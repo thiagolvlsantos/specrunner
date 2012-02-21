@@ -1,1 +1,0 @@
-mvn clean package verify release:perform -Darguments=-Dgpg.passphrase=%1
