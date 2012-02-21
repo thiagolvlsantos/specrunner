@@ -25,7 +25,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.specrunner</groupId>
-			<artifactId>specrunner</artifactId>
+			<artifactId>specrunner-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
