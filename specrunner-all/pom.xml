@@ -6,7 +6,7 @@
         <version>7</version>
     </parent>
     <groupId>org.specrunner</groupId>
-    <artifactId>specrunner-all</artifactId>
+    <artifactId>specrunner</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>SpecRunner (multi-module).</name>
@@ -37,7 +37,7 @@
     </issueManagement>
 
     <modules>
-        <module>../specrunner</module>
+        <module>../specrunner-core</module>
         <module>../specrunner-objects</module>
         <module>../specrunner-hibernate3</module>
         <module>../specrunner-sql</module>
