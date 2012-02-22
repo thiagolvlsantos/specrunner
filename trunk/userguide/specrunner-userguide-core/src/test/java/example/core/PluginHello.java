@@ -1,4 +1,4 @@
-package example1;
+package example.core;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
