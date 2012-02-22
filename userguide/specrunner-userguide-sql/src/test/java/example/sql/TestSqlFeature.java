@@ -9,6 +9,7 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.PluginConnection;
+import org.specrunner.sql.PluginScript;
 
 public class TestSqlFeature {
 
@@ -26,10 +27,14 @@ public class TestSqlFeature {
     @Before
     public void before() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        // setting plugin connection features
         fm.add(PluginConnection.FEATURE_DRIVER, "org.hsqldb.jdbcDriver");
         fm.add(PluginConnection.FEATURE_URL, "jdbc:hsqldb:mem:TESTE");
         fm.add(PluginConnection.FEATURE_USER, "sa");
         fm.add(PluginConnection.FEATURE_PASSWORD, "");
+        fm.add(PluginConnection.FEATURE_REUSE, Boolean.TRUE);
+        // setting plugin script features
+        fm.add(PluginScript.FEATURE_FAILSAFE, Boolean.TRUE);
     }
 
     @Test
