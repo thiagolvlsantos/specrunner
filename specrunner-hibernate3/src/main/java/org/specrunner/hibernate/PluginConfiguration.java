@@ -113,25 +113,31 @@ public class PluginConfiguration extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_TYPE, "type", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (type == null) {
+            try {
+                fh.set(FEATURE_TYPE, "type", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_FACTORY, "factory", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (factory == null) {
+            try {
+                fh.set(FEATURE_FACTORY, "factory", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_METHOD, "method", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (method == null) {
+            try {
+                fh.set(FEATURE_METHOD, "method", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         try {

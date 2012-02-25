@@ -32,7 +32,7 @@ public abstract class AbstractPluginResources extends AbstractPlugin {
      * disabled.
      */
     public static final String FEATURE_SAVE = AbstractPluginResources.class.getName() + ".save";
-    private Boolean save = true;
+    private Boolean save = null;
 
     protected AbstractPluginResources() {
     }
@@ -46,18 +46,20 @@ public abstract class AbstractPluginResources extends AbstractPlugin {
     }
 
     protected boolean isSave() {
-        return save != null && save;
+        return save == null || save;
     }
 
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_SAVE, "save", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (save == null) {
+            try {
+                fh.set(FEATURE_SAVE, "save", Boolean.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
     }

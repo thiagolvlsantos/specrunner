@@ -31,6 +31,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.sql.impl.SimpleDataSource;
 import org.specrunner.util.UtilLog;
 
@@ -321,20 +322,7 @@ public class PluginConnection extends AbstractPluginValue {
             }
         }
         if (reuse) {
-            rm.put(currentName, new IReusable() {
-                @Override
-                public boolean canReuse(Map<String, Object> cfg) {
-                    boolean sameName = currentName.equalsIgnoreCase((String) cfg.get("name"));
-                    boolean sameProvider = provider != null && provider.equals(cfg.get("provider"));
-                    boolean sameInstance = providerInstance != null && providerInstance == cfg.get("providerInstance");
-                    boolean sameProperties = true;
-                    sameProperties = driver != null && driver.equalsIgnoreCase((String) cfg.get("driver"));
-                    sameProperties = sameProperties && url != null && url.equalsIgnoreCase((String) cfg.get("url"));
-                    sameProperties = sameProperties && user != null && user.equalsIgnoreCase((String) cfg.get("user"));
-                    sameProperties = sameProperties && password != null && password.equalsIgnoreCase((String) cfg.get("password"));
-                    return sameName && (sameInstance || sameProvider || sameProperties);
-                }
-
+            rm.put(currentName, new AbstractReusable(currentName, providerInstance) {
                 @Override
                 public void reset() {
                 }
@@ -348,13 +336,16 @@ public class PluginConnection extends AbstractPluginValue {
                 }
 
                 @Override
-                public Object getObject() {
-                    return providerInstance;
-                }
-
-                @Override
-                public String getName() {
-                    return currentName;
+                public boolean canReuse(Map<String, Object> cfg) {
+                    boolean sameName = currentName.equalsIgnoreCase((String) cfg.get("name"));
+                    boolean sameProvider = provider != null && provider.equals(cfg.get("provider"));
+                    boolean sameInstance = providerInstance != null && providerInstance == cfg.get("providerInstance");
+                    boolean sameProperties = true;
+                    sameProperties = driver != null && driver.equalsIgnoreCase((String) cfg.get("driver"));
+                    sameProperties = sameProperties && url != null && url.equalsIgnoreCase((String) cfg.get("url"));
+                    sameProperties = sameProperties && user != null && user.equalsIgnoreCase((String) cfg.get("user"));
+                    sameProperties = sameProperties && password != null && password.equalsIgnoreCase((String) cfg.get("password"));
+                    return sameName && (sameInstance || sameProvider || sameProperties);
                 }
             });
         }

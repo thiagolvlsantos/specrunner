@@ -67,25 +67,31 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
             UtilLog.LOG.trace("initialize()>" + context.peek());
         }
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_CONDITION, "condition", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (condition == null) {
+            try {
+                fh.set(FEATURE_CONDITION, "condition", Boolean.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_SLEEP, "sleep", Long.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (sleep == null) {
+            try {
+                fh.set(FEATURE_SLEEP, "sleep", Long.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (timeout == null) {
+            try {
+                fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
     }

@@ -80,18 +80,22 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_FINDER_TYPE, "finder", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (finder == null) {
+            try {
+                fh.set(FEATURE_FINDER_TYPE, "finder", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_FINDER_INSTANCE, "finderInstance", IFinder.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (finderInstance == null) {
+            try {
+                fh.set(FEATURE_FINDER_INSTANCE, "finderInstance", IFinder.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         if (finder != null) {
