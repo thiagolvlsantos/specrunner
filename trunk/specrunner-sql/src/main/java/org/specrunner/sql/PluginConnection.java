@@ -71,13 +71,6 @@ public class PluginConnection extends AbstractPluginValue {
     private String password;
 
     /**
-     * When using direct connection information, use threadsafe='true' to append
-     * thread name to data base URL.
-     */
-    public static final String FEATURE_THREADSAFE = PluginConnection.class.getName() + ".threadsafe";
-    private Boolean threadsafe = false;
-
-    /**
      * Provider name feature.
      */
     public static final String FEATURE_PROVIDER = PluginConnection.class.getName() + ".provider";
@@ -94,6 +87,13 @@ public class PluginConnection extends AbstractPluginValue {
      */
     public static final String FEATURE_REUSE = PluginConnection.class.getName() + ".reuse";
     private Boolean reuse = false;
+
+    /**
+     * When using direct connection information, use threadsafe='true' to append
+     * thread name to data base URL.
+     */
+    public static final String FEATURE_THREADSAFE = PluginConnection.class.getName() + ".threadsafe";
+    private Boolean threadsafe = false;
 
     /**
      * Driver information.
@@ -205,39 +205,49 @@ public class PluginConnection extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_DRIVER, "driver", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (driver == null) {
+            try {
+                fh.set(FEATURE_DRIVER, "driver", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_URL, "url", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (url == null) {
+            try {
+                fh.set(FEATURE_URL, "url", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_USER, "user", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (user == null) {
+            try {
+                fh.set(FEATURE_USER, "user", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_PASSWORD, "password", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (password == null) {
+            try {
+                fh.set(FEATURE_PASSWORD, "password", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_PROVIDER, "provider", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (provider == null) {
+            try {
+                fh.set(FEATURE_PROVIDER, "provider", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         try {

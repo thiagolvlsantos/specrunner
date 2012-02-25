@@ -96,6 +96,14 @@ $(document).ready(function() {
 			event.preventDefault();
 		});
 	});
+	$("a.collapse").each(function() {
+		var name = "#" + $(this).attr("id") + "_inc";
+		$(name).hide();
+	});
+	$("a.expanded").each(function() {
+		var name = "#" + $(this).attr("id") + "_inc";
+		$(name).show();
+	});
 
 	$(":button.top_exp, #right_exp, :button.top_col, #right_col").css("width","45%");
 	$(":button.top_exp, #right_exp").attr("title","Expand all");
