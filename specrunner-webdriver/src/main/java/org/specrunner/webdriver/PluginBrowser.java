@@ -31,6 +31,7 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.Status;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
@@ -56,7 +57,7 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
      * Default browser recording feature.
      */
     public static final String FEATURE_RECORDING = PluginBrowser.class.getName() + ".recording";
-    private Boolean recording = true;
+    private Boolean recording = UtilLog.LOG.isDebugEnabled();
 
     /**
      * Default WebDriver type.
@@ -181,19 +182,24 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         IListenerManager fac = SpecRunnerServices.get(IListenerManager.class);
         if (recording) {
-            fac.add(new PageListener(getName()));
+            fac.add(new PageListener(getName(), context));
         } else {
-            fac.remove(getName());
+            fac.remove(getName(), context);
         }
         IReusableManager reusables = SpecRunnerServices.get(IReusableManager.class);
         if (reuse) {
             Map<String, Object> cfg = new HashMap<String, Object>();
             cfg.put("webdriver", webdriver);
-            cfg.put("webdriverFactory", webdriverfactory);
+            cfg.put("webdriverfactory", webdriverfactory);
+            cfg.put("webdriverInstance", webdriverInstance);
             IReusable reusable = reusables.get(getName());
             if (reusable != null && reusable.canReuse(cfg)) {
                 reusable.reset();
                 save(context, (WebDriver) reusable.getObject());
+                result.addResult(Status.SUCCESS, context.peek());
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Browser (" + getName() + ") reused.");
+                }
                 return ENext.DEEP;
             }
         }
@@ -231,11 +237,14 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
                 @Override
                 public boolean canReuse(Map<String, Object> extra) {
                     String localWebdriver = (String) extra.get("webdriver");
-                    String localWebDriverFactory = (String) extra.get("webdriverFactory");
+                    String localWebDriverFactory = (String) extra.get("webdriverfactory");
+                    WebDriver localWebDriverInstance = (WebDriver) extra.get("webdriverInstance");
                     if (webdriver != null) {
                         return webdriver.equalsIgnoreCase(localWebdriver);
                     } else if (webdriverfactory != null) {
                         return webdriverfactory.equalsIgnoreCase(localWebDriverFactory);
+                    } else if (webdriverInstance != null) {
+                        return webdriverInstance == localWebDriverInstance;
                     } else if (webdriver == null && webdriverfactory == null) {
                         return true;
                     }

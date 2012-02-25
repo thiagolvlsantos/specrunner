@@ -45,18 +45,25 @@ import com.gargoylesoftware.htmlunit.WebClient;
 public class PageListener implements IPluginListener {
 
     private static final Status DETAIL_STATUS = Status.newStatus("detail", false, -1);
-    private Map<String, Object> info = new HashMap<String, Object>();
+    private final Map<String, Object> info = new HashMap<String, Object>();
 
-    private String name;
+    private final String name;
+    private final IContext context;
 
-    public PageListener(String name) {
+    public PageListener(String name, IContext context) {
         this.name = name;
+        this.context = context;
         info.put(SourceDumperWritables.LABEL_FIELD, "(" + name + ")");
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public IContext getContext() {
+        return context;
     }
 
     @Override

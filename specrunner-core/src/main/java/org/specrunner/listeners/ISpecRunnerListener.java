@@ -17,6 +17,8 @@
  */
 package org.specrunner.listeners;
 
+import org.specrunner.context.IContext;
+
 /**
  * Generic listener.
  * 
@@ -31,4 +33,11 @@ public interface ISpecRunnerListener {
      * @return The listener name.
      */
     String getName();
+
+    /**
+     * The context where the listener is expected to wirk on.
+     * 
+     * @return The listener name.
+     */
+    IContext getContext();
 }

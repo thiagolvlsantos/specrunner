@@ -124,7 +124,7 @@ public class PluginBrowser extends AbstractPluginScoped {
      * Default browser recording feature.
      */
     public static final String FEATURE_RECORDING = PluginBrowser.class.getName() + ".recording";
-    private Boolean recording = true;
+    private Boolean recording = UtilLog.LOG.isDebugEnabled();
 
     /**
      * Default browser setting for reuse.
@@ -413,9 +413,9 @@ public class PluginBrowser extends AbstractPluginScoped {
         try {
             IListenerManager fac = SpecRunnerServices.get(IListenerManager.class);
             if (recording) {
-                fac.add(new PageListener(getName()));
+                fac.add(new PageListener(getName(), context));
             } else {
-                fac.remove(getName());
+                fac.remove(getName(), context);
             }
             IReusableManager reusables = SpecRunnerServices.get(IReusableManager.class);
             if (reuse) {
@@ -426,6 +426,10 @@ public class PluginBrowser extends AbstractPluginScoped {
                 if (reusable != null && reusable.canReuse(cfg)) {
                     reusable.reset();
                     saveGlobal(context, getName(), reusable.getObject());
+                    result.addResult(Status.SUCCESS, context.peek());
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Browser (" + getName() + ") reused.");
+                    }
                     return ENext.DEEP;
                 }
             }

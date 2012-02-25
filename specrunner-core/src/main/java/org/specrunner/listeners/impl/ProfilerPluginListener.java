@@ -33,13 +33,18 @@ import org.specrunner.util.UtilLog;
 public class ProfilerPluginListener implements IPluginListener {
 
     private static final int TRESHOLD = 5;
-    private Stack<Long> timeInit = new Stack<Long>();
-    private Stack<Long> timeStart = new Stack<Long>();
-    private Stack<Long> timeEnd = new Stack<Long>();
+    private final Stack<Long> timeInit = new Stack<Long>();
+    private final Stack<Long> timeStart = new Stack<Long>();
+    private final Stack<Long> timeEnd = new Stack<Long>();
 
     @Override
     public String getName() {
         return "profilerPlugin";
+    }
+
+    @Override
+    public IContext getContext() {
+        return null;
     }
 
     @Override
