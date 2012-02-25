@@ -32,11 +32,16 @@ import org.specrunner.util.UtilLog;
  */
 public class ProfilerSourceListener implements ISourceListener {
 
-    private Stack<Long> timeStart = new Stack<Long>();
+    private final Stack<Long> timeStart = new Stack<Long>();
 
     @Override
     public String getName() {
         return "profilerSource";
+    }
+
+    @Override
+    public IContext getContext() {
+        return null;
     }
 
     @Override

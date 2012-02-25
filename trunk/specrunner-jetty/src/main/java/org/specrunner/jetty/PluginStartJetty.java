@@ -148,6 +148,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     if (reusable != null && reusable.canReuse(cfg)) {
                         reusable.reset();
                         saveGlobal(context, getName(), reusable.getObject());
+                        result.addResult(Status.SUCCESS, context.peek());
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Jetty (" + getName() + "/" + Server.getVersion() + ") with " + file + " reused.");
                         }

@@ -44,18 +44,25 @@ import org.specrunner.webdriver.util.WritablePage;
 public class PageListener implements IPluginListener {
 
     private static final Status DETAIL_STATUS = Status.newStatus("detail", false, -1);
-    private Map<String, Object> info = new HashMap<String, Object>();
+    private final Map<String, Object> info = new HashMap<String, Object>();
 
-    private String name;
+    private final String name;
+    private final IContext context;
 
-    public PageListener(String name) {
+    public PageListener(String name, IContext context) {
         this.name = name;
+        this.context = context;
         info.put(SourceDumperWritables.LABEL_FIELD, "(" + name + ")");
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public IContext getContext() {
+        return context;
     }
 
     @Override
@@ -84,7 +91,7 @@ public class PageListener implements IPluginListener {
         if (p instanceof AbstractPluginBrowserAware) {
             String tmp = (String) p.getParameter("name");
             String browserName = tmp != null ? tmp : PluginBrowser.BROWSER_NAME;
-            if (name.equals(browserName)) {
+            if (name.equals(browserName) && this.context == context) {
                 WebDriver client = (WebDriver) context.getByName(browserName);
                 if (client == null) {
                     result.addResult(Status.FAILURE, context.peek(), "Browser instance named '" + browserName + "' not created. See PluginBrowser.");

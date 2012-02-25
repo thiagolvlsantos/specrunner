@@ -20,6 +20,7 @@ package org.specrunner.listeners.impl;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.specrunner.context.IContext;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.ISpecRunnerListener;
 
@@ -39,10 +40,18 @@ public class ListenerManagerImpl extends LinkedList<ISpecRunnerListener> impleme
     }
 
     @Override
-    public void remove(String name) {
+    public boolean add(ISpecRunnerListener e) {
+        // remove repetition
+        remove(e);
+        // add element
+        return super.add(e);
+    }
+
+    @Override
+    public void remove(String name, IContext context) {
         ISpecRunnerListener listener = null;
         for (ISpecRunnerListener li : this) {
-            if (li.getName().equals(name)) {
+            if (li.getName().equals(name) && li.getContext() == context) {
                 listener = li;
                 break;
             }

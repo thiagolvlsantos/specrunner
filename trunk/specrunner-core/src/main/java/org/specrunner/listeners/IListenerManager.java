@@ -19,6 +19,8 @@ package org.specrunner.listeners;
 
 import java.util.List;
 
+import org.specrunner.context.IContext;
+
 /**
  * A listeners manager.
  * 
@@ -32,8 +34,10 @@ public interface IListenerManager extends List<ISpecRunnerListener> {
      * 
      * @param name
      *            The name of the listener to be removed.
+     * @param context
+     *            The context of the listener.
      */
-    void remove(String name);
+    void remove(String name, IContext context);
 
     /**
      * Filter listeners by their types.
