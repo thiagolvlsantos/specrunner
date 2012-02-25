@@ -19,6 +19,7 @@ package org.specrunner.webdriver;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.PluginException;
 
 /**
  * Creates a WebDriver based on contextual information.
@@ -34,6 +35,8 @@ public interface IWebDriverFactory {
      * @param context
      *            The context.
      * @return W web driver based on context.
+     * @throws PluginException
+     *             On creation errors.
      */
-    WebDriver create(IContext context);
+    WebDriver create(IContext context) throws PluginException;
 }
