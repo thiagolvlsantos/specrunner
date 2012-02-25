@@ -223,7 +223,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                         UtilLog.LOG.info("Waiting Jetty start.");
                     }
                 }
-                saveLocal(context, getName(), s);
+                saveGlobal(context, getName(), s);
                 if (reuse) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Jetty reuse enabled.");

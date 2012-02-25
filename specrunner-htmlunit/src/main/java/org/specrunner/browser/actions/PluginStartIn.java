@@ -23,6 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
 
@@ -49,6 +50,7 @@ public class PluginStartIn extends AbstractPluginUrlAware {
         String u = null;
         if (provider == null) {
             u = getUrl() != null ? getUrl() : node.getValue();
+            u = String.valueOf(UtilEvaluator.evaluate(u, context));
         } else {
             try {
                 if (UtilLog.LOG.isInfoEnabled()) {
