@@ -17,7 +17,6 @@
  */
 package org.specrunner.plugins.impl.macro;
 
-import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -26,6 +25,7 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilNode;
 
 /**
  * The plugin which creates a macro. To defined a macro just add the class
@@ -93,7 +93,7 @@ public class PluginMacro extends AbstractPluginScoped {
         } else {
             saveLocal(context, getName(), ele.copy());
         }
-        ele.addAttribute(new Attribute("class", CSS_DEFINED));
+        UtilNode.appendCss(ele, CSS_DEFINED);
         return (run ? ENext.DEEP : ENext.SKIP);
     }
 }
