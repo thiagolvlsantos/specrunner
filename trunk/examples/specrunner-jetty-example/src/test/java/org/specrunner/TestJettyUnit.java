@@ -9,7 +9,7 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.webdriver.PluginBrowser;
-import org.specrunner.webdriver.actions.PluginBrowserIn;
+import org.specrunner.webdriver.actions.PluginStartIn;
 import org.specrunner.webdriver.actions.PluginOpen;
 import org.specrunner.webdriver.actions.window.PluginSize;
 import org.specrunner.webdriver.assertions.PluginCompare;
@@ -40,7 +40,7 @@ public class TestJettyUnit {
         size.setHeight(500);
         group.add(size);
 
-        PluginBrowserIn in = new PluginBrowserIn();
+        PluginStartIn in = new PluginStartIn();
         in.setProvider(JettyStringProvider.class.getName());
         group.add(in);
 

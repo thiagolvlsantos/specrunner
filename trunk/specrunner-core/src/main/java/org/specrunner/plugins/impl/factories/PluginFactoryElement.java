@@ -50,7 +50,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
             String name = ele.getQualifiedName().toLowerCase();
             Class<? extends IPlugin> c = types.get(name);
             if (c != null) {
-                return UtilPlugin.create(context, c, ele);
+                return UtilPlugin.create(context, c, ele, true);
             }
         }
         return PluginNop.emptyPlugin();
