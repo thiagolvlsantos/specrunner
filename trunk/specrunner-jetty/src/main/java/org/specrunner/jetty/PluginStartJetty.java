@@ -135,7 +135,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         synchronized (lock) {
             try {
-                Log.getLog().setDebugEnabled(true);
+                Log.getRootLogger().setDebugEnabled(true);
                 if (file == null) {
                     throw new PluginException("Jetty file name must be set using attribute 'file'.");
                 }
@@ -147,7 +147,10 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     IReusable reusable = reusables.get(getName());
                     if (reusable != null && reusable.canReuse(cfg)) {
                         reusable.reset();
-                        saveLocal(context, getName(), reusable.getObject());
+                        saveGlobal(context, getName(), reusable.getObject());
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Jetty (" + getName() + "/" + Server.getVersion() + ") with " + file + " reused.");
+                        }
                         return;
                     }
                 }
@@ -222,6 +225,9 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Waiting Jetty start.");
                     }
+                }
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Jetty version -> " + Server.getVersion() + ".");
                 }
                 saveGlobal(context, getName(), s);
                 if (reuse) {
