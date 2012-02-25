@@ -78,6 +78,13 @@ public class PluginInclude extends AbstractPlugin {
     public static final Integer DEFAULT_DEPTH = Integer.MAX_VALUE;
     protected Integer depth = DEFAULT_DEPTH;
 
+    /**
+     * Default include expanded state.
+     */
+    public static final String FEATURE_EXPANDED = PluginInclude.class.getName() + ".expanded";
+    public static final Boolean DEFAULT_EXPANDED = Boolean.FALSE;
+    protected Boolean expanded = null;
+
     public String getHref() {
         return href;
     }
@@ -101,6 +108,21 @@ public class PluginInclude extends AbstractPlugin {
         this.depth = depth;
     }
 
+    /**
+     * Gets the status expected for inclusion.
+     * 
+     * @return true, if node might be shown expanded after inclusion, false, if
+     *         collapsed. IMPORTANT: on errors in included files the expended
+     *         mode will be overridden to expanded=true.
+     */
+    public Boolean getExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(Boolean expanded) {
+        this.expanded = expanded;
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -109,6 +131,15 @@ public class PluginInclude extends AbstractPlugin {
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+        if (expanded == null) {
+            try {
+                fh.set(FEATURE_EXPANDED, "expanded", Boolean.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
     }
@@ -197,6 +228,8 @@ public class PluginInclude extends AbstractPlugin {
             Element trContent = new Element("tr");
             table.appendChild(trContent);
 
+            int failCount = result.countStatus(Status.FAILURE);
+
             Element tdContent = new Element("td");
             UtilNode.appendCss(tdContent, CSS_INCLUDED_CONTENT);
             trContent.appendChild(tdContent);
@@ -228,6 +261,15 @@ public class PluginInclude extends AbstractPlugin {
                     tdContent.addAttribute(new Attribute("class", Status.WARNING.getCssName()));
                     tdContent.appendChild(new Text("Cyclic dependency."));
                     result.addResult(Status.WARNING, context.newBlock(node, this), "Cyclic dependency>" + toString(context) + "\n on run " + newSource);
+                }
+            }
+
+            failCount = result.countStatus(Status.FAILURE) - failCount;
+            if (failCount > 0) {
+                UtilNode.appendCss(ele, "expanded");
+            } else {
+                if (expanded == null || !expanded) {
+                    UtilNode.appendCss(ele, "collapse");
                 }
             }
         } catch (URISyntaxException e) {
