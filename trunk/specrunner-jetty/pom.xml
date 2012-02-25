@@ -22,8 +22,8 @@
     </distributionManagement>
 
 	<properties>
-		<jetty.version>7.4.5.v20110725</jetty.version>
-		<jasper.version>6.0.29</jasper.version>
+		<jetty.version>8.1.1.v20120215</jetty.version>
+		<jasper.version>6.0.35</jasper.version>
 		<jstl.version>1.1.2</jstl.version>
 	</properties>
 
