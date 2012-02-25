@@ -51,10 +51,10 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
     public WebClient getWebClient() {
         return super.getWebClient();
     }
-    
+
     public void setHeader(String name, String value) {
-        WebClient wc = super.getWebClient();
+        WebClient wc = getWebClient();
         wc.addRequestHeader(name, value);
     }
-    
+
 }

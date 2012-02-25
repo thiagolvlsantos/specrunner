@@ -81,23 +81,25 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
-
-        try {
-            fh.set(FEATURE_CLEAN, "cacheClean", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (cacheClean == null) {
+            try {
+                fh.set(FEATURE_CLEAN, "cacheClean", Boolean.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         if (cacheClean != null && cacheClean) {
             reset();
         }
-
-        try {
-            fh.set(FEATURE_STRATEGY, "strategy", ICacheable.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (strategy == null) {
+            try {
+                fh.set(FEATURE_STRATEGY, "strategy", ICacheable.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         if (strategy != null) {

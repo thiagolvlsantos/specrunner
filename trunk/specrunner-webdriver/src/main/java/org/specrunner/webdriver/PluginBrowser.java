@@ -142,35 +142,37 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
-        try {
-            if (webdriver == null) {
+        if (webdriver == null) {
+            try {
                 fh.set(FEATURE_WEBDRIVER_TYPE, "webdriver", String.class, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver type is " + webdriver);
                 }
-            }
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            if (webdriverfactory == null) {
+        if (webdriverfactory == null) {
+            try {
                 fh.set(FEATURE_WEBDRIVER_FACTORY, "webdriverfactory", String.class, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver factory is " + webdriverfactory);
                 }
-            }
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_WEBDRIVER_INSTANCE, "webdriverInstance", WebDriver.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (webdriverInstance == null) {
+            try {
+                fh.set(FEATURE_WEBDRIVER_INSTANCE, "webdriverInstance", WebDriver.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
     }

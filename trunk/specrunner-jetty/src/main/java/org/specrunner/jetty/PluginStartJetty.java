@@ -45,6 +45,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     public static final String JETTY_NAME = "jettyName";
     private static Object lock = new Object();
 
+    public static final String FEATURE_FILE = PluginStartJetty.class.getName() + ".file";
     private String file;
 
     public static final String FEATURE_DYNAMIC = PluginStartJetty.class.getName() + ".dynamic";
@@ -96,6 +97,15 @@ public class PluginStartJetty extends AbstractPluginScoped {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        if (file == null) {
+            try {
+                fh.set(FEATURE_FILE, "file", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        }
         try {
             fh.set(FEATURE_DYNAMIC, "dynamic", Boolean.class, this);
         } catch (FeatureManagerException e) {
@@ -103,11 +113,13 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
-        try {
-            fh.set(FEATURE_PORT, "port", Integer.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (port == null) {
+            try {
+                fh.set(FEATURE_PORT, "port", Integer.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         try {
