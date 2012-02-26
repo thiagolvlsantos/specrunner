@@ -74,6 +74,7 @@ import org.specrunner.source.resource.IResourceManagerFactory;
 import org.specrunner.source.resource.impl.ResourceManagerFactoryImpl;
 import org.specrunner.transformer.ITransformer;
 import org.specrunner.transformer.impl.TransformerImpl;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.StringAlignerFactoryImpl;
 import org.specrunner.util.comparer.IComparatorManager;
@@ -93,11 +94,10 @@ import org.specrunner.util.converter.impl.ConverterManagerImpl;
  * @author Thiago Santos
  * 
  */
-public final class SpecRunnerServices extends Thread {
+public final class SpecRunnerServices {
 
     private static ThreadLocal<SpecRunnerServices> instance = new ThreadLocal<SpecRunnerServices>();
 
-    private SpecRunnerServices shutDownInstance;
     /**
      * Map of services by type.
      */
@@ -145,14 +145,6 @@ public final class SpecRunnerServices extends Thread {
         bind(IReusableManager.class, new ReusableManagerImpl());
 
         bind(ISpecRunnerFactory.class, new SpecRunnerFactoryImpl(new SpecRunnerImpl()));
-    }
-
-    public SpecRunnerServices getShutDownInstance() {
-        return shutDownInstance;
-    }
-
-    public void setShutDownInstance(SpecRunnerServices shutDownInstance) {
-        this.shutDownInstance = shutDownInstance;
     }
 
     /**
@@ -218,8 +210,7 @@ public final class SpecRunnerServices extends Thread {
     public static SpecRunnerServices get() {
         if (instance.get() == null) {
             SpecRunnerServices service = new SpecRunnerServices();
-            service.setShutDownInstance(service);
-            Runtime.getRuntime().addShutdownHook(service);
+            Runtime.getRuntime().addShutdownHook(new ShutDown(service));
             instance.set(service);
         }
         return instance.get();
@@ -239,12 +230,34 @@ public final class SpecRunnerServices extends Thread {
     /**
      * Release all reusable resources pending.
      */
-    @Override
-    public void run() {
-        IReusableManager rm = shutDownInstance.lookup(IReusableManager.class);
+    public static void release() {
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Release programmatic call.");
+        }
+        release(instance.get());
+    }
+
+    private static void release(SpecRunnerServices service) {
+        IReusableManager rm = service.lookup(IReusableManager.class);
         for (IReusable r : rm.values()) {
             r.release();
             rm.remove(r);
+        }
+    }
+
+    private static class ShutDown extends Thread {
+        private final SpecRunnerServices shutdown;
+
+        public ShutDown(SpecRunnerServices shutdown) {
+            this.shutdown = shutdown;
+        }
+
+        @Override
+        public void run() {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Release shutdown call.");
+            }
+            SpecRunnerServices.release(shutdown);
         }
     }
 }
