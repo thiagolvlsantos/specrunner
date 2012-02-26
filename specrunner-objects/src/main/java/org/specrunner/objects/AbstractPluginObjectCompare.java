@@ -17,6 +17,8 @@
  */
 package org.specrunner.objects;
 
+import java.util.List;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
@@ -51,18 +53,30 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
             UtilLog.LOG.debug("KEYS>" + reference);
         }
         try {
-            Object base = selectUnique(context, instance, row, result);
+            List<Object> list = select(context, instance, row, result);
+            if (list.isEmpty()) {
+                addError(context, row, result, new PluginException("None element found. XML:" + row.getElement().toXML()));
+                return;
+            }
+            if (list.size() > 1) {
+                addError(context, row, result, new PluginException("More than one element found. XML:" + row.getElement().toXML()));
+                return;
+            }
+            Object base = list.get(0);
             if (base == null) {
-                Exception e = new PluginException("This register is not present in object repository. XML:" + row.getElement().toXML());
-                for (int i = 0; i < row.getCellsCount(); i++) {
-                    result.addResult(i == 0 ? Status.FAILURE : Status.WARNING, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
-                }
+                addError(context, row, result, new PluginException("This register is not present in object repository. XML:" + row.getElement().toXML()));
             } else {
                 compare(context, base, instance, row, result);
             }
 
         } finally {
             release();
+        }
+    }
+
+    private void addError(IContext context, RowAdapter row, IResultSet result, Exception e) {
+        for (int i = 0; i < row.getCellsCount(); i++) {
+            result.addResult(i == 0 ? Status.FAILURE : Status.WARNING, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
         }
     }
 
@@ -77,11 +91,11 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
      *            The row which was the source for object creation.
      * @param result
      *            The result set.
-     * @return The corresponding object from repository.
+     * @return The corresponding objects from repository.
      * @throws Exception
      *             On selecion errors.
      */
-    public abstract Object selectUnique(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
+    public abstract List<Object> select(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
 
     /**
      * Release comparation resources. i.e. For Hibernate repositories free
