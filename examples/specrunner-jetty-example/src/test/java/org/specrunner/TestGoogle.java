@@ -1,6 +1,5 @@
 package org.specrunner;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.specrunner.configuration.IConfiguration;
@@ -10,11 +9,6 @@ import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.WebDriverFactoryIe;
 
 public class TestGoogle {
-
-    @AfterClass
-    public static void release() {
-        SpecRunnerServices.release();
-    }
 
     @Test
     public void runGoogle() throws Exception {

@@ -32,7 +32,20 @@ import org.specrunner.reuse.IReusableManager;
 public class ReusableManagerImpl extends HashMap<String, IReusable> implements IReusableManager {
 
     @Override
+    public IReusable put(String name, IReusable resource) {
+        IReusable ir = get(name);
+        if (ir != null) {
+            ir.release();
+        }
+        return super.put(name, resource);
+    }
+
+    @Override
     public void remove(String name) {
-        remove(get(name));
+        IReusable ir = get(name);
+        if (ir != null) {
+            ir.release();
+            remove(ir);
+        }
     }
 }

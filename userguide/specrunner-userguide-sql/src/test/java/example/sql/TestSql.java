@@ -1,8 +1,6 @@
 package example.sql;
 
-import org.junit.AfterClass;
 import org.junit.Test;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.junit.SpecRunnerJUnit;
 
 public class TestSql {
@@ -32,10 +30,5 @@ public class TestSql {
     @Test
     public void all() {
         run("all.html");
-    }
-
-    @AfterClass
-    public static void afterClass() {
-        SpecRunnerServices.release();
     }
 }
