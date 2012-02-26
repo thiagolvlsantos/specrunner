@@ -17,6 +17,8 @@
  */
 package org.specrunner.hibernate;
 
+import java.util.List;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -44,8 +46,9 @@ public class PluginOutput extends AbstractPluginObjectCompare {
         return false;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Object selectUnique(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
+    public List<Object> select(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
         SessionFactory sf = PluginSessionFactory.getSessionFactory(context, getName());
         session = sf.openSession();
         Criteria c = session.createCriteria(instance.getClass());
@@ -53,7 +56,7 @@ public class PluginOutput extends AbstractPluginObjectCompare {
         for (int i = 0; i < keyFields.length; i++) {
             c.add(Restrictions.eq(keyFields[i], PropertyUtils.getProperty(instance, keyFields[i])));
         }
-        return c.uniqueResult();
+        return c.list();
     }
 
     @Override
