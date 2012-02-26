@@ -23,6 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * A specialization of AbstractPluginFind to be overridden by actions that take
@@ -57,7 +58,7 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
             return;
         }
         if (elements.length == 0) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."));
+            result.addResult(Status.FAILURE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."), new WritablePage(client));
             return;
         }
         WebElement element = elements[index];

@@ -58,9 +58,9 @@ public final class PluginCompareUtils {
         try {
             IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
             if (client != null) {
-                result.addResult(Status.FAILURE, block, new DefaultAlignmentException(al));
-            } else {
                 result.addResult(Status.FAILURE, block, new DefaultAlignmentException(al), new WritablePage(client));
+            } else {
+                result.addResult(Status.FAILURE, block, new DefaultAlignmentException(al));
             }
         } catch (Exception e) {
             throw new PluginException(e);
