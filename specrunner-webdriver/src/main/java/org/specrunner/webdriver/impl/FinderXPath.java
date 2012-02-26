@@ -29,6 +29,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.parameters.impl.AbstractParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.IFinder;
 
 /**
@@ -50,7 +51,7 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         };
     };
 
-    private Map<String, String> strategies = new HashMap<String, String>();
+    private final Map<String, String> strategies = new HashMap<String, String>();
     protected String by;
     protected String separator = ";";
 
@@ -61,6 +62,8 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         addStrategy("class", "//{0}[contains(@class,'{1}')]");
         addStrategy("contains", "//{0}[contains(.,'{1}')]");
         addStrategy("starts", "//{0}[starts-with({1},'{2}')]");
+        addStrategy("ends", "//{0}[ends-with({1},'{2}')]");
+        addStrategy("link", "//a[text()='{0}']");
         addStrategy("xpath", "{0}");
     }
 
@@ -93,6 +96,9 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
      */
     public void addStrategy(String name, String xpath) {
         strategies.put(name, xpath);
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Search strategy (" + name + "," + xpath + ") added.");
+        }
     }
 
     /**
@@ -109,11 +115,11 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
     /**
      * The search strategy to be used. i.e. <code>by="id:txtName"</code> means
      * find the element whose 'id' is 'txtName'. The 'by' attribute is closely
-     * related to <code>FindBy</code> strategy.
+     * related to <code>FindexXPath</code> strategy.
      * <p>
-     * The 'id' type is associated in FindBy to the XPath "//*[@id='{0}']", is
-     * means that if you use 'by="id:txtName"', this plugin will lookup the 'id'
-     * corresponding XPath, tokenize the content after ':' using ';' as
+     * The 'id' type is associated in FindexXPath to the XPath "//*[@id='{0}']",
+     * is means that if you use 'by="id:txtName"', this plugin will lookup the
+     * 'id' corresponding XPath, tokenize the content after ':' using ';' as
      * separator and replace '{...}' elements in order. To use another separator
      * set 'separator' attribute.
      * <p>
@@ -213,7 +219,7 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
     public String getXPath(IContext context) throws PluginException {
         String format = findStrategy(getType());
         if (format == null) {
-            throw new PluginException("Invalid search strategy '" + getType() + "', see FindBy to see options, or registry your pattern using FindBy.addStrategy(<type>,<pattern>). i.e. if you add FindBy.addStrategy(\"class\",\"//*[contains(@class,'${0}')]\") means you can now use 'by=class:any_css'.");
+            throw new PluginException("Invalid search strategy '" + getType() + "', see FindexXPath to see options, or registry your pattern using FindexXPath.get().addStrategy(<type>,<pattern>). i.e. if you add FindexXPath.addStrategy(\"class\",\"//*[contains(@class,'${0}')]\") means you can now use 'by=class:any_css'.");
         }
         String[] args = getArguments(context);
         for (int i = 0; i < args.length; i++) {
