@@ -28,6 +28,7 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
+import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Sets initial page of a given driver. Once set, relative references can be
@@ -71,7 +72,7 @@ public class PluginStartIn extends AbstractPluginUrlAware implements IAction {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                 }
-                result.addResult(Status.FAILURE, context.newBlock(node, this), e);
+                result.addResult(Status.FAILURE, context.newBlock(node, this), e, new WritablePage(client));
                 return;
             }
         }

@@ -27,6 +27,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.IFinder;
+import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Check if an id, name, value, xpath, etc is present.
@@ -74,12 +75,12 @@ public class PluginPresent extends AbstractPluginFind implements IAssertion {
         int failure = 0;
         if (getCount() != null) {
             if (list.size() != getCount()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected count of elements was '" + count + "', but '" + list.size() + "' was received."));
+                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected count of elements was '" + count + "', but '" + list.size() + "' was received."), new WritablePage(client));
                 failure++;
             }
         } else {
             if (list.isEmpty()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element not found."));
+                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element not found."), new WritablePage(client));
                 failure++;
             }
         }

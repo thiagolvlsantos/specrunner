@@ -65,7 +65,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         Nodes tables = node.query("descendant-or-self::table");
         Node table = UtilXPath.getHighest(tables);
         if (table == null) {
-            result.addResult(Status.FAILURE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."), new WritablePage(client));
+            result.addResult(Status.FAILURE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
             return false;
         }
         TableAdapter tableExpected = UtilNode.newTableAdapter((Element) table);
