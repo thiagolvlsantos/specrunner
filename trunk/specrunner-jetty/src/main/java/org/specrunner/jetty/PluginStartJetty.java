@@ -27,7 +27,10 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.session.HashSessionManager;
+import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
@@ -165,6 +168,32 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 XmlConfiguration configuration = new XmlConfiguration(in);
                 in.close();
                 final Server s = (Server) configuration.configure();
+
+                // cannot shutdown JVM, leave it to test programmer.
+                for (Handler h : s.getHandlers()) {
+                    if (h instanceof ShutdownHandler) {
+                        ((ShutdownHandler) h).setExitJvm(false);
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Jetty System.exit(..) disabled.");
+                        }
+                    }
+                }
+
+                // for reusable jetty the session manager must invalidate all
+                // previous sessions
+                LocalSessionManager sm = null;
+                if (reuse) {
+                    WebAppContext web = s.getChildHandlerByClass(WebAppContext.class);
+                    if (web != null) {
+                        SessionHandler h = web.getSessionHandler();
+                        sm = new LocalSessionManager();
+                        h.setSessionManager(sm);
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Jetty LocalSessionManager added -> " + sm + ".");
+                        }
+                    }
+                }
+
                 for (Connector c : s.getConnectors()) {
                     if (c instanceof SelectChannelConnector) {
                         port = c.getPort();
@@ -223,16 +252,6 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     }
                 }
 
-                // cannot shutdown JVM, leave it to test programmer.
-                for (Handler h : s.getHandlers()) {
-                    if (h instanceof ShutdownHandler) {
-                        ((ShutdownHandler) h).setExitJvm(false);
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Jetty System.exit(..) disabled.");
-                        }
-                    }
-                }
-
                 s.start();
                 while (!s.isRunning()) {
                     if (UtilLog.LOG.isInfoEnabled()) {
@@ -247,6 +266,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Jetty reuse enabled.");
                     }
+                    final LocalSessionManager localSm = sm;
                     reusables.put(getName(), new AbstractReusable(getName(), s) {
                         @Override
                         public boolean canReuse(Map<String, Object> extra) {
@@ -266,6 +286,9 @@ public class PluginStartJetty extends AbstractPluginScoped {
                                     }
                                     break;
                                 }
+                            }
+                            if (localSm != null) {
+                                localSm.invalidateSessions();
                             }
                             s.clearAttributes();
                             if (UtilLog.LOG.isInfoEnabled()) {
@@ -305,4 +328,19 @@ public class PluginStartJetty extends AbstractPluginScoped {
         return "file_" + jettyName;
     }
 
+    private final class LocalSessionManager extends HashSessionManager {
+        @Override
+        public void invalidateSessions() {
+            try {
+                super.invalidateSessions();
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Sessions removed.");
+                }
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        }
+    }
 }
