@@ -1,6 +1,5 @@
 package org.specrunner;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.specrunner.context.impl.LazyExpressionModel;
 import org.specrunner.jetty.JettyStringProvider;
@@ -9,8 +8,8 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.webdriver.PluginBrowser;
-import org.specrunner.webdriver.actions.PluginStartIn;
 import org.specrunner.webdriver.actions.PluginOpen;
+import org.specrunner.webdriver.actions.PluginStartIn;
 import org.specrunner.webdriver.actions.window.PluginSize;
 import org.specrunner.webdriver.assertions.PluginCompare;
 import org.specrunner.webdriver.assertions.PluginContains;
@@ -73,8 +72,4 @@ public class TestJettyUnit {
         SpecRunnerJUnit.defaultRun(group);
     }
 
-    @AfterClass
-    public static void release() {
-        SpecRunnerServices.release();
-    }
 }

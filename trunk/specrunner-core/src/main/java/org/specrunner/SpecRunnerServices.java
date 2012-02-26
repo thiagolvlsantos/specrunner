@@ -93,19 +93,15 @@ import org.specrunner.util.converter.impl.ConverterManagerImpl;
  * @author Thiago Santos
  * 
  */
-public final class SpecRunnerServices {
+public final class SpecRunnerServices extends Thread {
 
-    private static ThreadLocal<SpecRunnerServices> instance = new ThreadLocal<SpecRunnerServices>() {
-        @Override
-        protected SpecRunnerServices initialValue() {
-            return new SpecRunnerServices();
-        };
-    };
+    private static ThreadLocal<SpecRunnerServices> instance = new ThreadLocal<SpecRunnerServices>();
 
+    private SpecRunnerServices shutDownInstance;
     /**
      * Map of services by type.
      */
-    private Map<Class<?>, Object> servicePool = new HashMap<Class<?>, Object>();
+    private final Map<Class<?>, Object> servicePool = new HashMap<Class<?>, Object>();
 
     private SpecRunnerServices() {
         bind(IPropertyLoader.class, new PropertyLoaderImpl());
@@ -149,6 +145,14 @@ public final class SpecRunnerServices {
         bind(IReusableManager.class, new ReusableManagerImpl());
 
         bind(ISpecRunnerFactory.class, new SpecRunnerFactoryImpl(new SpecRunnerImpl()));
+    }
+
+    public SpecRunnerServices getShutDownInstance() {
+        return shutDownInstance;
+    }
+
+    public void setShutDownInstance(SpecRunnerServices shutDownInstance) {
+        this.shutDownInstance = shutDownInstance;
     }
 
     /**
@@ -212,6 +216,12 @@ public final class SpecRunnerServices {
      * @return
      */
     public static SpecRunnerServices get() {
+        if (instance.get() == null) {
+            SpecRunnerServices service = new SpecRunnerServices();
+            service.setShutDownInstance(service);
+            Runtime.getRuntime().addShutdownHook(service);
+            instance.set(service);
+        }
         return instance.get();
     }
 
@@ -227,10 +237,11 @@ public final class SpecRunnerServices {
     }
 
     /**
-     * Release all reusable resources pedding.
+     * Release all reusable resources pending.
      */
-    public static void release() {
-        IReusableManager rm = get(IReusableManager.class);
+    @Override
+    public void run() {
+        IReusableManager rm = shutDownInstance.lookup(IReusableManager.class);
         for (IReusable r : rm.values()) {
             r.release();
             rm.remove(r);

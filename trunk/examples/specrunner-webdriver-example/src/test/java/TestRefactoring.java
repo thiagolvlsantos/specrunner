@@ -1,6 +1,4 @@
-import org.junit.AfterClass;
 import org.junit.Test;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.impl.PluginGroupImpl;
@@ -30,10 +28,5 @@ public class TestRefactoring {
         group.add(compare);
 
         SpecRunnerJUnit.defaultRun(group);
-    }
-
-    @AfterClass
-    public static void release() {
-        SpecRunnerServices.release();
     }
 }
