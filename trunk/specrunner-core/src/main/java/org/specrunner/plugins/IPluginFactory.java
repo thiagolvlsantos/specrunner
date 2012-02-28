@@ -30,6 +30,20 @@ import org.specrunner.context.IContext;
 public interface IPluginFactory {
 
     /**
+     * Given a class, for example, return the corresponding alias for the
+     * plugin.
+     * 
+     * @param type
+     *            The plugin type, i.e. 'PluginInclude.class',
+     *            'PluginConnection', etc.
+     * @return The alias, if type is mapped, null, otherwise. Null does not
+     *         means a invalid plugin, but the plugin is either not mapped in
+     *         the usual way, or the factory of plugins is not based on alias
+     *         premisses.
+     */
+    String getAlias(Class<? extends IPlugin> type);
+
+    /**
      * Creates a new plugin.
      * 
      * @param source

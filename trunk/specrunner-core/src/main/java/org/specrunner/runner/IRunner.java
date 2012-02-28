@@ -17,6 +17,8 @@
  */
 package org.specrunner.runner;
 
+import java.util.Set;
+
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
@@ -33,9 +35,23 @@ import org.specrunner.source.ISource;
 public interface IRunner {
 
     /**
-     * Any node with attribute "ignore=true" will not be evaluated.
+     * Any node in specification with attribute "ignore=true" will not be
+     * evaluated.
      */
     String IGNORE = "ignore";
+
+    /**
+     * Feature to set the ignorable aliases using IFeatureManager or
+     * IConfiguration.
+     */
+    String FEATURE_IGNORED_ALIASES = IRunner.class.getName() + ".ignoredAliases";
+
+    /**
+     * List of alias that should be ignored by runner.
+     * 
+     * @return Ignorable aliases.
+     */
+    Set<String> getIgnoredAliases();
 
     /**
      * Performs the specification in source.

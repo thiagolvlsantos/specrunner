@@ -17,7 +17,9 @@
  */
 package org.specrunner.runner.impl;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import nu.xom.Element;
 import nu.xom.Node;
@@ -27,6 +29,8 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
+import org.specrunner.features.FeatureManagerException;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.IPluginListener;
 import org.specrunner.listeners.ISourceListener;
@@ -55,6 +59,13 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class RunnerImpl implements IRunner {
+
+    private final Set<String> ignoredAliases = new HashSet<String>();
+
+    @Override
+    public Set<String> getIgnoredAliases() {
+        return ignoredAliases;
+    }
 
     @Override
     public void run(ISource source, IContext context, IResultSet result) throws RunnerException {
@@ -97,17 +108,32 @@ public class RunnerImpl implements IRunner {
     }
 
     protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        try {
+            fm.set(IRunner.FEATURE_IGNORED_ALIASES, "ignoredAliases", Set.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
         IPlugin plugin = null;
         IBlock block = null;
         try {
+            IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
             if (previous == null) {
                 // create a plugin based on node information
-                plugin = SpecRunnerServices.get(IPluginFactory.class).newPlugin(node, context);
+                plugin = factory.newPlugin(node, context);
             } else {
                 plugin = previous;
             }
             // new block for node
             block = context.newBlock(node, plugin);
+            String alias = factory.getAlias(plugin.getClass());
+            if (alias != null && ignoredAliases != null && ignoredAliases.contains(alias)) {
+                result.addResult(Status.IGNORED, block, "This plugin has been ignored by our own choice. Ignored plugins:" + ignoredAliases + ". To add, remove, or clear ignored plugins use SpecRunnerServices.get(IRunner.class).getIgnoredAlias() object, or use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList<our alias list>).");
+                return;
+            }
+
             // queue block to the context
             context.push(block);
 

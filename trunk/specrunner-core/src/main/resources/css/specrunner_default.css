@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 /* STATUS DECLARATION */
-.sr_raised,.sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_failure_a:after,.sr_success_a:after,.sr_warning_a:after,.sr_info_a:after
+.sr_raised,.sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_ignored_b:before,.sr_failure_a:after,.sr_success_a:after,.sr_warning_a:after,.sr_info_a:after,.sr_ignored_a:after
 	{
 	border-top: 1px solid #EDEDED;
 	border-left: 1px solid #EDEDED;
@@ -35,7 +35,7 @@
 	background: #E7ECF0;
 }
 
-.sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_failure_a:after,.sr_success_a:after,.sr_warning_a:after,.sr_info_a:after
+.sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_ignored_b:before,.sr_failure_a:after,.sr_success_a:after,.sr_warning_a:after,.sr_info_a:after,.sr_ignored_b:before
 	{
 	padding: 2px;
 	font-size: x-small;
@@ -43,7 +43,7 @@
 	background-color: white;
 }
 
-.sr_failure,.sr_success,.sr_warning,.sr_info {
+.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_ignored {
 	color: #333333;
 }
 
@@ -63,6 +63,10 @@
 	background: #E0E0E0;
 }
 
+.sr_ignored {
+	background: cyan;
+}
+
 .sr_failure_b:before {
 	content: "E<";
 }
@@ -79,6 +83,10 @@
 	content: "I<";
 }
 
+.sr_ignored_b:before {
+	content: "IG<";
+}
+
 .sr_failure_a:after {
 	content: ">E";
 }
@@ -93,6 +101,10 @@
 
 .sr_info_a:after {
 	content: ">I";
+}
+
+.sr_ignored_a:after {
+	content: ">IG";
 }
 
 /* STACK TRACE */

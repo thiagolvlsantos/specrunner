@@ -38,6 +38,7 @@ import org.specrunner.util.UtilLog;
 public abstract class PluginFactoryImpl implements IPluginFactory {
 
     protected Map<String, Class<? extends IPlugin>> types = new HashMap<String, Class<? extends IPlugin>>();
+    protected Map<Class<? extends IPlugin>, String> aliases = new HashMap<Class<? extends IPlugin>, String>();
     private String file;
     private boolean initialized = false;
 
@@ -66,6 +67,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
                         }
                     }
                     types.put(key, c);
+                    aliases.put(c, key);
                 }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -75,5 +77,13 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
             }
             initialized = true;
         }
+    }
+
+    @Override
+    public String getAlias(Class<? extends IPlugin> type) {
+        if (type == null) {
+            return null;
+        }
+        return aliases.get(type);
     }
 }
