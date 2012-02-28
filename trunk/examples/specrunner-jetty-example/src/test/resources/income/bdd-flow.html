@@ -25,14 +25,14 @@
 
 <h2>Example 1</h2>
 
-With <span class="jetty_start" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> on, and considering system screens are like:
+With <span class="jettyStart" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> on, and considering system screens are like:
 <table border=1>
 	<tr><th >Start</th><th>Confirmation</th><th>Result</th></tr>
 	<tr>
 		<td class="macro" name="start" scope="body">
 			title is '<span class="compare" by="xpath://title">Start</span>', layout is
 			<table style="border: solid black 1pt" >
-				<tr><td colspan=2>Header <span class="compare_date" value='${dt.toString("HH:mm dd/MM/yyyy")}' format="HH:mm dd/MM/yyyy" by="id:hDate">current date</span></td></tr>
+				<tr><td colspan=2>Header <span class="compareDate" value='${dt.toString("HH:mm dd/MM/yyyy")}' format="HH:mm dd/MM/yyyy" by="id:hDate">current date</span></td></tr>
 				<tr>
 					<td>Menu</td>
 					<td>Center</td>

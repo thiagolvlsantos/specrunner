@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
@@ -170,12 +169,11 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 final Server s = (Server) configuration.configure();
 
                 // cannot shutdown JVM, leave it to test programmer.
-                for (Handler h : s.getHandlers()) {
-                    if (h instanceof ShutdownHandler) {
-                        ((ShutdownHandler) h).setExitJvm(false);
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Jetty System.exit(..) disabled.");
-                        }
+                ShutdownHandler sdh = s.getChildHandlerByClass(ShutdownHandler.class);
+                if (sdh != null) {
+                    sdh.setExitJvm(false);
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Jetty System.exit(..) disabled.");
                     }
                 }
 

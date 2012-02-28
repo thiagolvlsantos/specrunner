@@ -39,7 +39,7 @@ import org.specrunner.webdriver.util.WritablePage;
  */
 public class PluginStartIn extends AbstractPluginUrlAware implements IAction {
 
-    public static final String BROWSER_IN = "browserIn";
+    public static final String START_IN = "startIn";
 
     private String provider;
 
@@ -88,6 +88,6 @@ public class PluginStartIn extends AbstractPluginUrlAware implements IAction {
     }
 
     public static String getBaseForBrowser(String browserName) {
-        return browserName + "_" + BROWSER_IN;
+        return browserName + "_" + START_IN;
     }
 }
