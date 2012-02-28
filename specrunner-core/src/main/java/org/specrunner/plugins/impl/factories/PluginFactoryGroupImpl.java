@@ -47,4 +47,16 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
         }
         return group.getNormalized();
     }
+
+    @Override
+    public String getAlias(Class<? extends IPlugin> type) {
+        String result = null;
+        for (IPluginFactory pf : getChildren()) {
+            result = pf.getAlias(type);
+            if (result != null) {
+                break;
+            }
+        }
+        return result;
+    }
 }

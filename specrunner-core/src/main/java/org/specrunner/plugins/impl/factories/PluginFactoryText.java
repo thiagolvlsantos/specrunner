@@ -58,4 +58,8 @@ public class PluginFactoryText implements IPluginFactory {
         return PluginNop.emptyPlugin();
     }
 
+    @Override
+    public String getAlias(Class<? extends IPlugin> type) {
+        return null;
+    }
 }

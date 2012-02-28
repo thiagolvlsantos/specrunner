@@ -32,6 +32,10 @@ import org.specrunner.util.IPresentation;
 public class Status implements Comparable<Status>, IPresentation {
 
     /**
+     * Ignored: is not error, has importance -1.
+     */
+    public static final Status IGNORED = new Status("ignored", false, -1);
+    /**
      * Info: is not error, has importance 0.
      */
     public static final Status INFO = new Status("info", false, 0);
