@@ -147,7 +147,7 @@
 }
 
 /* ENUM */
-.data_list:before,.data_map:before {
+.list:before,.map:before {
 	border-top: 1px solid #EDEDED;
 	border-left: 1px solid #EDEDED;
 	border-right: 1px solid #969696;
@@ -158,10 +158,10 @@
 	background-color: white;
 }
 
-.data_list:before {
+.list:before {
 	content: "list " attr(name) " " attr(scope);
 }
 
-.data_map:before {
+.map:before {
 	content: "map " attr(name) " " attr(scope);
 }

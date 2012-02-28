@@ -1,26 +1,26 @@
 Browser default.
 <p>
-Start <span class="jetty_start" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> then
+Start <span class="jettyStart" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> then
 <!-- connection="org.specrunner.browser.impl.WebConnectionLogging" --> 
 <!-- connection="org.specrunner.browser.impl.WebConnectionFile" --> 
 <span class="browser" version="FIREFOX_3_6" reuse="false" connection="org.specrunner.browser.impl.WebConnectionFile">
 <span class="size" condition='!browser_type.equals("HtmlUnitDriverLocal")' width="500" height="500">open</span> ${browser_type} 
 </span> 
-browser in <span class="browser_in" provider="org.specrunner.jetty.JettyStringProvider">default location</span>.
+browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvider">default location</span>.
 
 <ul>
     <li>Access '<span class="open">/application</span>';</li>
     <li>The word <span class="contains">Quickstart</span> is present;</li>
-    <li>The word <span class="not_contains">Blueprint</span> is not present;</li>
+    <li>The word <span class="notContains">Blueprint</span> is not present;</li>
     <li><span class="present" by="xpath://title">Title</span> is present;</li>
-    <li>None <span class="not_present" by="xpath://table">table</span> is not present;</li>
+    <li>None <span class="notPresent" by="xpath://table">table</span> is not present;</li>
     <li>There is only <span class="present" by="xpath://title" count="1">one</span> title;</li>
     <li>Check title that might be '<span class="compare" by="xpath://title">Wicket Quickstart Archetype Homepage</span>';</li>
     <li>Access '<span class="open">/application/date.jsp</span>';</li>
-    <li>Date information might be '<span class="compare_date" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>';</li>
+    <li>Date information might be '<span class="compareDate" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>';</li>
 	<li>The page contains <span class="contains">Dynamic dates</span>;</li>
-	<li>The page does not contain <span class="not_contains">Static dates</span>;</li>
-    <li>Table information might be :<span class="compare_table" by="xpath://table[@id='tableId']" >
+	<li>The page does not contain <span class="notContains">Static dates</span>;</li>
+    <li>Table information might be :<span class="compareTable" by="xpath://table[@id='tableId']" >
 			<table border=1>
 				<caption>Dynamic dates</caption>
 				<tr>
@@ -74,9 +74,9 @@ browser in <span class="browser_in" provider="org.specrunner.jetty.JettyStringPr
 </ul>
 Checkbox examples:
 <ul>
-	<li>Select all checkboxes <span class="check_all" by="starts:input;@id;check">C1,C2 and C3</span>;</li>
-	<li>Unselect all checkboxes <span class="check_all" by="starts:*;@id;check" status="false">C1,C2 and C3</span>;</li>
-	<li>Select all checkboxes <span class="check_all" by="starts:*;@id;check">C1,C2 and C3</span>;</li>
+	<li>Select all checkboxes <span class="checkAll" by="starts:input;@id;check">C1,C2 and C3</span>;</li>
+	<li>Unselect all checkboxes <span class="checkAll" by="starts:*;@id;check" status="false">C1,C2 and C3</span>;</li>
+	<li>Select all checkboxes <span class="checkAll" by="starts:*;@id;check">C1,C2 and C3</span>;</li>
 	<li>Check if all checks are <span class="checked" by="xpath://input[starts-with(@id,'check')]" checked="true">on</span>;</li>
 	<li>Check if all checks and radio 2 are <span class="checked" title="Set by custom strategy!" by="starts_new:check;rad2" checked="true">on</span>;</li>
 	
@@ -153,7 +153,7 @@ Text field and area examples:
 <ul>
 	<li>Check if text field is <span class="compare" by="name:txtName" value='""'>empty</span>;</li>
 	<li>Type <span class="type" by="name:txtName" value='dt.toString(pattern)'>current date in format 'HH:mm:ss'</span>;</li>
-	<li>Check if the text field value is the <span class="compare_date" by="name:txtName" format="HH:mm:ss" value='dt.toString("HH:mm:ss")'>current date</span>;</li>
+	<li>Check if the text field value is the <span class="compareDate" by="name:txtName" format="HH:mm:ss" value='dt.toString("HH:mm:ss")'>current date</span>;</li>
 
 	<li>Check if text area is '<span class="compare" by="name:areaName">type here</span>';</li>
 	<li>Type <span class="type" by="name:areaName">new value</span> in text area;</li>
@@ -168,4 +168,4 @@ Text field and area examples:
 
 <!-- Perform the same using <a href="other.html" class="include">another strategy</a>. -->
 
-<!--p class="jetty_stop">Stop Jetty</p-->
+<!--p class="jettyStop">Stop Jetty</p-->

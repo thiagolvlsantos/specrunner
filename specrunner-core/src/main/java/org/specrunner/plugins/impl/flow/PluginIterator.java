@@ -56,7 +56,7 @@ import org.specrunner.result.IResultSet;
  * The CSS annotated version would be:
  * 
  * <pre>
- * &lt;table border=1 class="data_map" name="numbers">
+ * &lt;table border=1 class="map" name="numbers">
  * &lt;tr>
  * &lt;th>n&lt;/th>
  * &lt;th>square&lt;/th>
