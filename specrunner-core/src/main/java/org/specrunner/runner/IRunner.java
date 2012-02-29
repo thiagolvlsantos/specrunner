@@ -17,7 +17,7 @@
  */
 package org.specrunner.runner;
 
-import java.util.Set;
+import java.util.List;
 
 import nu.xom.Node;
 
@@ -49,9 +49,10 @@ public interface IRunner {
     /**
      * List of alias that should be ignored by runner.
      * 
-     * @return Ignorable aliases.
+     * @param ignoredAliases
+     *            The alias to be ignored by runner.
      */
-    Set<String> getIgnoredAliases();
+    void setIgnoredAliases(List<String> ignoredAliases);
 
     /**
      * Performs the specification in source.

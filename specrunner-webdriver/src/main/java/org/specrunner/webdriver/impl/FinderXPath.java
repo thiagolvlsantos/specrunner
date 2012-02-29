@@ -115,9 +115,9 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
     /**
      * The search strategy to be used. i.e. <code>by="id:txtName"</code> means
      * find the element whose 'id' is 'txtName'. The 'by' attribute is closely
-     * related to <code>FindexXPath</code> strategy.
+     * related to <code>FindeXPath</code> strategy.
      * <p>
-     * The 'id' type is associated in FindexXPath to the XPath "//*[@id='{0}']",
+     * The 'id' type is associated in FindeXPath to the XPath "//*[@id='{0}']",
      * is means that if you use 'by="id:txtName"', this plugin will lookup the
      * 'id' corresponding XPath, tokenize the content after ':' using ';' as
      * separator and replace '{...}' elements in order. To use another separator
@@ -219,7 +219,7 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
     public String getXPath(IContext context) throws PluginException {
         String format = findStrategy(getType());
         if (format == null) {
-            throw new PluginException("Invalid search strategy '" + getType() + "', see FindexXPath to see options, or registry your pattern using FindexXPath.get().addStrategy(<type>,<pattern>). i.e. if you add FindexXPath.addStrategy(\"class\",\"//*[contains(@class,'${0}')]\") means you can now use 'by=class:any_css'.");
+            throw new PluginException("Invalid search strategy '" + getType() + "', see FindeXPath to see options, or registry your pattern using FindeXPath.get().addStrategy(<type>,<pattern>). i.e. if you add FindeXPath.addStrategy(\"class\",\"//*[contains(@class,'${0}')]\") means you can now use 'by=class:any_css'.");
         }
         String[] args = getArguments(context);
         for (int i = 0; i < args.length; i++) {
