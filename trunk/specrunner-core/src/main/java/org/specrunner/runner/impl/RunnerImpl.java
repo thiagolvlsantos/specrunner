@@ -17,9 +17,9 @@
  */
 package org.specrunner.runner.impl;
 
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import nu.xom.Element;
 import nu.xom.Node;
@@ -60,15 +60,29 @@ import org.specrunner.util.UtilLog;
  */
 public class RunnerImpl implements IRunner {
 
-    private final Set<String> ignoredAliases = new HashSet<String>();
+    private List<String> ignoredAliases = Collections.emptyList();
 
     @Override
-    public Set<String> getIgnoredAliases() {
+    public void setIgnoredAliases(List<String> ignoredAliases) {
+        if (ignoredAliases == null) {
+            this.ignoredAliases = Collections.emptyList();
+        } else {
+            this.ignoredAliases = new LinkedList<String>();
+            for (String s : ignoredAliases) {
+                if (s != null) {
+                    this.ignoredAliases.add(s.toLowerCase());
+                }
+            }
+        }
+    }
+
+    public List<String> getIgnoredAliases() {
         return ignoredAliases;
     }
 
     @Override
     public void run(ISource source, IContext context, IResultSet result) throws RunnerException {
+        setFeature();
         List<ISourceListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(ISourceListener.class);
         // perform before listeners
         for (ISourceListener sl : listeners) {
@@ -92,11 +106,13 @@ public class RunnerImpl implements IRunner {
 
     @Override
     public void run(Node node, IContext context, IResultSet result) throws RunnerException {
+        setFeature();
         local(node, context, result, null);
     }
 
     @Override
     public void run(IPlugin plugin, IContext context, IResultSet result) throws RunnerException {
+        setFeature();
         if (plugin instanceof IPluginGroup) {
             IPluginGroup group = (IPluginGroup) plugin;
             for (IPlugin p : group.getChildren()) {
@@ -107,17 +123,21 @@ public class RunnerImpl implements IRunner {
         }
     }
 
-    protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
+    private void setFeature() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         try {
-            fm.set(IRunner.FEATURE_IGNORED_ALIASES, "ignoredAliases", Set.class, this);
+            fm.set(IRunner.FEATURE_IGNORED_ALIASES, "ignoredAliases", List.class, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
+    }
+
+    protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
         IPlugin plugin = null;
         IBlock block = null;
+        boolean ignored = false;
         try {
             IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
             if (previous == null) {
@@ -129,8 +149,12 @@ public class RunnerImpl implements IRunner {
             // new block for node
             block = context.newBlock(node, plugin);
             String alias = factory.getAlias(plugin.getClass());
-            if (alias != null && ignoredAliases != null && ignoredAliases.contains(alias)) {
-                result.addResult(Status.IGNORED, block, "This plugin has been ignored by our own choice. Ignored plugins:" + ignoredAliases + ". To add, remove, or clear ignored plugins use SpecRunnerServices.get(IRunner.class).getIgnoredAlias() object, or use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList<our alias list>).");
+            if (alias != null && ignoredAliases.contains(alias)) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
+                }
+                result.addResult(Status.IGNORED, block, "This plugin has been ignored by our own choice. Ignored plugins:" + ignoredAliases + ". To set ignored plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)).");
+                ignored = true;
                 return;
             }
 
@@ -236,7 +260,7 @@ public class RunnerImpl implements IRunner {
             // any failure back to specification
             result.addResult(Status.FAILURE, context.newBlock(node, plugin), e);
         } finally {
-            if (block != null) {
+            if (block != null && !ignored) {
                 // remove block from context
                 context.pop();
             }

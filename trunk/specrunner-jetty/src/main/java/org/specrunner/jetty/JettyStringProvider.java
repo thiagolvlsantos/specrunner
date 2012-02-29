@@ -20,27 +20,53 @@ package org.specrunner.jetty;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
+import org.specrunner.features.FeatureManagerException;
+import org.specrunner.features.IFeatureManager;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
 
 public class JettyStringProvider implements IStringProvider {
 
+    public static final String FEATURE_URL = JettyStringProvider.class.getName() + ".url";
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     @Override
     public String newString(IContext context) throws ContextException {
-        Server s = (Server) context.getByName(PluginStartJetty.JETTY_NAME);
-        if (s == null) {
-            throw new ContextException("Jetty server named '" + PluginStartJetty.JETTY_NAME + "' does not exists.");
-        }
-        final int defaultPort = 8080;
-        int port = defaultPort;
-        for (Connector c : s.getConnectors()) {
-            if (c instanceof SelectChannelConnector) {
-                port = c.getPort();
-                break;
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        try {
+            fm.set(FEATURE_URL, "url", String.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
-        return "http://localhost:" + port;
+        if (url == null) {
+            Server s = (Server) context.getByName(PluginStartJetty.JETTY_NAME);
+            if (s == null) {
+                throw new ContextException("Jetty server named '" + PluginStartJetty.JETTY_NAME + "' does not exists.");
+            }
+            final int defaultPort = 8080;
+            int port = defaultPort;
+            for (Connector c : s.getConnectors()) {
+                if (c instanceof SelectChannelConnector) {
+                    port = c.getPort();
+                    break;
+                }
+            }
+            return "http://localhost:" + port;
+        }
+        return url;
     }
 
 }
