@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner-userguide</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.2-SNAPSHOT</version>
         <relativePath>../specrunner-userguide</relativePath>
     </parent>
     <artifactId>specrunner-userguide-hibernate3</artifactId>
