@@ -17,16 +17,21 @@
  */
 package org.specrunner.plugins.impl.text;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import nu.xom.Node;
+import nu.xom.Nodes;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilEvaluator;
-import org.specrunner.util.UtilLog;
 
 /**
  * Replace mapped elements.
@@ -36,7 +41,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginReplacerMap extends PluginReplacerItem {
+public class PluginReplacerMap extends AbstractPlugin {
 
     @Override
     @SuppressWarnings("unchecked")
@@ -48,32 +53,87 @@ public class PluginReplacerMap extends PluginReplacerItem {
 
         Node node = context.getNode();
         String text = node.getValue();
-        String replaced = replaceMap(text, (Map<String, ?>) map);
-        if (UtilLog.LOG.isDebugEnabled() && !text.equals(replaced)) {
-            UtilLog.LOG.debug("replacer_mapping_before>" + text);
-            UtilLog.LOG.debug("replacer_mapping_after>" + replaced + "." + replaced.getClass());
+        Nodes replaced = replaceMap(text, (Map<String, ?>) map);
+        if (replaced.size() > 1) {
+            ParentNode parent = node.getParent();
+            int index = parent.indexOf(node);
+            parent.removeChild(index);
+            for (int i = 0; i < replaced.size(); i++) {
+                parent.insertChild(replaced.get(i), index++);
+            }
         }
-        replaceText(node, context, text, replaced);
         return ENext.DEEP;
     }
 
-    public String replaceMap(String text, Map<String, ?> map) throws PluginException {
-        String result = text;
+    public Nodes replaceMap(String text, Map<String, ?> map) throws PluginException {
+        Nodes nodes = new Nodes();
+        List<String> names = new LinkedList<String>();
         int pos1 = text.indexOf(UtilEvaluator.START_DATA);
-        int pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length());
-        while (pos1 >= 0 & pos2 > pos1) {
-            // escape character
-            if (pos1 > 0 && text.charAt(pos1 - 1) == UtilEvaluator.ESCAPE) {
-                pos1 = text.indexOf(UtilEvaluator.START_DATA, pos2 + 1);
-                pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length());
-                continue;
+        int pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length() + 1);
+        while (pos1 >= 0 && pos2 >= pos1) {
+            String name = text.substring(pos1, pos2 + 1);
+            if (!names.contains(name)) {
+                names.add(name);
             }
-            String content = text.substring(pos1 + UtilEvaluator.START_DATA.length(), pos2);
-            String name = UtilEvaluator.START_DATA + content + UtilEvaluator.END;
-            result = UtilEvaluator.replace(result, name, map.get(content));
             pos1 = text.indexOf(UtilEvaluator.START_DATA, pos2 + 1);
-            pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length());
+            pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length() + 1);
         }
-        return result;
+        for (String name : names) {
+            pos1 = 0;
+            pos2 = text.indexOf(name);
+            while (pos1 >= 0 && pos2 >= 0) {
+                nodes.append(new Text(text.substring(pos1, pos2)));
+                if (pos2 > 0 && text.charAt(pos2 - 1) == UtilEvaluator.ESCAPE) {
+                    nodes.append(new Text(name));
+                } else {
+                    Node n = (Node) map.get(name);
+                    if (n != null) {
+                        if (n instanceof ParentNode) {
+                            ParentNode pn = (ParentNode) n;
+                            for (int i = 0; i < pn.getChildCount(); i++) {
+                                nodes.append(pn.getChild(i).copy());
+                            }
+                        } else {
+                            nodes.append(n.copy());
+                        }
+                    }
+                }
+                pos1 = pos2 + name.length();
+                pos2 = text.indexOf(name, pos1);
+            }
+            nodes.append(new Text(text.substring(pos1, text.length())));
+        }
+        return nodes;
+    }
+
+    private static class Range {
+        private int start;
+        private int end;
+
+        public Range(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public int getStart() {
+            return start;
+        }
+
+        public void setStart(int start) {
+            this.start = start;
+        }
+
+        public int getEnd() {
+            return end;
+        }
+
+        public void setEnd(int end) {
+            this.end = end;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + start + "," + end + ")";
+        }
     }
 }
