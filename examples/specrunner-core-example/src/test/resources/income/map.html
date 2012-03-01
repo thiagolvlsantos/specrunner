@@ -1,0 +1,34 @@
+<html>
+<header> </header>
+<body>
+    <table class="map" name="lista">
+        <tr>
+            <th>Nome</th>
+            <th>Mensagem</th>
+        </tr>
+        <tr>
+            <td>eu</td>
+            <td><ul>
+                    <li>a</li>
+                    <li>b</li>
+                </ul></td>
+        </tr>
+        <tr>
+            <td>tu</td>
+            <td><ul>
+                    <li>1</li>
+                    <li>2</li>
+                </ul></td>
+        </tr>
+    </table>
+
+    <iterator name="lista">
+    <table border=1>
+        <tr>
+            <td>#{Nome}</td>
+            <td>#{Nome}->#{Mensagem}</td>
+        </tr>
+    </table>
+    </iterator>
+</body>
+</html>
