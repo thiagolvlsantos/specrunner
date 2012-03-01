@@ -50,10 +50,8 @@ public class PluginReplacerMap extends AbstractPlugin {
         if (map == null) {
             return ENext.DEEP;
         }
-
         Node node = context.getNode();
-        String text = node.getValue();
-        Nodes replaced = replaceMap(text, (Map<String, ?>) map);
+        Nodes replaced = replaceMap(node.getValue(), (Map<String, Node>) map);
         if (replaced.size() > 1) {
             ParentNode parent = node.getParent();
             int index = parent.indexOf(node);
@@ -65,7 +63,7 @@ public class PluginReplacerMap extends AbstractPlugin {
         return ENext.DEEP;
     }
 
-    public Nodes replaceMap(String text, Map<String, ?> map) throws PluginException {
+    public Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
         Nodes nodes = new Nodes();
         List<String> names = new LinkedList<String>();
         int pos1 = text.indexOf(UtilEvaluator.START_DATA);
@@ -86,7 +84,7 @@ public class PluginReplacerMap extends AbstractPlugin {
                 if (pos2 > 0 && text.charAt(pos2 - 1) == UtilEvaluator.ESCAPE) {
                     nodes.append(new Text(name));
                 } else {
-                    Node n = (Node) map.get(name);
+                    Node n = map.get(name);
                     if (n != null) {
                         if (n instanceof ParentNode) {
                             ParentNode pn = (ParentNode) n;
@@ -104,36 +102,5 @@ public class PluginReplacerMap extends AbstractPlugin {
             nodes.append(new Text(text.substring(pos1, text.length())));
         }
         return nodes;
-    }
-
-    private static class Range {
-        private int start;
-        private int end;
-
-        public Range(int start, int end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        public int getStart() {
-            return start;
-        }
-
-        public void setStart(int start) {
-            this.start = start;
-        }
-
-        public int getEnd() {
-            return end;
-        }
-
-        public void setEnd(int end) {
-            this.end = end;
-        }
-
-        @Override
-        public String toString() {
-            return "(" + start + "," + end + ")";
-        }
     }
 }
