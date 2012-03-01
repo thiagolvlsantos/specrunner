@@ -29,6 +29,7 @@ import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
+import org.specrunner.source.resource.positional.Position;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -59,7 +60,12 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
     }
 
     protected void addLinkToFrame(Document document, IResultSet result, Map<String, Object> model) {
-        Nodes nodes = document.query("//body");
+        Nodes nodes = document.query(Position.BODY);
+        // if does not have body, add to root element.
+        if (nodes.size() == 0) {
+            nodes = new Nodes();
+            nodes.append(document.getRootElement());
+        }
         Element body = (Element) nodes.get(0);
         Element div = new Element("div");
         div.addAttribute(new Attribute("class", "sr_frame_link_div"));

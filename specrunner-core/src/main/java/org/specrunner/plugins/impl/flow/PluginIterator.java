@@ -24,11 +24,10 @@ import nu.xom.ParentNode;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.data.IDataList;
-import org.specrunner.plugins.data.IDataMap;
-import org.specrunner.plugins.data.IDataTable;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.impl.data.IDataList;
+import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -98,9 +97,7 @@ public class PluginIterator extends AbstractPluginNamed {
 
         String local = "item_list";
         String pos = "${index}";
-        if (list instanceof IDataTable<?>) {
-            local = "item_table";
-        } else if (list instanceof IDataMap<?>) {
+        if (list instanceof IDataMap<?>) {
             local = "item_map";
         }
 

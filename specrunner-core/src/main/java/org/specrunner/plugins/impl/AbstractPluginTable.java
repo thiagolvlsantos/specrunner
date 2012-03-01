@@ -22,9 +22,7 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.impl.AbstractParametrized;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
@@ -37,20 +35,11 @@ import org.specrunner.util.impl.TableAdapter;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginTable extends AbstractParametrized implements IPlugin {
-
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+public abstract class AbstractPluginTable extends AbstractPluginScoped {
 
     @Override
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("initialize()>" + context.peek());
         }

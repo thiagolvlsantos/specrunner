@@ -27,7 +27,6 @@ import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.text.PluginReplacer;
-import org.specrunner.plugins.impl.text.PluginReplacerList;
 import org.specrunner.plugins.impl.text.PluginReplacerMap;
 
 /**
@@ -42,7 +41,6 @@ public class PluginFactoryText implements IPluginFactory {
         @Override
         protected IPlugin initialValue() {
             IPluginGroup group = new PluginGroupImpl();
-            group.add(new PluginReplacerList());
             group.add(new PluginReplacerMap());
             group.add(new PluginReplacer());
             return group;
