@@ -1,6 +1,5 @@
 #summary Quais serão os próximos passos do SpecRunner?
 #labels Featured
 
-  * Publicar no Maven;
   * Incrementar a Wiki;
   * Escrever para revistas.
