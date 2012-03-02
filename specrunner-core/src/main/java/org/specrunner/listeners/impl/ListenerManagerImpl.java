@@ -34,11 +34,6 @@ import org.specrunner.listeners.ISpecRunnerListener;
 @SuppressWarnings("serial")
 public class ListenerManagerImpl extends LinkedList<ISpecRunnerListener> implements IListenerManager {
 
-    public ListenerManagerImpl() {
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-    }
-
     @Override
     public boolean add(ISpecRunnerListener e) {
         // remove repetition

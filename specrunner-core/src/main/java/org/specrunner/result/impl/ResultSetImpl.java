@@ -17,22 +17,20 @@
  */
 package org.specrunner.result.impl;
 
-import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
-import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
-import org.specrunner.util.ExceptionUtil;
-import org.specrunner.util.UtilLog;
 
 /**
  * Default result set implementation.
@@ -80,10 +78,20 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
-    public <T extends Status> List<IResult> filterByStatus(T status) {
+    public <T extends Status> List<IResult> filterByStatus(T... status) {
+        return filterByStatus(0, size(), status);
+    }
+
+    @Override
+    public <T extends Status> List<IResult> filterByStatus(int start, int end, T... status) {
         List<IResult> result = new LinkedList<IResult>();
-        for (IResult t : this) {
-            if (t.getStatus().equals(status)) {
+        Set<Status> valid = new HashSet<Status>();
+        for (int i = 0; i < status.length; i++) {
+            valid.add(status[i]);
+        }
+        for (int i = start; i < end; i++) {
+            IResult t = get(i);
+            if (valid.contains(t.getStatus())) {
                 result.add(t);
             }
         }
@@ -91,8 +99,13 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
-    public <T extends Status> int countStatus(T status) {
-        return filterByStatus(status).size();
+    public <T extends Status> int countStatus(T... status) {
+        return countStatus(0, size(), status);
+    }
+
+    @Override
+    public <T extends Status> int countStatus(int start, int end, T... status) {
+        return filterByStatus(start, end, status).size();
     }
 
     @Override
@@ -169,23 +182,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 sb.append("\t" + status.getName() + " (" + filter.size() + "):\n");
                 for (IResult r : filter) {
                     sb.append("\t\t[" + (++index));
-
-                    IBlock block = r.getBlock();
-                    if (!block.hasNode()) {
-                        IPlugin plugin = block.getPlugin();
-                        sb.append(". on " + plugin + "[" + plugin.getAllParameters() + "]");
-                    }
-
-                    String msg = r.getFailure() != null ? r.getFailure().getMessage() : r.getMessage();
-                    if (UtilLog.LOG.isDebugEnabled() && r.getFailure() != null) {
-                        try {
-                            msg += "\n" + ExceptionUtil.dumpException(r.getFailure());
-                        } catch (IOException e) {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug(e.getMessage(), e);
-                            }
-                        }
-                    }
+                    String msg = r.asString();
                     msg = (msg != null ? msg.replace("\n", "\n\t\t\t") : msg);
                     sb.append("]=" + msg + "\n");
                 }

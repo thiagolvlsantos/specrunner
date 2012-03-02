@@ -28,7 +28,7 @@ import org.specrunner.util.IPresentation;
  * @author Thiago Santos
  * 
  */
-public interface IResultSet extends IStatus, Iterable<IResult>, IPresentation {
+public interface IResultSet extends List<IResult>, IStatus, IPresentation {
 
     /**
      * Lists status in result.
@@ -47,20 +47,46 @@ public interface IResultSet extends IStatus, Iterable<IResult>, IPresentation {
     /**
      * Filters result by status type.
      * 
-     * @param status
-     *            The filter.
+     * @param statuses
+     *            The filters.
      * @return The subset of status.
      */
-    <T extends Status> List<IResult> filterByStatus(T status);
+    <T extends Status> List<IResult> filterByStatus(T... status);
+
+    /**
+     * Filters result by status type.
+     * 
+     * @param start
+     *            Range start.
+     * @param end
+     *            Range end.
+     * @param status
+     *            The filters.
+     * @return The subset of status.
+     */
+    <T extends Status> List<IResult> filterByStatus(int start, int end, T... status);
 
     /**
      * Counts the status of a given type.
      * 
      * @param status
-     *            The filter.
+     *            The filters.
      * @return The number of result.
      */
-    <T extends Status> int countStatus(T status);
+    <T extends Status> int countStatus(T... status);
+
+    /**
+     * Counts the status of a given type.
+     * 
+     * @param start
+     *            Range start.
+     * @param end
+     *            Range end.
+     * @param status
+     *            The filters.
+     * @return The number of result.
+     */
+    <T extends Status> int countStatus(int start, int end, T... status);
 
     /**
      * Add a result.
