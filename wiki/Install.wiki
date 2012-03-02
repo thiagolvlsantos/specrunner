@@ -4,22 +4,13 @@
 = Requisitos =
 Uma versão do Maven >= 3 disponível e parte do PATH do seu ambiente.
 
-= Instalando =
-  * Faça o download a última versão disponível;
-  * Descompacte o arquivo;
-  * Em linha de comando ("DOS",cmd);
-  * Vá para o diretório '*specrunner-all*';
-  * Execute '*mvn clean source:jar install*'.
-
-Obs: Essa é uma solução temporária enquanto o SpecRunner não é publicado em um repositório público Maven (isso já está sendo providenciado).
-
-= Adicionando a um projeto =
+= Uso =
 Adicione a dependência Maven da seguinte forma:
 {{{
 <dependency>
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 }}}
 Ou qualquer um dos outros perfis disponíveis, por exemplo, para usar o WebDriver na especificações:
@@ -27,6 +18,6 @@ Ou qualquer um dos outros perfis disponíveis, por exemplo, para usar o WebDrive
 <dependency>
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner-webdriver</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 }}}
