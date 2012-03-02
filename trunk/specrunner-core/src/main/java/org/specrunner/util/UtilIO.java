@@ -28,6 +28,7 @@ import org.specrunner.source.resource.ResourceException;
 public final class UtilIO {
 
     public static final int BUFFER_SIZE = 1024;
+    private static final int READ_SIZE = 12;
 
     private UtilIO() {
     }
@@ -123,6 +124,16 @@ public final class UtilIO {
                     }
                 }
             }
+        }
+    }
+
+    public static void pressKey() throws IOException {
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") read keybord (press 'Enter' to go on)...");
+        }
+        System.in.read(new byte[READ_SIZE]);
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") done...");
         }
     }
 }

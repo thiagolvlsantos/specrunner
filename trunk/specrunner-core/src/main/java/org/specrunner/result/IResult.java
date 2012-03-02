@@ -18,6 +18,7 @@
 package org.specrunner.result;
 
 import org.specrunner.context.IBlock;
+import org.specrunner.util.IPresentation;
 
 /**
  * A individual result.
@@ -25,7 +26,7 @@ import org.specrunner.context.IBlock;
  * @author Thiago Santos
  * 
  */
-public interface IResult extends IStatus {
+public interface IResult extends IStatus, IPresentation {
 
     /**
      * Block related to this result.

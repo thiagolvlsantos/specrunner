@@ -51,7 +51,10 @@ import org.specrunner.features.impl.FeatureManagerImpl;
 import org.specrunner.impl.SpecRunnerFactoryImpl;
 import org.specrunner.impl.SpecRunnerImpl;
 import org.specrunner.listeners.IListenerManager;
+import org.specrunner.listeners.impl.FailurePausePluginListener;
 import org.specrunner.listeners.impl.ListenerManagerImpl;
+import org.specrunner.listeners.impl.ProfilerPluginListener;
+import org.specrunner.listeners.impl.ProfilerSourceListener;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
 import org.specrunner.plugins.impl.factories.PluginFactoryCustom;
@@ -140,7 +143,11 @@ public final class SpecRunnerServices {
 
         bind(IStringAlignerFactory.class, new StringAlignerFactoryImpl());
 
-        bind(IListenerManager.class, new ListenerManagerImpl());
+        IListenerManager lm = new ListenerManagerImpl();
+        lm.add(new ProfilerSourceListener());
+        lm.add(new ProfilerPluginListener());
+        lm.add(new FailurePausePluginListener());
+        bind(IListenerManager.class, lm);
 
         bind(IReusableManager.class, new ReusableManagerImpl());
 

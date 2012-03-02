@@ -17,10 +17,18 @@
  */
 package org.specrunner.result.impl;
 
+import java.io.IOException;
+
+import nu.xom.Node;
+import nu.xom.Text;
+
 import org.specrunner.context.IBlock;
+import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
+import org.specrunner.util.ExceptionUtil;
+import org.specrunner.util.UtilLog;
 
 /**
  * Default result implementation.
@@ -67,6 +75,32 @@ public class ResultImpl implements IResult {
     @Override
     public IWritable getWritable() {
         return writable;
+    }
+
+    @Override
+    public String asString() {
+        String msg1 = "";
+        if (!source.hasNode()) {
+            IPlugin plugin = source.getPlugin();
+            msg1 = ". on " + plugin + "[" + plugin.getAllParameters() + "]";
+        }
+
+        String msg2 = getFailure() != null ? getFailure().getMessage() : getMessage();
+        if (UtilLog.LOG.isDebugEnabled() && getFailure() != null) {
+            try {
+                msg2 += "\n" + ExceptionUtil.dumpException(getFailure());
+            } catch (IOException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        }
+        return msg1 + msg2;
+    }
+
+    @Override
+    public Node asNode() {
+        return new Text(asString());
     }
 
     @Override

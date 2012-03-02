@@ -25,6 +25,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -35,7 +36,6 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginPause extends AbstractPlugin {
 
-    private static final int SIZE = 12;
     private Long time;
 
     /**
@@ -74,13 +74,7 @@ public class PluginPause extends AbstractPlugin {
             }
         } else {
             try {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") read keybord (press 'Enter' to go on)...");
-                }
-                System.in.read(new byte[SIZE]);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") done...");
-                }
+                UtilIO.pressKey();
                 result.addResult(Status.SUCCESS, context.peek());
             } catch (IOException e) {
                 result.addResult(Status.FAILURE, context.peek(), e);
