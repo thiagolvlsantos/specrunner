@@ -59,6 +59,7 @@ public class SourceFactoryImpl implements ISourceFactory {
             HTMLConfiguration config = new HTMLConfiguration();
             SAXParserLocal neko = new SAXParserLocal(config);
             neko.setFeature("http://xml.org/sax/features/namespaces", false);
+            neko.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
             neko.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
             neko.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
             neko.setProperty("http://cyberneko.org/html/properties/default-encoding", "ISO-8859-1");
