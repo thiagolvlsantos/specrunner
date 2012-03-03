@@ -22,6 +22,7 @@ import java.util.Stack;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.ISourceListener;
 import org.specrunner.result.IResultSet;
+import org.specrunner.source.ISource;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -40,20 +41,20 @@ public class ProfilerSourceListener implements ISourceListener {
     }
 
     @Override
-    public IContext getContext() {
-        return null;
+    public void reset() {
+        timeStart.clear();
     }
 
     @Override
-    public void onBefore(IContext context, IResultSet result) {
+    public void onBefore(ISource source, IContext context, IResultSet result) {
         timeStart.push(System.currentTimeMillis());
     }
 
     @Override
-    public void onAfter(IContext context, IResultSet result) {
+    public void onAfter(ISource source, IContext context, IResultSet result) {
         long time = (System.currentTimeMillis() - timeStart.pop());
         if (UtilLog.LOG.isInfoEnabled() && time > 0) {
-            UtilLog.LOG.info("Source '" + context.getSources().peek().getString() + "' performed in " + time + "mls.");
+            UtilLog.LOG.info("Source '" + source.getString() + "' performed in " + time + "mls.");
         }
     }
 

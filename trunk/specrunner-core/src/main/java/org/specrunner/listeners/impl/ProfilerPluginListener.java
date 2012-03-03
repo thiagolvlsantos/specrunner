@@ -21,6 +21,7 @@ import java.util.Stack;
 
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.IPluginListener;
+import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 
@@ -43,17 +44,19 @@ public class ProfilerPluginListener implements IPluginListener {
     }
 
     @Override
-    public IContext getContext() {
-        return null;
+    public void reset() {
+        timeInit.clear();
+        timeStart.clear();
+        timeEnd.clear();
     }
 
     @Override
-    public void onBeforeInit(IContext context, IResultSet result) {
+    public void onBeforeInit(IPlugin plugin, IContext context, IResultSet result) {
         timeInit.push(System.currentTimeMillis());
     }
 
     @Override
-    public void onAfterInit(IContext context, IResultSet result) {
+    public void onAfterInit(IPlugin plugin, IContext context, IResultSet result) {
         long time = (System.currentTimeMillis() - timeInit.pop());
         if (UtilLog.LOG.isDebugEnabled() && time > TRESHOLD) {
             UtilLog.LOG.debug("initialize(): " + time + "mls. On " + context.getPlugin());
@@ -61,12 +64,12 @@ public class ProfilerPluginListener implements IPluginListener {
     }
 
     @Override
-    public void onBeforeStart(IContext context, IResultSet result) {
+    public void onBeforeStart(IPlugin plugin, IContext context, IResultSet result) {
         timeStart.push(System.currentTimeMillis());
     }
 
     @Override
-    public void onAfterStart(IContext context, IResultSet result) {
+    public void onAfterStart(IPlugin plugin, IContext context, IResultSet result) {
         long time = (System.currentTimeMillis() - timeStart.pop());
         if (UtilLog.LOG.isDebugEnabled() && time > TRESHOLD) {
             UtilLog.LOG.debug("doStart(): " + time + "mls. On " + context.getPlugin());
@@ -74,12 +77,12 @@ public class ProfilerPluginListener implements IPluginListener {
     }
 
     @Override
-    public void onBeforeEnd(IContext context, IResultSet result) {
+    public void onBeforeEnd(IPlugin plugin, IContext context, IResultSet result) {
         timeEnd.push(System.currentTimeMillis());
     }
 
     @Override
-    public void onAfterEnd(IContext context, IResultSet result) {
+    public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
         long time = (System.currentTimeMillis() - timeEnd.pop());
         if (UtilLog.LOG.isDebugEnabled() && time > TRESHOLD) {
             UtilLog.LOG.debug("  doEnd(): " + time + "mls. On " + context.getPlugin());

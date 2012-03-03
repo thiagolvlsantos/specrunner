@@ -19,6 +19,7 @@ package org.specrunner.listeners;
 
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
+import org.specrunner.source.ISource;
 
 /**
  * A generic source listener.
@@ -36,7 +37,7 @@ public interface ISourceListener extends ISpecRunnerListener {
      * @param result
      *            A result set.
      */
-    void onBefore(IContext context, IResultSet result);
+    void onBefore(ISource source, IContext context, IResultSet result);
 
     /**
      * To be performed after a source execution.
@@ -46,5 +47,5 @@ public interface ISourceListener extends ISpecRunnerListener {
      * @param result
      *            A result set.
      */
-    void onAfter(IContext context, IResultSet result);
+    void onAfter(ISource source, IContext context, IResultSet result);
 }
