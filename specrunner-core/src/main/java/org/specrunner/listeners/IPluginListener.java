@@ -18,6 +18,7 @@
 package org.specrunner.listeners;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -29,15 +30,15 @@ import org.specrunner.result.IResultSet;
  */
 public interface IPluginListener extends ISpecRunnerListener {
 
-    void onBeforeInit(IContext context, IResultSet result);
+    void onBeforeInit(IPlugin plugin, IContext context, IResultSet result);
 
-    void onAfterInit(IContext context, IResultSet result);
+    void onAfterInit(IPlugin plugin, IContext context, IResultSet result);
 
-    void onBeforeStart(IContext context, IResultSet result);
+    void onBeforeStart(IPlugin plugin, IContext context, IResultSet result);
 
-    void onAfterStart(IContext context, IResultSet result);
+    void onAfterStart(IPlugin plugin, IContext context, IResultSet result);
 
-    void onBeforeEnd(IContext context, IResultSet result);
+    void onBeforeEnd(IPlugin plugin, IContext context, IResultSet result);
 
-    void onAfterEnd(IContext context, IResultSet result);
+    void onAfterEnd(IPlugin plugin, IContext context, IResultSet result);
 }

@@ -28,7 +28,7 @@ import org.specrunner.dumper.impl.SourceDumperWritables;
 import org.specrunner.htmlunit.AbstractPluginBrowserAware;
 import org.specrunner.htmlunit.PluginBrowser;
 import org.specrunner.htmlunit.util.WritablePage;
-import org.specrunner.listeners.IPluginListener;
+import org.specrunner.listeners.impl.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.result.IResultSet;
@@ -42,17 +42,15 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public class PageListener implements IPluginListener {
+public class PageListener extends AbstractPluginListener {
 
     private static final Status DETAIL_STATUS = Status.newStatus("detail", false, -1);
     private final Map<String, Object> info = new HashMap<String, Object>();
 
     private final String name;
-    private final IContext context;
 
-    public PageListener(String name, IContext context) {
+    public PageListener(String name) {
         this.name = name;
-        this.context = context;
         info.put(SourceDumperWritables.LABEL_FIELD, "(" + name + ")");
     }
 
@@ -62,32 +60,12 @@ public class PageListener implements IPluginListener {
     }
 
     @Override
-    public IContext getContext() {
-        return context;
+    public void reset() {
+        // nothing
     }
 
     @Override
-    public void onBeforeInit(IContext context, IResultSet result) {
-    }
-
-    @Override
-    public void onAfterInit(IContext context, IResultSet result) {
-    }
-
-    @Override
-    public void onBeforeStart(IContext context, IResultSet result) {
-    }
-
-    @Override
-    public void onAfterStart(IContext context, IResultSet result) {
-    }
-
-    @Override
-    public void onBeforeEnd(IContext context, IResultSet result) {
-    }
-
-    @Override
-    public void onAfterEnd(IContext context, IResultSet result) {
+    public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
         IPlugin p = context.getPlugin();
         if (p instanceof AbstractPluginBrowserAware) {
             String tmp = (String) p.getParameter("name");

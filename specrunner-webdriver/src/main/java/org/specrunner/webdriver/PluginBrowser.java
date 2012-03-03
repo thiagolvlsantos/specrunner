@@ -182,9 +182,9 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         IListenerManager fac = SpecRunnerServices.get(IListenerManager.class);
         if (recording) {
-            fac.add(new PageListener(getName(), context));
+            fac.add(new PageListener(getName()));
         } else {
-            fac.remove(getName(), context);
+            fac.remove(getName());
         }
         IReusableManager reusables = SpecRunnerServices.get(IReusableManager.class);
         if (reuse) {

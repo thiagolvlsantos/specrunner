@@ -32,6 +32,7 @@ import org.specrunner.context.IModel;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
+import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IPluginListener;
 import org.specrunner.listeners.ISourceListener;
 import org.specrunner.plugins.ENext;
@@ -86,7 +87,7 @@ public class RunnerImpl implements IRunner {
         List<ISourceListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(ISourceListener.class);
         // perform before listeners
         for (ISourceListener sl : listeners) {
-            sl.onBefore(context, result);
+            sl.onBefore(source, context, result);
         }
         try {
             // call recursive execution on document root node
@@ -99,7 +100,7 @@ public class RunnerImpl implements IRunner {
         } finally {
             // perform after listeners
             for (ISourceListener sl : listeners) {
-                sl.onAfter(context, result);
+                sl.onAfter(source, context, result);
             }
         }
     }
@@ -135,6 +136,11 @@ public class RunnerImpl implements IRunner {
     }
 
     protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
+        List<INodeListener> nListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
+        // perform before listeners
+        for (INodeListener nl : nListeners) {
+            nl.onBefore(node, context, result);
+        }
         IPlugin plugin = null;
         IBlock block = null;
         boolean ignored = false;
@@ -172,7 +178,7 @@ public class RunnerImpl implements IRunner {
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
             // perform before initialization
             for (IPluginListener sl : listeners) {
-                sl.onBeforeInit(context, result);
+                sl.onBeforeInit(plugin, context, result);
             }
             try {
                 // initialize the plugin
@@ -180,13 +186,13 @@ public class RunnerImpl implements IRunner {
             } finally {
                 // perform after initialization
                 for (IPluginListener sl : listeners) {
-                    sl.onAfterInit(context, result);
+                    sl.onAfterInit(plugin, context, result);
                 }
             }
             if (checkConditional(plugin, context)) {
                 // perform before start
                 for (IPluginListener sl : listeners) {
-                    sl.onBeforeStart(context, result);
+                    sl.onBeforeStart(plugin, context, result);
                 }
                 ENext next = null;
                 try {
@@ -198,7 +204,7 @@ public class RunnerImpl implements IRunner {
                 } finally {
                     // perform after start
                     for (IPluginListener sl : listeners) {
-                        sl.onAfterStart(context, result);
+                        sl.onAfterStart(plugin, context, result);
                     }
                 }
                 if (node != null) {
@@ -230,7 +236,7 @@ public class RunnerImpl implements IRunner {
                 }
                 // perform before end
                 for (IPluginListener sl : listeners) {
-                    sl.onBeforeEnd(context, result);
+                    sl.onBeforeEnd(plugin, context, result);
                 }
                 try {
                     final long time = System.currentTimeMillis();
@@ -241,7 +247,7 @@ public class RunnerImpl implements IRunner {
                 } finally {
                     // perform after end
                     for (IPluginListener sl : listeners) {
-                        sl.onAfterEnd(context, result);
+                        sl.onAfterEnd(plugin, context, result);
                     }
                 }
             } else {
@@ -264,6 +270,10 @@ public class RunnerImpl implements IRunner {
                 // remove block from context
                 context.pop();
             }
+        }
+        // perform after listeners
+        for (INodeListener nl : nListeners) {
+            nl.onAfter(node, context, result);
         }
     }
 

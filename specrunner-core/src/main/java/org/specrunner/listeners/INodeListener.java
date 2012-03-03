@@ -17,35 +17,22 @@
  */
 package org.specrunner.listeners;
 
-import java.util.List;
+import nu.xom.Node;
+
+import org.specrunner.context.IContext;
+import org.specrunner.result.IResultSet;
 
 /**
- * A listeners manager.
+ * Generic node listener. Performs actions before and after plugin
+ * <code>IRunner.run(...)</code> methods.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IListenerManager extends List<ISpecRunnerListener> {
+public interface INodeListener extends ISpecRunnerListener {
 
-    /**
-     * Reset all listeners.
-     */
-    void reset();
+    void onBefore(Node node, IContext context, IResultSet result);
 
-    /**
-     * Remove a listener by its name.
-     * 
-     * @param name
-     *            The name of the listener to be removed.
-     */
-    void remove(String name);
+    void onAfter(Node node, IContext context, IResultSet result);
 
-    /**
-     * Filter listeners by their types.
-     * 
-     * @param type
-     *            The type to be filtered.
-     * @return The listeners of the given type.
-     */
-    <T extends ISpecRunnerListener> List<T> filterByType(Class<T> type);
 }

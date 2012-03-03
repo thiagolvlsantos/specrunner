@@ -38,6 +38,7 @@ import org.specrunner.context.IContextPopulator;
 import org.specrunner.dumper.ISourceDumperFactory;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.listeners.IListenerManager;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultFactory;
 import org.specrunner.result.IResultSet;
@@ -61,7 +62,7 @@ import org.specrunner.util.UtilEvaluator;
 public class SpecRunnerImpl implements ISpecRunner {
 
     public static final String TIME = "time";
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public IResultSet run(String input) throws SpecRunnerException {
@@ -82,6 +83,12 @@ public class SpecRunnerImpl implements ISpecRunner {
 
         // local feature settings
         features.setCfgFeatures(configuration);
+
+        // listeners added
+        IListenerManager listeners = createListenerManager();
+
+        // reset listeners
+        listeners.reset();
 
         // create the source
         ISource source = createSource(input);
@@ -110,6 +117,8 @@ public class SpecRunnerImpl implements ISpecRunner {
         // ----------- METAVARIABLES --------------
         // meta variable 'features'
         context.saveGlobal(UtilEvaluator.asVariable("features"), features);
+        // meta variable 'listeners'
+        context.saveGlobal(UtilEvaluator.asVariable("listeners"), listeners);
         // meta variable 'configuration'
         context.saveGlobal(UtilEvaluator.asVariable("configuration"), configuration);
         // meta variable 'source'
@@ -158,6 +167,10 @@ public class SpecRunnerImpl implements ISpecRunner {
 
     protected IFeatureManager createFeatureManager() {
         return SpecRunnerServices.get(IFeatureManager.class);
+    }
+
+    protected IListenerManager createListenerManager() {
+        return SpecRunnerServices.get(IListenerManager.class);
     }
 
     protected ISource createSource(String input) throws SourceException {
@@ -241,6 +254,12 @@ public class SpecRunnerImpl implements ISpecRunner {
 
         // local feature settings
         features.setCfgFeatures(configuration);
+
+        // listeners added
+        IListenerManager listeners = createListenerManager();
+
+        // reset listeners
+        listeners.reset();
 
         // a plugin runner
         IRunner runner = createRunner(null);
