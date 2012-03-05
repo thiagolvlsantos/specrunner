@@ -40,6 +40,6 @@ public class PluginCompare extends AbstractPluginFindSingle implements IAssertio
         String expected = String.valueOf(tmp);
         String received = element.getText();
         Node node = context.getNode();
-        PluginCompareUtils.compare(expected, received, context.newBlock(node, this), context, result, client);
+        PluginCompareUtils.compare(getNormalized(expected), getNormalized(received), context.newBlock(node, this), context, result, client);
     }
 }

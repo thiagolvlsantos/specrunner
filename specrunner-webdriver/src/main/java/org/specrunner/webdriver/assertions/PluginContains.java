@@ -43,8 +43,8 @@ public class PluginContains extends AbstractPluginFindSingle implements IAsserti
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Object obj = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
-        String value = String.valueOf(obj);
-        String content = element.getText();
+        String value = getNormalized(String.valueOf(obj));
+        String content = getNormalized(element.getText());
         if (test(content, value)) {
             result.addResult(Status.SUCCESS, context.peek());
         } else {

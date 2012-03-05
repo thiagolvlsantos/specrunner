@@ -29,6 +29,7 @@ import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilString;
 
 /**
  * A generic plugin that acts over a webdriver.
@@ -53,12 +54,15 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     private Long maxwait = DEFAULT_MAXWAIT;
 
     /**
+     * Normalized feature.
+     */
+    public static final String FEATURE_NORMALIZED = AbstractPluginBrowserAware.class.getName() + ".normalized";
+    private Boolean normalized = Boolean.TRUE;
+
+    /**
      * Default timeout to finish the action.
      */
     public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
-
-    public AbstractPluginBrowserAware() {
-    }
 
     /**
      * The max time to wait for JavaScript return. Default is '1000'
@@ -88,6 +92,27 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         this.interval = interval;
     }
 
+    /**
+     * If normalized is false, the expected and received String are not compared
+     * using their normalized version (trim+remove extra spaces).
+     * 
+     * @return
+     */
+    public Boolean getNormalized() {
+        return normalized;
+    }
+
+    public void setNormalized(Boolean normalized) {
+        this.normalized = normalized;
+    }
+
+    public String getNormalized(String str) {
+        if (getNormalized()) {
+            return UtilString.normalize(str);
+        }
+        return str;
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
@@ -101,6 +126,13 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         }
         try {
             fh.set(FEATURE_MAXWAIT, "maxwait", Long.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+        try {
+            fh.set(FEATURE_NORMALIZED, "normalized", Boolean.class, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
