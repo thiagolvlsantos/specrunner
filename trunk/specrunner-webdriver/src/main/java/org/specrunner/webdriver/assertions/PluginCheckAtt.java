@@ -27,7 +27,7 @@ import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
- * Check if body or a given element contains a text.
+ * Check if a given attribute element contains a text.
  * 
  * @author Thiago Santos
  * 

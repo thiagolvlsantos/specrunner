@@ -43,6 +43,6 @@ public class PluginAlertCompare extends AbstractPluginAlert implements IAssertio
         String expected = String.valueOf(tmp);
         String received = alert.getText();
         Node node = context.getNode();
-        PluginCompareUtils.compare(expected, received, context.newBlock(node, this), context, result, client);
+        PluginCompareUtils.compare(getNormalized(expected), getNormalized(received), context.newBlock(node, this), context, result, client);
     }
 }

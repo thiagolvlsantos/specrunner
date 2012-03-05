@@ -38,8 +38,9 @@ public class PluginContains extends AbstractPluginFindSingle implements IAsserti
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        String value = context.getNode().getValue();
-        String content = element.asText();
+        Object obj = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        String value = getNormalized(String.valueOf(obj));
+        String content = getNormalized(element.asText());
         if (test(content, value)) {
             result.addResult(Status.SUCCESS, context.peek());
         } else {

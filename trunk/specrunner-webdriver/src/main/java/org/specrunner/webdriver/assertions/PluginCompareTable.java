@@ -163,7 +163,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), true, context);
             String exp = String.valueOf(tmp).trim();
             String rec = received.getText().trim();
-            return PluginCompareUtils.compare(exp, rec, context.newBlock(expected.getElement(), plugin), context, result, client);
+            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getElement(), plugin), context, result, client);
         }
     }
 
