@@ -22,8 +22,34 @@ import org.specrunner.util.impl.TableAdapter;
 
 public class PluginMap extends AbstractPluginTable {
 
+    private Boolean after = false;
+
+    public Boolean getAfter() {
+        return after;
+    }
+
+    public void setAfter(Boolean after) {
+        this.after = after;
+    }
+
     @Override
     public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+        if (!after) {
+            process(context, result, tableAdapter);
+            return ENext.SKIP;
+        } else {
+            return ENext.DEEP;
+        }
+    }
+
+    @Override
+    public void doEnd(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+        if (after) {
+            process(context, result, tableAdapter);
+        }
+    }
+
+    private void process(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         final List<Map<String, Node>> data = new LinkedList<Map<String, Node>>();
         RowAdapter ths = tableAdapter.getRow(0);
         List<RowAdapter> trs = tableAdapter.getRows();
@@ -59,6 +85,5 @@ public class PluginMap extends AbstractPluginTable {
         for (int i = 0; i < ths.getCellsCount(); i++) {
             result.addResult(Status.SUCCESS, context.newBlock(ths.getCell(i).getElement(), this));
         }
-        return ENext.SKIP;
     }
 }
