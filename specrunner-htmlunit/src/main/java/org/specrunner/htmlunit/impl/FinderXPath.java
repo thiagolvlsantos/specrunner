@@ -50,7 +50,7 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         };
     };
 
-    private Map<String, String> strategies = new HashMap<String, String>();
+    private final Map<String, String> strategies = new HashMap<String, String>();
     protected String by;
     protected String separator = ";";
 
@@ -61,6 +61,8 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         addStrategy("class", "//{0}[contains(@class,'{1}')]");
         addStrategy("contains", "//{0}[contains(.,'{1}')]");
         addStrategy("starts", "//{0}[starts-with({1},'{2}')]");
+        addStrategy("ends", "//{0}[ends-with({1},'{2}')]");
+        addStrategy("link", "//a[text()='{0}']");
         addStrategy("xpath", "{0}");
     }
 
