@@ -17,8 +17,6 @@
  */
 package org.specrunner.plugins.impl.text;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import nu.xom.Node;
@@ -65,40 +63,32 @@ public class PluginReplacerMap extends AbstractPlugin {
 
     public Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
         Nodes nodes = new Nodes();
-        List<String> names = new LinkedList<String>();
-        int pos1 = text.indexOf(UtilEvaluator.START_DATA);
-        int pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length() + 1);
-        while (pos1 >= 0 && pos2 >= pos1) {
-            String name = text.substring(pos1, pos2 + 1);
-            if (!names.contains(name)) {
-                names.add(name);
-            }
-            pos1 = text.indexOf(UtilEvaluator.START_DATA, pos2 + 1);
-            pos2 = text.indexOf(UtilEvaluator.END, pos1 + UtilEvaluator.START_DATA.length() + 1);
-        }
-        for (String name : names) {
-            pos1 = 0;
-            pos2 = text.indexOf(name);
-            while (pos1 >= 0 && pos2 >= 0) {
+        int pos1 = 0;
+        int pos2 = text.indexOf(UtilEvaluator.START_DATA);
+        int pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
+        while (pos2 >= 0 & pos3 > pos2) {
+            if (pos2 > pos1) {
                 nodes.append(new Text(text.substring(pos1, pos2)));
-                if (pos2 > 0 && text.charAt(pos2 - 1) == UtilEvaluator.ESCAPE) {
-                    nodes.append(new Text(name));
-                } else {
-                    Node n = map.get(name);
-                    if (n != null) {
-                        if (n instanceof ParentNode) {
-                            ParentNode pn = (ParentNode) n;
-                            for (int i = 0; i < pn.getChildCount(); i++) {
-                                nodes.append(pn.getChild(i).copy());
-                            }
-                        } else {
-                            nodes.append(n.copy());
-                        }
-                    }
-                }
-                pos1 = pos2 + name.length();
-                pos2 = text.indexOf(name, pos1);
             }
+            String name = text.substring(pos2, pos3 + 1);
+            Node n = map.get(name);
+            if (n != null) {
+                if (n instanceof ParentNode) {
+                    ParentNode pn = (ParentNode) n;
+                    for (int i = 0; i < pn.getChildCount(); i++) {
+                        nodes.append(pn.getChild(i).copy());
+                    }
+                } else {
+                    nodes.append(n.copy());
+                }
+            } else {
+                nodes.append(new Text(text.substring(pos2, pos3)));
+            }
+            pos1 = pos3 + 1;
+            pos2 = text.indexOf(UtilEvaluator.START_DATA, pos1);
+            pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
+        }
+        if (pos1 != text.length() + 1) {
             nodes.append(new Text(text.substring(pos1, text.length())));
         }
         return nodes;
