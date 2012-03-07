@@ -67,9 +67,7 @@ public class PluginReplacerMap extends AbstractPlugin {
         int pos2 = text.indexOf(UtilEvaluator.START_DATA);
         int pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
         while (pos2 >= 0 & pos3 > pos2) {
-            if (pos2 > pos1) {
-                nodes.append(new Text(text.substring(pos1, pos2)));
-            }
+            nodes.append(new Text(text.substring(pos1, pos2)));
             String name = text.substring(pos2, pos3 + 1);
             Node n = map.get(name);
             if (n != null) {
