@@ -1,3 +1,0 @@
-#summary Objects plugins
-
-Pending: available [http://code.google.com/p/specrunner/source/browse/#git%2Ftrunk%2Fspecrunner-objects source-code].

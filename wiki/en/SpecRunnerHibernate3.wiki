@@ -1,3 +1,0 @@
-#summary Hibernate3 plugins
-
-Pending: available [http://code.google.com/p/specrunner/source/browse/#git%2Ftrunk%2Fspecrunner-hibernate3 source-code].
