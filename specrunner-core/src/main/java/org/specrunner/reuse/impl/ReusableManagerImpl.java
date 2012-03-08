@@ -34,7 +34,7 @@ public class ReusableManagerImpl extends HashMap<String, IReusable> implements I
     @Override
     public IReusable put(String name, IReusable resource) {
         IReusable ir = get(name);
-        if (ir != null) {
+        if (ir != null && ir.getObject() != resource.getObject()) {
             ir.release();
         }
         return super.put(name, resource);
