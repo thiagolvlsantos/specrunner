@@ -27,6 +27,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
@@ -63,24 +64,41 @@ public final class PluginCompareUtils {
                 result.addResult(Status.FAILURE, block, new DefaultAlignmentException(al));
             }
         } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
             throw new PluginException(e);
         }
     }
 
     public static boolean compareDate(String format, long tolerance, String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         boolean res = true;
+        DateTimeFormatter fmt = null;
         try {
-            DateTimeFormatter fmt = DateTimeFormat.forPattern(format);
-            DateTime dtExpected = fmt.parseDateTime(expected);
-            DateTime dtReceived = fmt.parseDateTime(received);
-            if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= tolerance) {
-                result.addResult(Status.SUCCESS, block);
-            } else {
-                addError(expected, received, block, context, result, client);
-                res = false;
-            }
+            fmt = DateTimeFormat.forPattern(format);
         } catch (Exception e) {
-            addError(expected, received, block, context, result, client);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            result.addResult(Status.FAILURE, block, new PluginException(e));
+            res = false;
+        }
+        if (fmt != null) {
+            try {
+                DateTime dtExpected = fmt.parseDateTime(expected);
+                DateTime dtReceived = fmt.parseDateTime(received);
+                if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= tolerance) {
+                    result.addResult(Status.SUCCESS, block);
+                } else {
+                    addError(expected, received, block, context, result, client);
+                    res = false;
+                }
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                addError(expected, received, block, context, result, client);
+            }
         }
         return res;
     }
