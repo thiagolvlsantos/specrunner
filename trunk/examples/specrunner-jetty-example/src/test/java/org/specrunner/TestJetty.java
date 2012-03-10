@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.android.AndroidDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
@@ -17,6 +16,7 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;
+import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
 import org.specrunner.webdriver.impl.WebDriverFactoryIe;
 
 public class TestJetty {
@@ -43,8 +43,7 @@ public class TestJetty {
     @Test
     public void runJettyChrome() throws Exception {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        System.setProperty("webdriver.chrome.driver", System.getProperty("user.home") + "/AppData/Local/Google/Chrome/Application/chromedriver.exe");
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, ChromeDriver.class.getName());
+        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jetty-crome.html", cfg);
     }
 

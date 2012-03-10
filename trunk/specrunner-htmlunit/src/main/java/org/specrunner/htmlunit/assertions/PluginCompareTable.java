@@ -150,13 +150,13 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
             return compareTable(context, result, page, received, expected.getElement());
         } else if (PluginCompareDate.isDate(expected.getElement())) {
             PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, expected.getElement());
-            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), true, context);
+            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.asText();
             return PluginCompareUtils.compareDate(compare.getFormat(), compare.getTolerance(), exp, rec, context.newBlock(expected.getElement(), plugin), context, result, page);
         } else {
             PluginCompare compare = UtilPlugin.create(context, PluginCompareDate.class, expected.getElement());
-            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), true, context);
+            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp).trim();
             String rec = received.asText().trim();
             return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getElement(), plugin), context, result, page);
