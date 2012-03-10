@@ -459,6 +459,8 @@ public class PluginBrowser extends AbstractPluginScoped {
 
             // print content on error
             client.setPrintContentOnFailingStatusCode(true);
+            client.setThrowExceptionOnFailingStatusCode(false);
+            client.setThrowExceptionOnScriptError(false);
 
             // synchronize Ajax calls
             client.setAjaxController(new NicelyResynchronizingAjaxController());
