@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
@@ -309,9 +310,7 @@ public class PluginConnection extends AbstractPluginValue {
                 }
             } else {
                 if (driver != null && url != null && user != null && password != null) {
-                    String suffix = Thread.currentThread().getName();
-                    suffix = suffix.replace("-", "");
-                    providerInstance = new SimpleDataSource(driver, (threadsafe ? url + suffix : url), user, password);
+                    providerInstance = createProvider();
                 } else {
                     throw new PluginException(PluginConnection.class.getSimpleName() + " must have a provider instance set using feature 'FEATURE_PROVIDER_INSTANCE', a generator of DataSource using feature 'FEATURE_PROVIDER', or connection informations 'driver/url/user/password' passed as attributes or their specific 'FEATURE_...'.");
                 }
@@ -363,5 +362,14 @@ public class PluginConnection extends AbstractPluginValue {
             throw new PluginException("Instance of '" + IDataSourceProvider.class.getName() + "' not found. Use " + PluginConnection.class.getName() + " first.");
         }
         return provider;
+    }
+
+    public IDataSourceProvider createProvider() {
+        String newUrl = url;
+        if (threadsafe) {
+            IConcurrentMapping rm = SpecRunnerServices.get(IConcurrentMapping.class);
+            newUrl = String.valueOf(rm.get("url", newUrl));
+        }
+        return new SimpleDataSource(driver, newUrl, user, password);
     }
 }

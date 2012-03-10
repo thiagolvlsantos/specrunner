@@ -27,6 +27,8 @@ import org.specrunner.annotator.impl.AnnotatorGroupImpl;
 import org.specrunner.annotator.impl.AnnotatorLink;
 import org.specrunner.annotator.impl.AnnotatorStacktrace;
 import org.specrunner.annotator.impl.AnnotatorTitle;
+import org.specrunner.concurrency.IConcurrentMapping;
+import org.specrunner.concurrency.impl.ConcurrentMappingImpl;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.configuration.impl.ConfigurationFactoryImpl;
 import org.specrunner.context.IBlockFactory;
@@ -112,6 +114,8 @@ public final class SpecRunnerServices {
         bind(IConfigurationFactory.class, new ConfigurationFactoryImpl());
 
         bind(IFeatureManager.class, new FeatureManagerImpl());
+
+        bind(IConcurrentMapping.class, new ConcurrentMappingImpl());
 
         bind(IResourceManagerFactory.class, new ResourceManagerFactoryImpl());
 

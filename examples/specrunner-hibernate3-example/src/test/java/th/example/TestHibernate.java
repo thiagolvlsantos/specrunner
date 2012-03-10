@@ -7,12 +7,12 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.hibernate.PluginConfiguration;
 import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ConcurrentJunitRunner;
+import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.util.comparer.impl.AbstractComparatorTime;
 import org.specrunner.util.converter.IConverterManager;
 
-@RunWith(ConcurrentJunitRunner.class)
+@RunWith(ConcurrentRunner.class)
 @Concurrent(threads = 6)
 public class TestHibernate {
 

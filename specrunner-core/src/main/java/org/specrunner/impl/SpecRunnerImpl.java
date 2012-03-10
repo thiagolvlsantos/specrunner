@@ -29,6 +29,7 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.annotator.IAnnotatorFactory;
+import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.ContextException;
@@ -222,7 +223,7 @@ public class SpecRunnerImpl implements ISpecRunner {
     }
 
     private String getNome() {
-        return "(" + Thread.currentThread().getName() + ")";
+        return "(" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ")";
     }
 
     protected void dump(ISource source, IResultSet result, Map<String, Object> info) throws SourceDumperException {

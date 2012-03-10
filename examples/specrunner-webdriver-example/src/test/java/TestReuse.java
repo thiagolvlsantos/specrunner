@@ -6,12 +6,12 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.configuration.impl.ConfigurationFactoryImpl;
 import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ConcurrentJunitRunner;
+import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.WebDriverFactoryIe;
 
-@RunWith(ConcurrentJunitRunner.class)
+@RunWith(ConcurrentRunner.class)
 @Concurrent(threads = 6)
 public class TestReuse {
 
