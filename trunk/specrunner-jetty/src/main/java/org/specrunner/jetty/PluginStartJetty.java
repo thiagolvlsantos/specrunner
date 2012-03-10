@@ -53,7 +53,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     private String file;
 
     public static final String FEATURE_DYNAMIC = PluginStartJetty.class.getName() + ".dynamic";
-    private Boolean dynamic = false;
+    private Boolean dynamic = true;
 
     public static final String FEATURE_PORT = PluginStartJetty.class.getName() + ".port";
     private Integer port;

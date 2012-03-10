@@ -39,10 +39,13 @@ import org.specrunner.webdriver.IWebDriverFactory;
 public class WebDriverFactoryChrome implements IWebDriverFactory {
 
     public static final String FEATURE_CHROME = WebDriverFactoryChrome.class.getName() + ".chrome";
-    private String chrome;
+    protected String chrome;
 
     public static final String FEATURE_DRIVER = WebDriverFactoryChrome.class.getName() + ".driver";
-    private String driver;
+    protected String driver;
+
+    public static final String FEATURE_SWITCHES = WebDriverFactoryChrome.class.getName() + ".switches";
+    protected String switches;
 
     public WebDriverFactoryChrome() {
         String path = System.getProperty("user.home") + "/AppData/Local/Google/Chrome/Application/";
@@ -59,6 +62,13 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         }
         try {
             fm.set(FEATURE_DRIVER, "driver", String.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+        try {
+            fm.set(FEATURE_SWITCHES, "switches", String.class, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -82,6 +92,14 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         this.driver = driver;
     }
 
+    public String getSwitches() {
+        return switches;
+    }
+
+    public void setSwitches(String switches) {
+        this.switches = switches;
+    }
+
     @Override
     public WebDriver create(IContext context) throws PluginException {
         if (UtilLog.LOG.isInfoEnabled()) {
@@ -98,6 +116,9 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         System.setProperty("webdriver.chrome.driver", fDriver.getAbsolutePath());
         DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         capabilities.setCapability("chrome.binary", fChrome.getAbsolutePath());
+        if (switches != null) {
+            capabilities.setCapability("chrome.switches", switches);
+        }
         return new ChromeDriver(capabilities);
     }
 }
