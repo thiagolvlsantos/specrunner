@@ -17,10 +17,10 @@ import org.junit.runners.model.RunnerScheduler;
 /**
  * @author Mathieu Carbou (mathieu.carbou@gmail.com)
  */
-public class ConcurrentJunitRunner extends BlockJUnit4ClassRunner {
+public class ConcurrentRunner extends BlockJUnit4ClassRunner {
     public static final double RATE = 1.5;
 
-    public ConcurrentJunitRunner(final Class<?> klass) throws InitializationError {
+    public ConcurrentRunner(final Class<?> klass) throws InitializationError {
         super(klass);
         setScheduler(new RunnerScheduler() {
             private ExecutorService executorService = Executors.newFixedThreadPool(klass.isAnnotationPresent(Concurrent.class) ? klass.getAnnotation(Concurrent.class).threads() : (int) (Runtime.getRuntime().availableProcessors() * RATE), new NamedThreadFactory(klass.getSimpleName()));

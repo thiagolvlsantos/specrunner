@@ -30,10 +30,10 @@ import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PreInsertEventListener;
 import org.hibernate.mapping.PersistentClass;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.objects.AbstractPluginObject;
 import org.specrunner.objects.PluginObjectManager;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -223,10 +223,7 @@ public class PluginConfiguration extends AbstractPluginValue {
     }
 
     protected void changeUrl(IContext context, Configuration cfg) {
-        Thread current = Thread.currentThread();
-        String suffix = AbstractPluginObject.normalize(current.getName());
-        suffix = suffix.replace("-", "");
-        String url = cfg.getProperty(Environment.URL) + suffix;
+        String url = String.valueOf(SpecRunnerServices.get(IConcurrentMapping.class).get("url", cfg.getProperty(Environment.URL)));
         cfg.setProperty(Environment.URL, url);
         Node node = context.getNode();
         if (node instanceof Element) {

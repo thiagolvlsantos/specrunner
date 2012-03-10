@@ -34,7 +34,7 @@ public final class ConcurrentSuite extends Suite {
                     public Runner runnerForClass(Class<?> testClass) throws Throwable {
                         Concurrent annotation = testClass.getAnnotation(Concurrent.class);
                         if (annotation != null) {
-                            return new ConcurrentJunitRunner(testClass);
+                            return new ConcurrentRunner(testClass);
                         }
                         return null;
                     }
