@@ -37,6 +37,8 @@ public interface IModel<T, U> {
      * @param context
      *            The context.
      * @return The object model.
+     * @throws SpecRunnerException
+     *             On model errors.
      */
     U getObject(IContext context) throws SpecRunnerException;
 
@@ -47,6 +49,8 @@ public interface IModel<T, U> {
      *            The object model.
      * @param context
      *            The context.
+     * @throws SpecRunnerException
+     *             On model errors.
      */
     void setObject(T object, IContext context) throws SpecRunnerException;
 }

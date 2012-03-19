@@ -31,7 +31,7 @@ public interface IResourcePositional extends IResource {
     /**
      * The position to add the resource.
      * 
-     * @return
+     * @return The resource position.
      */
     Position getPosition();
 

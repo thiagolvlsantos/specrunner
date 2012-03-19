@@ -81,6 +81,9 @@ public interface IFeatureManager extends Map<String, Object> {
      * settings. When a instance of a <code>ISpecRunner</code> received a
      * <code>IConfiguration</code>, this is set here as local and at the
      * beginning of a new test execution it can be just replaced.
+     * 
+     * @param cfg
+     *            Set configuration features.
      */
     void setCfgFeatures(IConfiguration cfg);
 }

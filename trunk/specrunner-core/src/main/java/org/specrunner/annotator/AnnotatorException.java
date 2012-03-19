@@ -19,9 +19,16 @@ package org.specrunner.annotator;
 
 import org.specrunner.SpecRunnerException;
 
+/**
+ * Errors on annotation process.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 @SuppressWarnings("serial")
 public class AnnotatorException extends SpecRunnerException {
 
+    // CHECKSTYLE:OFF
     public AnnotatorException() {
         super();
     }
@@ -37,5 +44,5 @@ public class AnnotatorException extends SpecRunnerException {
     public AnnotatorException(String message, Throwable cause) {
         super(message, cause);
     }
-
+    // CHECKSTYLE:ON
 }

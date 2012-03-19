@@ -32,6 +32,8 @@ public interface ISourceListener extends ISpecRunnerListener {
     /**
      * To be performed before start a source execution.
      * 
+     * @param source
+     *            The specification.
      * @param context
      *            A context.
      * @param result
@@ -42,6 +44,8 @@ public interface ISourceListener extends ISpecRunnerListener {
     /**
      * To be performed after a source execution.
      * 
+     * @param source
+     *            The specification.
      * @param context
      *            A context.
      * @param result

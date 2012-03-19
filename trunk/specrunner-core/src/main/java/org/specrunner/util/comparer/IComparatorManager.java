@@ -47,8 +47,8 @@ public interface IComparatorManager {
     /**
      * Gets a comparator by type.
      * 
-     * @param The
-     *            type of object to be compared.
+     * @param type
+     *            The type of object to be compared.
      * @return The comparator, if it exists, null, otherwise.
      */
     IComparator get(Class<?> type);

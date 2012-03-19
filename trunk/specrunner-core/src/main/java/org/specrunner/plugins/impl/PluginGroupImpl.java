@@ -41,11 +41,21 @@ import org.specrunner.util.composite.CompositeImpl;
  */
 public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implements IPluginGroup {
 
-    private Map<String, Object> parameters = new HashMap<String, Object>();
-    private Map<String, Object> allParameters = new HashMap<String, Object>();
+    /**
+     * Map of valid parameters.
+     */
+    private final Map<String, Object> parameters = new HashMap<String, Object>();
+    /**
+     * Map of all parameters set.
+     */
+    private final Map<String, Object> allParameters = new HashMap<String, Object>();
 
     /**
      * Adds a child plugin. No repetition is allowed.
+     * 
+     * @param child
+     *            The child plugin.
+     * @return The group itself.
      */
     @Override
     public IPluginGroup add(IPlugin child) {
@@ -59,6 +69,8 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
      * Returns the normalized version of the group. In case of empty group a
      * singleton instance of PluginNop is returned, and in case of single member
      * group the member is returned.
+     * 
+     * @return The normalized version of the plugin.
      */
     @Override
     public IPlugin getNormalized() {
