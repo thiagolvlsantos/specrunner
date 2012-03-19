@@ -38,11 +38,18 @@
 
     <modules>
         <module>../specrunner-core</module>
+        <!-- basic object mapping -->
         <module>../specrunner-objects</module>
-        <module>../specrunner-hibernate3</module>
+        <!-- Basic database support -->
         <module>../specrunner-sql</module>
-        <module>../specrunner-htmlunit</module>
+        <!-- ORM -->
+        <module>../specrunner-hibernate3</module>
+        <module>../specrunner-jpa</module>
+        <!-- WebServer support -->
         <module>../specrunner-jetty</module>
+        <module>../specrunner-tomcat</module>
+        <!-- Web clients support -->
+        <module>../specrunner-htmlunit</module>
         <module>../specrunner-webdriver</module>
     </modules>
 
@@ -52,6 +59,30 @@
     </properties>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-eclipse-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <additionalBuildcommands>
+                        <buildcommand>com.atlassw.tools.eclipse.checkstyle.CheckstyleBuilder</buildcommand>
+                    </additionalBuildcommands>
+                    <additionalProjectnatures>
+                        <projectnature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</projectnature>
+                    </additionalProjectnatures>
+                    <additionalConfig>
+                        
+                    </additionalConfig>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <configLocation>specrunner_checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

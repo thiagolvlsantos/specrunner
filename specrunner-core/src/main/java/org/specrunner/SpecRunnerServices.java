@@ -205,6 +205,8 @@ public final class SpecRunnerServices {
     /**
      * Shortcut static method to recover a service (thread-safe).
      * 
+     * @param <T>
+     *            A class type.
      * @param clazz
      *            see {@link lookup}.
      * @return see {@link lookup}.
@@ -256,9 +258,24 @@ public final class SpecRunnerServices {
         }
     }
 
+    /**
+     * Shutdown hook thread.
+     * 
+     * @author Thiago Santos.
+     * 
+     */
     private static class ShutDown extends Thread {
+        /**
+         * The services instance to be shutdown.
+         */
         private final SpecRunnerServices shutdown;
 
+        /**
+         * The services instance to shutdown on <code>System.exit(...)</code>.
+         * 
+         * @param shutdown
+         *            The instance.
+         */
         public ShutDown(SpecRunnerServices shutdown) {
             this.shutdown = shutdown;
         }

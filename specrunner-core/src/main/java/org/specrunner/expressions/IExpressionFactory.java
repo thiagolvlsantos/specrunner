@@ -44,6 +44,7 @@ public interface IExpressionFactory {
      *            Runner`s context.
      * @return The corresponding expression.
      * @throws ExpressionException
+     *             On expression errors.
      */
     IExpression create(Object source, IContext context) throws ExpressionException;
 

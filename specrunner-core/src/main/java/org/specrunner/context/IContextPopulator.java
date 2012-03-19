@@ -31,7 +31,7 @@ public interface IContextPopulator {
      * 
      * @param context
      *            The context modified or a new one.
-     * @return
+     * @return The context populated.
      */
     IContext populate(IContext context);
 }

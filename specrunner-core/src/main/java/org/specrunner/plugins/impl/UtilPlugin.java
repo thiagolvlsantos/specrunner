@@ -50,6 +50,8 @@ public final class UtilPlugin {
     /**
      * Equivalent to <code>create(...,false)</code>.
      * 
+     * @param <T>
+     *            A subtype of <code>IPlugin</code>.
      * @param context
      *            The reference context.
      * @param type
@@ -69,13 +71,16 @@ public final class UtilPlugin {
      * evaluated as expressions in the given context and used to set plugin
      * attributes with corresponding names.
      * 
+     * @param <T>
+     *            A subtype of <code>IPlugin</code>.
      * @param context
      *            The reference context.
      * @param type
      *            The plugin type.
      * @param element
      *            The element to be used as reference for plugin creation.
-     * @param true, if initialize() should be called, false, otherwise.
+     * @param initialize
+     *            true, if initialize() should be called, false, otherwise.
      * @return The newly created plugin.
      * @throws PluginException
      *             On plugin creation errors.

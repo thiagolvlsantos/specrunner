@@ -54,6 +54,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      * @return true status must be OK, false otherwise, in which case error
      *         should be set.
      * @throws PluginException
+     *             On operation errors.
      */
     protected abstract boolean operation(Object obj, IContext context) throws PluginException;
 

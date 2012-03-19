@@ -62,6 +62,7 @@ public interface IPlugin extends IParametrized {
      * @param result
      *            The result set.
      * @throws PluginException
+     *             On execution errors.
      */
     void doEnd(IContext context, IResultSet result) throws PluginException;
 }
