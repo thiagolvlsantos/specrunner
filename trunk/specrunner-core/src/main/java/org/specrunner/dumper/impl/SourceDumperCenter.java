@@ -59,6 +59,16 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         }
     }
 
+    /**
+     * Add a link to body.
+     * 
+     * @param document
+     *            The document.
+     * @param result
+     *            The result.
+     * @param model
+     *            The model.
+     */
     protected void addLinkToFrame(Document document, IResultSet result, Map<String, Object> model) {
         Nodes nodes = document.query(Position.BODY);
         // if does not have body, add to root element.

@@ -50,6 +50,14 @@ public class AnnotatorLink implements IAnnotator {
         }
     }
 
+    /**
+     * Add a link to a node.
+     * 
+     * @param node
+     *            The node.
+     * @param errorIndex
+     *            The index number.
+     */
     protected void addLinkToError(Node node, int errorIndex) {
         if (node instanceof ParentNode) {
             ParentNode ele = (ParentNode) node;

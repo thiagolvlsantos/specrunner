@@ -45,11 +45,33 @@ import org.specrunner.util.UtilLog;
 @SuppressWarnings("serial")
 public class ContextImpl extends LinkedList<IBlock> implements IContext {
 
+    /**
+     * Parent index.
+     */
     private static final int PARENT = 1;
+    /**
+     * Node index.
+     */
     private static final int CURRENT = 0;
+    /**
+     * Queue of sources.
+     */
     protected Deque<ISource> sources = new LinkedList<ISource>();
+    /**
+     * The runner.
+     */
     protected IRunner runner;
 
+    /**
+     * Creates a context from a source and a runner.
+     * 
+     * @param source
+     *            The source.
+     * @param runner
+     *            The runner.
+     * @throws ContextException
+     *             On creation errors.
+     */
     public ContextImpl(ISource source, IRunner runner) throws ContextException {
         sources.add(source);
         add(new BlockImpl(null, PluginNop.emptyPlugin(), new HashMap<String, Object>()));
@@ -140,6 +162,15 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         return findNode(PARENT, type);
     }
 
+    /**
+     * Find a node type.
+     * 
+     * @param start
+     *            The start index.
+     * @param type
+     *            The type.
+     * @return The block found.
+     */
     private IBlock findNode(int start, Class<? extends Node> type) {
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
@@ -163,6 +194,15 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         return findPlugin(PARENT, type);
     }
 
+    /**
+     * Find a plugin by type.
+     * 
+     * @param start
+     *            The start index.
+     * @param type
+     *            The type.
+     * @return The block.
+     */
     private IBlock findPlugin(int start, Class<? extends IPlugin> type) {
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
@@ -186,6 +226,15 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         return findName(PARENT, name);
     }
 
+    /**
+     * Find an object by name.
+     * 
+     * @param start
+     *            The start index.
+     * @param name
+     *            The object name.
+     * @return The object.
+     */
     private Object findName(int start, String name) {
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);

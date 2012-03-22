@@ -33,6 +33,10 @@ public interface ISourceDumper {
     /**
      * Extra information to be dumped.
      * 
+     * @param source
+     *            The specification input.
+     * @param result
+     *            The result.
      * @param model
      *            Extra information model.
      * @throws SourceDumperException

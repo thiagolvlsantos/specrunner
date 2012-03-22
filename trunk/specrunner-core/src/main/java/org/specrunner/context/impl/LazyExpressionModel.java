@@ -24,10 +24,27 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
+/**
+ * A model with a object source. This model is evaluated only on runtime.
+ * 
+ * @author Thiago Santos
+ * 
+ * @param <T>
+ *            The return type.
+ */
 public class LazyExpressionModel<T> implements IModel<Object, T> {
 
+    /**
+     * The source of expression.
+     */
     private Object source;
 
+    /**
+     * Creates a lazy model from a source.
+     * 
+     * @param source
+     *            The expression source.
+     */
     public LazyExpressionModel(Object source) {
         this.source = source;
     }

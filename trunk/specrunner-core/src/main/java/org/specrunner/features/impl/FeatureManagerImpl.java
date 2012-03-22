@@ -35,7 +35,13 @@ import org.specrunner.util.UtilLog;
 @SuppressWarnings("serial")
 public class FeatureManagerImpl extends HashMap<String, Object> implements IFeatureManager {
 
+    /**
+     * Set of overrides information.
+     */
     protected Map<String, Boolean> overrides = new HashMap<String, Boolean>();
+    /**
+     * The current configuration.
+     */
     protected IConfiguration cfg;
 
     @Override

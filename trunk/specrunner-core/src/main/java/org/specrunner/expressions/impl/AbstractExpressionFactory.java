@@ -29,8 +29,14 @@ import org.specrunner.expressions.IExpressionFactory;
  * 
  */
 public abstract class AbstractExpressionFactory implements IExpressionFactory {
-    private Map<String, Object> predefinedValues = new HashMap<String, Object>();
-    private Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
+    /**
+     * The set of predefined values.
+     */
+    private final Map<String, Object> predefinedValues = new HashMap<String, Object>();
+    /**
+     * The set of predefined classes.
+     */
+    private final Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
 
     @Override
     public void clearPredefinedValues() {

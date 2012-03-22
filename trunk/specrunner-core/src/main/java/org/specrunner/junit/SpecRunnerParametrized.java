@@ -71,17 +71,51 @@ import org.specrunner.util.UtilLog;
 @RunWith(Parameterized.class)
 public class SpecRunnerParametrized {
 
-    private Entry entry;
+    /**
+     * File entry.
+     */
+    private final Entry entry;
 
+    /**
+     * Creates a instance by entry.
+     * 
+     * @param entry
+     *            The entry.
+     */
     protected SpecRunnerParametrized(Entry entry) {
         this.entry = entry;
     }
 
+    /**
+     * A execution mapping.
+     * 
+     * @author Thiago Santos
+     * 
+     */
     protected static final class Entry {
-        private Object input;
-        private Object output;
-        private IConfiguration cfg;
+        /**
+         * Entry input.
+         */
+        private final Object input;
+        /**
+         * Entry output.
+         */
+        private final Object output;
+        /**
+         * Entry configuration.
+         */
+        private final IConfiguration cfg;
 
+        /**
+         * Creates an entry.
+         * 
+         * @param input
+         *            The input file.
+         * @param output
+         *            The output file.
+         * @param cfg
+         *            The configuration.
+         */
         private Entry(Object input, Object output, IConfiguration cfg) {
             this.input = input;
             this.output = output;
@@ -114,39 +148,149 @@ public class SpecRunnerParametrized {
         }
     }
 
+    /**
+     * Runs a specification.
+     * 
+     * @throws Exception
+     *             On execution errors.
+     */
     @Test
     public void run() throws Exception {
         SpecRunnerJUnit.defaultRun(String.valueOf(entry.input), String.valueOf(entry.output), entry.cfg);
     }
 
+    /**
+     * Filter types.
+     * 
+     * @author Thiago Santos
+     * 
+     */
     enum Filter {
-        STARTWITH, CONTAINS, ENDSWITH;
+        /**
+         * Starts with a string.
+         */
+        STARTWITH,
+        /**
+         * Contains a string.
+         */
+        CONTAINS,
+        /**
+         * Ends with a string.
+         */
+        ENDSWITH;
     }
 
+    /**
+     * Filter files starting with.
+     * 
+     * @param inDir
+     *            Base directory.
+     * @param prefix
+     *            Prefix.
+     * @param outDir
+     *            The output directory.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> startsWith(File inDir, String prefix, File outDir) {
         return startsWith(inDir, prefix, outDir, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
+    /**
+     * Filter files starting with.
+     * 
+     * @param inDir
+     *            Base directory.
+     * @param prefix
+     *            Prefix.
+     * @param outDir
+     *            The output directory.
+     * @param cfg
+     *            A configuration.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> startsWith(File inDir, String prefix, File outDir, IConfiguration cfg) {
         return filter(inDir, prefix, Filter.STARTWITH, outDir, cfg);
     }
 
+    /**
+     * Filter files containing a string.
+     * 
+     * @param inDir
+     *            The base directory.
+     * @param suffix
+     *            The suffix.
+     * @param outDir
+     *            The output directory.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> contains(File inDir, String suffix, File outDir) {
         return contains(inDir, suffix, outDir, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
+    /**
+     * Filter files containing a string.
+     * 
+     * @param inDir
+     *            The base directory.
+     * @param suffix
+     *            The suffix.
+     * @param outDir
+     *            The output directory.
+     * @param cfg
+     *            A configuration.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> contains(File inDir, String suffix, File outDir, IConfiguration cfg) {
         return filter(inDir, suffix, Filter.CONTAINS, outDir, cfg);
     }
 
+    /**
+     * Filter files ending with.
+     * 
+     * @param inDir
+     *            The base directory.
+     * @param suffix
+     *            The suffix.
+     * @param outDir
+     *            The output directory.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> endsWith(File inDir, String suffix, File outDir) {
         return endsWith(inDir, suffix, outDir, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
+    /**
+     * Filter files ending with.
+     * 
+     * @param inDir
+     *            The base directory.
+     * @param suffix
+     *            The suffix.
+     * @param outDir
+     *            The output directory.
+     * @param cfg
+     *            A configuration.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> endsWith(File inDir, String suffix, File outDir, IConfiguration cfg) {
         return filter(inDir, suffix, Filter.ENDSWITH, outDir, cfg);
     }
 
+    /**
+     * Generic filter method.
+     * 
+     * @param inDir
+     *            Base directory.
+     * @param str
+     *            String.
+     * @param filter
+     *            The filter type.
+     * @param outDir
+     *            The output directory.
+     * @param cfg
+     *            A configuration.
+     * @return A collection of entries.
+     */
     protected static Collection<Object[]> filter(File inDir, final String str, final Filter filter, File outDir, IConfiguration cfg) {
         if (!inDir.exists()) {
             throw new IllegalArgumentException("Diretory '" + inDir + "' not found.");
@@ -181,6 +325,13 @@ public class SpecRunnerParametrized {
         return result;
     }
 
+    /**
+     * Merge to different collections.
+     * 
+     * @param lists
+     *            The lists.
+     * @return A merged collection.
+     */
     protected static Collection<Object[]> merge(Collection<Object[]>... lists) {
         List<Object[]> result = new LinkedList<Object[]>();
         if (lists != null) {

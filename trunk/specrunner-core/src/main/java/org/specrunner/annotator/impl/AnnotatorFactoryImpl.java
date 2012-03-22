@@ -29,8 +29,17 @@ import org.specrunner.annotator.IAnnotatorFactory;
  */
 public class AnnotatorFactoryImpl implements IAnnotatorFactory {
 
+    /**
+     * Reused annotator.
+     */
     protected IAnnotator annotator;
 
+    /**
+     * Creates a new annotator factory.
+     * 
+     * @param annotator
+     *            The annotator.
+     */
     public AnnotatorFactoryImpl(IAnnotator annotator) {
         this.annotator = annotator;
     }

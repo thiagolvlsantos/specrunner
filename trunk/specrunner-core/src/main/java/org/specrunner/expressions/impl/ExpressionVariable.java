@@ -30,8 +30,17 @@ import org.specrunner.expressions.IExpression;
  */
 public class ExpressionVariable implements IExpression {
 
-    private String source;
+    /**
+     * The variable name.
+     */
+    private final String source;
 
+    /**
+     * Creates an expression to access a variable.
+     * 
+     * @param source
+     *            The variable name.
+     */
     public ExpressionVariable(String source) {
         this.source = source;
     }

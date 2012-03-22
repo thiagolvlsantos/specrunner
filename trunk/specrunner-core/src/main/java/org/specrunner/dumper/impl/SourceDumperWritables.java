@@ -43,6 +43,9 @@ import org.specrunner.util.UtilLog;
  */
 public class SourceDumperWritables extends AbstractSourceDumperFile {
 
+    /**
+     * Label name.
+     */
     public static final String LABEL_FIELD = "name";
 
     @Override

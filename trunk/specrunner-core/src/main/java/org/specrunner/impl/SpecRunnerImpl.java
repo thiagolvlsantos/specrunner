@@ -62,7 +62,13 @@ import org.specrunner.util.UtilEvaluator;
  */
 public class SpecRunnerImpl implements ISpecRunner {
 
+    /**
+     * Time model information.
+     */
     public static final String TIME = "time";
+    /**
+     * Report date format.
+     */
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -75,6 +81,17 @@ public class SpecRunnerImpl implements ISpecRunner {
         return doRun(input, configuration);
     }
 
+    /**
+     * Perform a specification given by input.
+     * 
+     * @param input
+     *            An input.
+     * @param configuration
+     *            A configuration.
+     * @return The result set.
+     * @throws SpecRunnerException
+     *             On runner errors.
+     */
     protected IResultSet doRun(String input, IConfiguration configuration) throws SpecRunnerException {
         // create a model information
         Map<String, Object> model = createModel();
@@ -156,6 +173,11 @@ public class SpecRunnerImpl implements ISpecRunner {
         return result;
     }
 
+    /**
+     * Creates the default model.
+     * 
+     * @return A model mapping.
+     */
     protected Map<String, Object> createModel() {
         Map<String, Object> model = new HashMap<String, Object>();
         model.put(TIME, System.currentTimeMillis());
@@ -166,70 +188,198 @@ public class SpecRunnerImpl implements ISpecRunner {
         return model;
     }
 
+    /**
+     * Creates a feature manager.
+     * 
+     * @return A manager.
+     */
     protected IFeatureManager createFeatureManager() {
         return SpecRunnerServices.get(IFeatureManager.class);
     }
 
+    /**
+     * Creates a listener manager.
+     * 
+     * @return A manager.
+     */
     protected IListenerManager createListenerManager() {
         return SpecRunnerServices.get(IListenerManager.class);
     }
 
+    /**
+     * Creates a source from input.
+     * 
+     * @param input
+     *            The input name.
+     * @return The source instance.
+     * @throws SourceException
+     *             On source creation errors.
+     */
     protected ISource createSource(String input) throws SourceException {
         return SpecRunnerServices.get(ISourceFactory.class).newSource(input);
     }
 
+    /**
+     * Perform a transformation of a given source.
+     * 
+     * @param source
+     *            The source to be transformed.
+     * @return The transformed source.
+     * @throws SourceException
+     *             On transformation errors.
+     */
     protected ISource transformSource(ISource source) throws SourceException {
         return SpecRunnerServices.get(ITransformer.class).transform(source);
     }
 
+    /**
+     * Add resources to a source.
+     * 
+     * @param source
+     *            The source.
+     * @throws ResourceException
+     *             On resource errors.
+     */
     protected void addResources(ISource source) throws ResourceException {
         IResourceManager manager = source.getManager();
         manager.addDefaultCss();
         manager.addDefaultJs();
     }
 
+    /**
+     * Creates a runner for a source.
+     * 
+     * @param source
+     *            The source.
+     * @return The corresponding runner.
+     * @throws RunnerException
+     *             On creation errors.
+     */
     protected IRunner createRunner(ISource source) throws RunnerException {
         return SpecRunnerServices.get(IRunnerFactory.class).newRunner(source);
     }
 
+    /**
+     * Creates a context based on a source and runner.
+     * 
+     * @param source
+     *            The input.
+     * @param runner
+     *            The runner.
+     * @return Context errors.
+     * @throws ContextException
+     *             On context creation.
+     */
     protected IContext createContext(ISource source, IRunner runner) throws ContextException {
         return SpecRunnerServices.get(IContextFactory.class).newContext(source, runner);
     }
 
+    /**
+     * Populate a context with predefined values.
+     * 
+     * @param context
+     *            The context to be populated.
+     * @return The context populated.
+     * @throws ContextException
+     *             On populate errors.
+     */
     protected IContext populate(IContext context) throws ContextException {
         return SpecRunnerServices.get(IContextPopulator.class).populate(context);
     }
 
+    /**
+     * Create a result instance.
+     * 
+     * @return A result set.
+     */
     protected IResultSet createResult() {
         return SpecRunnerServices.get(IResultFactory.class).newResult();
     }
 
+    /**
+     * Perform the specification source.
+     * 
+     * @param source
+     *            The input source.
+     * @param runner
+     *            The runner.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @throws RunnerException
+     *             On execution errors.
+     */
     protected void perform(ISource source, IRunner runner, IContext context, IResultSet result) throws RunnerException {
         runner.run(source, context, result);
     }
 
+    /**
+     * Creates an annotator instance.
+     * 
+     * @return A annotator.
+     * @throws AnnotatorException
+     *             On creation error.
+     */
     protected IAnnotator createAnnotator() throws AnnotatorException {
         return SpecRunnerServices.get(IAnnotatorFactory.class).newAnnotator();
     }
 
+    /**
+     * Add time information to model.
+     * 
+     * @param info
+     *            The time information.
+     */
     protected void addTimeInfo(Map<String, Object> info) {
         info.put(TIME, System.currentTimeMillis() - (Long) info.get(TIME));
         info.put("date", sdf.format(new Date()));
     }
 
+    /**
+     * Print message before execution.
+     * 
+     * @param input
+     *            The input.
+     */
     protected void messageBefore(String input) {
         System.out.println();
         System.out.println(" Input " + getNome() + ": " + (input != null ? input.replace('/', File.separatorChar) : "null"));
     }
 
+    /**
+     * Thread normalized name.
+     * 
+     * @return The normalized thread named.
+     */
     private String getNome() {
         return "(" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ")";
     }
 
+    /**
+     * Dump the result set and its corresponding resources to the output.
+     * 
+     * @param source
+     *            The specification source.
+     * @param result
+     *            The result set.
+     * @param info
+     *            The model information.
+     * @throws SourceDumperException
+     *             On dumper errors.
+     */
     protected void dump(ISource source, IResultSet result, Map<String, Object> info) throws SourceDumperException {
         SpecRunnerServices.get(ISourceDumperFactory.class).newDumper().dump(source, result, info);
     }
 
+    /**
+     * Message after execution.
+     * 
+     * @param info
+     *            The model information.
+     * @param result
+     *            The result set.
+     */
     protected void messageAfter(Map<String, Object> info, IResultSet result) {
         System.out.printf("Result " + getNome() + ": %s \n", result.asString());
         System.out.printf("    In " + getNome() + ": %d mls \n", info.get(TIME));
@@ -246,6 +396,17 @@ public class SpecRunnerImpl implements ISpecRunner {
         return doRun(plugin, configuration);
     }
 
+    /**
+     * Perform runner.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param configuration
+     *            A configuration.
+     * @return The result set.
+     * @throws SpecRunnerException
+     *             On execution errors.
+     */
     protected IResultSet doRun(IPlugin plugin, IConfiguration configuration) throws SpecRunnerException {
         // create a model information
         Map<String, Object> model = createModel();
@@ -289,6 +450,20 @@ public class SpecRunnerImpl implements ISpecRunner {
         return result;
     }
 
+    /**
+     * Perform errors.
+     * 
+     * @param plugin
+     *            The plugin.
+     * @param runner
+     *            The runner.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @throws RunnerException
+     *             On execution errors.
+     */
     private void perform(IPlugin plugin, IRunner runner, IContext context, IResultSet result) throws RunnerException {
         runner.run(plugin, context, result);
     }

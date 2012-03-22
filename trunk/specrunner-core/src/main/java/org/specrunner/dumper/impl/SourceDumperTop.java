@@ -37,6 +37,9 @@ import org.specrunner.source.ISource;
  */
 public class SourceDumperTop extends AbstractSourceDumperFile {
 
+    /**
+     * KB size.
+     */
     private static final int KBYTES = 1024;
 
     @Override
@@ -53,6 +56,15 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
         appendResources(output);
     }
 
+    /**
+     * Creates a label.
+     * 
+     * @param result
+     *            The result.
+     * @param model
+     *            The model.
+     * @return The label.
+     */
     protected Element createLabel(IResultSet result, Map<String, Object> model) {
         Runtime runtime = Runtime.getRuntime();
         // before information

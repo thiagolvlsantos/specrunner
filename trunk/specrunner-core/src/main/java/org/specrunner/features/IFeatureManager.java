@@ -55,6 +55,9 @@ public interface IFeatureManager extends Map<String, Object> {
      *            The feature name.
      * @param value
      *            The value.
+     * @param override
+     *            true, if the value should overwrite previous values, false,
+     *            otherwise.
      * @return The manager itself.
      */
     IFeatureManager add(String feature, Object value, boolean override);

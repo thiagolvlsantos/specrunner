@@ -29,8 +29,17 @@ import org.specrunner.expressions.IExpression;
  */
 public class ExpressionObject implements IExpression {
 
-    private Object source;
+    /**
+     * The expression source.
+     */
+    private final Object source;
 
+    /**
+     * Creates an expression with a given object.
+     * 
+     * @param source
+     *            The source.
+     */
     public ExpressionObject(Object source) {
         this.source = source;
     }
