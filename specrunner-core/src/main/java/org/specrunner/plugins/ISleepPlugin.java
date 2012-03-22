@@ -34,7 +34,8 @@ public interface ISleepPlugin extends IPlugin {
      * set sleep to '4000' which means the action will wait this time before
      * leaving the ISpecRunner go on.
      * 
-     * @return The sleep time.
+     * @param sleep
+     *            Sleep time.
      */
     void setSleep(Long sleep);
 

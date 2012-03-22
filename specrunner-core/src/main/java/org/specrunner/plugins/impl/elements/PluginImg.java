@@ -45,14 +45,31 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginImg extends AbstractPluginResources {
 
+    /**
+     * Static sequential number.
+     */
     private static int serialNumber;
 
+    /**
+     * The image source.
+     */
     private String src;
 
+    /**
+     * The image source attribute.
+     * 
+     * @return The source.
+     */
     public String getSrc() {
         return src;
     }
 
+    /**
+     * Set source object.
+     * 
+     * @param src
+     *            The image source.
+     */
     public void setSrc(String src) {
         this.src = src;
     }

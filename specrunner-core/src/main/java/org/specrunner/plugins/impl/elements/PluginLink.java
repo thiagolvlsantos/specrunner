@@ -39,21 +39,49 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginLink extends AbstractPluginResources {
 
+    /**
+     * Link type attribute.
+     */
     private String type;
+    /**
+     * Location attribute.
+     */
     private String href;
 
+    /**
+     * Get the type.
+     * 
+     * @return The type.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Set type.
+     * 
+     * @param type
+     *            The type.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Get location.
+     * 
+     * @return The link location.
+     */
     public String getHref() {
         return href;
     }
 
+    /**
+     * Set location.
+     * 
+     * @param href
+     *            The location.
+     */
     public void setHref(String href) {
         this.href = href;
     }
@@ -81,6 +109,11 @@ public class PluginLink extends AbstractPluginResources {
         return ENext.DEEP;
     }
 
+    /**
+     * Check if resource is CSS.
+     * 
+     * @return true, is CSS, false, otherwise.
+     */
     protected boolean isCss() {
         return "text/css".equalsIgnoreCase(type);
     }

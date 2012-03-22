@@ -52,7 +52,7 @@ public interface ITestPlugin extends IPlugin {
     /**
      * Set plugin condition model.
      * 
-     * @param condition
+     * @param model
      *            The plugin condition model.
      */
     void setConditionModel(IModel<Object, Boolean> model);

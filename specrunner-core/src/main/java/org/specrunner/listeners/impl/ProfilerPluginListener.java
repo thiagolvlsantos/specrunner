@@ -33,9 +33,21 @@ import org.specrunner.util.UtilLog;
  */
 public class ProfilerPluginListener implements IPluginListener {
 
+    /**
+     * Threshold to appear in log.
+     */
     private static final int TRESHOLD = 5;
+    /**
+     * Stack of initialization times.
+     */
     private final Stack<Long> timeInit = new Stack<Long>();
+    /**
+     * Stack of start times.
+     */
     private final Stack<Long> timeStart = new Stack<Long>();
+    /**
+     * Stack of end times.
+     */
     private final Stack<Long> timeEnd = new Stack<Long>();
 
     @Override

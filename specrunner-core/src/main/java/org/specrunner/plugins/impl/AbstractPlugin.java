@@ -44,21 +44,39 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
      * Default conditional feature.
      */
     public static final String FEATURE_CONDITION = AbstractPlugin.class.getName() + ".condition";
+    /**
+     * Perform condition.
+     */
     private Boolean condition;
+    /**
+     * Perform condition model.
+     */
     private IModel<Object, Boolean> conditionModel;
 
     /**
      * Default sleep time feature.
      */
     public static final String FEATURE_SLEEP = AbstractPlugin.class.getName() + ".sleep";
+    /**
+     * Plugin sleep time.
+     */
     private Long sleep;
+    /**
+     * Plugin sleep time model.
+     */
     private IModel<Object, Long> sleepModel;
 
     /**
      * Default timeout time feature.
      */
     public static final String FEATURE_TIMEOUT = AbstractPlugin.class.getName() + ".timeout";
+    /**
+     * Plugin timeout.
+     */
     private Long timeout;
+    /**
+     * Plugin timeout model.
+     */
     private IModel<Object, Long> timeoutModel;
 
     @Override
@@ -171,6 +189,19 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
         this.timeoutModel = timeoutModel;
     }
 
+    /**
+     * Set a parameter value.
+     * 
+     * @param <T>
+     *            The plugin type.
+     * @param name
+     *            The name.
+     * @param value
+     *            The value.
+     * @return The plugin instance.
+     * @throws Exception
+     *             On setting errors.
+     */
     @SuppressWarnings("unchecked")
     public <T extends AbstractPlugin> T set(String name, Object value) throws Exception {
         this.setParameter(name, value);

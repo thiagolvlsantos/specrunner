@@ -27,6 +27,9 @@ import org.specrunner.plugins.IPlugin;
  */
 public final class PluginNop extends AbstractPlugin {
 
+    /**
+     * A instance per thread.
+     */
     private static ThreadLocal<IPlugin> instance = new ThreadLocal<IPlugin>() {
         @Override
         protected IPlugin initialValue() {
@@ -34,13 +37,16 @@ public final class PluginNop extends AbstractPlugin {
         };
     };
 
+    /**
+     * Hidden constructor.
+     */
     private PluginNop() {
     }
 
     /**
      * Returns the singleton version of the plugin.
      * 
-     * @return
+     * @return A plugin instance.
      */
     public static IPlugin emptyPlugin() {
         return instance.get();

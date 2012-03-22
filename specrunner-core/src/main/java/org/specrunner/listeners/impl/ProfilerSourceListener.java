@@ -33,6 +33,9 @@ import org.specrunner.util.UtilLog;
  */
 public class ProfilerSourceListener implements ISourceListener {
 
+    /**
+     * Stack of times.
+     */
     private final Stack<Long> timeStart = new Stack<Long>();
 
     @Override

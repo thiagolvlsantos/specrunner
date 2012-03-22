@@ -25,6 +25,12 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.util.UtilLog;
 
+/**
+ * Helper class for resources plugins.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginResources extends AbstractPlugin {
 
     /**
@@ -32,19 +38,41 @@ public abstract class AbstractPluginResources extends AbstractPlugin {
      * disabled.
      */
     public static final String FEATURE_SAVE = AbstractPluginResources.class.getName() + ".save";
+    /**
+     * Set the save status.
+     */
     private Boolean save = null;
 
+    /**
+     * Constructor.
+     */
     protected AbstractPluginResources() {
     }
 
+    /**
+     * Return true, if resources like CSS/JS should saved on error report.
+     * 
+     * @return true, if save is enabled, false, otherwise.
+     */
     public Boolean getSave() {
         return save;
     }
 
+    /**
+     * Set save state.
+     * 
+     * @param save
+     *            The new state.
+     */
     public void setSave(Boolean save) {
         this.save = save;
     }
 
+    /**
+     * Check if save enabled or not.
+     * 
+     * @return true, is save is enabled, false, otherwise.
+     */
     protected boolean isSave() {
         return save == null || save;
     }

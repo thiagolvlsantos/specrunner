@@ -29,8 +29,17 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
+/**
+ * Helper class for setting parametrized objects.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public final class UtilParametrized {
 
+    /**
+     * Hidden constructor.
+     */
     private UtilParametrized() {
     }
 

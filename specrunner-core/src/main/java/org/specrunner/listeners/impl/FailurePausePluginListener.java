@@ -25,14 +25,32 @@ import org.specrunner.util.UtilLog;
  */
 public class FailurePausePluginListener extends AbstractPluginListener {
 
+    /**
+     * Enable pause on errors.
+     */
     public static final String FEATURE_PAUSE_ON_FAILURE = FailurePausePluginListener.class.getName() + ".pauseOnFailure";
+    /**
+     * Set true, to pause on errors.
+     */
     private Boolean pause;
 
+    /**
+     * Enable error dialog on failures.
+     */
     public static final String FEATURE_SHOW_DIALOG = FailurePausePluginListener.class.getName() + ".showDialog";
+    /**
+     * Set true, to show a dialog.
+     */
     private Boolean dialog;
 
+    /**
+     * Auxiliary frame.
+     */
     private JFrame frame;
 
+    /**
+     * Count to check if errors have be added.
+     */
     private int start;
 
     @Override
@@ -40,18 +58,40 @@ public class FailurePausePluginListener extends AbstractPluginListener {
         return "errorListener";
     }
 
+    /**
+     * The pause status.
+     * 
+     * @return true, for pause on errors, false, otherwise.
+     */
     public Boolean getPause() {
         return pause;
     }
 
+    /**
+     * Set pause on errors.
+     * 
+     * @param pause
+     *            true, for pause, false, otherwise.
+     */
     public void setPause(Boolean pause) {
         this.pause = pause;
     }
 
+    /**
+     * The dialog enabled status.
+     * 
+     * @return true, if dialog is enabled, false, otherwise.
+     */
     public Boolean getDialog() {
         return dialog;
     }
 
+    /**
+     * Set the dialog status.
+     * 
+     * @param dialog
+     *            true, to show dialog, false, otherwise.
+     */
     public void setDialog(Boolean dialog) {
         this.dialog = dialog;
     }

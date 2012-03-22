@@ -44,6 +44,9 @@ import org.specrunner.util.aligner.impl.DefaultAlignmentException;
  */
 public final class UtilPlugin {
 
+    /**
+     * Hidden constructor.
+     */
     private UtilPlugin() {
     }
 
