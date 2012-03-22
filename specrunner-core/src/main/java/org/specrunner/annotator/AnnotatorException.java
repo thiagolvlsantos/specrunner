@@ -26,9 +26,9 @@ import org.specrunner.SpecRunnerException;
  * 
  */
 @SuppressWarnings("serial")
+// CHECKSTYLE:OFF
 public class AnnotatorException extends SpecRunnerException {
 
-    // CHECKSTYLE:OFF
     public AnnotatorException() {
         super();
     }
@@ -44,5 +44,5 @@ public class AnnotatorException extends SpecRunnerException {
     public AnnotatorException(String message, Throwable cause) {
         super(message, cause);
     }
-    // CHECKSTYLE:ON
 }
+// CHECKSTYLE:ON

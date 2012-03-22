@@ -36,6 +36,9 @@ import org.specrunner.result.IResultSet;
  */
 public class AnnotatorCss implements IAnnotator {
 
+    /**
+     * Class attribute.
+     */
     public static final String ATTRIBUTE_CSS = "class";
 
     @Override

@@ -55,6 +55,18 @@ public class AnnotatorStacktrace implements IAnnotator {
         }
     }
 
+    /**
+     * Add a stack trace to a node.
+     * 
+     * @param node
+     *            The node.
+     * @param result
+     *            The result.
+     * @param stackIndex
+     *            The start index.
+     * @throws AnnotatorException
+     *             On annotator errors.
+     */
     protected void addStackTrace(Node node, IResult result, int stackIndex) throws AnnotatorException {
         ParentNode parent = node instanceof ParentNode ? (ParentNode) node : node.getParent();
         if (parent == null) {

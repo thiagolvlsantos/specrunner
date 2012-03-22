@@ -35,6 +35,9 @@ import org.specrunner.result.IResultSet;
  */
 public final class SpecRunnerJUnit {
 
+    /**
+     * Hidden constructor.
+     */
     private SpecRunnerJUnit() {
     }
 

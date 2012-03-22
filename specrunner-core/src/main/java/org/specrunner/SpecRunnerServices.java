@@ -101,6 +101,9 @@ import org.specrunner.util.converter.impl.ConverterManagerImpl;
  */
 public final class SpecRunnerServices {
 
+    /**
+     * Instance by thread.
+     */
     private static ThreadLocal<SpecRunnerServices> instance = new ThreadLocal<SpecRunnerServices>();
 
     /**
@@ -108,6 +111,9 @@ public final class SpecRunnerServices {
      */
     private final Map<Class<?>, Object> servicePool = new HashMap<Class<?>, Object>();
 
+    /**
+     * Create a group of services provided by SpecRunner.
+     */
     private SpecRunnerServices() {
         bind(IPropertyLoader.class, new PropertyLoaderImpl());
 
@@ -165,6 +171,8 @@ public final class SpecRunnerServices {
      * instead of <code>@BeforeClass</code>. Features, however, can be set on
      * <code>@BeforeClass</code> without side-effects.
      * 
+     * @param <T>
+     *            The type to be bound.
      * @param clazz
      *            The service type.
      * @param instance
@@ -177,6 +185,8 @@ public final class SpecRunnerServices {
     /**
      * Lookup for a service by its type.
      * 
+     * @param <T>
+     *            The service type.
      * @param clazz
      *            The service type.
      * @return The instance of the given service, or throws
@@ -218,7 +228,7 @@ public final class SpecRunnerServices {
     /**
      * Gets the instanceof of {@link SpecRunnerServices}.
      * 
-     * @return
+     * @return The services instance.
      */
     public static SpecRunnerServices get() {
         if (instance.get() == null) {
@@ -250,6 +260,12 @@ public final class SpecRunnerServices {
         release(instance.get());
     }
 
+    /**
+     * Release reusable resources.
+     * 
+     * @param service
+     *            The service.
+     */
     private static void release(SpecRunnerServices service) {
         IReusableManager rm = service.lookup(IReusableManager.class);
         for (IReusable r : rm.values()) {

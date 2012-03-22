@@ -57,6 +57,18 @@ public class AnnotatorTitle implements IAnnotator {
         }
     }
 
+    /**
+     * Add title to a node based on error.
+     * 
+     * @param node
+     *            The node.
+     * @param message
+     *            The message.
+     * @param error
+     *            The error.
+     * @throws AnnotatorException
+     *             On annotation errors.
+     */
     protected void addTitle(Node node, String message, Throwable error) throws AnnotatorException {
         if (node instanceof Element) {
             Element element = (Element) node;

@@ -28,8 +28,17 @@ import org.specrunner.ISpecRunnerFactory;
  */
 public class SpecRunnerFactoryImpl implements ISpecRunnerFactory {
 
+    /**
+     * The reusable runner.
+     */
     protected ISpecRunner runner;
 
+    /**
+     * Creates a factory with a reusable runner.
+     * 
+     * @param runner
+     *            The runner.
+     */
     public SpecRunnerFactoryImpl(ISpecRunner runner) {
         this.runner = runner;
     }

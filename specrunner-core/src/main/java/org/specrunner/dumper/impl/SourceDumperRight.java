@@ -56,6 +56,15 @@ public class SourceDumperRight extends AbstractSourceDumperFile {
         appendResources(output);
     }
 
+    /**
+     * Creates the label.
+     * 
+     * @param result
+     *            The result.
+     * @param model
+     *            The model.
+     * @return The label element.
+     */
     protected Element createLabel(IResultSet result, Map<String, Object> model) {
         Element body = new Element("body");
         String left = "../../" + (String) model.get(SourceDumperFrame.CENTER_FRAME);

@@ -37,14 +37,35 @@ import org.specrunner.util.UtilLog;
  */
 public class SourceDumperFrame extends AbstractSourceDumperFile {
 
+    /**
+     * Top frame name.
+     */
     public static final String TOP_FRAME = "topFrame";
+    /**
+     * Center frame name.
+     */
     public static final String CENTER_FRAME = "centerFrame";
+    /**
+     * Right frame name.
+     */
     public static final String RIGHT_FRAME = "rightFrame";
 
-    private String topProportion = "115px";
-    private String centerVerticalProportion = "80%";
-    private String centerHorizontalProportion = "90%";
-    private String rightProportion = "10%";
+    /**
+     * Top proportion.
+     */
+    private final String topProportion = "115px";
+    /**
+     * Center vertical proportion.
+     */
+    private final String centerVerticalProportion = "80%";
+    /**
+     * Center horizontal proportion.
+     */
+    private final String centerHorizontalProportion = "90%";
+    /**
+     * Right proportion.
+     */
+    private final String rightProportion = "10%";
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {

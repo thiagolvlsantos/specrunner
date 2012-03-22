@@ -150,8 +150,8 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
      * Search a value by its name, from the most restricted block to the
      * outermost (i.e. the root XML element).
      * 
-     * @param type
-     *            The type.
+     * @param name
+     *            The name.
      * @return The nearest block that matches the type.
      */
     Object getByName(String name);
@@ -160,8 +160,8 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
      * A strict parent search a value by its name, from the most restricted
      * block to the outermost (i.e. the root XML element).
      * 
-     * @param type
-     *            The type.
+     * @param name
+     *            The name.
      * @return The nearest block that matches the type.
      */
     Object getParentByName(String name);

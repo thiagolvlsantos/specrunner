@@ -32,11 +32,33 @@ import org.specrunner.plugins.IPlugin;
  */
 public class BlockImpl implements IBlock {
 
+    /**
+     * Hold if changes have been made to the block.
+     */
     protected boolean changed;
+    /**
+     * The block node.
+     */
     protected Node node;
+    /**
+     * The plugin node.
+     */
     protected IPlugin plugin;
+    /**
+     * The mapping of objects.
+     */
     protected Map<String, Object> map;
 
+    /**
+     * Creates a block with node, plugin and mapping.
+     * 
+     * @param node
+     *            The node.
+     * @param plugin
+     *            The plugin.
+     * @param map
+     *            The mapping.
+     */
     public BlockImpl(Node node, IPlugin plugin, Map<String, Object> map) {
         this.node = node;
         this.plugin = plugin;

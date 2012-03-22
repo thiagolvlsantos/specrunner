@@ -29,8 +29,17 @@ import org.specrunner.dumper.SourceDumperException;
  */
 public class SourceDumperFactoryImpl implements ISourceDumperFactory {
 
-    private ISourceDumper dumper;
+    /**
+     * The reusable dumper.
+     */
+    private final ISourceDumper dumper;
 
+    /**
+     * Creates a factory of reusable dumpers.
+     * 
+     * @param dumper
+     *            The dumper.
+     */
     public SourceDumperFactoryImpl(ISourceDumper dumper) {
         this.dumper = dumper;
     }
