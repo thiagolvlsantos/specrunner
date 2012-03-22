@@ -28,6 +28,9 @@ import org.specrunner.context.IContext;
  */
 public class AbstractPluginScoped extends AbstractPluginNamed {
 
+    /**
+     * The plugin scope.
+     */
     private String scope;
 
     /**

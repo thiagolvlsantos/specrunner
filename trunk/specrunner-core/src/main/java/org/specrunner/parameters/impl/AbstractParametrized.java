@@ -35,8 +35,14 @@ import org.specrunner.util.UtilLog;
  */
 public class AbstractParametrized implements IParametrized {
 
-    private Map<String, Object> parameters = new HashMap<String, Object>();
-    private Map<String, Object> allParameters = new HashMap<String, Object>();
+    /**
+     * Set of valid parameters.
+     */
+    private final Map<String, Object> parameters = new HashMap<String, Object>();
+    /**
+     * Set of all parameters, valid or not.
+     */
+    private final Map<String, Object> allParameters = new HashMap<String, Object>();
 
     @Override
     public Object getParameter(String name) {

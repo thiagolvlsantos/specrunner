@@ -31,8 +31,28 @@ import org.specrunner.result.IResultSet;
  */
 public interface INodeListener extends ISpecRunnerListener {
 
+    /**
+     * Perform some action before building plugin for a given node.
+     * 
+     * @param node
+     *            The node.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onBefore(Node node, IContext context, IResultSet result);
 
+    /**
+     * Perform some action after plugin execution for a given node.
+     * 
+     * @param node
+     *            The node.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onAfter(Node node, IContext context, IResultSet result);
 
 }

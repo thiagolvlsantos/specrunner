@@ -25,6 +25,9 @@ package org.specrunner.plugins.impl;
  */
 public class AbstractPluginNamed extends AbstractPlugin {
 
+    /**
+     * The plugin instance name.
+     */
     private String name;
 
     /**

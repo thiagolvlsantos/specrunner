@@ -29,7 +29,13 @@ import org.specrunner.util.UtilEvaluator;
  * 
  */
 public abstract class AbstractPluginValue extends AbstractPluginScoped {
+    /**
+     * true, of value must be evaluated as expressions, false, otherwise.
+     */
     private boolean eval;
+    /**
+     * Plugin value.
+     */
     private Object value;
 
     /**

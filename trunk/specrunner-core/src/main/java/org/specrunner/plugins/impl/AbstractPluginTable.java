@@ -46,6 +46,15 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
         initialize(context, getTableAdapter(context));
     }
 
+    /**
+     * Gets the table adapter from a table.
+     * 
+     * @param context
+     *            The context.
+     * @return The table adapter.
+     * @throws PluginException
+     *             On creation errors.
+     */
     private TableAdapter getTableAdapter(IContext context) throws PluginException {
         Node element = context.getNode();
         if (UtilLog.LOG.isDebugEnabled()) {
@@ -63,6 +72,16 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
         return table;
     }
 
+    /**
+     * Initialize helper.
+     * 
+     * @param context
+     *            The context.
+     * @param table
+     *            The adapter.
+     * @throws PluginException
+     *             On initialization errors.
+     */
     public void initialize(IContext context, TableAdapter table) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("initialize(table)>" + context.peek());
@@ -77,6 +96,19 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
         return doStart(context, result, getTableAdapter(context));
     }
 
+    /**
+     * Perform the plugin start action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param tableAdapter
+     *            The adapter.
+     * @return The next action to be taken.
+     * @throws PluginException
+     *             On plugin errors.
+     */
     public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("doStart(table)>" + context.peek());
@@ -92,6 +124,18 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
         doEnd(context, result, getTableAdapter(context));
     }
 
+    /**
+     * Perform an ending action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param tableAdapter
+     *            The adapter.
+     * @throws PluginException
+     *             On plugin errors.
+     */
     public void doEnd(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("doEnd(table)>" + context.peek());

@@ -33,6 +33,7 @@ public interface ITimedPlugin extends IPlugin {
      * Set the plugin timeout.
      * 
      * @param timeout
+     *            The plugin timeout.
      */
     void setTimeout(Long timeout);
 

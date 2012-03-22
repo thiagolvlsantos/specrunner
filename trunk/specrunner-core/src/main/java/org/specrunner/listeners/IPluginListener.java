@@ -30,15 +30,75 @@ import org.specrunner.result.IResultSet;
  */
 public interface IPluginListener extends ISpecRunnerListener {
 
+    /**
+     * Perform some action before plugin initialization.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onBeforeInit(IPlugin plugin, IContext context, IResultSet result);
 
+    /**
+     * Perform some action after plugin initialization.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onAfterInit(IPlugin plugin, IContext context, IResultSet result);
 
+    /**
+     * Perform some action before plugin start.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onBeforeStart(IPlugin plugin, IContext context, IResultSet result);
 
+    /**
+     * Perform some action after plugin start.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onAfterStart(IPlugin plugin, IContext context, IResultSet result);
 
+    /**
+     * Perform some action before plugin ending.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onBeforeEnd(IPlugin plugin, IContext context, IResultSet result);
 
+    /**
+     * Perform some action after plugin ending.
+     * 
+     * @param plugin
+     *            The plugin instance.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     */
     void onAfterEnd(IPlugin plugin, IContext context, IResultSet result);
 }
