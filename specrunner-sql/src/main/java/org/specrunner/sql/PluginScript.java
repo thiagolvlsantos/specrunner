@@ -47,6 +47,7 @@ import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.source.ISource;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -61,36 +62,54 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginScript extends AbstractPluginValue {
 
+    /**
+     * List of scripts to be performed.
+     */
     private URI[] scripts;
 
     /**
      * Sets the script separator on specification. Default is ";".
      */
     public static final String FEATURE_SCRIPT_SEPARATOR = PluginScript.class.getName() + ".scriptseparator";
+    /**
+     * Separator of script names.
+     */
     private String scriptseparator = ";";
 
     /**
      * Sets the SQL command separator. Default is ";".
      */
     public static final String FEATURE_SQL_SEPARATOR = PluginScript.class.getName() + ".separator";
+    /**
+     * The SQL comand separator.
+     */
     private String separator = ";";
 
     /**
-     * Failsafe feature means that on command execution command errors will not
+     * Fail safe feature means that on command execution command errors will not
      * raise errors but warnings instead.
      */
     public static final String FEATURE_FAILSAFE = PluginScript.class.getName() + ".failsafe";
+    /**
+     * Set fail safe state.
+     */
     private Boolean failsafe = false;
 
     /**
      * List of scripts as URIs.
      * 
-     * @return The scrpit list.
+     * @return The script list.
      */
     public URI[] getScripts() {
         return scripts;
     }
 
+    /**
+     * Set scripts.
+     * 
+     * @param scripts
+     *            The scripts.
+     */
     public void setScripts(URI[] scripts) {
         this.scripts = scripts;
     }
@@ -104,6 +123,12 @@ public class PluginScript extends AbstractPluginValue {
         return scriptseparator;
     }
 
+    /**
+     * Set script separator.
+     * 
+     * @param scriptseparator
+     *            The separator.
+     */
     public void setScriptseparator(String scriptseparator) {
         this.scriptseparator = scriptseparator;
     }
@@ -111,12 +136,18 @@ public class PluginScript extends AbstractPluginValue {
     /**
      * The SQL commands separator.
      * 
-     * @return The seperator.
+     * @return The separator.
      */
     public String getSeparator() {
         return separator;
     }
 
+    /**
+     * Sets the SQL command separators.
+     * 
+     * @param separator
+     *            Separator.
+     */
     public void setSeparator(String separator) {
         this.separator = separator;
     }
@@ -131,6 +162,12 @@ public class PluginScript extends AbstractPluginValue {
         return failsafe;
     }
 
+    /**
+     * Set fail safe status.
+     * 
+     * @param failsafe
+     *            Fail safe status.
+     */
     public void setFailsafe(Boolean failsafe) {
         this.failsafe = failsafe;
     }
@@ -262,6 +299,21 @@ public class PluginScript extends AbstractPluginValue {
         return ENext.DEEP;
     }
 
+    /**
+     * Perform script commands.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param connection
+     *            Database connection.
+     * @param script
+     *            Script content.
+     * @return The number of errors.
+     * @throws SQLException
+     *             On SQL errors, only if fail safe is off.
+     */
     protected int perform(IContext context, IResultSet result, Connection connection, Reader script) throws SQLException {
         int failures = 0;
         Statement stmt = null;
@@ -276,7 +328,11 @@ public class PluginScript extends AbstractPluginValue {
                         continue;
                     }
                     if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("On command:" + command);
+                        UtilLog.LOG.info("Command before:" + command);
+                    }
+                    command = UtilEvaluator.replace(command, context);
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info(" Command after:" + command);
                     }
                     try {
                         stmt.executeUpdate(command);

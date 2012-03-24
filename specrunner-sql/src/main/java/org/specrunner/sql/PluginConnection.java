@@ -55,46 +55,71 @@ public class PluginConnection extends AbstractPluginValue {
      * Connection driver.
      */
     public static final String FEATURE_DRIVER = PluginConnection.class.getName() + ".driver";
+    /**
+     * Driver class.
+     */
     private String driver;
     /**
      * Connection url.
      */
     public static final String FEATURE_URL = PluginConnection.class.getName() + ".url";
+    /**
+     * Database connection.
+     */
     private String url;
     /**
      * Connection user.
      */
     public static final String FEATURE_USER = PluginConnection.class.getName() + ".user";
+    /**
+     * Database user.
+     */
     private String user;
     /**
      * Connection password.
      */
     public static final String FEATURE_PASSWORD = PluginConnection.class.getName() + ".password";
+    /**
+     * Database password.
+     */
     private String password;
 
     /**
      * Provider name feature.
      */
     public static final String FEATURE_PROVIDER = PluginConnection.class.getName() + ".provider";
+    /**
+     * Connection provider class name.
+     */
     private String provider;
 
     /**
      * Provider instance feature.
      */
     public static final String FEATURE_PROVIDER_INSTANCE = PluginConnection.class.getName() + ".providerInstance";
+    /**
+     * Datasource provider instance.
+     */
     private IDataSourceProvider providerInstance;
 
     /**
      * Default connection setting for reuse.
      */
     public static final String FEATURE_REUSE = PluginConnection.class.getName() + ".reuse";
+    /**
+     * Set connection as reusable.
+     */
     private Boolean reuse = false;
 
     /**
-     * When using direct connection information, use threadsafe='true' to append
-     * thread name to data base URL.
+     * When threadsafe='true' <code>SpecRunner</code> uses
+     * <code>IConcurrentMapping</code> to resolve database url reference.
      */
     public static final String FEATURE_THREADSAFE = PluginConnection.class.getName() + ".threadsafe";
+    /**
+     * Enable use of <code>IConcurrentMapping</code> to perform thread specific
+     * settings.
+     */
     private Boolean threadsafe = false;
 
     /**
@@ -106,6 +131,12 @@ public class PluginConnection extends AbstractPluginValue {
         return driver;
     }
 
+    /**
+     * Sets the drive.
+     * 
+     * @param driver
+     *            The driver.
+     */
     public void setDriver(String driver) {
         this.driver = driver;
     }
@@ -119,6 +150,12 @@ public class PluginConnection extends AbstractPluginValue {
         return url;
     }
 
+    /**
+     * Sets the URL.
+     * 
+     * @param url
+     *            Database URL.
+     */
     public void setUrl(String url) {
         this.url = url;
     }
@@ -132,6 +169,12 @@ public class PluginConnection extends AbstractPluginValue {
         return user;
     }
 
+    /**
+     * Sets database user.
+     * 
+     * @param user
+     *            The user.
+     */
     public void setUser(String user) {
         this.user = user;
     }
@@ -145,6 +188,12 @@ public class PluginConnection extends AbstractPluginValue {
         return password;
     }
 
+    /**
+     * Sets the database password.
+     * 
+     * @param password
+     *            The database password.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
@@ -158,6 +207,12 @@ public class PluginConnection extends AbstractPluginValue {
         return threadsafe;
     }
 
+    /**
+     * Set thread safe value.
+     * 
+     * @param threadsafe
+     *            Thread safe state.
+     */
     public void setThreadsafe(Boolean threadsafe) {
         this.threadsafe = threadsafe;
     }
@@ -172,6 +227,13 @@ public class PluginConnection extends AbstractPluginValue {
         return provider;
     }
 
+    /**
+     * Sets the datasource provider class name.
+     * 
+     * @param provider
+     *            The class which implements <code>IDataSourceProvider</code>
+     *            provider name.
+     */
     public void setProvider(String provider) {
         this.provider = provider;
     }
@@ -185,6 +247,12 @@ public class PluginConnection extends AbstractPluginValue {
         return providerInstance;
     }
 
+    /**
+     * The instance of data source.
+     * 
+     * @param providerInstance
+     *            The instance.
+     */
     public void setProviderInstance(IDataSourceProvider providerInstance) {
         this.providerInstance = providerInstance;
     }
@@ -199,6 +267,12 @@ public class PluginConnection extends AbstractPluginValue {
         return reuse;
     }
 
+    /**
+     * Set reusable state.
+     * 
+     * @param reuse
+     *            true, for reuse, false, otherwise.
+     */
     public void setReuse(Boolean reuse) {
         this.reuse = reuse;
     }
@@ -353,6 +427,17 @@ public class PluginConnection extends AbstractPluginValue {
         return ENext.DEEP;
     }
 
+    /**
+     * Gets the datasource provider saved in context.
+     * 
+     * @param context
+     *            The context.
+     * @param name
+     *            The datasource provider name.
+     * @return The datasource provider.
+     * @throws PluginException
+     *             On lookup errors.
+     */
     public static IDataSourceProvider getProvider(IContext context, String name) throws PluginException {
         if (name == null) {
             name = CONNECTION_PROVIDER;
@@ -364,6 +449,11 @@ public class PluginConnection extends AbstractPluginValue {
         return provider;
     }
 
+    /**
+     * Creates a given provider.
+     * 
+     * @return The datasource provider.
+     */
     public IDataSourceProvider createProvider() {
         String newUrl = url;
         if (threadsafe) {
