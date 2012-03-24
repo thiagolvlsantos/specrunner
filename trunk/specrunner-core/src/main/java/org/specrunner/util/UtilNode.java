@@ -31,11 +31,24 @@ import org.specrunner.util.impl.TableAdapter;
  */
 public final class UtilNode {
 
+    /**
+     * The CSS attribute name.
+     */
     public static final String ATT_CSS = "class";
 
+    /**
+     * Hidden constructor.
+     */
     private UtilNode() {
     }
 
+    /**
+     * Creates a table adapter for the given node.
+     * 
+     * @param ele
+     *            The element.
+     * @return The adapter.
+     */
     public static TableAdapter newTableAdapter(Element ele) {
         return new TableAdapter(ele);
     }

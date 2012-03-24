@@ -92,7 +92,7 @@ public class AnnotatorStacktrace implements IAnnotator {
             // otherwise print default strack trace
             stack = new Element("pre");
             try {
-                stack.appendChild(ExceptionUtil.dumpException(failure));
+                stack.appendChild(ExceptionUtil.toString(failure));
             } catch (IOException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

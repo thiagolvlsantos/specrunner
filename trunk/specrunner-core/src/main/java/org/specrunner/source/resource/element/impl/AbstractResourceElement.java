@@ -24,9 +24,32 @@ import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.element.IResourceElement;
 import org.specrunner.source.resource.impl.AbstractResource;
 
+/**
+ * Abstract implementation of a resource with a Element counterpart.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractResourceElement extends AbstractResource implements IResourceElement {
+    /**
+     * The related element.
+     */
     private Element element;
 
+    /**
+     * Creates a element resource.
+     * 
+     * @param parent
+     *            The parent source.
+     * @param path
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     * @param element
+     *            The referred element.
+     */
     protected AbstractResourceElement(ISource parent, String path, boolean classpath, EType type, Element element) {
         super(parent, path, classpath, type);
         this.element = element;

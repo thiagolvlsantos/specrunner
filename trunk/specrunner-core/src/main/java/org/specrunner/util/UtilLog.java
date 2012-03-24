@@ -30,9 +30,14 @@ import org.slf4j.LoggerFactory;
  */
 public final class UtilLog {
 
+    /**
+     * Defaut logger instance.
+     */
     public static final Logger LOG = LoggerFactory.getLogger("org.specrunner");
 
+    /**
+     * Hidden constructor.
+     */
     private UtilLog() {
-        super();
     }
 }

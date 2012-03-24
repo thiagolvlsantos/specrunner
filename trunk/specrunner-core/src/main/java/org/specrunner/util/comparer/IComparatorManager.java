@@ -30,8 +30,8 @@ public interface IComparatorManager {
      * 
      * @param name
      *            A name.
-     * @param converter
-     *            A converter.
+     * @param comparator
+     *            A comparator.
      */
     void bind(String name, IComparator comparator);
 

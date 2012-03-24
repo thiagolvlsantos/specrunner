@@ -27,9 +27,23 @@ import org.specrunner.reuse.IReusable;
  */
 public abstract class AbstractReusable implements IReusable {
 
+    /**
+     * A name given to the reusable resource.
+     */
     private String name;
+    /**
+     * The reusable object instance.
+     */
     private Object object;
 
+    /**
+     * Create a reusable resource with name and the object to be reused.
+     * 
+     * @param name
+     *            The name.
+     * @param object
+     *            The reusable object.
+     */
     public AbstractReusable(String name, Object object) {
         this.name = name;
         this.object = object;
@@ -40,8 +54,28 @@ public abstract class AbstractReusable implements IReusable {
         return name;
     }
 
+    /**
+     * Sets the reusable object name.
+     * 
+     * @param name
+     *            The name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public Object getObject() {
         return object;
+    }
+
+    /**
+     * Sets the reusable object.
+     * 
+     * @param object
+     *            The object.
+     */
+    public void setObject(Object object) {
+        this.object = object;
     }
 }

@@ -28,7 +28,7 @@ import org.specrunner.plugins.PluginException;
 public class PluginNotEquals extends PluginEquals {
 
     @Override
-    protected boolean rule(Object reference, Object value) {
+    protected boolean verify(Object reference, Object value) {
         boolean result = !reference.equals(value);
         if (!result) {
             error = new PluginException("Values are equals.");

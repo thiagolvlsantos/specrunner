@@ -11,7 +11,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 public @interface Concurrent {
+
+    /**
+     * Default number of threads.
+     */
     int THREADS = 5;
 
+    /**
+     * Number of threads.
+     */
     int threads() default THREADS;
 }

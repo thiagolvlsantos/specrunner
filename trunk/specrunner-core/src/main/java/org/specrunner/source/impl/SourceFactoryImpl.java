@@ -52,8 +52,14 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class SourceFactoryImpl implements ISourceFactory {
+    /**
+     * Builder of XOM documents.
+     */
     private Builder builder;
 
+    /**
+     * Creates a new source factory using XOM resources.
+     */
     public SourceFactoryImpl() {
         try {
             HTMLConfiguration config = new HTMLConfiguration();
@@ -69,7 +75,19 @@ public class SourceFactoryImpl implements ISourceFactory {
         }
     }
 
+    /**
+     * Local SAX configuration.
+     * 
+     * @author Thiago Santos
+     * 
+     */
     public static class SAXParserLocal extends AbstractSAXParser {
+        /**
+         * Default settings.
+         * 
+         * @param config
+         *            The configuration.
+         */
         public SAXParserLocal(HTMLConfiguration config) {
             super(config);
         }
@@ -169,7 +187,13 @@ public class SourceFactoryImpl implements ISourceFactory {
         });
     }
 
-    // adds the XHTML Doctype to the document if none is specified.
+    /**
+     * Adds the XHTML Doctype to the document if none is specified.
+     * 
+     * @param document
+     *            The document.
+     * @return The document itself.
+     */
     protected Document addDoctype(Document document) {
         if (document.getDocType() == null) {
             // <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">

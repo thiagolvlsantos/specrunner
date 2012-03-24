@@ -31,17 +31,39 @@ import nu.xom.Nodes;
  */
 public class TableAdapter extends ElementHolderImpl {
 
+    /**
+     * List of caption elements.
+     */
     private List<CellAdapter> captions;
+    /**
+     * The list of rows.
+     */
     private List<RowAdapter> rows;
 
+    /**
+     * The table element.
+     * 
+     * @param node
+     *            The table.
+     */
     public TableAdapter(Element node) {
         super(node);
     }
 
+    /**
+     * Gets the XPath for rows.
+     * 
+     * @return The rows XPath.
+     */
     public String getXPath() {
         return "child::tr | child::thead/tr | child::tbody/tr";
     }
 
+    /**
+     * Get captions list.
+     * 
+     * @return The captions list.
+     */
     public List<CellAdapter> getCaptions() {
         if (captions == null) {
             List<CellAdapter> result = new LinkedList<CellAdapter>();
@@ -54,10 +76,20 @@ public class TableAdapter extends ElementHolderImpl {
         return captions;
     }
 
+    /**
+     * The counter of rows.
+     * 
+     * @return The number of rows.
+     */
     public int getRowCount() {
         return getRows().size();
     }
 
+    /**
+     * The rows list.
+     * 
+     * @return The rows list.
+     */
     public List<RowAdapter> getRows() {
         if (rows == null) {
             List<RowAdapter> result = new LinkedList<RowAdapter>();
@@ -70,6 +102,13 @@ public class TableAdapter extends ElementHolderImpl {
         return rows;
     }
 
+    /**
+     * The row given by that index.
+     * 
+     * @param i
+     *            The row index.
+     * @return The row.
+     */
     public RowAdapter getRow(int i) {
         return getRows().get(i);
     }

@@ -22,9 +22,21 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.comparer.IComparator;
 
+/**
+ * Abstract comparator of time objects.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractComparatorTime implements IComparator {
 
+    /**
+     * Feature to set time tolerance.
+     */
     public static final String FEATURE_TOLERANCE = AbstractComparatorTime.class.getName() + ".tolerance";
+    /**
+     * Tolerance for comparations.
+     */
     protected Long tolerance = 0L;
 
     @Override
@@ -39,14 +51,34 @@ public abstract class AbstractComparatorTime implements IComparator {
         }
     }
 
+    /**
+     * Get the time tolerance.
+     * 
+     * @return The time.
+     */
     public Long getTolerance() {
         return tolerance;
     }
 
+    /**
+     * Set time tolerance.
+     * 
+     * @param tolerance
+     *            The tolerance.
+     */
     public void setTolerance(Long tolerance) {
         this.tolerance = tolerance;
     }
 
+    /**
+     * Compare the expected and received.
+     * 
+     * @param left
+     *            The expected time.
+     * @param right
+     *            The received time.
+     * @return true, if acceptable, false, otherwise.
+     */
     protected boolean compare(long left, long right) {
         long gap = Math.max(left, right) - Math.min(left, right);
         return gap <= tolerance;

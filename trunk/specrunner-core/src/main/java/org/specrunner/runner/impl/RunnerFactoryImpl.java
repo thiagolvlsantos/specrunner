@@ -30,8 +30,17 @@ import org.specrunner.source.ISource;
  */
 public class RunnerFactoryImpl implements IRunnerFactory {
 
+    /**
+     * A reusable runner.
+     */
     protected IRunner runner;
 
+    /**
+     * Creates a factory with reusable runner.
+     * 
+     * @param runner
+     *            The runner.
+     */
     public RunnerFactoryImpl(IRunner runner) {
         this.runner = runner;
     }

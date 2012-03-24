@@ -52,32 +52,78 @@ public class Status implements Comparable<Status>, IPresentation {
      */
     public static final Status FAILURE = new Status("failure", true, 3);
 
+    /**
+     * The status name.
+     */
     protected String name;
+    /**
+     * If it stands for an error.
+     */
     protected boolean error;
+    /**
+     * Its priority, for example, FAILURE has higher priority than SUCCESS.
+     */
     protected double importance;
 
+    /**
+     * Creates a status.
+     * 
+     * @param name
+     *            The name.
+     * @param error
+     *            The error flag.
+     * @param importance
+     *            The importante.
+     */
     protected Status(String name, boolean error, double importance) {
         this.name = name;
         this.error = error;
         this.importance = importance;
     }
 
+    /**
+     * The status name.
+     * 
+     * @return The name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * The CSS which represents the status.
+     * 
+     * @return The CSS name.
+     */
     public String getCssName() {
         return "sr_" + getName();
     }
 
+    /**
+     * Set the name.
+     * 
+     * @param name
+     *            The new name.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * true, if stands for an error, false, otherwise.
+     * 
+     * @return The error flag.
+     */
     public boolean isError() {
         return error;
     }
 
+    /**
+     * Set error status.
+     * 
+     * @param error
+     *            The error.
+     */
     public void setError(boolean error) {
         this.error = error;
     }

@@ -40,11 +40,35 @@ import org.specrunner.util.UtilResources;
  */
 public abstract class AbstractResource implements IResource {
 
+    /**
+     * The parent source.
+     */
     private ISource parent;
+    /**
+     * The resource path.
+     */
     private String resourcePath;
+    /**
+     * The classpath flag.
+     */
     private boolean classpath;
+    /**
+     * The resource nature.
+     */
     private EType type;
 
+    /**
+     * Partial constructor.
+     * 
+     * @param parent
+     *            The parent.
+     * @param resourcePath
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     */
     protected AbstractResource(ISource parent, String resourcePath, boolean classpath, EType type) {
         this.parent = parent;
         this.resourcePath = resourcePath;
@@ -92,6 +116,13 @@ public abstract class AbstractResource implements IResource {
         this.classpath = classpath;
     }
 
+    /**
+     * Gets the list of URL resources.
+     * 
+     * @return List of resources.
+     * @throws ResourceException
+     *             On resource listing errors.
+     */
     protected List<URL> getResourceURLs() throws ResourceException {
         List<URL> files;
         try {
@@ -106,9 +137,15 @@ public abstract class AbstractResource implements IResource {
         }
 
         return filterExisting(files);
-        // return files;
     }
 
+    /**
+     * Filter only available resources.
+     * 
+     * @param urls
+     *            List of resource URLs.
+     * @return The filtered version.
+     */
     protected List<URL> filterExisting(List<URL> urls) {
         List<URL> existing = new LinkedList<URL>();
         for (URL url : urls) {

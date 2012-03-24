@@ -27,13 +27,22 @@ import java.util.StringTokenizer;
  */
 public final class UtilString {
 
+    /**
+     * Hidden constructor.
+     */
     private UtilString() {
-        super();
     }
 
-    public static String normalize(String result) {
+    /**
+     * Normalize a string, removing white spaces.
+     * 
+     * @param str
+     *            The original string.
+     * @return The normalized version.
+     */
+    public static String normalize(String str) {
         StringBuilder sb = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(result, " \r\n\t");
+        StringTokenizer st = new StringTokenizer(str, " \r\n\t");
         while (st.hasMoreTokens()) {
             sb.append(st.nextToken());
         }

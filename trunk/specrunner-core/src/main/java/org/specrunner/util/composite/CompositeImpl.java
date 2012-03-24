@@ -32,7 +32,10 @@ import java.util.List;
  */
 public class CompositeImpl<P extends IComposite<P, T>, T> implements IComposite<P, T> {
 
-    private List<T> children = new LinkedList<T>();
+    /**
+     * Children elements.
+     */
+    private final List<T> children = new LinkedList<T>();
 
     @Override
     public boolean isEmpty() {

@@ -48,7 +48,7 @@ import org.specrunner.result.IResultSet;
  * <td>5</td>
  * <td>25</td>
  * </tr>
- * <table>
+ * </table>
  * <p>
  * Iterate over list and check #{n}^2 = #{square}. </blockquote>
  * 
@@ -72,7 +72,7 @@ import org.specrunner.result.IResultSet;
  * &lt;p>
  * Iterate over list and check 
  *      &lt;span class="iterator" name="numbers"&gt;
- *          &lt;span class="compare"&gt; 
+ *          &lt;span class="eq"&gt; 
  *              &lt;span class="left" value="${Math.pow(n,2)}"&gt;#{n}^2&lt;span&gt; = &lt;span class="right"&gt;#{square}&lt;span&gt; 
  *          &lt;span&gt;
  *      &lt;span&gt;.

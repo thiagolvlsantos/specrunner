@@ -45,8 +45,25 @@ import org.specrunner.util.UtilIO;
  */
 public abstract class AbstractResourceHeader extends AbstractResourcePositional {
 
+    /**
+     * A sequential number.
+     */
     private static int serialNumber = 0;
 
+    /**
+     * Creates a header resource.
+     * 
+     * @param parent
+     *            The source.
+     * @param path
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     * @param position
+     *            The resource position.
+     */
     protected AbstractResourceHeader(ISource parent, String path, boolean classpath, EType type, Position position) {
         super(parent, path, classpath, type, position);
     }
@@ -110,10 +127,33 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
         return output;
     }
 
+    /**
+     * Get the element which represents the resource.
+     * 
+     * @return The corresponding element.
+     */
     protected abstract Element getHeaderTag();
 
+    /**
+     * Ges the element which represents the source provided extra information.
+     * 
+     * @param output
+     *            The output source.
+     * @param name
+     *            The output name.
+     * @return The corresponding element.
+     */
     protected abstract Element getHeaderTag(ISource output, String name);
 
+    /**
+     * Get the file which represents the output resource.
+     * 
+     * @param output
+     *            The output source.
+     * @param name
+     *            The name.
+     * @return The result file.
+     */
     protected abstract File getFile(ISource output, String name);
 
     @Override

@@ -33,18 +33,51 @@ import org.specrunner.util.aligner.IStringAlignerFactory;
  */
 public class NeedlemanWunschAligner implements IStringAligner {
 
+    /**
+     * The expected value.
+     */
     protected String expected;
+    /**
+     * The expected value aligned.
+     */
     protected StringBuilder expectedAligned;
 
+    /**
+     * The character to be using on error report.
+     */
     protected char fillCharacter;
 
+    /**
+     * The received string.
+     */
     protected String received;
+    /**
+     * The received value aligned.
+     */
     protected StringBuilder receivedAligned;
 
+    /**
+     * Creates an aligner with default fill character.
+     * 
+     * @param expected
+     *            The expected string.
+     * @param received
+     *            The received string.
+     */
     public NeedlemanWunschAligner(String expected, String received) {
         this(expected, received, IStringAlignerFactory.DEFAULT_FILL_CHARACTER);
     }
 
+    /**
+     * Creates an aligner with both strings and fill character.
+     * 
+     * @param expected
+     *            The expected string.
+     * @param received
+     *            The received string.
+     * @param fillCharacter
+     *            The fill character.
+     */
     public NeedlemanWunschAligner(String expected, String received, char fillCharacter) {
         this.expected = expected;
         this.received = received;
@@ -82,8 +115,11 @@ public class NeedlemanWunschAligner implements IStringAligner {
         return receivedAligned;
     }
 
+    /**
+     * Perform alignment.
+     */
     protected void align() {
-        List<Character> list = alfabeth(expected, received);
+        List<Character> list = alphabet(expected, received);
         int size = list.size();
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("ALFABETH(" + size + ")>" + list);
@@ -107,7 +143,16 @@ public class NeedlemanWunschAligner implements IStringAligner {
         }
     }
 
-    protected List<Character> alfabeth(String a, String b) {
+    /**
+     * Creates the local alphabet.
+     * 
+     * @param a
+     *            Left string.
+     * @param b
+     *            Right string.
+     * @return The list of characters.
+     */
+    protected List<Character> alphabet(String a, String b) {
         List<Character> list = new LinkedList<Character>();
         for (int i = 0; i < a.length(); i++) {
             if (!list.contains(a.charAt(i))) {
@@ -123,6 +168,21 @@ public class NeedlemanWunschAligner implements IStringAligner {
         return list;
     }
 
+    /**
+     * Calculate the matrix of gaps.
+     * 
+     * @param a
+     *            The left string.
+     * @param b
+     *            The right string.
+     * @param list
+     *            The alphabet.
+     * @param s
+     *            The scoring matrix.
+     * @param d
+     *            The penalty.
+     * @return The proximity matrix.
+     */
     protected int[][] calculate(String a, String b, List<Character> list, int[][] s, int d) {
         int[][] f = new int[a.length() + 1][b.length() + 1];
         for (int i = 0; i < a.length(); i++) {
@@ -142,6 +202,13 @@ public class NeedlemanWunschAligner implements IStringAligner {
         return f;
     }
 
+    /**
+     * The scoring matrix.
+     * 
+     * @param size
+     *            The size.
+     * @return The scoring matrix.
+     */
     protected int[][] scoring(int size) {
         int[][] s = new int[size][size];
         for (int i = 0; i < s.length; i++) {
@@ -158,11 +225,34 @@ public class NeedlemanWunschAligner implements IStringAligner {
         return s;
     }
 
+    /**
+     * Calculate penalty.
+     * 
+     * @param size
+     *            The size of alphabet.
+     * @return The penalty.
+     */
     protected int penalty(int size) {
         int d = -(size / 2);
         return d;
     }
 
+    /**
+     * Fill the alignment result.
+     * 
+     * @param a
+     *            The left string.
+     * @param b
+     *            The right string.
+     * @param list
+     *            The alphabet.
+     * @param s
+     *            The scoring matrix.
+     * @param d
+     *            The penalty.
+     * @param f
+     *            The current proximity matrix.
+     */
     protected void traceback(String a, String b, List<Character> list, int[][] s, int d, int[][] f) {
         StringBuilder alignmentA = new StringBuilder();
         StringBuilder alignmentB = new StringBuilder();
@@ -198,6 +288,13 @@ public class NeedlemanWunschAligner implements IStringAligner {
         receivedAligned = alignmentB.reverse();
     }
 
+    /**
+     * String representation of a matrix.
+     * 
+     * @param d
+     *            The matrix.
+     * @return The string for the matrix.
+     */
     protected String toString(int[][] d) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < d.length; i++) {

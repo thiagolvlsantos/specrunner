@@ -10,9 +10,9 @@
 -->
 <module name="Checker">
   <property name="severity" value="warning"/>
-  <module name="SuppressionCommentFilter"/>
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
+    <module name="FileContentsHolder"/>
     <module name="JavadocMethod">
       <property name="suppressLoadErrors" value="true"/>
     </module>
@@ -103,7 +103,11 @@
     </module>
     <module name="UpperEll"/>
   </module>
-  <module name="JavadocPackage"/>
+  <module name="SuppressionCommentFilter"/>
+  <module name="JavadocPackage">
+    <property name="severity" value="ignore"/>
+    <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>
+  </module>
   <module name="NewlineAtEndOfFile">
     <property name="severity" value="ignore"/>
     <metadata name="net.sf.eclipsecs.core.lastEnabledSeverity" value="inherit"/>

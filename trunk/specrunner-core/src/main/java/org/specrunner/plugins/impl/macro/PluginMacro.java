@@ -37,9 +37,18 @@ import org.specrunner.util.UtilNode;
  */
 public class PluginMacro extends AbstractPluginScoped {
 
+    /**
+     * CSS of macro defined.
+     */
     public static final String CSS_DEFINED = "macro_defined";
 
+    /**
+     * Set if the macro should be called on creation time also.
+     */
     private boolean run;
+    /**
+     * Set if a macro should be global to the current specification.
+     */
     private boolean global;
 
     /**

@@ -40,14 +40,45 @@ import org.specrunner.util.UtilLog;
  */
 public class SourceImpl implements ISource {
 
+    /**
+     * The source as String.
+     */
     private String string;
+    /**
+     * The source as file.
+     */
     private File file;
+    /**
+     * The source as URI.
+     */
     private URI uri;
-    private ISourceFactory factory;
+    /**
+     * The source factory used to create it.
+     */
+    private final ISourceFactory factory;
+    /**
+     * The resource manager.
+     */
     private IResourceManager manager;
+    /**
+     * A document loader.
+     */
     protected IDocumentLoader loader;
+    /**
+     * The document.
+     */
     protected Document document;
 
+    /**
+     * Creates a source instance.
+     * 
+     * @param string
+     *            The source reference.
+     * @param factory
+     *            The factory.
+     * @param loader
+     *            The document loader.
+     */
     public SourceImpl(String string, ISourceFactory factory, IDocumentLoader loader) {
         this.string = string;
         if (this.string != null) {

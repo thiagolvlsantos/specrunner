@@ -41,6 +41,9 @@ import org.specrunner.result.IResultSet;
  */
 public class PluginCall extends AbstractPluginNamed {
 
+    /**
+     * CSS of called macros.
+     */
     public static final String CSS_CALLED = "called";
 
     @Override

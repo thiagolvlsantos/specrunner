@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.runner.Runner;
@@ -23,8 +21,19 @@ import org.junit.runners.model.RunnerScheduler;
  * @author Mathieu Carbou (mathieu.carbou@gmail.com)
  */
 public final class ConcurrentSuite extends Suite {
+    /**
+     * Thread creation ration.
+     */
     public static final double RATE = 1.5;
 
+    /**
+     * Creates a concurrent runner.
+     * 
+     * @param klass
+     *            The class.
+     * @throws InitializationError
+     *             On initialization error.
+     */
     public ConcurrentSuite(final Class<?> klass) throws InitializationError {
         super(klass, new AllDefaultPossibilitiesBuilder(true) {
             @Override
@@ -49,9 +58,9 @@ public final class ConcurrentSuite extends Suite {
             }
         });
         setScheduler(new RunnerScheduler() {
-            private ExecutorService executorService = Executors.newFixedThreadPool(klass.isAnnotationPresent(Concurrent.class) ? klass.getAnnotation(Concurrent.class).threads() : (int) (Runtime.getRuntime().availableProcessors() * RATE), new NamedThreadFactory(klass.getSimpleName()));
-            private CompletionService<Void> completionService = new ExecutorCompletionService<Void>(executorService);
-            private Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();
+            private final ExecutorService executorService = Executors.newFixedThreadPool(klass.isAnnotationPresent(Concurrent.class) ? klass.getAnnotation(Concurrent.class).threads() : (int) (Runtime.getRuntime().availableProcessors() * RATE), new NamedFactory(klass.getSimpleName()));
+            private final CompletionService<Void> completionService = new ExecutorCompletionService<Void>(executorService);
+            private final Queue<Future<Void>> tasks = new LinkedList<Future<Void>>();
 
             @Override
             public void schedule(Runnable childStatement) {
@@ -75,20 +84,4 @@ public final class ConcurrentSuite extends Suite {
             }
         });
     }
-
-    static final class NamedThreadFactory implements ThreadFactory {
-        private final AtomicInteger poolNumber = new AtomicInteger(1);
-        private final AtomicInteger threadNumber = new AtomicInteger(1);
-        private final ThreadGroup group;
-
-        NamedThreadFactory(String poolName) {
-            group = new ThreadGroup(poolName + "-" + poolNumber.getAndIncrement());
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            return new Thread(group, r, group.getName() + "-thread-" + threadNumber.getAndIncrement(), 0);
-        }
-    }
-
 }

@@ -27,6 +27,12 @@ import nu.xom.Element;
  */
 public class CellAdapter extends ElementHolderImpl {
 
+    /**
+     * Construct a cell node.
+     * 
+     * @param node
+     *            The cell node.
+     */
     public CellAdapter(Element node) {
         super(node);
     }

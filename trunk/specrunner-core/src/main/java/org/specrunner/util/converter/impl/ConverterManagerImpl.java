@@ -36,9 +36,18 @@ import org.specrunner.util.converter.IConverterManager;
  */
 public class ConverterManagerImpl implements IConverterManager {
 
-    protected Map<String, IConverter> iConverters = new HashMap<String, IConverter>();
+    /**
+     * Map of converters.
+     */
+    protected Map<String, IConverter> converters = new HashMap<String, IConverter>();
+    /**
+     * Initialization flag.
+     */
     protected boolean initialized = false;
 
+    /**
+     * Initialize manager.
+     */
     public void initialize() {
         if (!initialized) {
             try {
@@ -53,7 +62,7 @@ public class ConverterManagerImpl implements IConverterManager {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("put(" + key + "," + c + ")");
                     }
-                    iConverters.put(key, c.newInstance());
+                    converters.put(key, c.newInstance());
                 }
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
@@ -65,12 +74,12 @@ public class ConverterManagerImpl implements IConverterManager {
     @Override
     public void bind(String name, IConverter iConverter) {
         initialize();
-        iConverters.put(name, iConverter);
+        converters.put(name, iConverter);
     }
 
     @Override
     public IConverter get(String name) {
         initialize();
-        return iConverters.get(name);
+        return converters.get(name);
     }
 }

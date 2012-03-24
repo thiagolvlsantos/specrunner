@@ -61,6 +61,9 @@ import org.specrunner.util.UtilLog;
  */
 public class RunnerImpl implements IRunner {
 
+    /**
+     * List of ignored aliases.
+     */
     private List<String> ignoredAliases = Collections.emptyList();
 
     @Override
@@ -77,6 +80,11 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    /**
+     * Get the list of ignored aliases.
+     * 
+     * @return Ignored aliases list.
+     */
     public List<String> getIgnoredAliases() {
         return ignoredAliases;
     }
@@ -124,7 +132,10 @@ public class RunnerImpl implements IRunner {
         }
     }
 
-    private void setFeature() {
+    /**
+     * Set ignored aliases feature.
+     */
+    protected void setFeature() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         try {
             fm.set(IRunner.FEATURE_IGNORED_ALIASES, "ignoredAliases", List.class, this);
@@ -135,6 +146,20 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    /**
+     * Perform node execution.
+     * 
+     * @param node
+     *            The node.
+     * @param context
+     *            The current context.
+     * @param result
+     *            The result.
+     * @param previous
+     *            The previous plugin.
+     * @throws RunnerException
+     *             On execution errors.
+     */
     protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
         List<INodeListener> nListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
         // perform before listeners
@@ -277,6 +302,17 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    /**
+     * Check condition to perform the plugin.
+     * 
+     * @param plugin
+     *            The plugin.
+     * @param context
+     *            The context.
+     * @return true, if should be performed, false, otherwise.
+     * @throws SpecRunnerException
+     *             On conditional evaluation errors.
+     */
     protected boolean checkConditional(IPlugin plugin, IContext context) throws SpecRunnerException {
         Boolean out = null;
         if (plugin instanceof ITestPlugin) {
@@ -291,6 +327,22 @@ public class RunnerImpl implements IRunner {
         return out == null || out;
     }
 
+    /**
+     * Check timeout to perform the plugin.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param plugin
+     *            The plugin.
+     * @param start
+     *            The plugin.
+     * @param method
+     *            The method name.
+     * @throws SpecRunnerException
+     *             On conditional evaluation errors.
+     */
     protected void checkTimeout(IContext context, IResultSet result, IPlugin plugin, long start, String method) throws SpecRunnerException {
         long total = System.currentTimeMillis() - start;
         if (plugin instanceof ITimedPlugin) {
@@ -308,6 +360,16 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    /**
+     * Perform a sleep for the step, if specified.
+     * 
+     * @param plugin
+     *            The plugin.
+     * @param context
+     *            The context.
+     * @throws SpecRunnerException
+     *             On sleep checking errors.
+     */
     protected void checkSleep(IPlugin plugin, IContext context) throws SpecRunnerException {
         if (plugin instanceof ISleepPlugin) {
             ISleepPlugin sleepPlugin = (ISleepPlugin) plugin;
