@@ -36,14 +36,44 @@ import org.specrunner.util.UtilLog;
  */
 public class SimpleDataSource implements IDataSourceProvider, DataSource {
 
+    /**
+     * Current connection.
+     */
     private Connection connection;
 
-    private String driver;
-    private String url;
-    private String user;
-    private String password;
+    /**
+     * The driver.
+     */
+    private final String driver;
+    /**
+     * The URL.
+     */
+    private final String url;
+    /**
+     * The user.
+     */
+    private final String user;
+    /**
+     * The password.
+     */
+    private final String password;
+    /**
+     * The connection timeout.
+     */
     private int timeout;
 
+    /**
+     * Creates a basic datasource.
+     * 
+     * @param driver
+     *            A driver.
+     * @param url
+     *            A URL.
+     * @param user
+     *            A user.
+     * @param password
+     *            A password.
+     */
     public SimpleDataSource(String driver, String url, String user, String password) {
         this.driver = driver;
         this.url = url;
@@ -109,6 +139,21 @@ public class SimpleDataSource implements IDataSourceProvider, DataSource {
         return get(driver, url, user, password);
     }
 
+    /**
+     * Gets a connection from connection parameters.
+     * 
+     * @param driver
+     *            The driver.
+     * @param url
+     *            The URL.
+     * @param user
+     *            The user.
+     * @param pwd
+     *            The password.
+     * @return A connection.
+     * @throws SQLException
+     *             On connection errors.
+     */
     protected Connection get(String driver, String url, String user, String pwd) throws SQLException {
         if (connection == null || connection.isClosed()) {
             try {
