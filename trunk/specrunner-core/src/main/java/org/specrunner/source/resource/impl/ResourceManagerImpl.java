@@ -38,8 +38,17 @@ import org.specrunner.util.UtilLog;
 @SuppressWarnings("serial")
 public class ResourceManagerImpl extends LinkedList<IResource> implements IResourceManager {
 
+    /**
+     * The parent source.
+     */
     private ISource parent;
 
+    /**
+     * Creates a resource manager to a source.
+     * 
+     * @param parent
+     *            The parent.
+     */
     public ResourceManagerImpl(ISource parent) {
         this.parent = parent;
     }
@@ -49,6 +58,12 @@ public class ResourceManagerImpl extends LinkedList<IResource> implements IResou
         return parent;
     }
 
+    /**
+     * Set resource manager parent.
+     * 
+     * @param parent
+     *            The parent.
+     */
     public void setParent(ISource parent) {
         this.parent = parent;
     }
@@ -87,6 +102,13 @@ public class ResourceManagerImpl extends LinkedList<IResource> implements IResou
         return check(new CSSResource(parent, path, classpath, ref, position));
     }
 
+    /**
+     * Add a resource.
+     * 
+     * @param result
+     *            The resource.
+     * @return The resource itself, if added, false, otherwise.
+     */
     private IResource check(IResource result) {
         if (add(result)) {
             return result;

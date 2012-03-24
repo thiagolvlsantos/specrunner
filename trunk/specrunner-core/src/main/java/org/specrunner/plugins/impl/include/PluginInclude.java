@@ -17,8 +17,11 @@
  */
 package org.specrunner.plugins.impl.include;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.util.StringTokenizer;
 
 import nu.xom.Attribute;
 import nu.xom.Document;
@@ -43,6 +46,7 @@ import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.transformer.ITransformer;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilNode;
 
@@ -65,30 +69,65 @@ import org.specrunner.util.UtilNode;
  */
 public class PluginInclude extends AbstractPlugin {
 
+    /**
+     * Style added to included file.
+     */
     public static final String CSS_INCLUDED = "included";
+    /**
+     * Style added to the header file.
+     */
     public static final String CSS_INCLUDED_FILE = "included_file";
+    /**
+     * Style added to content file.
+     */
     public static final String CSS_INCLUDED_CONTENT = "included_content";
 
+    /**
+     * Link to file.
+     */
     protected String href;
 
     /**
-     * Default include depth.
+     * Max deep of includes.
      */
     public static final String FEATURE_DEPTH = PluginInclude.class.getName() + ".depth";
+    /**
+     * Default value.
+     */
     public static final Integer DEFAULT_DEPTH = Integer.MAX_VALUE;
+    /**
+     * Max depth of inclusion.
+     */
     protected Integer depth = DEFAULT_DEPTH;
 
     /**
-     * Default include expanded state.
+     * Enable expanded mode for features.
      */
     public static final String FEATURE_EXPANDED = PluginInclude.class.getName() + ".expanded";
+    /**
+     * Default include expanded state.
+     */
     public static final Boolean DEFAULT_EXPANDED = Boolean.FALSE;
+    /**
+     * Expanded state.
+     */
     protected Boolean expanded = null;
 
+    /**
+     * The link reference.
+     * 
+     * @return The link.
+     */
     public String getHref() {
         return href;
     }
 
+    /**
+     * Set link reference.
+     * 
+     * @param href
+     *            The reference.
+     */
     public void setHref(String href) {
         this.href = href;
     }
@@ -104,6 +143,12 @@ public class PluginInclude extends AbstractPlugin {
         return depth;
     }
 
+    /**
+     * Set max depth.
+     * 
+     * @param depth
+     *            The depth.
+     */
     public void setDepth(Integer depth) {
         this.depth = depth;
     }
@@ -119,6 +164,12 @@ public class PluginInclude extends AbstractPlugin {
         return expanded;
     }
 
+    /**
+     * Set expanded mode.
+     * 
+     * @param expanded
+     *            The expanded value.
+     */
     public void setExpanded(Boolean expanded) {
         this.expanded = expanded;
     }
@@ -149,7 +200,8 @@ public class PluginInclude extends AbstractPlugin {
         Node node = context.getNode();
         ParentNode parent = node.getParent();
         try {
-            URI originalHref = new URI(href);
+            String path = normalizeAddParameters(context);
+            URI originalHref = new URI(path);
             URI newHref = originalHref;
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("HREF>" + newHref);
@@ -281,6 +333,52 @@ public class PluginInclude extends AbstractPlugin {
         return ENext.SKIP;
     }
 
+    /**
+     * Normalize path removing parameters which are set as arguments.
+     * 
+     * @param context
+     *            The context.
+     * @return The path to file normalized.
+     * @throws PluginException
+     *             On plugin errors.
+     */
+    protected String normalizeAddParameters(IContext context) throws PluginException {
+        String path = href;
+        String query = null;
+        int indexParameters = href.indexOf("?");
+        if (indexParameters > 0) {
+            path = href.substring(0, indexParameters);
+            query = href.substring(indexParameters + 1);
+        }
+        if (query != null) {
+            try {
+                StringTokenizer st = new StringTokenizer(query, "&=");
+                if (st.countTokens() % 2 != 0) {
+                    throw new PluginException("The parameters are not valid. Current value:" + query);
+                }
+                while (st.hasMoreTokens()) {
+                    String key = URLDecoder.decode(st.nextToken(), "UTF-8");
+                    String value = URLDecoder.decode(st.nextToken(), "UTF-8");
+                    try {
+                        context.saveLocal(UtilEvaluator.asVariable(key), UtilEvaluator.evaluate(value, context));
+                    } catch (Exception e) {
+                        throw new PluginException("Invalid parameter (" + key + "," + value + ")", e);
+                    }
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new PluginException("Unable do decode query:" + query, e);
+            }
+        }
+        return path;
+    }
+
+    /**
+     * Cycle as string.
+     * 
+     * @param context
+     *            The context.
+     * @return The path to cycle.
+     */
     protected StringBuilder toString(IContext context) {
         StringBuilder sb = new StringBuilder();
         for (ISource i : context.getSources()) {
