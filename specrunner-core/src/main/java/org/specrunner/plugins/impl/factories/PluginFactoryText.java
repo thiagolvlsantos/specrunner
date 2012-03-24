@@ -37,6 +37,9 @@ import org.specrunner.plugins.impl.text.PluginReplacerMap;
  */
 public class PluginFactoryText implements IPluginFactory {
 
+    /**
+     * Concurrent instance of plugin.
+     */
     private static ThreadLocal<IPlugin> instance = new ThreadLocal<IPlugin>() {
         @Override
         protected IPlugin initialValue() {

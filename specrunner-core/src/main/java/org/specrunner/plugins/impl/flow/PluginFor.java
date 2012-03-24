@@ -79,9 +79,21 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginFor extends AbstractPlugin {
 
+    /**
+     * Index variable name.
+     */
     protected String var = "index";
+    /**
+     * Minimum value.
+     */
     protected int min = 0;
+    /**
+     * Maximum value.
+     */
     protected int max;
+    /**
+     * Step.
+     */
     protected int step = 1;
 
     /**

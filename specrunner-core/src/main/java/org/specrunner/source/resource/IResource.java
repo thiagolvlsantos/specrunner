@@ -20,6 +20,13 @@ package org.specrunner.source.resource;
 import org.specrunner.source.ISource;
 import org.specrunner.util.IPresentation;
 
+/**
+ * A resource is something attached somehow to the source. For example, CSSs,
+ * Java Scripts, images, etc.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public interface IResource extends IPresentation {
 
     /**

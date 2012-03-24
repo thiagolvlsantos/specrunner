@@ -39,15 +39,37 @@ import org.specrunner.plugins.PluginException;
  */
 public final class UtilEvaluator {
 
+    /**
+     * Escape mark.
+     */
     public static final char ESCAPE = '\\';
+    /**
+     * Start code delimiter.
+     */
     public static final String START_CODE = "${";
+    /**
+     * End code delimiter.
+     */
     public static final String END = "}";
+    /**
+     * Start code replacement.
+     */
     public static final String START_DATA = "#{";
 
+    /**
+     * Hidden constructor.
+     */
     private UtilEvaluator() {
-        super();
     }
 
+    /**
+     * Given a name, returns its equivalent as variables inside
+     * <code>IContext</code> object.
+     * 
+     * @param name
+     *            The source name.
+     * @return The corresponding variable.
+     */
     public static String asVariable(String name) {
         return START_CODE + name + END;
     }
@@ -188,6 +210,17 @@ public final class UtilEvaluator {
         return sb.toString();
     }
 
+    /**
+     * Replaces text with corresponding values in map.
+     * 
+     * @param text
+     *            The text to be replace.
+     * @param map
+     *            The map of values to be replace.
+     * @return The nodes which represents the replaced text.
+     * @throws PluginException
+     *             On replacemente errors.
+     */
     public static Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
         Nodes nodes = new Nodes();
         int pos1 = 0;

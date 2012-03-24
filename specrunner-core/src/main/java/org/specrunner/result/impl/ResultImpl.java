@@ -38,12 +38,41 @@ import org.specrunner.util.UtilLog;
  */
 public class ResultImpl implements IResult {
 
+    /**
+     * The status.
+     */
     protected Status status;
+    /**
+     * The source block.
+     */
     protected IBlock source;
+    /**
+     * A associated message.
+     */
     protected String message;
+    /**
+     * The associated failure.
+     */
     protected Throwable failure;
+    /**
+     * The associated writable information.
+     */
     protected IWritable writable;
 
+    /**
+     * The result instance creator.
+     * 
+     * @param status
+     *            The status.
+     * @param source
+     *            The source block.
+     * @param message
+     *            The message.
+     * @param failure
+     *            The failure.
+     * @param writable
+     *            The writable resources.
+     */
     public ResultImpl(Status status, IBlock source, String message, Throwable failure, IWritable writable) {
         this.status = status;
         this.source = source;
@@ -88,7 +117,7 @@ public class ResultImpl implements IResult {
         String msg2 = getFailure() != null ? getFailure().getMessage() : getMessage();
         if (UtilLog.LOG.isDebugEnabled() && getFailure() != null) {
             try {
-                msg2 += "\n" + ExceptionUtil.dumpException(getFailure());
+                msg2 += "\n" + ExceptionUtil.toString(getFailure());
             } catch (IOException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

@@ -21,7 +21,7 @@ import java.io.File;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
@@ -114,11 +114,11 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
             throw new PluginException("Missing Chrome driver at Chrome path:" + fDriver + ". Download 'chromedriver.exe' at http://chromium.googlecode.com/ and set 'FEATURE_DRIVER' to the executable.");
         }
         System.setProperty("webdriver.chrome.driver", fDriver.getAbsolutePath());
-        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-        capabilities.setCapability("chrome.binary", fChrome.getAbsolutePath());
+        ChromeOptions options = new ChromeOptions();
+        options.setBinary(fChrome);
         if (switches != null) {
-            capabilities.setCapability("chrome.switches", switches);
+            options.addArguments(switches);
         }
-        return new ChromeDriver(capabilities);
+        return new ChromeDriver(options);
     }
 }

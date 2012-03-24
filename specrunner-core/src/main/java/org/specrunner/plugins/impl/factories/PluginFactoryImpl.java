@@ -37,17 +37,41 @@ import org.specrunner.util.UtilLog;
  */
 public abstract class PluginFactoryImpl implements IPluginFactory {
 
+    /**
+     * Types of plugins available by name.
+     */
     protected Map<String, Class<? extends IPlugin>> types = new HashMap<String, Class<? extends IPlugin>>();
+    /**
+     * Alias of plugins.
+     */
     protected Map<Class<? extends IPlugin>, String> aliases = new HashMap<Class<? extends IPlugin>, String>();
+    /**
+     * File to be loaded.
+     */
     private String file;
+    /**
+     * Initialization status.
+     */
     private boolean initialized = false;
 
+    /**
+     * Creates a factory loading the given file.
+     * 
+     * @param file
+     *            The file to be loaded.
+     */
     protected PluginFactoryImpl(String file) {
         if (file != null) {
             this.file = file;
         }
     }
 
+    /**
+     * Initialize the factory.
+     * 
+     * @throws PluginException
+     *             On initialization errors.
+     */
     @SuppressWarnings("unchecked")
     public void initialize() throws PluginException {
         if (!initialized) {

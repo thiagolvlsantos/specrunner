@@ -38,6 +38,9 @@ import org.specrunner.plugins.impl.UtilPlugin;
  */
 public class PluginFactoryElement extends PluginFactoryImpl {
 
+    /**
+     * Creates a factory loading file 'plugin_element.properties'.
+     */
     public PluginFactoryElement() {
         super("plugin_element.properties");
     }
@@ -50,7 +53,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
             String name = ele.getQualifiedName().toLowerCase();
             Class<? extends IPlugin> c = types.get(name);
             if (c != null) {
-                return UtilPlugin.create(context, c, ele, true);
+                return UtilPlugin.create(context, c, ele);
             }
         }
         return PluginNop.emptyPlugin();

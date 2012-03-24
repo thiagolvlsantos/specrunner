@@ -34,11 +34,30 @@ import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.source.resource.positional.IResourcePositional;
 
+/**
+ * Resources utilities.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public final class UtilResources {
 
+    /**
+     * Hidden constructor.
+     */
     private UtilResources() {
     }
 
+    /**
+     * Add a positional resource to a document.
+     * 
+     * @param source
+     *            The source.
+     * @param resourcePositional
+     *            The positional resource.
+     * @throws ResourceException
+     *             The adding errors.
+     */
     public static void addToDoc(ISource source, IResourcePositional resourcePositional) throws ResourceException {
         try {
             Document d = source.getDocument();
@@ -72,6 +91,15 @@ public final class UtilResources {
         }
     }
 
+    /**
+     * Get the most specific file. The one which is closer in classpath lookup.
+     * 
+     * @param file
+     *            The file.
+     * @return The resource URL.
+     * @throws IOException
+     *             On lookup errors.
+     */
     public static URL getMostSpecific(String file) throws IOException {
         List<URL> files = getFileList(file);
         if (files.isEmpty()) {
@@ -80,6 +108,15 @@ public final class UtilResources {
         return files.get(files.size() - 1);
     }
 
+    /**
+     * Get the list of all files matching the given name.
+     * 
+     * @param file
+     *            The file name.
+     * @return The file list.
+     * @throws IOException
+     *             On lookup errors.
+     */
     public static List<URL> getFileList(String file) throws IOException {
         List<URL> files = new LinkedList<URL>();
         String standard = getDefaultName(file);
@@ -89,11 +126,27 @@ public final class UtilResources {
         return files;
     }
 
+    /**
+     * Get default name for resource files.
+     * 
+     * @param file
+     *            The file name.
+     * @return The corresponding default file name.
+     */
     public static String getDefaultName(String file) {
         int pos = file.lastIndexOf('.');
         return file.substring(0, pos) + "_default" + file.substring(pos);
     }
 
+    /**
+     * Find a given file in classloader.
+     * 
+     * @param file
+     *            The file name.
+     * @return The list of files satisfying the name restriction in classpath.
+     * @throws IOException
+     *             On loading list errors.
+     */
     public static List<URL> find(String file) throws IOException {
         List<URL> result = new LinkedList<URL>();
         Enumeration<URL> urls = ClassLoader.getSystemResources(file);
@@ -103,6 +156,13 @@ public final class UtilResources {
         return result;
     }
 
+    /**
+     * Sort the files using reverse order.
+     * 
+     * @param files
+     *            The files.
+     * @return The list in reverse order.
+     */
     public static List<URL> sort(List<URL> files) {
         Collections.reverse(files);
         return files;

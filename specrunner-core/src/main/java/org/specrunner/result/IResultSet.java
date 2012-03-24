@@ -92,6 +92,8 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      *            Range start.
      * @param end
      *            Range end.
+     * @param <T>
+     *            A status class.
      * @param status
      *            The filters.
      * @return The number of result.

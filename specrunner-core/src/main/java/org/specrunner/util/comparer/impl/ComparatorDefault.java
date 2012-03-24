@@ -19,6 +19,13 @@ package org.specrunner.util.comparer.impl;
 
 import org.specrunner.util.comparer.IComparator;
 
+/**
+ * A default comparator. It compares nulls values, and if both are not null, it
+ * uses <code>Object.equals(Object)</code>.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public class ComparatorDefault implements IComparator {
 
     @Override

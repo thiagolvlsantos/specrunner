@@ -31,20 +31,44 @@ import nu.xom.Nodes;
  */
 public class RowAdapter extends ElementHolderImpl {
 
+    /**
+     * List of row cells.
+     */
     private List<CellAdapter> cells;
 
+    /**
+     * The row element.
+     * 
+     * @param node
+     *            The row.
+     */
     public RowAdapter(Element node) {
         super(node);
     }
 
+    /**
+     * The row XPath.
+     * 
+     * @return The rows XPath.
+     */
     public String getXPath() {
         return "child::td | child::th";
     }
 
+    /**
+     * Number of cells per row.
+     * 
+     * @return Number of cells.
+     */
     public int getCellsCount() {
         return getCells().size();
     }
 
+    /**
+     * List of cells.
+     * 
+     * @return The list of cells.
+     */
     public List<CellAdapter> getCells() {
         if (cells == null) {
             List<CellAdapter> result = new LinkedList<CellAdapter>();
@@ -57,6 +81,13 @@ public class RowAdapter extends ElementHolderImpl {
         return cells;
     }
 
+    /**
+     * Get cell at a given index.
+     * 
+     * @param i
+     *            The index.
+     * @return A cell adapter.
+     */
     public CellAdapter getCell(int i) {
         return getCells().get(i);
     }

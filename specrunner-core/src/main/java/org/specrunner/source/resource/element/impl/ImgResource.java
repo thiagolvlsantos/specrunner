@@ -39,6 +39,20 @@ import org.specrunner.util.UtilResources;
  */
 public class ImgResource extends AbstractResourceElement {
 
+    /**
+     * Creates an image resource.
+     * 
+     * @param parent
+     *            The source parent.
+     * @param path
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     * @param element
+     *            The referred element.
+     */
     public ImgResource(ISource parent, String path, boolean classpath, EType type, Element element) {
         super(parent, path, classpath, type, element);
     }

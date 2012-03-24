@@ -25,7 +25,13 @@ package org.specrunner.source.resource.positional;
  */
 public final class Position {
 
+    /**
+     * The head position is given by this specification XPath.
+     */
     public static final String HEAD = "//head";
+    /**
+     * The body position is given by this specification XPath.
+     */
     public static final String BODY = "//body";
     /**
      * On header start.
@@ -44,18 +50,42 @@ public final class Position {
      */
     public static final Position BODY_END = new Position(BODY, EPlace.END);
 
-    private String xpath;
-    private EPlace place;
+    /**
+     * Position xpath.
+     */
+    private final String xpath;
+    /**
+     * Position placement.
+     */
+    private final EPlace place;
 
+    /**
+     * Creates a position based on XPath and placement.
+     * 
+     * @param xpath
+     *            The XPath.
+     * @param place
+     *            The place.
+     */
     private Position(String xpath, EPlace place) {
         this.xpath = xpath;
         this.place = place;
     }
 
+    /**
+     * The XPath reference.
+     * 
+     * @return The xpath.
+     */
     public String getXpath() {
         return xpath;
     }
 
+    /**
+     * The placement element.
+     * 
+     * @return The placement.
+     */
     public EPlace getPlace() {
         return place;
     }

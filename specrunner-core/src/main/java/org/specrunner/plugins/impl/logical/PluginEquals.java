@@ -34,18 +34,27 @@ import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.impl.CellAdapter;
 
 /**
- * Compare elements. Use class 'equals', with 'left' class to the first
- * argument, and 'right' class to the second argument.
+ * Compare elements. Use class 'eq', with 'left' class to the first argument,
+ * and 'right' class to the second argument.
  * 
  * @author Thiago Santos
  * 
  */
 public class PluginEquals extends AbstractPluginDual {
 
+    /**
+     * The CSS which set the left side condition of equals.
+     */
     public static final String CSS_LETF = "left";
+    /**
+     * The CSS which set the right side condition of equals.
+     */
     public static final String CSS_RIGHT = "right";
 
-    protected Exception error;
+    /**
+     * Error object after failure.
+     */
+    protected Throwable error;
 
     @Override
     protected boolean operation(Object obj, IContext context) throws PluginException {
@@ -78,13 +87,24 @@ public class PluginEquals extends AbstractPluginDual {
         Object objExpected = UtilEvaluator.evaluate(expectedValue, context);
         Object objReceived = UtilEvaluator.evaluate(receivedValue, context);
         try {
-            return rule(objExpected, objReceived);
+            return verify(objExpected, objReceived);
         } catch (SpecRunnerException e) {
             throw new PluginException(e);
         }
     }
 
-    protected boolean rule(Object reference, Object value) throws SpecRunnerException {
+    /**
+     * Verify the condition.
+     * 
+     * @param reference
+     *            The reference value.
+     * @param value
+     *            The received value.
+     * @return true, if equals, false, otherwise.
+     * @throws SpecRunnerException
+     *             On condition errors.
+     */
+    protected boolean verify(Object reference, Object value) throws SpecRunnerException {
         boolean result = reference.equals(value);
         if (!result) {
             if (reference instanceof String && value instanceof String) {

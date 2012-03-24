@@ -19,6 +19,12 @@ package org.specrunner.util.comparer.impl;
 
 import org.joda.time.ReadableInstant;
 
+/**
+ * Comparator of <code>ReadableInstant</code>s.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class ComparatorJodatime extends AbstractComparatorTime {
 
     @Override

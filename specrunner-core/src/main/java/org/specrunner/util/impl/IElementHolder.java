@@ -27,17 +27,61 @@ import nu.xom.Element;
  */
 public interface IElementHolder {
 
+    /**
+     * Get the hold element.
+     * 
+     * @return The element.
+     */
     Element getElement();
 
+    /**
+     * Set the hold element.
+     * 
+     * @param element
+     *            The element.
+     */
     void setElement(Element element);
 
+    /**
+     * Get element value.
+     * 
+     * @return Element value.
+     */
     String getValue();
 
+    /**
+     * Check if an given attribute is present.
+     * 
+     * @param name
+     *            The attribute name.
+     * @return true, if present, false, otherwise.
+     */
     boolean hasAttribute(String name);
 
+    /**
+     * Get attribute value by type.
+     * 
+     * @param name
+     *            The name.
+     * @return The value, if exists, null, otherwise.
+     */
     String getAttribute(String name);
 
+    /**
+     * Set attribute value.
+     * 
+     * @param name
+     *            The name.
+     * @param value
+     *            The value.
+     */
     void setAttribute(String name, String value);
 
+    /**
+     * Remove a attribute.
+     * 
+     * @param name
+     *            The attribute name.
+     */
     void removeAttribute(String name);
 }

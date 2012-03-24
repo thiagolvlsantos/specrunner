@@ -43,6 +43,8 @@ public interface IListenerManager extends List<ISpecRunnerListener> {
     /**
      * Filter listeners by their types.
      * 
+     * @param <T>
+     *            The listener type.
      * @param type
      *            The type to be filtered.
      * @return The listeners of the given type.

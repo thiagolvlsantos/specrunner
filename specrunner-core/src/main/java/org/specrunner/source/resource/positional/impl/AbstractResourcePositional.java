@@ -23,9 +23,32 @@ import org.specrunner.source.resource.impl.AbstractResource;
 import org.specrunner.source.resource.positional.IResourcePositional;
 import org.specrunner.source.resource.positional.Position;
 
+/**
+ * A positional resource.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractResourcePositional extends AbstractResource implements IResourcePositional {
+    /**
+     * The resource position inside a source.
+     */
     private Position position;
 
+    /**
+     * Creates a positional resource.
+     * 
+     * @param parent
+     *            The source parent.
+     * @param path
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     * @param position
+     *            The resource position.
+     */
     protected AbstractResourcePositional(ISource parent, String path, boolean classpath, EType type, Position position) {
         super(parent, path, classpath, type);
         this.position = position;

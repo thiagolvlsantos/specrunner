@@ -34,6 +34,12 @@ import org.specrunner.util.aligner.IStringAligner;
 @SuppressWarnings("serial")
 public class DefaultAlignmentException extends AlignmentException {
 
+    /**
+     * Creates a exception with an aligner.
+     * 
+     * @param aligner
+     *            The aligner.
+     */
     public DefaultAlignmentException(IStringAligner aligner) {
         super(aligner);
     }
@@ -79,6 +85,12 @@ public class DefaultAlignmentException extends AlignmentException {
         return ele;
     }
 
+    /**
+     * Provide detailed information of alignment.
+     * 
+     * @param td
+     *            The target node.
+     */
     protected void addDetail(Element td) {
         Element tr;
         Element inner;

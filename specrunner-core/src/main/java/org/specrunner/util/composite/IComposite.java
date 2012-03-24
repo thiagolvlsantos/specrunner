@@ -31,9 +31,26 @@ import java.util.List;
  */
 public interface IComposite<P extends IComposite<P, T>, T> {
 
+    /**
+     * Check if object has children.
+     * 
+     * @return true, if has none children, false, otherwise.
+     */
     boolean isEmpty();
 
+    /**
+     * Get the children list.
+     * 
+     * @return The children list.
+     */
     List<T> getChildren();
 
+    /**
+     * Add a child and return the object itself.
+     * 
+     * @param child
+     *            The child.
+     * @return The composite itself.
+     */
     P add(T child);
 }

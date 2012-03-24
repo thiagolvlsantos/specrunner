@@ -60,11 +60,50 @@ import org.specrunner.util.UtilXPath;
  */
 public class PluginIf extends AbstractPluginValue {
 
+    /**
+     * CSS name for testing condition.
+     */
     public static final String CSS_TEST = "test";
+    /**
+     * CSS name for then block.
+     */
     public static final String CSS_THEN = "then";
+    /**
+     * CSS name for else block.
+     */
     public static final String CSS_ELSE = "else";
+    /**
+     * CSS style for selected branch.
+     */
     public static final String CSS_SELECTED = "selected";
+    /**
+     * CSS style for unselected branch.
+     */
     public static final String CSS_RELEGATED = "relegated";
+
+    /**
+     * Set if unselected branch should be hidden.
+     */
+    private Boolean hide = Boolean.FALSE;
+
+    /**
+     * Get hide status.
+     * 
+     * @return true, to hide unselected branch, false, otherwise.
+     */
+    public Boolean getHide() {
+        return hide;
+    }
+
+    /**
+     * Set hide status.
+     * 
+     * @param hide
+     *            Status,
+     */
+    public void setHide(Boolean hide) {
+        this.hide = hide;
+    }
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
@@ -122,6 +161,14 @@ public class PluginIf extends AbstractPluginValue {
         return ENext.SKIP;
     }
 
+    /**
+     * Encapsulate the selected element.
+     * 
+     * @param node
+     *            The node.
+     * @param expanded
+     *            If is expanded or not.
+     */
     public void encapsulate(Node node, boolean expanded) {
         ParentNode parent = node.getParent();
         int index = parent.indexOf(node);
@@ -132,7 +179,6 @@ public class PluginIf extends AbstractPluginValue {
             enc.appendChild(node);
             parent.insertChild(enc, index++);
         } else {
-            boolean hide = Boolean.parseBoolean(((Element) node).getAttributeValue("hide"));
             if (!hide) {
                 enc.appendChild(node);
                 parent.insertChild(enc, index++);

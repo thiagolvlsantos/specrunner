@@ -28,8 +28,17 @@ import nu.xom.Element;
  */
 public class ElementHolderImpl implements IElementHolder {
 
+    /**
+     * The element encapsulated.
+     */
     private Element element;
 
+    /**
+     * Create a element holder.
+     * 
+     * @param element
+     *            The element.
+     */
     public ElementHolderImpl(Element element) {
         this.element = element;
     }

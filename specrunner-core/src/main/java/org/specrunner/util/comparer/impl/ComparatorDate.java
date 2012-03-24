@@ -19,6 +19,12 @@ package org.specrunner.util.comparer.impl;
 
 import java.util.Date;
 
+/**
+ * Comparator of dates.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class ComparatorDate extends AbstractComparatorTime {
 
     @Override

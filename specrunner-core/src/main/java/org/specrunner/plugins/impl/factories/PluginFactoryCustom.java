@@ -40,8 +40,14 @@ import org.specrunner.plugins.impl.UtilPlugin;
  */
 public class PluginFactoryCustom extends PluginFactoryImpl {
 
+    /**
+     * Attribute with custom plugin information.
+     */
     private static final String ATTRIBUTE = "custom";
 
+    /**
+     * Creates the factory loading file 'plugin_custom.properties'.
+     */
     public PluginFactoryCustom() {
         super("plugin_custom.properties");
     }

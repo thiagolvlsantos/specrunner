@@ -36,10 +36,13 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginPause extends AbstractPlugin {
 
+    /**
+     * Pause time.
+     */
     private Long time;
 
     /**
-     * If set, specify the time to wait.
+     * If set, specify the time to wait. Otherwise, press any key to move on.
      * 
      * @return The time to wait.
      */

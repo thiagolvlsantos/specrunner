@@ -41,8 +41,14 @@ import org.specrunner.plugins.impl.UtilPlugin;
  */
 public class PluginFactoryCSS extends PluginFactoryImpl {
 
+    /**
+     * Attribute with CSS information.
+     */
     private static final String ATTRIBUTE = "class";
 
+    /**
+     * Creates the factory loading file 'plugin_css.properties'.
+     */
     public PluginFactoryCSS() {
         super("plugin_css.properties");
     }

@@ -36,10 +36,22 @@ import org.specrunner.util.comparer.IComparatorManager;
  */
 public class ComparatorManagerImpl implements IComparatorManager {
 
-    protected Map<String, IComparator> iComparators = new HashMap<String, IComparator>();
+    /**
+     * Map of comparators.
+     */
+    protected Map<String, IComparator> comparators = new HashMap<String, IComparator>();
+    /**
+     * Default comparator instance.
+     */
     protected IComparator defaultComparator = new ComparatorDefault();
+    /**
+     * Initialization flag.
+     */
     protected boolean initialized = false;
 
+    /**
+     * Initialize manager.
+     */
     public void initialize() {
         if (!initialized) {
             try {
@@ -54,7 +66,7 @@ public class ComparatorManagerImpl implements IComparatorManager {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("put(" + key + "," + c + ")");
                     }
-                    iComparators.put(key, c.newInstance());
+                    comparators.put(key, c.newInstance());
                 }
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
@@ -66,13 +78,13 @@ public class ComparatorManagerImpl implements IComparatorManager {
     @Override
     public void bind(String name, IComparator iComparator) {
         initialize();
-        iComparators.put(name, iComparator);
+        comparators.put(name, iComparator);
     }
 
     @Override
     public IComparator get(String name) {
         initialize();
-        IComparator c = iComparators.get(name);
+        IComparator c = comparators.get(name);
         if (c != null) {
             c.initialize();
         }
@@ -82,7 +94,7 @@ public class ComparatorManagerImpl implements IComparatorManager {
     @Override
     public IComparator get(Class<?> type) {
         initialize();
-        for (IComparator c : iComparators.values()) {
+        for (IComparator c : comparators.values()) {
             if (c.getType() != Object.class && c.getType().isAssignableFrom(type)) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Comparator for " + type.getName() + " is " + c);

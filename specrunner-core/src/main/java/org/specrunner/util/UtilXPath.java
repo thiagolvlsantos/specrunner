@@ -28,6 +28,9 @@ import nu.xom.Nodes;
  */
 public final class UtilXPath {
 
+    /**
+     * Hidden constructor.
+     */
     private UtilXPath() {
     }
 

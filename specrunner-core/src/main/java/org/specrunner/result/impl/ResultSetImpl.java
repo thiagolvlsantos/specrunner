@@ -138,6 +138,21 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         return addResult(status, source, null, failure, writable);
     }
 
+    /**
+     * Add a result.
+     * 
+     * @param status
+     *            The status.
+     * @param source
+     *            The source.
+     * @param message
+     *            The message.
+     * @param failure
+     *            The failure.
+     * @param writable
+     *            The writable resources.
+     * @return The result new created.
+     */
     protected IResult addResult(Status status, IBlock source, String message, Throwable failure, IWritable writable) {
         IResult result = new ResultImpl(status, source, message, failure, writable);
         if (add(result)) {

@@ -34,8 +34,22 @@ import org.specrunner.source.resource.positional.Position;
  */
 public class JSResource extends AbstractResourceHeader {
 
-    public JSResource(ISource parent, String path, boolean classpath, EType ref, Position position) {
-        super(parent, path, classpath, ref, position);
+    /**
+     * Creates a JavaScript resource.
+     * 
+     * @param parent
+     *            The source parent.
+     * @param path
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     * @param position
+     *            The resource position.
+     */
+    public JSResource(ISource parent, String path, boolean classpath, EType type, Position position) {
+        super(parent, path, classpath, type, position);
     }
 
     @Override
@@ -58,6 +72,15 @@ public class JSResource extends AbstractResourceHeader {
         return new File(output.getFile().getParentFile(), localName(output, name));
     }
 
+    /**
+     * Gets the local disk file name.
+     * 
+     * @param output
+     *            The output source.
+     * @param name
+     *            The name.
+     * @return The name of local resource.
+     */
     protected String localName(ISource output, String name) {
         return output.getFile().getName() + "_res/" + name + ".js";
     }
