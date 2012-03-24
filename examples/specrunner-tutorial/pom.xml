@@ -15,11 +15,11 @@
 	</licenses>
 	<dependencies>
 		<!-- SPECRUNNER -->
-		<dependency>
+		<!--dependency>
 			<groupId>org.specrunner</groupId>
 			<artifactId>specrunner-hibernate3</artifactId>
 			<version>${project.version}</version>
-		</dependency>
+		</dependency-->
 		<dependency>
 			<groupId>org.specrunner</groupId>
 			<artifactId>specrunner-htmlunit</artifactId>
