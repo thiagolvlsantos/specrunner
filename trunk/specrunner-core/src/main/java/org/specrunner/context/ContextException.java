@@ -19,6 +19,7 @@ package org.specrunner.context;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class ContextException extends SpecRunnerException {
 
@@ -36,5 +37,5 @@ public class ContextException extends SpecRunnerException {
     public ContextException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }
+// CHECKSTYLE:ON

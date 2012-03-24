@@ -19,6 +19,7 @@ package org.specrunner.source.resource;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class ResourceException extends SpecRunnerException {
 
@@ -37,3 +38,4 @@ public class ResourceException extends SpecRunnerException {
         super(message, cause);
     }
 }
+// CHECKSTYLE:ON

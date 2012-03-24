@@ -19,6 +19,7 @@ package org.specrunner.properties;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class PropertyLoaderException extends SpecRunnerException {
 
@@ -37,3 +38,4 @@ public class PropertyLoaderException extends SpecRunnerException {
         super(message, cause);
     }
 }
+// CHECKSTYLE:ON

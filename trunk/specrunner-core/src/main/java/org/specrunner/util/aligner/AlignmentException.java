@@ -19,6 +19,7 @@ package org.specrunner.util.aligner;
 
 import org.specrunner.util.IPresentation;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public abstract class AlignmentException extends Exception implements IPresentation {
 
@@ -37,3 +38,4 @@ public abstract class AlignmentException extends Exception implements IPresentat
         return "Strings are different:\n(expected        )" + getAligner().getExpected() + "\n(received        )" + getAligner().getReceived() + "\n(expected aligned)" + aligner.getExpectedAligned() + "\n(received aligned)" + aligner.getReceivedAligned();
     }
 }
+// CHECKSTYLE:ON

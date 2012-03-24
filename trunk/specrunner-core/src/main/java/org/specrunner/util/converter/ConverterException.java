@@ -19,6 +19,7 @@ package org.specrunner.util.converter;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class ConverterException extends SpecRunnerException {
 
@@ -38,3 +39,4 @@ public class ConverterException extends SpecRunnerException {
         super(cause);
     }
 }
+// CHECKSTYLE:ON

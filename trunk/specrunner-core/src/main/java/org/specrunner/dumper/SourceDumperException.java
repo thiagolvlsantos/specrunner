@@ -19,6 +19,7 @@ package org.specrunner.dumper;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class SourceDumperException extends SpecRunnerException {
 
@@ -36,5 +37,5 @@ public class SourceDumperException extends SpecRunnerException {
     public SourceDumperException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }
+// CHECKSTYLE:ON
