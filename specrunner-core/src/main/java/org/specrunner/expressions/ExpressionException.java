@@ -19,6 +19,7 @@ package org.specrunner.expressions;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class ExpressionException extends SpecRunnerException {
 
@@ -36,5 +37,5 @@ public class ExpressionException extends SpecRunnerException {
     public ExpressionException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }
+// CHECKSTYLE:ON

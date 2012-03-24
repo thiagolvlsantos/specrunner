@@ -19,6 +19,7 @@ package org.specrunner.runner;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class RunnerException extends SpecRunnerException {
 
@@ -38,3 +39,4 @@ public class RunnerException extends SpecRunnerException {
         super(message, cause);
     }
 }
+// CHECKSTYLE:ON

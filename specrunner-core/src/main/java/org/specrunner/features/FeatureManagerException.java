@@ -19,6 +19,7 @@ package org.specrunner.features;
 
 import org.specrunner.SpecRunnerException;
 
+//CHECKSTYLE:OFF
 @SuppressWarnings("serial")
 public class FeatureManagerException extends SpecRunnerException {
 
@@ -36,5 +37,5 @@ public class FeatureManagerException extends SpecRunnerException {
     public FeatureManagerException(String message, Throwable cause) {
         super(message, cause);
     }
-
 }
+// CHECKSTYLE:ON
