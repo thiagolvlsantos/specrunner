@@ -2,7 +2,7 @@
 #labels Featured,Phase-Deploy
 
 = Requisitos =
-Uma versão do Maven >= 3 disponível e parte do PATH do seu ambiente.
+Uma versão do Maven >= 3 disponível no PATH do seu ambiente.
 
 = Adicionando a um projeto =
 Adicione a dependência Maven da seguinte forma:
