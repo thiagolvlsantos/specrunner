@@ -422,7 +422,7 @@ public class PluginBrowser extends AbstractPluginScoped {
                 Map<String, Object> cfg = new HashMap<String, Object>();
                 cfg.put("version", version);
                 cfg.put("name", getName());
-                IReusable reusable = reusables.get(getName());
+                IReusable<?> reusable = reusables.get(getName());
                 if (reusable != null && reusable.canReuse(cfg)) {
                     reusable.reset();
                     saveGlobal(context, getName(), reusable.getObject());
@@ -528,7 +528,7 @@ public class PluginBrowser extends AbstractPluginScoped {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebClient reuse enabled.");
                 }
-                reusables.put(getName(), new AbstractReusable(getName(), client) {
+                reusables.put(getName(), new AbstractReusable<WebClient>(getName(), client) {
                     @Override
                     public boolean canReuse(Map<String, Object> extra) {
                         Object localVersion = extra.get("version");

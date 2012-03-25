@@ -268,7 +268,7 @@ public final class SpecRunnerServices {
      */
     private static void release(SpecRunnerServices service) {
         IReusableManager rm = service.lookup(IReusableManager.class);
-        for (IReusable r : rm.values()) {
+        for (IReusable<?> r : rm.values()) {
             r.release();
             rm.remove(r);
         }

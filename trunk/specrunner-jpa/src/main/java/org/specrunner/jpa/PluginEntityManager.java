@@ -89,7 +89,7 @@ public class PluginEntityManager extends AbstractPluginObject {
         }
 
         String emfName = "entityManagerFactory" + unit;
-        IReusable irFact = rm.get(emfName);
+        IReusable<?> irFact = rm.get(emfName);
         if (irFact != null) {
             if (irFact.canReuse(cfg)) {
                 emf = (EntityManagerFactory) irFact.getObject();
@@ -101,7 +101,7 @@ public class PluginEntityManager extends AbstractPluginObject {
         }
 
         String emName = "entityManager" + unit;
-        IReusable irEm = rm.get(emName);
+        IReusable<?> irEm = rm.get(emName);
         if (irEm != null) {
             if (irEm.canReuse(cfg)) {
                 em = (EntityManager) irEm.getObject();
@@ -113,7 +113,7 @@ public class PluginEntityManager extends AbstractPluginObject {
         }
 
         final EntityManager e = em;
-        rm.put(emName, new AbstractReusable(emName, e) {
+        rm.put(emName, new AbstractReusable<EntityManager>(emName, e) {
             @Override
             public void reset() {
                 e.clear();
@@ -133,7 +133,7 @@ public class PluginEntityManager extends AbstractPluginObject {
         });
 
         final EntityManagerFactory f = emf;
-        rm.put(emfName, new AbstractReusable(emfName, f) {
+        rm.put(emfName, new AbstractReusable<EntityManagerFactory>(emfName, f) {
             @Override
             public void reset() {
             }

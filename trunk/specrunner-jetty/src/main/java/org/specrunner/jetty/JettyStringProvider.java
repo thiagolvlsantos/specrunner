@@ -28,15 +28,39 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
 
+/**
+ * Default implementation of a string provider which, based on a previous
+ * started Jetty server, gets the base url.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class JettyStringProvider implements IStringProvider {
 
+    /**
+     * URL feature.
+     */
     public static final String FEATURE_URL = JettyStringProvider.class.getName() + ".url";
+    /**
+     * The start url.
+     */
     private String url;
 
+    /**
+     * The url.
+     * 
+     * @return The url.
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * Sets the url.
+     * 
+     * @param url
+     *            The url.
+     */
     public void setUrl(String url) {
         this.url = url;
     }

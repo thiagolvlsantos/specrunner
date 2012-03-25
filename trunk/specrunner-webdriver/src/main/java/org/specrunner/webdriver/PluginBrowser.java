@@ -192,7 +192,7 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
             cfg.put("webdriver", webdriver);
             cfg.put("webdriverfactory", webdriverfactory);
             cfg.put("webdriverInstance", webdriverInstance);
-            IReusable reusable = reusables.get(getName());
+            IReusable<?> reusable = reusables.get(getName());
             if (reusable != null && reusable.canReuse(cfg)) {
                 reusable.reset();
                 save(context, (WebDriver) reusable.getObject());
@@ -233,7 +233,7 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("WebDriver reuse enabled.");
             }
-            reusables.put(getName(), new AbstractReusable(getName(), webdriverInstance) {
+            reusables.put(getName(), new AbstractReusable<WebDriver>(getName(), webdriverInstance) {
                 @Override
                 public boolean canReuse(Map<String, Object> extra) {
                     String localWebdriver = (String) extra.get("webdriver");
