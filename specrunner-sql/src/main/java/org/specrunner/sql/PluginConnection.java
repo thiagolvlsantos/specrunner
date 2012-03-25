@@ -354,7 +354,7 @@ public class PluginConnection extends AbstractPluginValue {
         final String currentName = getName() != null ? getName() : CONNECTION_PROVIDER;
         IReusableManager rm = SpecRunnerServices.get(IReusableManager.class);
         if (reuse) {
-            IReusable ir = rm.get(currentName);
+            IReusable<?> ir = rm.get(currentName);
             if (ir != null) {
                 Map<String, Object> cfg = new HashMap<String, Object>();
                 cfg.put("name", currentName);
@@ -395,7 +395,7 @@ public class PluginConnection extends AbstractPluginValue {
             }
         }
         if (reuse) {
-            rm.put(currentName, new AbstractReusable(currentName, providerInstance) {
+            rm.put(currentName, new AbstractReusable<IDataSourceProvider>(currentName, providerInstance) {
                 @Override
                 public void reset() {
                 }

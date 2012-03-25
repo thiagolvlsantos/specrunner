@@ -25,7 +25,7 @@ import java.util.Map;
  * @author Thiago Santos
  * 
  */
-public interface IReusableManager extends Map<String, IReusable> {
+public interface IReusableManager extends Map<String, IReusable<?>> {
 
     /**
      * Remove a reusable resource by name.

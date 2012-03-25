@@ -22,10 +22,12 @@ import org.specrunner.reuse.IReusable;
 /**
  * Partial reusable object implementation.
  * 
- * @author Thiago Santos
+ * @param <T>
+ *            The resource object type.
  * 
+ * @author Thiago Santos
  */
-public abstract class AbstractReusable implements IReusable {
+public abstract class AbstractReusable<T> implements IReusable<T> {
 
     /**
      * A name given to the reusable resource.
@@ -34,7 +36,7 @@ public abstract class AbstractReusable implements IReusable {
     /**
      * The reusable object instance.
      */
-    private Object object;
+    private T object;
 
     /**
      * Create a reusable resource with name and the object to be reused.
@@ -44,7 +46,7 @@ public abstract class AbstractReusable implements IReusable {
      * @param object
      *            The reusable object.
      */
-    public AbstractReusable(String name, Object object) {
+    public AbstractReusable(String name, T object) {
         this.name = name;
         this.object = object;
     }
@@ -65,7 +67,7 @@ public abstract class AbstractReusable implements IReusable {
     }
 
     @Override
-    public Object getObject() {
+    public T getObject() {
         return object;
     }
 
@@ -75,7 +77,7 @@ public abstract class AbstractReusable implements IReusable {
      * @param object
      *            The object.
      */
-    public void setObject(Object object) {
+    public void setObject(T object) {
         this.object = object;
     }
 }

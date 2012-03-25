@@ -25,6 +25,12 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilLog;
 
+/**
+ * Stop a jetty server.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginStopJetty extends AbstractPluginNamed {
 
     @Override

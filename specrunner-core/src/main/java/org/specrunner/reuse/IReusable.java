@@ -23,10 +23,11 @@ import java.util.Map;
  * Stands for a reusable object. Any reusable candidate object can implement
  * this interface and use the services of reusable items.
  * 
+ * @param <T>
+ *            The reusable object type.
  * @author Thiago Santos
- * 
  */
-public interface IReusable {
+public interface IReusable<T> {
 
     /**
      * Reusable name.
@@ -40,7 +41,7 @@ public interface IReusable {
      * 
      * @return Object.
      */
-    Object getObject();
+    T getObject();
 
     /**
      * Return if the reusable can be reused. i.e. if a Jetty Server has the same

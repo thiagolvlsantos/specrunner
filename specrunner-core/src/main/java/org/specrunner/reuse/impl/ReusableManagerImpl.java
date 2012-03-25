@@ -29,11 +29,11 @@ import org.specrunner.reuse.IReusableManager;
  * 
  */
 @SuppressWarnings("serial")
-public class ReusableManagerImpl extends HashMap<String, IReusable> implements IReusableManager {
+public class ReusableManagerImpl extends HashMap<String, IReusable<?>> implements IReusableManager {
 
     @Override
-    public IReusable put(String name, IReusable resource) {
-        IReusable ir = get(name);
+    public IReusable<?> put(String name, IReusable<?> resource) {
+        IReusable<?> ir = get(name);
         if (ir != null && ir.getObject() != resource.getObject()) {
             ir.release();
         }
@@ -42,7 +42,7 @@ public class ReusableManagerImpl extends HashMap<String, IReusable> implements I
 
     @Override
     public void remove(String name) {
-        IReusable ir = get(name);
+        IReusable<?> ir = get(name);
         if (ir != null) {
             ir.release();
             remove(ir);
