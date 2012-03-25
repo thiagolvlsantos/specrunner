@@ -1,10 +1,12 @@
 package example.sql;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.PluginConnection;
@@ -25,6 +27,12 @@ public class TestSqlFeature {
 
     @Before
     public void before() {
+        IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        ief.bindPredefinedValue("pattern", pattern);
+        ief.bindPredefinedValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
+        ief.bindPredefinedClass("dt", DateTime.class);
+
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         // setting plugin connection features
         fm.add(PluginConnection.FEATURE_DRIVER, "org.hsqldb.jdbcDriver");
