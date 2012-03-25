@@ -1,5 +1,0 @@
-#summary Quais serão os próximos passos do SpecRunner?
-#labels Featured
-
-  * Incrementar a Wiki;
-  * Escrever para revistas.
