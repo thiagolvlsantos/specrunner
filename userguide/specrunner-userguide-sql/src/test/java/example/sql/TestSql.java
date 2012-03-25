@@ -1,6 +1,10 @@
 package example.sql;
 
+import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
 
 public class TestSql {
@@ -10,6 +14,15 @@ public class TestSql {
 
     private void run(String name) {
         SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + name);
+    }
+
+    @Before
+    public void before() {
+        IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+        ief.bindPredefinedValue("pattern", pattern);
+        ief.bindPredefinedValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
+        ief.bindPredefinedClass("dt", DateTime.class);
     }
 
     @Test
