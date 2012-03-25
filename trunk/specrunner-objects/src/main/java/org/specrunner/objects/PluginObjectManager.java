@@ -31,6 +31,9 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginObjectManager {
 
+    /**
+     * Thread instance of manager.
+     */
     private static ThreadLocal<PluginObjectManager> instance = new ThreadLocal<PluginObjectManager>() {
         @Override
         protected PluginObjectManager initialValue() {
@@ -38,7 +41,10 @@ public class PluginObjectManager {
         };
     };
 
-    private Map<Class<?>, AbstractPluginObject> entities = new HashMap<Class<?>, AbstractPluginObject>();
+    /**
+     * Map of instances for a given entity.
+     */
+    private final Map<Class<?>, AbstractPluginObject> entities = new HashMap<Class<?>, AbstractPluginObject>();
 
     /**
      * The object manager instance (Thread safe).

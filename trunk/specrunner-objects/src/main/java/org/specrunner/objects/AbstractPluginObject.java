@@ -52,14 +52,41 @@ import org.specrunner.util.impl.TableAdapter;
  */
 public abstract class AbstractPluginObject extends AbstractPluginTable {
 
+    /**
+     * Object class name.
+     */
     protected String type;
+    /**
+     * Object class.
+     */
     protected Class<?> typeInstance;
+    /**
+     * Object creator name.
+     */
     protected String creator;
+    /**
+     * Object creator instance.
+     */
     protected IObjectCreator creatorInstance;
+    /**
+     * The identification fields.
+     */
     protected String reference;
+    /**
+     * Separator of identification attributes.
+     */
     protected String separator;
+    /**
+     * List of fields.
+     */
     protected List<Field> fields = new LinkedList<Field>();
+    /**
+     * Mapping of key before processing to the ones after processing.
+     */
     protected Map<String, String> keysBefore = new HashMap<String, String>();
+    /**
+     * Mapping of identifiers to object instances.
+     */
     protected Map<String, Object> instances = new HashMap<String, Object>();
 
     /**
@@ -172,6 +199,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         return separator;
     }
 
+    /**
+     * Sets identifier separator.
+     * 
+     * @param separator
+     *            The separator.
+     */
     public void setSeparator(String separator) {
         this.separator = separator;
     }
@@ -226,8 +259,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     /**
      * Load fields based on <code>th</code> tags.
      * 
+     * @param context
+     *            The context.
      * @param row
+     *            The row.
      * @throws Exception
+     *             On load errors.
      */
     protected void loadFields(IContext context, RowAdapter row) throws Exception {
         int index = 0;
@@ -314,14 +351,53 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * 
      */
     public static class Field {
+        /**
+         * Field index.
+         */
         private int index;
+        /**
+         * Field name. Many-level.
+         */
         private String[] names;
+        /**
+         * Field types. Many-level.
+         */
         private Class<?>[] types;
+        /**
+         * Default value.
+         */
         private String def;
+        /**
+         * Converters.
+         */
         private String[] converters;
+        /**
+         * Arguments for converters.
+         */
         private String[] args;
+        /**
+         * Comparator name.
+         */
         private String comparator;
 
+        /**
+         * Field constructor.
+         * 
+         * @param index
+         *            The index.
+         * @param names
+         *            The names.
+         * @param def
+         *            The default value.
+         * @param type
+         *            The type.
+         * @param converters
+         *            The converters.
+         * @param args
+         *            The arguments.
+         * @param comparator
+         *            The comparator.
+         */
         public Field(int index, String[] names, String def, Class<?>[] type, String[] converters, String[] args, String comparator) {
             this.index = index;
             this.names = names;
@@ -332,62 +408,144 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             this.comparator = comparator;
         }
 
+        /**
+         * Get index.
+         * 
+         * @return The index.
+         */
         public int getIndex() {
             return index;
         }
 
+        /**
+         * Sets the index.
+         * 
+         * @param index
+         *            The index.
+         */
         public void setIndex(int index) {
             this.index = index;
         }
 
+        /**
+         * Gets names.
+         * 
+         * @return The names.
+         */
         public String[] getNames() {
             return names;
         }
 
+        /**
+         * Sets the name.
+         * 
+         * @param names
+         *            The names.
+         */
         public void setNames(String[] names) {
             this.names = names;
         }
 
+        /**
+         * Get types.
+         * 
+         * @return The types.
+         */
         public Class<?>[] getTypes() {
             return types;
         }
 
+        /**
+         * Set types.
+         * 
+         * @param types
+         *            The types.
+         */
         public void setTypes(Class<?>[] types) {
             this.types = types;
         }
 
+        /**
+         * Get default value.
+         * 
+         * @return The default.
+         */
         public String getDef() {
             return def;
         }
 
+        /**
+         * Sets the default.
+         * 
+         * @param def
+         *            The default.
+         */
         public void setDef(String def) {
             this.def = def;
         }
 
+        /**
+         * Get converters.
+         * 
+         * @return The converters.
+         */
         public String[] getConverters() {
             return converters;
         }
 
+        /**
+         * Set converters.
+         * 
+         * @param converters
+         *            The converters.
+         */
         public void setConverters(String[] converters) {
             this.converters = converters;
         }
 
+        /**
+         * The converter arguments.
+         * 
+         * @return The arguments.
+         */
         public String[] getArgs() {
             return args;
         }
 
+        /**
+         * Set converter arguments.
+         * 
+         * @param args
+         *            The arguments.
+         */
         public void setArgs(String[] args) {
             this.args = args;
         }
 
+        /**
+         * Gets the comparator.
+         * 
+         * @return The comparator.
+         */
         public String getComparator() {
             return comparator;
         }
 
+        /**
+         * Sets the comparator.
+         * 
+         * @param comparator
+         *            The comparator.
+         */
         public void setComparator(String comparator) {
             this.comparator = comparator;
         }
 
+        /**
+         * Get full name of field.
+         * 
+         * @return The name.
+         */
         public String getFullName() {
             String strNames = "";
             for (int i = 0; i < names.length; i++) {
@@ -396,6 +554,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             return strNames;
         }
 
+        /**
+         * Get the type of field.
+         * 
+         * @return The type.
+         */
         public Class<?> getSpecificType() {
             return types[types.length - 1];
         }
@@ -625,30 +788,114 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
     }
 
+    /**
+     * Sets a boolean to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setBoolean(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Boolean.valueOf(String.valueOf(value)));
     }
 
+    /**
+     * Sets a char to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setChar(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Character.valueOf(String.valueOf(value).charAt(0)));
     }
 
+    /**
+     * Sets a short to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setShort(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Short.valueOf(String.valueOf(value)));
     }
 
+    /**
+     * Sets an integer to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setInteger(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Integer.valueOf(String.valueOf(value)));
     }
 
+    /**
+     * Sets a long to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setLong(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Long.valueOf(String.valueOf(value)));
     }
 
+    /**
+     * Sets a float to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setFloat(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Float.valueOf(String.valueOf(value)));
     }
 
+    /**
+     * Sets a double to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setDouble(Object instance, Field f, Object value) throws Exception {
         PropertyUtils.setProperty(instance, f.getFullName(), Double.valueOf(String.valueOf(value)));
     }
@@ -677,6 +924,18 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         PropertyUtils.setProperty(instance, f.getFullName(), obj);
     }
 
+    /**
+     * Sets an object to a field.
+     * 
+     * @param instance
+     *            The object instance.
+     * @param f
+     *            The field information.
+     * @param value
+     *            The value to be set.
+     * @throws Exception
+     *             On setting errors.
+     */
     protected void setObject(Object instance, Field f, Object value) throws Exception {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("OBJECT(" + f.getSpecificType() + ")");

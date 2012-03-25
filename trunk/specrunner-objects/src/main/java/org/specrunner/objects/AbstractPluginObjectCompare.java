@@ -74,6 +74,18 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
         }
     }
 
+    /**
+     * Add a error to a comparation.
+     * 
+     * @param context
+     *            The context.
+     * @param row
+     *            The row.
+     * @param result
+     *            The result set.
+     * @param e
+     *            The error.
+     */
     private void addError(IContext context, RowAdapter row, IResultSet result, Exception e) {
         for (int i = 0; i < row.getCellsCount(); i++) {
             result.addResult(i == 0 ? Status.FAILURE : Status.WARNING, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
