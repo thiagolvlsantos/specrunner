@@ -51,48 +51,119 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginSessionFactory extends AbstractPluginScoped {
 
+    /**
+     * Default session factory name.
+     */
     public static final String SESSION_FACTORY = "sessionFactory";
 
-    public static final String FEATURE_CONFIGURATION = PluginConfiguration.class.getName() + ".configuration";
+    /**
+     * Feature to set configuration.
+     */
+    public static final String FEATURE_CONFIGURATION = PluginSessionFactory.class.getName() + ".configuration";
+    /**
+     * The configuration name.
+     */
     private String configuration;
 
-    public static final String FEATURE_TYPE = PluginConfiguration.class.getName() + ".type";
+    /**
+     * The session factory provider name.
+     */
+    public static final String FEATURE_TYPE = PluginSessionFactory.class.getName() + ".type";
+    /**
+     * The provider class name.
+     */
     private String type;
 
-    public static final String FEATURE_FACTORY = PluginConfiguration.class.getName() + ".factory";
+    /**
+     * Feature to set session factory factory.
+     */
+    public static final String FEATURE_FACTORY = PluginSessionFactory.class.getName() + ".factory";
+    /**
+     * The factory class.
+     */
     private String factory;
 
-    public static final String FEATURE_METHOD = PluginConfiguration.class.getName() + ".method";
+    /**
+     * Set feature factory method name.
+     */
+    public static final String FEATURE_METHOD = PluginSessionFactory.class.getName() + ".method";
+    /**
+     * The method name in object factory.
+     */
     private String method;
 
+    /**
+     * Gets the configuration.
+     * 
+     * @return The configuration.
+     */
     public String getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Sets the configuration.
+     * 
+     * @param configuration
+     *            The configuration.
+     */
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Get the session factory provider class name.
+     * 
+     * @return The session factory provider class name.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Set the session factory provider.
+     * 
+     * @param type
+     *            The factory type.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Get the session factory factory class.
+     * 
+     * @return The object factory.
+     */
     public String getFactory() {
         return factory;
     }
 
+    /**
+     * Set session factory object factory.
+     * 
+     * @param factory
+     *            The object factory name.
+     */
     public void setFactory(String factory) {
         this.factory = factory;
     }
 
+    /**
+     * Get the static method of object factory.
+     * 
+     * @return The creator method.
+     */
     public String getMethod() {
         return method;
     }
 
+    /**
+     * Set the method of a factory.
+     * 
+     * @param method
+     *            The factory method.
+     */
     public void setMethod(String method) {
         this.method = method;
     }
@@ -176,6 +247,17 @@ public class PluginSessionFactory extends AbstractPluginScoped {
         return ENext.SKIP;
     }
 
+    /**
+     * Get the session factory associated to a given name in test context.
+     * 
+     * @param context
+     *            The context.
+     * @param name
+     *            The name.
+     * @return The session factory instance.
+     * @throws PluginException
+     *             On session factory lookup errors.
+     */
     public static SessionFactory getSessionFactory(IContext context, String name) throws PluginException {
         String str = name != null ? name : SESSION_FACTORY;
         SessionFactory sf = (SessionFactory) context.getByName(str);

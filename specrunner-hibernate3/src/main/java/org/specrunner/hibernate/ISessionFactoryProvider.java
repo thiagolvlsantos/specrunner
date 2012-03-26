@@ -28,5 +28,12 @@ import org.hibernate.SessionFactory;
  */
 public interface ISessionFactoryProvider {
 
+    /**
+     * Get the system session factory.
+     * 
+     * @return The session factory.
+     * @throws Exception
+     *             On session factory lookup error.
+     */
     SessionFactory getSessioFactory() throws Exception;
 }
