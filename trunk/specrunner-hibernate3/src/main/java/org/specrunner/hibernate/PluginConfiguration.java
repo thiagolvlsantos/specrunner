@@ -64,48 +64,121 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginConfiguration extends AbstractPluginValue {
 
+    /**
+     * Default configuration name.
+     */
     public static final String SESSION_CONFIGURATION = "sessionConfiguration";
 
+    /**
+     * Feature to set configuration provider class name.
+     */
     public static final String FEATURE_TYPE = PluginConfiguration.class.getName() + ".type";
+    /**
+     * The configuration provider class name.
+     */
     private String type;
 
+    /**
+     * Feature to set configuration factory class.
+     */
     public static final String FEATURE_FACTORY = PluginConfiguration.class.getName() + ".factory";
+    /**
+     * The configuration factory name.
+     */
     private String factory;
 
+    /**
+     * Feature to set method factory name.
+     */
     public static final String FEATURE_METHOD = PluginConfiguration.class.getName() + ".method";
+    /**
+     * The method name.
+     */
     private String method;
 
+    /**
+     * Set thread safe feature enable thread resolution of connection
+     * parameters.
+     */
     public static final String FEATURE_THREADSAFE = PluginConfiguration.class.getName() + ".threadsafe";
+    /**
+     * The thread safe feature.
+     */
     private Boolean threadsafe = false;
 
+    /**
+     * The configuration provider class name.
+     * 
+     * @return The provider class name.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Set the provider.
+     * 
+     * @param type
+     *            The class name.
+     */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Get the object factory class name.
+     * 
+     * @return The factory name.
+     */
     public String getFactory() {
         return factory;
     }
 
+    /**
+     * Set factory class.
+     * 
+     * @param factory
+     *            The factory.
+     */
     public void setFactory(String factory) {
         this.factory = factory;
     }
 
+    /**
+     * Static creator method name.
+     * 
+     * @return The creator method.
+     */
     public String getMethod() {
         return method;
     }
 
+    /**
+     * Set the method name.
+     * 
+     * @param method
+     *            The name.
+     */
     public void setMethod(String method) {
         this.method = method;
     }
 
+    /**
+     * Get the thread safe mode.
+     * 
+     * @return true, of data base url should be changed according to current
+     *         thread.
+     */
     public Boolean getThreadsafe() {
         return threadsafe;
     }
 
+    /**
+     * The thread safe state.
+     * 
+     * @param threadsafe
+     *            true, for change URL based on thread, false, otherwise.
+     */
     public void setThreadsafe(Boolean threadsafe) {
         this.threadsafe = threadsafe;
     }
@@ -197,6 +270,12 @@ public class PluginConfiguration extends AbstractPluginValue {
         return ENext.SKIP;
     }
 
+    /**
+     * Set listeners of plugin.
+     * 
+     * @param cfg
+     *            The configuration.
+     */
     public void setListeners(Configuration cfg) {
         HibernateListener listener = new HibernateListener(PluginObjectManager.get().getEntities());
         PreInsertEventListener[] oldIn = cfg.getEventListeners().getPreInsertEventListeners();
@@ -222,6 +301,14 @@ public class PluginConfiguration extends AbstractPluginValue {
         cfg.getEventListeners().setPostInsertEventListeners(out);
     }
 
+    /**
+     * Change URL if thread safe is true.
+     * 
+     * @param context
+     *            The context.
+     * @param cfg
+     *            The configuration.
+     */
     protected void changeUrl(IContext context, Configuration cfg) {
         String url = String.valueOf(SpecRunnerServices.get(IConcurrentMapping.class).get("url", cfg.getProperty(Environment.URL)));
         cfg.setProperty(Environment.URL, url);
@@ -240,6 +327,18 @@ public class PluginConfiguration extends AbstractPluginValue {
         }
     }
 
+    /**
+     * Gets the configuration object bound to the environment with a given name.
+     * 
+     * @param context
+     *            The context.
+     * @param name
+     *            The presumed name of configuration.
+     * @return The configuration with the given name, if exists, otherwise the
+     *         configuration with default name, if exists, or null.
+     * @throws PluginException
+     *             On configuration lookup error.
+     */
     public static Configuration getConfiguration(IContext context, String name) throws PluginException {
         String str = name != null ? name : SESSION_CONFIGURATION;
         Configuration cfg = (Configuration) context.getByName(str);

@@ -39,10 +39,25 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginSchema extends AbstractPlugin {
 
+    /**
+     * The configuration name.
+     */
     private String configuration;
+    /**
+     * The factory name.
+     */
     private String factory;
+    /**
+     * The schema name.
+     */
     private String schema;
+    /**
+     * To show/generate script.
+     */
     private boolean script = false;
+    /**
+     * To export/update schema.
+     */
     private boolean export = true;
 
     /**
@@ -55,6 +70,12 @@ public class PluginSchema extends AbstractPlugin {
         return configuration;
     }
 
+    /**
+     * Set the configuration.
+     * 
+     * @param configuration
+     *            A configuration.
+     */
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }
@@ -69,6 +90,12 @@ public class PluginSchema extends AbstractPlugin {
         return factory;
     }
 
+    /**
+     * Set a session factory.
+     * 
+     * @param factory
+     *            A factory.
+     */
     public void setFactory(String factory) {
         this.factory = factory;
     }

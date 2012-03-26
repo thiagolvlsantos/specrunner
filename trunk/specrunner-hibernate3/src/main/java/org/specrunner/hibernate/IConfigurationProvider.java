@@ -28,5 +28,12 @@ import org.hibernate.cfg.Configuration;
  */
 public interface IConfigurationProvider {
 
+    /**
+     * Gets the system configuration.
+     * 
+     * @return The configuration.
+     * @throws Exception
+     *             On configuration lookup error.
+     */
     Configuration getConfiguration() throws Exception;
 }

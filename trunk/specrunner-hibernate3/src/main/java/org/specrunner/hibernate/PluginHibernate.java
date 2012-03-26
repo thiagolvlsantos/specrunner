@@ -32,12 +32,26 @@ import org.specrunner.util.impl.RowAdapter;
  */
 public abstract class PluginHibernate extends AbstractPluginObject {
 
+    /**
+     * The configuration name.
+     */
     private String configuration;
 
+    /**
+     * The configuration name.
+     * 
+     * @return The name.
+     */
     public String getConfiguration() {
         return configuration;
     }
 
+    /**
+     * Set configuration name.
+     * 
+     * @param configuration
+     *            The name.
+     */
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }
@@ -66,12 +80,18 @@ public abstract class PluginHibernate extends AbstractPluginObject {
      * This method can be and should be overridden to perform save, comparation,
      * etc for updates.
      * 
-     * @param sf
-     *            The session factory information.
+     * @param context
+     *            The test context.
      * @param instance
      *            The object instance.
+     * @param row
+     *            The row of object.
+     * @param result
+     *            The result set.
+     * @param sf
+     *            The session factory.
      * @throws Exception
-     *             On action errors.
+     *             On exception errors.
      */
     protected abstract void action(IContext context, Object instance, RowAdapter row, IResultSet result, SessionFactory sf) throws Exception;
 }

@@ -35,9 +35,21 @@ import org.specrunner.util.UtilLog;
 @SuppressWarnings("serial")
 public class HibernateListener implements PreInsertEventListener, PostInsertEventListener {
 
-    private Map<Class<?>, AbstractPluginObject> entities;
+    /**
+     * Map of objects inserted.
+     */
+    private final Map<Class<?>, AbstractPluginObject> entities;
+    /**
+     * Key of object before inclusion.
+     */
     private String keyBefore;
 
+    /**
+     * Creates a listener with a entities mapping.
+     * 
+     * @param entities
+     *            The entity mapping by type.
+     */
     public HibernateListener(Map<Class<?>, AbstractPluginObject> entities) {
         this.entities = entities;
     }
