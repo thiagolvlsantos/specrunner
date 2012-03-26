@@ -40,23 +40,38 @@ import org.specrunner.util.UtilString;
 public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
 
     /**
-     * Default interval feature.
+     * Feature for interval.
      */
     public static final String FEATURE_INTERVAL = AbstractPluginBrowserAware.class.getName() + ".interval";
+    /**
+     * Default interval.
+     */
     private static final Long DEFAULT_INTERVAL = 100L;
+    /**
+     * The interval.
+     */
     private Long interval = DEFAULT_INTERVAL;
 
     /**
-     * Default max time of feature.
+     * Feature to set max interval.
      */
     public static final String FEATURE_MAXWAIT = AbstractPluginBrowserAware.class.getName() + ".maxwait";
+    /**
+     * Default max wait.
+     */
     private static final Long DEFAULT_MAXWAIT = 1000L;
+    /**
+     * The max wait time.
+     */
     private Long maxwait = DEFAULT_MAXWAIT;
 
     /**
-     * Normalized feature.
+     * Feature to set normalized state.
      */
     public static final String FEATURE_NORMALIZED = AbstractPluginBrowserAware.class.getName() + ".normalized";
+    /**
+     * The normalized version.
+     */
     private Boolean normalized = Boolean.TRUE;
 
     /**
@@ -74,6 +89,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         return maxwait;
     }
 
+    /**
+     * Set the max wait interval.
+     * 
+     * @param maxwait
+     *            The max wait.
+     */
     public void setMaxwait(Long maxwait) {
         this.maxwait = maxwait;
     }
@@ -88,6 +109,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         return interval;
     }
 
+    /**
+     * Change the interval.
+     * 
+     * @param interval
+     *            The interval.
+     */
     public void setInterval(Long interval) {
         this.interval = interval;
     }
@@ -96,16 +123,29 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * If normalized is false, the expected and received String are not compared
      * using their normalized version (trim+remove extra spaces).
      * 
-     * @return
+     * @return If normalized is enable or not.
      */
     public Boolean getNormalized() {
         return normalized;
     }
 
+    /**
+     * Set the normalized state.
+     * 
+     * @param normalized
+     *            true, to normalize, false, otherwise.
+     */
     public void setNormalized(Boolean normalized) {
         this.normalized = normalized;
     }
 
+    /**
+     * Get the normalized version of a string.
+     * 
+     * @param str
+     *            The string to be normalized.
+     * @return The normalized version of the string.
+     */
     public String getNormalized(String str) {
         if (getNormalized()) {
             return UtilString.normalize(str);
@@ -161,6 +201,11 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         }
     }
 
+    /**
+     * Gets the browser name.
+     * 
+     * @return The name.
+     */
     public String getBrowserName() {
         return getName() != null ? getName() : PluginBrowser.BROWSER_NAME;
     }
@@ -179,17 +224,37 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException;
 
+    /**
+     * Sign actions to wait for browser response.
+     * 
+     * @return true, when wait is desired, false, otherwise. Default is true.
+     */
     protected boolean isWait() {
         return true;
     }
 
+    /**
+     * Wait for client. If sleep is set, wait for sleep time.
+     * 
+     * @param client
+     *            The client.
+     */
     protected void waitForClient(WebDriver client) {
         if (getSleep() == null) {
             (new WebDriverWait(client, maxwait, interval)).until(getCondition(System.currentTimeMillis(), getTimeout()));
         }
     }
 
-    protected ExpectedCondition<?> getCondition(final long start, final Long timeout) {
+    /**
+     * Return the condition to wait.
+     * 
+     * @param start
+     *            The begin time.
+     * @param timeout
+     *            The timeout.
+     * @return The expected condition.
+     */
+    protected ExpectedCondition<Boolean> getCondition(final long start, final Long timeout) {
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver d) {

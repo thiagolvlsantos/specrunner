@@ -20,16 +20,16 @@ package org.specrunner.webdriver.actions;
 import org.openqa.selenium.WebElement;
 
 /**
- * Check all checkboxes.
+ * Uncheck all checkboxes.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginCheckAll extends AbstractPluginCheck implements IAction {
+public class PluginUncheckAll extends AbstractPluginCheck implements IAction {
 
     @Override
     protected void doSomething(WebElement e) {
-        if (!e.isSelected()) {
+        if (e.isSelected()) {
             e.click();
         }
     }

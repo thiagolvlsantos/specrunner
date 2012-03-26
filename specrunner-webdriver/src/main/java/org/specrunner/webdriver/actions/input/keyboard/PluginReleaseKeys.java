@@ -27,6 +27,12 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginKeyboard;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Release a given key.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public class PluginReleaseKeys extends AbstractPluginKeyboard implements IAction {
 
     @Override

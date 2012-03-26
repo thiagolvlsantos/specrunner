@@ -31,18 +31,38 @@ import com.gargoylesoftware.htmlunit.WebClient;
  */
 public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriver {
 
+    /**
+     * Default constructor.
+     */
     public HtmlUnitDriverLocal() {
-        super();
     }
 
+    /**
+     * Creates the client with JS enabled or not.
+     * 
+     * @param enableJavascript
+     *            true, to enable java script, false, otherwise.
+     */
     public HtmlUnitDriverLocal(boolean enableJavascript) {
         super(enableJavascript);
     }
 
+    /**
+     * Creates a client with a given version.
+     * 
+     * @param version
+     *            The browser version.
+     */
     public HtmlUnitDriverLocal(BrowserVersion version) {
         super(version);
     }
 
+    /**
+     * Creates a driver with preset capabilities.
+     * 
+     * @param capabilities
+     *            The capabilities.
+     */
     public HtmlUnitDriverLocal(Capabilities capabilities) {
         super(capabilities);
     }
@@ -52,6 +72,14 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
         return super.getWebClient();
     }
 
+    /**
+     * Adds a header to the client.
+     * 
+     * @param name
+     *            The header name.
+     * @param value
+     *            The header value.
+     */
     public void setHeader(String name, String value) {
         WebClient wc = getWebClient();
         wc.addRequestHeader(name, value);

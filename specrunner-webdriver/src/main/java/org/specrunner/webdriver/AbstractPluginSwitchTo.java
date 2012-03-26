@@ -36,5 +36,19 @@ public abstract class AbstractPluginSwitchTo extends AbstractPluginBrowserAware 
         doEnd(context, result, client, client.switchTo());
     }
 
+    /**
+     * Perform a target locator action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param target
+     *            The target.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, TargetLocator target) throws PluginException;
 }

@@ -27,6 +27,12 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginKeyboard;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Press a given key.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginPressKeys extends AbstractPluginKeyboard implements IAction {
 
     @Override

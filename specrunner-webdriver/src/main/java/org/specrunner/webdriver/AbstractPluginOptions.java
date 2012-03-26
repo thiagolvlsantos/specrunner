@@ -36,5 +36,19 @@ public abstract class AbstractPluginOptions extends AbstractPluginBrowserAware {
         doEnd(context, result, client, client.manage());
     }
 
+    /**
+     * Perform an option action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param options
+     *            The options.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, Options options) throws PluginException;
 }

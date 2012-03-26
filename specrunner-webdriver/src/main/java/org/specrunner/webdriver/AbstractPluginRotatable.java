@@ -33,16 +33,37 @@ import org.specrunner.result.Status;
  */
 public abstract class AbstractPluginRotatable extends AbstractPluginBrowserAware {
 
+    /**
+     * The orientation name.
+     */
     private String orientation;
 
+    /**
+     * Get the orientation name.
+     * 
+     * @return The orientation name.
+     */
     public String getOrientation() {
         return orientation;
     }
 
+    /**
+     * Set the orientation.
+     * 
+     * @param orientation
+     *            The orientation.
+     */
     public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
 
+    /**
+     * Gets the object orientation by its name.
+     * 
+     * @return The orientation object.
+     * @throws PluginException
+     *             On orientation lookup errors.
+     */
     protected ScreenOrientation getOrientationValue() throws PluginException {
         ScreenOrientation so = ScreenOrientation.valueOf(getOrientation());
         if (so == null) {
@@ -60,5 +81,19 @@ public abstract class AbstractPluginRotatable extends AbstractPluginBrowserAware
         }
     }
 
+    /**
+     * Perform an action on rotatable drivers.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param rotatable
+     *            The rotatable driver.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, Rotatable rotatable) throws PluginException;
 }

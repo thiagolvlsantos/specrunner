@@ -32,9 +32,20 @@ import org.specrunner.webdriver.AbstractPluginFindSingle;
  * 
  */
 public class PluginType extends AbstractPluginFindSingle implements IAction {
+    /**
+     * Set the append mode.
+     */
     private Boolean append = false;
+    /**
+     * Write to a given text position.
+     */
     private Integer position;
 
+    /**
+     * Get the append mode.
+     * 
+     * @return true, if append is on, false, otherwise. Default is false.
+     */
     public Boolean getAppend() {
         return append;
     }
@@ -49,6 +60,11 @@ public class PluginType extends AbstractPluginFindSingle implements IAction {
         this.append = append;
     }
 
+    /**
+     * Get the position to type text.
+     * 
+     * @return The text position.
+     */
     public Integer getPosition() {
         return position;
     }

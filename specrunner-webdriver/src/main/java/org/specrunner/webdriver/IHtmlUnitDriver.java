@@ -27,5 +27,10 @@ import com.gargoylesoftware.htmlunit.WebClient;
  */
 public interface IHtmlUnitDriver {
 
+    /**
+     * Return the webdriver client.
+     * 
+     * @return The client.
+     */
     WebClient getWebClient();
 }

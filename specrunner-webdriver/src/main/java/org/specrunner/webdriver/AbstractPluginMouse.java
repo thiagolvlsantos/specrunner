@@ -37,5 +37,21 @@ public abstract class AbstractPluginMouse extends AbstractPluginHasInputDevices 
         doEnd(context, result, client, input, input.getMouse());
     }
 
+    /**
+     * Perform actions on a mouse enabled device.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param input
+     *            The device.
+     * @param mouse
+     *            The mouse action.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Mouse mouse) throws PluginException;
 }

@@ -38,8 +38,31 @@ public abstract class AbstractPluginKeyboard extends AbstractPluginHasInputDevic
         doEnd(context, result, client, input, input.getKeyboard());
     }
 
+    /**
+     * Perform an action on input devices with keyboard.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param input
+     *            The device.
+     * @param keyboard
+     *            The keyboard.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Keyboard keyboard) throws PluginException;
 
+    /**
+     * Gets the keys by the name set in name attribute.
+     * 
+     * @return The keys.
+     * @throws PluginException
+     *             On key lookup errors.
+     */
     protected Keys getKey() throws PluginException {
         Keys k = Keys.valueOf(getName());
         if (k == null) {

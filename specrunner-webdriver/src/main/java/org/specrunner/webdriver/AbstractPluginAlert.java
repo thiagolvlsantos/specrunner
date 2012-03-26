@@ -37,5 +37,21 @@ public abstract class AbstractPluginAlert extends AbstractPluginSwitchTo {
         doEnd(context, result, client, target, target.alert());
     }
 
+    /**
+     * Perform an alert action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param target
+     *            The target.
+     * @param alert
+     *            The alert.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, TargetLocator target, Alert alert) throws PluginException;
 }

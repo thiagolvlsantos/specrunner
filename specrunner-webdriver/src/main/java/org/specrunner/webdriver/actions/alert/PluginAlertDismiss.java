@@ -28,6 +28,12 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginAlert;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Perform a alert dismiss action.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginAlertDismiss extends AbstractPluginAlert implements IAction {
 
     @Override

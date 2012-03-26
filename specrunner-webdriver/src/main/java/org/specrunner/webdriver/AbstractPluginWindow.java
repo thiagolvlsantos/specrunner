@@ -33,39 +33,95 @@ import org.specrunner.result.Status;
  */
 public abstract class AbstractPluginWindow extends AbstractPluginOptions {
 
+    /**
+     * X point.
+     */
     private Integer x;
+    /**
+     * Y point.
+     */
     private Integer y;
+    /**
+     * Window width.
+     */
     private Integer width;
+    /**
+     * Window height.
+     */
     private Integer height;
 
+    /**
+     * Gets the X position.
+     * 
+     * @return The X position.
+     */
     public Integer getX() {
         return x;
     }
 
+    /**
+     * Set the X position.
+     * 
+     * @param x
+     *            The X position.
+     */
     public void setX(Integer x) {
         this.x = x;
     }
 
+    /**
+     * Gets the Y position.
+     * 
+     * @return The Y position.
+     */
     public Integer getY() {
         return y;
     }
 
+    /**
+     * Sets the Y position.
+     * 
+     * @param y
+     *            The Y position.
+     */
     public void setY(Integer y) {
         this.y = y;
     }
 
+    /**
+     * Gets the client width.
+     * 
+     * @return The width.
+     */
     public Integer getWidth() {
         return width;
     }
 
+    /**
+     * Sets the client width.
+     * 
+     * @param width
+     *            The width.
+     */
     public void setWidth(Integer width) {
         this.width = width;
     }
 
+    /**
+     * Gets the client height.
+     * 
+     * @return The height.
+     */
     public Integer getHeight() {
         return height;
     }
 
+    /**
+     * Sets the client height.
+     * 
+     * @param height
+     *            The height.
+     */
     public void setHeight(Integer height) {
         this.height = height;
     }
@@ -76,5 +132,21 @@ public abstract class AbstractPluginWindow extends AbstractPluginOptions {
         result.addResult(Status.SUCCESS, context.peek());
     }
 
+    /**
+     * Perform an option/window action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param options
+     *            The options.
+     * @param window
+     *            The window.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, Options options, Window window) throws PluginException;
 }

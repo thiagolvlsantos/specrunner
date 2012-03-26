@@ -39,5 +39,21 @@ public abstract class AbstractPluginTimeouts extends AbstractPluginOptions {
         result.addResult(Status.SUCCESS, context.peek());
     }
 
+    /**
+     * Perform an option timeout action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param options
+     *            The options.
+     * @param timeouts
+     *            The timeouts.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, Options options, Timeouts timeouts) throws PluginException;
 }
