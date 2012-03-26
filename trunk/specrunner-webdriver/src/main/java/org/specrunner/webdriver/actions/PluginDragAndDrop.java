@@ -39,30 +39,74 @@ import org.specrunner.webdriver.IFinder;
  */
 public class PluginDragAndDrop extends AbstractPluginFindSingle implements IAction {
 
+    /**
+     * The target element.
+     */
     private String target;
+    /**
+     * The x offset gap.
+     */
     private Integer xoffset;
+    /**
+     * The y offset gap.
+     */
     private Integer yoffset;
 
+    /**
+     * Gets the target of paste action. i.e.
+     * <code>target="xpath://span[@id='destination']"</code>. The same search
+     * options provided by '<code>by</code>' attribute.
+     * 
+     * @return The target object.
+     */
     public String getTarget() {
         return target;
     }
 
+    /**
+     * Sets the target object.
+     * 
+     * @param target
+     *            The target.
+     */
     public void setTarget(String target) {
         this.target = target;
     }
 
+    /**
+     * Gets the x offset value.
+     * 
+     * @return The x offset.
+     */
     public Integer getXoffset() {
         return xoffset;
     }
 
+    /**
+     * Sets the x offset value.
+     * 
+     * @param xoffset
+     *            The offset.
+     */
     public void setXoffset(Integer xoffset) {
         this.xoffset = xoffset;
     }
 
+    /**
+     * Gets the y offset method.
+     * 
+     * @return The y offset.
+     */
     public Integer getYoffset() {
         return yoffset;
     }
 
+    /**
+     * Sets the y offset.
+     * 
+     * @param yoffset
+     *            The y offset.
+     */
     public void setYoffset(Integer yoffset) {
         this.yoffset = yoffset;
     }

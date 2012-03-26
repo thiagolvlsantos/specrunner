@@ -20,16 +20,16 @@ package org.specrunner.webdriver.actions;
 import org.openqa.selenium.WebElement;
 
 /**
- * Select a given element, or a list of elements in &lt;ul&gt;.
+ * Unselect a given element, or a list of elements in &lt;ul&gt;.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginSelect extends AbstractPluginSelect implements IAction {
+public class PluginUnselect extends AbstractPluginSelect implements IAction {
 
     @Override
     protected void doSomething(WebElement element, WebElement option) {
-        if (!option.isSelected()) {
+        if (option.isSelected()) {
             option.click();
         }
     }

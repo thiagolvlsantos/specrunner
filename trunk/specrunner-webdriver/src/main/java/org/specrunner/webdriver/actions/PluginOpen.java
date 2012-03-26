@@ -76,6 +76,13 @@ public class PluginOpen extends AbstractPluginUrlAware implements IAction {
         }
     }
 
+    /**
+     * Should return true if the error is ignorable.
+     * 
+     * @param error
+     *            The error.
+     * @return true, if ignorable, false, otherwise. Default is 'false'.
+     */
     protected boolean isIgnorable(PluginException error) {
         return false;
     }

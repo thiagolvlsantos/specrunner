@@ -22,61 +22,154 @@ import org.openqa.selenium.interactions.internal.Coordinates;
 import org.specrunner.webdriver.AbstractPluginMouse;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Abstract for a plugin with coordinates information. To details about each
+ * concept, please refer to the WebDriver javadoc.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginCoordinates extends AbstractPluginMouse implements IAction {
+    /**
+     * Screen point.
+     */
     private Point onscreen;
+    /**
+     * Point on view port.
+     */
     private Point inviewport;
+    /**
+     * Point in DOM.
+     */
     private Point indom;
+    /**
+     * Auxiliary.
+     */
     private Object auxiliary;
 
+    /**
+     * Gets the point on screen.
+     * 
+     * @return The point.
+     */
     public Point getOnscreen() {
         return onscreen;
     }
 
+    /**
+     * Sets point.
+     * 
+     * @param onscreen
+     *            The point.
+     */
     public void setOnscreen(Point onscreen) {
         this.onscreen = onscreen;
     }
 
+    /**
+     * Sets the on screen point as string.
+     * 
+     * @param onscreen
+     *            The screen point.
+     */
     public void setOnscreen(String onscreen) {
         this.onscreen = getPoint(onscreen);
     }
 
+    /**
+     * Gets the point in view.
+     * 
+     * @return The point.
+     */
     public Point getInviewport() {
         return inviewport;
     }
 
+    /**
+     * Sets the point in view.
+     * 
+     * @param inviewport
+     *            The point in view.
+     */
     public void setInviewport(Point inviewport) {
         this.inviewport = inviewport;
     }
 
+    /**
+     * Sets the view port.
+     * 
+     * @param inviewport
+     *            The view port as string.
+     */
     public void setInviewport(String inviewport) {
         this.inviewport = getPoint(inviewport);
     }
 
+    /**
+     * Gets the DOM point.
+     * 
+     * @return The DOM point.
+     */
     public Point getIndom() {
         return indom;
     }
 
+    /**
+     * Sets the DOM point.
+     * 
+     * @param indom
+     *            The DOM point.
+     */
     public void setIndom(Point indom) {
         this.indom = indom;
     }
 
+    /**
+     * The DOM point as string.
+     * 
+     * @param indom
+     *            The DOM point.
+     */
     public void setIndom(String indom) {
         this.indom = getPoint(indom);
     }
 
+    /**
+     * Gets the auxiliary.
+     * 
+     * @return The auxiliary.
+     */
     public Object getAuxiliary() {
         return auxiliary;
     }
 
+    /**
+     * Sets the auxiliary.
+     * 
+     * @param auxiliary
+     *            The auxiliary.
+     */
     public void setAuxiliary(Object auxiliary) {
         this.auxiliary = auxiliary;
     }
 
+    /**
+     * Gets the point from a string, the pattern is 'x,y'.
+     * 
+     * @param point
+     *            The point as string.
+     * @return The point.
+     */
     public static Point getPoint(String point) {
         int pos = point.indexOf(',');
         return new Point(Integer.parseInt(point.substring(0, pos)), Integer.parseInt(point.substring(pos + 1)));
     }
 
+    /**
+     * Builder of coordinates.
+     * 
+     * @return The coordinates.
+     */
     protected Coordinates getCoordinates() {
         return new Coordinates() {
 

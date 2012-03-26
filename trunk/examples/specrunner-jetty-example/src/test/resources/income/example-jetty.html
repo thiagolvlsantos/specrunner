@@ -75,7 +75,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
 Checkbox examples:
 <ul>
 	<li>Select all checkboxes <span class="checkAll" by="starts:input;@id;check">C1,C2 and C3</span>;</li>
-	<li>Unselect all checkboxes <span class="checkAll" by="starts:*;@id;check" status="false">C1,C2 and C3</span>;</li>
+	<li>Unselect all checkboxes <span class="uncheckAll" by="starts:*;@id;check" status="false">C1,C2 and C3</span>;</li>
 	<li>Select all checkboxes <span class="checkAll" by="starts:*;@id;check">C1,C2 and C3</span>;</li>
 	<li>Check if all checks are <span class="checked" by="xpath://input[starts-with(@id,'check')]" checked="true">on</span>;</li>
 	<li>Check if all checks and radio 2 are <span class="checked" title="Set by custom strategy!" by="starts_new:check;rad2" checked="true">on</span>;</li>
@@ -139,7 +139,7 @@ Select examples:
 		;
 	</li>
 	<li>Unselect options 2 and 4 in Multiple selection 
-		<ul class="select" by="id:sel2" unselect="true">
+		<ul class="unselect" by="id:sel2">
 			<li>Option 4</li>
 			<li>Option 2</li>
 		</ul>
