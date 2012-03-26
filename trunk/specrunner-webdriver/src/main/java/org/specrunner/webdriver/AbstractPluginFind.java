@@ -42,17 +42,26 @@ import org.specrunner.webdriver.impl.FinderXPath;
 public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
 
     /**
-     * Default finder instance.
+     * Feature to set finder instance.
      */
     public static final String FEATURE_FINDER_TYPE = AbstractPluginFind.class.getName() + ".finder";
+    /**
+     * The finder class name.
+     */
     protected String finder;
 
     /**
-     * Default finderInstance feature.
+     * Feature to set finderInstance.
      */
     public static final String FEATURE_FINDER_INSTANCE = AbstractPluginFind.class.getName() + ".finderInstance";
+    /**
+     * A finder instance.
+     */
     private IFinder finderInstance;
 
+    /**
+     * Default constructor.
+     */
     public AbstractPluginFind() {
     }
 
@@ -65,11 +74,25 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
         return finderInstance;
     }
 
+    /**
+     * Set the finder.
+     * 
+     * @param finder
+     *            A finder.
+     */
     public void setFinder(IFinder finder) {
         this.finderInstance = finder;
     }
 
-    // propagate parameters added to finderInstance
+    /**
+     * Propagate parameters added to finderInstance.
+     * 
+     * @param context
+     *            The context.
+     * @return The finder configured.
+     * @throws PluginException
+     *             On processing errors.
+     */
     public IFinder getFinderInstance(IContext context) throws PluginException {
         UtilParametrized.setProperties(context, finderInstance, getAllParameters());
         return finderInstance;

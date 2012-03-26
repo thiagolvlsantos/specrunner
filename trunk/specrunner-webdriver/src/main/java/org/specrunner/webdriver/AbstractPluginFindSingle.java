@@ -36,6 +36,9 @@ import org.specrunner.webdriver.util.WritablePage;
  */
 public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
 
+    /**
+     * The element index.
+     */
     protected int index = 0;
 
     /**
@@ -47,6 +50,12 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
         return index;
     }
 
+    /**
+     * Set the index position.
+     * 
+     * @param index
+     *            The index.
+     */
     public void setIndex(int index) {
         this.index = index;
     }

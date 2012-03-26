@@ -37,5 +37,21 @@ public abstract class AbstractPluginIme extends AbstractPluginOptions {
         doEnd(context, result, client, options, options.ime());
     }
 
+    /**
+     * Perform an options/ime action.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param options
+     *            The options.
+     * @param ime
+     *            The handler.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, Options options, ImeHandler ime) throws PluginException;
 }

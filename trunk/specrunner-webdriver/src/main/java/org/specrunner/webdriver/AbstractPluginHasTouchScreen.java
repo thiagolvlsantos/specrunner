@@ -42,5 +42,19 @@ public abstract class AbstractPluginHasTouchScreen extends AbstractPluginBrowser
         }
     }
 
+    /**
+     * Perform actions on touch screen devices.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param touch
+     *            The touch screen.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, TouchScreen touch) throws PluginException;
 }

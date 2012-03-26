@@ -36,5 +36,19 @@ public abstract class AbstractPluginNavigation extends AbstractPluginBrowserAwar
         doEnd(context, result, client, client.navigate());
     }
 
+    /**
+     * Perform navigational actions.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param navigation
+     *            The navigation device.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, Navigation navigation) throws PluginException;
 }

@@ -25,6 +25,9 @@ package org.specrunner.webdriver;
  */
 public abstract class AbstractPluginUrlAware extends AbstractPluginBrowserAware {
 
+    /**
+     * The url parameter.
+     */
     private String url;
 
     /**
@@ -36,6 +39,12 @@ public abstract class AbstractPluginUrlAware extends AbstractPluginBrowserAware 
         return url;
     }
 
+    /**
+     * Set the location.
+     * 
+     * @param url
+     *            The url.
+     */
     public void setUrl(String url) {
         this.url = url;
     }

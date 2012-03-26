@@ -30,6 +30,12 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginAlert;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Perform a type on alert dialogs.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginAlertType extends AbstractPluginAlert implements IAction {
 
     @Override

@@ -41,5 +41,19 @@ public abstract class AbstractPluginHasInputDevices extends AbstractPluginBrowse
         }
     }
 
+    /**
+     * Perform actions on input devices drivers.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param devices
+     *            The devices.
+     * @throws PluginException
+     *             On processing errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices devices) throws PluginException;
 }

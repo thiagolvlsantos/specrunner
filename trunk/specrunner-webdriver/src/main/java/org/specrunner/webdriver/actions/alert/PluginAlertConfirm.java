@@ -28,6 +28,12 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginAlert;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Perform a confirm alert action.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public class PluginAlertConfirm extends AbstractPluginAlert implements IAction {
 
     @Override

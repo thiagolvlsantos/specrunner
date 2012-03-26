@@ -41,5 +41,19 @@ public abstract class AbstractPluginHasCapabilities extends AbstractPluginBrowse
         }
     }
 
-    protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, HasCapabilities capabilites) throws PluginException;
+    /**
+     * Perform an action on <code>HasCapabilities</code> devices.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param capabilities
+     *            The capabilities.
+     * @throws PluginException
+     *             On processing errors.
+     */
+    protected abstract void doEnd(IContext context, IResultSet result, WebDriver client, HasCapabilities capabilities) throws PluginException;
 }
