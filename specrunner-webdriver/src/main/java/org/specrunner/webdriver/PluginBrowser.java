@@ -40,6 +40,12 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.actions.IAction;
 import org.specrunner.webdriver.listeners.PageListener;
 
+/**
+ * Create a web driver instance.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginBrowser extends AbstractPluginScoped implements IAction {
 
     /**
@@ -54,63 +60,123 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
     public static final String BROWSER_TYPE = "type";
 
     /**
-     * Default browser recording feature.
+     * Feature to enable browser recording.
      */
     public static final String FEATURE_RECORDING = PluginBrowser.class.getName() + ".recording";
+    /**
+     * Recording status. Default is "DEBUG log enabled".
+     */
     private Boolean recording = UtilLog.LOG.isDebugEnabled();
 
     /**
-     * Default WebDriver type.
+     * Feature to set web driver class name.
      */
     public static final String FEATURE_WEBDRIVER_TYPE = PluginBrowser.class.getName() + ".webdriver";
+    /**
+     * The web driver class name.
+     */
     protected String webdriver;
 
     /**
-     * Default WebDriver factory.
+     * Feature to set webdriver factory class name.
      */
     public static final String FEATURE_WEBDRIVER_FACTORY = PluginBrowser.class.getName() + ".webdriverFactory";
+    /**
+     * The web driver factory.
+     */
     protected String webdriverfactory;
 
     /**
-     * Default finderInstance feature.
+     * Feature to set web driver instance.
      */
     public static final String FEATURE_WEBDRIVER_INSTANCE = PluginBrowser.class.getName() + ".webdriverInstance";
+    /**
+     * The web driver instance.
+     */
     protected WebDriver webdriverInstance;
 
     /**
-     * Default browser setting for reuse.
+     * Feature to set web driver reuse.
      */
     public static final String FEATURE_REUSE = PluginBrowser.class.getName() + ".reuse";
+    /**
+     * The reuse status.
+     */
     private Boolean reuse = false;
 
+    /**
+     * Get the recording status. true, for recording, false, otherwise.
+     * 
+     * @return The recording status.
+     */
     public Boolean getRecording() {
         return recording;
     }
 
+    /**
+     * Sets the recording status.
+     * 
+     * @param recording
+     *            The status.
+     */
     public void setRecording(Boolean recording) {
         this.recording = recording;
     }
 
+    /**
+     * Gets web driver class name.
+     * 
+     * @return The web driver class.
+     */
     public String getWebdriver() {
         return webdriver;
     }
 
+    /**
+     * Sets class name.
+     * 
+     * @param webdriver
+     *            The class name.
+     */
     public void setWebdriver(String webdriver) {
         this.webdriver = webdriver;
     }
 
+    /**
+     * Gets web driver factory class name. Might implements
+     * <code>IWebDriverFactory</code>.
+     * 
+     * @return The factory class name.
+     */
     public String getWebdriverfactory() {
         return webdriverfactory;
     }
 
+    /**
+     * The web driver factory class name.
+     * 
+     * @param webdriverfactory
+     *            The driver factory.
+     */
     public void setWebdriverfactory(String webdriverfactory) {
         this.webdriverfactory = webdriverfactory;
     }
 
+    /**
+     * Gets the web driver instance.
+     * 
+     * @return The instance.
+     */
     public WebDriver getWebdriverInstance() {
         return webdriverInstance;
     }
 
+    /**
+     * Set the webdriver instance.
+     * 
+     * @param webdriverInstance
+     *            The instance.
+     */
     public void setWebdriverInstance(WebDriver webdriverInstance) {
         this.webdriverInstance = webdriverInstance;
     }
@@ -125,10 +191,19 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
         return reuse;
     }
 
+    /**
+     * Set reuse status.
+     * 
+     * @param reuse
+     *            Reuse status.
+     */
     public void setReuse(Boolean reuse) {
         this.reuse = reuse;
     }
 
+    /**
+     * Creates a browser.
+     */
     public PluginBrowser() {
         setName(BROWSER_NAME);
     }
@@ -276,6 +351,14 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
         return ENext.DEEP;
     }
 
+    /**
+     * Save browser to the context.
+     * 
+     * @param context
+     *            The context.
+     * @param driver
+     *            The driver.
+     */
     protected void save(IContext context, WebDriver driver) {
         String str = getName() != null ? getName() : BROWSER_NAME;
         String type = str + "_" + BROWSER_TYPE;
