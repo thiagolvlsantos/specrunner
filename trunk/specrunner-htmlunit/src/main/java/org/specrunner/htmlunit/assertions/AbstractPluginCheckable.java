@@ -26,39 +26,31 @@ import org.specrunner.result.Status;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DisabledElement;
+import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 
-public class PluginCheckEnabled extends AbstractPluginFind implements IAssertion {
-
-    /**
-     * Check if a component is enabled.
-     */
-    private Boolean enabled;
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
+public abstract class AbstractPluginCheckable extends AbstractPluginFind implements IAssertion {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
-        if (enabled == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Set plugin attribute 'enabled' to true or false."));
-            return;
-        }
         boolean error = false;
         for (HtmlElement element : elements) {
-            if (!(element instanceof DisabledElement)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), new WritablePage(page));
+            if (!(element instanceof HtmlCheckBoxInput) && !(element instanceof HtmlRadioButtonInput)) {
+                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), new WritablePage(page));
                 error = true;
             } else {
-                DisabledElement in = (DisabledElement) element;
-                if (!(enabled == !in.isDisabled())) {
-                    result.addResult(Status.FAILURE, context.peek(), new PluginException("Element '" + getFinder().resume(context) + " should be '" + (enabled ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), new WritablePage(page));
+                boolean onComponent = false;
+                if (element instanceof HtmlCheckBoxInput) {
+                    HtmlCheckBoxInput in = (HtmlCheckBoxInput) element;
+                    onComponent = in.isChecked();
+                }
+                if (element instanceof HtmlRadioButtonInput) {
+                    HtmlRadioButtonInput in = (HtmlRadioButtonInput) element;
+                    onComponent = in.isChecked();
+                }
+                if (expected() != onComponent) {
+                    result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(page));
                     error = true;
                 }
             }
@@ -67,4 +59,11 @@ public class PluginCheckEnabled extends AbstractPluginFind implements IAssertion
             result.addResult(Status.SUCCESS, context.peek());
         }
     }
+
+    /**
+     * The expected value.
+     * 
+     * @return true, of expected is marked, false, otherwise.
+     */
+    protected abstract boolean expected();
 }
