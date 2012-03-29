@@ -59,6 +59,23 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         }
     }
 
+    /**
+     * Compare a table.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param element
+     *            The element.
+     * @param node
+     *            The node.
+     * @return The result of comparation.
+     * @throws PluginException
+     *             On evaluation error.
+     */
     protected boolean compareTable(IContext context, IResultSet result, WebDriver client, WebElement element, Node node) throws PluginException {
         boolean success = true;
 
@@ -149,6 +166,25 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         return success;
     }
 
+    /**
+     * Compare terminal nodes of tables.
+     * 
+     * @param plugin
+     *            The source plugin.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The web driver.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @return true, if equals, false, otherwise.
+     * @throws PluginException
+     *             On comparison errors.
+     */
     protected boolean compareTerminal(IPlugin plugin, IContext context, IResultSet result, WebDriver client, CellAdapter expected, WebElement received) throws PluginException {
         if (isTable(expected.getElement())) {
             return compareTable(context, result, client, received, expected.getElement());
@@ -167,6 +203,13 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         }
     }
 
+    /**
+     * Return if a given element is a table.
+     * 
+     * @param element
+     *            The element type.
+     * @return true, if table, false otherwise.
+     */
     public static boolean isTable(Element element) {
         CellAdapter ca = new CellAdapter(element);
         return ca.hasAttribute("type") && ca.getAttribute("type").equalsIgnoreCase("table");

@@ -37,33 +37,72 @@ import org.specrunner.webdriver.util.WritablePage;
  */
 public class PluginPresent extends AbstractPluginFind implements IAssertion {
 
-    // exact number of elements selected
+    /**
+     * Exact number of elements selected.
+     */
     private Integer count;
-    // minimum number of elements selected
+    /**
+     * Minimum number of elements selected.
+     */
     private Integer min;
-    // maximum number of elements selected
+    /**
+     * Maximum number of elements selected.
+     */
     private Integer max;
 
+    /**
+     * Gets the exact count match.
+     * 
+     * @return The count.
+     */
     public Integer getCount() {
         return count;
     }
 
+    /**
+     * Sets the exact count match.
+     * 
+     * @param count
+     *            The count.
+     */
     public void setCount(Integer count) {
         this.count = count;
     }
 
+    /**
+     * Gets the minimum count.
+     * 
+     * @return The minimum.
+     */
     public Integer getMin() {
         return min;
     }
 
+    /**
+     * Sets the minimum.
+     * 
+     * @param min
+     *            The minimum.
+     */
     public void setMin(Integer min) {
         this.min = min;
     }
 
+    /**
+     * Set maximum counter.
+     * 
+     * @return The maximum.
+     */
     public Integer getMax() {
         return max;
     }
 
+    /**
+     * Sets the maximum.
+     * 
+     * @param max
+     *            The maximum.
+     */
     public void setMax(Integer max) {
         this.max = max;
     }
