@@ -28,6 +28,12 @@ import org.specrunner.result.Status;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginWindow;
 
+/**
+ * Plugin to change window size.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginSize extends AbstractPluginWindow {
 
     @Override

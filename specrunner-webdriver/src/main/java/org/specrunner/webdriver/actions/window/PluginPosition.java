@@ -28,6 +28,12 @@ import org.specrunner.result.Status;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginWindow;
 
+/**
+ * Plugin to set web driver position.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginPosition extends AbstractPluginWindow {
 
     @Override

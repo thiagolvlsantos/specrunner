@@ -26,6 +26,12 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginRotatable;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Rotate a web driver.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginRotate extends AbstractPluginRotatable implements IAction {
 
     @Override

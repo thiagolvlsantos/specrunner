@@ -27,36 +27,19 @@ import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
- * Check if elements are enabled.
+ * Check if elements are enabled/not.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginCheckEnabled extends AbstractPluginFind implements IAssertion {
-
-    /**
-     * Check if a component is enabled.
-     */
-    private Boolean enabled = true;
-
-    public Boolean getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
+public abstract class AbstractPluginEnabled extends AbstractPluginFind implements IAssertion {
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement[] elements) throws PluginException {
-        if (getEnabled() == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Set plugin attribute 'enabled' to true or false."));
-            return;
-        }
         boolean error = false;
         for (WebElement element : elements) {
-            if (enabled != element.isEnabled()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (enabled ? "enabled" : "disabled") + "' but is '" + (element.isEnabled() ? "enabled" : "disabled") + "'."), new WritablePage(client));
+            if (enabled() != element.isEnabled()) {
+                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (element.isEnabled() ? "enabled" : "disabled") + "'."), new WritablePage(client));
                 error = true;
             }
         }
@@ -64,4 +47,11 @@ public class PluginCheckEnabled extends AbstractPluginFind implements IAssertion
             result.addResult(Status.SUCCESS, context.peek());
         }
     }
+
+    /**
+     * Get enabled or not.
+     * 
+     * @return true, to check enabled, false, otherwise.
+     */
+    protected abstract boolean enabled();
 }

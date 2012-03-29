@@ -77,17 +77,17 @@ Checkbox examples:
 	<li>Select all checkboxes <span class="checkAll" by="starts:input;@id;check">C1,C2 and C3</span>;</li>
 	<li>Unselect all checkboxes <span class="uncheckAll" by="starts:*;@id;check" status="false">C1,C2 and C3</span>;</li>
 	<li>Select all checkboxes <span class="checkAll" by="starts:*;@id;check">C1,C2 and C3</span>;</li>
-	<li>Check if all checks are <span class="checked" by="xpath://input[starts-with(@id,'check')]" checked="true">on</span>;</li>
-	<li>Check if all checks and radio 2 are <span class="checked" title="Set by custom strategy!" by="starts_new:check;rad2" checked="true">on</span>;</li>
+	<li>Check if all checks are <span class="checked" by="xpath://input[starts-with(@id,'check')]">on</span>;</li>
+	<li>Check if all checks and radio 2 are <span class="checked" title="Set by custom strategy!" by="starts_new:check;rad2">on</span>;</li>
 	
 	<li>Click on checkbox <span class="clickon" by="id:check3">C3</span>;</li>
 	<li>Click on checkbox <span class="clickon" by="id:check3">C3</span>;</li>
-	<li>Check if chechbox <span class="enabled" by="id:check1" enabled="true">C1</span> is enabled, <span class="enabled" by="id:check2" enabled="false">C2</span> is disabled, and <span class="enabled" by="id:check3" enabled="true">C3</span> is enabled;</li>
-	<li>Check if <span class="checked" by="id:check1" checked="true">C1</span>, <span class="checked" by="id:check2" checked="true">C2</span> and <span class="checked" by="id:check3" checked="true">C3</span> are checked;</li>
+	<li>Check if chechbox <span class="enabled" by="id:check1" >C1</span> is enabled, <span class="disabled" by="id:check2" >C2</span> is disabled, and <span class="enabled" by="id:check3">C3</span> is enabled;</li>
+	<li>Check if <span class="checked" by="id:check1" >C1</span>, <span class="checked" by="id:check2">C2</span> and <span class="checked" by="id:check3" >C3</span> are checked;</li>
 	<li>Try click on checkbox <span class="clickon" by="id:check2">C2</span>;</li>
-	<li>Check if <span class="checked" by="id:check1" checked="true">C1</span>, <span class="checked" by="id:check2" checked="true">C2</span> and <span class="checked" by="id:check3" checked="true">C3</span> are checked;</li>
+	<li>Check if <span class="checked" by="id:check1" >C1</span>, <span class="checked" by="id:check2" >C2</span> and <span class="checked" by="id:check3" >C3</span> are checked;</li>
 	<li>Click on check <span class="clickon" by="id:check1">C1</span>;</li>
-	<li>Check if <span class="checked" by="id:check1" checked="false">C1</span> is unchecked, and <span class="checked" by="id:check2" checked="true">C2</span> and <span class="checked" by="id:check3" checked="true">C3</span> are checked;</li>
+	<li>Check if <span class="unchecked" by="id:check1" >C1</span> is unchecked, and <span class="checked" by="id:check2" >C2</span> and <span class="checked" by="id:check3" >C3</span> are checked;</li>
 </ul>
 Select examples:
 <ul>
@@ -106,7 +106,7 @@ Select examples:
 		<span class="clickon clicknext" by="id:idDisableSingle">Disable single</span>;
 	</li>
 	<li>Check if Single selection is  
-		<span class="enabled" by="id:sel1" enabled="false">disabled</span>;
+		<span class="disabled" by="id:sel1" >disabled</span>;
 	</li>
 	<li>Check if Single selection after disabling is 
 		<span class="selection" by="id:sel1" selection="true">Option 2</span>;

@@ -24,6 +24,14 @@ import org.specrunner.context.IContext;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.IWebDriverFactory;
 
+/**
+ * Creates a InternetExplorer web driver instance with
+ * <code>InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS</code>
+ * set to true.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class WebDriverFactoryIe implements IWebDriverFactory {
 
     @Override

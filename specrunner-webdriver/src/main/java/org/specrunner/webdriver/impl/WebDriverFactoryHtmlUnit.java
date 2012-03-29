@@ -23,6 +23,12 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.HtmlUnitDriverLocal;
 import org.specrunner.webdriver.IWebDriverFactory;
 
+/**
+ * Creates a <code>HtmlUnitDriverLocal(true)</code> web driver instance.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class WebDriverFactoryHtmlUnit implements IWebDriverFactory {
 
     @Override

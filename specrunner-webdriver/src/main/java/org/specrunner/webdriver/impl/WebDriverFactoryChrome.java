@@ -38,15 +38,36 @@ import org.specrunner.webdriver.IWebDriverFactory;
  */
 public class WebDriverFactoryChrome implements IWebDriverFactory {
 
+    /**
+     * Feature to set Chrome path.
+     */
     public static final String FEATURE_CHROME = WebDriverFactoryChrome.class.getName() + ".chrome";
+    /**
+     * The path Chrome path.
+     */
     protected String chrome;
 
+    /**
+     * Feature to set web driver path.
+     */
     public static final String FEATURE_DRIVER = WebDriverFactoryChrome.class.getName() + ".driver";
+    /**
+     * The driver path.
+     */
     protected String driver;
 
+    /**
+     * Feature to set Chrome switches options.
+     */
     public static final String FEATURE_SWITCHES = WebDriverFactoryChrome.class.getName() + ".switches";
+    /**
+     * The switches options.
+     */
     protected String switches;
 
+    /**
+     * Default constructor.
+     */
     public WebDriverFactoryChrome() {
         String path = System.getProperty("user.home") + "/AppData/Local/Google/Chrome/Application/";
         chrome = path + "chrome.exe";
@@ -76,26 +97,59 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         }
     }
 
+    /**
+     * Gets the Chrome path.
+     * 
+     * @return The path.
+     */
     public String getChrome() {
         return chrome;
     }
 
+    /**
+     * Sets the Chrome path.
+     * 
+     * @param chrome
+     *            The path.
+     */
     public void setChrome(String chrome) {
         this.chrome = chrome;
     }
 
+    /**
+     * Gets the driver path.
+     * 
+     * @return The path.
+     */
     public String getDriver() {
         return driver;
     }
 
+    /**
+     * Sets the driver path.
+     * 
+     * @param driver
+     *            The path.
+     */
     public void setDriver(String driver) {
         this.driver = driver;
     }
 
+    /**
+     * Gets the switches.
+     * 
+     * @return The switches.
+     */
     public String getSwitches() {
         return switches;
     }
 
+    /**
+     * Sets the switches.
+     * 
+     * @param switches
+     *            The switches.
+     */
     public void setSwitches(String switches) {
         this.switches = switches;
     }

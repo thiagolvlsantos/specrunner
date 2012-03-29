@@ -15,27 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.actions.input.mouse;
-
-import org.openqa.selenium.HasInputDevices;
-import org.openqa.selenium.Mouse;
-import org.openqa.selenium.WebDriver;
-import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+package org.specrunner.webdriver.assertions;
 
 /**
- * Action click (by coordinates).
+ * Check if elements are enabled.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginClickCoordinates extends AbstractPluginCoordinates {
+public class PluginEnabled extends AbstractPluginEnabled {
 
     @Override
-    protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Mouse mouse) throws PluginException {
-        mouse.click(getCoordinates());
-        result.addResult(Status.SUCCESS, context.peek());
+    protected boolean enabled() {
+        return true;
     }
 }

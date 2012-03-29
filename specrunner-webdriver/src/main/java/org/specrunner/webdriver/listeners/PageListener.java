@@ -43,11 +43,26 @@ import org.specrunner.webdriver.util.WritablePage;
  */
 public class PageListener extends AbstractPluginListener {
 
+    /**
+     * Default status for details.
+     */
     private static final Status DETAIL_STATUS = Status.newStatus("detail", false, -1);
+    /**
+     * Map of extra information.
+     */
     private final Map<String, Object> info = new HashMap<String, Object>();
 
+    /**
+     * The name to be used in label.
+     */
     private final String name;
 
+    /**
+     * Creates a listener with a name.
+     * 
+     * @param name
+     *            The name.
+     */
     public PageListener(String name) {
         this.name = name;
         info.put(SourceDumperWritables.LABEL_FIELD, "(" + name + ")");
