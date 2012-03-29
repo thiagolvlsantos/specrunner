@@ -32,33 +32,16 @@ import org.specrunner.webdriver.util.WritablePage;
  * @author Thiago Santos
  * 
  */
-public class PluginCheckChecked extends AbstractPluginFind implements IAssertion {
-
-    /**
-     * Check if a radio or a checkbox is checked.
-     */
-    private Boolean checked;
-
-    public Boolean getChecked() {
-        return checked;
-    }
-
-    public void setChecked(Boolean checked) {
-        this.checked = checked;
-    }
+public abstract class AbstractPluginCheckable extends AbstractPluginFind implements IAssertion {
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement[] elements) throws PluginException {
-        if (getChecked() == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Set plugin parameter 'checked' to true or false."));
-            return;
-        }
         boolean error = false;
         for (WebElement element : elements) {
             if (isCheckbox(element) || isRadio(element)) {
-                boolean onComponent = element.isSelected();
-                if (getChecked() != onComponent) {
-                    result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (checked ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(client));
+                boolean componentStatus = element.isSelected();
+                if (expected() != componentStatus) {
+                    result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (componentStatus ? "checked" : "unchecked") + "'."), new WritablePage(client));
                     error = true;
                 }
             } else {
@@ -71,10 +54,31 @@ public class PluginCheckChecked extends AbstractPluginFind implements IAssertion
         }
     }
 
+    /**
+     * The expected value.
+     * 
+     * @return true, of expected is marked, false, otherwise.
+     */
+    protected abstract boolean expected();
+
+    /**
+     * Return if a element is a input type=radio.
+     * 
+     * @param element
+     *            The element.
+     * @return true, if radio, false otherwise.
+     */
     protected boolean isRadio(WebElement element) {
         return "input".equals(element.getTagName()) && "radio".equals(element.getAttribute("type"));
     }
 
+    /**
+     * Return if a element is a input type=checkbox.
+     * 
+     * @param element
+     *            The element.
+     * @return true, if checkbox, false otherwise.
+     */
     protected boolean isCheckbox(WebElement element) {
         return "input".equals(element.getTagName()) && "checkbox".equals(element.getAttribute("type"));
     }

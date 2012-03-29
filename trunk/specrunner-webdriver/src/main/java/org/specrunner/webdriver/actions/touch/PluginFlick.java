@@ -33,21 +33,49 @@ import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
  */
 public class PluginFlick extends AbstractPluginHasTouchScreen {
 
+    /**
+     * X speed.
+     */
     private Integer xspeed;
+    /**
+     * Y speed.
+     */
     private Integer yspeed;
 
+    /**
+     * Gets the x speed.
+     * 
+     * @return The x speed.
+     */
     public Integer getXspeed() {
         return xspeed;
     }
 
+    /**
+     * Sets the X speed.
+     * 
+     * @param xspeed
+     *            The xspeed.
+     */
     public void setXspeed(Integer xspeed) {
         this.xspeed = xspeed;
     }
 
+    /**
+     * Gets y speed.
+     * 
+     * @return The y speed.
+     */
     public Integer getYspeed() {
         return yspeed;
     }
 
+    /**
+     * Sets y speed.
+     * 
+     * @param yspeed
+     *            The y speed.
+     */
     public void setYspeed(Integer yspeed) {
         this.yspeed = yspeed;
     }

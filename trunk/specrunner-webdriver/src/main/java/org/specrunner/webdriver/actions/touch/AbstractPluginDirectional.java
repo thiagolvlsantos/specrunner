@@ -20,23 +20,57 @@ package org.specrunner.webdriver.actions.touch;
 import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Touch screen with starting action point.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginDirectional extends AbstractPluginHasTouchScreen implements IAction {
 
+    /**
+     * The x position.
+     */
     private Integer x;
+    /**
+     * The y position.
+     */
     private Integer y;
 
+    /**
+     * Gets the x position.
+     * 
+     * @return The x position.
+     */
     public Integer getX() {
         return x;
     }
 
+    /**
+     * Sets the x position.
+     * 
+     * @param x
+     *            The x position.
+     */
     public void setX(Integer x) {
         this.x = x;
     }
 
+    /**
+     * Gets the y position.
+     * 
+     * @return The y position.
+     */
     public Integer getY() {
         return y;
     }
 
+    /**
+     * Sets the y position.
+     * 
+     * @param y
+     *            The y position.
+     */
     public void setY(Integer y) {
         this.y = y;
     }

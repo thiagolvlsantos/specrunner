@@ -32,12 +32,26 @@ import org.specrunner.webdriver.AbstractPluginNavigation;
  */
 public class PluginGo extends AbstractPluginNavigation {
 
+    /**
+     * The history index.
+     */
     private Long to;
 
+    /**
+     * Gets the to index.
+     * 
+     * @return The index.
+     */
     public Long getTo() {
         return to;
     }
 
+    /**
+     * Sets the index.
+     * 
+     * @param to
+     *            The new index.
+     */
     public void setTo(Long to) {
         this.to = to;
     }

@@ -25,23 +25,57 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 
+/**
+ * Mouse move action (by coordinates).
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginMouseMoveCoordinates extends AbstractPluginCoordinates {
 
+    /**
+     * The x offset gap.
+     */
     private Integer xoffset;
+    /**
+     * The y offset gap.
+     */
     private Integer yoffset;
 
+    /**
+     * Gets the x offset value.
+     * 
+     * @return The x offset.
+     */
     public Integer getXoffset() {
         return xoffset;
     }
 
+    /**
+     * Sets the x offset value.
+     * 
+     * @param xoffset
+     *            The offset.
+     */
     public void setXoffset(Integer xoffset) {
         this.xoffset = xoffset;
     }
 
+    /**
+     * Gets the y offset method.
+     * 
+     * @return The y offset.
+     */
     public Integer getYoffset() {
         return yoffset;
     }
 
+    /**
+     * Sets the y offset.
+     * 
+     * @param yoffset
+     *            The y offset.
+     */
     public void setYoffset(Integer yoffset) {
         this.yoffset = yoffset;
     }

@@ -39,30 +39,58 @@ import org.specrunner.util.impl.CellAdapter;
  */
 public class PluginCompareDate extends PluginCompare {
 
+    /**
+     * Feature to set data format on comparisons.
+     */
     public static final String FEATURE_FORMAT = PluginCompareDate.class.getName() + ".format";
     /** Date format, default is null. */
     private String format;
 
+    /**
+     * Feature to set tolerance on time comparation.
+     */
     public static final String FEATURE_TOLERANCE = PluginCompareDate.class.getName() + ".tolerance";
-    /** Date tolerance, default 1s */
+    /** Date tolerance, default 1s. */
     private static final Long DEFAULT_TOLERANCE = 1000L;
+    /**
+     * The time tolerance.
+     */
     private Long tolerance = DEFAULT_TOLERANCE;
 
-    public PluginCompareDate() {
-    }
-
+    /**
+     * The date format.
+     * 
+     * @return The date format.
+     */
     public String getFormat() {
         return format;
     }
 
+    /**
+     * Set the date format.
+     * 
+     * @param format
+     *            The format.
+     */
     public void setFormat(String format) {
         this.format = format;
     }
 
+    /**
+     * Gets the time tolerance.
+     * 
+     * @return The time tolerance.
+     */
     public long getTolerance() {
         return tolerance;
     }
 
+    /**
+     * Sets the time tolerance.
+     * 
+     * @param tolerance
+     *            The time tolerance.
+     */
     public void setTolerance(long tolerance) {
         this.tolerance = tolerance;
     }
@@ -99,6 +127,13 @@ public class PluginCompareDate extends PluginCompare {
         PluginCompareUtils.compareDate(format, getTolerance(), expected, received, context.newBlock(context.getNode(), this), context, result, client);
     }
 
+    /**
+     * Check if the element stand for a date.
+     * 
+     * @param element
+     *            The element.
+     * @return true, if is date comparation, false, otherwise.
+     */
     public static boolean isDate(Element element) {
         CellAdapter ca = new CellAdapter(element);
         return ca.hasAttribute("type") && ca.getAttribute("type").equalsIgnoreCase("date");

@@ -33,21 +33,49 @@ import org.specrunner.webdriver.AbstractPluginSwitchTo;
  */
 public class PluginFrame extends AbstractPluginSwitchTo {
 
+    /**
+     * Go to frame by index.
+     */
     private Integer index;
+    /**
+     * Go to frame by name or id.
+     */
     private String nameorid;
 
+    /**
+     * Gets the target frame index.
+     * 
+     * @return The index.
+     */
     public Integer getIndex() {
         return index;
     }
 
+    /**
+     * Sets the frame index.
+     * 
+     * @param index
+     *            The frame index.
+     */
     public void setIndex(Integer index) {
         this.index = index;
     }
 
+    /**
+     * Gets the frame name or id.
+     * 
+     * @return The name or id.
+     */
     public String getNameorid() {
         return nameorid;
     }
 
+    /**
+     * Sets the target frame name or id.
+     * 
+     * @param nameorid
+     *            The name or id.
+     */
     public void setNameorid(String nameorid) {
         this.nameorid = nameorid;
     }

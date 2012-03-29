@@ -17,5 +17,11 @@
  */
 package org.specrunner.webdriver.assertions;
 
+/**
+ * Tag interface to sign assertions.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public interface IAssertion {
 }

@@ -32,12 +32,26 @@ import org.specrunner.result.Status;
  */
 public class PluginFlickOff extends AbstractPluginCoordinatesOff {
 
+    /**
+     * The speed.
+     */
     private Integer speed;
 
+    /**
+     * Gets the speed.
+     * 
+     * @return The speed.
+     */
     public Integer getSpeed() {
         return speed;
     }
 
+    /**
+     * Sets the speed.
+     * 
+     * @param speed
+     *            The speed.
+     */
     public void setSpeed(Integer speed) {
         this.speed = speed;
     }

@@ -25,6 +25,12 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 
+/**
+ * Context click action (by coordinates).
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginContextClickCoordinates extends AbstractPluginCoordinates {
 
     @Override

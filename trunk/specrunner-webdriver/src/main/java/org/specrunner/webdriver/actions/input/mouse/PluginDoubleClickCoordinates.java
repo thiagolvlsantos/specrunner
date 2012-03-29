@@ -25,6 +25,12 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 
+/**
+ * Double click action (by coordinates).
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginDoubleClickCoordinates extends AbstractPluginCoordinates {
 
     @Override

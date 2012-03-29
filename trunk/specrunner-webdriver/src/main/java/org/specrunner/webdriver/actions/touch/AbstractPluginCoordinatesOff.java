@@ -19,22 +19,56 @@ package org.specrunner.webdriver.actions.touch;
 
 import org.specrunner.webdriver.actions.IAction;
 
+/**
+ * Plugin coordinates with offset.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginCoordinatesOff extends AbstractPluginCoordinates implements IAction {
+    /**
+     * The x offset gap.
+     */
     private Integer xoffset;
+    /**
+     * The y offset gap.
+     */
     private Integer yoffset;
 
+    /**
+     * Gets the x offset value.
+     * 
+     * @return The x offset.
+     */
     public Integer getXoffset() {
         return xoffset;
     }
 
+    /**
+     * Sets the x offset value.
+     * 
+     * @param xoffset
+     *            The offset.
+     */
     public void setXoffset(Integer xoffset) {
         this.xoffset = xoffset;
     }
 
+    /**
+     * Gets the y offset method.
+     * 
+     * @return The y offset.
+     */
     public Integer getYoffset() {
         return yoffset;
     }
 
+    /**
+     * Sets the y offset.
+     * 
+     * @param yoffset
+     *            The y offset.
+     */
     public void setYoffset(Integer yoffset) {
         this.yoffset = yoffset;
     }

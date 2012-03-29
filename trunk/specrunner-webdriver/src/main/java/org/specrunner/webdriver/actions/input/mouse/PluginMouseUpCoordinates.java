@@ -25,6 +25,12 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 
+/**
+ * Perform mouse up (by coordinates).
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginMouseUpCoordinates extends AbstractPluginCoordinates {
 
     @Override
