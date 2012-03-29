@@ -49,14 +49,37 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  */
 public class WritablePage implements IWritable {
 
-    private Map<String, Object> information;
+    /**
+     * Map of information.
+     */
+    private final Map<String, Object> information;
+    /**
+     * Reference to temporary file dumped.
+     */
     private File tmpDump;
+    /**
+     * Reference to the source file or writable resources.
+     */
     private File tmpSource;
 
+    /**
+     * Writable page by web driver.
+     * 
+     * @param driver
+     *            The driver.
+     */
     public WritablePage(WebDriver driver) {
         this(null, driver);
     }
 
+    /**
+     * The writable with extra information plus web driver.
+     * 
+     * @param information
+     *            The extra information.
+     * @param driver
+     *            The web driver.
+     */
     public WritablePage(Map<String, Object> information, WebDriver driver) {
         this.information = information;
         try {
@@ -76,6 +99,17 @@ public class WritablePage implements IWritable {
         }
     }
 
+    /**
+     * Dump a screen shot of web driver which implements
+     * <code>TakesScreenshot</code>.
+     * 
+     * @param source
+     *            The web driver source.
+     * @param driver
+     *            The web driver casted to screenshot object.
+     * @throws IOException
+     *             On writing errors.
+     */
     protected void dumpScreenshot(WebDriver source, TakesScreenshot driver) throws IOException {
         Window window = source.manage().window();
         Dimension d = null;
@@ -121,12 +155,27 @@ public class WritablePage implements IWritable {
         }
     }
 
+    /**
+     * Gets the file extension.
+     * 
+     * @param scrFile
+     *            The source.
+     * @return The corresponding file extension.
+     */
     protected String getExtension(File scrFile) {
         String name = scrFile.getName();
         name = name.substring(name.lastIndexOf("."), name.length());
         return name;
     }
 
+    /**
+     * Dump screenshots for <code>HtmlUnitLocal</code> drivers.
+     * 
+     * @param driver
+     *            The <code>HtmlUnitLocal</code> subclass driver.
+     * @throws IOException
+     *             When screenshot presents some problems.
+     */
     private void dumpScreenShot(IHtmlUnitDriver driver) throws IOException {
         WebClient wb = driver.getWebClient();
         if (wb != null) {
@@ -193,6 +242,20 @@ public class WritablePage implements IWritable {
         return map;
     }
 
+    /**
+     * Dump the file from temporary to target.
+     * 
+     * @param from
+     *            The temporary file.
+     * @param target
+     *            The target.
+     * @param map
+     *            The map of informations.
+     * @param label
+     *            The label to be used.
+     * @throws ResultException
+     *             On dump errors.
+     */
     protected void dump(File from, String target, Map<String, String> map, String label) throws ResultException {
         File to = new File(target + getExtension(from));
         String name = from.getName();

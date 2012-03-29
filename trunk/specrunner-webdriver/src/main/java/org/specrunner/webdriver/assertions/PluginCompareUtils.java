@@ -41,9 +41,31 @@ import org.specrunner.webdriver.util.WritablePage;
  */
 public final class PluginCompareUtils {
 
+    /**
+     * Hidden constructor.
+     */
     private PluginCompareUtils() {
     }
 
+    /**
+     * Compare two strings.
+     * 
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @param block
+     *            The block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The web driver.
+     * @return true, if equals, false, otherwise.
+     * @throws PluginException
+     *             On comparison errors.
+     */
     public static boolean compare(String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         boolean res = true;
         if (expected.equals(received)) {
@@ -55,6 +77,24 @@ public final class PluginCompareUtils {
         return res;
     }
 
+    /**
+     * Add error to result.
+     * 
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @param block
+     *            The block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The web driver.
+     * @throws PluginException
+     *             On errors.
+     */
     protected static void addError(String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         try {
             IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
