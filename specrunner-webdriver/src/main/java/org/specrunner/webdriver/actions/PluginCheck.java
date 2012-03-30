@@ -25,12 +25,12 @@ import org.openqa.selenium.WebElement;
  * @author Thiago Santos
  * 
  */
-public class PluginCheckAll extends AbstractPluginCheck implements IAction {
+public class PluginCheck extends AbstractPluginCheck implements IAction {
 
     @Override
-    protected void doSomething(WebElement e) {
-        if (!e.isSelected()) {
-            e.click();
+    protected void doSomething(WebElement option) {
+        if (!option.isSelected()) {
+            option.click();
         }
     }
 }
