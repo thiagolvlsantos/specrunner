@@ -17,13 +17,10 @@
  */
 package org.specrunner.webdriver.assertions;
 
-import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Node;
 import nu.xom.Nodes;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.SpecRunnerServices;
@@ -38,100 +35,69 @@ import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
- * Check elements selected or not of a given 'select'.
+ * Check elements of a selection.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginCheckSelection extends AbstractPluginFindSingle implements IAssertion {
-
-    private Boolean content;
-    private Boolean selection;
-
-    /**
-     * Check the content of a select.
-     * 
-     * @return true, to check content.
-     */
-    public Boolean getContent() {
-        return content;
-    }
-
-    public void setContent(Boolean content) {
-        this.content = content;
-    }
-
-    /**
-     * Check the selection of a select.
-     * 
-     * @return true, to check selected items.
-     */
-    public Boolean getSelection() {
-        return selection;
-    }
-
-    public void setSelection(Boolean selection) {
-        this.selection = selection;
-    }
+public abstract class AbstractPluginSelection extends AbstractPluginFindSingle implements IAssertion {
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        if (getContent() == null && getSelection() == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Set plugin content or selection."));
-            return;
-        }
-        int error = checkContent(context, result, client, element);
-        error = error + checkSelection(context, result, client, element);
-        if (error == 0) {
-            result.addResult(Status.SUCCESS, context.peek());
-        }
-    }
-
-    protected int checkContent(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        int error = 0;
-        if (getContent() != null) {
-            if (!isSelect(element)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(client));
-                error = 1;
-            } else {
-                Node node = context.getNode();
-                Nodes nodes = node.query("descendant::li");
-                List<WebElement> options = element.findElements(By.xpath("descendant::option"));
-                error = testList(context, result, client, nodes, options, content);
+        if (isSelect(element)) {
+            if (checkSelection(context, result, client, element) == 0) {
+                result.addResult(Status.SUCCESS, context.peek());
             }
+        } else {
+            result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(client));
         }
-        return error;
     }
 
+    /**
+     * Check if element is a select.
+     * 
+     * @param element
+     *            The select form.
+     * @return true, if is select, false, otherwise.
+     */
     protected boolean isSelect(WebElement element) {
         return element.getTagName().equalsIgnoreCase("select");
     }
 
-    protected int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        int error = 0;
-        if (getSelection() != null) {
-            if (!isSelect(element)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(client));
-                error = 1;
-            } else {
-                Node node = context.getNode();
-                Nodes nodes = node.query("descendant::li");
-                if (nodes.size() == 0) {
-                    nodes = new Nodes(node);
-                }
-                List<WebElement> tmp = element.findElements(By.xpath("descendant::option"));
-                List<WebElement> options = new LinkedList<WebElement>();
-                for (WebElement we : tmp) {
-                    if (we.isSelected()) {
-                        options.add(we);
-                    }
-                }
-                error = testList(context, result, client, nodes, options, content);
-            }
-        }
-        return error;
-    }
+    /**
+     * Perform the selection test.
+     * 
+     * @param context
+     *            The test.
+     * @param result
+     *            The result.
+     * @param client
+     *            The web driver.
+     * @param element
+     *            The element.
+     * @return Number of errors.
+     * @throws PluginException
+     *             On comparison errors.
+     */
+    protected abstract int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException;
 
+    /**
+     * Perform tests on a list.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The client.
+     * @param nodes
+     *            The nodes to be compared.
+     * @param options
+     *            The select options.
+     * @param content
+     *            true, to check options, false, to check selected.
+     * @return Number of inconsistencies.
+     */
     @SuppressWarnings("serial")
     protected int testList(IContext context, IResultSet result, WebDriver client, Nodes nodes, List<WebElement> options, Boolean content) {
         int error = 0;

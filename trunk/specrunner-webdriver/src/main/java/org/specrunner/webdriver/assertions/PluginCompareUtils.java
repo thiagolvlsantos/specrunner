@@ -111,6 +111,29 @@ public final class PluginCompareUtils {
         }
     }
 
+    /**
+     * Perform date comparisons.
+     * 
+     * @param format
+     *            The format.
+     * @param tolerance
+     *            The tolerance.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @param block
+     *            The block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The web driver.
+     * @return true, of equals considering tolerance, false, otherwise.
+     * @throws PluginException
+     *             On comparison errors.
+     */
     public static boolean compareDate(String format, long tolerance, String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         boolean res = true;
         DateTimeFormatter fmt = null;
