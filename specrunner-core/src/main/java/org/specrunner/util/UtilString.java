@@ -17,7 +17,6 @@
  */
 package org.specrunner.util;
 
-import java.util.StringTokenizer;
 
 /**
  * Utility String class.
@@ -42,9 +41,12 @@ public final class UtilString {
      */
     public static String normalize(String str) {
         StringBuilder sb = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(str, " \r\n\t");
-        while (st.hasMoreTokens()) {
-            sb.append(st.nextToken());
+        char c;
+        for (int i = 0; i < str.length(); i++) {
+            c = str.charAt(i);
+            if (Character.isWhitespace(c) && Character.isDefined(c)) {
+                sb.append(c);
+            }
         }
         return sb.toString();
     }
