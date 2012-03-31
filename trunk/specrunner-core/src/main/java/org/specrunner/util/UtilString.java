@@ -17,7 +17,6 @@
  */
 package org.specrunner.util;
 
-
 /**
  * Utility String class.
  * 
@@ -44,7 +43,7 @@ public final class UtilString {
         char c;
         for (int i = 0; i < str.length(); i++) {
             c = str.charAt(i);
-            if (Character.isWhitespace(c) && Character.isDefined(c)) {
+            if (!Character.isWhitespace(c) && Character.isDefined(c)) {
                 sb.append(c);
             }
         }
