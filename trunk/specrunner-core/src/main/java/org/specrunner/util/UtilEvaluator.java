@@ -219,7 +219,7 @@ public final class UtilEvaluator {
      *            The map of values to be replace.
      * @return The nodes which represents the replaced text.
      * @throws PluginException
-     *             On replacemente errors.
+     *             On replacement errors.
      */
     public static Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
         Nodes nodes = new Nodes();

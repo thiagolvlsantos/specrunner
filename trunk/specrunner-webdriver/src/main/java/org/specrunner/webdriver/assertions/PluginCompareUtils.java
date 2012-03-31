@@ -114,10 +114,8 @@ public final class PluginCompareUtils {
     /**
      * Perform date comparisons.
      * 
-     * @param format
-     *            The format.
-     * @param tolerance
-     *            The tolerance.
+     * @param compare
+     *            The plugin which hold format and tolerance information.
      * @param expected
      *            The expected value.
      * @param received
@@ -134,11 +132,11 @@ public final class PluginCompareUtils {
      * @throws PluginException
      *             On comparison errors.
      */
-    public static boolean compareDate(String format, long tolerance, String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
+    public static boolean compareDate(PluginCompareDate compare, String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         boolean res = true;
         DateTimeFormatter fmt = null;
         try {
-            fmt = DateTimeFormat.forPattern(format);
+            fmt = DateTimeFormat.forPattern(compare.getFormat());
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -150,7 +148,7 @@ public final class PluginCompareUtils {
             try {
                 DateTime dtExpected = fmt.parseDateTime(expected);
                 DateTime dtReceived = fmt.parseDateTime(received);
-                if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= tolerance) {
+                if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= compare.getTolerance()) {
                     result.addResult(Status.SUCCESS, block);
                 } else {
                     addError(expected, received, block, context, result, client);

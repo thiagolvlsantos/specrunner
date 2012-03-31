@@ -124,7 +124,7 @@ public class PluginCompareDate extends PluginCompare {
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         String expected = String.valueOf(tmp);
         String received = element.getText();
-        PluginCompareUtils.compareDate(format, getTolerance(), expected, received, context.newBlock(context.getNode(), this), context, result, client);
+        PluginCompareUtils.compareDate(this, expected, received, context.newBlock(context.getNode(), this), context, result, client);
     }
 
     /**
