@@ -43,23 +43,23 @@ public class SourceImpl implements ISource {
     /**
      * The source as String.
      */
-    private String string;
+    protected String string;
     /**
      * The source as file.
      */
-    private File file;
+    protected File file;
     /**
      * The source as URI.
      */
-    private URI uri;
+    protected URI uri;
     /**
      * The source factory used to create it.
      */
-    private final ISourceFactory factory;
+    protected ISourceFactory factory;
     /**
      * The resource manager.
      */
-    private IResourceManager manager;
+    protected IResourceManager manager;
     /**
      * A document loader.
      */

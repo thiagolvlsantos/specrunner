@@ -40,11 +40,30 @@ public class SpecRunnerFactoryImpl implements ISpecRunnerFactory {
      *            The runner.
      */
     public SpecRunnerFactoryImpl(ISpecRunner runner) {
+        setRunner(runner);
+    }
+
+    /**
+     * Gets the runner.
+     * 
+     * @return The runner.
+     */
+    public ISpecRunner getRunner() {
+        return runner;
+    }
+
+    /**
+     * Sets the runner.
+     * 
+     * @param runner
+     *            The runner.
+     */
+    public void setRunner(ISpecRunner runner) {
         this.runner = runner;
     }
 
     @Override
     public ISpecRunner newRunner() {
-        return runner;
+        return getRunner();
     }
 }

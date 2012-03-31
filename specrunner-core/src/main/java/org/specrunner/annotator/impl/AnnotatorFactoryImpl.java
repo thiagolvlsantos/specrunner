@@ -41,11 +41,30 @@ public class AnnotatorFactoryImpl implements IAnnotatorFactory {
      *            The annotator.
      */
     public AnnotatorFactoryImpl(IAnnotator annotator) {
+        setAnnotator(annotator);
+    }
+
+    /**
+     * Gets the annotator.
+     * 
+     * @return The annotator.
+     */
+    public IAnnotator getAnnotator() {
+        return annotator;
+    }
+
+    /**
+     * Set the annotator.
+     * 
+     * @param annotator
+     *            The annotator.
+     */
+    public void setAnnotator(IAnnotator annotator) {
         this.annotator = annotator;
     }
 
     @Override
     public IAnnotator newAnnotator() throws AnnotatorException {
-        return annotator;
+        return getAnnotator();
     }
 }

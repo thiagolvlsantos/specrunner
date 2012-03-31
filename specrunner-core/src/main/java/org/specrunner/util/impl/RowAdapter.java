@@ -34,7 +34,7 @@ public class RowAdapter extends ElementHolderImpl {
     /**
      * List of row cells.
      */
-    private List<CellAdapter> cells;
+    protected List<CellAdapter> cells;
 
     /**
      * The row element.

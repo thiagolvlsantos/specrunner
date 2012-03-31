@@ -60,14 +60,14 @@ public class BlockImpl implements IBlock {
      *            The mapping.
      */
     public BlockImpl(Node node, IPlugin plugin, Map<String, Object> map) {
-        this.node = node;
-        this.plugin = plugin;
-        this.map = map;
+        setNode(node);
+        setPlugin(plugin);
+        setMap(map);
     }
 
     @Override
     public boolean hasChildren() {
-        return hasNode() && node.getChildCount() > 0;
+        return hasNode() && getNode().getChildCount() > 0;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class BlockImpl implements IBlock {
 
     @Override
     public boolean hasNode() {
-        return node != null;
+        return getNode() != null;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class BlockImpl implements IBlock {
 
     @Override
     public boolean hasPlugin() {
-        return plugin != null;
+        return getPlugin() != null;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class BlockImpl implements IBlock {
 
     @Override
     public boolean hasMap() {
-        return map != null;
+        return getMap() != null;
     }
 
     @Override
@@ -127,6 +127,6 @@ public class BlockImpl implements IBlock {
 
     @Override
     public String toString() {
-        return node + "," + plugin + "," + map;
+        return getNode() + "," + getPlugin() + "," + getMap();
     }
 }

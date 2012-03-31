@@ -75,7 +75,7 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
     public ContextImpl(ISource source, IRunner runner) throws ContextException {
         sources.add(source);
         add(new BlockImpl(null, PluginNop.emptyPlugin(), new HashMap<String, Object>()));
-        this.runner = runner;
+        setRunner(runner);
     }
 
     @Override
@@ -83,9 +83,29 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         return sources;
     }
 
+    /**
+     * Sets the sources.
+     * 
+     * @param sources
+     *            The sources.
+     */
+    public void setSources(Deque<ISource> sources) {
+        this.sources = sources;
+    }
+
     @Override
     public IRunner getRunner() {
         return runner;
+    }
+
+    /**
+     * Sets the runner.
+     * 
+     * @param runner
+     *            The runner.
+     */
+    public void setRunner(IRunner runner) {
+        this.runner = runner;
     }
 
     @Override

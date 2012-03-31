@@ -42,11 +42,30 @@ public class RunnerFactoryImpl implements IRunnerFactory {
      *            The runner.
      */
     public RunnerFactoryImpl(IRunner runner) {
+        setRunner(runner);
+    }
+
+    /**
+     * Gets the runner.
+     * 
+     * @return The runner.
+     */
+    public IRunner getRunner() {
+        return runner;
+    }
+
+    /**
+     * Sets the runner.
+     * 
+     * @param runner
+     *            The runner.
+     */
+    public void setRunner(IRunner runner) {
         this.runner = runner;
     }
 
     @Override
     public IRunner newRunner(ISource source) throws RunnerException {
-        return runner;
+        return getRunner();
     }
 }

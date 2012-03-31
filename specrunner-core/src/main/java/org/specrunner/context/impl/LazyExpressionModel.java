@@ -37,7 +37,7 @@ public class LazyExpressionModel<T> implements IModel<Object, T> {
     /**
      * The source of expression.
      */
-    private Object source;
+    protected Object source;
 
     /**
      * Creates a lazy model from a source.
@@ -46,6 +46,25 @@ public class LazyExpressionModel<T> implements IModel<Object, T> {
      *            The expression source.
      */
     public LazyExpressionModel(Object source) {
+        this.source = source;
+    }
+
+    /**
+     * Gets the source.
+     * 
+     * @return The source.
+     */
+    public Object getSource() {
+        return source;
+    }
+
+    /**
+     * Sets the source.
+     * 
+     * @param source
+     *            The source.
+     */
+    public void setSource(Object source) {
         this.source = source;
     }
 

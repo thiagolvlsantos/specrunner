@@ -31,7 +31,7 @@ public class ElementHolderImpl implements IElementHolder {
     /**
      * The element encapsulated.
      */
-    private Element element;
+    protected Element element;
 
     /**
      * Create a element holder.

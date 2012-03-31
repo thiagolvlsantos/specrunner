@@ -42,7 +42,7 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     /**
      * The current configuration.
      */
-    protected IConfiguration cfg;
+    protected IConfiguration configuration;
 
     @Override
     public Object put(String key, Object value) {
@@ -66,7 +66,7 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     @Override
     public Object get(Object key) {
         // search local configuration
-        Object result = cfg != null ? cfg.get(key) : null;
+        Object result = getConfiguration() != null ? getConfiguration().get(key) : null;
         if (result == null) {
             // then search global configuration.
             result = super.get(key);
@@ -106,8 +106,17 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
         }
     }
 
+    /**
+     * Gets the configuration.
+     * 
+     * @return The configuration.
+     */
+    public IConfiguration getConfiguration() {
+        return configuration;
+    }
+
     @Override
-    public void setCfgFeatures(IConfiguration cfg) {
-        this.cfg = cfg;
+    public void setConfiguration(IConfiguration configuration) {
+        this.configuration = configuration;
     }
 }

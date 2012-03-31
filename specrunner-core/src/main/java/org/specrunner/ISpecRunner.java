@@ -54,6 +54,21 @@ public interface ISpecRunner {
     IResultSet run(String source, IConfiguration configuration) throws SpecRunnerException;
 
     /**
+     * Runs a specification using a given configuration.
+     * 
+     * @param source
+     *            The specification source.
+     * @param output
+     *            The specification output.
+     * @param configuration
+     *            Specific configurations.
+     * @return The result of execution.
+     * @throws SpecRunnerException
+     *             On execution errors.
+     */
+    IResultSet run(String source, String output, IConfiguration configuration) throws SpecRunnerException;
+
+    /**
      * Runs a plugin.
      * 
      * @param plugin

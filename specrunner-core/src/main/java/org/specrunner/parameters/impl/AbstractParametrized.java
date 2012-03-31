@@ -38,11 +38,11 @@ public class AbstractParametrized implements IParametrized {
     /**
      * Set of valid parameters.
      */
-    private final Map<String, Object> parameters = new HashMap<String, Object>();
+    protected Map<String, Object> parameters = new HashMap<String, Object>();
     /**
      * Set of all parameters, valid or not.
      */
-    private final Map<String, Object> allParameters = new HashMap<String, Object>();
+    protected Map<String, Object> allParameters = new HashMap<String, Object>();
 
     @Override
     public Object getParameter(String name) {
@@ -98,8 +98,28 @@ public class AbstractParametrized implements IParametrized {
         return parameters;
     }
 
+    /**
+     * Set parameters map.
+     * 
+     * @param parameters
+     *            The map.
+     */
+    public void setParameters(Map<String, Object> parameters) {
+        this.parameters = parameters;
+    }
+
     @Override
     public Map<String, Object> getAllParameters() {
         return allParameters;
+    }
+
+    /**
+     * Set of all parameters map.
+     * 
+     * @param allParameters
+     *            The map.
+     */
+    public void setAllParameters(Map<String, Object> allParameters) {
+        this.allParameters = allParameters;
     }
 }

@@ -32,7 +32,7 @@ public class SourceDumperFactoryImpl implements ISourceDumperFactory {
     /**
      * The reusable dumper.
      */
-    private final ISourceDumper dumper;
+    protected ISourceDumper dumper;
 
     /**
      * Creates a factory of reusable dumpers.
@@ -41,11 +41,30 @@ public class SourceDumperFactoryImpl implements ISourceDumperFactory {
      *            The dumper.
      */
     public SourceDumperFactoryImpl(ISourceDumper dumper) {
+        setDumper(dumper);
+    }
+
+    /**
+     * Gets the dumper.
+     * 
+     * @return The dumper.
+     */
+    public ISourceDumper getDumper() {
+        return dumper;
+    }
+
+    /**
+     * Sets the runner.
+     * 
+     * @param dumper
+     *            The dumper.
+     */
+    public void setDumper(ISourceDumper dumper) {
         this.dumper = dumper;
     }
 
     @Override
     public ISourceDumper newDumper() throws SourceDumperException {
-        return dumper;
+        return getDumper();
     }
 }
