@@ -37,7 +37,7 @@ import org.specrunner.util.UtilLog;
  * <p>
  * Example:
  * <p>
- * <blockquote> Check the square an cubic roots from 0 to 10, with step 2:
+ * <blockquote> Check the square and cubic roots from 0 to 10, with step 2:
  * <table border=1>
  * <tr>
  * <th>n</th>
@@ -52,7 +52,7 @@ import org.specrunner.util.UtilLog;
  * </table>
  * </blockquote>
  * <p>
- * The CSS annotated version: <blockquote> Check the square an cubic roots from
+ * The CSS annotated version: <blockquote> Check the square and cubic roots from
  * 0 to 10, with step 2:
  * 
  * <pre>
