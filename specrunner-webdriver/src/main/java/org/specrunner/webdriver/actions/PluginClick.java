@@ -27,7 +27,7 @@ import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 
 /**
- * Clicks.
+ * Clicks something.
  * 
  * @author Thiago Santos.
  * 
