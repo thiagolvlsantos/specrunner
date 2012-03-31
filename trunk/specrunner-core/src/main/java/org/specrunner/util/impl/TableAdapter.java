@@ -34,11 +34,11 @@ public class TableAdapter extends ElementHolderImpl {
     /**
      * List of caption elements.
      */
-    private List<CellAdapter> captions;
+    protected List<CellAdapter> captions;
     /**
      * The list of rows.
      */
-    private List<RowAdapter> rows;
+    protected List<RowAdapter> rows;
 
     /**
      * The table element.

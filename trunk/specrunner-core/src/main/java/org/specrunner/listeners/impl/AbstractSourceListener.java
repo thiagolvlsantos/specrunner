@@ -24,7 +24,7 @@ import org.specrunner.source.ISource;
 import org.specrunner.util.UtilLog;
 
 /**
- * Helper listener class.
+ * Helper for source listeners.
  * 
  * @author Thiago Santos
  * 

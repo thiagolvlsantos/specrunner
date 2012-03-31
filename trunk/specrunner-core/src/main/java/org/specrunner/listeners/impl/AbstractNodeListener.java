@@ -25,7 +25,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 
 /**
- * Helper for listeners.
+ * Helper for node listeners.
  * 
  * @author Thiago Santos
  * 

@@ -38,6 +38,7 @@ import org.specrunner.context.IContextFactory;
 import org.specrunner.context.IContextPopulator;
 import org.specrunner.dumper.ISourceDumperFactory;
 import org.specrunner.dumper.SourceDumperException;
+import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.plugins.IPlugin;
@@ -81,6 +82,14 @@ public class SpecRunnerImpl implements ISpecRunner {
         return doRun(input, configuration);
     }
 
+    @Override
+    public IResultSet run(String input, String output, IConfiguration configuration) throws SpecRunnerException {
+        File file = new File(output);
+        configuration.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, file.getParentFile());
+        configuration.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, file.getName());
+        return doRun(input, configuration);
+    }
+
     /**
      * Perform a specification given by input.
      * 
@@ -100,7 +109,7 @@ public class SpecRunnerImpl implements ISpecRunner {
         IFeatureManager features = createFeatureManager();
 
         // local feature settings
-        features.setCfgFeatures(configuration);
+        features.setConfiguration(configuration);
 
         // listeners added
         IListenerManager listeners = createListenerManager();
@@ -140,7 +149,7 @@ public class SpecRunnerImpl implements ISpecRunner {
         // meta variable 'configuration'
         context.saveGlobal(UtilEvaluator.asVariable("configuration"), configuration);
         // meta variable 'source'
-        context.saveGlobal(UtilEvaluator.asVariable("string"), source);
+        context.saveGlobal(UtilEvaluator.asVariable("source"), source);
         // meta variable 'runner'
         context.saveGlobal(UtilEvaluator.asVariable("runner"), runner);
         // meta variable 'model'
@@ -415,7 +424,7 @@ public class SpecRunnerImpl implements ISpecRunner {
         IFeatureManager features = createFeatureManager();
 
         // local feature settings
-        features.setCfgFeatures(configuration);
+        features.setConfiguration(configuration);
 
         // listeners added
         IListenerManager listeners = createListenerManager();

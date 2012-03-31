@@ -35,7 +35,7 @@ import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 
 /**
- * Pause execution on errors.
+ * Listener to pause execution on errors.
  * 
  * @author Thiago Santos.
  * 

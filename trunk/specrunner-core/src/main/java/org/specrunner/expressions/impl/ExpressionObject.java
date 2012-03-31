@@ -32,7 +32,7 @@ public class ExpressionObject implements IExpression {
     /**
      * The expression source.
      */
-    private final Object source;
+    protected Object source;
 
     /**
      * Creates an expression with a given object.
@@ -41,11 +41,30 @@ public class ExpressionObject implements IExpression {
      *            The source.
      */
     public ExpressionObject(Object source) {
+        setSource(source);
+    }
+
+    /**
+     * Gets the object source.
+     * 
+     * @return The source.
+     */
+    public Object getSource() {
+        return source;
+    }
+
+    /**
+     * Sets the object source.
+     * 
+     * @param source
+     *            The source.
+     */
+    public void setSource(Object source) {
         this.source = source;
     }
 
     @Override
     public Object evaluate(IContext context) throws ExpressionException {
-        return source;
+        return getSource();
     }
 }

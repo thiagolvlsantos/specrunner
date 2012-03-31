@@ -88,5 +88,5 @@ public interface IFeatureManager extends Map<String, Object> {
      * @param cfg
      *            Set configuration features.
      */
-    void setCfgFeatures(IConfiguration cfg);
+    void setConfiguration(IConfiguration cfg);
 }

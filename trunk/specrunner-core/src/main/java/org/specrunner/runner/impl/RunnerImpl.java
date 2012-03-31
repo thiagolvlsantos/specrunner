@@ -64,7 +64,7 @@ public class RunnerImpl implements IRunner {
     /**
      * List of ignored aliases.
      */
-    private List<String> ignoredAliases = Collections.emptyList();
+    protected List<String> ignoredAliases = Collections.emptyList();
 
     @Override
     public void setIgnoredAliases(List<String> ignoredAliases) {

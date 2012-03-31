@@ -50,7 +50,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     /**
      * Gap used to dump sources.
      */
-    private static final int GAP = 4;
+    public static final int GAP = 4;
 
     /**
      * The output directory. The default value is 'src/test/resources/outcome'.

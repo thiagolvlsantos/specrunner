@@ -33,20 +33,39 @@ public class ExpressionVariable implements IExpression {
     /**
      * The variable name.
      */
-    private final String source;
+    protected String name;
 
     /**
      * Creates an expression to access a variable.
      * 
-     * @param source
+     * @param name
      *            The variable name.
      */
-    public ExpressionVariable(String source) {
-        this.source = source;
+    public ExpressionVariable(String name) {
+        setName(name);
+    }
+
+    /**
+     * Gets the variable name.
+     * 
+     * @return The name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the variable name.
+     * 
+     * @param name
+     *            The name.
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public Object evaluate(IContext context) throws ExpressionException {
-        return context.getByName("${" + source + "}");
+        return context.getByName("${" + name + "}");
     }
 }

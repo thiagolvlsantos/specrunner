@@ -32,11 +32,11 @@ public abstract class AbstractReusable<T> implements IReusable<T> {
     /**
      * A name given to the reusable resource.
      */
-    private String name;
+    protected String name;
     /**
      * The reusable object instance.
      */
-    private T object;
+    protected T object;
 
     /**
      * Create a reusable resource with name and the object to be reused.

@@ -24,7 +24,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 
 /**
- * Helper listener class.
+ * Helper for plugin listeners.
  * 
  * @author Thiago Santos
  * 
