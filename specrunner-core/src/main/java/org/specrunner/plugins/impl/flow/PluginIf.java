@@ -20,17 +20,12 @@ package org.specrunner.plugins.impl.flow;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
-import org.specrunner.runner.RunnerException;
-import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilXPath;
 
 /**
  * Create a condition execution.
@@ -48,11 +43,33 @@ import org.specrunner.util.UtilXPath;
  * <p>
  * 
  * <pre>
- *  &lt;span class="if"&gt;
- *      Consider &lt;span class="test" value="${x > 0}"&gt;x is positive&lt;span&gt; 
+ *  Consider &lt;span class="if" value="${x > 0}"&gt;x is positive&lt;span&gt; 
  *      the message is "&lt;span class="then"&gt;Positive&lt;span&gt;" 
- *      else something different happens and the message is "&lt;span class="else"&gt;Negative&lt;span&gt;"
- *  &lt;span&gt;
+ *      else something different happens and the message is "&lt;span class="else"&gt;Negative&lt;span&gt;".
+ * </pre>
+ * 
+ * With complex descriptions, the order can be different and the group of
+ * 'if'/'then'/'else' can be named to avoid interferences of others
+ * if/then/else.
+ * <p>
+ * Example1:
+ * 
+ * <pre>
+ *  Consider &lt;span class="if" value="${x > 0}" name="test1"&gt;x is positive&lt;span&gt; 
+ *      the message is "&lt;span class="then" name="test1"&gt;Positive&lt;span&gt;" 
+ *      else something different happens and the message is "&lt;span class="else" name="test1"&gt;Negative&lt;span&gt;".
+ * </pre>
+ * 
+ * Example2:
+ * 
+ * <pre>
+ *  Consider &lt;span class="if" value="${x > 0}" &gt;x is positive&lt;span&gt; 
+ *  Consider &lt;span class="if" value="${y > 0}" name="testY"&gt;y is negative&lt;span&gt;
+ *      
+ *  the message for x is "&lt;span class="then" name="test1"&gt;Positive&lt;span&gt;" 
+ *  the message for y is "&lt;span class="then" name="testY"&gt;Positive&lt;span&gt;" 
+ *  else something different happens and the message for x is "&lt;span class="else"&gt;Negative&lt;span&gt;".
+ *  else something different happens and the message for y is "&lt;span class="else" name="testY"&gt;Negative&lt;span&gt;".
  * </pre>
  * 
  * @author Thiago Santos
@@ -61,128 +78,54 @@ import org.specrunner.util.UtilXPath;
 public class PluginIf extends AbstractPluginValue {
 
     /**
-     * CSS name for testing condition.
+     * The conditional default name. To use another name use 'name' attribute.
      */
-    public static final String CSS_TEST = "test";
-    /**
-     * CSS name for then block.
-     */
-    public static final String CSS_THEN = "then";
-    /**
-     * CSS name for else block.
-     */
-    public static final String CSS_ELSE = "else";
-    /**
-     * CSS style for selected branch.
-     */
-    public static final String CSS_SELECTED = "selected";
-    /**
-     * CSS style for unselected branch.
-     */
-    public static final String CSS_RELEGATED = "relegated";
-
-    /**
-     * Set if unselected branch should be hidden.
-     */
-    private Boolean hide = Boolean.FALSE;
-
-    /**
-     * Get hide status.
-     * 
-     * @return true, to hide unselected branch, false, otherwise.
-     */
-    public Boolean getHide() {
-        return hide;
-    }
-
-    /**
-     * Set hide status.
-     * 
-     * @param hide
-     *            Status,
-     */
-    public void setHide(Boolean hide) {
-        this.hide = hide;
-    }
+    public static final String TEST_NAME = "ifTest";
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        Element node = (Element) context.getNode();
-        Nodes conditions = node.query("descendant::*[@class='" + CSS_TEST + "']");
-        if (conditions.size() == 0) {
-            throw new PluginException("If without condition. Use i.e. a span with class='test'.");
-        }
-        Node condition = UtilXPath.getHighest(conditions);
-        try {
-            context.getRunner().run(condition, context, result);
-        } catch (RunnerException e) {
-            throw new PluginException("Condition could not be calculated.");
-        }
-        String strCond = ((Element) condition).getAttributeValue("value");
-        Object valueCond = getValue(strCond != null ? strCond : condition.getValue(), true, context);
-        valueCond = valueCond != null ? valueCond.toString() : "null";
-        if (!("true".equalsIgnoreCase(valueCond.toString()) || "false".equalsIgnoreCase(valueCond.toString()))) {
-            throw new PluginException("If contition result in invalid value: " + valueCond);
-        }
-        try {
-            Node selected = null;
-            Node relegated = null;
-            Nodes thens = node.query("descendant::*[@class='" + CSS_THEN + "']");
-            Nodes elses = node.query("descendant::*[@class='" + CSS_ELSE + "']");
-            if (Boolean.TRUE.equals(Boolean.parseBoolean(valueCond.toString()))) {
-                selected = UtilXPath.getHighest(thens);
-                if (elses.size() > 0) {
-                    relegated = UtilXPath.getHighest(elses);
-                }
+        Element condition = (Element) context.getNode();
+        Object valueCond = getValue(getValue() != null ? getValue() : condition.getValue(), true, context);
+        if (!(valueCond instanceof Boolean)) {
+            String strCon = String.valueOf(valueCond);
+            if ("true".equalsIgnoreCase(strCon) || "false".equalsIgnoreCase(strCon)) {
+                valueCond = Boolean.valueOf(strCon);
             } else {
-                if (thens.size() > 0) {
-                    relegated = UtilXPath.getHighest(thens);
-                }
-                selected = UtilXPath.getHighest(elses);
+                throw new PluginException("If contition result in invalid value: '" + valueCond + "'. Type:" + (valueCond != null ? valueCond.getClass() : "null"));
             }
-
-            if (selected != null) {
-                encapsulate(selected, true);
-            }
-            if (relegated != null) {
-                encapsulate(relegated, false);
-            }
-            if (selected == null) {
-                throw new PluginException("If without valid branch. " + node.toXML());
-            } else {
-                context.getRunner().run(selected, context, result);
-            }
-        } catch (RunnerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-            throw new PluginException(e);
         }
-        return ENext.SKIP;
+        String testName = getName() != null ? getName() : TEST_NAME;
+        condition.addAttribute(new Attribute("name", testName));
+        condition.addAttribute(new Attribute("branch", String.valueOf(valueCond)));
+        saveLocal(context, testName, valueCond);
+        return ENext.DEEP;
     }
 
     /**
-     * Encapsulate the selected element.
+     * Gets the previously calculated condition with the given name.
      * 
-     * @param node
-     *            The node.
-     * @param expanded
-     *            If is expanded or not.
+     * @param context
+     *            The context.
+     * @param name
+     *            The test name.
+     * @return true, if test passed, false, otherwise.
+     * @throws PluginException
+     *             On lookup errors.
      */
-    public void encapsulate(Node node, boolean expanded) {
-        ParentNode parent = node.getParent();
-        int index = parent.indexOf(node);
-        Element enc = new Element("span");
-        enc.addAttribute(new Attribute("class", expanded ? CSS_SELECTED : CSS_RELEGATED));
-        node.detach();
-        if (expanded) {
-            enc.appendChild(node);
-            parent.insertChild(enc, index++);
-        } else {
-            if (!hide) {
-                enc.appendChild(node);
-                parent.insertChild(enc, index++);
-            }
+    public static Boolean getTest(IContext context, String name) throws PluginException {
+        String ifName = name != null ? name : TEST_NAME;
+        Object ifObject = context.getByName(ifName);
+        if (ifObject == null) {
+            throw new PluginException("Conditional test with name '" + ifName + "' not found in context.");
         }
+        if (!(ifObject instanceof Boolean)) {
+            throw new PluginException("Conditional test with name '" + ifName + "' returned a '" + (ifObject != null ? ifObject.getClass().getName() : "null") + "' instance of an instance of Boolean.");
+        }
+        Node node = context.getNode();
+        if (node instanceof Element) {
+            ((Element) node).addAttribute(new Attribute("name", "" + ifName));
+        }
+        return ((Boolean) ifObject);
     }
+
 }

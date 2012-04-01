@@ -62,27 +62,30 @@ Loop com min =
     Execução condicional: <span class="global" name="num" eval="true">${System.currentTimeMillis() % 2 == 0}</span>
 <p>Normal (${num}):
 <p>
-<div class="if">
-    Se <span class="test">${num}</span> <br>
+<div>
+    Se <span class="if">${num}</span> 
+    <br>
     <div class="then">
         então ${4 + 9} -> Número par ${new java.util.Date()}
-        <div class="if">
-            <table class="test" border="1" value="${System.currentTimeMillis() % 2 == 0}">
-                <tr class="then">
-                    <td>70%</td>
-                </tr>
-                <tr class="else">
-                    <td>30%</td>
-                </tr>
-            </table>
-        </div>
+        <table class="if" border="1" value="${System.currentTimeMillis() % 2 == 0}">
+            <tr class="then">
+                <td>70%</td>
+            </tr>
+            <tr class="else">
+                <td>30%</td>
+            </tr>
+        </table>
     </div>
     <br>
     <div class="else">senão ${3 + 7} -> Número impar ${new java.util.Date()}</div>
 </div>
+</p>
 <p>
-    Negação (${!num}): <span class="if"> <span class="then"><br>Número par, caso <span class="test">${!num}</span>
-    </span> <span class="else"><br>Número impar, caso contrário.</span> </span>
+    Negação (${!num}): 
+    <if value="${!num}"> 
+        <span class="then"><br>Número par, caso ${!num}</span> 
+        <span class="else"><br>Número impar, caso contrário.</span> 
+    </if>
 <h2>File inclusion</h2>
 Usar o arquivo '
 <a class="include" href="source.html">source.html</a>

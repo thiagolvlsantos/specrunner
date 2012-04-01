@@ -34,6 +34,6 @@ public class PluginDefineGlobal extends AbstractPluginDefine {
             UtilLog.LOG.debug("Bind_global(" + getName() + ")->" + obj + "(" + (obj != null ? obj.getClass() : "null") + ")");
         }
         saveGlobal(context, getName(), obj);
-        return true;
+        return super.operation(obj, context);
     }
 }

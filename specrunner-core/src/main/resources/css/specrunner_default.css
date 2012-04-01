@@ -130,6 +130,11 @@
 	vertical-align: top;
 }
 
+/* FLOW */
+.relegated {
+	text-decoration: line-through;
+}
+
 /* INCLUDE FILES */
 a.include {
 	padding: 1px;

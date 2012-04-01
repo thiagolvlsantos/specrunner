@@ -127,6 +127,6 @@ public class BlockImpl implements IBlock {
 
     @Override
     public String toString() {
-        return getNode() + "," + getPlugin() + "," + getMap();
+        return getNode() + "," + getPlugin() + "," + getMap().keySet();
     }
 }

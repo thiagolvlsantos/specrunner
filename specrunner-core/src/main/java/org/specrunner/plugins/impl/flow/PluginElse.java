@@ -15,25 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.impl.var;
-
-import org.specrunner.context.IContext;
-import org.specrunner.util.UtilLog;
+package org.specrunner.plugins.impl.flow;
 
 /**
- * Defines a local variable.
+ * The 'else' side of a conditional test.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class PluginDefineLocal extends AbstractPluginDefine {
+public class PluginElse extends PluginIfBranch {
 
     @Override
-    protected boolean operation(Object obj, IContext context) {
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Bind_local(" + getName() + ")->" + obj + "(" + (obj != null ? obj.getClass() : "null") + ")");
-        }
-        saveLocal(context, getName(), obj);
-        return super.operation(obj, context);
+    protected boolean expected() {
+        return false;
     }
 }
