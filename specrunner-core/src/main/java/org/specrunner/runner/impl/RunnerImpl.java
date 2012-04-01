@@ -295,10 +295,10 @@ public class RunnerImpl implements IRunner {
                 // remove block from context
                 context.pop();
             }
-        }
-        // perform after listeners
-        for (INodeListener nl : nListeners) {
-            nl.onAfter(node, context, result);
+            // perform after listeners
+            for (INodeListener nl : nListeners) {
+                nl.onAfter(node, context, result);
+            }
         }
     }
 
