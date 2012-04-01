@@ -50,7 +50,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      * @param obj
      *            The value to be used.
      * @param context
-     *            The conext.
+     *            The context.
      * @return true status must be OK, false otherwise, in which case error
      *         should be set.
      * @throws PluginException

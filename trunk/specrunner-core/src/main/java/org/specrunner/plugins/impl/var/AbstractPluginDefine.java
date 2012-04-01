@@ -17,8 +17,14 @@
  */
 package org.specrunner.plugins.impl.var;
 
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+
+import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
+import org.specrunner.util.UtilEvaluator;
 
 /**
  * Defines variables.
@@ -29,8 +35,23 @@ import org.specrunner.plugins.impl.AbstractPluginDual;
 public abstract class AbstractPluginDefine extends AbstractPluginDual {
 
     @Override
+    public boolean isEval() {
+        return true;
+    }
+
+    @Override
     public String getName() {
-        return "${" + super.getName() + "}";
+        return UtilEvaluator.asVariable(super.getName());
+    }
+
+    @Override
+    protected boolean operation(Object obj, IContext context) {
+        Node node = context.getNode();
+        if (node instanceof Element) {
+            Element e = (Element) node;
+            e.addAttribute(new Attribute("instance", obj != null ? obj.getClass().getSimpleName() : "null"));
+        }
+        return true;
     }
 
     @Override

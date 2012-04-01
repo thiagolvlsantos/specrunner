@@ -42,11 +42,11 @@
 }
 
 .local:after {
-	content: "local(" attr(name) ")" attr(scope);
+	content: "local(" attr(name) ":" attr(instance) ")" attr(scope);
 }
 
 .global:after {
-	content: "global(" attr(name) ")";
+	content: "global(" attr(name) ":" attr(instance) ")" ;
 }
 
 /* MACROS */
@@ -113,7 +113,7 @@
 }
 
 .if:before {
-	content: "if";
+	content: "if (" attr(name) ";" attr(value) ";" attr(branch) ")";
 }
 
 .sr_condition:before {
@@ -121,20 +121,16 @@
 }
 
 .then:before {
-	content: "then";
+	content: "then (" attr(name) ")";
 }
 
 .else:before {
-	content: "else";
+	content: "else (" attr(name) ")";
 }
 
 .selected {
 	border-right: 1px solid green;
 	border-bottom: 1px solid green;
-}
-
-.relegated {
-	text-decoration: line-through;
 }
 
 .for:before {

@@ -20,15 +20,18 @@ package example.sql;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginScript;
 
+@RunWith(ConcurrentRunner.class)
 public class TestSqlFeature {
 
     private static final String INCOME = "src/test/resources/income/clean/";

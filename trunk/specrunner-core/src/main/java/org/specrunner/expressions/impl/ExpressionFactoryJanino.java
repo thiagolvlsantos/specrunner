@@ -17,6 +17,7 @@
  */
 package org.specrunner.expressions.impl;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.LinkedList;
@@ -44,10 +45,10 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
         List<Class<?>> types = new LinkedList<Class<?>>();
 
         String original = String.valueOf(source);
+        Reader rd = null;
         try {
-            Reader rd = new StringReader(original);
+            rd = new StringReader(original);
             String[] vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
-            rd.close();
             for (String str : vars) {
                 ExpressionVariable var = new ExpressionVariable(str);
                 Object result = var.evaluate(context);
@@ -80,6 +81,16 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace(e.getMessage(), e);
             }
+        } finally {
+            if (rd != null) {
+                try {
+                    rd.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
         }
 
         if (UtilLog.LOG.isDebugEnabled()) {
@@ -97,21 +108,44 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
 
         Object r = null;
         try {
-            ExpressionEvaluator ee = new ExpressionEvaluator(original, Object.class, arrayArgs, arrayTypes);
-            r = ee.evaluate(arrayValues);
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("JANINO(" + source + ")_produced>" + r + "(" + (r != null ? r.getClass().getSimpleName() : "") + ")");
-            }
-        } catch (Exception e) {
-            r = original;
+            r = valorNumerico(original);
+        } catch (NumberFormatException ne) {
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
-                UtilLog.LOG.trace("JANINO(" + source + ")_unchanged>" + r);
+                UtilLog.LOG.trace(ne.getMessage(), ne);
+                UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
+            }
+            try {
+                ExpressionEvaluator ee = new ExpressionEvaluator(original, Object.class, arrayArgs, arrayTypes);
+                r = ee.evaluate(arrayValues);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("JANINO(" + source + ")_produced>" + r + "(" + (r != null ? r.getClass().getSimpleName() : "") + ")");
+                }
+            } catch (Exception e) {
+                r = original;
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace(e.getMessage(), e);
+                    UtilLog.LOG.trace("JANINO(" + source + ")_unchanged>" + r);
+                }
             }
         }
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
         }
         return new ExpressionObject(r);
+    }
+
+    /**
+     * Convert to number.
+     * 
+     * @param original
+     *            The text.
+     * @return The corresponding value.
+     */
+    protected Number valorNumerico(String original) {
+        try {
+            return Long.valueOf(original);
+        } catch (NumberFormatException e) {
+            return Double.valueOf(original);
+        }
     }
 }
