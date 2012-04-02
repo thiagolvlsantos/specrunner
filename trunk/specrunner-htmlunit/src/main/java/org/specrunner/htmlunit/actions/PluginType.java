@@ -29,6 +29,12 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
 
+/**
+ * Type a text in a given element.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginType extends AbstractPluginKeys {
 
     /**

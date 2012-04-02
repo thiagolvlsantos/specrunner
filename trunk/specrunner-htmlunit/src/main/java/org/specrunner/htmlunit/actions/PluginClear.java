@@ -27,6 +27,12 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
 
+/**
+ * Clear a given element.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public class PluginClear extends AbstractPluginFindSingle implements IAction {
 
     @Override

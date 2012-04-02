@@ -15,13 +15,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.htmlunit.assertions;
+package org.specrunner.htmlunit.actions;
+
+import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 
 /**
- * Tag interface to sign assertions.
+ * Uncheck all checkboxes.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IAssertion {
+public class PluginUncheck extends AbstractPluginCheck implements IAction {
+
+    @Override
+    protected void doSomething(HtmlCheckBoxInput option) {
+        if (option.isChecked()) {
+            option.setChecked(false);
+        }
+    }
 }

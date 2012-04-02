@@ -27,6 +27,9 @@ import org.specrunner.htmlunit.AbstractPluginBrowserAware;
  */
 public abstract class AbstractPluginUrlAware extends AbstractPluginBrowserAware implements IAction {
 
+    /**
+     * The url parameter.
+     */
     private String url;
 
     /**
@@ -38,6 +41,12 @@ public abstract class AbstractPluginUrlAware extends AbstractPluginBrowserAware 
         return url;
     }
 
+    /**
+     * Set the location.
+     * 
+     * @param url
+     *            The url.
+     */
     public void setUrl(String url) {
         this.url = url;
     }

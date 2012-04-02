@@ -30,6 +30,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
 
+/**
+ * Partial implementation of actions in checkboxes.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginCheckable extends AbstractPluginFind implements IAssertion {
 
     @Override

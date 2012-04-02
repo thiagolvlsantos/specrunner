@@ -50,27 +50,48 @@ import com.gargoylesoftware.htmlunit.WebResponse;
 public class WebConnectionFile extends HttpWebConnection implements IWebConnection {
 
     /**
-     * The cache directory. The default value is '
+     * The cache directory feature. The default value is '
      * <code>src/test/resources/outcome/cache</code>'.
      */
     public static final String FEATURE_DIRECTORY = WebConnectionFile.class.getName() + ".cacheDirectory";
+    /**
+     * The cache directory.
+     */
     protected File cacheDirectory = new File("src/test/resources/outcome/cache");
 
     /**
      * When true, clear file cache on first use of this WebConnection.
      */
     public static final String FEATURE_CLEAN = WebConnectionFile.class.getName() + ".cacheClean";
+    /**
+     * Clean cache status.
+     */
     protected Boolean cacheClean;
 
     /**
      * The cache strategy. The default value is ' <code>CacheableMime.</code>'.
      */
     public static final String FEATURE_STRATEGY = WebConnectionFile.class.getName() + ".strategy";
+    /**
+     * The cache strategy class.
+     */
     protected String strategy;
+    /**
+     * The cache strategy instance. Default is <code>CachableMime</code>.
+     */
     protected ICacheable strategyInstance = new CacheableMime();
 
+    /**
+     * A message digester utility for name mapping (url to MD5).
+     */
     private MessageDigest digest;
 
+    /**
+     * Web connection from a client. The client.
+     * 
+     * @param webClient
+     *            The client.
+     */
     public WebConnectionFile(WebClient webClient) {
         super(webClient);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -123,26 +144,59 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
         }
     }
 
+    /**
+     * Gets the cache directory.
+     * 
+     * @return The cache directory.
+     */
     public File getCacheDirectory() {
         return cacheDirectory;
     }
 
+    /**
+     * Sets the cache directory.
+     * 
+     * @param cacheDirectory
+     *            The directory.
+     */
     public void setCacheDirectory(File cacheDirectory) {
         this.cacheDirectory = cacheDirectory;
     }
 
+    /**
+     * Gets the clean cache status.
+     * 
+     * @return The cache status.
+     */
     public Boolean getCacheClean() {
         return cacheClean;
     }
 
+    /**
+     * Sets cache status.
+     * 
+     * @param cacheClean
+     *            The cache status.
+     */
     public void setCacheClean(Boolean cacheClean) {
         this.cacheClean = cacheClean;
     }
 
+    /**
+     * Sets the cache strategy class name.
+     * 
+     * @return The strategy.
+     */
     public String getStrategy() {
         return strategy;
     }
 
+    /**
+     * Sets the cache strategy class name.
+     * 
+     * @param strategy
+     *            The strategy.
+     */
     public void setStrategy(String strategy) {
         this.strategy = strategy;
     }
@@ -182,6 +236,13 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
         return response;
     }
 
+    /**
+     * Gets the web response as a file.
+     * 
+     * @param request
+     *            The source request.
+     * @return The request as a file.
+     */
     protected File asFile(WebRequest request) {
         digest.reset();
         digest.update(request.getUrl().toString().getBytes());
@@ -192,6 +253,15 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
         return result;
     }
 
+    /**
+     * Gets a web response from a file.
+     * 
+     * @param file
+     *            The file.
+     * @return The <code>WebResponse</code> corresponding to the file.
+     * @throws IOException
+     *             On response load errors.
+     */
     protected WebResponse get(File file) throws IOException {
         WebResponse result = null;
         ObjectInputStream oin = null;
@@ -222,6 +292,16 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
         return result;
     }
 
+    /**
+     * Perform web response saving.
+     * 
+     * @param request
+     *            The request.
+     * @param response
+     *            The response.
+     * @param file
+     *            The corresponding file.
+     */
     protected void save(WebRequest request, WebResponse response, File file) {
         ObjectOutputStream out = null;
         try {

@@ -29,6 +29,12 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DisabledElement;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
+/**
+ * Check if elements are enabled/not.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginEnabled extends AbstractPluginFind implements IAssertion {
 
     @Override

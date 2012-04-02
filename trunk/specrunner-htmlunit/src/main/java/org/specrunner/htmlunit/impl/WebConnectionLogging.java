@@ -27,12 +27,30 @@ import com.gargoylesoftware.htmlunit.WebRequest;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.util.WebConnectionWrapper;
 
+/**
+ * A logging connection.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class WebConnectionLogging extends WebConnectionWrapper {
 
+    /**
+     * Creates a logging from a client.
+     * 
+     * @param webClient
+     *            A client.
+     */
     public WebConnectionLogging(WebClient webClient) {
         super(webClient);
     }
 
+    /**
+     * Creates a logging from a connection.
+     * 
+     * @param webConnection
+     *            A web connection.
+     */
     public WebConnectionLogging(WebConnection webConnection) {
         super(webConnection);
     }

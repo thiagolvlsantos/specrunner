@@ -35,6 +35,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 
+/**
+ * Perform some action over select elements.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginSelect extends AbstractPluginFindSingle implements IAction {
 
     @Override

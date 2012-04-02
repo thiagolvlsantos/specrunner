@@ -20,6 +20,12 @@ package org.specrunner.htmlunit.actions;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 
+/**
+ * Unselect a given element, or a list of elements in &lt;ul&gt;.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginUnselect extends AbstractPluginSelect implements IAction {
 
     @Override
