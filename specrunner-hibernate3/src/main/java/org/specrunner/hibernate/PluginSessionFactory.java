@@ -170,6 +170,7 @@ public class PluginSessionFactory extends AbstractPluginScoped {
 
     @Override
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (configuration == null) {
             try {

@@ -211,6 +211,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
     @Override
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         try {
             if (type != null) {
                 typeInstance = Class.forName(type);

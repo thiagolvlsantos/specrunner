@@ -403,6 +403,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     @Override
     @SuppressWarnings("unchecked")
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         try {
             fh.set(FEATURE_VERSION, "version", String.class, this);

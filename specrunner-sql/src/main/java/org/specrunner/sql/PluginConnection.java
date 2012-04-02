@@ -40,6 +40,9 @@ import org.specrunner.util.UtilLog;
  * Plugin to set connection information. The connection information must be
  * based on a provider (DataSource- see <code>IDataSourceProvider</code>), or
  * direct information with driver/url/user/password.
+ * <p>
+ * When threadsafe='true' <code>SpecRunner</code> uses
+ * <code>IConcurrentMapping</code> to resolve database url reference.
  * 
  * @author Thiago Santos
  * 
@@ -110,17 +113,6 @@ public class PluginConnection extends AbstractPluginValue {
      * Set connection as reusable.
      */
     private Boolean reuse = false;
-
-    /**
-     * When threadsafe='true' <code>SpecRunner</code> uses
-     * <code>IConcurrentMapping</code> to resolve database url reference.
-     */
-    public static final String FEATURE_THREADSAFE = PluginConnection.class.getName() + ".threadsafe";
-    /**
-     * Enable use of <code>IConcurrentMapping</code> to perform thread specific
-     * settings.
-     */
-    private Boolean threadsafe = false;
 
     /**
      * Driver information.
@@ -196,25 +188,6 @@ public class PluginConnection extends AbstractPluginValue {
      */
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    /**
-     * The thread mode.
-     * 
-     * @return true, for thread safe connections.
-     */
-    public Boolean getThreadsafe() {
-        return threadsafe;
-    }
-
-    /**
-     * Set thread safe value.
-     * 
-     * @param threadsafe
-     *            Thread safe state.
-     */
-    public void setThreadsafe(Boolean threadsafe) {
-        this.threadsafe = threadsafe;
     }
 
     /**
@@ -340,13 +313,6 @@ public class PluginConnection extends AbstractPluginValue {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
-        try {
-            fh.set(FEATURE_THREADSAFE, "threadsafe", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
     }
 
     @Override
@@ -456,7 +422,7 @@ public class PluginConnection extends AbstractPluginValue {
      */
     public IDataSourceProvider createProvider() {
         String newUrl = url;
-        if (threadsafe) {
+        if (getThreadsafe()) {
             IConcurrentMapping rm = SpecRunnerServices.get(IConcurrentMapping.class);
             newUrl = String.valueOf(rm.get("url", newUrl));
         }
