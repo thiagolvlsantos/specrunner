@@ -44,19 +44,22 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 public abstract class AbstractPluginFind extends AbstractPluginSgml {
 
     /**
-     * Default finder instance.
+     * Feature to set finder type.
      */
     public static final String FEATURE_FINDER_TYPE = AbstractPluginFind.class.getName() + ".finder";
+    /**
+     * The finder class name.
+     */
     protected String finder;
 
     /**
-     * Default finderInstance feature.
+     * Feature to set finderInstance.
      */
     public static final String FEATURE_FINDER_INSTANCE = AbstractPluginFind.class.getName() + ".finderInstance";
+    /**
+     * A finder instance.
+     */
     private IFinder finderInstance;
-
-    public AbstractPluginFind() {
-    }
 
     /**
      * Sets the plugin finderInstance.
@@ -67,10 +70,25 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
         return finderInstance;
     }
 
+    /**
+     * Set the finder.
+     * 
+     * @param finder
+     *            A finder.
+     */
     public void setFinder(IFinder finder) {
         this.finderInstance = finder;
     }
 
+    /**
+     * Propagate parameters added to finderInstance.
+     * 
+     * @param context
+     *            The context.
+     * @return The finder configured.
+     * @throws PluginException
+     *             On processing errors.
+     */
     public IFinder getFinderInstance(IContext context) throws PluginException {
         UtilParametrized.setProperties(context, finderInstance, getAllParameters());
         return finderInstance;

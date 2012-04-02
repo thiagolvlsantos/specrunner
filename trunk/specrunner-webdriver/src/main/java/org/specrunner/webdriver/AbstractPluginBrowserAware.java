@@ -144,7 +144,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * 
      * @param str
      *            The string to be normalized.
-     * @return The normalized version of the string.
+     * @return The normalized version of the string, if normalized=true.
      */
     public String getNormalized(String str) {
         if (getNormalized()) {
