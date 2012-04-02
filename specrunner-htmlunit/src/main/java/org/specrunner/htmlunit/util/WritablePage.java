@@ -38,13 +38,33 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  */
 public class WritablePage implements IWritable {
 
-    private Map<String, Object> information;
+    /**
+     * Map of information.
+     */
+    private final Map<String, Object> information;
+    /**
+     * Reference to temporary file dumped.
+     */
     private File tmp;
 
+    /**
+     * Writable page by web driver.
+     * 
+     * @param page
+     *            The client page.
+     */
     public WritablePage(Page page) {
         this(null, page);
     }
 
+    /**
+     * The writable with extra information plus client page.
+     * 
+     * @param information
+     *            The extra information.
+     * @param page
+     *            The client page.
+     */
     public WritablePage(Map<String, Object> information, Page page) {
         this.information = information;
         try {

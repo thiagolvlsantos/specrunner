@@ -44,6 +44,12 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlTable;
 
+/**
+ * Compare tables.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginCompareTable extends AbstractPluginFindSingle implements IAssertion {
 
     @Override
@@ -55,6 +61,23 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         }
     }
 
+    /**
+     * Compare a table.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param page
+     *            The client page.
+     * @param element
+     *            The element.
+     * @param node
+     *            The node.
+     * @return The result of comparation.
+     * @throws PluginException
+     *             On evaluation error.
+     */
     protected boolean compareTable(IContext context, IResultSet result, SgmlPage page, HtmlElement element, Node node) throws PluginException {
         boolean success = true;
 
@@ -145,6 +168,25 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         return success;
     }
 
+    /**
+     * Compare terminal nodes of tables.
+     * 
+     * @param plugin
+     *            The source plugin.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param page
+     *            The client page.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @return true, if equals, false, otherwise.
+     * @throws PluginException
+     *             On comparison errors.
+     */
     protected boolean compareTerminal(IPlugin plugin, IContext context, IResultSet result, SgmlPage page, CellAdapter expected, HtmlElement received) throws PluginException {
         if (isTable(expected.getElement())) {
             return compareTable(context, result, page, received, expected.getElement());
@@ -153,7 +195,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.asText();
-            return PluginCompareUtils.compareDate(compare.getFormat(), compare.getTolerance(), exp, rec, context.newBlock(expected.getElement(), plugin), context, result, page);
+            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getElement(), plugin), context, result, page);
         } else {
             PluginCompare compare = UtilPlugin.create(context, PluginCompareDate.class, expected.getElement());
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
@@ -163,6 +205,13 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         }
     }
 
+    /**
+     * Return if a given element is a table.
+     * 
+     * @param element
+     *            The element type.
+     * @return true, if table, false otherwise.
+     */
     public static boolean isTable(Element element) {
         CellAdapter ca = new CellAdapter(element);
         return ca.hasAttribute("type") && ca.getAttribute("type").equals("table");

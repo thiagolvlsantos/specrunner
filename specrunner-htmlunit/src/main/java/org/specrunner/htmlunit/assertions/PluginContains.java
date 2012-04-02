@@ -28,6 +28,12 @@ import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
+/**
+ * Check if body or a given element contains a text.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginContains extends AbstractPluginFindSingle implements IAssertion {
 
     @Override
@@ -48,10 +54,30 @@ public class PluginContains extends AbstractPluginFindSingle implements IAsserti
         }
     }
 
+    /**
+     * Check if content contains the value.
+     * 
+     * @param content
+     *            The content.
+     * @param value
+     *            The value.
+     * @return true, if contains, false, otherwise.
+     */
     protected boolean test(String content, String value) {
         return content.contains(value);
     }
 
+    /**
+     * The error message in case o test failure.
+     * 
+     * @param context
+     *            The context.
+     * @param value
+     *            The value.
+     * @return The message.
+     * @throws PluginException
+     *             On message construction errors.
+     */
     protected String getMessage(IContext context, String value) throws PluginException {
         return getFinder().resume(context) + " does not contain '" + value + "'.";
     }

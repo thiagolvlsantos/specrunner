@@ -30,6 +30,12 @@ import org.specrunner.util.UtilLog;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
+/**
+ * Open a given URL.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginOpen extends AbstractPluginUrlAware {
 
     @Override
@@ -70,6 +76,13 @@ public class PluginOpen extends AbstractPluginUrlAware {
         }
     }
 
+    /**
+     * Check if an error can be ignored.
+     * 
+     * @param error
+     *            The error.
+     * @return true, if ignorable, false, otherwise.
+     */
     protected boolean isIgnorable(PluginException error) {
         String msg = error.getMessage();
         return msg.contains("ScriptException") || msg.endsWith(".js");

@@ -28,6 +28,12 @@ import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
+/**
+ * Compare strings.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginCompare extends AbstractPluginFindSingle implements IAssertion {
 
     @Override

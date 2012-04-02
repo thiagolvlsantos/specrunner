@@ -20,6 +20,12 @@ package org.specrunner.htmlunit.actions;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 
+/**
+ * Select a given element, or a list of elements in &lt;ul&gt;.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginSelect extends AbstractPluginSelect implements IAction {
 
     @Override

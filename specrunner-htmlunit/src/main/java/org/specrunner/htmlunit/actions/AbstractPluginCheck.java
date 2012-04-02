@@ -29,35 +29,47 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
-public class PluginCheckAll extends AbstractPluginFind implements IAction {
-
-    private Boolean status = true;
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
+/**
+ * Partial implementation of actions in checkboxes.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+public abstract class AbstractPluginCheck extends AbstractPluginFind implements IAction {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
         boolean success = true;
         for (int i = 0; i < elements.length; i++) {
-            if (!(elements[i] instanceof HtmlCheckBoxInput)) {
+            if (!isCheckbox(elements[i])) {
                 result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + elements[i] + " is not a checkbox."), new WritablePage(page));
                 success = false;
                 break;
             }
             HtmlCheckBoxInput e = (HtmlCheckBoxInput) elements[i];
-            if (!e.isDisabled()) {
-                e.setChecked(status);
-            }
+            doSomething(e);
         }
         if (success) {
             result.addResult(Status.SUCCESS, context.peek());
         }
     }
 
+    /**
+     * Return if a element is a input type=checkbox.
+     * 
+     * @param element
+     *            The element.
+     * @return true, if checkbox, false otherwise.
+     */
+    protected boolean isCheckbox(HtmlElement element) {
+        return element instanceof HtmlCheckBoxInput;
+    }
+
+    /**
+     * Perform something with the checkbox.
+     * 
+     * @param checkbox
+     *            The element.
+     */
+    protected abstract void doSomething(HtmlCheckBoxInput checkbox);
 }

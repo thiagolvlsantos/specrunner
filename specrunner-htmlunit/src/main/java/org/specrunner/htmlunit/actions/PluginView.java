@@ -26,6 +26,12 @@ import org.specrunner.result.Status;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
+/**
+ * Take a snapshoot.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginView extends AbstractPluginBrowserAware implements IAction {
 
     @Override

@@ -26,14 +26,34 @@ import org.specrunner.util.UtilLog;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
+/**
+ * Set the header information.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginHeader extends AbstractPluginBrowserAware implements IAction {
 
+    /**
+     * The header.
+     */
     private String header;
 
+    /**
+     * Gets header name.
+     * 
+     * @return The header name.
+     */
     public String getHeader() {
         return header;
     }
 
+    /**
+     * Sets the header name.
+     * 
+     * @param header
+     *            The header.
+     */
     public void setHeader(String header) {
         this.header = header;
     }

@@ -99,18 +99,22 @@ public class PluginCompareDate extends PluginCompare {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_FORMAT, "format", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (format == null) {
+            try {
+                fh.set(FEATURE_FORMAT, "format", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
-        try {
-            fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (tolerance == null) {
+            try {
+                fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
     }

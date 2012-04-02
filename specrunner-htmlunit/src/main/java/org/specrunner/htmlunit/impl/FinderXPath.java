@@ -43,6 +43,9 @@ import com.gargoylesoftware.htmlunit.WebClient;
  */
 public class FinderXPath extends AbstractParametrized implements IFinder {
 
+    /**
+     * Thread safe instance of <code>IFinder</code>.
+     */
     private static ThreadLocal<FinderXPath> instance = new ThreadLocal<FinderXPath>() {
         @Override
         protected FinderXPath initialValue() {
@@ -50,10 +53,22 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         };
     };
 
+    /**
+     * Mapping of XPath strategies.
+     */
     private final Map<String, String> strategies = new HashMap<String, String>();
+    /**
+     * The reference to document objects.
+     */
     protected String by;
+    /**
+     * The separator of arguments in 'by' attribute.
+     */
     protected String separator = ";";
 
+    /**
+     * Minimum constructor.
+     */
     protected FinderXPath() {
         addStrategy("id", "//*[@id='{0}']");
         addStrategy("name", "//*[@name='{0}']");
@@ -128,6 +143,12 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         return by;
     }
 
+    /**
+     * Sets the target reference.
+     * 
+     * @param by
+     *            The reference.
+     */
     public void setBy(String by) {
         this.by = by;
     }
@@ -141,6 +162,12 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         return separator;
     }
 
+    /**
+     * Sets the separator.
+     * 
+     * @param separator
+     *            The separator.
+     */
     public void setSeparator(String separator) {
         this.separator = separator;
     }

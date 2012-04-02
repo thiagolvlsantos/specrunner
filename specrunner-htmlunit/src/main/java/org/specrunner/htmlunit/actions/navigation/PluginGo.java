@@ -34,12 +34,26 @@ import com.gargoylesoftware.htmlunit.WebClient;
  */
 public class PluginGo extends AbstractPluginHistory {
 
+    /**
+     * The history index.
+     */
     private Long to;
 
+    /**
+     * Gets the to index.
+     * 
+     * @return The index.
+     */
     public Long getTo() {
         return to;
     }
 
+    /**
+     * Sets the index.
+     * 
+     * @param to
+     *            The new index.
+     */
     public void setTo(Long to) {
         this.to = to;
     }

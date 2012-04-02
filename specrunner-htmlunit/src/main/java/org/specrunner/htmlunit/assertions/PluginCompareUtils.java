@@ -34,11 +34,39 @@ import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 
+/**
+ * Comparation utilities.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public final class PluginCompareUtils {
 
+    /**
+     * Hidden constructor.
+     */
     private PluginCompareUtils() {
     }
 
+    /**
+     * Compare two strings.
+     * 
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @param block
+     *            The block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param page
+     *            The client page.
+     * @return true, if equals, false, otherwise.
+     * @throws PluginException
+     *             On comparison errors.
+     */
     public static boolean compare(String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
         boolean res = true;
         if (expected.equals(received)) {
@@ -50,6 +78,24 @@ public final class PluginCompareUtils {
         return res;
     }
 
+    /**
+     * Add error to result.
+     * 
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @param block
+     *            The block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param page
+     *            The page.
+     * @throws PluginException
+     *             On errors.
+     */
     protected static void addError(String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
         try {
             IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
@@ -66,11 +112,32 @@ public final class PluginCompareUtils {
         }
     }
 
-    public static boolean compareDate(String format, long tolerance, String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
+    /**
+     * Perform date comparisons.
+     * 
+     * @param compare
+     *            The plugin which hold format and tolerance information.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @param block
+     *            The block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param page
+     *            The client page.
+     * @return true, of equals considering tolerance, false, otherwise.
+     * @throws PluginException
+     *             On comparison errors.
+     */
+    public static boolean compareDate(PluginCompareDate compare, String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
         boolean res = true;
         DateTimeFormatter fmt = null;
         try {
-            fmt = DateTimeFormat.forPattern(format);
+            fmt = DateTimeFormat.forPattern(compare.getFormat());
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -82,7 +149,7 @@ public final class PluginCompareUtils {
             try {
                 DateTime dtExpected = fmt.parseDateTime(expected);
                 DateTime dtReceived = fmt.parseDateTime(received);
-                if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= tolerance) {
+                if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= compare.getTolerance()) {
                     result.addResult(Status.SUCCESS, block);
                 } else {
                     addError(expected, received, block, context, result, page);

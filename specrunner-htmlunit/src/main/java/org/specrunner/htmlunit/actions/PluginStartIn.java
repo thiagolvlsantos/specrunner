@@ -29,16 +29,41 @@ import org.specrunner.util.string.IStringProvider;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
+/**
+ * Sets initial page of a given driver. Once set, relative references can be
+ * made.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginStartIn extends AbstractPluginUrlAware {
 
+    /**
+     * Start reference for a given browser.
+     */
     public static final String START_IN = "startIn";
 
+    /**
+     * String provider.
+     */
     private String provider;
 
+    /**
+     * The <code>IStringProvider</code> which can give information about the
+     * start url.
+     * 
+     * @return The provider class name.
+     */
     public String getProvider() {
         return provider;
     }
 
+    /**
+     * The provide class name.
+     * 
+     * @param provider
+     *            The provider.
+     */
     public void setProvider(String provider) {
         this.provider = provider;
     }
@@ -75,10 +100,26 @@ public class PluginStartIn extends AbstractPluginUrlAware {
         result.addResult(Status.SUCCESS, context.newBlock(node, this));
     }
 
+    /**
+     * Get the URL from a provider.
+     * 
+     * @param context
+     *            The context.
+     * @return The provider url.
+     * @throws Exception
+     *             On provider action errors.
+     */
     protected String getBaseFromProvider(IContext context) throws Exception {
         return ((IStringProvider) Class.forName(provider).newInstance()).newString(context);
     }
 
+    /**
+     * Gets the start URL for a given browser name.
+     * 
+     * @param browserName
+     *            The browser name.
+     * @return The browser start in name to be used in context lookups.
+     */
     public static String getBaseForBrowser(String browserName) {
         return browserName + "_" + START_IN;
     }
