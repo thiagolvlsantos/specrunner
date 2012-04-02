@@ -176,6 +176,7 @@ public class PluginInclude extends AbstractPlugin {
 
     @Override
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         try {
             fh.set(FEATURE_DEPTH, "depth", Integer.class, this);

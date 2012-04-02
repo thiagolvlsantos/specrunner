@@ -20,10 +20,13 @@ package example.sql;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 
+@RunWith(ConcurrentRunner.class)
 public class TestSql {
 
     private static final String INCOME = "src/test/resources/income/full/";

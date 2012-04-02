@@ -24,6 +24,7 @@ import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.impl.AbstractParametrized;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IParalelPlugin;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.ISleepPlugin;
 import org.specrunner.plugins.ITestPlugin;
@@ -38,7 +39,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPlugin extends AbstractParametrized implements IPlugin, ITestPlugin, ISleepPlugin, ITimedPlugin {
+public abstract class AbstractPlugin extends AbstractParametrized implements IPlugin, ITestPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
 
     /**
      * Default conditional feature.
@@ -79,6 +80,15 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
      */
     private IModel<Object, Long> timeoutModel;
 
+    /**
+     * Default threadsafe feature.
+     */
+    public static final String FEATURE_THREADSAFE = AbstractPlugin.class.getName() + ".threadsafe";
+    /**
+     * Thread safe status. Default is false.
+     */
+    private Boolean threadsafe = false;
+
     @Override
     public void initialize(IContext context) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
@@ -106,6 +116,15 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
         if (timeout == null) {
             try {
                 fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        }
+        if (threadsafe == null) {
+            try {
+                fh.set(FEATURE_THREADSAFE, "threadsafe", Boolean.class, this);
             } catch (FeatureManagerException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -187,6 +206,16 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
     @Override
     public void setTimeoutModel(IModel<Object, Long> timeoutModel) {
         this.timeoutModel = timeoutModel;
+    }
+
+    @Override
+    public Boolean getThreadsafe() {
+        return threadsafe;
+    }
+
+    @Override
+    public void setThreadsafe(Boolean threadsafe) {
+        this.threadsafe = threadsafe;
     }
 
     /**

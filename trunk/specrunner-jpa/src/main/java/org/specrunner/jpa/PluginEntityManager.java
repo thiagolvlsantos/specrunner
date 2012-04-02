@@ -39,7 +39,6 @@ public class PluginEntityManager extends AbstractPluginObject {
 
     private String unit;
     private String url;
-    private Boolean threadsafe = false;
 
     public String getUnit() {
         return unit;
@@ -55,14 +54,6 @@ public class PluginEntityManager extends AbstractPluginObject {
 
     public void setUrl(String url) {
         this.url = url;
-    }
-
-    public Boolean getThreadsafe() {
-        return threadsafe;
-    }
-
-    public void setThreadsafe(Boolean threadsafe) {
-        this.threadsafe = threadsafe;
     }
 
     @Override
@@ -81,7 +72,7 @@ public class PluginEntityManager extends AbstractPluginObject {
         cfg.put("unit", unit);
 
         Map<String, Object> properties = new HashMap<String, Object>();
-        if (threadsafe && url != null) {
+        if (getThreadsafe() && url != null) {
             String key = "javax.persistence.jdbc.url";
             IConcurrentMapping cm = SpecRunnerServices.get(IConcurrentMapping.class);
             String newUrl = String.valueOf(cm.get("url", url));

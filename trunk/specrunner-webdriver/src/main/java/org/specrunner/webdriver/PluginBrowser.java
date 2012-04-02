@@ -210,6 +210,7 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
 
     @Override
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         try {
             fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);

@@ -97,16 +97,6 @@ public class PluginConfiguration extends AbstractPluginValue {
     private String method;
 
     /**
-     * Set thread safe feature enable thread resolution of connection
-     * parameters.
-     */
-    public static final String FEATURE_THREADSAFE = PluginConfiguration.class.getName() + ".threadsafe";
-    /**
-     * The thread safe feature.
-     */
-    private Boolean threadsafe = false;
-
-    /**
      * The configuration provider class name.
      * 
      * @return The provider class name.
@@ -163,28 +153,9 @@ public class PluginConfiguration extends AbstractPluginValue {
         this.method = method;
     }
 
-    /**
-     * Get the thread safe mode.
-     * 
-     * @return true, of data base url should be changed according to current
-     *         thread.
-     */
-    public Boolean getThreadsafe() {
-        return threadsafe;
-    }
-
-    /**
-     * The thread safe state.
-     * 
-     * @param threadsafe
-     *            true, for change URL based on thread, false, otherwise.
-     */
-    public void setThreadsafe(Boolean threadsafe) {
-        this.threadsafe = threadsafe;
-    }
-
     @Override
     public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (type == null) {
             try {
@@ -213,13 +184,6 @@ public class PluginConfiguration extends AbstractPluginValue {
                 }
             }
         }
-        try {
-            fh.set(FEATURE_THREADSAFE, "threadsafe", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
     }
 
     @Override
@@ -246,7 +210,7 @@ public class PluginConfiguration extends AbstractPluginValue {
             }
             setListeners(cfg);
 
-            if (threadsafe) {
+            if (getThreadsafe()) {
                 changeUrl(context, cfg);
             }
 
