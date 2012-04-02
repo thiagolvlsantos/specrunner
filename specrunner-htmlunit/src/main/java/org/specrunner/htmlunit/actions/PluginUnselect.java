@@ -20,12 +20,12 @@ package org.specrunner.htmlunit.actions;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 
-public class PluginSelect extends AbstractPluginSelect implements IAction {
+public class PluginUnselect extends AbstractPluginSelect implements IAction {
 
     @Override
     protected void doSomething(HtmlElement element, HtmlOption option) {
-        if (!option.isSelected()) {
-            option.setSelected(true);
+        if (option.isSelected()) {
+            option.setSelected(false);
         }
     }
 }

@@ -15,33 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.assertions;
+package org.specrunner.htmlunit.actions.navigation;
 
-import java.util.List;
+import java.io.IOException;
 
-import nu.xom.Node;
-import nu.xom.Nodes;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
+import org.specrunner.htmlunit.actions.AbstractPluginHistory;
 import org.specrunner.result.IResultSet;
 
+import com.gargoylesoftware.htmlunit.History;
+import com.gargoylesoftware.htmlunit.WebClient;
+
 /**
- * Check select options.
+ * Call browser back.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class PluginOptions extends AbstractPluginSelection implements IAssertion {
+public class PluginBack extends AbstractPluginHistory {
 
     @Override
-    protected int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        Node node = context.getNode();
-        Nodes expectedOptions = node.query("descendant::li");
-        List<WebElement> currentOptions = element.findElements(By.xpath("descendant::option"));
-        return testList(context, result, client, expectedOptions, currentOptions, true);
+    protected void doEnd(IContext context, IResultSet result, WebClient client, History history) throws IOException {
+        history.back();
     }
+
 }

@@ -15,27 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.htmlunit.actions;
+package org.specrunner.htmlunit.actions.navigation;
 
 import java.io.IOException;
 
 import org.specrunner.context.IContext;
+import org.specrunner.htmlunit.actions.AbstractPluginHistory;
 import org.specrunner.result.IResultSet;
 
 import com.gargoylesoftware.htmlunit.History;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
- * Call browser back.
+ * Call browser refresh.
  * 
  * @author Thiago Santos.
  * 
  */
-public class PluginBack extends AbstractPluginHistory {
+public class PluginRefresh extends AbstractPluginHistory {
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client, History history) throws IOException {
-        history.back();
+        history.go(0);
     }
-
 }

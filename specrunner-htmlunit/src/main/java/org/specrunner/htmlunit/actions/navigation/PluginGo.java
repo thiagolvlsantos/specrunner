@@ -15,26 +15,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.htmlunit.actions;
+package org.specrunner.htmlunit.actions.navigation;
 
 import java.io.IOException;
 
 import org.specrunner.context.IContext;
+import org.specrunner.htmlunit.actions.AbstractPluginHistory;
 import org.specrunner.result.IResultSet;
 
 import com.gargoylesoftware.htmlunit.History;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
- * Call browser refresh.
+ * Call browser history to a index.
  * 
  * @author Thiago Santos.
  * 
  */
-public class PluginRefresh extends AbstractPluginHistory {
+public class PluginGo extends AbstractPluginHistory {
+
+    private Long to;
+
+    public Long getTo() {
+        return to;
+    }
+
+    public void setTo(Long to) {
+        this.to = to;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client, History history) throws IOException {
-        history.go(0);
+        if (to == null) {
+            throw new IOException("Specify 'to' index. i.e. to='-1' backs one page, to='2' forward history twice.");
+        }
+        history.go(to.intValue());
     }
+
 }

@@ -15,20 +15,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.assertions;
+package org.specrunner.htmlunit.assertions;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import nu.xom.Node;
 import nu.xom.Nodes;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlOption;
+import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 
 /**
  * Check select selected items.
@@ -39,19 +41,14 @@ import org.specrunner.result.IResultSet;
 public class PluginSelected extends AbstractPluginSelection implements IAssertion {
 
     @Override
-    protected int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
+    protected int checkSelection(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException {
         Node node = context.getNode();
         Nodes expectedSelection = node.query("descendant::li");
         if (expectedSelection.size() == 0) {
             expectedSelection = new Nodes(node);
         }
-        List<WebElement> tmp = element.findElements(By.xpath("descendant::option"));
-        List<WebElement> currentSelection = new LinkedList<WebElement>();
-        for (WebElement we : tmp) {
-            if (we.isSelected()) {
-                currentSelection.add(we);
-            }
-        }
-        return testList(context, result, client, expectedSelection, currentSelection, false);
+        HtmlSelect select = (HtmlSelect) element;
+        List<HtmlOption> currentSelection = select.getSelectedOptions();
+        return testList(context, result, page, expectedSelection, currentSelection, false);
     }
 }

@@ -15,26 +15,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.htmlunit.actions;
+package org.specrunner.htmlunit.assertions;
 
-import java.io.IOException;
+import java.util.List;
+
+import nu.xom.Node;
+import nu.xom.Nodes;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
-import com.gargoylesoftware.htmlunit.History;
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlOption;
+import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 
 /**
- * Call browser forward.
+ * Check select options.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public class PluginForward extends AbstractPluginHistory {
+public class PluginOptions extends AbstractPluginSelection implements IAssertion {
 
     @Override
-    protected void doEnd(IContext context, IResultSet result, WebClient client, History history) throws IOException {
-        history.forward();
+    protected int checkSelection(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException {
+        Node node = context.getNode();
+        Nodes expectedOptions = node.query("descendant::li");
+        List<HtmlOption> currentOptions = ((HtmlSelect) element).getOptions();
+        return testList(context, result, page, expectedOptions, currentOptions, true);
     }
 }
