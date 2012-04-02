@@ -39,32 +39,44 @@ import com.gargoylesoftware.htmlunit.WebClient;
 public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
 
     /**
-     * Default interval feature.
+     * Feature for interval.
      */
     public static final String FEATURE_INTERVAL = AbstractPluginBrowserAware.class.getName() + ".interval";
+    /**
+     * Default interval.
+     */
     private static final Long DEFAULT_INTERVAL = 100L;
+    /**
+     * The interval.
+     */
     private Long interval = DEFAULT_INTERVAL;
 
     /**
-     * Default max time of feature.
+     * Feature to set max interval.
      */
     public static final String FEATURE_MAXWAIT = AbstractPluginBrowserAware.class.getName() + ".maxwait";
+    /**
+     * Default max wait.
+     */
     private static final Long DEFAULT_MAXWAIT = 1000L;
+    /**
+     * The max wait time.
+     */
     private Long maxwait = DEFAULT_MAXWAIT;
 
     /**
-     * Normalized feature.
+     * Feature to set normalized state.
      */
     public static final String FEATURE_NORMALIZED = AbstractPluginBrowserAware.class.getName() + ".normalized";
+    /**
+     * The normalized version.
+     */
     private Boolean normalized = Boolean.TRUE;
 
     /**
      * Default timeout to finish browser based actions.
      */
     public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
-
-    public AbstractPluginBrowserAware() {
-    }
 
     /**
      * The max time to wait for JavaScript return. Default is '1000'
@@ -76,6 +88,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         return maxwait;
     }
 
+    /**
+     * Set the max wait interval.
+     * 
+     * @param maxwait
+     *            The max wait.
+     */
     public void setMaxwait(Long maxwait) {
         this.maxwait = maxwait;
     }
@@ -90,6 +108,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         return interval;
     }
 
+    /**
+     * Change the interval.
+     * 
+     * @param interval
+     *            The interval.
+     */
     public void setInterval(Long interval) {
         this.interval = interval;
     }
@@ -98,16 +122,29 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * If normalized is false, the expected and received String are not compared
      * using their normalized version (trim+remove extra spaces).
      * 
-     * @return
+     * @return The normalized version of a string.
      */
     public Boolean getNormalized() {
         return normalized;
     }
 
+    /**
+     * Sets normalized status.
+     * 
+     * @param normalized
+     *            The normalized option.
+     */
     public void setNormalized(Boolean normalized) {
         this.normalized = normalized;
     }
 
+    /**
+     * Gets the normalized version of a string.
+     * 
+     * @param str
+     *            The string to be normalized.
+     * @return The normalized version, if normalized=true.
+     */
     public String getNormalized(String str) {
         if (getNormalized()) {
             return UtilString.normalize(str);
@@ -163,10 +200,20 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         }
     }
 
+    /**
+     * Gets the browser name.
+     * 
+     * @return The name.
+     */
     public String getBrowserName() {
         return getName() != null ? getName() : PluginBrowser.BROWSER_NAME;
     }
 
+    /**
+     * Sign actions to wait for browser response.
+     * 
+     * @return true, when wait is desired, false, otherwise. Default is true.
+     */
     protected boolean isWait() {
         return true;
     }
@@ -185,6 +232,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      */
     protected abstract void doEnd(IContext context, IResultSet result, WebClient client) throws PluginException;
 
+    /**
+     * Wait for client. If sleep is set, wait for sleep time.
+     * 
+     * @param client
+     *            The client.
+     */
     protected void waitForClient(WebClient client) {
         if (getSleep() == null) {
             long time = System.currentTimeMillis();

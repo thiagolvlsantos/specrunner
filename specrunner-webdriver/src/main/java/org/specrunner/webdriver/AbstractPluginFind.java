@@ -42,7 +42,7 @@ import org.specrunner.webdriver.impl.FinderXPath;
 public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
 
     /**
-     * Feature to set finder instance.
+     * Feature to set finder type.
      */
     public static final String FEATURE_FINDER_TYPE = AbstractPluginFind.class.getName() + ".finder";
     /**

@@ -28,6 +28,12 @@ import org.specrunner.result.Status;
 import com.gargoylesoftware.htmlunit.History;
 import com.gargoylesoftware.htmlunit.WebClient;
 
+/**
+ * Plugin helper to interact with history.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPluginHistory extends AbstractPluginBrowserAware implements IAction {
 
     @Override
@@ -40,6 +46,20 @@ public abstract class AbstractPluginHistory extends AbstractPluginBrowserAware i
         }
     }
 
+    /**
+     * Perform actions on history elements.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * @param history
+     *            The history.
+     * @throws IOException
+     *             On interaction errors.
+     */
     protected abstract void doEnd(IContext context, IResultSet result, WebClient client, History history) throws IOException;
 
 }

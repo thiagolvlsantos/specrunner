@@ -65,73 +65,115 @@ public class PluginBrowser extends AbstractPluginScoped {
     public static final String BROWSER_NAME = "browser";
 
     /**
-     * Default browser version feature.
+     * Feature to set browser version.
      */
     public static final String FEATURE_VERSION = PluginBrowser.class.getName() + ".version";
+    /**
+     * The browser version.
+     */
     private String version = "FIREFOX_3_6";
 
     /**
-     * Default browser proxy host feature.
+     * Feature to set host (for proxies).
      */
     public static final String FEATURE_HOST = PluginBrowser.class.getName() + ".host";
+    /**
+     * The host.
+     */
     private String host;
 
     /**
-     * Default browser proxy port feature.
+     * Feature to set port (for proxies).
      */
     public static final String FEATURE_PORT = PluginBrowser.class.getName() + ".port";
+    /**
+     * The port.
+     */
     private Integer port;
 
     /**
-     * Default user name feature, if the browser requires authentication.
+     * Feature to set user name, if the browser requires authentication.
      */
     public static final String FEATURE_USERNAME = PluginBrowser.class.getName() + ".username";
+    /**
+     * The username.
+     */
     private String username;
 
     /**
-     * Default password feature, if the browser requires authentication.
+     * Feature to set password, if the browser requires authentication.
      */
     public static final String FEATURE_PASSWORD = PluginBrowser.class.getName() + ".password";
+    /**
+     * The password.
+     */
     private String password;
 
     /**
-     * Default browser timeout feature.
+     * Set default browser http timeout.
      */
     public static final String FEATURE_HTTPTIMEOUT = PluginBrowser.class.getName() + ".httptimeout";
+    /**
+     * The browser http timeout. Default is '0'.
+     */
     private Integer httptimeout = 0;
 
     /**
-     * Default browser connection setting feature.
+     * Feature to set browser connection type.
      */
     public static final String FEATURE_CONNECTION = PluginBrowser.class.getName() + ".connection";
+    /**
+     * <code>IWebConnection</code> type to be used.
+     */
     private String connection;
+    /**
+     * Connection instance.
+     */
     private Class<? extends IWebConnection> connectionType;
 
     /**
      * Default browser cache (class name) setting feature.
      */
     public static final String FEATURE_CACHE = PluginBrowser.class.getName() + ".cache";
+    /**
+     * <code>Cache</code> cache class to be used.
+     */
     private String cache;
+    /**
+     * Cache instance.
+     */
     private Cache cacheInstance;
 
     /**
-     * Default browser cached (true/false) setting feature.
+     * Feature to set browser cached option (true/false).
      */
     public static final String FEATURE_CACHED = PluginBrowser.class.getName() + ".cached";
+    /**
+     * The cache status. Default is 'true'.
+     */
     private Boolean cached = true;
 
     /**
-     * Default browser recording feature.
+     * Feature to enable browser recording.
      */
     public static final String FEATURE_RECORDING = PluginBrowser.class.getName() + ".recording";
+    /**
+     * Recording status. Default is "DEBUG log enabled".
+     */
     private Boolean recording = UtilLog.LOG.isDebugEnabled();
 
     /**
-     * Default browser setting for reuse.
+     * Feature to set web driver reuse.
      */
     public static final String FEATURE_REUSE = PluginBrowser.class.getName() + ".reuse";
+    /**
+     * The reuse status.
+     */
     private Boolean reuse = false;
 
+    /**
+     * Creates a browser.
+     */
     public PluginBrowser() {
         setName(BROWSER_NAME);
     }
@@ -146,6 +188,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return version;
     }
 
+    /**
+     * Set the browser version.
+     * 
+     * @param version
+     *            The version.
+     */
     public void setVersion(String version) {
         this.version = version;
     }
@@ -160,6 +208,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return host;
     }
 
+    /**
+     * Sets the host.
+     * 
+     * @param host
+     *            The host.
+     */
     public void setHost(String host) {
         this.host = host;
     }
@@ -174,6 +228,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return port;
     }
 
+    /**
+     * Sets the port.
+     * 
+     * @param port
+     *            The port.
+     */
     public void setPort(Integer port) {
         this.port = port;
     }
@@ -188,6 +248,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return username;
     }
 
+    /**
+     * Sets the username.
+     * 
+     * @param username
+     *            The username.
+     */
     public void setUsername(String username) {
         this.username = username;
     }
@@ -202,6 +268,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return password;
     }
 
+    /**
+     * Sets the password.
+     * 
+     * @param password
+     *            The password.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
@@ -217,13 +289,19 @@ public class PluginBrowser extends AbstractPluginScoped {
         return httptimeout;
     }
 
+    /**
+     * Sets the HTTP timeout.
+     * 
+     * @param httptimeout
+     *            The timeout.
+     */
     public void setHttptimeout(Integer httptimeout) {
         this.httptimeout = httptimeout;
     }
 
     /**
      * Gets the web connection type, valid values are classes which implements
-     * </code>com.gargoylesoftware.htmlunit.WebConnection</code>. Default is
+     * <code>com.gargoylesoftware.htmlunit.WebConnection</code>. Default is
      * null.
      * 
      * @return The connection instance class.
@@ -232,13 +310,19 @@ public class PluginBrowser extends AbstractPluginScoped {
         return connection;
     }
 
+    /**
+     * Sets the connection class.
+     * 
+     * @param connection
+     *            The connection.
+     */
     public void setConnection(String connection) {
         this.connection = connection;
     }
 
     /**
      * Gets the cache type, valid values are classes which extend
-     * </code>com.gargoylesoftware.htmlunit.Cache</code>. Default is null.
+     * <code>com.gargoylesoftware.htmlunit.Cache</code>. Default is null.
      * 
      * @return The cache class.
      */
@@ -246,6 +330,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return cache;
     }
 
+    /**
+     * Sets the cache class name.
+     * 
+     * @param cache
+     *            The cache class name.
+     */
     public void setCache(String cache) {
         this.cache = cache;
     }
@@ -260,6 +350,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return cached;
     }
 
+    /**
+     * Set cached version.
+     * 
+     * @param cached
+     *            The cached status.
+     */
     public void setCached(Boolean cached) {
         this.cached = cached;
     }
@@ -274,6 +370,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return recording;
     }
 
+    /**
+     * Set recording status.
+     * 
+     * @param recording
+     *            The status.
+     */
     public void setRecording(Boolean recording) {
         this.recording = recording;
     }
@@ -288,6 +390,12 @@ public class PluginBrowser extends AbstractPluginScoped {
         return reuse;
     }
 
+    /**
+     * Set reuse status.
+     * 
+     * @param reuse
+     *            The reuse status.
+     */
     public void setReuse(Boolean reuse) {
         this.reuse = reuse;
     }
@@ -457,10 +565,7 @@ public class PluginBrowser extends AbstractPluginScoped {
                 client.setWebConnection(connectionInstance);
             }
 
-            // print content on error
-            client.setPrintContentOnFailingStatusCode(true);
-            client.setThrowExceptionOnFailingStatusCode(false);
-            client.setThrowExceptionOnScriptError(false);
+            setDefaultClientBehaviors(client);
 
             // synchronize Ajax calls
             client.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -559,5 +664,18 @@ public class PluginBrowser extends AbstractPluginScoped {
         } catch (Exception e) {
             throw new PluginException(e);
         }
+    }
+
+    /**
+     * Set common properties.
+     * 
+     * @param client
+     *            The client to be set.
+     */
+    protected void setDefaultClientBehaviors(final WebClient client) {
+        // print content on error
+        client.setPrintContentOnFailingStatusCode(true);
+        client.setThrowExceptionOnFailingStatusCode(false);
+        client.setThrowExceptionOnScriptError(false);
     }
 }

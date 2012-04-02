@@ -27,30 +27,72 @@ import org.specrunner.htmlunit.AbstractPluginFindSingle;
  */
 public abstract class AbstractPluginKeys extends AbstractPluginFindSingle implements IAction {
 
+    /**
+     * The shift key hold status.
+     */
     protected Boolean shiftkey;
+    /**
+     * The ctrl key hold status.
+     */
     protected Boolean ctrlkey;
+    /**
+     * The alty key hold status.
+     */
     protected Boolean altkey;
 
+    /**
+     * Gets the shift status.
+     * 
+     * @return true, if shift pressed, false, otherwise.
+     */
     public Boolean getShiftkey() {
         return shiftkey;
     }
 
+    /**
+     * Sets the shift status.
+     * 
+     * @param shiftkey
+     *            The key status.
+     */
     public void setShiftkey(Boolean shiftkey) {
         this.shiftkey = shiftkey;
     }
 
+    /**
+     * Gets the ctrl status.
+     * 
+     * @return true, if ctrl pressed, false, otherwise.
+     */
     public Boolean getCtrlkey() {
         return ctrlkey;
     }
 
+    /**
+     * Sets the ctrl status.
+     * 
+     * @param ctrlkey
+     *            The key status.
+     */
     public void setCtrlkey(Boolean ctrlkey) {
         this.ctrlkey = ctrlkey;
     }
 
+    /**
+     * Gets the alt status.
+     * 
+     * @return true, if alt pressed, false, otherwise.
+     */
     public Boolean getAltkey() {
         return altkey;
     }
 
+    /**
+     * Sets the alt status.
+     * 
+     * @param altkey
+     *            The key status.
+     */
     public void setAltkey(Boolean altkey) {
         this.altkey = altkey;
     }

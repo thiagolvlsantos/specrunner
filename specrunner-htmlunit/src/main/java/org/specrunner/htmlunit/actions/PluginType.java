@@ -31,30 +31,73 @@ import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
 
 public class PluginType extends AbstractPluginKeys {
 
+    /**
+     * Set the append mode.
+     */
+    private Boolean append = false;
+    /**
+     * Write to a given text position.
+     */
     private Integer position;
-    private Boolean append;
+    /**
+     * The select option.
+     */
     private Boolean select = true;
 
-    public Integer getPosition() {
-        return position;
-    }
-
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
+    /**
+     * Get the append mode.
+     * 
+     * @return true, if append is on, false, otherwise. Default is false.
+     */
     public Boolean getAppend() {
         return append;
     }
 
+    /**
+     * To append text, without clear, set this true. Default is <b>false</b>.
+     * 
+     * @param append
+     *            true, to append, false, otherwise.
+     */
     public void setAppend(Boolean append) {
         this.append = append;
     }
 
+    /**
+     * Get the position to type text.
+     * 
+     * @return The text position.
+     */
+    public Integer getPosition() {
+        return position;
+    }
+
+    /**
+     * Set the position to insert text.
+     * 
+     * @param position
+     *            Index position to write.
+     */
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    /**
+     * Gets the select status. If select is true, the content is selected before
+     * writing.
+     * 
+     * @return The select status.
+     */
     public Boolean getSelect() {
         return select;
     }
 
+    /**
+     * ets the select status.
+     * 
+     * @param select
+     *            The status.
+     */
     public void setSelect(Boolean select) {
         this.select = select;
     }
