@@ -19,7 +19,6 @@ package org.specrunner.htmlunit.assertions;
 
 import java.util.List;
 
-import nu.xom.Node;
 import nu.xom.Nodes;
 
 import org.specrunner.SpecRunnerServices;
@@ -40,87 +39,72 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 import com.gargoylesoftware.htmlunit.html.HtmlSelect;
 
-public class PluginCheckSelection extends AbstractPluginFindSingle implements IAssertion {
-
-    private Boolean content;
-    private Boolean selection;
-
-    /**
-     * Check the content of a select.
-     * 
-     * @return true, to check content.
-     */
-    public Boolean getContent() {
-        return content;
-    }
-
-    public void setContent(Boolean content) {
-        this.content = content;
-    }
-
-    /**
-     * Check the selection of a select.
-     * 
-     * @return true, to check selected items.
-     */
-    public Boolean getSelection() {
-        return selection;
-    }
-
-    public void setSelection(Boolean selection) {
-        this.selection = selection;
-    }
+/**
+ * Check elements of a selection.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+public abstract class AbstractPluginSelection extends AbstractPluginFindSingle implements IAssertion {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        if (content == null && selection == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Set plugin content or selection."));
-            return;
-        }
-        int error = checkContent(context, result, client, page, element);
-        error = error + checkSelection(context, result, client, page, element);
-        if (error == 0) {
-            result.addResult(Status.SUCCESS, context.peek());
-        }
-    }
-
-    protected int checkContent(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException {
-        int error = 0;
-        if (content != null) {
-            if (!(element instanceof HtmlSelect)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
-                error = 1;
-            } else {
-                Node node = context.getNode();
-                Nodes nodes = node.query("descendant::li");
-                HtmlSelect select = (HtmlSelect) element;
-                List<HtmlOption> options = select.getOptions();
-                error = testList(context, result, page, nodes, options, content);
+        if (isSelect(element)) {
+            if (checkSelection(context, result, client, page, element) == 0) {
+                result.addResult(Status.SUCCESS, context.peek());
             }
+        } else {
+            result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
         }
-        return error;
     }
 
-    protected int checkSelection(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException {
-        int error = 0;
-        if (selection != null) {
-            if (!(element instanceof HtmlSelect)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
-                error = 1;
-            } else {
-                Node node = context.getNode();
-                Nodes nodes = node.query("descendant::li");
-                if (nodes.size() == 0) {
-                    nodes = new Nodes(node);
-                }
-                HtmlSelect select = (HtmlSelect) element;
-                List<HtmlOption> options = select.getSelectedOptions();
-                error = testList(context, result, page, nodes, options, content);
-            }
-        }
-        return error;
+    /**
+     * Check if element is a select.
+     * 
+     * @param element
+     *            The select form.
+     * @return true, if is select, false, otherwise.
+     */
+    protected boolean isSelect(HtmlElement element) {
+        return element instanceof HtmlSelect;
     }
 
+    /**
+     * Perform the selection test.
+     * 
+     * @param context
+     *            The test.
+     * @param result
+     *            The result.
+     * @param client
+     *            The browser.
+     * @param page
+     *            The current page.
+     * @param element
+     *            The element.
+     * @return Number of errors.
+     * @throws PluginException
+     *             On comparison errors.
+     */
+    protected abstract int checkSelection(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException;
+
+    /**
+     * Perform tests on a list.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param page
+     *            The current page.
+     * @param nodes
+     *            The nodes to be compared.
+     * @param options
+     *            The select options.
+     * @param content
+     *            true, to check options, false, to check selected.
+     * @return Number of inconsistencies.
+     */
     @SuppressWarnings("serial")
     protected int testList(IContext context, IResultSet result, Page page, Nodes nodes, List<HtmlOption> options, Boolean content) {
         int error = 0;

@@ -17,6 +17,12 @@
  */
 package org.specrunner.htmlunit.assertions;
 
+/**
+ * Verify checked elements.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginChecked extends AbstractPluginCheckable {
 
     @Override
