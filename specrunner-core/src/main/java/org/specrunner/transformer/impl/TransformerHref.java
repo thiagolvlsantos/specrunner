@@ -26,8 +26,8 @@ import org.specrunner.transformer.ITransformer;
 import org.specrunner.util.UtilNode;
 
 /**
- * Usefull transformer to set all links in specification as included resources
- * in without the need of adding <code>class='include'</code> by hand in each
+ * Useful transformer to set all links in specification as included resources in
+ * without the need of adding <code>class='include'</code> by hand in each
  * anchor link.
  * 
  * @author Thiago Santos
