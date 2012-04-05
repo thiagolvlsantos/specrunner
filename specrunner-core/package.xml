@@ -26,8 +26,7 @@
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<fileSets>
-		
-		<!-- incluindo arquivos do raiz: pom modificado e README.txt, LICENCA.TXT, etc.-->
+		<!-- root files: README.txt, LICENSE.TXT, etc.-->
 		<fileSet>
 			<directory>${basedir}</directory>
 			<outputDirectory></outputDirectory>
@@ -37,41 +36,38 @@
 			</includes>
 		</fileSet>
 
-        <!-- incluindo código fonte -->		
+        <!-- source file -->		
         <fileSet>
             <directory>${basedir}/src</directory>
             <outputDirectory>src</outputDirectory>
         </fileSet>
 
-        <!-- incluindo o diretório de documentação -->
+        <!-- documentation -->
         <fileSet>
             <directory>${basedir}/docs</directory>
             <outputDirectory>docs</outputDirectory>
         </fileSet>
 
-		<!-- incluindo arquivos do /bin -->
+		<!-- bin files -->
 		<fileSet>
 			<directory>${basedir}/bin</directory>
-			<outputDirectory></outputDirectory>
-			<includes>
-				<include>*.bat</include>
-			</includes>
+			<outputDirectory>bin</outputDirectory>
 		</fileSet>
 		
-		<!-- incluindo a própria biblioteca e fontes -->
+		<!-- the compiled version -->
 		<fileSet>
 			<directory>${basedir}/target</directory>
-			<outputDirectory></outputDirectory>
+			<outputDirectory>build</outputDirectory>
 			<includes>
 				<include>*.jar</include>
                 <include>*.war</include>
 			</includes>
 		</fileSet>
 		
-		<!-- incluindo as bibliotecas que o Specrunner -->
+		<!-- the required libraries -->
 		<fileSet>
 			<directory>${basedir}/target/lib</directory>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>build/lib</outputDirectory>
 			<includes>
 				<include>*.jar</include>
 			</includes>
