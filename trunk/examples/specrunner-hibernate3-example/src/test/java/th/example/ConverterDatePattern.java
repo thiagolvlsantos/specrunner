@@ -10,6 +10,9 @@ public class ConverterDatePattern implements IConverter {
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value == null) {
+            return null;
+        }
         try {
             return new SimpleDateFormat(String.valueOf(args[0])).parse(String.valueOf(value));
         } catch (ParseException e) {

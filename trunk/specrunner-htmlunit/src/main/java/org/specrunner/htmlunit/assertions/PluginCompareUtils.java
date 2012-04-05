@@ -35,7 +35,7 @@ import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 
 /**
- * Comparation utilities.
+ * Comparison utilities.
  * 
  * @author Thiago Santos
  * 

@@ -35,7 +35,7 @@ public abstract class AbstractComparatorTime implements IComparator {
      */
     public static final String FEATURE_TOLERANCE = AbstractComparatorTime.class.getName() + ".tolerance";
     /**
-     * Tolerance for comparations.
+     * Tolerance for comparisons.
      */
     protected Long tolerance = 0L;
 

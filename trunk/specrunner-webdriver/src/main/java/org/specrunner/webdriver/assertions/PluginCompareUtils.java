@@ -34,7 +34,7 @@ import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
- * Comparation utilities.
+ * Comparison utilities.
  * 
  * @author Thiago Santos
  * 

@@ -67,7 +67,7 @@ public class City {
 
     @Override
     public String toString() {
-        return id + "->" + name + "->" + foundation + "->" + lastUpdate;
+        return id + "->" + name + "(" + status + ")->" + foundation + "->" + lastUpdate;
     }
 
 }

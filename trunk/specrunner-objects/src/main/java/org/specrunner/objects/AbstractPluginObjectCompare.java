@@ -75,7 +75,7 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
     }
 
     /**
-     * Add a error to a comparation.
+     * Add a error to a comparison.
      * 
      * @param context
      *            The context.
@@ -110,8 +110,8 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
     public abstract List<Object> select(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
 
     /**
-     * Release comparation resources. i.e. For Hibernate repositories free
-     * sessions in use for comparation.
+     * Release comparison resources. i.e. For Hibernate repositories free
+     * sessions in use for comparison.
      * 
      * @throws Exception
      *             On release errors.
@@ -119,7 +119,7 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
     public abstract void release() throws Exception;
 
     /**
-     * Default comparation processing.
+     * Default comparison processing.
      * 
      * @param context
      *            The test context.
@@ -132,7 +132,7 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
      * @param result
      *            The result set.
      * @throws Exception
-     *             On comparation errors.
+     *             On comparison errors.
      */
     public void compare(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
         for (Field f : fields) {
@@ -150,6 +150,7 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
                     break;
                 }
             }
+
             // lookup for best match comparator
             IComparatorManager cf = SpecRunnerServices.get(IComparatorManager.class);
             IComparator comparator = null;
@@ -163,7 +164,7 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
                 comparator = cf.get(f.getComparator());
             }
             // by object type
-            if (comparator == null) {
+            if (comparator == null && currentInstance != null) {
                 Class<?> type = currentInstance.getClass();
                 comparator = cf.get(type);
             }

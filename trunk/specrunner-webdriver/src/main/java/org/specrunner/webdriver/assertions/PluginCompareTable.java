@@ -72,7 +72,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
      *            The element.
      * @param node
      *            The node.
-     * @return The result of comparation.
+     * @return The result of comparison.
      * @throws PluginException
      *             On evaluation error.
      */

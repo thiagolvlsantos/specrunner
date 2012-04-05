@@ -86,6 +86,9 @@ public final class UtilEvaluator {
      *             On evaluation errors.
      */
     public static Object evaluate(String text, IContext context) throws PluginException {
+        if (text == null) {
+            return null;
+        }
         IExpression expression = null;
         Object result = text;
         int pos1 = text.indexOf(START_CODE);

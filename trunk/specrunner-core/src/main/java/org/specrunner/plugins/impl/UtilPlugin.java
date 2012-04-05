@@ -157,7 +157,7 @@ public final class UtilPlugin {
     }
 
     /**
-     * Perform a comparation and add the result to the given node.
+     * Perform a comparison and add the result to the given node.
      * 
      * @param node
      *            Node to be annotated.
