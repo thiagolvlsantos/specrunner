@@ -177,8 +177,8 @@ public class PluginSchema extends AbstractPlugin {
                 }
                 sql.executeUpdate();
             } catch (Exception e) {
-                if (UtilLog.LOG.isErrorEnabled()) {
-                    UtilLog.LOG.error(str, e);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(str, e);
                 }
             }
             try {
@@ -189,8 +189,8 @@ public class PluginSchema extends AbstractPlugin {
                 }
                 sql.executeUpdate();
             } catch (Exception e) {
-                if (UtilLog.LOG.isErrorEnabled()) {
-                    UtilLog.LOG.error(str, e);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(str, e);
                 }
             }
         } finally {
