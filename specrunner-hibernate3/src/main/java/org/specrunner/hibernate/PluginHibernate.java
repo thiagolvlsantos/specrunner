@@ -77,7 +77,7 @@ public abstract class PluginHibernate extends AbstractPluginObject {
     }
 
     /**
-     * This method can be and should be overridden to perform save, comparation,
+     * This method can be and should be overridden to perform save, comparison,
      * etc for updates.
      * 
      * @param context

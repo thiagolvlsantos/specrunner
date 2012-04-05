@@ -1,0 +1,98 @@
+<html>
+<style type="text/css">
+.dados {
+    background-color: #DDDDDD;
+    border: 1px solid black;
+}
+</style>
+
+<p>
+    Dado que a configuração do sistema é: <span class="global" name="configuracao">th.example.CityConfiguration</span>, ajuste a <span class="configuration" type="${configuracao}" name="cfg">configuração
+        Hibernate</span> do <span class="factory" configuration="cfg">sistema</span> e recrie o <span class="schema" schema="CTI" script="true" configuration="cfg">esquema</span>.
+<p>
+    Considerando que o número de registro mínimo em cada tabela é de <span class="global" name="quantidade">20</span> itens. Considerando também o campo de identificador do endereço como <span
+        class="local" name="id">ID</span>, preencha a base de dados com:
+<table>
+    <tr>
+        <td valign="top">Lista de cidades:
+            <table class="input" mapping="/city.html" reference="name">
+                <caption>Cidades</caption>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data de fundação</th>
+                    <th>Ativa</th>
+                    <th>Última atualização</th>
+                </tr>
+                <tr>
+                    <td>Recife</td>
+                    <td>12/03/1656</td>
+                    <td>Sim</td>
+                    <td>a data atual</td>
+                </tr>
+                <tr>
+                    <td>Salvador</td>
+                    <td>30/10/1790</td>
+                    <td>Sim</td>
+                    <td>a data atual menos 2 dias</td>
+                </tr>
+                <tr>
+                    <td>João Pessoa</td>
+                    <td>30/10/1897</td>
+                    <td>Não</td>
+                    <td converter="dateAny">qualquer</td>
+                </tr>
+                <tbody class="for" min="${quantidade}" max="${3 * quantidade}" replace="true">
+                    <tr>
+                        <td>Cidade ${index}</td>
+                        <td>30/10/${index}</td>
+                        <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+                        <td converter="dateAny">qualquer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+
+Conferir a lista usando um mapping:
+<table class="output" mapping="/city.html" reference="name">
+    <caption>Cidades</caption>
+    <tr>
+        <th>Ativa</th>
+        <th>Data de fundação</th>
+        <th>Nome</th>
+    </tr>
+    <tr>
+        <td>Sim</td>
+        <td>12/03/1656</td>
+        <td>Recife</td>
+    </tr>
+    <tbody class="for" min="${quantidade}" max="${quantidade + (quantidade/2)}" replace="true">
+        <tr>
+            <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+            <td>30/10/${index}</td>
+            <td>Cidade ${index}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+Conferir a lista usando forma direta:
+<table class="output" reference="name" type="th.example.City">
+    <caption>Cidades</caption>
+    <tr>
+        <th field="status" converter="bool">Ativa</th>
+        <th field="name">Nome</th>
+    </tr>
+    <tr>
+        <td>Sim</td>
+        <td>Recife</td>
+    </tr>
+    <tbody class="for" min="${quantidade}" max="${quantidade + (quantidade/2)}" replace="true">
+        <tr>
+            <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+            <td>Cidade ${index}</td>
+        </tr>
+    </tbody>
+</table>
+</html>

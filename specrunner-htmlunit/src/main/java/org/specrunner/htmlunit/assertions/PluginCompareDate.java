@@ -49,7 +49,7 @@ public class PluginCompareDate extends PluginCompare {
     private String format;
 
     /**
-     * Feature to set tolerance on time comparation.
+     * Feature to set tolerance on time comparison.
      */
     public static final String FEATURE_TOLERANCE = PluginCompareDate.class.getName() + ".tolerance";
     /** Date tolerance, default 1s. */
@@ -124,7 +124,7 @@ public class PluginCompareDate extends PluginCompare {
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         if (format == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Date comparation missing 'format' attribute."));
+            result.addResult(Status.FAILURE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
@@ -138,7 +138,7 @@ public class PluginCompareDate extends PluginCompare {
      * 
      * @param element
      *            The element.
-     * @return true, if is date comparation, false, otherwise.
+     * @return true, if is date comparison, false, otherwise.
      */
     public static boolean isDate(Element element) {
         CellAdapter ca = new CellAdapter(element);

@@ -1,9 +1,11 @@
 package th.example;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.hibernate.PluginConfiguration;
 import org.specrunner.junit.Concurrent;
@@ -21,6 +23,9 @@ public class TestHibernate {
         IConverterManager cf = SpecRunnerServices.get(IConverterManager.class);
         cf.bind("bool", new ConverterSimNao());
 
+        IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
+        ief.bindPredefinedClass("dt", DateTime.class);
+
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         fh.put(AbstractComparatorTime.FEATURE_TOLERANCE, 10000L);
 
@@ -29,6 +34,11 @@ public class TestHibernate {
 
     protected void run(int index) {
         SpecRunnerJUnit.defaultRun("src/test/resources/income/hibernate.html", "src/test/resources/outcome/hibernate" + index + ".html");
+    }
+
+    @Test
+    public void rodarHibernateMap() throws Exception {
+        SpecRunnerJUnit.defaultRun("src/test/resources/income/hibernateMap.html", "src/test/resources/outcome/hibernateMap.html");
     }
 
     @Test

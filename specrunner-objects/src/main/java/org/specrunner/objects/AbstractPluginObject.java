@@ -18,6 +18,7 @@
 package org.specrunner.objects;
 
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -25,15 +26,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Nodes;
+
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.impl.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.source.ISource;
+import org.specrunner.source.ISourceFactory;
+import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilNode;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
@@ -76,6 +86,14 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * Separator of identification attributes.
      */
     protected String separator;
+    /**
+     * The map of generic fields to be used as reference.
+     */
+    protected String mapping;
+    /**
+     * List of generic definition fields.
+     */
+    protected Map<String, Field> generic = new HashMap<String, Field>();
     /**
      * List of fields.
      */
@@ -209,9 +227,103 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         this.separator = separator;
     }
 
+    /**
+     * Return the map of field information. For example, if there is a mapping
+     * for object City already defined in a file name '/city.html' or
+     * '/city.xml', just add map='/cities.html' to the tag.
+     * 
+     * @return The mapping.
+     */
+
+    public String getMapping() {
+        return mapping;
+    }
+
+    /**
+     * Sets the object mapping.
+     * 
+     * @param mapping
+     *            The mapping.
+     */
+    public void setMapping(String mapping) {
+        this.mapping = mapping;
+    }
+
     @Override
-    public void initialize(IContext context) throws PluginException {
-        super.initialize(context);
+    public void initialize(IContext context, TableAdapter table) throws PluginException {
+        super.initialize(context, table);
+        if (mapping != null) {
+            loadMapping(context, table);
+        } else {
+            setObjectInformation();
+        }
+    }
+
+    /**
+     * Load mapping with predefined values.
+     * 
+     * @param context
+     *            The context.
+     * @param table
+     *            The table.
+     * @throws PluginException
+     *             On mapping errors.
+     */
+    protected void loadMapping(IContext context, TableAdapter table) throws PluginException {
+        try {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Loading object mapping>" + mapping);
+            }
+            URL file = getClass().getResource(mapping);
+            if (file == null) {
+                throw new PluginException("The object mapping file '" + file + "' not found.");
+            }
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Loading object mapping file>" + file);
+            }
+            ISource source = SpecRunnerServices.get(ISourceFactory.class).newSource(file.toString());
+            Document doc = source.getDocument();
+            Nodes ns = doc.query("//table");
+            if (ns.size() == 0) {
+                throw new PluginException("The mapping file must have a table element with the field information.");
+            }
+            Element n = (Element) ns.get(0);
+            TableAdapter ta = UtilNode.newTableAdapter(n);
+            if (ta.getRowCount() == 0) {
+                throw new PluginException("The mapping file might have at least one row (usually a header) with the generic field information.");
+            }
+            RowAdapter information = ta.getRow(0);
+
+            // set table properties such as type/separator/id/etc.
+            UtilParametrized.setProperties(context, this, n);
+
+            // to replace specific settings back.
+            UtilParametrized.setProperties(context, this, table.getElement());
+
+            // set type objects.
+            setObjectInformation();
+
+            // load fields.
+            List<Field> general = new LinkedList<Field>();
+            loadFields(context, information, general);
+            for (Field field : general) {
+                generic.put(field.getFieldName(), field);
+            }
+        } catch (SourceException e) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info(e.getMessage(), e);
+            }
+            throw new PluginException("Fail on loading mapping information: '" + mapping + "'.", e);
+        }
+    }
+
+    /**
+     * Set object and/or creator information.
+     * 
+     * @throws PluginException
+     *             On setting errors.
+     */
+    protected void setObjectInformation() throws PluginException {
         try {
             if (type != null) {
                 typeInstance = Class.forName(type);
@@ -225,6 +337,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             throw new PluginException(e);
         }
+        if (typeInstance == null) {
+            throw new PluginException("Set 'type' with object class name.");
+        }
     }
 
     @Override
@@ -235,7 +350,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         for (int i = 0; i < table.getRowCount(); i++) {
             if (i == 0) {
                 try {
-                    loadFields(context, table.getRow(i));
+                    loadFields(context, table.getRow(i), fields);
                     result.addResult(Status.SUCCESS, context.newBlock(table.getRow(i).getElement(), this));
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
@@ -264,56 +379,102 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      *            The context.
      * @param row
      *            The row.
-     * @throws Exception
+     * @param list
+     *            List of fields.
+     * @throws PluginException
      *             On load errors.
      */
-    protected void loadFields(IContext context, RowAdapter row) throws Exception {
+    protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
+
+            String fieldName = cell.getValue().trim();
             String name;
             if (cell.hasAttribute("field")) {
                 name = cell.getAttribute("field");
             } else {
-                name = normalize(cell.getValue());
+                name = normalize(fieldName);
             }
+
+            Field f = generic.get(fieldName);
+            if (f == null) {
+                f = new Field();
+                f.setFieldName(fieldName);
+            } else {
+                name = f.getFullName();
+            }
+            f.setIndex(index++);
+
             StringTokenizer st = new StringTokenizer(name, ".");
             String[] names = new String[st.countTokens()];
             for (int i = 0; i < names.length; i++) {
                 names[i] = st.nextToken();
             }
+            if (names.length > 0) {
+                f.setNames(names);
+            }
+
             Class<?>[] types = new Class<?>[names.length];
             Class<?> currentType = typeInstance;
-            for (int i = 0; i < types.length; i++) {
+            for (int i = 0; currentType != null && i < types.length; i++) {
                 Method m = null;
                 try {
                     m = currentType.getMethod("get" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
                 } catch (Exception e) {
-                    m = currentType.getMethod("is" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
+                    try {
+                        m = currentType.getMethod("is" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
+                    } catch (Exception e1) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug(e1.getMessage(), e1);
+                        }
+                        // throw new PluginException("Invalid field '" + name +
+                        // "' change the column name to a name already used by object mapping (is set), change the column name to an object property name, or set the 'field' attribute to the name of the field you want to set.",
+                        // e1);
+                    }
                 }
                 if (m == null) {
-                    throw new PluginException("Getter method for " + names[i] + " not found.");
+                    throw new PluginException("Getter method for " + names[i] + " not found for type '" + currentType + "'.");
                 }
                 types[i] = m.getReturnType();
                 currentType = types[i];
+            }
+            if (types.length > 0) {
+                f.setTypes(types);
             }
 
             String def = null;
             if (cell.hasAttribute("default")) {
                 def = cell.getAttribute("default");
             }
+            if (def != null) {
+                f.setDef(def);
+            }
+
             String converter = cell.hasAttribute("converter") ? cell.getAttribute("converter") : null;
+            String[] converters = converter != null ? converter.split(",") : new String[0];
+            if (f.getConverters() == null || converters.length > 0) {
+                f.setConverters(converters);
+            }
+
             int i = 0;
             List<Object> args = new LinkedList<Object>();
             while (cell.hasAttribute("arg" + i)) {
                 args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context));
                 i++;
             }
-            String comparator = cell.hasAttribute("comparator") ? cell.getAttribute("comparator") : null;
-            Field f = new Field(index++, names, def, types, converter != null ? converter.split(",") : new String[0], args.toArray(new String[args.size()]), comparator);
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("FIELD>" + f);
+            if (f.getArgs() == null || !args.isEmpty()) {
+                f.setArgs(args.toArray(new String[args.size()]));
             }
-            fields.add(f);
+
+            String comparator = cell.hasAttribute("comparator") ? cell.getAttribute("comparator") : null;
+            if (comparator != null) {
+                f.setComparator(comparator);
+            }
+
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("FIELD>" + f);
+            }
+            list.add(f);
         }
     }
 
@@ -357,6 +518,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         private int index;
         /**
+         * The column name of the field.
+         */
+        private String fieldName;
+        /**
          * Field name. Many-level.
          */
         private String[] names;
@@ -382,34 +547,6 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         private String comparator;
 
         /**
-         * Field constructor.
-         * 
-         * @param index
-         *            The index.
-         * @param names
-         *            The names.
-         * @param def
-         *            The default value.
-         * @param type
-         *            The type.
-         * @param converters
-         *            The converters.
-         * @param args
-         *            The arguments.
-         * @param comparator
-         *            The comparator.
-         */
-        public Field(int index, String[] names, String def, Class<?>[] type, String[] converters, String[] args, String comparator) {
-            this.index = index;
-            this.names = names;
-            this.def = def;
-            this.types = type;
-            this.converters = converters;
-            this.args = args;
-            this.comparator = comparator;
-        }
-
-        /**
          * Get index.
          * 
          * @return The index.
@@ -426,6 +563,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         public void setIndex(int index) {
             this.index = index;
+        }
+
+        /**
+         * Gets the field column name.
+         * 
+         * @return The field column name.
+         */
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        /**
+         * The column name.
+         * 
+         * @param fieldName
+         *            The column name.
+         */
+        public void setFieldName(String fieldName) {
+            this.fieldName = fieldName;
         }
 
         /**
@@ -582,7 +738,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             for (int i = 0; i < args.length; i++) {
                 strArgs += (i == 0 ? "" : ",") + args[i];
             }
-            return index + "," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],(" + comparator + ")";
+            return index + ",'" + fieldName + "'," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],(" + comparator + ")";
         }
     }
 
@@ -680,7 +836,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @param instance
      *            The object instance.
      * @param context
-     *            The tes context.
+     *            The test context.
      * @param row
      *            The row with attribute informations.
      * @param result
@@ -699,23 +855,26 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     UtilLog.LOG.debug("ON>" + f.getFullName());
                 }
                 String text = cell.getElement().getValue();
-                if (text.isEmpty() && f.def != null) {
-                    text = f.def;
+                Object value = text;
+                if (text.isEmpty()) {
+                    value = UtilEvaluator.evaluate(f.def, context);
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("USING_DEFAULT>" + text);
+                        UtilLog.LOG.debug("USING_DEFAULT>" + value);
                     }
                 }
-                Object value = text;
-                String[] convs = f.converters;
-                if (cell.hasAttribute("converter")) {
-                    convs = cell.getAttribute("converter").split(",");
-                }
-                for (int j = 0; j < convs.length; j++) {
-                    IConverter con = SpecRunnerServices.get(IConverterManager.class).get(convs[j]);
-                    if (con != null) {
-                        value = con.convert(value, f.args);
-                    } else {
-                        throw new ConverterException("Converter named '" + convs[j] + "' not found.");
+                Class<?> t = f.getTypes()[f.getTypes().length - 1];
+                if (!t.isInstance(value)) {
+                    String[] convs = f.converters;
+                    if (cell.hasAttribute("converter")) {
+                        convs = cell.getAttribute("converter").split(",");
+                    }
+                    for (int j = 0; j < convs.length; j++) {
+                        IConverter con = SpecRunnerServices.get(IConverterManager.class).get(convs[j]);
+                        if (con != null) {
+                            value = con.convert(value, f.args);
+                        } else {
+                            throw new ConverterException("Converter named '" + convs[j] + "' not found.");
+                        }
                     }
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -768,7 +927,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             current = tmp;
         }
-        if (f.getSpecificType() == boolean.class || f.getSpecificType() == Boolean.class) {
+        if (value == null) {
+            setObject(instance, f, value);
+        } else if (f.getSpecificType() == boolean.class || f.getSpecificType() == Boolean.class) {
             setBoolean(instance, f, value);
         } else if (f.getSpecificType() == char.class || f.getSpecificType() == Character.class) {
             setChar(instance, f, value);
@@ -945,7 +1106,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     }
 
     /**
-     * This method can be and should be overridden to perform save, comparation,
+     * This method can be and should be overridden to perform save, comparison,
      * etc for updates.
      * 
      * @param context
