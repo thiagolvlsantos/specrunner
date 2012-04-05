@@ -427,9 +427,6 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e1.getMessage(), e1);
                         }
-                        // throw new PluginException("Invalid field '" + name +
-                        // "' change the column name to a name already used by object mapping (is set), change the column name to an object property name, or set the 'field' attribute to the name of the field you want to set.",
-                        // e1);
                     }
                 }
                 if (m == null) {
