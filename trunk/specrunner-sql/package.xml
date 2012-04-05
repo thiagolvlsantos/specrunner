@@ -26,7 +26,6 @@
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
 	<fileSets>
-		
 		<!-- root files: README.txt, LICENSE.TXT, etc.-->
 		<fileSet>
 			<directory>${basedir}</directory>
@@ -52,16 +51,13 @@
 		<!-- bin files -->
 		<fileSet>
 			<directory>${basedir}/bin</directory>
-			<outputDirectory></outputDirectory>
-			<includes>
-				<include>*.bat</include>
-			</includes>
+			<outputDirectory>bin</outputDirectory>
 		</fileSet>
 		
 		<!-- the compiled version -->
 		<fileSet>
 			<directory>${basedir}/target</directory>
-			<outputDirectory></outputDirectory>
+			<outputDirectory>build</outputDirectory>
 			<includes>
 				<include>*.jar</include>
                 <include>*.war</include>
@@ -71,7 +67,7 @@
 		<!-- the required libraries -->
 		<fileSet>
 			<directory>${basedir}/target/lib</directory>
-			<outputDirectory>lib</outputDirectory>
+			<outputDirectory>build/lib</outputDirectory>
 			<includes>
 				<include>*.jar</include>
 			</includes>
