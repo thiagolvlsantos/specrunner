@@ -6,11 +6,11 @@
         <version>1.0.3-SNAPSHOT</version>
         <relativePath>../specrunner-userguide</relativePath>
     </parent>
-    <artifactId>specrunner-userguide-webdriver</artifactId>
+    <artifactId>specrunner-userguide-jpa</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.specrunner</groupId>
-            <artifactId>specrunner-webdriver</artifactId>
+            <artifactId>specrunner-jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
