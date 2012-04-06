@@ -38,10 +38,10 @@
 
     <modules>
         <module>../specrunner-core</module>
-        <!-- basic object mapping -->
-        <module>../specrunner-objects</module>
         <!-- Basic database support -->
         <module>../specrunner-sql</module>
+        <!-- Basic object mapping -->
+        <module>../specrunner-objects</module>
         <!-- ORM -->
         <module>../specrunner-hibernate3</module>
         <module>../specrunner-jpa</module>
@@ -169,7 +169,7 @@
                             <finalName>${project.artifactId}</finalName>
                             <archive>
                                 <manifest>
-                                    <mainClass>${main}</mainClass>
+                                    <!--mainClass>${main}</mainClass-->
                                     <addClasspath>true</addClasspath>
                                     <classpathPrefix>${lib}/</classpathPrefix>
                                 </manifest>
