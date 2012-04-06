@@ -20,7 +20,7 @@
  -->
 
 <assembly>
-	<id></id>
+	<id>${project.version}</id>
 	<formats>
 		<format>zip</format>
 	</formats>
@@ -29,7 +29,7 @@
 		<!-- root files: README.txt, LICENSE.TXT, etc.-->
 		<fileSet>
 			<directory>${basedir}</directory>
-			<outputDirectory></outputDirectory>
+			<outputDirectory>specrunner</outputDirectory>
 			<includes>
                 <include>*.txt</include>
                 <include>*.xml</include>
@@ -39,19 +39,19 @@
         <!-- source file -->		
         <fileSet>
             <directory>${basedir}/src</directory>
-            <outputDirectory>src</outputDirectory>
+            <outputDirectory>specrunner/src</outputDirectory>
         </fileSet>
 
         <!-- documentation -->
         <fileSet>
             <directory>${basedir}/docs</directory>
-            <outputDirectory>docs</outputDirectory>
+            <outputDirectory>specrunner/docs</outputDirectory>
         </fileSet>
 
 		<!-- bin files -->
 		<fileSet>
 			<directory>${basedir}/bin</directory>
-			<outputDirectory>bin</outputDirectory>
+			<outputDirectory>specrunner/bin</outputDirectory>
 		</fileSet>
 		
 		<!-- the compiled version -->
@@ -75,63 +75,63 @@
         <!-- children packages -->
         <fileSet>
             <directory>${basedir}/../specrunner-core/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-core.zip</include>
             </includes>
         </fileSet>
         <fileSet>
-            <directory>${basedir}/../specrunner-objects/target/</directory>
-            <outputDirectory>modules</outputDirectory>
-            <includes>
-                <include>specrunner-objects.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>${basedir}/../specrunner-sql/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-sql.zip</include>
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-objects/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-objects.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-hibernate3/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-hibernate3.zip</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${basedir}/../specrunner-jpa/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-jpa.zip</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${basedir}/../specrunner-jetty/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-jetty.zip</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${basedir}/../specrunner-tomcat/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-tomcat.zip</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${basedir}/../specrunner-htmlunit/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-htmlunit.zip</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${basedir}/../specrunner-webdriver/target/</directory>
-            <outputDirectory>modules</outputDirectory>
+            <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-webdriver.zip</include>
             </includes>
