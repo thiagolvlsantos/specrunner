@@ -17,8 +17,10 @@
 
         <module>../specrunner-userguide-objects</module>
         <module>../specrunner-userguide-hibernate3</module>
+        <module>../specrunner-userguide-jpa</module>
 
         <module>../specrunner-userguide-jetty</module>
+        <module>../specrunner-userguide-tomcat</module>
 		
         <module>../specrunner-userguide-htmlunit</module>
         <module>../specrunner-userguide-webdriver</module>
