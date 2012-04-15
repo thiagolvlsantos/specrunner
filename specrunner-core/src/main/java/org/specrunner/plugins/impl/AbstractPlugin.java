@@ -87,7 +87,7 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
     /**
      * Thread safe status. Default is false.
      */
-    private Boolean threadsafe = false;
+    private Boolean threadsafe;
 
     @Override
     public void initialize(IContext context) throws PluginException {
@@ -130,6 +130,9 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
             }
+        }
+        if (threadsafe == null) {
+            threadsafe = false;
         }
     }
 

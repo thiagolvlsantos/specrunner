@@ -115,53 +115,69 @@ public final class SpecRunnerServices {
      * Create a group of services provided by SpecRunner.
      */
     private SpecRunnerServices() {
-        bind(IPropertyLoader.class, new PropertyLoaderImpl());
+    }
 
-        bind(IConfigurationFactory.class, new ConfigurationFactoryImpl());
-
-        bind(IFeatureManager.class, new FeatureManagerImpl());
-
-        bind(IConcurrentMapping.class, new ConcurrentMappingImpl());
-
-        bind(IResourceManagerFactory.class, new ResourceManagerFactoryImpl());
-
-        bind(IConverterManager.class, new ConverterManagerImpl());
-
-        bind(IComparatorManager.class, new ComparatorManagerImpl());
-
-        bind(ISourceFactory.class, new SourceFactoryImpl());
-
-        bind(ITransformer.class, new TransformerImpl());
-
-        bind(IPluginFactory.class, new PluginFactoryGroupImpl().add(new PluginFactoryCSS()).add(new PluginFactoryElement()).add(new PluginFactoryCustom()).add(new PluginFactoryText()));
-
-        bind(IBlockFactory.class, new BlockFactoryImpl());
-
-        bind(IExpressionFactory.class, new ExpressionFactoryJanino());
-
-        bind(IContextFactory.class, new ContextFactoryImpl());
-
-        bind(IContextPopulator.class, new ContextPopulatorImpl());
-
-        bind(IRunnerFactory.class, new RunnerFactoryImpl(new RunnerImpl()));
-
-        bind(IResultFactory.class, new ResultFactoryImpl());
-
-        bind(IAnnotatorFactory.class, new AnnotatorFactoryImpl(new AnnotatorGroupImpl().add(new AnnotatorCss()).add(new AnnotatorTitle()).add(new AnnotatorStacktrace()).add(new AnnotatorLink())));
-
-        bind(ISourceDumperFactory.class, new SourceDumperFactoryImpl(new SourceDumperGroupImpl().add(new SourceDumperResources()).add(new SourceDumperWritables()).add(new SourceDumperTop()).add(new SourceDumperCenter()).add(new SourceDumperRight()).add(new SourceDumperFrame())));
-
-        bind(IStringAlignerFactory.class, new StringAlignerFactoryImpl());
-
-        IListenerManager lm = new ListenerManagerImpl();
-        lm.add(new ProfilerSourceListener());
-        lm.add(new ProfilerPluginListener());
-        lm.add(new FailurePausePluginListener());
-        bind(IListenerManager.class, lm);
-
-        bind(IReusableManager.class, new ReusableManagerImpl());
-
-        bind(ISpecRunnerFactory.class, new SpecRunnerFactoryImpl(new SpecRunnerImpl()));
+    /**
+     * Gets the default instance of a given services.
+     * 
+     * @param <T>
+     *            The class type.
+     * @param type
+     *            The type.
+     * @return The service object.
+     */
+    private <T> T getDefault(Class<T> type) {
+        Object result = null;
+        if (type == IPropertyLoader.class) {
+            result = new PropertyLoaderImpl();
+        } else if (type == IConfigurationFactory.class) {
+            result = new ConfigurationFactoryImpl();
+        } else if (type == IFeatureManager.class) {
+            result = new FeatureManagerImpl();
+        } else if (type == IConcurrentMapping.class) {
+            result = new ConcurrentMappingImpl();
+        } else if (type == IResourceManagerFactory.class) {
+            result = new ResourceManagerFactoryImpl();
+        } else if (type == IConverterManager.class) {
+            result = new ConverterManagerImpl();
+        } else if (type == IComparatorManager.class) {
+            result = new ComparatorManagerImpl();
+        } else if (type == ISourceFactory.class) {
+            result = new SourceFactoryImpl();
+        } else if (type == ITransformer.class) {
+            result = new TransformerImpl();
+        } else if (type == IPluginFactory.class) {
+            result = new PluginFactoryGroupImpl().add(new PluginFactoryCSS()).add(new PluginFactoryElement()).add(new PluginFactoryCustom()).add(new PluginFactoryText());
+        } else if (type == IBlockFactory.class) {
+            result = new BlockFactoryImpl();
+        } else if (type == IExpressionFactory.class) {
+            result = new ExpressionFactoryJanino();
+        } else if (type == IContextFactory.class) {
+            result = new ContextFactoryImpl();
+        } else if (type == IContextPopulator.class) {
+            result = new ContextPopulatorImpl();
+        } else if (type == IRunnerFactory.class) {
+            result = new RunnerFactoryImpl(new RunnerImpl());
+        } else if (type == IResultFactory.class) {
+            result = new ResultFactoryImpl();
+        } else if (type == IAnnotatorFactory.class) {
+            result = new AnnotatorFactoryImpl(new AnnotatorGroupImpl().add(new AnnotatorCss()).add(new AnnotatorTitle()).add(new AnnotatorStacktrace()).add(new AnnotatorLink()));
+        } else if (type == ISourceDumperFactory.class) {
+            result = new SourceDumperFactoryImpl(new SourceDumperGroupImpl().add(new SourceDumperResources()).add(new SourceDumperWritables()).add(new SourceDumperTop()).add(new SourceDumperCenter()).add(new SourceDumperRight()).add(new SourceDumperFrame()));
+        } else if (type == IStringAlignerFactory.class) {
+            result = new StringAlignerFactoryImpl();
+        } else if (type == IListenerManager.class) {
+            IListenerManager lm = new ListenerManagerImpl();
+            lm.add(new ProfilerSourceListener());
+            lm.add(new ProfilerPluginListener());
+            lm.add(new FailurePausePluginListener());
+            result = lm;
+        } else if (type == IReusableManager.class) {
+            result = new ReusableManagerImpl();
+        } else if (type == ISpecRunnerFactory.class) {
+            result = new SpecRunnerFactoryImpl(new SpecRunnerImpl());
+        }
+        return type.cast(result);
     }
 
     /**
@@ -196,6 +212,12 @@ public final class SpecRunnerServices {
     @SuppressWarnings("unchecked")
     public <T> T lookup(Class<T> clazz) {
         Object obj = servicePool.get(clazz);
+        if (obj == null) {
+            obj = getDefault(clazz);
+            if (obj != null) {
+                bind(clazz, (T) obj);
+            }
+        }
         if (obj == null) {
             throw new IllegalArgumentException("Object of type '" + clazz + "' not found in pool of services.");
         }
