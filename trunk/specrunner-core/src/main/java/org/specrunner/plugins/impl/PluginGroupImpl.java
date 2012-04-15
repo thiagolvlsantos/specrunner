@@ -42,6 +42,10 @@ import org.specrunner.util.composite.CompositeImpl;
 public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implements IPluginGroup {
 
     /**
+     * Hold information of already checked attributes.
+     */
+    protected Map<String, Boolean> checked = new HashMap<String, Boolean>();
+    /**
      * Map of valid parameters.
      */
     private final Map<String, Object> parameters = new HashMap<String, Object>();
@@ -145,8 +149,14 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     public boolean hasParameter(String name) {
         boolean result = false;
         try {
-            PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(this, name);
-            result = pd != null;
+            Boolean alreadyChecked = checked.get(name);
+            if (alreadyChecked == null) {
+                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(this, name);
+                result = pd != null;
+                checked.put(name, result);
+            } else {
+                result = alreadyChecked;
+            }
         } catch (IllegalAccessException e) {
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace(e.getMessage(), e);
