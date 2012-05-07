@@ -8,15 +8,15 @@
 <p>
 	Dado que a configuração do sistema é: <span class="global"
 		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
-		class="configuration" type="${configuracao}" >configuração
-		Hibernate</span> do <span class="factory" >sistema</span>
-	e recrie o <span class="schema" schema="CTI" script="true" >esquema</span>.
+		class="hbmcfg" type="${configuracao}" >configuração
+		Hibernate</span> do <span class="hbmsf" >sistema</span>
+	e recrie o <span class="hbmsch" schema="CTI" script="true" >esquema</span>.
 
 <p>Sem IObjectCreator.
 <table>
 	<tr>
 		<td valign="top">Lista de pessoas:
-			<table class="dados input" type="th.example.Person"
+			<table class="dados objin" type="th.example.Person"
 				reference="id" separator="/">
 				<caption>Pessoa</caption>
 				<tr>

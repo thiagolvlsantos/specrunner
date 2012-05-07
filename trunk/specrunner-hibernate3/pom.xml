@@ -29,6 +29,10 @@
             <name>Repository for library Library[hibernate-support]</name>
         </repository>
     </repositories-->
+    
+    <properties>
+        <hibernate.version>3.6.10.Final</hibernate.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -39,20 +43,14 @@
         <!-- Database support -->
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-annotations</artifactId>
-            <version>3.5.0-Final</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>3.5.0-Final</version>
+            <version>${hibernate.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>3.5.0-Final</version>
+            <version>${hibernate.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

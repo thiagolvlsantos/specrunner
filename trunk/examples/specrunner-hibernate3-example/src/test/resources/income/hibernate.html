@@ -9,9 +9,9 @@
 <p>
 	Dado que a configuração do sistema é: <span class="global"
 		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
-		class="configuration" type="${configuracao}" name="cfg">configuração
-		Hibernate</span> do <span class="factory" configuration="cfg">sistema</span>
-	e recrie o <span class="schema" schema="CTI" script="true" configuration="cfg">esquema</span>.
+		class="hbmcfg" type="${configuracao}" name="cfg">configuração
+		Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span>
+	e recrie o <span class="hbmsch" schema="CTI" script="true" configuration="cfg">esquema</span>.
 
 
 <p>
@@ -22,7 +22,7 @@
 <table>
 	<tr>
 		<td valign="top">Lista de cidades:
-			<table class="dados input" type="th.example.City" reference="id"
+			<table class="dados objin" type="th.example.City" reference="id"
 				separator="/">
 				<caption>Cidades</caption>
 				<tr>
@@ -106,7 +106,7 @@
 </table>
 
 Conferir a lista:
-<table class="output" type="th.example.City" reference="name">
+<table class="objout" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 
