@@ -76,10 +76,6 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
             if (places.size() == 0) {
                 places = doc.query("//html");
             }
-            // if (places.size() == 0) {
-            // places = doc.query("//html", new XPathContext("xmlns",
-            // "http://www.w3.org/1999/xhtml"));
-            // }
             if (places.size() > 0 && places.get(0) instanceof Element) {
                 Element target = (Element) places.get(0);
 
