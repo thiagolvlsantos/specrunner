@@ -31,7 +31,7 @@ import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.result.IResultSet;
 
 /**
- * Iterate over a collection.
+ * Perform an iteration over a collection.
  * <p>
  * Example: <br>
  * <blockquote> Given the following list:
