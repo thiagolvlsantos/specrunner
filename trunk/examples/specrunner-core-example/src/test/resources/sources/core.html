@@ -115,3 +115,32 @@ Usar o arquivo '
 <p>
     Usando a macro '<span class="call">incluir arquivo</span>' novamente.
 </p>
+
+<h2>While</h2>
+Exemplo com test direto:
+<div>
+    Considerando que x 
+    é <span class="local" name="x">10</span>. Realizar o processo abaixo enquanto x > 5.
+    <table>
+        <tbody class="while" test="x>5">
+            <tr >
+                <td> valor de x = ${x}</td>
+                <td> x=<span class="local" name="x" scope="div">${x-1}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+Exemplo com condição nomeada:
+<div>
+    Considerando que x 
+    é <span class="local" name="x">10</span>. Realizar o processo abaixo enquanto <span class="condition" name="cond1">x > 5</span>.
+    <table>
+        <tbody class="while" name="cond1">
+            <tr >
+                <td> valor de x = ${x}</td>
+                <td> x=<span class="local" name="x" scope="div">${x-1}</span></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
