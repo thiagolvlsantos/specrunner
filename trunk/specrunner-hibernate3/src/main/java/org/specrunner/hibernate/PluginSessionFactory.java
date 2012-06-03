@@ -26,6 +26,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.result.IResultSet;
@@ -49,7 +50,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginSessionFactory extends AbstractPluginScoped {
+public class PluginSessionFactory extends AbstractPluginScoped implements IAction {
 
     /**
      * Default session factory name.

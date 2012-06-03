@@ -22,6 +22,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.result.IResultSet;
@@ -35,7 +36,7 @@ import org.specrunner.util.UtilNode;
  * @author Thiago Santos.
  * 
  */
-public class PluginMacro extends AbstractPluginScoped {
+public class PluginMacro extends AbstractPluginScoped implements IAction {
 
     /**
      * CSS of macro defined.

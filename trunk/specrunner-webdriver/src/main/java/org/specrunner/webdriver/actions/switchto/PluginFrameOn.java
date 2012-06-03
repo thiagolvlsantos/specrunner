@@ -20,11 +20,11 @@ package org.specrunner.webdriver.actions.switchto;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Select frame given by element.

@@ -24,6 +24,7 @@ import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
@@ -39,7 +40,7 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public class PluginCall extends AbstractPluginNamed {
+public class PluginCall extends AbstractPluginNamed implements IAction {
 
     /**
      * CSS of called macros.

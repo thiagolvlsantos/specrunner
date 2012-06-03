@@ -18,6 +18,7 @@
 package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebElement;
+import org.specrunner.plugins.IAction;
 
 /**
  * Check all checkboxes.

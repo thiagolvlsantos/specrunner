@@ -19,6 +19,7 @@ package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;

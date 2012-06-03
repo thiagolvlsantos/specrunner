@@ -22,6 +22,7 @@ import java.util.Map;
 
 import nu.xom.Node;
 
+import org.specrunner.pipeline.IChannelAware;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
@@ -32,7 +33,7 @@ import org.specrunner.source.ISource;
  * @author Thiago Santos
  * 
  */
-public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
+public interface IContext extends IChannelAware, Deque<IBlock>, IBlock, IBlockFactory {
 
     /**
      * Queue of sources. On file inclusion this queue is changed according and

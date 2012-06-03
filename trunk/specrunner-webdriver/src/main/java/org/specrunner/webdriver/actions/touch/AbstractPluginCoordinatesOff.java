@@ -17,7 +17,7 @@
  */
 package org.specrunner.webdriver.actions.touch;
 
-import org.specrunner.webdriver.actions.IAction;
+import org.specrunner.plugins.IAction;
 
 /**
  * Plugin coordinates with offset.

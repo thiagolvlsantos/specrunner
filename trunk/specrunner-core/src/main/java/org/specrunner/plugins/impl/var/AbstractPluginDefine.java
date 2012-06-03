@@ -22,6 +22,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.util.UtilEvaluator;
@@ -32,7 +33,7 @@ import org.specrunner.util.UtilEvaluator;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginDefine extends AbstractPluginDual {
+public abstract class AbstractPluginDefine extends AbstractPluginDual implements IAction {
 
     @Override
     public boolean isEval() {

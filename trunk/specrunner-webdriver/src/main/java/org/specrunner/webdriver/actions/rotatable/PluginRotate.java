@@ -20,11 +20,11 @@ package org.specrunner.webdriver.actions.rotatable;
 import org.openqa.selenium.Rotatable;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginRotatable;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Rotate a web driver.

@@ -15,7 +15,7 @@ import org.specrunner.util.comparer.impl.AbstractComparatorTime;
 import org.specrunner.util.converter.IConverterManager;
 
 @RunWith(ConcurrentRunner.class)
-@Concurrent(threads = 6)
+@Concurrent(threads = 3)
 public class TestHibernate {
 
     @Before

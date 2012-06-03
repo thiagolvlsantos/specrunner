@@ -28,6 +28,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
@@ -43,7 +44,7 @@ import org.specrunner.util.impl.TableAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginMap extends AbstractPluginTable {
+public class PluginMap extends AbstractPluginTable implements IAction {
 
     /**
      * true, to resolve content before mapping, false, otherwise.

@@ -20,6 +20,8 @@ package org.specrunner.result;
 import java.util.List;
 
 import org.specrunner.context.IBlock;
+import org.specrunner.pipeline.IChannelAware;
+import org.specrunner.plugins.IType;
 import org.specrunner.util.IPresentation;
 
 /**
@@ -28,7 +30,7 @@ import org.specrunner.util.IPresentation;
  * @author Thiago Santos
  * 
  */
-public interface IResultSet extends List<IResult>, IStatus, IPresentation {
+public interface IResultSet extends IChannelAware, List<IResult>, IStatus, IPresentation {
 
     /**
      * Lists status in result.
@@ -101,6 +103,22 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
     <T extends Status> int countStatus(int start, int end, T... status);
 
     /**
+     * List action types available for all results.
+     * 
+     * @return The list of types.
+     */
+    List<Class<IType>> actionTypes();
+
+    /**
+     * List action types available for the result subset.
+     * 
+     * @param subset
+     *            Subset to be analyzed.
+     * @return The list of types.
+     */
+    List<Class<IType>> actionTypes(List<IResult> subset);
+
+    /**
      * Add a result.
      * 
      * @param status
@@ -110,6 +128,14 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * @return The result.
      */
     IResult addResult(Status status, IBlock source);
+
+    List<IResult> filterByType(Class<IType>... type);
+
+    List<IResult> filterByType(List<IResult> subset, Class<IType>... type);
+
+    int countType(Class<IType>... status);
+
+    int countType(List<IResult> result, Class<IType>... status);
 
     /**
      * Adds a result.

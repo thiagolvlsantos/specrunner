@@ -31,6 +31,7 @@ import org.specrunner.context.ContextException;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
+import org.specrunner.pipeline.IChannel;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.runner.IRunner;
@@ -58,6 +59,10 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      */
     protected Deque<ISource> sources = new LinkedList<ISource>();
     /**
+     * The context channel.
+     */
+    protected IChannel channel;
+    /**
      * The runner.
      */
     protected IRunner runner;
@@ -72,10 +77,21 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      * @throws ContextException
      *             On creation errors.
      */
-    public ContextImpl(ISource source, IRunner runner) throws ContextException {
+    public ContextImpl(IChannel channel, ISource source, IRunner runner) throws ContextException {
+        setChannel(channel);
         sources.add(source);
         add(new BlockImpl(null, PluginNop.emptyPlugin(), new HashMap<String, Object>()));
         setRunner(runner);
+    }
+
+    @Override
+    public IChannel getChannel() {
+        return channel;
+    }
+
+    @Override
+    public void setChannel(IChannel channel) {
+        this.channel = channel;
     }
 
     @Override

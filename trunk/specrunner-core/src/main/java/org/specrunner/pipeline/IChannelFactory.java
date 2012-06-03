@@ -15,13 +15,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.assertions;
+package org.specrunner.pipeline;
+
+import java.util.Map;
 
 /**
- * Tag interface to sign assertions.
+ * Stand for a channel factory.
  * 
  * @author Thiago Santos
- * 
  */
-public interface IAssertion {
+public interface IChannelFactory {
+
+    /**
+     * Creates a new channel.
+     * 
+     * @return A new channel.
+     */
+    IChannel newChannel();
+
+    /**
+     * Creates a new channel.
+     * 
+     * @param load
+     *            The channel initial load.
+     * @return A new channel.
+     */
+    IChannel newChannel(Map<String, Object> load);
 }

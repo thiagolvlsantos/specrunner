@@ -20,6 +20,7 @@ package org.specrunner.context.impl;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IContextFactory;
+import org.specrunner.pipeline.IChannel;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
 
@@ -32,7 +33,7 @@ import org.specrunner.source.ISource;
 public class ContextFactoryImpl implements IContextFactory {
 
     @Override
-    public IContext newContext(ISource source, IRunner runner) throws ContextException {
-        return new ContextImpl(source, runner);
+    public IContext newContext(IChannel channel, ISource source, IRunner runner) throws ContextException {
+        return new ContextImpl(channel, source, runner);
     }
 }

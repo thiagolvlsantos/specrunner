@@ -35,6 +35,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
@@ -67,7 +68,7 @@ import org.specrunner.util.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class PluginInclude extends AbstractPlugin {
+public class PluginInclude extends AbstractPlugin implements IAction {
 
     /**
      * Style added to included file.

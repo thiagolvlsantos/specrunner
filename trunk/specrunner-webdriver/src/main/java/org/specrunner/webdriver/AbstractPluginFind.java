@@ -26,10 +26,10 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.impl.UtilParametrized;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.webdriver.actions.IAction;
 import org.specrunner.webdriver.impl.FinderXPath;
 
 /**

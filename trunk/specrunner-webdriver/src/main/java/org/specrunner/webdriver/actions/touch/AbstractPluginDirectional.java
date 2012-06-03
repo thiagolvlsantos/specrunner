@@ -17,8 +17,8 @@
  */
 package org.specrunner.webdriver.actions.touch;
 
+import org.specrunner.plugins.IAction;
 import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Touch screen with starting action point.

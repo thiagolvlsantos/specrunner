@@ -53,18 +53,6 @@ import org.specrunner.util.UtilLog;
  * }
  * </pre>
  * 
- * If you expect release all resources after each suite execution add a @AfterClass
- * to a static method as the following example.
- * 
- * <pre>
- * &#064;AfterClass
- * public static void releaseResources() {
- *     SpecRunnerServices.get().release();
- * }
- * </pre>
- * 
- * 
- * 
  * @author Thiago Santos
  * 
  */

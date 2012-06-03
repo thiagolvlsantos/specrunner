@@ -51,12 +51,19 @@ import org.specrunner.expressions.impl.ExpressionFactoryJanino;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.features.impl.FeatureManagerImpl;
 import org.specrunner.impl.SpecRunnerFactoryImpl;
-import org.specrunner.impl.SpecRunnerImpl;
+import org.specrunner.impl.SpecRunnerPipeline;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.impl.FailurePausePluginListener;
 import org.specrunner.listeners.impl.ListenerManagerImpl;
 import org.specrunner.listeners.impl.ProfilerPluginListener;
 import org.specrunner.listeners.impl.ProfilerSourceListener;
+import org.specrunner.pipeline.IChannel;
+import org.specrunner.pipeline.IChannelFactory;
+import org.specrunner.pipeline.IPipeline;
+import org.specrunner.pipeline.IPipelineFactory;
+import org.specrunner.pipeline.PipelineException;
+import org.specrunner.pipeline.impl.ChannelFactoryImpl;
+import org.specrunner.pipeline.impl.PipelineFactoryXOM;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
 import org.specrunner.plugins.impl.factories.PluginFactoryCustom;
@@ -65,9 +72,11 @@ import org.specrunner.plugins.impl.factories.PluginFactoryGroupImpl;
 import org.specrunner.plugins.impl.factories.PluginFactoryText;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.properties.impl.PropertyLoaderImpl;
+import org.specrunner.report.IReporterFactory;
+import org.specrunner.report.impl.ReporterFactoryImpl;
+import org.specrunner.report.impl.ReporterImpl;
 import org.specrunner.result.IResultFactory;
 import org.specrunner.result.impl.ResultFactoryImpl;
-import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.ReusableManagerImpl;
 import org.specrunner.runner.IRunnerFactory;
@@ -174,8 +183,16 @@ public final class SpecRunnerServices {
             result = lm;
         } else if (type == IReusableManager.class) {
             result = new ReusableManagerImpl();
+        } else if (type == IChannelFactory.class) {
+            result = new ChannelFactoryImpl();
+        } else if (type == IReporterFactory.class) {
+            result = new ReporterFactoryImpl(new ReporterImpl());
+        } else if (type == IPipelineFactory.class) {
+            result = new PipelineFactoryXOM();
         } else if (type == ISpecRunnerFactory.class) {
-            result = new SpecRunnerFactoryImpl(new SpecRunnerImpl());
+            result = new SpecRunnerFactoryImpl(new SpecRunnerPipeline());
+        } else if (type == SpecRunnerServices.class) {
+            result = this;
         }
         return type.cast(result);
     }
@@ -248,7 +265,7 @@ public final class SpecRunnerServices {
     }
 
     /**
-     * Gets the instanceof of {@link SpecRunnerServices}.
+     * Gets the instance of {@link SpecRunnerServices}.
      * 
      * @return The services instance.
      */
@@ -289,10 +306,15 @@ public final class SpecRunnerServices {
      *            The service.
      */
     private static void release(SpecRunnerServices service) {
-        IReusableManager rm = service.lookup(IReusableManager.class);
-        for (IReusable<?> r : rm.values()) {
-            r.release();
-            rm.remove(r);
+        try {
+            IChannel channel = service.lookup(IChannelFactory.class).newChannel();
+            channel.add(ShutDown.SHUTDOWN, service);
+            IPipeline pipeline = service.lookup(IPipelineFactory.class).newPipeline("specrunner_shutdown.xml");
+            pipeline.process(channel);
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
         }
     }
 
@@ -302,7 +324,11 @@ public final class SpecRunnerServices {
      * @author Thiago Santos.
      * 
      */
-    private static class ShutDown extends Thread {
+    public static class ShutDown extends Thread {
+        /**
+         * Name of service in shutdown channel.
+         */
+        public static final String SHUTDOWN = "shutdown";
         /**
          * The services instance to be shutdown.
          */
@@ -324,6 +350,19 @@ public final class SpecRunnerServices {
                 UtilLog.LOG.info("Release shutdown call.");
             }
             SpecRunnerServices.release(shutdown);
+        }
+
+        /**
+         * Return the services instance bound on channel.
+         * 
+         * @param channel
+         *            The channel.
+         * @return The service instance.
+         * @throws PipelineException
+         *             On lookup errors.
+         */
+        public static SpecRunnerServices recover(IChannel channel) throws PipelineException {
+            return channel.get(SHUTDOWN, SpecRunnerServices.class);
         }
     }
 }

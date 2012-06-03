@@ -23,6 +23,7 @@ import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
@@ -81,7 +82,7 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public class PluginIterator extends AbstractPluginNamed {
+public class PluginIterator extends AbstractPluginNamed implements IAction {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {

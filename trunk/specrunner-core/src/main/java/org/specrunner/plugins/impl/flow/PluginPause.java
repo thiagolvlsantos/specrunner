@@ -21,6 +21,7 @@ import java.io.IOException;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.result.IResultSet;
@@ -34,7 +35,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginPause extends AbstractPlugin {
+public class PluginPause extends AbstractPlugin implements IAction {
 
     /**
      * Pause time.

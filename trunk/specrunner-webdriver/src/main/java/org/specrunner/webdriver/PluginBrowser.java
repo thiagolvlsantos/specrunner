@@ -28,6 +28,7 @@ import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.result.IResultSet;
@@ -37,7 +38,6 @@ import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.webdriver.actions.IAction;
 import org.specrunner.webdriver.listeners.PageListener;
 
 /**

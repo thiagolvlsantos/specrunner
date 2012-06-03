@@ -19,8 +19,8 @@ package org.specrunner.webdriver.actions.input.mouse;
 
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.internal.Coordinates;
+import org.specrunner.plugins.IAction;
 import org.specrunner.webdriver.AbstractPluginMouse;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Abstract for a plugin with coordinates information. To details about each

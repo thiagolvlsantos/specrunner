@@ -20,10 +20,10 @@ package org.specrunner.webdriver.actions.navigation;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginNavigation;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Call driver refresh.
