@@ -27,6 +27,9 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
+import org.specrunner.pipeline.IChannel;
+import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.IType;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
@@ -40,6 +43,21 @@ import org.specrunner.result.Status;
  */
 @SuppressWarnings("serial")
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
+
+    /**
+     * Result set channel.
+     */
+    protected IChannel channel;
+
+    @Override
+    public IChannel getChannel() {
+        return channel;
+    }
+
+    @Override
+    public void setChannel(IChannel channel) {
+        this.channel = channel;
+    }
 
     @Override
     public Status getStatus() {
@@ -109,6 +127,68 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
+    public List<Class<IType>> actionTypes() {
+        return actionTypes(this);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Class<IType>> actionTypes(List<IResult> subset) {
+        List<Class<IType>> result = new LinkedList<Class<IType>>();
+        for (IResult s : subset) {
+            IBlock b = s.getBlock();
+            if (b != null) {
+                IPlugin p = b.getPlugin();
+                Class<?> c = p.getClass();
+                Class<?>[] is = c.getInterfaces();
+                for (Class<?> i : is) {
+                    if (!result.contains(i) && IType.class.isAssignableFrom(i)) {
+                        result.add((Class<IType>) i);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<IResult> filterByType(Class<IType>... type) {
+        return filterByType(this, type);
+    }
+
+    @Override
+    public List<IResult> filterByType(List<IResult> subset, Class<IType>... type) {
+        List<IResult> result = new LinkedList<IResult>();
+        Set<Class<IType>> valid = new HashSet<Class<IType>>();
+        for (int i = 0; i < type.length; i++) {
+            valid.add(type[i]);
+        }
+        for (IResult r : subset) {
+            IBlock b = r.getBlock();
+            if (b != null) {
+                IPlugin p = b.getPlugin();
+                Class<?> c = p.getClass();
+                for (Class<IType> t : valid) {
+                    if (t.isAssignableFrom(c)) {
+                        result.add(r);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int countType(Class<IType>... status) {
+        return countType(this, status);
+    }
+
+    @Override
+    public int countType(List<IResult> result, Class<IType>... status) {
+        return filterByType(result, status).size();
+    }
+
+    @Override
     public IResult addResult(Status status, IBlock source) {
         return addResult(status, source, null, null, null);
     }
@@ -164,12 +244,13 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getStatus().getName() + "(total:" + size() + ")");
-        sb.append("\n");
+        sb.append(getName(getStatus()) + "(total:" + size() + details(this) + ")\n");
+        List<IResult> filter;
         for (Status s : availableStatus()) {
-            sb.append("  " + s.getName() + "(" + countStatus(s) + ")\n");
+            filter = filterByStatus(s);
+            sb.append("  " + getName(s) + "(" + countStatus(s) + details(filter) + ")\n");
             if (s.isError()) {
-                for (IResult i : filterByStatus(s)) {
+                for (IResult i : filter) {
                     sb.append("    " + i + "\n");
                 }
             }
@@ -177,24 +258,80 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         return sb.toString();
     }
 
+    /**
+     * Returns the name of a given status.
+     * 
+     * @param s
+     *            The status.
+     * @return The formated name.
+     */
+    protected String getName(Status s) {
+        return s.getName().toUpperCase();
+    }
+
+    /**
+     * Generate report by type.
+     * 
+     * @param list
+     *            The result list to be analyzed.
+     * @return The short string form.
+     */
+    @SuppressWarnings("unchecked")
+    protected StringBuilder details(List<IResult> list) {
+        StringBuilder sb = new StringBuilder(":[");
+        int i = 0;
+        int counter = 0;
+        List<Class<IType>> types = actionTypes(list);
+        for (Class<IType> t : types) {
+            if (i++ > 0) {
+                sb.append('|');
+            }
+            String type = getName(t);
+            int size = filterByType(list, t).size();
+            sb.append(type + "=" + size);
+            counter += size;
+        }
+        counter = list.size() - counter;
+        if (counter > 0) {
+            if (i > 0) {
+                sb.append('|');
+            }
+            sb.append("other:" + counter);
+        }
+        sb.append("]");
+        return sb;
+    }
+
+    /**
+     * The name for a given interface.
+     * 
+     * @param t
+     *            The interface type.
+     * @return The string version.
+     */
+    protected String getName(Class<IType> t) {
+        return t.getSimpleName().substring(1).toLowerCase();
+    }
+
     @Override
     public String asString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(getStatus().getName() + "(total:" + size() + ")->");
+        sb.append(getName(getStatus()) + "(total:" + size() + details(this) + ")->");
         int i = 0;
         for (Status s : availableStatus()) {
             if (i++ > 0) {
                 sb.append(',');
             }
-            sb.append(s.getName() + "(" + countStatus(s) + ")");
+            sb.append(getName(s) + "(" + countStatus(s) + details(filterByStatus(s)) + ")");
         }
         List<Status> errors = errorStatus();
         if (!errors.isEmpty()) {
             sb.append("\n");
+            List<IResult> filter;
             for (Status status : errors) {
                 int index = 0;
-                List<IResult> filter = filterByStatus(status);
-                sb.append("\t" + status.getName() + " (" + filter.size() + "):\n");
+                filter = filterByStatus(status);
+                sb.append("\t" + getName(status) + " (" + filter.size() + details(filter) + "):\n");
                 for (IResult r : filter) {
                     sb.append("\t\t[" + (++index));
                     String msg = r.asString();
@@ -210,7 +347,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     public Node asNode() {
         Element base = new Element("span");
         Element e = (Element) getStatus().asNode();
-        e.appendChild("(total:" + size() + ")");
+        e.appendChild("(total:" + size() + details(this) + ")");
         base.appendChild(e);
         base.appendChild("->");
         int i = 0;
@@ -219,7 +356,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 base.appendChild(",");
             }
             Element st = (Element) s.asNode();
-            st.appendChild("(" + countStatus(s) + ")");
+            st.appendChild("(" + countStatus(s) + "|" + details(filterByStatus(s)) + ")");
             base.appendChild(st);
         }
         return base;

@@ -18,6 +18,7 @@
 package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebElement;
+import org.specrunner.plugins.IAction;
 
 /**
  * Select a given element, or a list of elements in &lt;ul&gt;.

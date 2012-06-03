@@ -15,13 +15,45 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.actions;
+package org.specrunner.pipeline;
 
 /**
- * Interface tag for actions.
+ * A listener of pipes.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IAction {
+public interface IPipeListener {
+
+    /**
+     * Perform something before checking.
+     * 
+     * @param channel
+     *            The channel.
+     */
+    void onBeforeCheck(IChannel channel);
+
+    /**
+     * Perform something after checking.
+     * 
+     * @param channel
+     *            The channel.
+     */
+    void onAfterCheck(IChannel channel);
+
+    /**
+     * Perform something before processing.
+     * 
+     * @param channel
+     *            The channel.
+     */
+    void onBeforeProcess(IChannel channel);
+
+    /**
+     * Perform something after processing.
+     * 
+     * @param channel
+     *            The channel.
+     */
+    void onAfterProcess(IChannel channel);
 }

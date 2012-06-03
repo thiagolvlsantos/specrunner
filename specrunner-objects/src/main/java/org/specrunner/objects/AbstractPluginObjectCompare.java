@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
@@ -40,7 +41,7 @@ import org.specrunner.util.impl.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
+public abstract class AbstractPluginObjectCompare extends AbstractPluginObject implements IAssertion {
 
     @Override
     public boolean isMapped() {

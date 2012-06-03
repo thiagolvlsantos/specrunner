@@ -17,6 +17,8 @@
  */
 package org.specrunner.webdriver.assertions;
 
+import org.specrunner.plugins.IAssertion;
+
 /**
  * Check if elements are checked.
  * 

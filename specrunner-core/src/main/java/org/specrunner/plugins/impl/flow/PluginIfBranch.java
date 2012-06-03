@@ -26,6 +26,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
@@ -39,7 +40,7 @@ import org.specrunner.util.UtilNode;
  * @author Thiago Santos
  * 
  */
-public abstract class PluginIfBranch extends AbstractPluginNamed {
+public abstract class PluginIfBranch extends AbstractPluginNamed implements IAction {
 
     /**
      * CSS style for selected branch.

@@ -29,13 +29,14 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.objects.AbstractPluginObject;
+import org.specrunner.plugins.IAction;
 import org.specrunner.result.IResultSet;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.util.impl.RowAdapter;
 
-public class PluginEntityManager extends AbstractPluginObject {
+public class PluginEntityManager extends AbstractPluginObject implements IAction {
 
     private String unit;
     private String url;

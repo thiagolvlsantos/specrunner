@@ -17,15 +17,12 @@
  */
 package org.specrunner.annotator.impl;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilNode;
 
 /**
  * Add CSS style related to result status. For each result node add the
@@ -36,30 +33,12 @@ import org.specrunner.result.IResultSet;
  */
 public class AnnotatorCss implements IAnnotator {
 
-    /**
-     * Class attribute.
-     */
-    public static final String ATTRIBUTE_CSS = "class";
-
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
         for (IResult r : result) {
             IBlock block = r.getBlock();
             if (block.hasNode()) {
-                Node node = block.getNode();
-                if (node instanceof Element) {
-                    Element ele = (Element) node;
-                    Attribute att = ele.getAttribute(ATTRIBUTE_CSS);
-                    if (att == null) {
-                        att = new Attribute(ATTRIBUTE_CSS, "");
-                        ele.addAttribute(att);
-                    }
-                    String current = att.getValue();
-                    String name = r.getStatus().getCssName();
-                    if (current.indexOf(name) < 0) {
-                        att.setValue(current + " " + name);
-                    }
-                }
+                UtilNode.appendCss(block.getNode(), r.getStatus().getCssName());
             }
         }
     }

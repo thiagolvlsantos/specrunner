@@ -56,7 +56,7 @@ public class ProfilerSourceListener implements ISourceListener {
     @Override
     public void onAfter(ISource source, IContext context, IResultSet result) {
         long time = (System.currentTimeMillis() - timeStart.pop());
-        if (UtilLog.LOG.isInfoEnabled() && time > 0) {
+        if (UtilLog.LOG.isInfoEnabled() && source != null && time > 0) {
             UtilLog.LOG.info("Source '" + source.getString() + "' performed in " + time + "mls.");
         }
     }

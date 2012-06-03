@@ -21,11 +21,11 @@ import org.openqa.selenium.HasInputDevices;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.webdriver.AbstractPluginKeyboard;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Release a given key.

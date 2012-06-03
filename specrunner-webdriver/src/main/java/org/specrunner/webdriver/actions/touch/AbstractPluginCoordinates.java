@@ -19,8 +19,8 @@ package org.specrunner.webdriver.actions.touch;
 
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.internal.Coordinates;
+import org.specrunner.plugins.IAction;
 import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
-import org.specrunner.webdriver.actions.IAction;
 
 /**
  * Touch screen helper (by coordinates).

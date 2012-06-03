@@ -23,10 +23,10 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.webdriver.AbstractPluginAlert;
-import org.specrunner.webdriver.assertions.IAssertion;
 import org.specrunner.webdriver.assertions.PluginCompareUtils;
 
 /**

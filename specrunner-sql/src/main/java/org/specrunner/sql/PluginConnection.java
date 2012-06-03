@@ -26,6 +26,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
@@ -47,7 +48,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginConnection extends AbstractPluginValue {
+public class PluginConnection extends AbstractPluginValue implements IAction {
 
     /**
      * Default connection provider name.

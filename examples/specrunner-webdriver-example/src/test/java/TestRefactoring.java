@@ -6,7 +6,7 @@ import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.actions.PluginOpen;
 import org.specrunner.webdriver.actions.PluginType;
 import org.specrunner.webdriver.assertions.PluginCompare;
-import org.specrunner.webdriver.impl.WebDriverFactoryIe;
+import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
 
 public class TestRefactoring {
 
@@ -14,7 +14,7 @@ public class TestRefactoring {
     public void play() throws Exception {
         IPluginGroup group = new PluginGroupImpl();
 
-        group.add(new PluginBrowser().set("webdriverfactory", WebDriverFactoryIe.class.getName()).set("reuse", Boolean.TRUE));
+        group.add(new PluginBrowser().set("webdriverfactory", WebDriverFactoryChrome.class.getName()).set("reuse", Boolean.TRUE));
         group.add(new PluginOpen().set("url", "http://www.google.com"));
 
         PluginType type = new PluginType();

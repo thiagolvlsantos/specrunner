@@ -20,6 +20,7 @@ package org.specrunner.hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.impl.RowAdapter;
 
@@ -30,7 +31,7 @@ import org.specrunner.util.impl.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginInput extends PluginHibernate {
+public class PluginInput extends PluginHibernate implements IAction {
 
     @Override
     protected boolean isMapped() {

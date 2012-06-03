@@ -22,6 +22,7 @@ import nu.xom.Text;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.result.IResultSet;
@@ -39,7 +40,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginReplacer extends AbstractPlugin {
+public class PluginReplacer extends AbstractPlugin implements IAction {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
