@@ -23,7 +23,7 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 
 /**
  * Mouse move action (by coordinates).
@@ -87,6 +87,6 @@ public class PluginMouseMoveCoordinates extends AbstractPluginCoordinates {
         } else {
             mouse.mouseMove(getCoordinates());
         }
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

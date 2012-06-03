@@ -24,7 +24,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 
@@ -191,7 +191,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         String tmp = getBrowserName();
         WebClient client = (WebClient) context.getByName(tmp);
         if (client == null) {
-            result.addResult(Status.FAILURE, context.peek(), "Browser instance named '" + tmp + "' not created. See PluginBrowser.");
+            result.addResult(Failure.INSTANCE, context.peek(), "Browser instance named '" + tmp + "' not created. See PluginBrowser.");
             return;
         }
         doEnd(context, result, client);

@@ -20,10 +20,11 @@ package org.specrunner.webdriver.actions;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
 
@@ -33,7 +34,12 @@ import org.specrunner.webdriver.AbstractPluginUrlAware;
  * @author Thiago Santos
  * 
  */
-public class PluginQuit extends AbstractPluginUrlAware implements IAction {
+public class PluginQuit extends AbstractPluginUrlAware {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
@@ -41,7 +47,7 @@ public class PluginQuit extends AbstractPluginUrlAware implements IAction {
         if (SpecRunnerServices.get(IReusableManager.class).get(getBrowserName()) == null) {
             client.quit();
         }
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 
     @Override

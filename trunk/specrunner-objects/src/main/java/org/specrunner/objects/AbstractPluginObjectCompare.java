@@ -22,10 +22,13 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
+import org.specrunner.result.status.Warning;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
@@ -41,7 +44,12 @@ import org.specrunner.util.impl.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginObjectCompare extends AbstractPluginObject implements IAssertion {
+public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
+
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     public boolean isMapped() {
@@ -89,7 +97,7 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject i
      */
     private void addError(IContext context, RowAdapter row, IResultSet result, Exception e) {
         for (int i = 0; i < row.getCellsCount(); i++) {
-            result.addResult(i == 0 ? Status.FAILURE : Status.WARNING, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
+            result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
         }
     }
 
@@ -174,10 +182,10 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject i
                 comparator = cf.getDefaultComparator();
             }
             if (comparator.equals(currentInstance, currentBase)) {
-                result.addResult(Status.SUCCESS, context.newBlock(row.getCell(f.getIndex()).getElement(), this));
+                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getElement(), this));
             } else {
                 IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(currentInstance), String.valueOf(currentBase));
-                result.addResult(Status.FAILURE, context.newBlock(row.getCell(f.getIndex()).getElement(), this), new DefaultAlignmentException(aligner));
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getElement(), this), new DefaultAlignmentException(aligner));
             }
         }
     }

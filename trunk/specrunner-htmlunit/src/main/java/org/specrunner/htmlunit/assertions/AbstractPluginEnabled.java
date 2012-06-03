@@ -20,9 +20,12 @@ package org.specrunner.htmlunit.assertions;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
 import org.specrunner.htmlunit.util.WritablePage;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -35,25 +38,29 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginEnabled extends AbstractPluginFind implements IAssertion {
+public abstract class AbstractPluginEnabled extends AbstractPluginFind {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
         boolean error = false;
         for (HtmlElement element : elements) {
             if (!(element instanceof DisabledElement)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), new WritablePage(page));
                 error = true;
             } else {
                 DisabledElement in = (DisabledElement) element;
                 if (!(enabled() == !in.isDisabled())) {
-                    result.addResult(Status.FAILURE, context.peek(), new PluginException("Element '" + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element '" + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), new WritablePage(page));
                     error = true;
                 }
             }
         }
         if (!error) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 

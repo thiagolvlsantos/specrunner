@@ -21,8 +21,11 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
@@ -69,6 +72,11 @@ public class PluginStartIn extends AbstractPluginUrlAware {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client) throws PluginException {
         Node node = context.getNode();
         String tmp = getBrowserName();
@@ -89,7 +97,7 @@ public class PluginStartIn extends AbstractPluginUrlAware {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                 }
-                result.addResult(Status.FAILURE, context.newBlock(node, this), e);
+                result.addResult(Failure.INSTANCE, context.newBlock(node, this), e);
                 return;
             }
         }
@@ -97,7 +105,7 @@ public class PluginStartIn extends AbstractPluginUrlAware {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Browser named '" + tmp + "' base url set to '" + u + "'.");
         }
-        result.addResult(Status.SUCCESS, context.newBlock(node, this));
+        result.addResult(Success.INSTANCE, context.newBlock(node, this));
     }
 
     /**

@@ -22,7 +22,7 @@ import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
@@ -63,11 +63,11 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement[] elements) throws PluginException {
         if (index < 0 || index > elements.length) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Index out of range '" + index + "', max = '" + elements.length + "'."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Index out of range '" + index + "', max = '" + elements.length + "'."));
             return;
         }
         if (elements.length == 0) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."), new WritablePage(client));
             return;
         }
         WebElement element = elements[index];

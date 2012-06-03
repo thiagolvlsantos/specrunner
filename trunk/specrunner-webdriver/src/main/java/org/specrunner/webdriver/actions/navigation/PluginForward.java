@@ -20,9 +20,10 @@ package org.specrunner.webdriver.actions.navigation;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginNavigation;
 
 /**
@@ -31,11 +32,15 @@ import org.specrunner.webdriver.AbstractPluginNavigation;
  * @author Thiago Santos.
  * 
  */
-public class PluginForward extends AbstractPluginNavigation implements IAction {
+public class PluginForward extends AbstractPluginNavigation {
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, Navigation navigation) {
         navigation.forward();
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

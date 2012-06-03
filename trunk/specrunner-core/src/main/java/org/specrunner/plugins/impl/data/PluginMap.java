@@ -28,11 +28,12 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginTable;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.impl.CellAdapter;
 import org.specrunner.util.impl.RowAdapter;
@@ -44,7 +45,7 @@ import org.specrunner.util.impl.TableAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginMap extends AbstractPluginTable implements IAction {
+public class PluginMap extends AbstractPluginTable {
 
     /**
      * true, to resolve content before mapping, false, otherwise.
@@ -68,6 +69,11 @@ public class PluginMap extends AbstractPluginTable implements IAction {
      */
     public void setAfter(Boolean after) {
         this.after = after;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override
@@ -133,7 +139,7 @@ public class PluginMap extends AbstractPluginTable implements IAction {
         };
         saveLocal(context, getName(), map);
         for (int i = 0; i < ths.getCellsCount(); i++) {
-            result.addResult(Status.SUCCESS, context.newBlock(ths.getCell(i).getElement(), this));
+            result.addResult(Success.INSTANCE, context.newBlock(ths.getCell(i).getElement(), this));
         }
     }
 }

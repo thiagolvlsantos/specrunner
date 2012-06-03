@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 
 /**
  * Partial implementation for input devices interactions.
@@ -37,7 +37,7 @@ public abstract class AbstractPluginHasInputDevices extends AbstractPluginBrowse
         if (client instanceof HasInputDevices) {
             doEnd(context, result, client, (HasInputDevices) client);
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("The WebDriver '" + client.getClass().getName() + "' is not a instance of HasInputDevices."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The WebDriver '" + client.getClass().getName() + "' is not a instance of HasInputDevices."));
         }
     }
 

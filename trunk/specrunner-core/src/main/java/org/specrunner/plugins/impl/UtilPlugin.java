@@ -28,7 +28,8 @@ import org.specrunner.parameters.impl.UtilParametrized;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilLog;
@@ -172,10 +173,10 @@ public final class UtilPlugin {
      */
     public static void compare(Node node, IResultSet result, String expected, String received) throws PluginException {
         if (expected.equals(received)) {
-            result.addResult(Status.SUCCESS, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null));
+            result.addResult(Success.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null));
         } else {
             IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
-            result.addResult(Status.FAILURE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null), new DefaultAlignmentException(sa));
+            result.addResult(Failure.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null), new DefaultAlignmentException(sa));
         }
     }
 }

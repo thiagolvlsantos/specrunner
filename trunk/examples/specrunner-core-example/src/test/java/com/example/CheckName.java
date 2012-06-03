@@ -2,8 +2,10 @@ package com.example;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 
 public class CheckName extends AbstractPlugin {
@@ -16,6 +18,11 @@ public class CheckName extends AbstractPlugin {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
     }
 
     @Override

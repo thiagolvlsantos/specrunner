@@ -28,12 +28,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilNode;
 import org.specrunner.util.UtilXPath;
@@ -49,14 +50,18 @@ import org.specrunner.webdriver.util.WritablePage;
  * @author Thiago Santos
  * 
  */
-public class PluginCompareTable extends AbstractPluginFindSingle implements IAssertion {
+public class PluginCompareTable extends AbstractPluginFindSingle {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Node node = context.getNode();
         boolean success = compareTable(context, result, client, element, node);
         if (!success) {
-            result.addResult(Status.FAILURE, context.newBlock(node, this), new PluginException("Tables do not match."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Tables do not match."), new WritablePage(client));
         }
     }
 
@@ -83,14 +88,14 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         Nodes tables = node.query("descendant-or-self::table");
         Node table = UtilXPath.getHighest(tables);
         if (table == null) {
-            result.addResult(Status.FAILURE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
             return false;
         }
         TableAdapter tableExpected = UtilNode.newTableAdapter((Element) table);
 
         List<WebElement> tablesReceived = element.findElements(By.xpath("descendant-or-self::table"));
         if (tablesReceived.isEmpty()) {
-            result.addResult(Status.FAILURE, context.newBlock(table, this), new PluginException("Expected table not present in input."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), new WritablePage(client));
             return false;
         }
         WebElement tableReceived = tablesReceived.get(0);
@@ -99,7 +104,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         Iterator<WebElement> iteCaptions = tableCaptions.iterator();
         for (CellAdapter expected : tableExpected.getCaptions()) {
             if (!iteCaptions.hasNext()) {
-                result.addResult(Status.FAILURE, context.newBlock(expected.getElement(), this), new PluginException("Caption cells missing in received table."));
+                result.addResult(Failure.INSTANCE, context.newBlock(expected.getElement(), this), new PluginException("Caption cells missing in received table."));
                 success = false;
                 continue;
             }
@@ -125,7 +130,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
             }
         }
         if (visible) {
-            result.addResult(Status.FAILURE, context.newBlock(table, this), new PluginException("Received table has more captions than expected."));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Received table has more captions than expected."));
             success = false;
         }
 
@@ -134,7 +139,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
         for (RowAdapter rowsExpected : tableExpected.getRows()) {
             for (CellAdapter expected : rowsExpected.getCells()) {
                 if (!iteElements.hasNext()) {
-                    result.addResult(Status.FAILURE, context.newBlock(expected.getElement(), this), new PluginException("Cell missing in received table."));
+                    result.addResult(Failure.INSTANCE, context.newBlock(expected.getElement(), this), new PluginException("Cell missing in received table."));
                     success = false;
                     continue;
                 }
@@ -160,7 +165,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle implements IAss
             }
         }
         if (visible) {
-            result.addResult(Status.FAILURE, context.newBlock(table, this), new PluginException("Received table has more cells than expected."));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Received table has more cells than expected."));
             success = false;
         }
 

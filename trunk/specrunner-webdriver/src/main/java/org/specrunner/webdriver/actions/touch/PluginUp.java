@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 
 /**
  * Up action in (x,y).
@@ -35,6 +35,6 @@ public class PluginUp extends AbstractPluginDirectional {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, TouchScreen touch) throws PluginException {
         touch.up(getX(), getY());
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

@@ -18,7 +18,6 @@
 package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebElement;
-import org.specrunner.plugins.IAction;
 
 /**
  * Uncheck checkboxes.
@@ -26,7 +25,7 @@ import org.specrunner.plugins.IAction;
  * @author Thiago Santos
  * 
  */
-public class PluginUncheck extends AbstractPluginCheck implements IAction {
+public class PluginUncheck extends AbstractPluginCheck {
 
     @Override
     protected void doSomething(WebElement option) {

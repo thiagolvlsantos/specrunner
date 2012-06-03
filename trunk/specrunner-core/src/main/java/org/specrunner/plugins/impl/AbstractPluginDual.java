@@ -22,7 +22,8 @@ import nu.xom.Node;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 /**
  * A generic plugin which performs a test, it the result is true, a success
@@ -38,9 +39,9 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
         Node node = context.getNode();
         Object obj = getValue(node.getValue(), isEval(), context);
         if (operation(obj, context)) {
-            result.addResult(Status.SUCCESS, context.newBlock(node, this));
+            result.addResult(Success.INSTANCE, context.newBlock(node, this));
         } else {
-            result.addResult(Status.FAILURE, context.newBlock(node, this), getError());
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), getError());
         }
     }
 

@@ -39,6 +39,7 @@ public class AnnotatorCss implements IAnnotator {
             IBlock block = r.getBlock();
             if (block.hasNode()) {
                 UtilNode.appendCss(block.getNode(), r.getStatus().getCssName());
+                UtilNode.appendCss(block.getNode(), r.getActionType().getCssName());
             }
         }
     }

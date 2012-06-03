@@ -25,11 +25,13 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -38,7 +40,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginSchema extends AbstractPlugin implements IAction {
+public class PluginSchema extends AbstractPlugin {
 
     /**
      * The configuration name.
@@ -161,6 +163,11 @@ public class PluginSchema extends AbstractPlugin implements IAction {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Configuration cfg = PluginConfiguration.getConfiguration(context, getConfiguration());
         SessionFactory sf = PluginSessionFactory.getSessionFactory(context, getFactory());
@@ -201,9 +208,9 @@ public class PluginSchema extends AbstractPlugin implements IAction {
         }
         try {
             new SchemaExport(cfg).create(isScript(), isExport());
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         } catch (HibernateException e) {
-            result.addResult(Status.FAILURE, context.peek(), e);
+            result.addResult(Failure.INSTANCE, context.peek(), e);
         }
         return ENext.DEEP;
     }

@@ -20,10 +20,12 @@ package org.specrunner.webdriver.assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
 
@@ -33,7 +35,11 @@ import org.specrunner.webdriver.util.WritablePage;
  * @author Thiago Santos
  * 
  */
-public class PluginCheckAtt extends AbstractPluginFindSingle implements IAssertion {
+public class PluginCheckAtt extends AbstractPluginFindSingle {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     /**
      * The attribute to be checked against value.
@@ -65,9 +71,9 @@ public class PluginCheckAtt extends AbstractPluginFindSingle implements IAsserti
         String attValue = element.getAttribute(String.valueOf(attName));
         Object value = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         if (test(attValue, value)) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException(getMessage(context, value)), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException(getMessage(context, value)), new WritablePage(client));
         }
     }
 

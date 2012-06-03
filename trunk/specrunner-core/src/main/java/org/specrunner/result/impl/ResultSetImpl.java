@@ -28,12 +28,13 @@ import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
 import org.specrunner.pipeline.IChannel;
-import org.specrunner.plugins.IPlugin;
-import org.specrunner.plugins.IType;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 
 /**
  * Default result set implementation.
@@ -61,7 +62,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     @Override
     public Status getStatus() {
-        Status result = Status.SUCCESS;
+        Status result = Success.INSTANCE;
         for (IResult s : this) {
             result = result.max(s.getStatus());
         }
@@ -127,64 +128,50 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
-    public List<Class<IType>> actionTypes() {
+    public List<ActionType> actionTypes() {
         return actionTypes(this);
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<Class<IType>> actionTypes(List<IResult> subset) {
-        List<Class<IType>> result = new LinkedList<Class<IType>>();
+    public List<ActionType> actionTypes(List<IResult> subset) {
+        List<ActionType> result = new LinkedList<ActionType>();
         for (IResult s : subset) {
-            IBlock b = s.getBlock();
-            if (b != null) {
-                IPlugin p = b.getPlugin();
-                Class<?> c = p.getClass();
-                Class<?>[] is = c.getInterfaces();
-                for (Class<?> i : is) {
-                    if (!result.contains(i) && IType.class.isAssignableFrom(i)) {
-                        result.add((Class<IType>) i);
-                    }
-                }
+            ActionType at = s.getActionType();
+            if (!result.contains(at)) {
+                result.add(at);
             }
         }
         return result;
     }
 
     @Override
-    public List<IResult> filterByType(Class<IType>... type) {
-        return filterByType(this, type);
+    public List<IResult> filterByType(ActionType... actionType) {
+        return filterByType(this, actionType);
     }
 
     @Override
-    public List<IResult> filterByType(List<IResult> subset, Class<IType>... type) {
+    public List<IResult> filterByType(List<IResult> subset, ActionType... actionType) {
         List<IResult> result = new LinkedList<IResult>();
-        Set<Class<IType>> valid = new HashSet<Class<IType>>();
-        for (int i = 0; i < type.length; i++) {
-            valid.add(type[i]);
+        Set<ActionType> valid = new HashSet<ActionType>();
+        for (int i = 0; i < actionType.length; i++) {
+            valid.add(actionType[i]);
         }
         for (IResult r : subset) {
-            IBlock b = r.getBlock();
-            if (b != null) {
-                IPlugin p = b.getPlugin();
-                Class<?> c = p.getClass();
-                for (Class<IType> t : valid) {
-                    if (t.isAssignableFrom(c)) {
-                        result.add(r);
-                    }
-                }
+            if (valid.contains(r.getActionType())) {
+                result.add(r);
             }
         }
         return result;
     }
 
     @Override
-    public int countType(Class<IType>... status) {
+    public int countType(ActionType... status) {
         return countType(this, status);
     }
 
     @Override
-    public int countType(List<IResult> result, Class<IType>... status) {
+    public int countType(List<IResult> result, ActionType... status) {
         return filterByType(result, status).size();
     }
 
@@ -276,27 +263,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      *            The result list to be analyzed.
      * @return The short string form.
      */
-    @SuppressWarnings("unchecked")
     protected StringBuilder details(List<IResult> list) {
         StringBuilder sb = new StringBuilder(":[");
         int i = 0;
-        int counter = 0;
-        List<Class<IType>> types = actionTypes(list);
-        for (Class<IType> t : types) {
+        List<ActionType> actionTypes = actionTypes(this);
+        for (ActionType t : actionTypes) {
             if (i++ > 0) {
                 sb.append('|');
             }
-            String type = getName(t);
             int size = filterByType(list, t).size();
-            sb.append(type + "=" + size);
-            counter += size;
-        }
-        counter = list.size() - counter;
-        if (counter > 0) {
-            if (i > 0) {
-                sb.append('|');
-            }
-            sb.append("other:" + counter);
+            sb.append(t.getName() + "=" + size);
         }
         sb.append("]");
         return sb;
@@ -309,7 +285,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      *            The interface type.
      * @return The string version.
      */
-    protected String getName(Class<IType> t) {
+    protected String getName(Class<IActionType> t) {
         return t.getSimpleName().substring(1).toLowerCase();
     }
 

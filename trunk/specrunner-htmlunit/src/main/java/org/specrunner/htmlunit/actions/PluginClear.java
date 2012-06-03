@@ -20,6 +20,8 @@ package org.specrunner.htmlunit.actions;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -33,7 +35,12 @@ import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
  * @author Thiago Santos.
  * 
  */
-public class PluginClear extends AbstractPluginFindSingle implements IAction {
+public class PluginClear extends AbstractPluginFindSingle {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {

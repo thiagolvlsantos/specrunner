@@ -25,7 +25,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
  * @author Thiago Santos
  * 
  */
-public class PluginUncheck extends AbstractPluginCheck implements IAction {
+public class PluginUncheck extends AbstractPluginCheck {
 
     @Override
     protected void doSomething(HtmlCheckBoxInput option) {

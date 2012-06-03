@@ -26,8 +26,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -36,7 +37,11 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public class PluginOptions extends AbstractPluginSelection implements IAssertion {
+public class PluginOptions extends AbstractPluginSelection {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {

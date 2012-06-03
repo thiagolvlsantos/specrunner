@@ -22,10 +22,12 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.IFinder;
 import org.specrunner.webdriver.util.WritablePage;
@@ -36,7 +38,11 @@ import org.specrunner.webdriver.util.WritablePage;
  * @author Thiago Santos
  * 
  */
-public class PluginPresent extends AbstractPluginFind implements IAssertion {
+public class PluginPresent extends AbstractPluginFind {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     /**
      * Exact number of elements selected.
@@ -115,29 +121,29 @@ public class PluginPresent extends AbstractPluginFind implements IAssertion {
         int failure = 0;
         if (getCount() != null) {
             if (list.size() != getCount()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected count of elements was '" + count + "', but '" + list.size() + "' was received."), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected count of elements was '" + count + "', but '" + list.size() + "' was received."), new WritablePage(client));
                 failure++;
             }
         } else {
             if (list.isEmpty()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element not found."), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element not found."), new WritablePage(client));
                 failure++;
             }
         }
         if (getMin() != null) {
             if (list.size() < getMin()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected minimum of elements was '" + count + "', but '" + list.size() + "' was received."));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected minimum of elements was '" + count + "', but '" + list.size() + "' was received."));
                 failure++;
             }
         }
         if (getMax() != null) {
             if (list.size() > getMax()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected maximum of elements was '" + count + "', but '" + list.size() + "' was received."));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected maximum of elements was '" + count + "', but '" + list.size() + "' was received."));
                 failure++;
             }
         }
         if (failure == 0) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 

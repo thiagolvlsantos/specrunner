@@ -26,8 +26,8 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.impl.UtilParametrized;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.impl.FinderXPath;
@@ -139,11 +139,11 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
         WebElement[] elements = list.toArray(new WebElement[list.size()]);
         if (UtilLog.LOG.isInfoEnabled()) {
             for (int i = 0; i < elements.length; i++) {
-                UtilLog.LOG.info((this instanceof IAction ? "Before" : "    On") + "[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
+                UtilLog.LOG.info((getActionType() instanceof Command ? "Before" : "    On") + "[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
             }
         }
         process(context, result, client, elements);
-        if (this instanceof IAction) {
+        if (getActionType() instanceof Command) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 for (int i = 0; i < elements.length; i++) {
                     UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));

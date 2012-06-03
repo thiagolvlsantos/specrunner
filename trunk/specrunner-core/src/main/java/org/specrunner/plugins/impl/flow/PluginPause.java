@@ -21,11 +21,13 @@ import java.io.IOException;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 
@@ -35,7 +37,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginPause extends AbstractPlugin implements IAction {
+public class PluginPause extends AbstractPlugin {
 
     /**
      * Pause time.
@@ -62,6 +64,11 @@ public class PluginPause extends AbstractPlugin implements IAction {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         if (getTime() != null) {
             try {
@@ -72,16 +79,16 @@ public class PluginPause extends AbstractPlugin implements IAction {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") woke up.");
                 }
-                result.addResult(Status.SUCCESS, context.peek());
+                result.addResult(Success.INSTANCE, context.peek());
             } catch (InterruptedException e) {
-                result.addResult(Status.FAILURE, context.peek(), e);
+                result.addResult(Failure.INSTANCE, context.peek(), e);
             }
         } else {
             try {
                 UtilIO.pressKey();
-                result.addResult(Status.SUCCESS, context.peek());
+                result.addResult(Success.INSTANCE, context.peek());
             } catch (IOException e) {
-                result.addResult(Status.FAILURE, context.peek(), e);
+                result.addResult(Failure.INSTANCE, context.peek(), e);
             }
         }
         return ENext.DEEP;

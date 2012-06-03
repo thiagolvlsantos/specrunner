@@ -23,8 +23,9 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.webdriver.AbstractPluginAlert;
 import org.specrunner.webdriver.assertions.PluginCompareUtils;
@@ -35,7 +36,11 @@ import org.specrunner.webdriver.assertions.PluginCompareUtils;
  * @author Thiago Santos.
  * 
  */
-public class PluginAlertCompare extends AbstractPluginAlert implements IAssertion {
+public class PluginAlertCompare extends AbstractPluginAlert {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, TargetLocator target, Alert alert) throws PluginException {

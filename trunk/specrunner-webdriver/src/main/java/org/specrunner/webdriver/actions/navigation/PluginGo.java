@@ -20,7 +20,9 @@ package org.specrunner.webdriver.actions.navigation;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.webdriver.AbstractPluginNavigation;
 
@@ -54,6 +56,11 @@ public class PluginGo extends AbstractPluginNavigation {
      */
     public void setTo(Long to) {
         this.to = to;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override

@@ -6,8 +6,10 @@ import nu.xom.ParentNode;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 
 public class PluginEcho extends AbstractPlugin {
@@ -20,6 +22,11 @@ public class PluginEcho extends AbstractPlugin {
 
     public void setTimes(int times) {
         this.times = times;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override

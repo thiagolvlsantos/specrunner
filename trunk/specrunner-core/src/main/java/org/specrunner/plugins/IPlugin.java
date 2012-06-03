@@ -27,7 +27,7 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public interface IPlugin extends IParametrized {
+public interface IPlugin extends IParametrized, IActionType {
 
     /**
      * Initialize the plugin. Performed after set parameters.

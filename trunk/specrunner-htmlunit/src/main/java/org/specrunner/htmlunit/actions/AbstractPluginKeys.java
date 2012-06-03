@@ -18,6 +18,8 @@
 package org.specrunner.htmlunit.actions;
 
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 
 /**
  * Partial keys implementation.
@@ -25,7 +27,7 @@ import org.specrunner.htmlunit.AbstractPluginFindSingle;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginKeys extends AbstractPluginFindSingle implements IAction {
+public abstract class AbstractPluginKeys extends AbstractPluginFindSingle {
 
     /**
      * The shift key hold status.
@@ -95,5 +97,10 @@ public abstract class AbstractPluginKeys extends AbstractPluginFindSingle implem
      */
     public void setAltkey(Boolean altkey) {
         this.altkey = altkey;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 }

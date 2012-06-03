@@ -25,7 +25,7 @@ import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.impl.CellAdapter;
 
@@ -124,7 +124,7 @@ public class PluginCompareDate extends PluginCompare {
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         if (format == null) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);

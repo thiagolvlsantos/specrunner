@@ -29,28 +29,7 @@ import org.specrunner.util.IPresentation;
  * @author Thiago Santos
  * 
  */
-public class Status implements Comparable<Status>, IPresentation {
-
-    /**
-     * Ignored: is not error, has importance -1.
-     */
-    public static final Status IGNORED = new Status("ignored", false, -1);
-    /**
-     * Info: is not error, has importance 0.
-     */
-    public static final Status INFO = new Status("info", false, 0);
-    /**
-     * Warning: is not error, has importance 1.
-     */
-    public static final Status WARNING = new Status("warning", false, 1);
-    /**
-     * Success: is not error, has importance 2.
-     */
-    public static final Status SUCCESS = new Status("success", false, 2);
-    /**
-     * Failure: is error, has importance 3.
-     */
-    public static final Status FAILURE = new Status("failure", true, 3);
+public abstract class Status implements Comparable<Status>, IPresentation {
 
     /**
      * The status name.
@@ -126,21 +105,6 @@ public class Status implements Comparable<Status>, IPresentation {
      */
     public void setError(boolean error) {
         this.error = error;
-    }
-
-    /**
-     * Creates a Status with the given information.
-     * 
-     * @param name
-     *            The name.
-     * @param error
-     *            The errors.
-     * @param importance
-     *            The importance.
-     * @return The status.
-     */
-    public static Status newStatus(String name, boolean error, double importance) {
-        return new Status(name, error, importance);
     }
 
     /**

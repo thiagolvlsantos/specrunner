@@ -20,9 +20,12 @@ package org.specrunner.htmlunit.assertions;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
 import org.specrunner.htmlunit.util.WritablePage;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -36,14 +39,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlRadioButtonInput;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginCheckable extends AbstractPluginFind implements IAssertion {
+public abstract class AbstractPluginCheckable extends AbstractPluginFind {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
         boolean error = false;
         for (HtmlElement element : elements) {
             if (!(element instanceof HtmlCheckBoxInput) && !(element instanceof HtmlRadioButtonInput)) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), new WritablePage(page));
                 error = true;
             } else {
                 boolean onComponent = false;
@@ -56,13 +63,13 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind impleme
                     onComponent = in.isChecked();
                 }
                 if (expected() != onComponent) {
-                    result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(page));
                     error = true;
                 }
             }
         }
         if (!error) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 

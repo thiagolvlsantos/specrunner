@@ -22,10 +22,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.Window;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginWindow;
 
@@ -35,7 +36,11 @@ import org.specrunner.webdriver.AbstractPluginWindow;
  * @author Thiago Santos.
  * 
  */
-public class PluginPosition extends AbstractPluginWindow implements IAssertion {
+public class PluginPosition extends AbstractPluginWindow {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, Options options, Window window) throws PluginException {
@@ -56,6 +61,6 @@ public class PluginPosition extends AbstractPluginWindow implements IAssertion {
         if (getY() != null && !getY().equals(p.getY())) {
             throw new PluginException("Y position does not match. Expected:" + getY() + ", received:" + (p != null ? p.getY() : "null"));
         }
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

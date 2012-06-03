@@ -42,11 +42,14 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
+import org.specrunner.result.status.Warning;
 import org.specrunner.source.ISource;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -61,7 +64,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginScript extends AbstractPluginValue implements IAction {
+public class PluginScript extends AbstractPluginValue {
 
     /**
      * List of scripts to be performed.
@@ -174,6 +177,11 @@ public class PluginScript extends AbstractPluginValue implements IAction {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -240,7 +248,7 @@ public class PluginScript extends AbstractPluginValue implements IAction {
                 if (str != null && str.startsWith("file:")) {
                     File f = new File(str.replace("file:/", ""));
                     if (!f.exists()) {
-                        result.addResult(Status.FAILURE, context.peek(), new PluginException("Script:" + f + " not found."));
+                        result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Script:" + f + " not found."));
                         failure++;
                     } else {
                         try {
@@ -260,13 +268,13 @@ public class PluginScript extends AbstractPluginValue implements IAction {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
-                        result.addResult(Status.FAILURE, context.peek(), e);
+                        result.addResult(Failure.INSTANCE, context.peek(), e);
                         failure++;
                     } catch (IOException e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
-                        result.addResult(Status.FAILURE, context.peek(), e);
+                        result.addResult(Failure.INSTANCE, context.peek(), e);
                         failure++;
                     }
                 }
@@ -295,7 +303,7 @@ public class PluginScript extends AbstractPluginValue implements IAction {
             }
         }
         if (failure == 0) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
         return ENext.DEEP;
     }
@@ -343,9 +351,9 @@ public class PluginScript extends AbstractPluginValue implements IAction {
                         }
                         if (!failsafe) {
                             failures++;
-                            result.addResult(Status.FAILURE, context.peek(), e);
+                            result.addResult(Failure.INSTANCE, context.peek(), e);
                         } else {
-                            result.addResult(Status.WARNING, context.peek(), e);
+                            result.addResult(Warning.INSTANCE, context.peek(), e);
                         }
                     }
                 }
@@ -354,7 +362,7 @@ public class PluginScript extends AbstractPluginValue implements IAction {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                result.addResult(Status.FAILURE, context.peek(), e);
+                result.addResult(Failure.INSTANCE, context.peek(), e);
             } finally {
                 try {
                     br.close();

@@ -20,9 +20,12 @@ package org.specrunner.htmlunit.assertions;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
 import org.specrunner.htmlunit.util.WritablePage;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -34,7 +37,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
  * @author Thiago Santos
  * 
  */
-public class PluginCheckAtt extends AbstractPluginFindSingle implements IAssertion {
+public class PluginCheckAtt extends AbstractPluginFindSingle {
 
     /**
      * The attribute to be checked against value.
@@ -61,14 +64,19 @@ public class PluginCheckAtt extends AbstractPluginFindSingle implements IAsserti
     }
 
     @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
+
+    @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         Object attName = getValue(attribute, true, context);
         String attValue = element.getAttribute(String.valueOf(attName));
         Object value = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         if (test(attValue, value)) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException(getMessage(context, value)), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException(getMessage(context, value)), new WritablePage(page));
         }
     }
 

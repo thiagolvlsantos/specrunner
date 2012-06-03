@@ -25,12 +25,13 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -50,7 +51,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginSessionFactory extends AbstractPluginScoped implements IAction {
+public class PluginSessionFactory extends AbstractPluginScoped {
 
     /**
      * Default session factory name.
@@ -170,6 +171,11 @@ public class PluginSessionFactory extends AbstractPluginScoped implements IActio
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -184,7 +190,7 @@ public class PluginSessionFactory extends AbstractPluginScoped implements IActio
         }
         if (type == null) {
             try {
-                fh.set(FEATURE_TYPE, "type", String.class, this);
+                fh.set(FEATURE_TYPE, "provider", String.class, this);
             } catch (FeatureManagerException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -239,7 +245,7 @@ public class PluginSessionFactory extends AbstractPluginScoped implements IActio
 
             String str = getName() != null ? getName() : SESSION_FACTORY;
             context.saveGlobal(str, sf);
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);

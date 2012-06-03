@@ -18,11 +18,13 @@
 package example.core;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 
 public class PluginHello extends AbstractPlugin {
 
@@ -37,13 +39,18 @@ public class PluginHello extends AbstractPlugin {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
     }
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
         return ENext.DEEP;
     }
 

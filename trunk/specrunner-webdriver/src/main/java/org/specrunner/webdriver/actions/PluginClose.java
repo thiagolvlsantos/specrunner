@@ -19,10 +19,11 @@ package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
 
 /**
@@ -31,12 +32,17 @@ import org.specrunner.webdriver.AbstractPluginUrlAware;
  * @author Thiago Santos
  * 
  */
-public class PluginClose extends AbstractPluginUrlAware implements IAction {
+public class PluginClose extends AbstractPluginUrlAware {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         client.close();
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 
     @Override

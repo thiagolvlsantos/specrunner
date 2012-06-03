@@ -22,7 +22,8 @@ import java.io.IOException;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -30,7 +31,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
 
 /**
- * Type a text in a given element.
+ * ActionType a text in a given element.
  * 
  * @author Thiago Santos
  * 
@@ -145,9 +146,9 @@ public class PluginType extends AbstractPluginKeys {
                     element.type(value);
                 }
             }
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         } catch (IOException e) {
-            result.addResult(Status.FAILURE, context.peek(), e);
+            result.addResult(Failure.INSTANCE, context.peek(), e);
         }
     }
 }

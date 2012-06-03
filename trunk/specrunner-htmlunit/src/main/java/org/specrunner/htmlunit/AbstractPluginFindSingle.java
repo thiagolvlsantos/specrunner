@@ -20,7 +20,7 @@ package org.specrunner.htmlunit;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -64,11 +64,11 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
         if (index < 0 || index > elements.length) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Index out of range '" + index + "', max = '" + elements.length + "'."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Index out of range '" + index + "', max = '" + elements.length + "'."));
             return;
         }
         if (elements.length == 0) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."));
             return;
         }
         HtmlElement element = elements[index];

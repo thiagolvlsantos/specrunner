@@ -21,7 +21,9 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -34,7 +36,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
  * @author Thiago Santos
  * 
  */
-public class PluginCompare extends AbstractPluginFindSingle implements IAssertion {
+public class PluginCompare extends AbstractPluginFindSingle {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {

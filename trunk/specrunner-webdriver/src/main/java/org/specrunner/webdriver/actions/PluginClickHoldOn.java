@@ -22,10 +22,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
@@ -34,12 +34,17 @@ import org.specrunner.webdriver.AbstractPluginFindSingle;
  * @author Thiago Santos.
  * 
  */
-public class PluginClickHoldOn extends AbstractPluginFindSingle implements IAction {
+public class PluginClickHoldOn extends AbstractPluginFindSingle {
+
+    @Override
+    public ActionType getActionType() {
+        return org.specrunner.plugins.type.Command.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Action ac = new Actions(client).clickAndHold(element).build();
         ac.perform();
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

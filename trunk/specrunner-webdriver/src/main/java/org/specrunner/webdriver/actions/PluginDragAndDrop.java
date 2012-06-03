@@ -24,10 +24,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.IFinder;
 
@@ -38,7 +38,7 @@ import org.specrunner.webdriver.IFinder;
  * @author Thiago Santos.
  * 
  */
-public class PluginDragAndDrop extends AbstractPluginFindSingle implements IAction {
+public class PluginDragAndDrop extends AbstractPluginFindSingle {
 
     /**
      * The target element.
@@ -113,6 +113,11 @@ public class PluginDragAndDrop extends AbstractPluginFindSingle implements IActi
     }
 
     @Override
+    public ActionType getActionType() {
+        return org.specrunner.plugins.type.Command.INSTANCE;
+    }
+
+    @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         if (getTarget() == null && getXoffset() == null && getYoffset() == null) {
             throw new PluginException("To use drag and drop you should specify 'target' attribute using the same syntax of attribute 'by', or specify 'xoffset' and 'yoffset' attributes.");
@@ -133,6 +138,6 @@ public class PluginDragAndDrop extends AbstractPluginFindSingle implements IActi
             throw new PluginException("You should specify both 'xoffset' and 'yoffset' attributes.");
         }
         ac.perform();
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

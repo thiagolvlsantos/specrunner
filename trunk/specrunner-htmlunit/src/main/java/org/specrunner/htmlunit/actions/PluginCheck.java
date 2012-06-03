@@ -17,6 +17,9 @@
  */
 package org.specrunner.htmlunit.actions;
 
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
+
 import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
 
 /**
@@ -25,7 +28,11 @@ import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
  * @author Thiago Santos
  * 
  */
-public class PluginCheck extends AbstractPluginCheck implements IAction {
+public class PluginCheck extends AbstractPluginCheck {
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doSomething(HtmlCheckBoxInput option) {

@@ -17,7 +17,6 @@
  */
 package org.specrunner.webdriver.assertions;
 
-import org.specrunner.plugins.IAssertion;
 
 /**
  * Check if elements are checked.
@@ -25,7 +24,7 @@ import org.specrunner.plugins.IAssertion;
  * @author Thiago Santos
  * 
  */
-public class PluginUnchecked extends AbstractPluginCheckable implements IAssertion {
+public class PluginUnchecked extends AbstractPluginCheckable {
 
     @Override
     protected boolean expected() {

@@ -37,7 +37,9 @@ import org.specrunner.parameters.impl.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
+import org.specrunner.result.status.Warning;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
@@ -351,12 +353,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (i == 0) {
                 try {
                     loadFields(context, table.getRow(i), fields);
-                    result.addResult(Status.SUCCESS, context.newBlock(table.getRow(i).getElement(), this));
+                    result.addResult(Success.INSTANCE, context.newBlock(table.getRow(i).getElement(), this));
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    result.addResult(Status.FAILURE, context.newBlock(table.getRow(i).getElement(), this), e);
+                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getElement(), this), e);
                     break;
                 }
             } else {
@@ -366,7 +368,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    result.addResult(Status.FAILURE, context.newBlock(table.getRow(i).getElement(), this), e);
+                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getElement(), this), e);
                 }
             }
         }
@@ -773,7 +775,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             Object obj = instances.get(keysBefore.get(keyBefore));
             if (obj != null && isMapped()) {
-                result.addResult(Status.FAILURE, context.newBlock(row.getElement(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
                 for (CellAdapter cell : row.getCells()) {
                     String title = cell.getAttribute("title");
                     String old = title.substring(0, title.lastIndexOf('|'));
@@ -795,7 +797,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         UtilLog.LOG.debug("SAVE:" + keysBefore);
                         UtilLog.LOG.debug("INST:" + instances);
                     }
-                    result.addResult(Status.SUCCESS, context.newBlock(row.getElement(), this));
+                    result.addResult(Success.INSTANCE, context.newBlock(row.getElement(), this));
                 }
             }
         }
@@ -884,12 +886,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                result.addResult(Status.FAILURE, context.newBlock(cell.getElement(), this), e);
+                result.addResult(Failure.INSTANCE, context.newBlock(cell.getElement(), this), e);
                 ok = false;
             }
         }
         if (!ok) {
-            result.addResult(Status.WARNING, context.newBlock(row.getElement(), this), "Could not create instance.");
+            result.addResult(Warning.INSTANCE, context.newBlock(row.getElement(), this), "Could not create instance.");
         }
         return ok;
     }

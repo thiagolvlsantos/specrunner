@@ -21,8 +21,11 @@ import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
 import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -35,14 +38,18 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginCheck extends AbstractPluginFind implements IAction {
+public abstract class AbstractPluginCheck extends AbstractPluginFind {
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
         boolean success = true;
         for (int i = 0; i < elements.length; i++) {
             if (!isCheckbox(elements[i])) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + elements[i] + " is not a checkbox."), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + elements[i] + " is not a checkbox."), new WritablePage(page));
                 success = false;
                 break;
             }
@@ -50,7 +57,7 @@ public abstract class AbstractPluginCheck extends AbstractPluginFind implements 
             doSomething(e);
         }
         if (success) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 

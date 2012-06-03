@@ -23,7 +23,7 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 
 /**
  * Partial implementation for touch screen interactions.
@@ -38,7 +38,7 @@ public abstract class AbstractPluginHasTouchScreen extends AbstractPluginBrowser
         if (client instanceof HasTouchScreen) {
             doEnd(context, result, client, ((HasTouchScreen) client).getTouch());
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("The WebDriver '" + client.getClass().getName() + "' is not a instance of HasTouchScreen."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The WebDriver '" + client.getClass().getName() + "' is not a instance of HasTouchScreen."));
         }
     }
 

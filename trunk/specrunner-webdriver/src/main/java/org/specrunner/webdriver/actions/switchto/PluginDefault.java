@@ -20,9 +20,11 @@ package org.specrunner.webdriver.actions.switchto;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginSwitchTo;
 
 /**
@@ -35,8 +37,13 @@ import org.specrunner.webdriver.AbstractPluginSwitchTo;
 public class PluginDefault extends AbstractPluginSwitchTo {
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, TargetLocator target) throws PluginException {
         target.defaultContent();
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

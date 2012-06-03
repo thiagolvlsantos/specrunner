@@ -22,9 +22,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.Window;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginWindow;
 
@@ -35,6 +37,11 @@ import org.specrunner.webdriver.AbstractPluginWindow;
  * 
  */
 public class PluginSize extends AbstractPluginWindow {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, Options options, Window window) throws PluginException {
@@ -51,7 +58,7 @@ public class PluginSize extends AbstractPluginWindow {
         }
         if (d != null) {
             window.setSize(new Dimension(getWidth() != null ? getWidth() : d.getWidth(), getHeight() != null ? getHeight() : d.getHeight()));
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 }

@@ -25,9 +25,11 @@ import nu.xom.ParentNode;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilLog;
 
@@ -173,13 +175,18 @@ public class PluginFor extends AbstractPlugin {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("VAR(" + var + "),MIN(" + min + "),MAX(" + max + "),STEP(" + step + ")");
         }
         Node current = context.getNode();
         if (min > max) {
-            result.addResult(Status.FAILURE, context.newBlock(current, this), new PluginException("IPlugin loop 'min'(" + min + ") cannot be greater than 'max'(" + max + ")"));
+            result.addResult(Failure.INSTANCE, context.newBlock(current, this), new PluginException("IPlugin loop 'min'(" + min + ") cannot be greater than 'max'(" + max + ")"));
             return ENext.SKIP;
         }
         Node base = current.copy();
@@ -209,7 +216,7 @@ public class PluginFor extends AbstractPlugin {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
-                        result.addResult(Status.FAILURE, context.newBlock(current, this), e);
+                        result.addResult(Failure.INSTANCE, context.newBlock(current, this), e);
                     }
                 } finally {
                     context.clearLocal(varName);

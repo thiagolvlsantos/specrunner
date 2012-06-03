@@ -17,7 +17,8 @@
  */
 package org.specrunner.webdriver.actions.touch;
 
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 
 /**
  * Plugin coordinates with offset.
@@ -25,7 +26,7 @@ import org.specrunner.plugins.IAction;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginCoordinatesOff extends AbstractPluginCoordinates implements IAction {
+public abstract class AbstractPluginCoordinatesOff extends AbstractPluginCoordinates {
     /**
      * The x offset gap.
      */
@@ -71,5 +72,10 @@ public abstract class AbstractPluginCoordinatesOff extends AbstractPluginCoordin
      */
     public void setYoffset(Integer yoffset) {
         this.yoffset = yoffset;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 }
