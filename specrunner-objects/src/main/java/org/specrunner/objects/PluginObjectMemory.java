@@ -18,6 +18,8 @@
 package org.specrunner.objects;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.impl.RowAdapter;
 
@@ -29,6 +31,11 @@ import org.specrunner.util.impl.RowAdapter;
  * 
  */
 public class PluginObjectMemory extends AbstractPluginObject {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected boolean isMapped() {

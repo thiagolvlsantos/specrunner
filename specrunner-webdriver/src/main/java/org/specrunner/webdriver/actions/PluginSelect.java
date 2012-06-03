@@ -18,7 +18,6 @@
 package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebElement;
-import org.specrunner.plugins.IAction;
 
 /**
  * Select a given element, or a list of elements in &lt;ul&gt;.
@@ -26,7 +25,7 @@ import org.specrunner.plugins.IAction;
  * @author Thiago Santos
  * 
  */
-public class PluginSelect extends AbstractPluginSelect implements IAction {
+public class PluginSelect extends AbstractPluginSelect {
 
     @Override
     protected void doSomething(WebElement element, WebElement option) {

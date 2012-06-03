@@ -27,8 +27,10 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -72,6 +74,11 @@ public class PluginImg extends AbstractPluginResources {
      */
     public void setSrc(String src) {
         this.src = src;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Undefined.INSTANCE;
     }
 
     @Override

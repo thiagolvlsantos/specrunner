@@ -38,7 +38,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlSelect;
  * @author Thiago Santos
  * 
  */
-public class PluginOptions extends AbstractPluginSelection implements IAssertion {
+public class PluginOptions extends AbstractPluginSelection {
 
     @Override
     protected int checkSelection(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException {

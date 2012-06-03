@@ -24,7 +24,9 @@ import nu.xom.Node;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -83,6 +85,11 @@ public class PluginIf extends AbstractPluginValue {
     public static final String TEST_NAME = "ifTest";
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Element condition = (Element) context.getNode();
         Object valueCond = getValue(getValue() != null ? getValue() : condition.getValue(), true, context);
@@ -91,7 +98,7 @@ public class PluginIf extends AbstractPluginValue {
             if ("true".equalsIgnoreCase(strCon) || "false".equalsIgnoreCase(strCon)) {
                 valueCond = Boolean.valueOf(strCon);
             } else {
-                throw new PluginException("If contition result in invalid value: '" + valueCond + "'. Type:" + (valueCond != null ? valueCond.getClass() : "null"));
+                throw new PluginException("If contition result in invalid value: '" + valueCond + "'. ActionType:" + (valueCond != null ? valueCond.getClass() : "null"));
             }
         }
         String testName = getName() != null ? getName() : TEST_NAME;

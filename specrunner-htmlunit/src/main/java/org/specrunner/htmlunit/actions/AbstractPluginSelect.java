@@ -26,8 +26,11 @@ import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
 import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -41,12 +44,17 @@ import com.gargoylesoftware.htmlunit.html.HtmlSelect;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginSelect extends AbstractPluginFindSingle implements IAction {
+public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         if (!(element instanceof HtmlSelect)) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
         } else {
             Node node = context.getNode();
             Nodes nodes = node.query("descendant::li");
@@ -68,14 +76,14 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle impl
                     }
                 }
                 if (!success) {
-                    result.addResult(Status.FAILURE, context.newBlock(current, this), new PluginException("The option '" + option + "' is missing."));
+                    result.addResult(Failure.INSTANCE, context.newBlock(current, this), new PluginException("The option '" + option + "' is missing."));
                     errors++;
                 }
             }
             if (errors > 0) {
-                result.addResult(Status.FAILURE, context.newBlock(node, this), new PluginException(errors + " option(s) is(are) missing."), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException(errors + " option(s) is(are) missing."), new WritablePage(page));
             } else {
-                result.addResult(Status.SUCCESS, context.newBlock(node, this));
+                result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }
         }
     }

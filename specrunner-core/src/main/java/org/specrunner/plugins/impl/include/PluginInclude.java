@@ -35,12 +35,14 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Warning;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -68,7 +70,7 @@ import org.specrunner.util.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class PluginInclude extends AbstractPlugin implements IAction {
+public class PluginInclude extends AbstractPlugin {
 
     /**
      * Style added to included file.
@@ -173,6 +175,11 @@ public class PluginInclude extends AbstractPlugin implements IAction {
      */
     public void setExpanded(Boolean expanded) {
         this.expanded = expanded;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override
@@ -282,15 +289,15 @@ public class PluginInclude extends AbstractPlugin implements IAction {
             Element trContent = new Element("tr");
             table.appendChild(trContent);
 
-            int failCount = result.countStatus(Status.FAILURE);
+            int failCount = result.countStatus(Failure.INSTANCE);
 
             Element tdContent = new Element("td");
             UtilNode.appendCss(tdContent, CSS_INCLUDED_CONTENT);
             trContent.appendChild(tdContent);
             if (context.getSources().size() > depth) {
-                tdContent.addAttribute(new Attribute("class", Status.WARNING.getCssName()));
+                tdContent.addAttribute(new Attribute("class", Warning.INSTANCE.getCssName()));
                 tdContent.appendChild(new Text("Max depth of '" + depth + "' reached."));
-                result.addResult(Status.WARNING, context.newBlock(node, this), "Max depth of '" + depth + "' reached>" + toString(context) + "\n on run " + newSource);
+                result.addResult(Warning.INSTANCE, context.newBlock(node, this), "Max depth of '" + depth + "' reached>" + toString(context) + "\n on run " + newSource);
             } else {
                 if (!context.getSources().contains(newSource)) {
                     try {
@@ -312,13 +319,13 @@ public class PluginInclude extends AbstractPlugin implements IAction {
                         throw new PluginException(e);
                     }
                 } else {
-                    tdContent.addAttribute(new Attribute("class", Status.WARNING.getCssName()));
+                    tdContent.addAttribute(new Attribute("class", Warning.INSTANCE.getCssName()));
                     tdContent.appendChild(new Text("Cyclic dependency."));
-                    result.addResult(Status.WARNING, context.newBlock(node, this), "Cyclic dependency>" + toString(context) + "\n on run " + newSource);
+                    result.addResult(Warning.INSTANCE, context.newBlock(node, this), "Cyclic dependency>" + toString(context) + "\n on run " + newSource);
                 }
             }
 
-            failCount = result.countStatus(Status.FAILURE) - failCount;
+            failCount = result.countStatus(Failure.INSTANCE) - failCount;
             if (failCount > 0) {
                 UtilNode.appendCss(ele, "expanded");
             } else {
@@ -330,7 +337,7 @@ public class PluginInclude extends AbstractPlugin implements IAction {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
-            result.addResult(Status.FAILURE, context.newBlock(node, this), e);
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), e);
         }
         return ENext.SKIP;
     }

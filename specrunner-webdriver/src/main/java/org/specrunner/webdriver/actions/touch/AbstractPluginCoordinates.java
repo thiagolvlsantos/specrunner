@@ -19,7 +19,8 @@ package org.specrunner.webdriver.actions.touch;
 
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.internal.Coordinates;
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
 
 /**
@@ -28,7 +29,7 @@ import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginCoordinates extends AbstractPluginHasTouchScreen implements IAction {
+public abstract class AbstractPluginCoordinates extends AbstractPluginHasTouchScreen {
     /**
      * Screen point.
      */
@@ -192,5 +193,10 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginHasTouchSc
                 return getAuxiliary();
             }
         };
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 }

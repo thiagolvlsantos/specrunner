@@ -26,7 +26,8 @@ import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
@@ -70,7 +71,7 @@ public final class PluginCompareUtils {
     public static boolean compare(String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
         boolean res = true;
         if (expected.equals(received)) {
-            result.addResult(Status.SUCCESS, block);
+            result.addResult(Success.INSTANCE, block);
         } else {
             addError(expected, received, block, context, result, page);
             res = false;
@@ -100,9 +101,9 @@ public final class PluginCompareUtils {
         try {
             IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
             if (page != null) {
-                result.addResult(Status.FAILURE, block, new DefaultAlignmentException(al));
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(al));
             } else {
-                result.addResult(Status.FAILURE, block, new DefaultAlignmentException(al), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(al), new WritablePage(page));
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -142,7 +143,7 @@ public final class PluginCompareUtils {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
-            result.addResult(Status.FAILURE, block, new PluginException(e));
+            result.addResult(Failure.INSTANCE, block, new PluginException(e));
             res = false;
         }
         if (fmt != null) {
@@ -150,7 +151,7 @@ public final class PluginCompareUtils {
                 DateTime dtExpected = fmt.parseDateTime(expected);
                 DateTime dtReceived = fmt.parseDateTime(received);
                 if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= compare.getTolerance()) {
-                    result.addResult(Status.SUCCESS, block);
+                    result.addResult(Success.INSTANCE, block);
                 } else {
                     addError(expected, received, block, context, result, page);
                     res = false;

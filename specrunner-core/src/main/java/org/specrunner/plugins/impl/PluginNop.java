@@ -17,7 +17,9 @@
  */
 package org.specrunner.plugins.impl;
 
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.type.Undefined;
 
 /**
  * Default no-operation plugin.
@@ -50,6 +52,11 @@ public final class PluginNop extends AbstractPlugin {
      */
     public static IPlugin emptyPlugin() {
         return instance.get();
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Undefined.INSTANCE;
     }
 
     @Override

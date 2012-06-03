@@ -26,11 +26,12 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
@@ -48,7 +49,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginConnection extends AbstractPluginValue implements IAction {
+public class PluginConnection extends AbstractPluginValue {
 
     /**
      * Default connection provider name.
@@ -252,6 +253,11 @@ public class PluginConnection extends AbstractPluginValue implements IAction {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -337,7 +343,7 @@ public class PluginConnection extends AbstractPluginValue implements IAction {
                         UtilLog.LOG.info("Reusing DataSource " + ir.getObject());
                     }
                     context.saveGlobal(currentName, ir.getObject());
-                    result.addResult(Status.SUCCESS, context.peek());
+                    result.addResult(Success.INSTANCE, context.peek());
                     return ENext.DEEP;
                 }
             }
@@ -390,7 +396,7 @@ public class PluginConnection extends AbstractPluginValue implements IAction {
             });
         }
         context.saveGlobal(currentName, providerInstance);
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
         return ENext.DEEP;
     }
 

@@ -17,6 +17,9 @@
  */
 package org.specrunner.htmlunit.actions;
 
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
+
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlOption;
 
@@ -26,7 +29,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlOption;
  * @author Thiago Santos
  * 
  */
-public class PluginSelect extends AbstractPluginSelect implements IAction {
+public class PluginSelect extends AbstractPluginSelect {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doSomething(HtmlElement element, HtmlOption option) {

@@ -23,7 +23,7 @@ package org.specrunner.plugins.impl;
  * @author Thiago Santos
  * 
  */
-public class AbstractPluginNamed extends AbstractPlugin {
+public abstract class AbstractPluginNamed extends AbstractPlugin {
 
     /**
      * The plugin instance name.

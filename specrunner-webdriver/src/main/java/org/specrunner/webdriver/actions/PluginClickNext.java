@@ -23,10 +23,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
@@ -35,7 +36,12 @@ import org.specrunner.webdriver.AbstractPluginFindSingle;
  * @author Thiago Santos.
  * 
  */
-public class PluginClickNext extends AbstractPluginFindSingle implements IAction {
+public class PluginClickNext extends AbstractPluginFindSingle {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
@@ -51,6 +57,6 @@ public class PluginClickNext extends AbstractPluginFindSingle implements IAction
         if (!found) {
             throw new PluginException("Could not found a following visible element.");
         }
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

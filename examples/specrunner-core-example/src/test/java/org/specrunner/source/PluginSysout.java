@@ -6,9 +6,11 @@ import nu.xom.Text;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 
 public class PluginSysout extends AbstractPlugin {
 
@@ -32,6 +34,11 @@ public class PluginSysout extends AbstractPlugin {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         return ENext.DEEP;
     }
@@ -42,7 +49,7 @@ public class PluginSysout extends AbstractPlugin {
             Element p = new Element("span");
             Text t = new Text(prefix);
             p.appendChild(t);
-            result.addResult(Status.SUCCESS, context.newBlock(p, this));
+            result.addResult(Success.INSTANCE, context.newBlock(p, this));
             ((Element) context.getNode()).insertChild(p, 0);
         }
         if (suffix != null) {

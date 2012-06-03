@@ -25,9 +25,10 @@ import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilEvaluator;
 
@@ -39,7 +40,11 @@ import org.specrunner.util.UtilEvaluator;
  * @author Thiago Santos
  * 
  */
-public class PluginReplacerMap extends AbstractPlugin implements IAction {
+public class PluginReplacerMap extends AbstractPlugin {
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     @SuppressWarnings("unchecked")

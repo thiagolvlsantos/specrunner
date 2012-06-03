@@ -18,7 +18,7 @@
 package org.specrunner.source.resource;
 
 /**
- * Type of resource.
+ * ActionType of resource.
  * 
  * @author Thiago Santos
  * 

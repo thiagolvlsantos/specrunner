@@ -96,11 +96,11 @@ public class ChannelImpl extends HashMap<String, Object> implements IChannel {
             throw new NotFoundException("Channel does not contain '" + key + "'.");
         }
         if (type == null) {
-            throw new NotFoundException("Type information cannot be null.");
+            throw new NotFoundException("ActionType information cannot be null.");
         }
         Class<? extends Object> clazz = obj.getClass();
         if (!type.isAssignableFrom(clazz)) {
-            throw new NotFoundException("Type missmatch for key '" + key + "' expected='" + type + "', received='" + clazz + "'.");
+            throw new NotFoundException("ActionType missmatch for key '" + key + "' expected='" + type + "', received='" + clazz + "'.");
         }
         return type.cast(obj);
     }

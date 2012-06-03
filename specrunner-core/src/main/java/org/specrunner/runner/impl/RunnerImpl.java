@@ -45,7 +45,9 @@ import org.specrunner.plugins.ITimedPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Ignored;
+import org.specrunner.result.status.Info;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
@@ -184,7 +186,7 @@ public class RunnerImpl implements IRunner {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
                 }
-                result.addResult(Status.IGNORED, block, "This plugin has been ignored by our own choice. Ignored plugins:" + ignoredAliases + ". To set ignored plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)).");
+                result.addResult(Ignored.INSTANCE, block, "This plugin has been ignored by our own choice. Ignored plugins:" + ignoredAliases + ". To set ignored plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)).");
                 ignored = true;
                 return;
             }
@@ -277,9 +279,9 @@ public class RunnerImpl implements IRunner {
                 }
             } else {
                 if (node != null) {
-                    result.addResult(Status.INFO, context.newBlock(node, plugin), "Conditional '" + ((Element) node).getAttributeValue("condition") + "' prevented execution.");
+                    result.addResult(Info.INSTANCE, context.newBlock(node, plugin), "Conditional '" + ((Element) node).getAttributeValue("condition") + "' prevented execution.");
                 } else {
-                    result.addResult(Status.INFO, context.newBlock(node, plugin), "Conditional prevented execution. " + plugin);
+                    result.addResult(Info.INSTANCE, context.newBlock(node, plugin), "Conditional prevented execution. " + plugin);
                 }
             }
             // sleep if required
@@ -289,7 +291,7 @@ public class RunnerImpl implements IRunner {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
             // any failure back to specification
-            result.addResult(Status.FAILURE, context.newBlock(node, plugin), e);
+            result.addResult(Failure.INSTANCE, context.newBlock(node, plugin), e);
         } finally {
             if (block != null && !ignored) {
                 // remove block from context
@@ -355,7 +357,7 @@ public class RunnerImpl implements IRunner {
                 timeout = timedPlugin.getTimeout();
             }
             if (timeout != null && total > timeout) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException(method + " has run out of time. time(" + total + ") > timeout(" + timeout + ")"));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException(method + " has run out of time. time(" + total + ") > timeout(" + timeout + ")"));
             }
         }
     }

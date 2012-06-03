@@ -23,7 +23,7 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 
 /**
  * Partial implementation for rotatable interactions.
@@ -77,7 +77,7 @@ public abstract class AbstractPluginRotatable extends AbstractPluginBrowserAware
         if (client instanceof Rotatable) {
             doEnd(context, result, client, (Rotatable) client);
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("The WebDriver '" + client.getClass().getName() + "' is not a instance of Rotatable."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The WebDriver '" + client.getClass().getName() + "' is not a instance of Rotatable."));
         }
     }
 

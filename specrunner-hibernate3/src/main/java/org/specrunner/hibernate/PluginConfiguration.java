@@ -35,12 +35,13 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.objects.PluginObjectManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -63,7 +64,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginConfiguration extends AbstractPluginValue implements IAction {
+public class PluginConfiguration extends AbstractPluginValue {
 
     /**
      * Default configuration name.
@@ -155,6 +156,11 @@ public class PluginConfiguration extends AbstractPluginValue implements IAction 
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -217,7 +223,7 @@ public class PluginConfiguration extends AbstractPluginValue implements IAction 
 
             String str = getName() != null ? getName() : SESSION_CONFIGURATION;
             context.saveGlobal(str, cfg);
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
 
             PluginObjectManager.get().clear();
             for (Iterator<?> ite = cfg.getClassMappings(); ite.hasNext();) {

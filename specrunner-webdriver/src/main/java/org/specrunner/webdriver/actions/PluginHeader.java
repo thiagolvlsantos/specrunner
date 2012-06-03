@@ -19,10 +19,12 @@ package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
+import org.specrunner.result.status.Warning;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.HtmlUnitDriverLocal;
@@ -33,7 +35,7 @@ import org.specrunner.webdriver.HtmlUnitDriverLocal;
  * @author Thiago Santos
  * 
  */
-public class PluginHeader extends AbstractPluginBrowserAware implements IAction {
+public class PluginHeader extends AbstractPluginBrowserAware {
 
     /**
      * The header.
@@ -60,6 +62,11 @@ public class PluginHeader extends AbstractPluginBrowserAware implements IAction 
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         UtilLog.LOG.info("    On: " + getClass().getSimpleName() + " with " + client);
         if (client instanceof HtmlUnitDriverLocal) {
@@ -69,9 +76,9 @@ public class PluginHeader extends AbstractPluginBrowserAware implements IAction 
             }
             String value = String.valueOf(tmp);
             ((HtmlUnitDriverLocal) client).setHeader(getHeader(), value);
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         } else {
-            result.addResult(Status.WARNING, context.peek(), "Header setting is not supported by '" + (client != null ? client.getClass() : "null") + "'.");
+            result.addResult(Warning.INSTANCE, context.peek(), "Header setting is not supported by '" + (client != null ? client.getClass() : "null") + "'.");
         }
     }
 }

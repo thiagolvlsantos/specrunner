@@ -17,7 +17,6 @@
  */
 package org.specrunner.plugins.impl.logical;
 
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
 
 /**
@@ -26,7 +25,7 @@ import org.specrunner.plugins.PluginException;
  * @author Thiago Santos
  * 
  */
-public class PluginNotEquals extends PluginEquals implements IAssertion {
+public class PluginNotEquals extends PluginEquals {
 
     @Override
     protected boolean verify(Object reference, Object value) {

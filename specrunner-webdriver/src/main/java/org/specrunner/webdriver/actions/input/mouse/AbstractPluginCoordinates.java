@@ -19,7 +19,8 @@ package org.specrunner.webdriver.actions.input.mouse;
 
 import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.internal.Coordinates;
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.webdriver.AbstractPluginMouse;
 
 /**
@@ -29,7 +30,7 @@ import org.specrunner.webdriver.AbstractPluginMouse;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginCoordinates extends AbstractPluginMouse implements IAction {
+public abstract class AbstractPluginCoordinates extends AbstractPluginMouse {
     /**
      * Screen point.
      */
@@ -193,5 +194,10 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginMouse impl
                 return getAuxiliary();
             }
         };
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 }

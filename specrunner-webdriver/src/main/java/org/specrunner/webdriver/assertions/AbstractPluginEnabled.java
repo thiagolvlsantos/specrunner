@@ -20,10 +20,12 @@ package org.specrunner.webdriver.assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.util.WritablePage;
 
@@ -33,19 +35,23 @@ import org.specrunner.webdriver.util.WritablePage;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginEnabled extends AbstractPluginFind implements IAssertion {
+public abstract class AbstractPluginEnabled extends AbstractPluginFind {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement[] elements) throws PluginException {
         boolean error = false;
         for (WebElement element : elements) {
             if (enabled() != element.isEnabled()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (element.isEnabled() ? "enabled" : "disabled") + "'."), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (element.isEnabled() ? "enabled" : "disabled") + "'."), new WritablePage(client));
                 error = true;
             }
         }
         if (!error) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 

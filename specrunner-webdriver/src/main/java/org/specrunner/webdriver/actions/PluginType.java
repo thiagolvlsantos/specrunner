@@ -20,19 +20,20 @@ package org.specrunner.webdriver.actions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
- * Type a text in a given element.
+ * ActionType a text in a given element.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginType extends AbstractPluginFindSingle implements IAction {
+public class PluginType extends AbstractPluginFindSingle {
     /**
      * Set the append mode.
      */
@@ -81,6 +82,11 @@ public class PluginType extends AbstractPluginFindSingle implements IAction {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         String value = String.valueOf(tmp);
@@ -95,6 +101,6 @@ public class PluginType extends AbstractPluginFindSingle implements IAction {
             }
             element.sendKeys(value);
         }
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

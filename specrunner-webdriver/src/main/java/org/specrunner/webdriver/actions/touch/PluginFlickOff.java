@@ -22,7 +22,7 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 
 /**
  * Flick coordinates, xoffset, yoffset and speed.
@@ -59,6 +59,6 @@ public class PluginFlickOff extends AbstractPluginCoordinatesOff {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, TouchScreen touch) throws PluginException {
         touch.flick(getCoordinates(), getXoffset(), getYoffset(), getSpeed());
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

@@ -24,9 +24,10 @@ import nu.xom.Nodes;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginDual;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilXPath;
 import org.specrunner.util.aligner.IStringAligner;
@@ -41,7 +42,7 @@ import org.specrunner.util.impl.CellAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginEquals extends AbstractPluginDual implements IAssertion {
+public class PluginEquals extends AbstractPluginDual {
 
     /**
      * The CSS which set the left side condition of equals.
@@ -56,6 +57,11 @@ public class PluginEquals extends AbstractPluginDual implements IAssertion {
      * Error object after failure.
      */
     protected Throwable error;
+
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected boolean operation(Object obj, IContext context) throws PluginException {

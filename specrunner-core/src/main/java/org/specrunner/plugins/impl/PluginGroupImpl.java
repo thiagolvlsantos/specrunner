@@ -24,12 +24,14 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.composite.CompositeImpl;
 
@@ -82,6 +84,11 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     }
 
     @Override
+    public ActionType getActionType() {
+        return Undefined.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         for (IPlugin p : getChildren()) {
             p.initialize(context);
@@ -101,7 +108,7 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
                     break;
                 }
             } catch (Exception e) {
-                result.addResult(Status.FAILURE, context.peek(), e);
+                result.addResult(Failure.INSTANCE, context.peek(), e);
             }
         }
         return exit;
@@ -113,7 +120,7 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
             try {
                 p.doEnd(context, result);
             } catch (Exception e) {
-                result.addResult(Status.FAILURE, context.peek(), e);
+                result.addResult(Failure.INSTANCE, context.peek(), e);
             }
         }
     }

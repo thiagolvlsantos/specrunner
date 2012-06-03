@@ -22,9 +22,12 @@ import java.util.List;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
 import org.specrunner.htmlunit.IFinder;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -36,7 +39,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
  * @author Thiago Santos
  * 
  */
-public class PluginPresent extends AbstractPluginFind implements IAssertion {
+public class PluginPresent extends AbstractPluginFind {
 
     /**
      * Exact number of elements selected.
@@ -109,35 +112,40 @@ public class PluginPresent extends AbstractPluginFind implements IAssertion {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client, SgmlPage page) throws PluginException {
         IFinder finder = getFinderInstance(context);
         List<?> list = finder.find(context, result, client, page);
         int failure = 0;
         if (getCount() != null) {
             if (list.size() != getCount()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected count of elements was '" + count + "', but '" + list.size() + "' was received."));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected count of elements was '" + count + "', but '" + list.size() + "' was received."));
                 failure++;
             }
         } else {
             if (list.isEmpty()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("Element not found."));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element not found."));
                 failure++;
             }
         }
         if (getMin() != null) {
             if (list.size() < getMin()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected minimum of elements was '" + getMin() + "', but '" + list.size() + "' was received."));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected minimum of elements was '" + getMin() + "', but '" + list.size() + "' was received."));
                 failure++;
             }
         }
         if (getMax() != null) {
             if (list.size() > getMax()) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The expected maximum of elements was '" + getMax() + "', but '" + list.size() + "' was received."));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected maximum of elements was '" + getMax() + "', but '" + list.size() + "' was received."));
                 failure++;
             }
         }
         if (failure == 0) {
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 

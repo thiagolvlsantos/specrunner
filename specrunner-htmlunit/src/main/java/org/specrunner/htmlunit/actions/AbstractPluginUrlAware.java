@@ -25,7 +25,7 @@ import org.specrunner.htmlunit.AbstractPluginBrowserAware;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginUrlAware extends AbstractPluginBrowserAware implements IAction {
+public abstract class AbstractPluginUrlAware extends AbstractPluginBrowserAware {
 
     /**
      * The url parameter.

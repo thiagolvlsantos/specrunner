@@ -19,10 +19,13 @@ package org.specrunner.jetty;
 
 import org.eclipse.jetty.server.Server;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -34,16 +37,21 @@ import org.specrunner.util.UtilLog;
 public class PluginStopJetty extends AbstractPluginNamed {
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         String tmp = getName() != null ? getName() : PluginStartJetty.JETTY_NAME;
         Server server = (Server) context.getByName(tmp);
         if (server == null) {
-            result.addResult(Status.FAILURE, context.peek(), "Server instance named '" + tmp + "' not found. See PluginStartJetty.");
+            result.addResult(Failure.INSTANCE, context.peek(), "Server instance named '" + tmp + "' not found. See PluginStartJetty.");
             return;
         }
         try {
             server.stop();
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Jetty finished.");
             }

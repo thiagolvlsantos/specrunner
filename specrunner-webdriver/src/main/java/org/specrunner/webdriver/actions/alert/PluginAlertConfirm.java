@@ -22,10 +22,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
+import org.specrunner.result.status.Warning;
 import org.specrunner.webdriver.AbstractPluginAlert;
 
 /**
@@ -34,15 +36,20 @@ import org.specrunner.webdriver.AbstractPluginAlert;
  * @author Thiago Santos.
  * 
  */
-public class PluginAlertConfirm extends AbstractPluginAlert implements IAction {
+public class PluginAlertConfirm extends AbstractPluginAlert {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, TargetLocator target, Alert alert) throws PluginException {
         if (client instanceof HtmlUnitDriver) {
-            result.addResult(Status.WARNING, context.peek(), new PluginException("HtmlUnit does not implement alert interactions on version 2.15.0, if a newer version is available try it."));
+            result.addResult(Warning.INSTANCE, context.peek(), new PluginException("HtmlUnit does not implement alert interactions on version 2.15.0, if a newer version is available try it."));
         } else {
             alert.accept();
-            result.addResult(Status.SUCCESS, context.peek());
+            result.addResult(Success.INSTANCE, context.peek());
         }
     }
 }

@@ -29,14 +29,15 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.objects.AbstractPluginObject;
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.util.impl.RowAdapter;
 
-public class PluginEntityManager extends AbstractPluginObject implements IAction {
+public class PluginEntityManager extends AbstractPluginObject {
 
     private String unit;
     private String url;
@@ -60,6 +61,11 @@ public class PluginEntityManager extends AbstractPluginObject implements IAction
     @Override
     protected boolean isMapped() {
         return true;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override

@@ -23,11 +23,12 @@ import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -107,7 +108,12 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginWhile extends AbstractPluginValue implements IAction {
+public class PluginWhile extends AbstractPluginValue {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
@@ -121,7 +127,7 @@ public class PluginWhile extends AbstractPluginValue implements IAction {
             UtilLog.LOG.debug("WHILE(" + test + ")");
         }
         if (test == null) {
-            result.addResult(Status.FAILURE, context.newBlock(current, this), new PluginException("IPlugin while missing 'test' condition or a name which reffers to a previously defined condition."));
+            result.addResult(Failure.INSTANCE, context.newBlock(current, this), new PluginException("IPlugin while missing 'test' condition or a name which reffers to a previously defined condition."));
             return ENext.SKIP;
         }
         Node base = current.copy();
@@ -143,7 +149,7 @@ public class PluginWhile extends AbstractPluginValue implements IAction {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    result.addResult(Status.FAILURE, context.newBlock(current, this), e);
+                    result.addResult(Failure.INSTANCE, context.newBlock(current, this), e);
                 }
             }
         }

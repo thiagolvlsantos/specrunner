@@ -25,9 +25,12 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
 import org.specrunner.htmlunit.util.WritablePage;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
@@ -45,16 +48,20 @@ import com.gargoylesoftware.htmlunit.html.HtmlSelect;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginSelection extends AbstractPluginFindSingle implements IAssertion {
+public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         if (isSelect(element)) {
             if (checkSelection(context, result, client, page, element) == 0) {
-                result.addResult(Status.SUCCESS, context.peek());
+                result.addResult(Success.INSTANCE, context.peek());
             }
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
         }
     }
 
@@ -117,13 +124,13 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle i
             receiveds[i] = options.get(i).asText();
         }
         if (expecteds.length != receiveds.length) {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Number of itens (" + receiveds.length + ") in " + (content != null && content ? "content" : "selected") + " is different from expected ones (" + expecteds.length + ")."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Number of itens (" + receiveds.length + ") in " + (content != null && content ? "content" : "selected") + " is different from expected ones (" + expecteds.length + ")."), new WritablePage(page));
             error = 1;
         } else {
             for (int i = 0; i < expecteds.length; i++) {
                 if (!expecteds[i].equals(receiveds[i])) {
                     IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expecteds[i], receiveds[i]);
-                    result.addResult(Status.FAILURE, context.newBlock(nodes.get(i), this), new DefaultAlignmentException(al) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(nodes.get(i), this), new DefaultAlignmentException(al) {
                         @Override
                         public String getMessage() {
                             return "Selection options are diferent (" + super.getMessage() + ").";
@@ -133,7 +140,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle i
                 }
             }
             if (error > 0) {
-                result.addResult(Status.FAILURE, context.peek(), new PluginException("The element(s) expected and received do(es) not match."), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The element(s) expected and received do(es) not match."), new WritablePage(page));
             }
         }
         return error;

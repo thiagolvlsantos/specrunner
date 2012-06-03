@@ -20,8 +20,10 @@ package org.specrunner.htmlunit.actions;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginBrowserAware;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -32,7 +34,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public class PluginHeader extends AbstractPluginBrowserAware implements IAction {
+public class PluginHeader extends AbstractPluginBrowserAware {
 
     /**
      * The header.
@@ -59,6 +61,11 @@ public class PluginHeader extends AbstractPluginBrowserAware implements IAction 
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client) throws PluginException {
         UtilLog.LOG.info("    On: " + getClass().getSimpleName() + " with " + client);
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
@@ -67,6 +74,6 @@ public class PluginHeader extends AbstractPluginBrowserAware implements IAction 
         }
         String value = String.valueOf(tmp);
         client.addRequestHeader(getHeader(), value);
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

@@ -17,7 +17,8 @@
  */
 package org.specrunner.webdriver.actions.touch;
 
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
 
 /**
@@ -26,7 +27,7 @@ import org.specrunner.webdriver.AbstractPluginHasTouchScreen;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginDirectional extends AbstractPluginHasTouchScreen implements IAction {
+public abstract class AbstractPluginDirectional extends AbstractPluginHasTouchScreen {
 
     /**
      * The x position.
@@ -73,5 +74,10 @@ public abstract class AbstractPluginDirectional extends AbstractPluginHasTouchSc
      */
     public void setY(Integer y) {
         this.y = y;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 }

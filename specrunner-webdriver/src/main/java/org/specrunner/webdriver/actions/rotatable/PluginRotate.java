@@ -20,10 +20,11 @@ package org.specrunner.webdriver.actions.rotatable;
 import org.openqa.selenium.Rotatable;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginRotatable;
 
 /**
@@ -32,11 +33,15 @@ import org.specrunner.webdriver.AbstractPluginRotatable;
  * @author Thiago Santos
  * 
  */
-public class PluginRotate extends AbstractPluginRotatable implements IAction {
+public class PluginRotate extends AbstractPluginRotatable {
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, Rotatable rotatable) throws PluginException {
         rotatable.rotate(getOrientationValue());
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

@@ -28,11 +28,12 @@ import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
@@ -46,7 +47,7 @@ import org.specrunner.webdriver.listeners.PageListener;
  * @author Thiago Santos
  * 
  */
-public class PluginBrowser extends AbstractPluginScoped implements IAction {
+public class PluginBrowser extends AbstractPluginScoped {
 
     /**
      * Default browser name. To set a different name use the attribute
@@ -209,6 +210,11 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -272,7 +278,7 @@ public class PluginBrowser extends AbstractPluginScoped implements IAction {
             if (reusable != null && reusable.canReuse(cfg)) {
                 reusable.reset();
                 save(context, (WebDriver) reusable.getObject());
-                result.addResult(Status.SUCCESS, context.peek());
+                result.addResult(Success.INSTANCE, context.peek());
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Browser (" + getName() + ") reused.");
                 }

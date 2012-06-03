@@ -35,10 +35,12 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
@@ -181,6 +183,11 @@ public class PluginStartJetty extends AbstractPluginScoped {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
@@ -239,7 +246,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     if (reusable != null && reusable.canReuse(cfg)) {
                         reusable.reset();
                         saveGlobal(context, getName(), reusable.getObject());
-                        result.addResult(Status.SUCCESS, context.peek());
+                        result.addResult(Success.INSTANCE, context.peek());
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Jetty (" + getName() + "/" + Server.getVersion() + ") with " + file + " reused.");
                         }
@@ -267,7 +274,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     }
                     reusables.put(getName(), new ReusableJetty(getName(), jetty, sm));
                 }
-                result.addResult(Status.SUCCESS, context.peek());
+                result.addResult(Success.INSTANCE, context.peek());
                 if (!reuse) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Jetty started and ready.");

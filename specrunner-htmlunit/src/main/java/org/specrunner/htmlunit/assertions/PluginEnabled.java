@@ -23,7 +23,7 @@ package org.specrunner.htmlunit.assertions;
  * @author Thiago Santos.
  * 
  */
-public class PluginEnabled extends AbstractPluginEnabled implements IAssertion {
+public class PluginEnabled extends AbstractPluginEnabled {
 
     @Override
     protected boolean enabled() {

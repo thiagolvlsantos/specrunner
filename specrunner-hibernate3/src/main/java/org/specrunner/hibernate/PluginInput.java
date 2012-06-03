@@ -20,7 +20,8 @@ package org.specrunner.hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.impl.RowAdapter;
 
@@ -31,7 +32,12 @@ import org.specrunner.util.impl.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginInput extends PluginHibernate implements IAction {
+public class PluginInput extends PluginHibernate {
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected boolean isMapped() {

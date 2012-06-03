@@ -21,10 +21,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 
 /**
@@ -33,12 +33,17 @@ import org.specrunner.webdriver.AbstractPluginBrowserAware;
  * @author Thiago Santos.
  * 
  */
-public class PluginClick extends AbstractPluginBrowserAware implements IAction {
+public class PluginClick extends AbstractPluginBrowserAware {
+
+    @Override
+    public ActionType getActionType() {
+        return org.specrunner.plugins.type.Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         Action ac = new Actions(client).click().build();
         ac.perform();
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

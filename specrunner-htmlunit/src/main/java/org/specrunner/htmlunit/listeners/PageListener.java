@@ -32,7 +32,8 @@ import org.specrunner.listeners.impl.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Detail;
+import org.specrunner.result.status.Failure;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
@@ -44,10 +45,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
  */
 public class PageListener extends AbstractPluginListener {
 
-    /**
-     * Default status for details.
-     */
-    private static final Status DETAIL_STATUS = Status.newStatus("detail", false, -1);
     /**
      * Map of extra information.
      */
@@ -88,7 +85,7 @@ public class PageListener extends AbstractPluginListener {
             if (name.equals(browserName)) {
                 WebClient client = (WebClient) context.getByName(browserName);
                 if (client == null) {
-                    result.addResult(Status.FAILURE, context.peek(), "Browser instance named '" + browserName + "' not created. See PluginBrowser.");
+                    result.addResult(Failure.INSTANCE, context.peek(), "Browser instance named '" + browserName + "' not created. See PluginBrowser.");
                     return;
                 }
                 if (context.getNode() != null) {
@@ -96,7 +93,7 @@ public class PageListener extends AbstractPluginListener {
                     Element ele = new Element("span");
                     UtilPlugin.setIgnore(ele);
                     view.appendChild(ele);
-                    result.addResult(DETAIL_STATUS, context.newBlock(ele, p), new WritablePage(info, client.getCurrentWindow().getEnclosedPage()));
+                    result.addResult(Detail.INSTANCE, context.newBlock(ele, p), new WritablePage(info, client.getCurrentWindow().getEnclosedPage()));
                 }
             }
         }

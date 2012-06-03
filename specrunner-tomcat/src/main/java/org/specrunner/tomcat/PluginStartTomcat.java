@@ -23,9 +23,11 @@ import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 
 public class PluginStartTomcat extends AbstractPluginNamed {
@@ -65,6 +67,11 @@ public class PluginStartTomcat extends AbstractPluginNamed {
 
     public void setWar(String war) {
         this.war = war;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
     }
 
     @Override

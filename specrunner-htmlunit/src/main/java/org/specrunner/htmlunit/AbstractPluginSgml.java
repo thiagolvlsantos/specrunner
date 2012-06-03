@@ -20,7 +20,7 @@ package org.specrunner.htmlunit;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -43,7 +43,7 @@ public abstract class AbstractPluginSgml extends AbstractPluginBrowserAware {
         if (page instanceof SgmlPage) {
             doEnd(context, result, client, (SgmlPage) page);
         } else {
-            result.addResult(Status.FAILURE, context.peek(), new PluginException("Enclosed page (" + page + ") is not an SgmlPage."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Enclosed page (" + page + ") is not an SgmlPage."));
         }
     }
 

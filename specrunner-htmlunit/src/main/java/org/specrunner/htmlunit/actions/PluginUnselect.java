@@ -26,7 +26,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlOption;
  * @author Thiago Santos
  * 
  */
-public class PluginUnselect extends AbstractPluginSelect implements IAction {
+public class PluginUnselect extends AbstractPluginSelect {
 
     @Override
     protected void doSomething(HtmlElement element, HtmlOption option) {

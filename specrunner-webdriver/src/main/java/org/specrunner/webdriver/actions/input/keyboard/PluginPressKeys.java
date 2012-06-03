@@ -21,10 +21,11 @@ import org.openqa.selenium.HasInputDevices;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginKeyboard;
 
 /**
@@ -33,11 +34,15 @@ import org.specrunner.webdriver.AbstractPluginKeyboard;
  * @author Thiago Santos
  * 
  */
-public class PluginPressKeys extends AbstractPluginKeyboard implements IAction {
+public class PluginPressKeys extends AbstractPluginKeyboard {
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Keyboard keyboard) throws PluginException {
         keyboard.pressKey(getKey());
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

@@ -22,9 +22,10 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
-import org.specrunner.plugins.IAction;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilNode;
 
@@ -36,7 +37,7 @@ import org.specrunner.util.UtilNode;
  * @author Thiago Santos.
  * 
  */
-public class PluginMacro extends AbstractPluginScoped implements IAction {
+public class PluginMacro extends AbstractPluginScoped {
 
     /**
      * CSS of macro defined.
@@ -89,6 +90,11 @@ public class PluginMacro extends AbstractPluginScoped implements IAction {
      */
     public void setGlobal(boolean global) {
         this.global = global;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override

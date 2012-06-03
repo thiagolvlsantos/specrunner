@@ -23,7 +23,9 @@ import nu.xom.Node;
 import nu.xom.Text;
 
 import org.specrunner.context.IBlock;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
@@ -104,6 +106,17 @@ public class ResultImpl implements IResult {
     @Override
     public IWritable getWritable() {
         return writable;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        if (source != null) {
+            IPlugin p = source.getPlugin();
+            if (p != null) {
+                return p.getActionType();
+            }
+        }
+        return Undefined.INSTANCE;
     }
 
     @Override

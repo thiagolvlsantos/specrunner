@@ -20,10 +20,11 @@ package org.specrunner.webdriver.assertions.rotatable;
 import org.openqa.selenium.Rotatable;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IAssertion;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginRotatable;
 
 /**
@@ -32,13 +33,17 @@ import org.specrunner.webdriver.AbstractPluginRotatable;
  * @author Thiago Santos
  * 
  */
-public class PluginScreenOrientation extends AbstractPluginRotatable implements IAssertion {
+public class PluginScreenOrientation extends AbstractPluginRotatable {
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, Rotatable rotatable) throws PluginException {
         if (rotatable.getOrientation() != getOrientationValue()) {
             throw new PluginException("ScreenOrientation should be '" + getOrientation() + "' but is '" + rotatable.getOrientation() + "'.");
         }
-        result.addResult(Status.SUCCESS, context.peek());
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }
