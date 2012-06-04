@@ -22,14 +22,25 @@ import java.util.Map;
 import org.specrunner.result.IResultSet;
 
 /**
- * A report repository.
+ * A reporter. The reporter should extract information to final dump.
  * 
  * @author Thiago Santos
  * 
  */
 public interface IReporter {
 
+    /**
+     * Add information to the reporter.
+     * 
+     * @param result
+     *            The result.
+     * @param model
+     *            The model.
+     */
     void add(IResultSet result, Map<String, Object> model);
 
+    /**
+     * Dump report information.
+     */
     void dump();
 }

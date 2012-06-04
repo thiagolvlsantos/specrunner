@@ -50,11 +50,20 @@ public class PipeRunner implements IPipe {
         return SpecRunnerServices.get(IRunnerFactory.class).newRunner(source);
     }
 
-    public static void bind(IChannel channel, IRunner runner) throws NotFoundException, InvalidTypeException {
-        channel.add(RUNNER, runner);
+    /**
+     * Bind the object to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param obj
+     *            The object.
+     * @return The channel itself.
+     */
+    public static IChannel bind(IChannel channel, IRunner obj) {
+        return channel.add(RUNNER, obj);
     }
 
-    public static IRunner recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static IRunner lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(RUNNER, IRunner.class);
     }
 }

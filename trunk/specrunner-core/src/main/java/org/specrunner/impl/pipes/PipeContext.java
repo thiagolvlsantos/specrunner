@@ -32,7 +32,7 @@ public class PipeContext implements IPipe {
             // for doRun(IPlugin m,...), the source cannot be present.
             ISource source = (ISource) channel.get(PipeSource.SOURCE);
             // a new context
-            bind(channel, createContext(channel, source, PipeRunner.recover(channel)));
+            bind(channel, createContext(channel, source, PipeRunner.lookup(channel)));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }
@@ -56,8 +56,17 @@ public class PipeContext implements IPipe {
         return SpecRunnerServices.get(IContextFactory.class).newContext(channel, source, runner);
     }
 
-    public static void bind(IChannel channel, IContext context) throws NotFoundException, InvalidTypeException {
-        channel.add(CONTEXT, context);
+    /**
+     * Bind the object to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param obj
+     *            The object.
+     * @return The channel itself.
+     */
+    public static IChannel bind(IChannel channel, IContext obj) {
+        return channel.add(CONTEXT, obj);
     }
 
     public static IContext recover(IChannel channel) throws NotFoundException, InvalidTypeException {

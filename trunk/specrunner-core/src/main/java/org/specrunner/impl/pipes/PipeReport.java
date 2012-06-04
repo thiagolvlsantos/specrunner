@@ -14,7 +14,7 @@ public class PipeReport implements IPipe {
 
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
-        PipeReporter.recover(channel).add(PipeResult.recover(channel), PipeModel.recover(channel));
+        PipeReporter.lookup(channel).add(PipeResult.recover(channel), PipeModel.recover(channel));
         return channel;
     }
 }

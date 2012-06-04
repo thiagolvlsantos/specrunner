@@ -12,10 +12,16 @@ import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
 import org.specrunner.pipeline.PipelineException;
 
+/**
+ * Pipe to bind an annotator to the channel.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public class PipeAnnotator implements IPipe {
 
     /**
-     * Source.
+     * Object name into the channel.
      */
     public static final String ANNOTATOR = "annotator";
 
@@ -45,11 +51,31 @@ public class PipeAnnotator implements IPipe {
         return SpecRunnerServices.get(IAnnotatorFactory.class).newAnnotator();
     }
 
-    public static void bind(IChannel channel, IAnnotator result) throws NotFoundException, InvalidTypeException {
-        channel.add(ANNOTATOR, result);
+    /**
+     * Bind the object to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param obj
+     *            The object.
+     * @return The channel itself.
+     */
+    public static IChannel bind(IChannel channel, IAnnotator obj) {
+        return channel.add(ANNOTATOR, obj);
     }
 
-    public static IAnnotator recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    /**
+     * Look for the object into the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The object.
+     * @throws NotFoundException
+     *             When object with the given name.
+     * @throws InvalidTypeException
+     *             When expected type do not match.
+     */
+    public static IAnnotator lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(ANNOTATOR, IAnnotator.class);
     }
 }

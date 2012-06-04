@@ -133,7 +133,6 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public List<ActionType> actionTypes(List<IResult> subset) {
         List<ActionType> result = new LinkedList<ActionType>();
         for (IResult s : subset) {

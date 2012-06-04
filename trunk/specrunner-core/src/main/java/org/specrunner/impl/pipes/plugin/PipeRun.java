@@ -19,7 +19,7 @@ public class PipeRun implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            PipeRunner.recover(channel).run(PipePlugin.recover(channel), PipeContext.recover(channel), PipeResult.recover(channel));
+            PipeRunner.lookup(channel).run(PipePlugin.recover(channel), PipeContext.recover(channel), PipeResult.recover(channel));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

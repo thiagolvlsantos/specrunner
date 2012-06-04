@@ -50,7 +50,7 @@ public class PipeFeatureManager implements IPipe {
         return SpecRunnerServices.get(IFeatureManager.class);
     }
 
-    public static IFeatureManager recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static IFeatureManager lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(FEATURE_MANAGER, IFeatureManager.class);
     }
 }

@@ -21,7 +21,7 @@ public class PipeTime extends AbstractPipeModel {
         return channel;
     }
 
-    public static Long recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static Long lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return (Long) PipeModel.recover(channel).get(TIME);
     }
 }

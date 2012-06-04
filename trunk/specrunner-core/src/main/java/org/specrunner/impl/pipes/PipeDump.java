@@ -23,12 +23,12 @@ public class PipeDump implements IPipe {
     public IChannel process(IChannel channel) throws PipelineException {
         try {
             // message before dump
-            messageBefore(PipeInput.recover(channel));
+            messageBefore(PipeInput.lookup(channel));
 
             // dump results
             IResultSet result = PipeResult.recover(channel);
-
             Map<String, Object> model = PipeModel.recover(channel);
+
             PipeDumper.recover(channel).dump(PipeSource.recover(channel), result, model);
 
             // message after dump
