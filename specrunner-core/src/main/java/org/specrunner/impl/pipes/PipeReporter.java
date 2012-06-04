@@ -45,11 +45,20 @@ public class PipeReporter implements IPipe {
         return SpecRunnerServices.get(IReporterFactory.class).newReporter();
     }
 
-    public static void bind(IChannel channel, IReporter reporter) throws NotFoundException, InvalidTypeException {
-        channel.add(REPORTER, reporter);
+    /**
+     * Bind the object to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param obj
+     *            The object.
+     * @return The channel itself.
+     */
+    public static IChannel bind(IChannel channel, IReporter obj) {
+        return channel.add(REPORTER, obj);
     }
 
-    public static IReporter recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static IReporter lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(REPORTER, IReporter.class);
     }
 }

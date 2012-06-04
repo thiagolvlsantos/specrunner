@@ -43,7 +43,7 @@ public class PipeListenerManager implements IPipe {
         return SpecRunnerServices.get(IListenerManager.class);
     }
 
-    public static IListenerManager recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static IListenerManager lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(LISTENER_MANAGER, IListenerManager.class);
     }
 }

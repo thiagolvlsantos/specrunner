@@ -30,7 +30,7 @@ public class PipeSource implements IPipe {
     public IChannel process(IChannel channel) throws PipelineException {
         try {
             // create the source
-            ISource source = createSource(PipeInput.recover(channel));
+            ISource source = createSource(PipeInput.lookup(channel));
 
             // adding default resources
             addResources(source);

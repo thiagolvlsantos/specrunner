@@ -7,6 +7,12 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 
+/**
+ * A pipe with information about a model.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractPipeModel implements IPipe {
 
     @Override
@@ -19,6 +25,17 @@ public abstract class AbstractPipeModel implements IPipe {
         return process(channel, PipeModel.recover(channel));
     }
 
-    public abstract IChannel process(IChannel channel, Map<String, Object> recover) throws PipelineException;
+    /**
+     * Process the channel with the model already recovered.
+     * 
+     * @param channel
+     *            The pipeline channel.
+     * @param model
+     *            The model.
+     * @return The channel itself.
+     * @throws PipelineException
+     *             On pipeline errors.
+     */
+    public abstract IChannel process(IChannel channel, Map<String, Object> model) throws PipelineException;
 
 }

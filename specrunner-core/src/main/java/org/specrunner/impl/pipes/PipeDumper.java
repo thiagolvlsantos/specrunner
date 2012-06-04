@@ -45,8 +45,17 @@ public class PipeDumper implements IPipe {
         return SpecRunnerServices.get(ISourceDumperFactory.class).newDumper();
     }
 
-    public static void bind(IChannel channel, ISourceDumper dumper) throws NotFoundException, InvalidTypeException {
-        channel.add(DUMPER, dumper);
+    /**
+     * Bind the object to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param obj
+     *            The object.
+     * @return The channel itself.
+     */
+    public static IChannel bind(IChannel channel, ISourceDumper obj) {
+        return channel.add(DUMPER, obj);
     }
 
     public static ISourceDumper recover(IChannel channel) throws NotFoundException, InvalidTypeException {

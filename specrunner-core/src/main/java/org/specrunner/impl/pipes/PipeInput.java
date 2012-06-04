@@ -3,7 +3,6 @@ package org.specrunner.impl.pipes;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
-import org.specrunner.pipeline.PipelineException;
 
 public class PipeInput {
 
@@ -12,12 +11,20 @@ public class PipeInput {
      */
     public static final String INPUT = "input";
 
-    public static IChannel bind(IChannel channel, String input) throws PipelineException {
-        channel.add(INPUT, input);
-        return channel;
+    /**
+     * Bind the object to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param obj
+     *            The object.
+     * @return The channel itself.
+     */
+    public static IChannel bind(IChannel channel, String obj) {
+        return channel.add(INPUT, obj);
     }
 
-    public static String recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static String lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(INPUT, String.class);
     }
 }

@@ -6,6 +6,12 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 
+/**
+ * Pipe to call annotation service.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeAnnotate implements IPipe {
 
     @Override
@@ -16,7 +22,7 @@ public class PipeAnnotate implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            PipeAnnotator.recover(channel).annotate(PipeResult.recover(channel));
+            PipeAnnotator.lookup(channel).annotate(PipeResult.recover(channel));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }
