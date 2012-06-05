@@ -8,19 +8,19 @@ import org.specrunner.impl.pipes.PipeTime;
 import org.specrunner.report.IReporter;
 import org.specrunner.result.IResultSet;
 
-public class ReporterImpl implements IReporter {
+public class ReporterSysout implements IReporter {
 
     private final List<IResultSet> rs = new LinkedList<IResultSet>();
     private final List<Map<String, Object>> ms = new LinkedList<Map<String, Object>>();
 
     @Override
-    public void add(IResultSet result, Map<String, Object> model) {
+    public void analyse(IResultSet result, Map<String, Object> model) {
         rs.add(result);
         ms.add(model);
     }
 
     @Override
-    public void dump() {
+    public void report() {
         if (!rs.isEmpty()) {
             synchronized (System.out) {
                 System.out.println("+------------- REPORT -------------+");

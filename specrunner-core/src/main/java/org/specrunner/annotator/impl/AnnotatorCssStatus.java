@@ -15,24 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.impl;
+package org.specrunner.annotator.impl;
 
-import org.specrunner.context.ContextException;
-import org.specrunner.context.IContext;
-import org.specrunner.context.IContextFactory;
-import org.specrunner.runner.IRunner;
-import org.specrunner.source.ISource;
+import org.specrunner.annotator.AnnotatorException;
+import org.specrunner.annotator.IAnnotator;
+import org.specrunner.context.IBlock;
+import org.specrunner.result.IResult;
+import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilNode;
 
 /**
- * Default context factory implementation.
+ * Add CSS style related to result status. For each result node add the
+ * corresponding CSS class to the element.
  * 
  * @author Thiago Santos
  * 
  */
-public class ContextFactoryImpl implements IContextFactory {
+public class AnnotatorCssStatus implements IAnnotator {
 
     @Override
-    public IContext newContext(ISource source, IRunner runner) throws ContextException {
-        return new ContextImpl(source, runner);
+    public void annotate(IResultSet result) throws AnnotatorException {
+        for (IResult r : result) {
+            IBlock block = r.getBlock();
+            if (block.hasNode()) {
+                UtilNode.appendCss(block.getNode(), r.getStatus().getCssName());
+            }
+        }
     }
 }

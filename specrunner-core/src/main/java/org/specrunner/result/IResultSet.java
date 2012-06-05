@@ -20,7 +20,6 @@ package org.specrunner.result;
 import java.util.List;
 
 import org.specrunner.context.IBlock;
-import org.specrunner.pipeline.IChannelAware;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.util.IPresentation;
 
@@ -30,7 +29,7 @@ import org.specrunner.util.IPresentation;
  * @author Thiago Santos
  * 
  */
-public interface IResultSet extends IChannelAware, List<IResult>, IStatus, IPresentation {
+public interface IResultSet extends List<IResult>, IStatus, IPresentation {
 
     /**
      * Lists status in result.
@@ -118,13 +117,45 @@ public interface IResultSet extends IChannelAware, List<IResult>, IStatus, IPres
      */
     List<ActionType> actionTypes(List<IResult> subset);
 
+    /**
+     * Filter the result itself by <code>ActionType</code>.
+     * 
+     * @param actionType
+     *            The action types.
+     * @return The filtered subset.
+     */
     List<IResult> filterByType(ActionType... actionType);
 
+    /**
+     * Filter the subset by <code>ActionType</code>.
+     * 
+     * @param subset
+     *            The subset to be filtered.
+     * @param actionType
+     *            The action types.
+     * @return The filtered subset.
+     */
     List<IResult> filterByType(List<IResult> subset, ActionType... actionType);
 
-    int countType(ActionType... status);
+    /**
+     * Count results of a given set of action types.
+     * 
+     * @param actionType
+     *            The action types.
+     * @return The size of the filtered set.
+     */
+    int countType(ActionType... actionType);
 
-    int countType(List<IResult> result, ActionType... status);
+    /**
+     * Count results of a given type in a list.
+     * 
+     * @param subset
+     *            A subset of results.
+     * @param actionType
+     *            The action types.
+     * @return The size of the filtered set.
+     */
+    int countType(List<IResult> subset, ActionType... actionType);
 
     /**
      * Add a result.

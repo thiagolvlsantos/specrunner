@@ -22,7 +22,6 @@ import java.net.URI;
 
 import nu.xom.Document;
 
-import org.specrunner.pipeline.IChannelAware;
 import org.specrunner.source.resource.IResourceManager;
 
 /**
@@ -31,7 +30,7 @@ import org.specrunner.source.resource.IResourceManager;
  * @author Thiago Santos
  * 
  */
-public interface ISource extends IChannelAware {
+public interface ISource {
 
     /**
      * The source reference as String.

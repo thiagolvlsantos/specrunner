@@ -32,7 +32,7 @@ public class PipeContext implements IPipe {
             // for doRun(IPlugin m,...), the source cannot be present.
             ISource source = (ISource) channel.get(PipeSource.SOURCE);
             // a new context
-            bind(channel, createContext(channel, source, PipeRunner.lookup(channel)));
+            bind(channel, createContext(source, PipeRunner.lookup(channel)));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }
@@ -42,8 +42,6 @@ public class PipeContext implements IPipe {
     /**
      * Creates a context based on a source and runner.
      * 
-     * @param channel
-     *            The channel.
      * @param source
      *            The input.
      * @param runner
@@ -52,8 +50,8 @@ public class PipeContext implements IPipe {
      * @throws ContextException
      *             On context creation.
      */
-    protected IContext createContext(IChannel channel, ISource source, IRunner runner) throws ContextException {
-        return SpecRunnerServices.get(IContextFactory.class).newContext(channel, source, runner);
+    protected IContext createContext(ISource source, IRunner runner) throws ContextException {
+        return SpecRunnerServices.get(IContextFactory.class).newContext(source, runner);
     }
 
     /**

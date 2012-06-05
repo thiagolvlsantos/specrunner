@@ -27,7 +27,6 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
-import org.specrunner.pipeline.IChannel;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
@@ -44,21 +43,6 @@ import org.specrunner.result.status.Success;
  */
 @SuppressWarnings("serial")
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
-
-    /**
-     * Result set channel.
-     */
-    protected IChannel channel;
-
-    @Override
-    public IChannel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public void setChannel(IChannel channel) {
-        this.channel = channel;
-    }
 
     @Override
     public Status getStatus() {

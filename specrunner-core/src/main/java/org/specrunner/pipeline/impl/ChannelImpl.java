@@ -74,16 +74,6 @@ public class ChannelImpl extends HashMap<String, Object> implements IChannel {
     }
 
     @Override
-    public IChannel getChannel() {
-        return this;
-    }
-
-    @Override
-    public void setChannel(IChannel channel) {
-        throw new UnsupportedOperationException("Channel cannot change itself.");
-    }
-
-    @Override
     public IChannel add(String key, Object value) {
         put(key, value);
         return this;

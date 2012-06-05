@@ -25,20 +25,19 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilNode;
 
 /**
- * Add CSS style related to result status. For each result node add the
+ * Add CSS style related to action type. For each result node add the
  * corresponding CSS class to the element.
  * 
  * @author Thiago Santos
  * 
  */
-public class AnnotatorCss implements IAnnotator {
+public class AnnotatorCssActionType implements IAnnotator {
 
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
         for (IResult r : result) {
             IBlock block = r.getBlock();
             if (block.hasNode()) {
-                UtilNode.appendCss(block.getNode(), r.getStatus().getCssName());
                 UtilNode.appendCss(block.getNode(), r.getActionType().getCssName());
             }
         }
