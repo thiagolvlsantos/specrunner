@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.specrunner.annotator.IAnnotatorFactory;
-import org.specrunner.annotator.impl.AnnotatorCss;
+import org.specrunner.annotator.impl.AnnotatorCssActionType;
+import org.specrunner.annotator.impl.AnnotatorCssStatus;
 import org.specrunner.annotator.impl.AnnotatorFactoryImpl;
 import org.specrunner.annotator.impl.AnnotatorGroupImpl;
 import org.specrunner.annotator.impl.AnnotatorLink;
@@ -74,7 +75,9 @@ import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.properties.impl.PropertyLoaderImpl;
 import org.specrunner.report.IReporterFactory;
 import org.specrunner.report.impl.ReporterFactoryImpl;
-import org.specrunner.report.impl.ReporterImpl;
+import org.specrunner.report.impl.ReporterGroupImpl;
+import org.specrunner.report.impl.ReporterSysout;
+import org.specrunner.report.impl.ReporterTxt;
 import org.specrunner.result.IResultFactory;
 import org.specrunner.result.impl.ResultFactoryImpl;
 import org.specrunner.reuse.IReusableManager;
@@ -170,7 +173,7 @@ public final class SpecRunnerServices {
         } else if (type == IResultFactory.class) {
             result = new ResultFactoryImpl();
         } else if (type == IAnnotatorFactory.class) {
-            result = new AnnotatorFactoryImpl(new AnnotatorGroupImpl().add(new AnnotatorCss()).add(new AnnotatorTitle()).add(new AnnotatorStacktrace()).add(new AnnotatorLink()));
+            result = new AnnotatorFactoryImpl(new AnnotatorGroupImpl().add(new AnnotatorCssStatus()).add(new AnnotatorCssActionType()).add(new AnnotatorTitle()).add(new AnnotatorStacktrace()).add(new AnnotatorLink()));
         } else if (type == ISourceDumperFactory.class) {
             result = new SourceDumperFactoryImpl(new SourceDumperGroupImpl().add(new SourceDumperResources()).add(new SourceDumperWritables()).add(new SourceDumperTop()).add(new SourceDumperCenter()).add(new SourceDumperRight()).add(new SourceDumperFrame()));
         } else if (type == IStringAlignerFactory.class) {
@@ -186,7 +189,7 @@ public final class SpecRunnerServices {
         } else if (type == IChannelFactory.class) {
             result = new ChannelFactoryImpl();
         } else if (type == IReporterFactory.class) {
-            result = new ReporterFactoryImpl(new ReporterImpl());
+            result = new ReporterFactoryImpl(new ReporterGroupImpl().add(new ReporterSysout()).add(new ReporterTxt()));
         } else if (type == IPipelineFactory.class) {
             result = new PipelineFactoryXOM();
         } else if (type == ISpecRunnerFactory.class) {

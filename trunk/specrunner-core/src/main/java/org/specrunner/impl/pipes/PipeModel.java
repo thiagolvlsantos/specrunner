@@ -41,17 +41,24 @@ public class PipeModel implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         // create a model information
-        channel.add(MODEL, create());
+        channel.add(MODEL, create(channel));
         return channel;
     }
 
     /**
      * Creates the default model.
      * 
+     * @param channel
+     *            The channel.
      * @return A model mapping.
+     * @throws InvalidTypeException
+     *             On type error.
+     * @throws NotFoundException
+     *             On not found resources.
      */
-    protected Map<String, Object> create() {
+    protected Map<String, Object> create(IChannel channel) throws NotFoundException, InvalidTypeException {
         Map<String, Object> model = new HashMap<String, Object>();
+        model.put(PipeInput.INPUT, PipeInput.lookup(channel));
         model.put(TIME, System.currentTimeMillis());
         Runtime rt = Runtime.getRuntime();
         model.put(FREE, rt.freeMemory());

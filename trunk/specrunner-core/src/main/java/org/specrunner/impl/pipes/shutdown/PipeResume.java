@@ -17,7 +17,7 @@ public class PipeResume implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws AbortException, PipelineException {
         IReporterFactory r = ShutDown.recover(channel).lookup(IReporterFactory.class);
-        r.newReporter().dump();
+        r.newReporter().report();
         return channel;
     }
 }

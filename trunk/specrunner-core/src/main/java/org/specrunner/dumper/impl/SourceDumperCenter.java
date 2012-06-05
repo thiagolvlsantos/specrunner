@@ -49,7 +49,7 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         String frameName = outputName;
         model.put(SourceDumperFrame.CENTER_FRAME, frameName);
         File output = new File(outputDirectory, frameName);
-        model.put("input", String.valueOf(output));
+        model.put("output", String.valueOf(output));
         try {
             addLinkToFrame(source.getDocument(), result, model);
             saveTo(source.getDocument(), output);

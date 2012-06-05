@@ -77,21 +77,10 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      * @throws ContextException
      *             On creation errors.
      */
-    public ContextImpl(IChannel channel, ISource source, IRunner runner) throws ContextException {
-        setChannel(channel);
+    public ContextImpl(ISource source, IRunner runner) throws ContextException {
         sources.add(source);
         add(new BlockImpl(null, PluginNop.emptyPlugin(), new HashMap<String, Object>()));
         setRunner(runner);
-    }
-
-    @Override
-    public IChannel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public void setChannel(IChannel channel) {
-        this.channel = channel;
     }
 
     @Override

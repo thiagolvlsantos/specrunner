@@ -37,10 +37,10 @@ public interface IReporter {
      * @param model
      *            The model.
      */
-    void add(IResultSet result, Map<String, Object> model);
+    void analyse(IResultSet result, Map<String, Object> model);
 
     /**
      * Dump report information.
      */
-    void dump();
+    void report();
 }

@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import nu.xom.Document;
 
 import org.specrunner.SpecRunnerServices;
-import org.specrunner.pipeline.IChannel;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -41,10 +40,6 @@ import org.specrunner.util.UtilLog;
  */
 public class SourceImpl implements ISource {
 
-    /**
-     * The channel.
-     */
-    protected IChannel channel;
     /**
      * The source as String.
      */
@@ -108,16 +103,6 @@ public class SourceImpl implements ISource {
     }
 
     @Override
-    public IChannel getChannel() {
-        return channel;
-    }
-
-    @Override
-    public void setChannel(IChannel channel) {
-        this.channel = channel;
-    }
-
-    @Override
     public String getString() {
         return string;
     }
@@ -144,9 +129,7 @@ public class SourceImpl implements ISource {
             return null;
         }
         URI uri = uriBase.resolve(other.getString());
-        ISource res = factory.newSource(uri.toString());
-        res.setChannel(channel);
-        return res;
+        return factory.newSource(uri.toString());
     }
 
     @Override

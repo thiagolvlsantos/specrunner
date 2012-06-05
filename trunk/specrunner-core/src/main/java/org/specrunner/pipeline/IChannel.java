@@ -19,7 +19,6 @@ package org.specrunner.pipeline;
 
 import java.util.Map;
 
-
 /**
  * Abstraction of a channel where information can be obtained from and written
  * to.
@@ -27,7 +26,7 @@ import java.util.Map;
  * @author Thiago Santos
  * 
  */
-public interface IChannel extends Map<String, Object>, IChannelAware {
+public interface IChannel extends Map<String, Object> {
 
     /**
      * Add data to the channel.

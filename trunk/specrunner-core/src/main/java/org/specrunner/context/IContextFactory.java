@@ -17,7 +17,6 @@
  */
 package org.specrunner.context;
 
-import org.specrunner.pipeline.IChannel;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
 
@@ -32,8 +31,6 @@ public interface IContextFactory {
     /**
      * Creates a new context based on an source and a runner.
      * 
-     * @param channel
-     *            The channel.
      * @param source
      *            The source context.
      * @param runner
@@ -42,5 +39,5 @@ public interface IContextFactory {
      * @throws ContextException
      *             On creation errors.
      */
-    IContext newContext(IChannel channel, ISource source, IRunner runner) throws ContextException;
+    IContext newContext(ISource source, IRunner runner) throws ContextException;
 }
