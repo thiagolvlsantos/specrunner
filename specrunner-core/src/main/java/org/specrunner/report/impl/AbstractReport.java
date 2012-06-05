@@ -11,6 +11,12 @@ import org.specrunner.report.IReporter;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 
+/**
+ * Generic extractor of usefull information for reporter dumps.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class AbstractReport implements IReporter {
 
     /**
