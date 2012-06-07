@@ -190,7 +190,7 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginMouse {
             }
 
             @Override
-            public Object getAuxiliry() {
+            public Object getAuxiliary() {
                 return getAuxiliary();
             }
         };
