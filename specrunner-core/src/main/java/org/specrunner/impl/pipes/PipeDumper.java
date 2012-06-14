@@ -12,10 +12,16 @@ import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
 import org.specrunner.pipeline.PipelineException;
 
+/**
+ * Adds a dumper to the channel.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeDumper implements IPipe {
 
     /**
-     * Source.
+     * Dumper.
      */
     public static final String DUMPER = "dumper";
 
@@ -58,7 +64,18 @@ public class PipeDumper implements IPipe {
         return channel.add(DUMPER, obj);
     }
 
-    public static ISourceDumper recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    /**
+     * Recover a dumper from channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The dumper.
+     * @throws NotFoundException
+     *             On lookup errors.
+     * @throws InvalidTypeException
+     *             On type errors.
+     */
+    public static ISourceDumper lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(DUMPER, ISourceDumper.class);
     }
 }

@@ -5,12 +5,24 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
 
-public class PipeConfiguration {
+/**
+ * Binds a configuration to the channel.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+public final class PipeConfiguration {
 
     /**
      * Configuration.
      */
     public static final String CONFIGURATION = "configuration";
+
+    /**
+     * Default constructor.
+     */
+    private PipeConfiguration() {
+    }
 
     /**
      * Bind the object to the channel.
@@ -25,7 +37,18 @@ public class PipeConfiguration {
         return channel.add(CONFIGURATION, obj);
     }
 
-    public static IConfiguration recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    /**
+     * Get the configuration from channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The configuration.
+     * @throws NotFoundException
+     *             On lookup errors.
+     * @throws InvalidTypeException
+     *             On typing errors.
+     */
+    public static IConfiguration lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(CONFIGURATION, IConfiguration.class);
     }
 }

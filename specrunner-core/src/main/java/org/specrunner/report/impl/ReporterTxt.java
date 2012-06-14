@@ -1,5 +1,7 @@
 package org.specrunner.report.impl;
 
+import java.util.List;
+
 /**
  * Basic TXT implementation.
  * 
@@ -8,26 +10,18 @@ package org.specrunner.report.impl;
  */
 public class ReporterTxt extends AbstractReport {
 
-    /**
-     * Divisor.
-     */
-    private static final int PERCENTAGE = 100;
-
     @Override
-    public void report() {
-        synchronized (System.out) {
-            System.out.println("+---------------- TXT ---------------------+");
-            String pattern = "%10s %10s | %7s | %-24s | %10s | %10s\n";
-            System.out.printf(pattern, "", "TIME", "%", " ON", "STATUS", "INPUT <-> OUTPUT");
-            pattern = "%10s %10s | %7.2f | %23s  | %10s | %10s\n";
-            for (int i = 0; i < times.size(); i++) {
-                Long time = times.get(i);
-                System.out.printf(pattern, "", time, ((double) time / total) * PERCENTAGE, timestamps.get(i), status.get(i).getName(), inputs.get(i) + " <-> " + outputs.get(i));
-            }
-            System.out.println("          ----------------------------------");
-            pattern = "%10s:%10d\n";
-            System.out.printf(pattern, "TOTAL", total);
-            System.out.println("+------------------------------------------+");
+    protected void dump(String header, List<Resume> list) {
+        System.out.printf("\t+---------------- TXT (%s)---------------------+\n", header);
+        String pattern = "\t%10s %10s | %7s | %-24s | %10s | %10s\n";
+        System.out.printf(pattern, "", "TIME", "%", " ON", "STATUS", "INPUT <-> OUTPUT");
+        pattern = "\t%10s %10s | %7.2f | %23s  | %10s | %10s\n";
+        for (Resume r : list) {
+            System.out.printf(pattern, "", r.getTime(), asPercentage(r.getTime()), r.getTimestamp(), r.getStatus().getName(), r.getInput() + " <-> " + r.getOutput());
         }
+        System.out.println("\t          ----------------------------------");
+        pattern = "\t%10s:%10d\n";
+        System.out.printf(pattern, "TOTAL", total);
+        System.out.printf("\t+---------------------%s-----------------------+\n", "");
     }
 }

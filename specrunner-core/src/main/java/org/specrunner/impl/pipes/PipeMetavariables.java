@@ -17,7 +17,7 @@ public class PipeMetavariables implements IPipe {
 
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
-        IContext context = PipeContext.recover(channel);
+        IContext context = PipeContext.lookup(channel);
         for (Entry<String, Object> e : channel.entrySet()) {
             context.saveGlobal(e.getKey(), e.getValue());
         }
