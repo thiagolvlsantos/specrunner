@@ -20,7 +20,7 @@ public class PipePopulator implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            PipeContext.bind(channel, populate(PipeContext.recover(channel)));
+            PipeContext.bind(channel, populate(PipeContext.lookup(channel)));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

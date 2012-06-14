@@ -12,6 +12,12 @@ import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.result.IResultSet;
 
+/**
+ * Make dumpers dump. :)
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeDump implements IPipe {
 
     @Override
@@ -29,7 +35,7 @@ public class PipeDump implements IPipe {
             IResultSet result = PipeResult.recover(channel);
             Map<String, Object> model = PipeModel.recover(channel);
 
-            PipeDumper.recover(channel).dump(PipeSource.recover(channel), result, model);
+            PipeDumper.lookup(channel).dump(PipeSource.recover(channel), result, model);
 
             // message after dump
             messageAfter(model, result);

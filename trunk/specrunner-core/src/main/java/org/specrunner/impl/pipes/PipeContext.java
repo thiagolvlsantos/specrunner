@@ -14,6 +14,12 @@ import org.specrunner.pipeline.PipelineException;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
 
+/**
+ * Create and bind a context to the channel.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeContext implements IPipe {
 
     /**
@@ -67,7 +73,18 @@ public class PipeContext implements IPipe {
         return channel.add(CONTEXT, obj);
     }
 
-    public static IContext recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    /**
+     * Recover a context from channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The context.
+     * @throws NotFoundException
+     *             On lookup errors.
+     * @throws InvalidTypeException
+     *             On type errors.
+     */
+    public static IContext lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(CONTEXT, IContext.class);
     }
 }
