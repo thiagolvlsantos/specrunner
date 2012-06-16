@@ -216,9 +216,22 @@ th.included_file {
     width: 100%;
 }
 
-.sr_resultset, .sr_resultset table td {
+.sr_resultset {
     border: 1px solid black;
 }
+
+.sr_resultset th {
+    border: 1px dotted black;
+}
+
+.sr_actiontypes {
+    width: 100%;
+}
+
+.sr_actiontypes td {
+    border-bottom: 1px dotted black; 
+}
+
 
 .sr_resultset {
     float: right;
