@@ -63,12 +63,14 @@ public abstract class AbstractReport implements IReporter {
 
     @Override
     public void report() {
-        synchronized (System.out) {
-            System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
-            dump("EXECUTION ORDER", resumes);
-            Collections.sort(resumes, getComparator());
-            dump("PERCENTAGE ORDER", resumes);
-            System.out.println("+---------------------------------------------------------------------------------+");
+        if (!resumes.isEmpty()) {
+            synchronized (System.out) {
+                System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
+                dump("EXECUTION ORDER", resumes);
+                Collections.sort(resumes, getComparator());
+                dump("PERCENTAGE ORDER", resumes);
+                System.out.println("+---------------------------------------------------------------------------------+");
+            }
         }
     }
 
@@ -91,7 +93,11 @@ public abstract class AbstractReport implements IReporter {
         return new Comparator<Resume>() {
             @Override
             public int compare(Resume o1, Resume o2) {
-                return (int) (o2.getTime() - o1.getTime());
+                int result = (int) (o2.getTime() - o1.getTime());
+                if (result == 0) {
+                    result = o1.getIndex() - o2.getIndex();
+                }
+                return result;
             }
         };
     }
