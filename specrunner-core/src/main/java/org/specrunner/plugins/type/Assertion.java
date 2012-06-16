@@ -3,7 +3,7 @@ package org.specrunner.plugins.type;
 import org.specrunner.plugins.ActionType;
 
 /**
- * Assertion: is not error, has importance 2.
+ * Assertion: has importance 2.
  */
 public class Assertion extends ActionType {
 
