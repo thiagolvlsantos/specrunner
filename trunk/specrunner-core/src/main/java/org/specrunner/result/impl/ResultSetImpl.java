@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -304,20 +305,57 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     @Override
     public Node asNode() {
-        Element base = new Element("span");
-        Element e = (Element) getStatus().asNode();
-        e.appendChild("(total:" + size() + details(this) + ")");
-        base.appendChild(e);
-        base.appendChild("->");
-        int i = 0;
+        Element table = new Element("table");
+        table.addAttribute(new Attribute("class", "sr_resultset"));
+        Element tr = new Element("tr");
+        table.appendChild(tr);
+        Element td;
         for (Status s : availableStatus()) {
-            if (i++ > 0) {
-                base.appendChild(",");
-            }
-            Element st = (Element) s.asNode();
-            st.appendChild("(" + countStatus(s) + "|" + details(filterByStatus(s)) + ")");
-            base.appendChild(st);
+            td = new Element("th");
+            tr.appendChild(td);
+            td.addAttribute(new Attribute("class", s.getCssName()));
+            td.appendChild(s.asNode());
+            td.appendChild("(" + countStatus(s) + ")");
         }
-        return base;
+        tr = new Element("tr");
+        table.appendChild(tr);
+        for (Status s : availableStatus()) {
+            td = new Element("td");
+            tr.appendChild(td);
+
+            Element sub = new Element("table");
+            td.appendChild(sub);
+            List<IResult> filter = filterByStatus(s);
+            List<ActionType> acs = actionTypes(this);
+            for (ActionType at : acs) {
+                Element subtr = new Element("tr");
+                sub.appendChild(subtr);
+                Element subtd = new Element("td");
+                subtr.appendChild(subtd);
+                subtd.appendChild(at.asNode());
+                td.addAttribute(new Attribute("class", at.getCssName()));
+                subtd = new Element("td");
+                subtr.appendChild(subtd);
+                subtd.appendChild("" + countType(filter, at));
+            }
+        }
+        return table;
+
+        // Element base = new Element("span");
+        // Element e = (Element) getStatus().asNode();
+        // e.appendChild("(total:" + size() + details(this) + ")");
+        // base.appendChild(e);
+        // base.appendChild("->");
+        // int i = 0;
+        // for (Status s : availableStatus()) {
+        // if (i++ > 0) {
+        // base.appendChild(",");
+        // }
+        // Element st = (Element) s.asNode();
+        // st.appendChild("(" + countStatus(s) + "|" +
+        // details(filterByStatus(s)) + ")");
+        // base.appendChild(st);
+        // }
+        // return base;
     }
 }
