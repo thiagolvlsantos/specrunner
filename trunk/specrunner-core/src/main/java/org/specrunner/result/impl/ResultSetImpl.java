@@ -340,22 +340,5 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             }
         }
         return table;
-
-        // Element base = new Element("span");
-        // Element e = (Element) getStatus().asNode();
-        // e.appendChild("(total:" + size() + details(this) + ")");
-        // base.appendChild(e);
-        // base.appendChild("->");
-        // int i = 0;
-        // for (Status s : availableStatus()) {
-        // if (i++ > 0) {
-        // base.appendChild(",");
-        // }
-        // Element st = (Element) s.asNode();
-        // st.appendChild("(" + countStatus(s) + "|" +
-        // details(filterByStatus(s)) + ")");
-        // base.appendChild(st);
-        // }
-        // return base;
     }
 }
