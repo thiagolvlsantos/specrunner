@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 /* STATUS DECLARATION */
-.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_ignored
+.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_detail,.sr_ignored
 	{
 	border-top: 1px solid #EDEDED;
 	border-left: 1px solid #EDEDED;
@@ -24,13 +24,27 @@
 	border-bottom: 1px solid #969696;
 }
 
-.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_ignored {
+.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_detail,.sr_ignored {
 /*	padding: 2px; */ 
+}
+
+/* TYPE DECLARATION */
+.sr_action:after {
+    content: "IN"
+}
+
+.sr_assertion:after {
+    content: "OUT"
+}
+
+.sr_undef:after {
+    content: "NA";
 }
 
 
 /* VARIABLE DECLARATION */
-.local:after,.global:after {
+.local:after,.global:after,
+.sr_action:after,.sr_assertion:after,.sr_undef:after {
 	border-top: 1px solid #EDEDED;
 	border-left: 1px solid #EDEDED;
 	border-right: 1px solid #969696;

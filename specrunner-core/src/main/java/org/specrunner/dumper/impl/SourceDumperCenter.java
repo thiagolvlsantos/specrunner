@@ -29,6 +29,7 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.Status;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.positional.Position;
@@ -94,8 +95,14 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         link.addAttribute(new Attribute("href", getFilePrefix() + "_frame.html"));
         link.addAttribute(new Attribute("title", "This is a framed report where errors are easier to find and test meta-information is available."));
         link.appendChild("Framed report");
-        span.appendChild(" (in " + model.get("time") + " mls): ");
+        span.appendChild(" (");
+        Status s = result.getStatus();
+        span.appendChild(s.asNode());
+        span.appendChild("(" + result.countStatus(s) + ")");
+        span.appendChild(" in " + model.get("time") + " ms): ");
+        span.appendChild(new Element("br"));
+        span.appendChild(" at " + model.get("date") + " ");
+        span.appendChild(new Element("br"));
         span.appendChild(result.asNode());
-        span.appendChild(" at " + model.get("date") + "");
     }
 }

@@ -53,7 +53,7 @@ public class SourceDumperFrame extends AbstractSourceDumperFile {
     /**
      * Top proportion.
      */
-    private final String topProportion = "115px";
+    private final String topProportion = "180px";
     /**
      * Center vertical proportion.
      */
