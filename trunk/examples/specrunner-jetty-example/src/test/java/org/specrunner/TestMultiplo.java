@@ -15,10 +15,8 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;
-import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
 
 @RunWith(Parameterized.class)
 public class TestMultiplo {
@@ -60,7 +58,8 @@ public class TestMultiplo {
     @Test
     public void runJettyChrome() throws Exception {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
+        // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
+        // WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jetty-" + numero + ".html", cfg);
     }
 }
