@@ -324,6 +324,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             tr.appendChild(td);
 
             Element sub = new Element("table");
+            sub.addAttribute(new Attribute("class", "sr_actiontypes"));
             td.appendChild(sub);
             List<IResult> filter = filterByStatus(s);
             List<ActionType> acs = actionTypes(this);
