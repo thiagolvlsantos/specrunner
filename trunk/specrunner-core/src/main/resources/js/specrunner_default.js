@@ -110,7 +110,7 @@ $(document).ready(function() {
 	$(":button.top_col, #right_col").attr("title","Collapse all");
 
 	if(parent != null && parent.center != null){
-		parent.center.$("#linkFrame").replaceWith("<span class='sr_frame_link_span'><a href='"+getFileName()+"' target='parent'>No-frame report</a></span>");
+		parent.center.$("#linkFrame").replaceWith("<span class='sr_frame_link_span'><a href='"+getFileName()+"' target='parent'>Frameless report</a></span>");
 	}
 });
 
