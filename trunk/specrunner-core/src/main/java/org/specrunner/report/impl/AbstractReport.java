@@ -31,6 +31,11 @@ public abstract class AbstractReport implements IReporter {
     protected Long total = 0L;
 
     /**
+     * The test index.
+     */
+    protected int index = 1;
+
+    /**
      * List of resume of results.
      */
     protected List<Resume> resumes = new LinkedList<Resume>();
@@ -53,7 +58,7 @@ public abstract class AbstractReport implements IReporter {
      */
     protected Resume createResume(IResultSet result, Map<String, Object> model) {
         Long time = (Long) model.get(PipeTime.TIME);
-        return new Resume(time, model.get(PipeTimestamp.DATE), model.get(PipeInput.INPUT), model.get("output"), result.getStatus());
+        return new Resume(index++, time, model.get(PipeTimestamp.DATE), model.get(PipeInput.INPUT), model.get("output"), result.getStatus());
     }
 
     @Override

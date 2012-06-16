@@ -52,7 +52,9 @@ import org.specrunner.expressions.impl.ExpressionFactoryJanino;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.features.impl.FeatureManagerImpl;
 import org.specrunner.impl.SpecRunnerFactoryImpl;
+import org.specrunner.impl.SpecRunnerFactoryPluginImpl;
 import org.specrunner.impl.SpecRunnerPipeline;
+import org.specrunner.impl.SpecRunnerPluginPipeline;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.impl.FailurePausePluginListener;
 import org.specrunner.listeners.impl.ListenerManagerImpl;
@@ -193,6 +195,8 @@ public final class SpecRunnerServices {
             result = new PipelineFactoryXOM();
         } else if (type == ISpecRunnerFactory.class) {
             result = new SpecRunnerFactoryImpl(new SpecRunnerPipeline());
+        } else if (type == ISpecRunnerFactoryPlugin.class) {
+            result = new SpecRunnerFactoryPluginImpl(new SpecRunnerPluginPipeline());
         } else if (type == SpecRunnerServices.class) {
             result = this;
         }
@@ -289,6 +293,17 @@ public final class SpecRunnerServices {
      */
     public static ISpecRunner getSpecRunner() throws SpecRunnerException {
         return get(ISpecRunnerFactory.class).newRunner();
+    }
+
+    /**
+     * Shortcut method to the topmost interface for programmatic plugins.
+     * 
+     * @return A specification runner.
+     * @throws SpecRunnerException
+     *             On recovering errors.
+     */
+    public static ISpecRunnerPlugin getSpecRunnerPlugin() throws SpecRunnerException {
+        return get(ISpecRunnerFactoryPlugin.class).newRunner();
     }
 
     /**

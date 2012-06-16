@@ -18,7 +18,6 @@
 package org.specrunner;
 
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -67,28 +66,4 @@ public interface ISpecRunner {
      *             On execution errors.
      */
     IResultSet run(String source, String output, IConfiguration configuration) throws SpecRunnerException;
-
-    /**
-     * Runs a plugin.
-     * 
-     * @param plugin
-     *            The plugin source.
-     * @return The result of execution.
-     * @throws SpecRunnerException
-     *             On execution errors.
-     */
-    IResultSet run(IPlugin plugin) throws SpecRunnerException;
-
-    /**
-     * Runs a specification using a given configuration.
-     * 
-     * @param plugin
-     *            The plugin source.
-     * @param configuration
-     *            Specific configurations.
-     * @return The result of execution.
-     * @throws SpecRunnerException
-     *             On execution errors.
-     */
-    IResultSet run(IPlugin plugin, IConfiguration configuration) throws SpecRunnerException;
 }

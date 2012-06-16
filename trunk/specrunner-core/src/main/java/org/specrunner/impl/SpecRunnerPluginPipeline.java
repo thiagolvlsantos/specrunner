@@ -17,20 +17,18 @@
  */
 package org.specrunner.impl;
 
-import java.io.File;
-
-import org.specrunner.ISpecRunner;
+import org.specrunner.ISpecRunnerPlugin;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
-import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.impl.pipes.PipeConfiguration;
-import org.specrunner.impl.pipes.PipeInput;
 import org.specrunner.impl.pipes.PipeResult;
+import org.specrunner.impl.pipes.plugin.PipePlugin;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipelineFactory;
+import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -39,42 +37,34 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public class SpecRunnerPipeline implements ISpecRunner {
+public class SpecRunnerPluginPipeline implements ISpecRunnerPlugin {
 
     @Override
-    public IResultSet run(String input) throws SpecRunnerException {
-        return doRun(input, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+    public IResultSet run(IPlugin plugin) throws SpecRunnerException {
+        return doRun(plugin, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     @Override
-    public IResultSet run(String input, IConfiguration configuration) throws SpecRunnerException {
-        return doRun(input, configuration);
-    }
-
-    @Override
-    public IResultSet run(String input, String output, IConfiguration configuration) throws SpecRunnerException {
-        File file = new File(output);
-        configuration.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, file.getParentFile());
-        configuration.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, file.getName());
-        return doRun(input, configuration);
+    public IResultSet run(IPlugin plugin, IConfiguration configuration) throws SpecRunnerException {
+        return doRun(plugin, configuration);
     }
 
     /**
-     * Perform a specification given by input.
+     * Perform runner.
      * 
-     * @param input
-     *            An input.
+     * @param plugin
+     *            The plugin instance.
      * @param configuration
      *            A configuration.
      * @return The result set.
      * @throws SpecRunnerException
-     *             On runner errors.
+     *             On execution errors.
      */
-    protected IResultSet doRun(String input, IConfiguration configuration) throws SpecRunnerException {
+    protected IResultSet doRun(IPlugin plugin, IConfiguration configuration) throws SpecRunnerException {
         try {
             IChannel channel = SpecRunnerServices.get(IChannelFactory.class).newChannel();
-            PipeConfiguration.bind(PipeInput.bind(channel, input), configuration);
-            return PipeResult.lookup(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner.xml").process(channel));
+            PipeConfiguration.bind(PipePlugin.bind(channel, plugin), configuration);
+            return PipeResult.lookup(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner_plugin.xml").process(channel));
         } catch (Exception e) {
             throw new SpecRunnerException(e);
         }
