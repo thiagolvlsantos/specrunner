@@ -4,7 +4,7 @@ import org.junit.Test;
 import org.specrunner.context.impl.LazyExpressionModel;
 import org.specrunner.jetty.JettyStringProvider;
 import org.specrunner.jetty.PluginStartJetty;
-import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.junit.SpecRunnerJUnitPlugin;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.webdriver.PluginBrowser;
@@ -69,7 +69,7 @@ public class TestJettyUnit {
         compare.setParameter("by", "xpath://title");
         group.add(compare);
 
-        SpecRunnerJUnit.defaultRun(group);
+        SpecRunnerJUnitPlugin.defaultRun(group);
     }
 
 }

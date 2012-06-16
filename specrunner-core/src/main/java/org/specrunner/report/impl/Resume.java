@@ -11,6 +11,10 @@ import org.specrunner.result.Status;
 public class Resume {
 
     /**
+     * Test index.
+     */
+    private int index;
+    /**
      * Execution time.
      */
     private long time;
@@ -34,6 +38,8 @@ public class Resume {
     /**
      * Creates a resume.
      * 
+     * @param index
+     *            The index of test.
      * @param time
      *            The time.
      * @param timestamp
@@ -43,14 +49,34 @@ public class Resume {
      * @param output
      *            The output.
      * @param status
-     *            The stattus.
+     *            The status.
      */
-    public Resume(long time, Object timestamp, Object input, Object output, Status status) {
+    public Resume(int index, long time, Object timestamp, Object input, Object output, Status status) {
+        this.index = index;
         this.time = time;
         this.timestamp = timestamp;
         this.input = input;
         this.output = output;
         this.status = status;
+    }
+
+    /**
+     * Gets the index.
+     * 
+     * @return The index.
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    /**
+     * Set the index.
+     * 
+     * @param index
+     *            The index.
+     */
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     /**

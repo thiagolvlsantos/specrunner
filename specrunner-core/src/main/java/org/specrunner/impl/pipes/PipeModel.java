@@ -26,6 +26,7 @@ import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.util.UtilLog;
 
 /**
  * Add a model information to the channel.
@@ -81,7 +82,13 @@ public class PipeModel implements IPipe {
      */
     protected Map<String, Object> create(IChannel channel) throws NotFoundException, InvalidTypeException {
         Map<String, Object> model = new HashMap<String, Object>();
-        model.put(PipeInput.INPUT, PipeInput.lookup(channel));
+        try {
+            model.put(PipeInput.INPUT, PipeInput.lookup(channel));
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
         model.put(TIME, System.currentTimeMillis());
         Runtime rt = Runtime.getRuntime();
         model.put(FREE, rt.freeMemory());
