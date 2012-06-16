@@ -3,7 +3,7 @@ package org.specrunner.plugins.type;
 import org.specrunner.plugins.ActionType;
 
 /**
- * Command: is not error, has importance 1.
+ * Action: has importance 1.
  */
 public class Command extends ActionType {
 

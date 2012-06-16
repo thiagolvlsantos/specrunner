@@ -3,7 +3,7 @@ package org.specrunner.plugins.type;
 import org.specrunner.plugins.ActionType;
 
 /**
- * Undefined: is not error, has importance -1.
+ * Undefined: has importance -1.
  */
 public class Undefined extends ActionType {
 
