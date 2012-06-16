@@ -76,7 +76,7 @@ public class SpecRunnerPipeline implements ISpecRunner {
         try {
             IChannel channel = SpecRunnerServices.get(IChannelFactory.class).newChannel();
             PipeConfiguration.bind(PipeInput.bind(channel, input), configuration);
-            return PipeResult.recover(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner.xml").process(channel));
+            return PipeResult.lookup(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner.xml").process(channel));
         } catch (Exception e) {
             throw new SpecRunnerException(e);
         }
@@ -107,7 +107,7 @@ public class SpecRunnerPipeline implements ISpecRunner {
         try {
             IChannel channel = SpecRunnerServices.get(IChannelFactory.class).newChannel();
             PipeConfiguration.bind(PipePlugin.bind(channel, plugin), configuration);
-            return PipeResult.recover(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner_plugin.xml").process(channel));
+            return PipeResult.lookup(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner_plugin.xml").process(channel));
         } catch (Exception e) {
             throw new SpecRunnerException(e);
         }

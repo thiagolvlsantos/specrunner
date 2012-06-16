@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2012  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
@@ -14,6 +31,12 @@ import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.source.resource.ResourceException;
 
+/**
+ * Creates the source and add to the channel.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeSource implements IPipe {
 
     /**
@@ -29,12 +52,8 @@ public class PipeSource implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            // create the source
             ISource source = createSource(PipeInput.lookup(channel));
-
-            // adding default resources
             addResources(source);
-
             bind(channel, source);
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
@@ -69,10 +88,29 @@ public class PipeSource implements IPipe {
         manager.addDefaultJs();
     }
 
-    public static void bind(IChannel channel, ISource source) throws NotFoundException, InvalidTypeException {
+    /**
+     * Bind a source to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param source
+     *            The source.
+     */
+    public static void bind(IChannel channel, ISource source) {
         channel.add(SOURCE, source);
     }
 
+    /**
+     * Recover the source from channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The source.
+     * @throws NotFoundException
+     *             On lookup errors.
+     * @throws InvalidTypeException
+     *             On type errors.
+     */
     public static ISource recover(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(SOURCE, ISource.class);
     }

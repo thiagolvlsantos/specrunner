@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2012  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.impl.pipes;
 
 import java.util.HashMap;
@@ -10,6 +27,12 @@ import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
 import org.specrunner.pipeline.PipelineException;
 
+/**
+ * Add a model information to the channel.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeModel implements IPipe {
 
     /**
@@ -67,6 +90,17 @@ public class PipeModel implements IPipe {
         return model;
     }
 
+    /**
+     * Recover the model from channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The model.
+     * @throws NotFoundException
+     *             On lookup errors.
+     * @throws InvalidTypeException
+     *             On type errors.
+     */
     @SuppressWarnings("unchecked")
     public static Map<String, Object> recover(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(MODEL, Map.class);

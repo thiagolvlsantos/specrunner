@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2012  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerServices;
@@ -10,6 +27,12 @@ import org.specrunner.pipeline.PipelineException;
 import org.specrunner.result.IResultFactory;
 import org.specrunner.result.IResultSet;
 
+/**
+ * Bind a result to the channel.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PipeResult implements IPipe {
 
     /**
@@ -37,11 +60,30 @@ public class PipeResult implements IPipe {
         return SpecRunnerServices.get(IResultFactory.class).newResult();
     }
 
-    public static void bind(IChannel channel, IResultSet result) throws NotFoundException, InvalidTypeException {
+    /**
+     * Bind the result set to the channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @param result
+     *            The result set.
+     */
+    public static void bind(IChannel channel, IResultSet result) {
         channel.add(RESULT, result);
     }
 
-    public static IResultSet recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    /**
+     * Recover the result set from channel.
+     * 
+     * @param channel
+     *            The channel.
+     * @return The result set.
+     * @throws NotFoundException
+     *             On lookup errors.
+     * @throws InvalidTypeException
+     *             On type errors.
+     */
+    public static IResultSet lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(RESULT, IResultSet.class);
     }
 }

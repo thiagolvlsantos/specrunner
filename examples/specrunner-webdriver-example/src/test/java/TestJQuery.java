@@ -32,7 +32,7 @@ public class TestJQuery {
     @Test
     public void rodarDragDropChrome2() throws Exception {
         ChromeDriverService.Builder builder = new ChromeDriverService.Builder();
-        ChromeDriverService service = builder.usingChromeDriverExecutable(new File("C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe")).usingPort(9090).build();
+        ChromeDriverService service = builder.usingDriverExecutable(new File("C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe")).usingPort(9090).build();
         service.start();
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false);
