@@ -1,0 +1,83 @@
+<h1>Example using BDD</h1>
+
+<style>
+.scenario {
+	border: solid 1pt black;
+	font-family: verdana;
+	font-size: 8pt;
+}
+
+.scenario caption {
+	background-color: gray;
+	color: white;
+	font-weight: bolder;
+	text-align: left;
+	font-size: 12pt;
+	border-bottom: dashed 1pt black;
+}
+
+.given, .when, .then {
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+
+
+<h2>Example 1</h2>
+
+<table class="scenario">
+	<caption>Scenario 1:</caption>
+	<tbody>
+		<tr class="given">
+			<td colspan=2>Given</td>
+		</tr>
+		<tr>
+			<td>a <span class="browser" version="FIREFOX_3_6"
+				reuse="true"
+				connection="org.specrunner.browser.impl.WebConnectionFile">browser</span>
+				openned in '<span class="open">http://www.google.com</span>'
+			</td>
+		</tr>
+		<tr class="when">
+			<td colspan=2>When</td>
+		</tr>
+		<tr>
+			<td>you see the screen</td>
+		</tr>
+		<tr class="then">
+			<td colspan=2>Then</td>
+		</tr>
+		<tr>
+			<td><ul>
+					<li>'<span class="contains">Pesquisa Google</span>' is
+						present;
+					</li>
+					<li>'<span class="not_contains">Blueprint</span>' is not
+						present;</li>
+					<li>and the page title is '<span class="compare"
+						by="xpath://title">Google</span>'.</li>
+					<li class="quit">Close browser.</li>
+				</ul></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Example 2</h2>
+<h3>Given</h3>
+There is a
+<span class="browser" version="FIREFOX_3_6" reuse="true"
+	connection="org.specrunner.browser.impl.WebConnectionFile">browser</span>
+openned in '
+<span class="open">http://www.google.com</span>
+'
+<h3>When</h3>
+you see the screen
+<h3>Then</h3>
+<ul>
+	<li>'<span class="contains">Pesquisa Google</span>' is present;
+	</li>
+	<li><span class="not_contains">'Blueprint</span>' is not present;</li>
+	<li>and the page title is '<span class="compare"
+		by="xpath://title">Google</span>'.
+	<li class="quit">Close browser.</li>
+</ul>
