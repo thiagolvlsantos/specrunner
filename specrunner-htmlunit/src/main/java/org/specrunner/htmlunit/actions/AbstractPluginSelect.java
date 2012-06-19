@@ -54,7 +54,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         if (!(element instanceof HtmlSelect)) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
         } else {
             Node node = context.getNode();
             Nodes nodes = node.query("descendant::li");
