@@ -44,7 +44,7 @@ public class PluginContains extends AbstractPluginFindSingle {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        getFinder().setParameter("by", "xpath://html");
+        getFinderInstance().setParameter("by", "xpath://html");
     }
 
     @Override
@@ -84,6 +84,6 @@ public class PluginContains extends AbstractPluginFindSingle {
      *             On message construction errors.
      */
     protected String getMessage(IContext context, String value) throws PluginException {
-        return "Element " + getFinder().resume(context) + " does not contain '" + value + "'.";
+        return "Element " + getFinderInstance().resume(context) + " does not contain '" + value + "'.";
     }
 }
