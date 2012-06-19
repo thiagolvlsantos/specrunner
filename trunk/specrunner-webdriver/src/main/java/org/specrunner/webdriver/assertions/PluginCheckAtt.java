@@ -102,6 +102,6 @@ public class PluginCheckAtt extends AbstractPluginFindSingle {
      *             On finder resume error.
      */
     protected String getMessage(IContext context, Object value) throws PluginException {
-        return "Element " + getFinder().resume(context) + " does not has an attribute '" + attribute + "' with value '" + value + "'.";
+        return "Element " + getFinderInstance().resume(context) + " does not has an attribute '" + attribute + "' with value '" + value + "'.";
     }
 }

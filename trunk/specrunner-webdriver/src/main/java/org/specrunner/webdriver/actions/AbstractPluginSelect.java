@@ -51,7 +51,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         if (!isSelect(element)) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(client));
         } else {
             Node node = context.getNode();
             Nodes nodes = node.query("descendant::li");

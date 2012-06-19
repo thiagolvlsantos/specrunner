@@ -46,7 +46,7 @@ public abstract class AbstractPluginEnabled extends AbstractPluginFind {
         boolean error = false;
         for (WebElement element : elements) {
             if (enabled() != element.isEnabled()) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (element.isEnabled() ? "enabled" : "disabled") + "'."), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (element.isEnabled() ? "enabled" : "disabled") + "'."), new WritablePage(client));
                 error = true;
             }
         }

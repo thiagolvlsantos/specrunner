@@ -124,7 +124,7 @@ public class PluginDragAndDrop extends AbstractPluginFindSingle {
         }
         Action ac = null;
         if (getTarget() != null) {
-            IFinder finder = getFinder();
+            IFinder finder = getFinderInstance();
             finder.setParameter("by", getTarget());
             List<WebElement> list = finder.find(context, result, client);
             if (list.isEmpty()) {

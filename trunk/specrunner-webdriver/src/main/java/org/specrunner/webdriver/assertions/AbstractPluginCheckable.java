@@ -48,11 +48,11 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind {
             if (isCheckbox(element) || isRadio(element)) {
                 boolean componentStatus = element.isSelected();
                 if (expected() != componentStatus) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (componentStatus ? "checked" : "unchecked") + "'."), new WritablePage(client));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (componentStatus ? "checked" : "unchecked") + "'."), new WritablePage(client));
                     error = true;
                 }
             } else {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a checkbox or radio is " + element.getTagName()), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a checkbox or radio is " + element.getTagName()), new WritablePage(client));
                 error = true;
             }
         }

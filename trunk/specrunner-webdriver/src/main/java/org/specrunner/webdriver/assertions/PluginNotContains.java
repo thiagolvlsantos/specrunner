@@ -35,6 +35,6 @@ public class PluginNotContains extends PluginContains {
 
     @Override
     protected String getMessage(IContext context, String value) throws PluginException {
-        return getFinder().resume(context) + " contains '" + value + "'.";
+        return getFinderInstance().resume(context) + " contains '" + value + "'.";
     }
 }
