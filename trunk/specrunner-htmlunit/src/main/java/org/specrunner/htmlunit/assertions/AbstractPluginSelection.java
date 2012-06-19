@@ -61,7 +61,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
                 result.addResult(Success.INSTANCE, context.peek());
             }
         } else {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
         }
     }
 

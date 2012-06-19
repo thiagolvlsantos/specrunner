@@ -50,7 +50,7 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind {
         boolean error = false;
         for (HtmlElement element : elements) {
             if (!(element instanceof HtmlCheckBoxInput) && !(element instanceof HtmlRadioButtonInput)) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), new WritablePage(page));
                 error = true;
             } else {
                 boolean onComponent = false;
@@ -63,7 +63,7 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind {
                     onComponent = in.isChecked();
                 }
                 if (expected() != onComponent) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinder().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(page));
                     error = true;
                 }
             }

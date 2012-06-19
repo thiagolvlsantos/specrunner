@@ -68,7 +68,7 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
             return;
         }
         if (elements.length == 0) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinder().resume(context) + "."));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."));
             return;
         }
         HtmlElement element = elements[index];

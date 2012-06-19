@@ -59,14 +59,33 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
     /**
      * A finder instance.
      */
-    private IFinder finderInstance;
+    protected IFinder finderInstance;
+
+    /**
+     * The finder type.
+     * 
+     * @return The finder type.
+     */
+    public String getFinder() {
+        return finder;
+    }
+
+    /**
+     * Set the finder type.
+     * 
+     * @param finder
+     *            The type.
+     */
+    public void setFinder(String finder) {
+        this.finder = finder;
+    }
 
     /**
      * Sets the plugin finderInstance.
      * 
      * @return The finderInstance.
      */
-    public IFinder getFinder() {
+    public IFinder getFinderInstance() {
         return finderInstance;
     }
 
@@ -76,7 +95,7 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
      * @param finder
      *            A finder.
      */
-    public void setFinder(IFinder finder) {
+    public void setFinderInstance(IFinder finder) {
         this.finderInstance = finder;
     }
 
@@ -116,7 +135,7 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
                 }
             }
         }
-        if (finder != null) {
+        if (finder != null && finderInstance == null) {
             try {
                 finderInstance = (IFinder) Class.forName(finder).newInstance();
             } catch (Exception e) {

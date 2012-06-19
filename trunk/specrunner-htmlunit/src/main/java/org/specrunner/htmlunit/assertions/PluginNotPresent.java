@@ -52,7 +52,7 @@ public class PluginNotPresent extends AbstractPluginFind {
         if (list == null || list.isEmpty()) {
             result.addResult(Success.INSTANCE, context.peek());
         } else {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinder().resume(context) + "."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinderInstance().resume(context) + "."), new WritablePage(page));
         }
     }
 

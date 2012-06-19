@@ -49,12 +49,12 @@ public abstract class AbstractPluginEnabled extends AbstractPluginFind {
         boolean error = false;
         for (HtmlElement element : elements) {
             if (!(element instanceof DisabledElement)) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinder().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinderInstance().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), new WritablePage(page));
                 error = true;
             } else {
                 DisabledElement in = (DisabledElement) element;
                 if (!(enabled() == !in.isDisabled())) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element '" + getFinder().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element '" + getFinderInstance().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), new WritablePage(page));
                     error = true;
                 }
             }
