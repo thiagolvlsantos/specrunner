@@ -52,6 +52,7 @@ public class TestJetty {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false);
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryIe.class.getName());
+        cfg.add(WebDriverFactoryIe.FEATURE_DRIVER, "C:\\Users\\Thiago\\Downloads\\IEDriverServer.exe");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jetty-ie.html", cfg);
     }
 
