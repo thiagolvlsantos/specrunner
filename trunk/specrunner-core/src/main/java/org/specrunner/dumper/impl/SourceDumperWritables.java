@@ -76,11 +76,8 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
                         if (block.hasNode()) {
                             Node node = block.getNode();
                             ParentNode parent = node instanceof ParentNode ? (ParentNode) node : node.getParent();
-                            int index = 0;
                             for (Entry<String, String> e : references.entrySet()) {
-                                if (index++ > 0) {
-                                    parent.appendChild(new Text(" "));
-                                }
+                                parent.appendChild(new Text(" "));
                                 Element link = new Element("a");
                                 link.addAttribute(new Attribute("class", "sr_" + e.getKey()));
                                 link.addAttribute(new Attribute("href", e.getValue()));
