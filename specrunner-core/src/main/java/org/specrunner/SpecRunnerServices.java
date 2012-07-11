@@ -68,11 +68,7 @@ import org.specrunner.pipeline.PipelineException;
 import org.specrunner.pipeline.impl.ChannelFactoryImpl;
 import org.specrunner.pipeline.impl.PipelineFactoryXOM;
 import org.specrunner.plugins.IPluginFactory;
-import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
-import org.specrunner.plugins.impl.factories.PluginFactoryCustom;
-import org.specrunner.plugins.impl.factories.PluginFactoryElement;
-import org.specrunner.plugins.impl.factories.PluginFactoryGroupImpl;
-import org.specrunner.plugins.impl.factories.PluginFactoryText;
+import org.specrunner.plugins.impl.factories.PluginFactoryGroupDefault;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.properties.impl.PropertyLoaderImpl;
 import org.specrunner.report.IReporterFactory;
@@ -160,7 +156,7 @@ public final class SpecRunnerServices {
         } else if (type == ITransformer.class) {
             result = new TransformerImpl();
         } else if (type == IPluginFactory.class) {
-            result = new PluginFactoryGroupImpl().add(new PluginFactoryCSS()).add(new PluginFactoryElement()).add(new PluginFactoryCustom()).add(new PluginFactoryText());
+            result = new PluginFactoryGroupDefault();
         } else if (type == IBlockFactory.class) {
             result = new BlockFactoryImpl();
         } else if (type == IExpressionFactory.class) {
