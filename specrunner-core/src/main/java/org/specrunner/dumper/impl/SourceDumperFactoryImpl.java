@@ -24,7 +24,7 @@ import org.specrunner.dumper.SourceDumperException;
 /**
  * Default dumper implementation.
  * 
- * @author Thiago
+ * @author Thiago Santos
  * 
  */
 public class SourceDumperFactoryImpl implements ISourceDumperFactory {
