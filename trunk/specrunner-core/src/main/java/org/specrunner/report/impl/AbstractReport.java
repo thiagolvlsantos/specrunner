@@ -11,6 +11,7 @@ import org.specrunner.impl.pipes.PipeTime;
 import org.specrunner.impl.pipes.PipeTimestamp;
 import org.specrunner.report.IReporter;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.Status;
 
 /**
  * Generic extractor of usefull information for reporter dumps.
@@ -58,7 +59,17 @@ public abstract class AbstractReport implements IReporter {
      */
     protected Resume createResume(IResultSet result, Map<String, Object> model) {
         Long time = (Long) model.get(PipeTime.TIME);
-        return new Resume(index++, time, model.get(PipeTimestamp.DATE), model.get(PipeInput.INPUT), model.get("output"), result.getStatus());
+        Status status = result.getStatus();
+        Resume r = new Resume();
+        r.setIndex(index++);
+        r.setTime(time);
+        r.setTimestamp(model.get(PipeTimestamp.DATE));
+        r.setInput(model.get(PipeInput.INPUT));
+        r.setOutput(model.get("output"));
+        r.setStatus(status);
+        r.setStatusCounter(result.countStatus(status));
+        r.setStatusTotal(result.size());
+        return r;
     }
 
     @Override

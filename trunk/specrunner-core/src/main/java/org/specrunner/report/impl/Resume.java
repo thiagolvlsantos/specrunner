@@ -34,31 +34,14 @@ public class Resume {
      * The resulting status.
      */
     private Status status;
-
     /**
-     * Creates a resume.
-     * 
-     * @param index
-     *            The index of test.
-     * @param time
-     *            The time.
-     * @param timestamp
-     *            The timestamp.
-     * @param input
-     *            The input.
-     * @param output
-     *            The output.
-     * @param status
-     *            The status.
+     * The status counter.
      */
-    public Resume(int index, long time, Object timestamp, Object input, Object output, Status status) {
-        this.index = index;
-        this.time = time;
-        this.timestamp = timestamp;
-        this.input = input;
-        this.output = output;
-        this.status = status;
-    }
+    private int statusCounter;
+    /**
+     * The status total.
+     */
+    private int statusTotal;
 
     /**
      * Gets the index.
@@ -172,5 +155,43 @@ public class Resume {
      */
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    /**
+     * Gets the status counter.
+     * 
+     * @return The counter.
+     */
+    public int getStatusCounter() {
+        return statusCounter;
+    }
+
+    /**
+     * Set the status counter.
+     * 
+     * @param statusCounter
+     *            The counter.
+     */
+    public void setStatusCounter(int statusCounter) {
+        this.statusCounter = statusCounter;
+    }
+
+    /**
+     * Gets the status total.
+     * 
+     * @return The total.
+     */
+    public int getStatusTotal() {
+        return statusTotal;
+    }
+
+    /**
+     * Sets the status total.
+     * 
+     * @param statusTotal
+     *            The total.
+     */
+    public void setStatusTotal(int statusTotal) {
+        this.statusTotal = statusTotal;
     }
 }
