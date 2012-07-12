@@ -197,7 +197,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     public String asString(WebElement element) {
         if (UtilLog.LOG.isDebugEnabled()) {
             try {
-                return element.getTagName() + "." + element.getText();
+                return element.getTagName() + "." + getText(element);
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -212,5 +212,18 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             }
         }
         return String.valueOf(element);
+    }
+
+    /**
+     * Get the value of element. Depends on element type.
+     * 
+     * @param element
+     *            The element.
+     * @return The value.
+     */
+    protected String getText(WebElement element) {
+        String tagName = element.getTagName().toLowerCase();
+        boolean isText = !("input".equals(tagName) || "textarea".equals(tagName));
+        return isText ? element.getText() : element.getAttribute("value");
     }
 }

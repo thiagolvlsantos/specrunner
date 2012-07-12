@@ -20,8 +20,8 @@ package org.specrunner.webdriver.actions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -91,7 +91,7 @@ public class PluginType extends AbstractPluginFindSingle {
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         String value = String.valueOf(tmp);
         if (getPosition() != null) {
-            String str = element.getText();
+            String str = getText(element);
             String newStr = str.substring(0, getPosition()) + value + str.substring(getPosition());
             element.clear();
             element.sendKeys(newStr);

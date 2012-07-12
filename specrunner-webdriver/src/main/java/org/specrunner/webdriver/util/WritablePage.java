@@ -125,7 +125,7 @@ public class WritablePage implements IWritable {
         try {
             // write screen
             File scrFile = driver.getScreenshotAs(OutputType.FILE);
-            tmpDump = File.createTempFile("sr", getExtension(scrFile));
+            tmpDump = File.createTempFile("srw", getExtension(scrFile));
             tmpDump.delete();
             FileUtils.copyFile(scrFile, tmpDump);
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -133,7 +133,7 @@ public class WritablePage implements IWritable {
             }
 
             // write source
-            tmpSource = File.createTempFile("sr", ".html");
+            tmpSource = File.createTempFile("srw", ".html");
             tmpSource.delete();
             FileUtils.writeStringToFile(tmpSource, source.getPageSource());
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -184,7 +184,7 @@ public class WritablePage implements IWritable {
                 Page page = window.getEnclosedPage();
                 if (page instanceof HtmlPage) {
                     synchronized (page) {
-                        tmpDump = File.createTempFile("sr", ".html");
+                        tmpDump = File.createTempFile("srw", ".html");
                         tmpDump.delete();
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug("Saving page to temporary file " + tmpDump);
