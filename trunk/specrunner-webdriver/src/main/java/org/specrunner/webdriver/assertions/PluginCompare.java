@@ -22,8 +22,8 @@ import nu.xom.Node;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
@@ -44,7 +44,7 @@ public class PluginCompare extends AbstractPluginFindSingle {
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         String expected = String.valueOf(tmp);
-        String received = element.getText();
+        String received = getText(element);
         Node node = context.getNode();
         PluginCompareUtils.compare(getNormalized(expected), getNormalized(received), context.newBlock(node, this), context, result, client);
     }

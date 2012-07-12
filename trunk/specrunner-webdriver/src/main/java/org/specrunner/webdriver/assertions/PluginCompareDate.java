@@ -81,7 +81,7 @@ public class PluginCompareDate extends PluginCompare {
      * 
      * @return The time tolerance.
      */
-    public long getTolerance() {
+    public Long getTolerance() {
         return tolerance;
     }
 
@@ -91,7 +91,7 @@ public class PluginCompareDate extends PluginCompare {
      * @param tolerance
      *            The time tolerance.
      */
-    public void setTolerance(long tolerance) {
+    public void setTolerance(Long tolerance) {
         this.tolerance = tolerance;
     }
 
@@ -108,13 +108,11 @@ public class PluginCompareDate extends PluginCompare {
                 }
             }
         }
-        if (tolerance == null) {
-            try {
-                fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
+        try {
+            fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
     }
@@ -127,7 +125,7 @@ public class PluginCompareDate extends PluginCompare {
         }
         Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
         String expected = String.valueOf(tmp);
-        String received = element.getText();
+        String received = getText(element);
         PluginCompareUtils.compareDate(this, expected, received, context.newBlock(context.getNode(), this), context, result, client);
     }
 
