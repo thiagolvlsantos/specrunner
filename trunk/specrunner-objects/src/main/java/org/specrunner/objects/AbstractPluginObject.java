@@ -389,6 +389,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
+            boolean ignore = false;
+            if (cell.hasAttribute("ignore")) {
+                ignore = Boolean.parseBoolean(cell.getAttribute("ignore"));
+            }
 
             String fieldName = cell.getValue().trim();
             String name;
@@ -407,67 +411,70 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             f.setIndex(index++);
 
-            StringTokenizer st = new StringTokenizer(name, ".");
-            String[] names = new String[st.countTokens()];
-            for (int i = 0; i < names.length; i++) {
-                names[i] = st.nextToken();
-            }
-            if (names.length > 0) {
-                f.setNames(names);
-            }
+            f.setIgnore(ignore);
+            if (!ignore) {
+                StringTokenizer st = new StringTokenizer(name, ".");
+                String[] names = new String[st.countTokens()];
+                for (int i = 0; i < names.length; i++) {
+                    names[i] = st.nextToken();
+                }
+                if (names.length > 0) {
+                    f.setNames(names);
+                }
 
-            Class<?>[] types = new Class<?>[names.length];
-            Class<?> currentType = typeInstance;
-            for (int i = 0; currentType != null && i < types.length; i++) {
-                Method m = null;
-                try {
-                    m = currentType.getMethod("get" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
-                } catch (Exception e) {
+                Class<?>[] types = new Class<?>[names.length];
+                Class<?> currentType = typeInstance;
+                for (int i = 0; currentType != null && i < types.length; i++) {
+                    Method m = null;
                     try {
-                        m = currentType.getMethod("is" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
-                    } catch (Exception e1) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e1.getMessage(), e1);
+                        m = currentType.getMethod("get" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
+                    } catch (Exception e) {
+                        try {
+                            m = currentType.getMethod("is" + Character.toUpperCase(names[i].charAt(0)) + names[i].substring(1));
+                        } catch (Exception e1) {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug(e1.getMessage(), e1);
+                            }
                         }
                     }
+                    if (m == null) {
+                        throw new PluginException("Getter method for " + names[i] + " not found for type '" + currentType + "'.");
+                    }
+                    types[i] = m.getReturnType();
+                    currentType = types[i];
                 }
-                if (m == null) {
-                    throw new PluginException("Getter method for " + names[i] + " not found for type '" + currentType + "'.");
+                if (types.length > 0) {
+                    f.setTypes(types);
                 }
-                types[i] = m.getReturnType();
-                currentType = types[i];
-            }
-            if (types.length > 0) {
-                f.setTypes(types);
-            }
 
-            String def = null;
-            if (cell.hasAttribute("default")) {
-                def = cell.getAttribute("default");
-            }
-            if (def != null) {
-                f.setDef(def);
-            }
+                String def = null;
+                if (cell.hasAttribute("default")) {
+                    def = cell.getAttribute("default");
+                }
+                if (def != null) {
+                    f.setDef(def);
+                }
 
-            String converter = cell.hasAttribute("converter") ? cell.getAttribute("converter") : null;
-            String[] converters = converter != null ? converter.split(",") : new String[0];
-            if (f.getConverters() == null || converters.length > 0) {
-                f.setConverters(converters);
-            }
+                String converter = cell.hasAttribute("converter") ? cell.getAttribute("converter") : null;
+                String[] converters = converter != null ? converter.split(",") : new String[0];
+                if (f.getConverters() == null || converters.length > 0) {
+                    f.setConverters(converters);
+                }
 
-            int i = 0;
-            List<Object> args = new LinkedList<Object>();
-            while (cell.hasAttribute("arg" + i)) {
-                args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context));
-                i++;
-            }
-            if (f.getArgs() == null || !args.isEmpty()) {
-                f.setArgs(args.toArray(new String[args.size()]));
-            }
+                int i = 0;
+                List<Object> args = new LinkedList<Object>();
+                while (cell.hasAttribute("arg" + i)) {
+                    args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context));
+                    i++;
+                }
+                if (f.getArgs() == null || !args.isEmpty()) {
+                    f.setArgs(args.toArray(new String[args.size()]));
+                }
 
-            String comparator = cell.hasAttribute("comparator") ? cell.getAttribute("comparator") : null;
-            if (comparator != null) {
-                f.setComparator(comparator);
+                String comparator = cell.hasAttribute("comparator") ? cell.getAttribute("comparator") : null;
+                if (comparator != null) {
+                    f.setComparator(comparator);
+                }
             }
 
             if (UtilLog.LOG.isInfoEnabled()) {
@@ -517,6 +524,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         private int index;
         /**
+         * Ignore column field.
+         */
+        private boolean ignore;
+        /**
          * The column name of the field.
          */
         private String fieldName;
@@ -562,6 +573,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         public void setIndex(int index) {
             this.index = index;
+        }
+
+        /**
+         * Ignore the column with this mark.
+         * 
+         * @return true, to ignore, false, otherwise.
+         */
+        public boolean isIgnore() {
+            return ignore;
+        }
+
+        /**
+         * Sets to ignore a column.
+         * 
+         * @param ignore
+         *            The ignore mark.
+         */
+        public void setIgnore(boolean ignore) {
+            this.ignore = ignore;
         }
 
         /**
@@ -852,6 +882,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 Field f = fields.get(i);
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("ON>" + f.getFullName());
+                }
+                if (f.isIgnore()) {
+                    continue;
                 }
                 String text = cell.getElement().getValue();
                 Object value = text;

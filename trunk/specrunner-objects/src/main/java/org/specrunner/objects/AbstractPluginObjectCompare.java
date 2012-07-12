@@ -145,6 +145,9 @@ public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
      */
     public void compare(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
         for (Field f : fields) {
+            if (f.isIgnore()) {
+                continue;
+            }
             Object currentInstance = instance;
             for (int i = 0; i < f.getNames().length; i++) {
                 currentInstance = PropertyUtils.getProperty(currentInstance, f.getNames()[i]);

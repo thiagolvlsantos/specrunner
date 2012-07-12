@@ -22,24 +22,28 @@
                     <th>Data de fundação</th>
                     <th>Ativa</th>
                     <th>Última atualização</th>
+                    <th ignore="true">QUALQUER</th>
                 </tr>
                 <tr>
                     <td>Recife</td>
                     <td>12/03/1656</td>
                     <td>Sim</td>
                     <td>a data atual</td>
+                    <td>SÓ EXIBIÇÃO 1</td>
                 </tr>
                 <tr>
                     <td>Salvador</td>
                     <td>30/10/1790</td>
                     <td>Sim</td>
                     <td>a data atual menos 2 dias</td>
+                    <td>SÓ EXIBIÇÃO 2</td>
                 </tr>
                 <tr>
                     <td>João Pessoa</td>
                     <td>30/10/1897</td>
                     <td>Não</td>
                     <td converter="dateAny">qualquer</td>
+                    <td>SÓ EXIBIÇÃO 3</td>
                 </tr>
                 <tbody class="for" min="${quantidade}" max="${3 * quantidade}" replace="true">
                     <tr>
@@ -47,6 +51,7 @@
                         <td>30/10/${index}</td>
                         <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
                         <td converter="dateAny">qualquer</td>
+                        <td>SÓ EXIBIÇÃO ${index}</td>
                     </tr>
                 </tbody>
             </table>
@@ -58,17 +63,20 @@ Conferir a lista usando um mapping:
 <table class="objout" mapping="/city.html" reference="name">
     <caption>Cidades</caption>
     <tr>
+        <th ignore="true">Comando</th>
         <th>Ativa</th>
         <th>Data de fundação</th>
         <th>Nome</th>
     </tr>
     <tr>
+        <td>NÃO USAR</td>
         <td>Sim</td>
         <td>12/03/1656</td>
         <td>Recife</td>
     </tr>
     <tbody class="for" min="${quantidade}" max="${quantidade + (quantidade/2)}" replace="true">
         <tr>
+            <td>NÃO USAR - ${index}</td>
             <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
             <td>30/10/${index}</td>
             <td>Cidade ${index}</td>
