@@ -265,7 +265,7 @@ th.included_file {
 	font-family: verdana;
 	/* always visible */
 	position: fixed; 
-	top: 10px; 
+	bottom: 10px; 
 	right: 20px;
 }
 

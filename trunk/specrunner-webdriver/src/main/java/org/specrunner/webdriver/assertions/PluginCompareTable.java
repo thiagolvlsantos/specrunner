@@ -28,13 +28,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.runner.IRunner;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilNode;
 import org.specrunner.util.UtilXPath;
@@ -115,7 +116,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 }
                 received = iteCaptions.next();
             }
-            if (received.isDisplayed()) {
+            if (!expected.hasAttribute(IRunner.IGNORE) && received.isDisplayed()) {
                 success = success & compareTerminal(this, context, result, client, expected, received);
             }
         }
@@ -150,7 +151,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                     }
                     received = iteElements.next();
                 }
-                if (received.isDisplayed()) {
+                if (!expected.hasAttribute(IRunner.IGNORE) && received.isDisplayed()) {
                     success = success & compareTerminal(this, context, result, client, expected, received);
                 }
             }

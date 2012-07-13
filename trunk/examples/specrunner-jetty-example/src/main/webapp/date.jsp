@@ -50,7 +50,7 @@ Current date is:
 				</tr>
 				<tbody>
 					<tr>
-						<td colspan=2>
+						<td>
 							<table border=1>
 								<caption>Super Inner table</caption>
 								<tr>
@@ -63,6 +63,9 @@ Current date is:
 								</tr>
 							</table>
 						</td>
+                        <td>
+                            <%= Math.random() %>
+                        </td>
 					</tr>	
 				</tbody>			
 			</table>
