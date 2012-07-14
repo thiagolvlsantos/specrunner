@@ -224,6 +224,10 @@ th.included_file {
     border: 1px dotted black;
 }
 
+.sr_resultset td {
+    font-size: 8pt;
+}
+
 .sr_actiontypes {
     width: 100%;
 }

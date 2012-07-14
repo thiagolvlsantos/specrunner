@@ -29,8 +29,12 @@
 }
 
 /* TYPE DECLARATION */
+.sr_action:after, .sr_assertion:after, .sr_undef:after {
+    font-size: 50%;    
+}
+
 .sr_action:after {
-    content: "IN"
+    content: "IN";
 }
 
 .sr_assertion:after {
@@ -50,9 +54,12 @@
 	border-right: 1px solid #969696;
 	border-bottom: 1px solid #969696;
 	padding: 1px 1px 1px 1px;
-	font-size: x-small;
 	vertical-align: top;
 	background-color: white;
+}
+
+.local:after,.global:after{
+    font-size: x-small;
 }
 
 .local:after {
