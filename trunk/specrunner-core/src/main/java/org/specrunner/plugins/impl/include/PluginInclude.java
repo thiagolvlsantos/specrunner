@@ -269,7 +269,7 @@ public class PluginInclude extends AbstractPlugin {
             // result table
             Element resultTable = new Element("div");
             resultTable.addAttribute(new Attribute("id", id + "_inc"));
-            UtilPlugin.setIgnore(resultTable);
+            UtilNode.setIgnore(resultTable);
             parent.insertChild(resultTable, nodeIndex);
 
             Element table = new Element("table");

@@ -11,6 +11,7 @@ import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilNode;
 
 public class PluginEcho extends AbstractPlugin {
 
@@ -38,7 +39,7 @@ public class PluginEcho extends AbstractPlugin {
         for (int i = 0; i < times; i++) {
             Node copy = node.copy();
             parent.insertChild(copy, index++);
-            UtilPlugin.setIgnore(copy);
+            UtilNode.setIgnore(copy);
             UtilPlugin.performChildren(copy, context, result);
         }
         return ENext.SKIP;

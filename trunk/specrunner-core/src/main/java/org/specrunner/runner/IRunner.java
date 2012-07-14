@@ -35,12 +35,6 @@ import org.specrunner.source.ISource;
 public interface IRunner {
 
     /**
-     * Any node in specification with attribute "ignore=true" will not be
-     * evaluated.
-     */
-    String IGNORE = "ignore";
-
-    /**
      * Feature to set the ignorable aliases using IFeatureManager or
      * IConfiguration.
      */

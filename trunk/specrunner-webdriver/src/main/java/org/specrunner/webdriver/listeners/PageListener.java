@@ -28,10 +28,10 @@ import org.specrunner.context.IContext;
 import org.specrunner.dumper.impl.SourceDumperWritables;
 import org.specrunner.listeners.impl.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
-import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Detail;
 import org.specrunner.result.status.Failure;
+import org.specrunner.util.UtilNode;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.util.WritablePage;
@@ -90,7 +90,7 @@ public class PageListener extends AbstractPluginListener {
                 if (context.getNode() != null) {
                     ParentNode view = ((ParentNode) context.getNode());
                     Element ele = new Element("span");
-                    UtilPlugin.setIgnore(ele);
+                    UtilNode.setIgnore(ele);
                     view.appendChild(ele);
                     result.addResult(Detail.INSTANCE, context.newBlock(ele, p), new WritablePage(info, client));
                 }
