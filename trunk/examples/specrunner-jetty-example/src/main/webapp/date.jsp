@@ -67,7 +67,15 @@ Current date is:
                             <%= Math.random() %>
                         </td>
 					</tr>	
-				</tbody>			
+				</tbody>
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            <input type="text" value="Linha"/>
+                            <textarea>Texto</textarea>
+                        </td>
+                    </tr>
+                </tbody>			
 			</table>
 		</td>
 	</tr>
