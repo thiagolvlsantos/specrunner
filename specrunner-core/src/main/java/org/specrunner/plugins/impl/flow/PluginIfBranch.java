@@ -29,7 +29,6 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
-import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
@@ -123,7 +122,7 @@ public abstract class PluginIfBranch extends AbstractPluginNamed {
         int index = parent.indexOf(node);
         Element enc = new Element("span");
         if (!condition) {
-            UtilPlugin.setIgnore(enc);
+            UtilNode.setIgnore(enc);
         }
         UtilNode.appendCss(node, condition ? CSS_SELECTED : CSS_RELEGATED);
         node.detach();

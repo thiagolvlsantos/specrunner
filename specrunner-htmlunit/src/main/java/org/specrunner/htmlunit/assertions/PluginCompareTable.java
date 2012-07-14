@@ -34,7 +34,6 @@ import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.runner.IRunner;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilNode;
 import org.specrunner.util.UtilXPath;
@@ -119,7 +118,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 }
                 received = (HtmlElement) iteCaptions.next();
             }
-            if (expected.getAttribute(IRunner.IGNORE) != null && received.isDisplayed()) {
+            if (expected.getAttribute(UtilNode.IGNORE) != null && received.isDisplayed()) {
                 success = success & compareTerminal(this, context, result, page, expected, received);
             }
         }
@@ -154,7 +153,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                     }
                     received = (HtmlElement) iteElements.next();
                 }
-                if (expected.getAttribute(IRunner.IGNORE) != null && received.isDisplayed()) {
+                if (expected.getAttribute(UtilNode.IGNORE) != null && received.isDisplayed()) {
                     success = success & compareTerminal(this, context, result, page, expected, received);
                 }
             }

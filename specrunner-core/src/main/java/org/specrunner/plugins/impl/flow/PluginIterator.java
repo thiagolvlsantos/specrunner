@@ -31,6 +31,7 @@ import org.specrunner.plugins.impl.data.IDataList;
 import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilNode;
 
 /**
  * Perform an iteration over a collection.
@@ -117,7 +118,7 @@ public class PluginIterator extends AbstractPluginNamed {
             context.saveLocal(pos, "" + i);
             try {
                 Node c = node.copy();
-                UtilPlugin.setIgnore(c);
+                UtilNode.setIgnore(c);
                 UtilPlugin.performChildren(c, context, result);
                 while (c.getChildCount() > 0) {
                     Node ch = c.getChild(0);

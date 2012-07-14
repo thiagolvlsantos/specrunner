@@ -30,10 +30,10 @@ import org.specrunner.htmlunit.PluginBrowser;
 import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.listeners.impl.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
-import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Detail;
 import org.specrunner.result.status.Failure;
+import org.specrunner.util.UtilNode;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
@@ -91,7 +91,7 @@ public class PageListener extends AbstractPluginListener {
                 if (context.getNode() != null) {
                     ParentNode view = ((ParentNode) context.peek().getNode());
                     Element ele = new Element("span");
-                    UtilPlugin.setIgnore(ele);
+                    UtilNode.setIgnore(ele);
                     view.appendChild(ele);
                     result.addResult(Detail.INSTANCE, context.newBlock(ele, p), new WritablePage(info, client.getCurrentWindow().getEnclosedPage()));
                 }

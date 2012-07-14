@@ -17,7 +17,6 @@
  */
 package org.specrunner.plugins.impl;
 
-import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -30,7 +29,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
@@ -106,29 +104,6 @@ public final class UtilPlugin {
             }
             throw new PluginException("Could not create a plugin for " + type + "." + e.getMessage(), e);
         }
-    }
-
-    /**
-     * Adds the information that a given node might be ignored by runners.
-     * 
-     * @param node
-     *            The node to be ignored.
-     */
-    public static void setIgnore(Node node) {
-        if (node instanceof Element) {
-            ((Element) node).addAttribute(new Attribute(IRunner.IGNORE, "true"));
-        }
-    }
-
-    /**
-     * Check is a node is marked to be ignored.
-     * 
-     * @param node
-     *            The node to be checked.
-     * @return true, if node can be ignored, false, otherwise.
-     */
-    public static boolean isIgnore(Node node) {
-        return node instanceof Element && ((Element) node).getAttribute(IRunner.IGNORE) != null;
     }
 
     /**

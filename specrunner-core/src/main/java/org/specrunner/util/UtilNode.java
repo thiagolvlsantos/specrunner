@@ -32,6 +32,12 @@ import org.specrunner.util.impl.TableAdapter;
 public final class UtilNode {
 
     /**
+     * Any node in specification with attribute "ignore=true" will not be
+     * evaluated. Ignore is also used in plugin specific features such as to
+     * avoid cell comparison inside tables in WebDriver profile.
+     */
+    public static final String IGNORE = "ignore";
+    /**
      * The CSS attribute name.
      */
     public static final String ATT_CSS = "class";
@@ -43,14 +49,26 @@ public final class UtilNode {
     }
 
     /**
-     * Creates a table adapter for the given node.
+     * Check is a node is marked to be ignored.
      * 
-     * @param ele
-     *            The element.
-     * @return The adapter.
+     * @param node
+     *            The node to be checked.
+     * @return true, if node can be ignored, false, otherwise.
      */
-    public static TableAdapter newTableAdapter(Element ele) {
-        return new TableAdapter(ele);
+    public static boolean isIgnore(Node node) {
+        return node instanceof Element && ((Element) node).getAttribute(IGNORE) != null;
+    }
+
+    /**
+     * Adds the information that a given node might be ignored by runners.
+     * 
+     * @param node
+     *            The node to be ignored.
+     */
+    public static void setIgnore(Node node) {
+        if (node instanceof Element) {
+            ((Element) node).addAttribute(new Attribute(IGNORE, "true"));
+        }
     }
 
     /**
@@ -76,5 +94,16 @@ public final class UtilNode {
             }
         }
         return node;
+    }
+
+    /**
+     * Creates a table adapter for the given node.
+     * 
+     * @param ele
+     *            The element.
+     * @return The adapter.
+     */
+    public static TableAdapter newTableAdapter(Element ele) {
+        return new TableAdapter(ele);
     }
 }

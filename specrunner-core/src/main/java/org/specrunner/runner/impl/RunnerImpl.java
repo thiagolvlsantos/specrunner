@@ -43,7 +43,6 @@ import org.specrunner.plugins.ISleepPlugin;
 import org.specrunner.plugins.ITestPlugin;
 import org.specrunner.plugins.ITimedPlugin;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Ignored;
@@ -54,6 +53,7 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilNode;
 
 /**
  * Default runner implementation.
@@ -250,7 +250,7 @@ public class RunnerImpl implements IRunner {
                             Node child = deep.getChild(i);
                             if (child instanceof Element) {
                                 // if not ignored marked
-                                if (!UtilPlugin.isIgnore(child)) {
+                                if (!UtilNode.isIgnore(child)) {
                                     // recursive execution
                                     local(child, context, result, null);
                                 }
