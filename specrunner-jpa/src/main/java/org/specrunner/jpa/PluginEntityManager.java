@@ -88,24 +88,16 @@ public class PluginEntityManager extends AbstractPluginObject {
 
         String emfName = "entityManagerFactory" + unit;
         IReusable<?> irFact = rm.get(emfName);
-        if (irFact != null) {
-            if (irFact.canReuse(cfg)) {
-                emf = (EntityManagerFactory) irFact.getObject();
-            } else {
-                emf = Persistence.createEntityManagerFactory(unit, properties);
-            }
+        if (irFact != null && irFact.canReuse(cfg)) {
+            emf = (EntityManagerFactory) irFact.getObject();
         } else {
             emf = Persistence.createEntityManagerFactory(unit, properties);
         }
 
         String emName = "entityManager" + unit;
         IReusable<?> irEm = rm.get(emName);
-        if (irEm != null) {
-            if (irEm.canReuse(cfg)) {
-                em = (EntityManager) irEm.getObject();
-            } else {
-                em = emf.createEntityManager();
-            }
+        if (irEm != null && irEm.canReuse(cfg)) {
+            em = (EntityManager) irEm.getObject();
         } else {
             em = emf.createEntityManager();
         }
