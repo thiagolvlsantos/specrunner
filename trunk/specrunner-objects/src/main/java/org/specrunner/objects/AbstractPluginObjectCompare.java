@@ -39,7 +39,7 @@ import org.specrunner.util.impl.CellAdapter;
 import org.specrunner.util.impl.RowAdapter;
 
 /**
- * Performs object after some system iteraction.
+ * Performs object after some system interaction.
  * 
  * @author Thiago Santos
  * 
