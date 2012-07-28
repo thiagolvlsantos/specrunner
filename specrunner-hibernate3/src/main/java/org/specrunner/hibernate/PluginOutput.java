@@ -41,12 +41,7 @@ public class PluginOutput extends AbstractPluginObjectCompare {
     /**
      * The object session factory.
      */
-    private Session session;
-
-    @Override
-    public boolean isMapped() {
-        return false;
-    }
+    protected Session session;
 
     @SuppressWarnings("unchecked")
     @Override
