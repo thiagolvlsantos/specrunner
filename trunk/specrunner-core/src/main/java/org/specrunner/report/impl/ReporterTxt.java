@@ -20,8 +20,8 @@ public class ReporterTxt extends AbstractReport {
             System.out.printf(pattern, "", r.getIndex(), r.getTime(), asPercentage(r.getTime()), r.getTimestamp(), r.getStatus().getName() + " " + r.getStatusCounter() + "/" + r.getStatusTotal(), r.getInput() + " <-> " + r.getOutput());
         }
         System.out.println("\t          ----------------------------------");
-        pattern = "\t%10s %10s : %10d\n";
-        System.out.printf(pattern, "", "TOTAL", total);
+        pattern = "\t%10s %10s : %10d (AVG: %.2f)\n";
+        System.out.printf(pattern, "", "TOTAL", total, ((double) total / (list.isEmpty() ? 1 : list.size())));
         System.out.printf("\t+---------------------%s-----------------------+\n", "");
     }
 }
