@@ -85,6 +85,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      */
     protected String reference;
     /**
+     * The identification fields list.
+     */
+    protected List<String> references = new LinkedList<String>();
+    /**
      * Separator of identification attributes.
      */
     protected String separator;
@@ -206,6 +210,13 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      */
     public void setReference(String reference) {
         this.reference = reference;
+        if (reference != null) {
+            references.clear();
+            String[] refs = reference.split(",");
+            for (String s : refs) {
+                references.add(s);
+            }
+        }
     }
 
     /**
@@ -411,6 +422,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             f.setIndex(index++);
 
+            f.setReference(references.contains(name));
+
             f.setIgnore(ignore);
             if (!ignore) {
                 StringTokenizer st = new StringTokenizer(name, ".");
@@ -528,6 +541,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         private boolean ignore;
         /**
+         * Is reference column.
+         */
+        private boolean reference;
+        /**
          * The column name of the field.
          */
         private String fieldName;
@@ -592,6 +609,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         public void setIgnore(boolean ignore) {
             this.ignore = ignore;
+        }
+
+        /**
+         * Get if the field is a key value.
+         * 
+         * @return true, if is part of key, false, otherwise.
+         */
+        public boolean isReference() {
+            return reference;
+        }
+
+        /**
+         * Set if the field is a key part.
+         * 
+         * @param reference
+         *            The reference status.
+         */
+        public void setReference(boolean reference) {
+            this.reference = reference;
         }
 
         /**
@@ -1168,9 +1204,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("KEYS>" + reference);
         }
-        String[] keyFields = reference.split(",");
-        for (int i = 0; i < keyFields.length; i++) {
-            str += (i == 0 ? "" : separator) + PropertyUtils.getProperty(instance, keyFields[i]);
+        for (int i = 0; i < references.size(); i++) {
+            str += (i == 0 ? "" : separator) + PropertyUtils.getProperty(instance, references.get(i));
         }
         return str;
     }

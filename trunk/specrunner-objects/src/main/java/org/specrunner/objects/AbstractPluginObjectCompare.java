@@ -17,19 +17,12 @@
  */
 package org.specrunner.objects;
 
-import java.util.List;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.result.status.Warning;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
@@ -39,111 +32,15 @@ import org.specrunner.util.impl.CellAdapter;
 import org.specrunner.util.impl.RowAdapter;
 
 /**
- * Performs object after some system interaction.
+ * Performs comparison of objects.
  * 
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginObjectCompare extends AbstractPluginObject {
+public abstract class AbstractPluginObjectCompare extends AbstractPluginObjectSelect {
 
     @Override
-    public ActionType getActionType() {
-        return Assertion.INSTANCE;
-    }
-
-    @Override
-    public boolean isMapped() {
-        return false;
-    }
-
-    @Override
-    protected void action(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("KEYS>" + reference);
-        }
-        try {
-            List<Object> list = select(context, instance, row, result);
-            if (list.isEmpty()) {
-                addError(context, row, result, new PluginException("None element found. XML:" + row.getElement().toXML()));
-                return;
-            }
-            if (list.size() > 1) {
-                addError(context, row, result, new PluginException("More than one element found. XML:" + row.getElement().toXML()));
-                return;
-            }
-            Object base = list.get(0);
-            if (base == null) {
-                addError(context, row, result, new PluginException("This register is not present in object repository. XML:" + row.getElement().toXML()));
-            } else {
-                compare(context, base, instance, row, result);
-            }
-
-        } finally {
-            release();
-        }
-    }
-
-    /**
-     * Add a error to a comparison.
-     * 
-     * @param context
-     *            The context.
-     * @param row
-     *            The row.
-     * @param result
-     *            The result set.
-     * @param e
-     *            The error.
-     */
-    private void addError(IContext context, RowAdapter row, IResultSet result, Exception e) {
-        for (int i = 0; i < row.getCellsCount(); i++) {
-            result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
-        }
-    }
-
-    /**
-     * Performs a select on object repository to compare with the reference.
-     * 
-     * @param context
-     *            The test context.
-     * @param instance
-     *            The object to be compared with repository version.
-     * @param row
-     *            The row which was the source for object creation.
-     * @param result
-     *            The result set.
-     * @return The corresponding objects from repository.
-     * @throws Exception
-     *             On selecion errors.
-     */
-    public abstract List<Object> select(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
-
-    /**
-     * Release comparison resources. i.e. For Hibernate repositories free
-     * sessions in use for comparison.
-     * 
-     * @throws Exception
-     *             On release errors.
-     */
-    public abstract void release() throws Exception;
-
-    /**
-     * Default comparison processing.
-     * 
-     * @param context
-     *            The test context.
-     * @param base
-     *            The object version from repository.
-     * @param instance
-     *            The object version from specification.
-     * @param row
-     *            The row which give origin to the 'instance'.
-     * @param result
-     *            The result set.
-     * @throws Exception
-     *             On comparison errors.
-     */
-    public void compare(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
+    public void perform(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
         for (Field f : fields) {
             if (f.isIgnore()) {
                 continue;
