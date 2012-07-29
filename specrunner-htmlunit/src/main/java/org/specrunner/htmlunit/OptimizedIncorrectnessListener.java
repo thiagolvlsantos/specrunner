@@ -1,7 +1,7 @@
 package org.specrunner.htmlunit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl;
 
@@ -16,7 +16,7 @@ public class OptimizedIncorrectnessListener extends IncorrectnessListenerImpl {
     /**
      * Logger, same of IncorrectnessListenerImpl.
      */
-    private static final Log LOG = LogFactory.getLog(IncorrectnessListenerImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(IncorrectnessListenerImpl.class.getName());
 
     @Override
     public void notify(String message, Object origin) {
