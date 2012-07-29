@@ -28,9 +28,9 @@ import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.listeners.PageListener;
 import org.specrunner.listeners.IListenerManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -560,6 +560,9 @@ public class PluginBrowser extends AbstractPluginScoped {
                 UtilLog.LOG.info("Browser named '" + getName() + "' version '" + bVersion.getNickname() + "'.");
             }
             final WebClient client = new WebClient(bVersion);
+
+            // the DefaulCssErrorHandler logs everything useless
+            client.setCssErrorHandler(new OptimizedCssErrorHandler());
 
             // change web connection
             if (connectionType != null) {

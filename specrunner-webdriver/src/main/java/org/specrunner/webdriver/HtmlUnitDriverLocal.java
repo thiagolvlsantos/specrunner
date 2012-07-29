@@ -35,6 +35,8 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      * Default constructor.
      */
     public HtmlUnitDriverLocal() {
+        super();
+        initialize();
     }
 
     /**
@@ -45,6 +47,7 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal(boolean enableJavascript) {
         super(enableJavascript);
+        initialize();
     }
 
     /**
@@ -55,6 +58,7 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal(BrowserVersion version) {
         super(version);
+        initialize();
     }
 
     /**
@@ -65,11 +69,19 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal(Capabilities capabilities) {
         super(capabilities);
+        initialize();
     }
 
     @Override
     public WebClient getWebClient() {
         return super.getWebClient();
+    }
+
+    /**
+     * Perform some missing initialization on webclient.
+     */
+    public void initialize() {
+        getWebClient().setCssErrorHandler(new OptimizedCssErrorHandler());
     }
 
     /**
@@ -81,8 +93,7 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      *            The header value.
      */
     public void setHeader(String name, String value) {
-        WebClient wc = getWebClient();
-        wc.addRequestHeader(name, value);
+        getWebClient().addRequestHeader(name, value);
     }
 
 }
