@@ -81,7 +81,9 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      * Perform some missing initialization on webclient.
      */
     public void initialize() {
-        getWebClient().setCssErrorHandler(new OptimizedCssErrorHandler());
+        WebClient client = getWebClient();
+        client.setCssErrorHandler(new OptimizedCssErrorHandler());
+        client.setIncorrectnessListener(new OptimizedIncorrectnessListener());
     }
 
     /**
