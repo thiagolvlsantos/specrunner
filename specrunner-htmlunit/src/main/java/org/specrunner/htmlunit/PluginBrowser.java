@@ -561,9 +561,6 @@ public class PluginBrowser extends AbstractPluginScoped {
             }
             final WebClient client = new WebClient(bVersion);
 
-            // the DefaulCssErrorHandler logs everything useless
-            client.setCssErrorHandler(new OptimizedCssErrorHandler());
-
             // change web connection
             if (connectionType != null) {
                 WebConnection connectionInstance = null;
@@ -575,7 +572,6 @@ public class PluginBrowser extends AbstractPluginScoped {
                 }
                 client.setWebConnection(connectionInstance);
             }
-
             setDefaultClientBehaviors(client);
 
             // synchronize Ajax calls
@@ -688,5 +684,8 @@ public class PluginBrowser extends AbstractPluginScoped {
         client.setPrintContentOnFailingStatusCode(true);
         client.setThrowExceptionOnFailingStatusCode(false);
         client.setThrowExceptionOnScriptError(false);
+        // some handlers are logging without test log enabled, fixing.
+        client.setCssErrorHandler(new OptimizedCssErrorHandler());
+        client.setIncorrectnessListener(new OptimizedIncorrectnessListener());
     }
 }
