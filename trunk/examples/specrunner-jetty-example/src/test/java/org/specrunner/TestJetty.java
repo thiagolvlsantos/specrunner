@@ -132,7 +132,7 @@ public class TestJetty {
         for (int j = 0; j < 5; j++) {
             try {
                 fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
-                // tj.runJetty();
+                tj.runJettyWithRecording();
             } catch (Exception e) {
                 e.printStackTrace();
             }
