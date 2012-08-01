@@ -17,10 +17,13 @@
  */
 package org.specrunner.dumper.impl;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import nu.xom.Document;
 import nu.xom.Serializer;
@@ -73,6 +76,15 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      * Output file (absolute).
      */
     protected File outputFile;
+
+    /**
+     * The output charset.
+     */
+    public static final String FEATURE_CHARSET = AbstractSourceDumperFile.class.getName() + ".charset";
+    /**
+     * Charset of output.
+     */
+    protected String charset = Charset.defaultCharset().name();
 
     /**
      * Set source and result objects.
@@ -147,6 +159,25 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     }
 
     /**
+     * The output charset.
+     * 
+     * @return The charset.
+     */
+    public String getCharset() {
+        return charset;
+    }
+
+    /**
+     * Set the charset.
+     * 
+     * @param charset
+     *            The charset.
+     */
+    public void setCharset(String charset) {
+        this.charset = charset;
+    }
+
+    /**
      * Set features.
      * 
      * @param source
@@ -157,6 +188,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     protected void setFeatures(ISource source) throws SourceDumperException {
         outputDirectory();
         outputName(source);
+        charset();
     }
 
     /**
@@ -217,6 +249,24 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     }
 
     /**
+     * Set the charset based on a feature.
+     * 
+     * @throws SourceDumperException
+     *             On dumper error.
+     */
+    protected void charset() throws SourceDumperException {
+        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        try {
+            fh.set(FEATURE_CHARSET, "charset", String.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceDumperException(e);
+        }
+    }
+
+    /**
      * Clean up directory files before dumping resources.
      * 
      * @param file
@@ -244,8 +294,8 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      * @throws UnsupportedEncodingException
      *             On enconding errors.
      */
-    protected Serializer getSerializer(FileOutputStream fr) throws UnsupportedEncodingException {
-        Serializer sr = new Serializer(fr, "ISO-8859-1");
+    protected Serializer getSerializer(OutputStream fr) throws UnsupportedEncodingException {
+        Serializer sr = new Serializer(fr, charset);
         // increase performance of execution.
         // sr.setIndent(GAP);
         return sr;
@@ -268,20 +318,30 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
                 throw new SourceDumperException("Could not create output directory '" + parent + "'.");
             }
         }
-        FileOutputStream fr = null;
+        FileOutputStream fout = null;
+        BufferedOutputStream bout = null;
         try {
-            fr = new FileOutputStream(output);
-            Serializer sr = getSerializer(fr);
-            sr.write(doc);
+            fout = new FileOutputStream(output);
+            bout = new BufferedOutputStream(fout);
+            getSerializer(bout).write(doc);
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
             throw new SourceDumperException(e);
         } finally {
-            if (fr != null) {
+            if (fout != null) {
                 try {
-                    fr.close();
+                    fout.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
+            if (bout != null) {
+                try {
+                    bout.close();
                 } catch (IOException e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
