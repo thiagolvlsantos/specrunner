@@ -19,7 +19,6 @@ package org.specrunner.source.resource.positional.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -104,7 +103,7 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                                 throw new ResourceException("Could not create resource directory '" + resFile.getParent() + "'.");
                             }
                         }
-                        UtilIO.writeToClose(url.openStream(), new FileOutputStream(resFile));
+                        UtilIO.writeToClose(url, resFile);
                         if (getPosition().getPlace() == EPlace.START) {
                             target.insertChild(tag, 0);
                         } else {

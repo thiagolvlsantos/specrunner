@@ -18,7 +18,6 @@
 package org.specrunner.source.resource.element.impl;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URL;
 
 import nu.xom.Attribute;
@@ -61,17 +60,17 @@ public class ImgResource extends AbstractResourceElement {
     public ISource writeTo(ISource target) throws ResourceException {
         try {
             File fout = null;
-            URL file = null;
+            URL url = null;
             if (isClasspath()) {
-                file = UtilResources.getMostSpecific(getResourcePath());
+                url = UtilResources.getMostSpecific(getResourcePath());
                 File f = new File(getResourcePath());
                 fout = new File(target.getFile().getParentFile(), target.getFile().getName() + "_res/" + f.getName());
             } else {
-                file = new URL(getResourcePath());
+                url = new URL(getResourcePath());
                 String srcChanged = getElement().getAttribute("src").getValue();
                 fout = new File(target.getFile().getParentFile(), srcChanged);
             }
-            UtilIO.writeToClose(file.openStream(), new FileOutputStream(fout));
+            UtilIO.writeToClose(url, fout);
         } catch (Exception e) {
             throw new ResourceException(e);
         }

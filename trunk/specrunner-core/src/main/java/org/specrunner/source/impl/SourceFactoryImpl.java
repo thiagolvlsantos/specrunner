@@ -17,8 +17,9 @@
  */
 package org.specrunner.source.impl;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -159,21 +160,35 @@ public class SourceFactoryImpl implements ISourceFactory {
                         throw new SourceException("Could not load the 'String/URI' source '" + target + "'.", e);
                     }
                 } else {
-                    FileReader reader = null;
+                    FileInputStream fin = null;
+                    BufferedInputStream bin = null;
                     try {
-                        reader = new FileReader(target);
-                        return newSource(reader).getDocument();
+                        fin = new FileInputStream(target);
+                        bin = new BufferedInputStream(fin);
+                        return newSource(bin).getDocument();
                     } catch (FileNotFoundException e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
                         throw new SourceException("Could not load the 'String/File' source '" + target + "'.", e);
                     } finally {
-                        if (reader != null) {
+                        if (fin != null) {
                             try {
-                                reader.close();
+                                fin.close();
                                 if (UtilLog.LOG.isDebugEnabled()) {
-                                    UtilLog.LOG.debug("Close file reader:" + target);
+                                    UtilLog.LOG.debug("Close file inputstream:" + target);
+                                }
+                            } catch (IOException e) {
+                                if (UtilLog.LOG.isTraceEnabled()) {
+                                    UtilLog.LOG.trace(e.getMessage(), e);
+                                }
+                            }
+                        }
+                        if (bin != null) {
+                            try {
+                                bin.close();
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug("Close file buffered inputstream:" + target);
                                 }
                             } catch (IOException e) {
                                 if (UtilLog.LOG.isTraceEnabled()) {

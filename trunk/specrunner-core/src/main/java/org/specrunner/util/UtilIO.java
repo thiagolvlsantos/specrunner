@@ -17,6 +17,9 @@
  */
 package org.specrunner.util;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -149,18 +152,24 @@ public final class UtilIO {
     }
 
     /**
-     * Write the input to output and close both.
+     * Write the url input to the file output.
      * 
-     * @param in
+     * @param url
      *            The input.
-     * @param out
+     * @param file
      *            The output.
      * @throws IOException
      *             On writing errors.
      */
-    public static void writeToClose(InputStream in, OutputStream out) throws IOException {
+    public static void writeToClose(URL url, File file) throws IOException {
+        InputStream in = null;
+        FileOutputStream fout = null;
+        BufferedOutputStream bout = null;
         try {
-            writeTo(in, out);
+            in = url.openStream();
+            fout = new FileOutputStream(file);
+            bout = new BufferedOutputStream(fout);
+            writeTo(in, bout);
         } finally {
             if (in != null) {
                 try {
@@ -171,12 +180,21 @@ public final class UtilIO {
                     }
                 }
             }
-            if (out != null) {
+            if (fout != null) {
                 try {
-                    out.close();
+                    fout.close();
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + out);
+                        UtilLog.LOG.debug("Closing " + fout);
+                    }
+                }
+            }
+            if (bout != null) {
+                try {
+                    bout.close();
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Closing " + bout);
                     }
                 }
             }
