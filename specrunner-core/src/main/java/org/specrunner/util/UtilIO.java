@@ -176,7 +176,7 @@ public final class UtilIO {
                     in.close();
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + in);
+                        UtilLog.LOG.debug("Closing " + in, e);
                     }
                 }
             }
@@ -185,7 +185,7 @@ public final class UtilIO {
                     fout.close();
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + fout);
+                        UtilLog.LOG.debug("Closing " + fout, e);
                     }
                 }
             }
@@ -194,7 +194,7 @@ public final class UtilIO {
                     bout.close();
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + bout);
+                        UtilLog.LOG.debug("Closing " + bout, e);
                     }
                 }
             }
