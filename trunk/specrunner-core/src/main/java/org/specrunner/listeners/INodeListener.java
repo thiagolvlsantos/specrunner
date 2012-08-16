@@ -20,6 +20,7 @@ package org.specrunner.listeners;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ENext;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -40,8 +41,10 @@ public interface INodeListener extends ISpecRunnerListener {
      *            The context.
      * @param result
      *            The result.
+     * @return The next step on execution. If return is <code>ENext.DEEP</code>,
+     *         the execution should go deeper.
      */
-    void onBefore(Node node, IContext context, IResultSet result);
+    ENext onBefore(Node node, IContext context, IResultSet result);
 
     /**
      * Perform some action after plugin execution for a given node.
@@ -54,5 +57,4 @@ public interface INodeListener extends ISpecRunnerListener {
      *            The result.
      */
     void onAfter(Node node, IContext context, IResultSet result);
-
 }

@@ -164,9 +164,13 @@ public class RunnerImpl implements IRunner {
      */
     protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
         List<INodeListener> nListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
-        // perform before listeners
-        for (INodeListener nl : nListeners) {
-            nl.onBefore(node, context, result);
+        ENext doNode = nodeStart(node, context, result, nListeners);
+        // if listener were used and they said to skip
+        if (doNode == ENext.SKIP) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Node listener returned '" + doNode + "'.");
+            }
+            return;
         }
         IPlugin plugin = null;
         IBlock block = null;
@@ -285,7 +289,7 @@ public class RunnerImpl implements IRunner {
                 }
             }
             // sleep if required
-            checkSleep(plugin, context);
+            doSleep(plugin, context);
         } catch (Throwable e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -302,6 +306,30 @@ public class RunnerImpl implements IRunner {
                 nl.onAfter(node, context, result);
             }
         }
+    }
+
+    /**
+     * Perform start node listeners.
+     * 
+     * @param node
+     *            The node.
+     * @param context
+     *            The current context.
+     * @param result
+     *            The result.
+     * @param listeners
+     *            Node listeners.
+     * @return The next step to be taken, SKIP or go DEEPer.
+     */
+    protected ENext nodeStart(Node node, IContext context, IResultSet result, List<INodeListener> listeners) {
+        // if there are listeners they can guide if runner should go deeper or
+        // not
+        ENext doNode = listeners.isEmpty() ? ENext.DEEP : ENext.SKIP;
+        // perform before listeners
+        for (INodeListener nl : listeners) {
+            doNode = doNode.max(nl.onBefore(node, context, result));
+        }
+        return doNode;
     }
 
     /**
@@ -372,7 +400,7 @@ public class RunnerImpl implements IRunner {
      * @throws SpecRunnerException
      *             On sleep checking errors.
      */
-    protected void checkSleep(IPlugin plugin, IContext context) throws SpecRunnerException {
+    protected void doSleep(IPlugin plugin, IContext context) throws SpecRunnerException {
         if (plugin instanceof ISleepPlugin) {
             ISleepPlugin sleepPlugin = (ISleepPlugin) plugin;
             IModel<Object, Long> model = sleepPlugin.getSleepModel();

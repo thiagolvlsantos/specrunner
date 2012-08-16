@@ -34,4 +34,15 @@ public enum ENext {
      * The runner goes down the node children.
      */
     DEEP;
+
+    /**
+     * Max of next actions.
+     * 
+     * @param e
+     *            The comparison element.
+     * @return The most important, for execution.
+     */
+    public ENext max(ENext e) {
+        return this == DEEP ? this : e;
+    }
 }

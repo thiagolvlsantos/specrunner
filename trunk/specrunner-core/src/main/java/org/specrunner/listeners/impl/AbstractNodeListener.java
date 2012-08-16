@@ -21,6 +21,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
+import org.specrunner.plugins.ENext;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 
@@ -33,10 +34,11 @@ import org.specrunner.util.UtilLog;
 public abstract class AbstractNodeListener implements INodeListener {
 
     @Override
-    public void onBefore(Node node, IContext context, IResultSet result) {
+    public ENext onBefore(Node node, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("onBefore(" + context + "," + result + ")");
         }
+        return ENext.DEEP;
     }
 
     @Override

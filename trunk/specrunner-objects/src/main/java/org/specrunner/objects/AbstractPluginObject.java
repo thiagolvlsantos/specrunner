@@ -788,22 +788,22 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         @Override
         public String toString() {
             String strNames = "";
-            for (int i = 0; i < names.length; i++) {
+            for (int i = 0; names != null && i < names.length; i++) {
                 strNames += (i == 0 ? "" : ",") + names[i];
             }
             String strTypes = "";
-            for (int i = 0; i < types.length; i++) {
+            for (int i = 0; types != null && i < types.length; i++) {
                 strTypes += (i == 0 ? "" : ",") + types[i];
             }
             String strConvs = "";
-            for (int i = 0; i < converters.length; i++) {
+            for (int i = 0; converters != null && i < converters.length; i++) {
                 strConvs += (i == 0 ? "" : ",") + converters[i];
             }
             String strArgs = "";
-            for (int i = 0; i < args.length; i++) {
+            for (int i = 0; args != null && i < args.length; i++) {
                 strArgs += (i == 0 ? "" : ",") + args[i];
             }
-            return index + ",'" + fieldName + "'," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],(" + comparator + ")";
+            return index + ",'" + fieldName + "'(" + ignore + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],(" + comparator + ")";
         }
     }
 
