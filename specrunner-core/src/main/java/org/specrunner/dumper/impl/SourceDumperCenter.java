@@ -95,11 +95,11 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         link.addAttribute(new Attribute("href", getFilePrefix() + "_frame.html"));
         link.addAttribute(new Attribute("title", "This is a framed report where errors are easier to find and test meta-information is available."));
         link.appendChild("Framed report");
-        span.appendChild(" (");
+        span.appendChild(" [");
         Status s = result.getStatus();
         span.appendChild(s.asNode());
         span.appendChild("(" + result.countStatus(s) + ")");
-        span.appendChild(" in " + model.get("time") + " ms): ");
+        span.appendChild(" in " + model.get("time") + " ms]: ");
         span.appendChild(new Element("br"));
         span.appendChild(" at " + model.get("date") + " ");
         span.appendChild(new Element("br"));

@@ -37,7 +37,7 @@ public class AnnotatorCssActionType implements IAnnotator {
     public void annotate(IResultSet result) throws AnnotatorException {
         for (IResult r : result) {
             IBlock block = r.getBlock();
-            if (block.hasNode() && !UtilNode.isIgnore(block.getNode())) {
+            if (block.hasNode()) {
                 UtilNode.appendCss(block.getNode(), r.getActionType().getCssName());
             }
         }

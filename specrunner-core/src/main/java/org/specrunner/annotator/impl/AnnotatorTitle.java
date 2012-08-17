@@ -27,6 +27,7 @@ import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
+import org.specrunner.util.UtilLog;
 
 /**
  * Add/Append title with result information.
@@ -80,7 +81,9 @@ public class AnnotatorTitle implements IAnnotator {
                 old.setValue(old.getValue() + ";" + message);
             }
         } else {
-            throw new AnnotatorException("Error element is not an Element -> " + (node != null ? node.toXML() : "null"), error);
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Error element is not an Element -> " + (node != null ? node.toXML() : "null"), error);
+            }
         }
     }
 }

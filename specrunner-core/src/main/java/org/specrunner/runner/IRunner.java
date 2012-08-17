@@ -35,18 +35,32 @@ import org.specrunner.source.ISource;
 public interface IRunner {
 
     /**
-     * Feature to set the ignorable aliases using IFeatureManager or
+     * Feature to set the disabled aliases using IFeatureManager or
      * IConfiguration.
      */
-    String FEATURE_IGNORED_ALIASES = IRunner.class.getName() + ".ignoredAliases";
+    String FEATURE_DISABLED_ALIASES = IRunner.class.getName() + ".disabledAliases";
+
+    /**
+     * Feature to set the enabled aliases using IFeatureManager or
+     * IConfiguration.
+     */
+    String FEATURE_ENABLED_ALIASES = IRunner.class.getName() + ".enabledAliases";
 
     /**
      * List of alias that should be ignored by runner.
      * 
-     * @param ignoredAliases
+     * @param disabledAliases
      *            The alias to be ignored by runner.
      */
-    void setIgnoredAliases(List<String> ignoredAliases);
+    void setDisabledAliases(List<String> disabledAliases);
+
+    /**
+     * List of alias that should be enabled by runner.
+     * 
+     * @param enabledAliases
+     *            The alias to be enabled by runner.
+     */
+    void setEnabledAliases(List<String> enabledAliases);
 
     /**
      * Performs the specification in source.

@@ -17,7 +17,6 @@
  */
 package org.specrunner.runner.impl;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,6 +42,7 @@ import org.specrunner.plugins.ISleepPlugin;
 import org.specrunner.plugins.ITestPlugin;
 import org.specrunner.plugins.ITimedPlugin;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Ignored;
@@ -64,31 +64,54 @@ import org.specrunner.util.UtilNode;
 public class RunnerImpl implements IRunner {
 
     /**
-     * List of ignored aliases.
+     * List of disabled aliases.
      */
-    protected List<String> ignoredAliases = Collections.emptyList();
+    protected List<String> disabledAliases;
+    /**
+     * List of enabled aliases.
+     */
+    protected List<String> enabledAliases;
 
     @Override
-    public void setIgnoredAliases(List<String> ignoredAliases) {
-        if (ignoredAliases == null) {
-            this.ignoredAliases = Collections.emptyList();
-        } else {
-            this.ignoredAliases = new LinkedList<String>();
-            for (String s : ignoredAliases) {
+    public void setDisabledAliases(List<String> disabledAliases) {
+        if (disabledAliases != null) {
+            this.disabledAliases = new LinkedList<String>();
+            for (String s : disabledAliases) {
                 if (s != null) {
-                    this.ignoredAliases.add(s.toLowerCase());
+                    this.disabledAliases.add(s.toLowerCase());
                 }
             }
         }
     }
 
     /**
-     * Get the list of ignored aliases.
+     * Get the list of disabled aliases.
      * 
-     * @return Ignored aliases list.
+     * @return Disabled aliases list.
      */
-    public List<String> getIgnoredAliases() {
-        return ignoredAliases;
+    public List<String> getDisabledAliases() {
+        return disabledAliases;
+    }
+
+    @Override
+    public void setEnabledAliases(List<String> enabledAliases) {
+        if (enabledAliases != null) {
+            this.enabledAliases = new LinkedList<String>();
+            for (String s : enabledAliases) {
+                if (s != null) {
+                    this.enabledAliases.add(s.toLowerCase());
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the list of enabled aliases.
+     * 
+     * @return Enabled aliases list.
+     */
+    public List<String> getEnabledAliases() {
+        return enabledAliases;
     }
 
     @Override
@@ -140,7 +163,14 @@ public class RunnerImpl implements IRunner {
     protected void setFeature() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         try {
-            fm.set(IRunner.FEATURE_IGNORED_ALIASES, "ignoredAliases", List.class, this);
+            fm.set(IRunner.FEATURE_DISABLED_ALIASES, "disabledAliases", List.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+        try {
+            fm.set(IRunner.FEATURE_ENABLED_ALIASES, "enabledAliases", List.class, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -185,14 +215,16 @@ public class RunnerImpl implements IRunner {
             }
             // new block for node
             block = context.newBlock(node, plugin);
-            String alias = factory.getAlias(plugin.getClass());
-            if (alias != null && ignoredAliases.contains(alias)) {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
+            if (plugin != PluginNop.emptyPlugin()) {
+                String alias = factory.getAlias(plugin.getClass());
+                if (alias != null && (disabledAliases != null && disabledAliases.contains(alias)) || (enabledAliases != null && !enabledAliases.contains(alias))) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
+                    }
+                    result.addResult(Ignored.INSTANCE, block, "This plugin has been disabled by our own choice.\n Disabled plugins:" + disabledAliases + ".\n Enabled plugins:" + enabledAliases + ".\n To set disabled or accepted plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)). The same approach for feature IRunner.FEATURE_ENABLED_ALIASES.");
+                    ignored = true;
+                    return;
                 }
-                result.addResult(Ignored.INSTANCE, block, "This plugin has been ignored by our own choice. Ignored plugins:" + ignoredAliases + ". To set ignored plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_IGNORED_ALIASES,Arrays.asList(<our alias list>)).");
-                ignored = true;
-                return;
             }
 
             // queue block to the context
@@ -207,19 +239,9 @@ public class RunnerImpl implements IRunner {
             context.saveLocal(UtilEvaluator.asVariable("block"), block);
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
-            // perform before initialization
-            for (IPluginListener sl : listeners) {
-                sl.onBeforeInit(plugin, context, result);
-            }
-            try {
-                // initialize the plugin
-                plugin.initialize(context);
-            } finally {
-                // perform after initialization
-                for (IPluginListener sl : listeners) {
-                    sl.onAfterInit(plugin, context, result);
-                }
-            }
+            // initialization
+            initialization(context, result, plugin, listeners);
+            // conditional execution
             if (checkConditional(plugin, context)) {
                 // perform before start
                 for (IPluginListener sl : listeners) {
@@ -330,6 +352,36 @@ public class RunnerImpl implements IRunner {
             doNode = doNode.max(nl.onBefore(node, context, result));
         }
         return doNode;
+    }
+
+    /**
+     * Perform initialization.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param plugin
+     *            The plugin.
+     * @param listeners
+     *            Plugin listeners.
+     * @throws PluginException
+     *             On initialization errors.
+     */
+    protected void initialization(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws PluginException {
+        // perform before initialization
+        for (IPluginListener sl : listeners) {
+            sl.onBeforeInit(plugin, context, result);
+        }
+        try {
+            // initialize the plugin
+            plugin.initialize(context);
+        } finally {
+            // perform after initialization
+            for (IPluginListener sl : listeners) {
+                sl.onAfterInit(plugin, context, result);
+            }
+        }
     }
 
     /**
