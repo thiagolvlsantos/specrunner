@@ -51,6 +51,12 @@ public class TestHibernate {
         // return "ignorarTabelas";
         // }
         // });
+
+        // exemplo de habilitar/desabilitar plugins
+        // fh.add(IRunner.FEATURE_ENABLED_ALIASES, Arrays.asList("global",
+        // "hbmcfg"));
+        // fh.add(IRunner.FEATURE_DISABLED_ALIASES, Arrays.asList("global",
+        // "hbmcfg"));
     }
 
     private void pause() {
