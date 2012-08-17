@@ -46,7 +46,7 @@ public class TestJump {
     @Test
     public void exampleChrome() {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(IRunner.FEATURE_IGNORED_ALIASES, Arrays.asList("pause"));
+        cfg.add(IRunner.FEATURE_DISABLED_ALIASES, Arrays.asList("pause"));
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", cfg);
     }
@@ -54,7 +54,7 @@ public class TestJump {
     @Test
     public void exampleLocal() {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(IRunner.FEATURE_IGNORED_ALIASES, Arrays.asList("jettyStart", "pause"));
+        cfg.add(IRunner.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         cfg.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyLocal.html", cfg);
     }
@@ -62,7 +62,7 @@ public class TestJump {
     @Test
     public void exampleGlobal() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.add(IRunner.FEATURE_IGNORED_ALIASES, Arrays.asList("jettyStart", "pause"));
+        fm.add(IRunner.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         fm.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyGlobal.html");
     }
