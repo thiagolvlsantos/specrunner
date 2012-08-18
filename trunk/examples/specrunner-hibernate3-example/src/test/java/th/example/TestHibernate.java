@@ -10,7 +10,6 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.listeners.IListenerManager;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.util.comparer.impl.AbstractComparatorTime;
 import org.specrunner.util.converter.IConverterManager;
@@ -33,7 +32,7 @@ public class TestHibernate {
 
         fh.put(AbstractPlugin.FEATURE_THREADSAFE, Boolean.TRUE);
 
-        IListenerManager lm = SpecRunnerServices.get(IListenerManager.class);
+        // IListenerManager lm = SpecRunnerServices.get(IListenerManager.class);
         // lm.add(new AbstractNodeListener() {
         // @Override
         // public void reset() {
