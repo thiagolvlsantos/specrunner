@@ -68,7 +68,6 @@ public abstract class AbstractPluginObjectSelect extends AbstractPluginObject {
             } else {
                 perform(context, base, instance, row, result);
             }
-
         } finally {
             release();
         }
