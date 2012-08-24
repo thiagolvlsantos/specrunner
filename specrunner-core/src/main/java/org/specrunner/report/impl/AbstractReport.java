@@ -5,7 +5,11 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.impl.pipes.PipeInput;
 import org.specrunner.impl.pipes.PipeTime;
 import org.specrunner.impl.pipes.PipeTimestamp;
@@ -37,6 +41,11 @@ public abstract class AbstractReport implements IReporter {
     protected int index = 1;
 
     /**
+     * Hash of state counters.
+     */
+    protected Map<Status, Integer> counter = new TreeMap<Status, Integer>();
+
+    /**
      * List of resume of results.
      */
     protected List<Resume> resumes = new LinkedList<Resume>();
@@ -44,8 +53,34 @@ public abstract class AbstractReport implements IReporter {
     @Override
     public void analyse(IResultSet result, Map<String, Object> model) {
         Resume r = createResume(result, model);
+        Status s = r.getStatus();
+        Integer c = counter.get(s);
+        if (c == null) {
+            c = 0;
+        }
+        counter.put(s, c + 1);
         total += r.getTime();
         resumes.add(r);
+    }
+
+    @Override
+    public void resume() {
+        System.out.println("+-----");
+        System.out.printf(" STATS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): #TESTS:%d [%s], TOTAL:%d ms, AVG:%7.2f ms\n", (index - 1), counters(), total, (index > 1 ? (float) total / (index - 1) : (float) total));
+        System.out.println("+-----");
+    }
+
+    /**
+     * Global status counter as string.
+     * 
+     * @return The overall execution resume.
+     */
+    protected String counters() {
+        StringBuilder sb = new StringBuilder();
+        for (Entry<Status, Integer> e : counter.entrySet()) {
+            sb.append(e.getKey().getName() + "=" + e.getValue() + ", ");
+        }
+        return sb.substring(0, sb.length() - 2);
     }
 
     /**

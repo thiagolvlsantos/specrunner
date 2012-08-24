@@ -21,6 +21,7 @@ import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.report.IReporter;
 
 /**
  * Pipe to add report information.
@@ -37,7 +38,9 @@ public class PipeReport implements IPipe {
 
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
-        PipeReporter.lookup(channel).analyse(PipeResult.lookup(channel), PipeModel.recover(channel));
+        IReporter reporter = PipeReporter.lookup(channel);
+        reporter.analyse(PipeResult.lookup(channel), PipeModel.recover(channel));
+        reporter.resume();
         return channel;
     }
 }

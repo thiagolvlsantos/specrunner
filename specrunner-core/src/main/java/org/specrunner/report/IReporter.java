@@ -40,6 +40,11 @@ public interface IReporter {
     void analyse(IResultSet result, Map<String, Object> model);
 
     /**
+     * Short information about report.
+     */
+    void resume();
+
+    /**
      * Dump report information.
      */
     void report();
