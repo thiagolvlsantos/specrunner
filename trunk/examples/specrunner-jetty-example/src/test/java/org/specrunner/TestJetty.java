@@ -1,7 +1,6 @@
 package org.specrunner;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -14,7 +13,6 @@ import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.util.UtilIO;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;
@@ -23,14 +21,14 @@ import org.specrunner.webdriver.impl.WebDriverFactoryIe;
 
 public class TestJetty {
 
-    static {
-        try {
-            System.out.println("LIGAR PROFILE...");
-            UtilIO.pressKey();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // static {
+    // try {
+    // System.out.println("LIGAR PROFILE...");
+    // UtilIO.pressKey();
+    // } catch (IOException e) {
+    // e.printStackTrace();
+    // }
+    // }
 
     @Before
     public void prepareTest() throws SpecRunnerException {

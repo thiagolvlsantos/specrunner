@@ -92,7 +92,7 @@ public class PipeDump implements IPipe {
      */
     protected void messageAfter(Map<String, Object> info, IResultSet result) {
         System.out.printf("Result " + getNome() + ": %s \n", result.asString());
-        System.out.printf("    In " + getNome() + ": %d mls \n", info.get(PipeTime.TIME));
+        System.out.printf("    In " + getNome() + ": %d ms \n", info.get(PipeTime.TIME));
         System.out.printf("    At " + getNome() + ": %s \n", info.get(PipeTimestamp.DATE));
     }
 }
