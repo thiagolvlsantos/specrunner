@@ -38,7 +38,7 @@ import org.specrunner.util.impl.RowAdapter;
  * @param <T>
  *            The source type.
  */
-public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjectSelect<T> {
+public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjectSelectUnique<T> {
 
     /**
      * Create a plugin comparator, provided an object selector.
