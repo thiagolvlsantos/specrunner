@@ -33,9 +33,30 @@ import org.specrunner.util.impl.RowAdapter;
  * Performs something on a selected object.
  * 
  * @author Thiago Santos
- * 
+ * @param <T>
+ *            The source type.
  */
-public abstract class AbstractPluginObjectSelect extends AbstractPluginObject {
+public abstract class AbstractPluginObjectSelect<T> extends AbstractPluginObject {
+
+    /**
+     * The default object selector.
+     */
+    protected IObjectSelector<T> selector;
+
+    /**
+     * The source.
+     */
+    protected T source;
+
+    /**
+     * Create a select plugin, provided an object selector.
+     * 
+     * @param selector
+     *            The selector.
+     */
+    public AbstractPluginObjectSelect(IObjectSelector<T> selector) {
+        this.selector = selector;
+    }
 
     @Override
     public ActionType getActionType() {
@@ -52,8 +73,9 @@ public abstract class AbstractPluginObjectSelect extends AbstractPluginObject {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("KEYS>" + reference);
         }
+        source = selector.getSource(this, context);
         try {
-            List<Object> list = select(context, instance, row, result);
+            List<Object> list = selector.select(this, context, instance, row, result);
             if (list.isEmpty()) {
                 addError(context, row, result, new PluginException("None element found. XML:" + row.getElement().toXML()));
                 return;
@@ -69,7 +91,7 @@ public abstract class AbstractPluginObjectSelect extends AbstractPluginObject {
                 perform(context, base, instance, row, result);
             }
         } finally {
-            release();
+            selector.release();
         }
     }
 
@@ -90,32 +112,6 @@ public abstract class AbstractPluginObjectSelect extends AbstractPluginObject {
             result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
         }
     }
-
-    /**
-     * Performs a select on object repository to compare with the reference.
-     * 
-     * @param context
-     *            The test context.
-     * @param instance
-     *            The object to be compared with repository version.
-     * @param row
-     *            The row which was the source for object creation.
-     * @param result
-     *            The result set.
-     * @return The corresponding objects from repository.
-     * @throws Exception
-     *             On selecion errors.
-     */
-    public abstract List<Object> select(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
-
-    /**
-     * Release comparison resources. i.e. For Hibernate repositories free
-     * sessions in use for comparison.
-     * 
-     * @throws Exception
-     *             On release errors.
-     */
-    public abstract void release() throws Exception;
 
     /**
      * Perform something on a database object.

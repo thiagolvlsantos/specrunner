@@ -18,7 +18,9 @@
 package org.specrunner.hibernate;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.Session;
 import org.specrunner.context.IContext;
+import org.specrunner.objects.AbstractPluginObjectSelect;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -33,7 +35,14 @@ import org.specrunner.util.impl.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginUpdate extends PluginOutput {
+public class PluginUpdate extends AbstractPluginObjectSelect<Session> {
+
+    /**
+     * Create an update plugin.
+     */
+    public PluginUpdate() {
+        super(ObjectSelector.get());
+    }
 
     @Override
     public ActionType getActionType() {
@@ -48,8 +57,8 @@ public class PluginUpdate extends PluginOutput {
                     BeanUtils.copyProperty(base, f.getFullName(), instance);
                 }
             }
-            session.update(base);
-            session.flush();
+            source.update(base);
+            source.flush();
             for (int i = 0; i < row.getCellsCount(); i++) {
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getElement(), this));
             }

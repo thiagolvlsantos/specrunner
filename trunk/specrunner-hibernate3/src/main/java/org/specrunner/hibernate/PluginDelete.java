@@ -18,21 +18,30 @@
 package org.specrunner.hibernate;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.specrunner.context.IContext;
+import org.specrunner.objects.AbstractPluginObjectSelect;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
+import org.specrunner.result.status.Warning;
 import org.specrunner.util.impl.RowAdapter;
 
 /**
- * Allow create object instances an make them persistent using Hibernate3 by
- * using save.
+ * Update object in database.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginInput extends PluginHibernate {
+public class PluginDelete extends AbstractPluginObjectSelect<Session> {
+
+    /**
+     * Create an update plugin.
+     */
+    public PluginDelete() {
+        super(ObjectSelector.get());
+    }
 
     @Override
     public ActionType getActionType() {
@@ -40,14 +49,17 @@ public class PluginInput extends PluginHibernate {
     }
 
     @Override
-    protected boolean isMapped() {
-        return true;
-    }
-
-    @Override
-    protected void action(IContext context, Object instance, RowAdapter row, IResultSet result, SessionFactory sf) throws Exception {
-        Session s = sf.openSession();
-        s.save(instance);
-        s.close();
+    public void perform(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
+        try {
+            source.delete(base);
+            source.flush();
+            for (int i = 0; i < row.getCellsCount(); i++) {
+                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getElement(), this));
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < row.getCellsCount(); i++) {
+                result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
+            }
+        }
     }
 }

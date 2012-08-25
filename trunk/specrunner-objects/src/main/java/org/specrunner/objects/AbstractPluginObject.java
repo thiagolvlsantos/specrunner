@@ -916,11 +916,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             CellAdapter cell = row.getCell(i);
             try {
                 Field f = fields.get(i);
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("ON>" + f.getFullName());
-                }
                 if (f.isIgnore()) {
                     continue;
+                }
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("ON>" + f.getFullName());
                 }
                 String text = cell.getElement().getValue();
                 Object value = text;
