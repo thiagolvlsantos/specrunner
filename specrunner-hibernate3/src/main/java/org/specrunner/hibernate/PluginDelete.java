@@ -19,7 +19,7 @@ package org.specrunner.hibernate;
 
 import org.hibernate.Session;
 import org.specrunner.context.IContext;
-import org.specrunner.objects.AbstractPluginObjectSelect;
+import org.specrunner.objects.AbstractPluginObjectSelectUnique;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -34,7 +34,7 @@ import org.specrunner.util.impl.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginDelete extends AbstractPluginObjectSelect<Session> {
+public class PluginDelete extends AbstractPluginObjectSelectUnique<Session> {
 
     /**
      * Create an update plugin.

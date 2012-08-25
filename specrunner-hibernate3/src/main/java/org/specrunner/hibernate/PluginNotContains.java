@@ -18,21 +18,20 @@
 package org.specrunner.hibernate;
 
 import org.hibernate.Session;
-import org.specrunner.objects.AbstractPluginObjectCompare;
+import org.specrunner.objects.AbstractPluginObjectSelectNone;
 
 /**
- * Check if a given list of objects is present in database. The object output
- * list has the same format of input.
+ * Check if an object is not in object repository.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginOutput extends AbstractPluginObjectCompare<Session> {
+public class PluginNotContains extends AbstractPluginObjectSelectNone<Session> {
 
     /**
-     * Create a output comparison.
+     * Creates the plugin.
      */
-    public PluginOutput() {
+    public PluginNotContains() {
         super(ObjectSelector.get());
     }
 }

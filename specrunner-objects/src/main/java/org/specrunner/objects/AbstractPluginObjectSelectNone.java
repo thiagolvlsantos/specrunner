@@ -15,14 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.hibernate;
+package org.specrunner.objects;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.hibernate.Session;
+import java.util.List;
+
 import org.specrunner.context.IContext;
-import org.specrunner.objects.AbstractPluginObjectSelectUnique;
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Command;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
@@ -30,39 +28,32 @@ import org.specrunner.result.status.Warning;
 import org.specrunner.util.impl.RowAdapter;
 
 /**
- * Update object in database.
+ * Check if an object is not in object repository.
  * 
  * @author Thiago Santos
- * 
+ * @param <T>
+ *            The source type.
  */
-public class PluginUpdate extends AbstractPluginObjectSelectUnique<Session> {
+public abstract class AbstractPluginObjectSelectNone<T> extends AbstractPluginObjectSelect<T> {
 
     /**
-     * Create an update plugin.
+     * Create a none plugin, provided an object selector.
+     * 
+     * @param selector
+     *            The selector.
      */
-    public PluginUpdate() {
-        super(ObjectSelector.get());
+    public AbstractPluginObjectSelectNone(IObjectSelector<T> selector) {
+        super(selector);
     }
 
     @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
-    }
-
-    @Override
-    public void perform(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
-        try {
-            for (Field f : fields) {
-                if (!f.isReference()) {
-                    BeanUtils.copyProperty(base, f.getFullName(), instance);
-                }
-            }
-            source.update(base);
-            source.flush();
+    public void processList(IContext context, Object instance, RowAdapter row, IResultSet result, List<Object> list) throws Exception {
+        if (list.isEmpty()) {
             for (int i = 0; i < row.getCellsCount(); i++) {
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getElement(), this));
             }
-        } catch (Exception e) {
+        } else {
+            Exception e = new PluginException("Element found in object repository. XML:" + row.getElement().toXML());
             for (int i = 0; i < row.getCellsCount(); i++) {
                 result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
             }

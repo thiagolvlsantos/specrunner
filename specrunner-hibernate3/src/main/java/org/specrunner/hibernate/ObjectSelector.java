@@ -57,6 +57,7 @@ public class ObjectSelector implements IObjectSelector<Session> {
     @SuppressWarnings("unchecked")
     @Override
     public List<Object> select(AbstractPluginObject plugin, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
+        session = getSource(plugin, context);
         Criteria c = session.createCriteria(instance.getClass());
         String[] keyFields = plugin.getReference().split(",");
         for (int i = 0; i < keyFields.length; i++) {
@@ -69,6 +70,7 @@ public class ObjectSelector implements IObjectSelector<Session> {
     public void release() throws Exception {
         if (session != null) {
             session.close();
+            session = null;
         }
     }
 }

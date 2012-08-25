@@ -21,11 +21,8 @@ import java.util.List;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.status.Failure;
-import org.specrunner.result.status.Warning;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.impl.RowAdapter;
 
@@ -76,58 +73,27 @@ public abstract class AbstractPluginObjectSelect<T> extends AbstractPluginObject
         source = selector.getSource(this, context);
         try {
             List<Object> list = selector.select(this, context, instance, row, result);
-            if (list.isEmpty()) {
-                addError(context, row, result, new PluginException("None element found. XML:" + row.getElement().toXML()));
-                return;
-            }
-            if (list.size() > 1) {
-                addError(context, row, result, new PluginException("More than one element found. XML:" + row.getElement().toXML()));
-                return;
-            }
-            Object base = list.get(0);
-            if (base == null) {
-                addError(context, row, result, new PluginException("This register is not present in object repository. XML:" + row.getElement().toXML()));
-            } else {
-                perform(context, base, instance, row, result);
-            }
+            processList(context, instance, row, result, list);
         } finally {
             selector.release();
         }
     }
 
     /**
-     * Add a error to a comparison.
+     * Process the list of objects recovered.
      * 
      * @param context
      *            The context.
+     * @param instance
+     *            The row instance.
      * @param row
      *            The row.
      * @param result
      *            The result set.
-     * @param e
-     *            The error.
-     */
-    private void addError(IContext context, RowAdapter row, IResultSet result, Exception e) {
-        for (int i = 0; i < row.getCellsCount(); i++) {
-            result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
-        }
-    }
-
-    /**
-     * Perform something on a database object.
-     * 
-     * @param context
-     *            The test context.
-     * @param base
-     *            The object version from repository.
-     * @param instance
-     *            The object version from specification.
-     * @param row
-     *            The row which give origin to the 'instance'.
-     * @param result
-     *            The result set.
+     * @param list
+     *            The list of objects recovered.
      * @throws Exception
      *             On processing errors.
      */
-    public abstract void perform(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception;
+    public abstract void processList(IContext context, Object instance, RowAdapter row, IResultSet result, List<Object> list) throws Exception;
 }
