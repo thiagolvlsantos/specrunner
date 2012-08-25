@@ -228,7 +228,7 @@ public class PluginConfiguration extends AbstractPluginValue {
             PluginObjectManager.get().clear();
             for (Iterator<?> ite = cfg.getClassMappings(); ite.hasNext();) {
                 PersistentClass persistent = (PersistentClass) ite.next();
-                PluginInput pin = new PluginInput();
+                PluginInsert pin = new PluginInsert();
                 pin.setTypeInstance(Class.forName(persistent.getClassName()));
                 PluginObjectManager.get().bind(pin);
             }

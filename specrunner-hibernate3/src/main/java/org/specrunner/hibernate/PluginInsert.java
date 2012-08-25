@@ -18,21 +18,36 @@
 package org.specrunner.hibernate;
 
 import org.hibernate.Session;
-import org.specrunner.objects.AbstractPluginObjectCompare;
+import org.hibernate.SessionFactory;
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Command;
+import org.specrunner.result.IResultSet;
+import org.specrunner.util.impl.RowAdapter;
 
 /**
- * Check if a given list of objects is present in database. The object output
- * list has the same format of input.
+ * Allow create object instances an make them persistent using Hibernate3 by
+ * using save.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginOutput extends AbstractPluginObjectCompare<Session> {
+public class PluginInsert extends PluginHibernate {
 
-    /**
-     * Create a output comparison.
-     */
-    public PluginOutput() {
-        super(ObjectSelector.get());
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
+    protected boolean isMapped() {
+        return true;
+    }
+
+    @Override
+    protected void action(IContext context, Object instance, RowAdapter row, IResultSet result, SessionFactory sf) throws Exception {
+        Session s = sf.openSession();
+        s.save(instance);
+        s.close();
     }
 }

@@ -35,9 +35,20 @@ import org.specrunner.util.impl.RowAdapter;
  * Performs comparison of objects.
  * 
  * @author Thiago Santos
- * 
+ * @param <T>
+ *            The source type.
  */
-public abstract class AbstractPluginObjectCompare extends AbstractPluginObjectSelect {
+public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjectSelect<T> {
+
+    /**
+     * Create a plugin comparator, provided an object selector.
+     * 
+     * @param selector
+     *            The object selector.
+     */
+    public AbstractPluginObjectCompare(IObjectSelector<T> selector) {
+        super(selector);
+    }
 
     @Override
     public void perform(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
