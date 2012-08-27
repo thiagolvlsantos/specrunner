@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -119,14 +120,14 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     @Override
     public List<ActionType> actionTypes(List<IResult> subset) {
-        List<ActionType> result = new LinkedList<ActionType>();
+        Set<ActionType> set = new TreeSet<ActionType>();
         for (IResult s : subset) {
             ActionType at = s.getActionType();
-            if (!result.contains(at)) {
-                result.add(at);
+            if (!set.contains(at)) {
+                set.add(at);
             }
         }
-        return result;
+        return new LinkedList<ActionType>(set);
     }
 
     @Override
@@ -250,8 +251,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     protected StringBuilder details(List<IResult> list) {
         StringBuilder sb = new StringBuilder(":[");
         int i = 0;
-        List<ActionType> actionTypes = actionTypes(this);
-        for (ActionType t : actionTypes) {
+        for (ActionType t : actionTypes()) {
             if (i++ > 0) {
                 sb.append('|');
             }
