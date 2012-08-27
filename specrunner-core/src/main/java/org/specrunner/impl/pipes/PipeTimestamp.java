@@ -41,7 +41,16 @@ public class PipeTimestamp extends AbstractPipeModel {
     /**
      * Report date format.
      */
-    private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    protected SimpleDateFormat sdf = createFormatter();
+
+    /**
+     * Creates the formatter.
+     * 
+     * @return The formater.
+     */
+    protected SimpleDateFormat createFormatter() {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    }
 
     @Override
     public IChannel process(IChannel channel, Map<String, Object> model) throws PipelineException {

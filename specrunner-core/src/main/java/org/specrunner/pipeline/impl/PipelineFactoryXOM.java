@@ -22,7 +22,16 @@ public class PipelineFactoryXOM extends PipelineFactoryImpl {
     /**
      * The XML reader.
      */
-    private final Builder builder = new Builder();
+    protected Builder builder = createBuilder();
+
+    /**
+     * Refactored to enable builder creation override.
+     * 
+     * @return The builder.
+     */
+    protected Builder createBuilder() {
+        return new Builder();
+    }
 
     @Override
     public IPipeline newPipeline(Object source) throws PipelineException {

@@ -44,7 +44,7 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
     /**
      * Attribute with CSS information.
      */
-    private static final String ATTRIBUTE = "class";
+    public static final String ATTRIBUTE = "class";
 
     /**
      * Creates the factory loading file 'plugin_css.properties'.

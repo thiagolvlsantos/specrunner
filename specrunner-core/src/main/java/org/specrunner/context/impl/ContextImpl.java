@@ -196,7 +196,7 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      *            The type.
      * @return The block found.
      */
-    private IBlock findNode(int start, Class<? extends Node> type) {
+    protected IBlock findNode(int start, Class<? extends Node> type) {
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -228,7 +228,7 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      *            The type.
      * @return The block.
      */
-    private IBlock findPlugin(int start, Class<? extends IPlugin> type) {
+    protected IBlock findPlugin(int start, Class<? extends IPlugin> type) {
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -260,7 +260,7 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      *            The object name.
      * @return The object.
      */
-    private Object findName(int start, String name) {
+    protected Object findName(int start, String name) {
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
             if (UtilLog.LOG.isTraceEnabled()) {

@@ -42,6 +42,14 @@ public class Resume {
      * The status total.
      */
     private int statusTotal;
+    /**
+     * The assertion counter.
+     */
+    private int assertionCounter;
+    /**
+     * The assertion total.
+     */
+    private int assertionTotal;
 
     /**
      * Gets the index.
@@ -193,5 +201,43 @@ public class Resume {
      */
     public void setStatusTotal(int statusTotal) {
         this.statusTotal = statusTotal;
+    }
+
+    /**
+     * Gets the assertions counter.
+     * 
+     * @return The assertions counter.
+     */
+    public int getAssertionCounter() {
+        return assertionCounter;
+    }
+
+    /**
+     * Sets the assertions counter.
+     * 
+     * @param assertionCounter
+     *            The assertions counter.
+     */
+    public void setAssertionCounter(int assertionCounter) {
+        this.assertionCounter = assertionCounter;
+    }
+
+    /**
+     * Gets the assertions total counter.
+     * 
+     * @return The assertions total counter.
+     */
+    public int getAssertionTotal() {
+        return assertionTotal;
+    }
+
+    /**
+     * Sets the assertions total.
+     * 
+     * @param assertionTotal
+     *            The assertions total counter.
+     */
+    public void setAssertionTotal(int assertionTotal) {
+        this.assertionTotal = assertionTotal;
     }
 }

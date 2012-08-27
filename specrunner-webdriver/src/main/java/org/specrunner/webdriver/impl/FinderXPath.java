@@ -79,6 +79,8 @@ public class FinderXPath extends AbstractParametrized implements IFinder {
         addStrategy("starts", "//{0}[starts-with({1},'{2}')]");
         addStrategy("ends", "//{0}[ends-with({1},'{2}')]");
         addStrategy("link", "//a[text()='{0}']");
+        addStrategy("linkText", "//a[text()='{0}']");
+        addStrategy("partialLinkText", "//a[contains(text(),'{0}')]");
         addStrategy("xpath", "{0}");
     }
 

@@ -46,8 +46,14 @@ public class PluginInsert extends PluginHibernate {
 
     @Override
     protected void action(IContext context, Object instance, RowAdapter row, IResultSet result, SessionFactory sf) throws Exception {
-        Session s = sf.openSession();
-        s.save(instance);
-        s.close();
+        Session s = null;
+        try {
+            s = sf.openSession();
+            s.save(instance);
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
     }
 }

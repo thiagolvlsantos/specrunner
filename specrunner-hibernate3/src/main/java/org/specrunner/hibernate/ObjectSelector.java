@@ -47,7 +47,8 @@ public class ObjectSelector implements IObjectSelector<Session> {
 
     @Override
     public Session getSource(AbstractPluginObject plugin, IContext context) throws Exception {
-        if (session == null || !session.isOpen()) {
+        // recover the plugin session factory.
+        if (session == null) {
             SessionFactory sf = PluginSessionFactory.getSessionFactory(context, plugin.getName());
             session = sf.openSession();
         }
@@ -68,6 +69,7 @@ public class ObjectSelector implements IObjectSelector<Session> {
 
     @Override
     public void release() throws Exception {
+        // close every time to allow reuse of object in different tests
         if (session != null) {
             session.close();
             session = null;
