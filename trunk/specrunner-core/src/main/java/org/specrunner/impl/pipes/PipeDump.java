@@ -78,7 +78,7 @@ public class PipeDump implements IPipe {
      * 
      * @return The normalized thread named.
      */
-    private String getNome() {
+    protected String getNome() {
         return "(" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ")";
     }
 

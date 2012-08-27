@@ -41,8 +41,10 @@ public interface IReporter {
 
     /**
      * Short information about report.
+     * 
+     * @return A partial version of resume.
      */
-    void resume();
+    String resume();
 
     /**
      * Dump report information.

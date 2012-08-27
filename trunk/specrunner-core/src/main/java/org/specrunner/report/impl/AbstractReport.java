@@ -13,7 +13,10 @@ import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.impl.pipes.PipeInput;
 import org.specrunner.impl.pipes.PipeTime;
 import org.specrunner.impl.pipes.PipeTimestamp;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.report.IReporter;
+import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 
@@ -43,7 +46,12 @@ public abstract class AbstractReport implements IReporter {
     /**
      * Hash of state counters.
      */
-    protected Map<Status, Integer> counter = new TreeMap<Status, Integer>();
+    protected Map<Status, Integer> status = new TreeMap<Status, Integer>();
+
+    /**
+     * Hash of actions counters.
+     */
+    protected Map<ActionType, Integer> types = new TreeMap<ActionType, Integer>();
 
     /**
      * List of resume of results.
@@ -54,30 +62,78 @@ public abstract class AbstractReport implements IReporter {
     public void analyse(IResultSet result, Map<String, Object> model) {
         Resume r = createResume(result, model);
         Status s = r.getStatus();
-        Integer c = counter.get(s);
+        Integer c = status.get(s);
         if (c == null) {
             c = 0;
         }
-        counter.put(s, c + 1);
+        status.put(s, c + 1);
+        List<ActionType> listTypes = result.actionTypes();
+        for (ActionType at : listTypes) {
+            Integer q = types.get(at);
+            if (q == null) {
+                q = 0;
+            }
+            types.put(at, q + result.filterByType(at).size());
+        }
         total += r.getTime();
         resumes.add(r);
     }
 
     @Override
-    public void resume() {
-        System.out.println("+-----");
-        System.out.printf(" STATS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): #TESTS:%d [%s], TOTAL:%d ms, AVG:%7.2f ms\n", (index - 1), counters(), total, (index > 1 ? (float) total / (index - 1) : (float) total));
-        System.out.println("+-----");
+    public String resume() {
+        String r = resume(false);
+        System.out.print(r);
+        return r;
     }
 
     /**
-     * Global status counter as string.
+     * Partial resume.
+     * 
+     * @param finalResume
+     *            If it is the final resume.
+     * @return The resume.
+     */
+    protected String resume(boolean finalResume) {
+        StringBuilder sb = new StringBuilder();
+        String gap = "";
+        if (finalResume) {
+            gap = "        ";
+        } else {
+            sb.append(gap);
+            sb.append("+----------\n");
+        }
+        sb.append(gap);
+        if (!finalResume) {
+            sb.append(String.format(" STATISTICS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): #TESTS:%d, STATUS:[%s], TYPES:[%s], TOTAL:%d ms, AVG:%7.2f ms\n", (index - 1), status(), types(), total, (index > 1 ? (float) total / (index - 1) : (float) total)));
+            sb.append(gap);
+            sb.append("+----------\n");
+        } else {
+            sb.append(String.format(" STATISTICS : #TESTS:%d, STATUS:[%s], TYPES:[%s]\n", (index - 1), status(), types()));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Global status as string.
      * 
      * @return The overall execution resume.
      */
-    protected String counters() {
+    protected String status() {
         StringBuilder sb = new StringBuilder();
-        for (Entry<Status, Integer> e : counter.entrySet()) {
+        for (Entry<Status, Integer> e : status.entrySet()) {
+            sb.append(e.getKey().getName() + "=" + e.getValue() + ", ");
+        }
+        return sb.substring(0, sb.length() - 2);
+    }
+
+    /**
+     * Global action types as string.
+     * 
+     * @return The overall execution resume.
+     */
+    protected String types() {
+        StringBuilder sb = new StringBuilder();
+        for (Entry<ActionType, Integer> e : types.entrySet()) {
             sb.append(e.getKey().getName() + "=" + e.getValue() + ", ");
         }
         return sb.substring(0, sb.length() - 2);
@@ -102,8 +158,18 @@ public abstract class AbstractReport implements IReporter {
         r.setInput(model.get(PipeInput.INPUT));
         r.setOutput(model.get("output"));
         r.setStatus(status);
-        r.setStatusCounter(result.countStatus(status));
+
+        List<IResult> byStatus = result.filterByStatus(status);
+        r.setStatusCounter(byStatus.size());
+
         r.setStatusTotal(result.size());
+
+        List<IResult> statusByType = result.filterByType(byStatus, Assertion.INSTANCE);
+        r.setAssertionCounter(statusByType.size());
+
+        List<IResult> totalByType = result.filterByType(Assertion.INSTANCE);
+        r.setAssertionTotal(totalByType.size());
+
         return r;
     }
 
@@ -113,8 +179,8 @@ public abstract class AbstractReport implements IReporter {
             synchronized (System.out) {
                 System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
                 dump("EXECUTION ORDER", resumes);
-                Collections.sort(resumes, getComparator());
-                dump("PERCENTAGE ORDER", resumes);
+                dump("PERCENTAGE ORDER", orderedList(resumes));
+                System.out.print(resume(true));
                 System.out.println("+---------------------------------------------------------------------------------+");
             }
         }
@@ -129,6 +195,21 @@ public abstract class AbstractReport implements IReporter {
      *            The list of resumes.
      */
     protected abstract void dump(String header, List<Resume> list);
+
+    /**
+     * Creates a copy of the resume list.
+     * 
+     * @param list
+     *            The list to be ordered.
+     * @return The list ordered.
+     */
+    protected List<Resume> orderedList(List<Resume> list) {
+        // create a copy, in case of someone call report each test
+        // execution.
+        List<Resume> copy = new LinkedList<Resume>(list);
+        Collections.sort(copy, getComparator());
+        return copy;
+    }
 
     /**
      * Gets the comparator.

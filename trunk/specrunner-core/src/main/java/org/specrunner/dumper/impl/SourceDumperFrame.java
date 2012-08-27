@@ -53,19 +53,19 @@ public class SourceDumperFrame extends AbstractSourceDumperFile {
     /**
      * Top proportion.
      */
-    private final String topProportion = "180px";
+    protected String topProportion = "180px";
     /**
      * Center vertical proportion.
      */
-    private final String centerVerticalProportion = "80%";
+    protected String centerVerticalProportion = "80%";
     /**
      * Center horizontal proportion.
      */
-    private final String centerHorizontalProportion = "90%";
+    protected String centerHorizontalProportion = "90%";
     /**
      * Right proportion.
      */
-    private final String rightProportion = "10%";
+    protected String rightProportion = "10%";
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {

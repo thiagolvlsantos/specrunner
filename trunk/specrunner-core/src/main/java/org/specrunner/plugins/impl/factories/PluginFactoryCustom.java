@@ -43,7 +43,7 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
     /**
      * Attribute with custom plugin information.
      */
-    private static final String ATTRIBUTE = "custom";
+    public static final String ATTRIBUTE = "custom";
 
     /**
      * Creates the factory loading file 'plugin_custom.properties'.

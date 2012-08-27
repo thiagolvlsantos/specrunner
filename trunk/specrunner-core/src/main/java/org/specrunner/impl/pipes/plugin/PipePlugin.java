@@ -23,7 +23,7 @@ import org.specrunner.pipeline.NotFoundException;
 import org.specrunner.plugins.IPlugin;
 
 /**
- * As a plugin as input information.
+ * Bind a plugin as input information.
  * 
  * @author Thiago Santos
  * 

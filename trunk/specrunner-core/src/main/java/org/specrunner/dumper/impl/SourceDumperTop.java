@@ -40,7 +40,7 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
     /**
      * KB size.
      */
-    private static final int KBYTES = 1024;
+    protected static final int KBYTES = 1024;
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {

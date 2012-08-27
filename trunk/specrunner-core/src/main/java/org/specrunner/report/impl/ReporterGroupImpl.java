@@ -23,10 +23,12 @@ public class ReporterGroupImpl extends CompositeImpl<IReporterGroup, IReporter> 
     }
 
     @Override
-    public void resume() {
+    public String resume() {
+        StringBuilder sb = new StringBuilder();
         for (IReporter r : getChildren()) {
-            r.resume();
+            sb.append(r.resume());
         }
+        return sb.toString();
     }
 
     @Override
