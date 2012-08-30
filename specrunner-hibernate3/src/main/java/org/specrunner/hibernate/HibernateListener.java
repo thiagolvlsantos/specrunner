@@ -38,11 +38,11 @@ public class HibernateListener implements PreInsertEventListener, PostInsertEven
     /**
      * Map of objects inserted.
      */
-    private final Map<Class<?>, AbstractPluginObject> entities;
+    protected Map<Class<?>, AbstractPluginObject> entities;
     /**
      * Key of object before inclusion.
      */
-    private String keyBefore;
+    protected String keyBefore;
 
     /**
      * Creates a listener with a entities mapping.
