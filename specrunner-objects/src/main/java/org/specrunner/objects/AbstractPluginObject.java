@@ -56,8 +56,8 @@ import org.specrunner.util.impl.TableAdapter;
 /**
  * Generic object plugin. To write object plugins override method
  * <code>isMapped()</code> and <code>action(...)</code>. i.e.
- * SpecRunner-Hibernate3 extends the object manipulation to save data using
- * Hibernate3 infra-structure.
+ * SpecRunner-Hibernate3 extends the object manipulation to save/update/delete
+ * data using Hibernate3 infra-structure.
  * 
  * @author Thiago Santos
  * 
