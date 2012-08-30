@@ -46,7 +46,7 @@ import org.specrunner.util.UtilLog;
 
 /**
  * Creates/recovers a configuration instance and add it to the global context.
- * It can be done using two strategies:
+ * It can be done by using two strategies:
  * <ul>
  * <li>by setting 'type' attribute to a class that implements
  * <code>IConfigurationProvider</code>, i.e.
