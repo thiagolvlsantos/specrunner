@@ -44,7 +44,7 @@ public class PluginObjectManager {
     /**
      * Map of instances for a given entity.
      */
-    private final Map<Class<?>, AbstractPluginObject> entities = new HashMap<Class<?>, AbstractPluginObject>();
+    protected Map<Class<?>, AbstractPluginObject> entities = new HashMap<Class<?>, AbstractPluginObject>();
 
     /**
      * The object manager instance (Thread safe).
