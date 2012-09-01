@@ -89,26 +89,6 @@ public abstract class AbstractReport implements IReporter {
     protected List<ReportPart> parts;
 
     /**
-     * Default constructor.
-     */
-    public AbstractReport() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fm.set(FEATURE_PARTS, "parts", List.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        if (parts == null) {
-            parts = new LinkedList<ReportPart>();
-            parts.add(new ReportPart("EXECUTION ORDER", IndexComparator.get()));
-            parts.add(new ReportPart("PERCENTAGE ORDER", TimeComparator.get()));
-            parts.add(new ReportPart("STATUS ORDER", StatusComparator.get()));
-        }
-    }
-
-    /**
      * Get the report pats.
      * 
      * @return The parts.
@@ -125,6 +105,27 @@ public abstract class AbstractReport implements IReporter {
      */
     public void setParts(List<ReportPart> parts) {
         this.parts = parts;
+    }
+
+    /**
+     * Prepare feature settings.
+     */
+    protected void setFeatures() {
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        parts = null;
+        try {
+            fm.set(FEATURE_PARTS, "parts", List.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+        if (parts == null) {
+            parts = new LinkedList<ReportPart>();
+            parts.add(new ReportPart("EXECUTION ORDER", IndexComparator.get()));
+            parts.add(new ReportPart("PERCENTAGE ORDER", TimeComparator.get()));
+            parts.add(new ReportPart("STATUS ORDER", StatusComparator.get()));
+        }
     }
 
     @Override
@@ -258,6 +259,7 @@ public abstract class AbstractReport implements IReporter {
     @Override
     public void report() {
         if (!resumes.isEmpty()) {
+            setFeatures();
             synchronized (System.out) {
                 System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
                 for (ReportPart rp : parts) {
