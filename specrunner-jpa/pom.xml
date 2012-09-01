@@ -24,6 +24,10 @@
     <!--repositories> <repository> <url>http://repository.jboss.com/maven2/</url> <id>hibernate-support</id> <layout>default</layout> <name>Repository for library Library[hibernate-support]</name> </repository> 
         </repositories -->
 
+    <properties>
+        <hibernate.version>4.1.6.Final</hibernate.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.specrunner</groupId>
@@ -33,7 +37,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-            <version>4.0.1.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
     </dependencies>
 </project>

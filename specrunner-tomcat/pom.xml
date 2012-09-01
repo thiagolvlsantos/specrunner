@@ -22,7 +22,7 @@
     </distributionManagement>
 
     <properties>
-        <org.apache.tomcat.embed.version>7.0.26</org.apache.tomcat.embed.version>
+        <org.apache.tomcat.embed.version>7.0.29</org.apache.tomcat.embed.version>
     </properties>
 
     <dependencies>
