@@ -30,14 +30,9 @@ import java.util.Comparator;
 public final class IndexComparator implements Comparator<Resume> {
 
     /**
-     * Thread safe instance.
+     * Unique instance.
      */
-    private static final ThreadLocal<IndexComparator> INSTANCE = new ThreadLocal<IndexComparator>() {
-        @Override
-        protected IndexComparator initialValue() {
-            return new IndexComparator();
-        };
-    };
+    private static final IndexComparator INSTANCE = new IndexComparator();
 
     /**
      * Default constructor.
@@ -51,7 +46,7 @@ public final class IndexComparator implements Comparator<Resume> {
      * @return The comparator.
      */
     public static IndexComparator get() {
-        return INSTANCE.get();
+        return INSTANCE;
     }
 
     @Override

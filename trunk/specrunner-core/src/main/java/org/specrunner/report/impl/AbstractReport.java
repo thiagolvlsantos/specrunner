@@ -17,6 +17,7 @@
  */
 package org.specrunner.report.impl;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -47,6 +48,11 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public abstract class AbstractReport implements IReporter {
+
+    /**
+     * Lock to avoid report interference among threads.
+     */
+    private static final Object LOCK = new Object();
 
     /**
      * Divisor.
@@ -89,6 +95,11 @@ public abstract class AbstractReport implements IReporter {
     protected List<ReportPart> parts;
 
     /**
+     * Default behavior.
+     */
+    public static final List<ReportPart> DEFAULT_PARTS = Arrays.asList(new ReportPart("EXECUTION ORDER", IndexComparator.get()), new ReportPart("PERCENTAGE ORDER", TimeComparator.get()), new ReportPart("STATUS ORDER", StatusComparator.get()));
+
+    /**
      * Get the report pats.
      * 
      * @return The parts.
@@ -109,9 +120,12 @@ public abstract class AbstractReport implements IReporter {
 
     /**
      * Prepare feature settings.
+     * 
+     * @param services
+     *            Services.
      */
-    protected void setFeatures() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    protected void setFeatures(SpecRunnerServices services) {
+        IFeatureManager fm = services.lookup(IFeatureManager.class);
         parts = null;
         try {
             fm.set(FEATURE_PARTS, "parts", List.class, this);
@@ -121,10 +135,7 @@ public abstract class AbstractReport implements IReporter {
             }
         }
         if (parts == null) {
-            parts = new LinkedList<ReportPart>();
-            parts.add(new ReportPart("EXECUTION ORDER", IndexComparator.get()));
-            parts.add(new ReportPart("PERCENTAGE ORDER", TimeComparator.get()));
-            parts.add(new ReportPart("STATUS ORDER", StatusComparator.get()));
+            parts = DEFAULT_PARTS;
         }
     }
 
@@ -257,19 +268,24 @@ public abstract class AbstractReport implements IReporter {
     }
 
     @Override
-    public void report() {
+    public void report(SpecRunnerServices services) {
         if (!resumes.isEmpty()) {
-            setFeatures();
-            synchronized (System.out) {
-                System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
+            setFeatures(services);
+            synchronized (LOCK) {
+                dumpStart();
                 for (ReportPart rp : parts) {
-                    dump(rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                    dumpPart(rp.getHeader(), orderedList(resumes, rp.getComparator()));
                 }
-                System.out.print(resume(true));
-                System.out.println("+---------------------------------------------------------------------------------+");
+                dumpResume(resume(true));
+                dumpEnd();
             }
         }
     }
+
+    /**
+     * Dump report starting.
+     */
+    protected abstract void dumpStart();
 
     /**
      * Creates a copy of the resume list.
@@ -297,7 +313,20 @@ public abstract class AbstractReport implements IReporter {
      * @param list
      *            The list of resumes.
      */
-    protected abstract void dump(String header, List<Resume> list);
+    protected abstract void dumpPart(String header, List<Resume> list);
+
+    /**
+     * Dump resume.
+     * 
+     * @param resume
+     *            Resume information.
+     */
+    protected abstract void dumpResume(String resume);
+
+    /**
+     * Dump report ending.
+     */
+    protected abstract void dumpEnd();
 
     /**
      * Returns a time as percentage.

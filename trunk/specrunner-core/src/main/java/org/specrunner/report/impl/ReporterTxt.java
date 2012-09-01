@@ -28,7 +28,12 @@ import java.util.List;
 public class ReporterTxt extends AbstractReport {
 
     @Override
-    protected void dump(String header, List<Resume> list) {
+    protected void dumpStart() {
+        System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
+    }
+
+    @Override
+    protected void dumpPart(String header, List<Resume> list) {
         System.out.printf("\t+---------------- TXT (%s)---------------------+\n", header);
         String pattern = "\t%10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s\n";
         System.out.printf(pattern, "", "#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "INPUT <-> OUTPUT");
@@ -40,5 +45,15 @@ public class ReporterTxt extends AbstractReport {
         pattern = "\t%10s %10s : %10d (AVG: %.2f)\n";
         System.out.printf(pattern, "", "TOTAL", total, ((double) total / (list.isEmpty() ? 1 : list.size())));
         System.out.printf("\t+---------------------%s-----------------------+\n", "");
+    }
+
+    @Override
+    protected void dumpResume(String resume) {
+        System.out.print(resume);
+    }
+
+    @Override
+    protected void dumpEnd() {
+        System.out.println("+---------------------------------------------------------------------------------+");
     }
 }
