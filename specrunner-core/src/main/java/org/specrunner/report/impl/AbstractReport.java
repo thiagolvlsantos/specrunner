@@ -27,6 +27,8 @@ import java.util.TreeMap;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
+import org.specrunner.features.FeatureManagerException;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.impl.pipes.PipeInput;
 import org.specrunner.impl.pipes.PipeTime;
 import org.specrunner.impl.pipes.PipeTimestamp;
@@ -36,6 +38,7 @@ import org.specrunner.report.IReporter;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.util.UtilLog;
 
 /**
  * Generic extractor of usefull information for reporter dumps.
@@ -74,6 +77,55 @@ public abstract class AbstractReport implements IReporter {
      * List of resume of results.
      */
     protected List<Resume> resumes = new LinkedList<Resume>();
+
+    /**
+     * Feature to set parts of report.
+     */
+    public static final String FEATURE_PARTS = AbstractReport.class.getName() + ".parts";
+
+    /**
+     * Final report parts.
+     */
+    protected List<ReportPart> parts;
+
+    /**
+     * Default constructor.
+     */
+    public AbstractReport() {
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        try {
+            fm.set(FEATURE_PARTS, "parts", List.class, this);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+        if (parts == null) {
+            parts = new LinkedList<ReportPart>();
+            parts.add(new ReportPart("EXECUTION ORDER", IndexComparator.get()));
+            parts.add(new ReportPart("PERCENTAGE ORDER", TimeComparator.get()));
+            parts.add(new ReportPart("STATUS ORDER", StatusComparator.get()));
+        }
+    }
+
+    /**
+     * Get the report pats.
+     * 
+     * @return The parts.
+     */
+    public List<ReportPart> getParts() {
+        return parts;
+    }
+
+    /**
+     * Set the parts.
+     * 
+     * @param parts
+     *            The parts.
+     */
+    public void setParts(List<ReportPart> parts) {
+        this.parts = parts;
+    }
 
     @Override
     public void analyse(IResultSet result, Map<String, Object> model) {
@@ -168,7 +220,7 @@ public abstract class AbstractReport implements IReporter {
     protected Resume createResume(IResultSet result, Map<String, Object> model) {
         Long time = (Long) model.get(PipeTime.TIME);
         Status status = result.getStatus();
-        Resume r = new Resume();
+        Resume r = createInstance(result, model);
         r.setIndex(index++);
         r.setTime(time);
         r.setTimestamp(model.get(PipeTimestamp.DATE));
@@ -190,25 +242,31 @@ public abstract class AbstractReport implements IReporter {
         return r;
     }
 
+    /**
+     * Create a resume instance. Override it to a different report.
+     * 
+     * @param result
+     *            The result set.
+     * @param model
+     *            The model.
+     * @return A new resume instance.
+     */
+    protected Resume createInstance(IResultSet result, Map<String, Object> model) {
+        return new Resume();
+    }
+
     @Override
     public void report() {
         if (!resumes.isEmpty()) {
             synchronized (System.out) {
                 System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
-                dump();
+                for (ReportPart rp : parts) {
+                    dump(rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                }
                 System.out.print(resume(true));
                 System.out.println("+---------------------------------------------------------------------------------+");
             }
         }
-    }
-
-    /**
-     * Dump report information.
-     */
-    protected void dump() {
-        dump("EXECUTION ORDER", resumes);
-        dump("PERCENTAGE ORDER", orderedList(resumes, new TimeComparator()));
-        dump("STATUS ORDER", orderedList(resumes, new StatusComparator()));
     }
 
     /**
