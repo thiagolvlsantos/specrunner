@@ -19,6 +19,7 @@ package org.specrunner.report.impl;
 
 import java.util.Map;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.report.IReporter;
 import org.specrunner.report.IReporterGroup;
 import org.specrunner.result.IResultSet;
@@ -49,9 +50,9 @@ public class ReporterGroupImpl extends CompositeImpl<IReporterGroup, IReporter> 
     }
 
     @Override
-    public void report() {
+    public void report(SpecRunnerServices services) {
         for (IReporter r : getChildren()) {
-            r.report();
+            r.report(services);
         }
     }
 }

@@ -30,14 +30,9 @@ import java.util.Comparator;
  */
 public final class StatusComparator implements Comparator<Resume> {
     /**
-     * Thread safe instance.
+     * Unique instance.
      */
-    private static final ThreadLocal<StatusComparator> INSTANCE = new ThreadLocal<StatusComparator>() {
-        @Override
-        protected StatusComparator initialValue() {
-            return new StatusComparator();
-        };
-    };
+    private static final StatusComparator INSTANCE = new StatusComparator();
 
     /**
      * Default constructor.
@@ -51,7 +46,7 @@ public final class StatusComparator implements Comparator<Resume> {
      * @return The comparator.
      */
     public static StatusComparator get() {
-        return INSTANCE.get();
+        return INSTANCE;
     }
 
     @Override

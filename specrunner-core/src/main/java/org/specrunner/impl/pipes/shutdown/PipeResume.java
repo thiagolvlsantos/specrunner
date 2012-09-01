@@ -17,6 +17,7 @@
  */
 package org.specrunner.impl.pipes.shutdown;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.SpecRunnerServices.ShutDown;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
@@ -40,9 +41,10 @@ public class PipeResume implements IPipe {
 
     @Override
     public IChannel process(IChannel channel) throws AbortException, PipelineException {
-        IReporterFactory r = ShutDown.recover(channel).lookup(IReporterFactory.class);
+        SpecRunnerServices services = ShutDown.recover(channel);
+        IReporterFactory r = services.lookup(IReporterFactory.class);
         IReporter reporter = r.newReporter();
-        reporter.report();
+        reporter.report(services);
         return channel;
     }
 }

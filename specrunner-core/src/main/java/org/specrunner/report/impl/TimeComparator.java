@@ -32,12 +32,7 @@ public final class TimeComparator implements Comparator<Resume> {
     /**
      * Thread safe instance.
      */
-    private static final ThreadLocal<TimeComparator> INSTANCE = new ThreadLocal<TimeComparator>() {
-        @Override
-        protected TimeComparator initialValue() {
-            return new TimeComparator();
-        };
-    };
+    private static final TimeComparator INSTANCE = new TimeComparator();
 
     /**
      * Default constructor.
@@ -51,7 +46,7 @@ public final class TimeComparator implements Comparator<Resume> {
      * @return The comparator.
      */
     public static TimeComparator get() {
-        return INSTANCE.get();
+        return INSTANCE;
     }
 
     @Override
