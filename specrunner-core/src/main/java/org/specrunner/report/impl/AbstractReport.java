@@ -177,17 +177,44 @@ public abstract class AbstractReport implements IReporter {
     protected String resume(boolean finalResume) {
         StringBuilder sb = new StringBuilder();
         String gap = "";
+        String before = "+------";
+        String after = "------+";
         if (finalResume) {
             gap = "        ";
         } else {
             sb.append(gap);
-            sb.append("+----------\n");
+            sb.append(before);
         }
         sb.append(gap);
         if (!finalResume) {
-            sb.append(String.format(" STATISTICS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): #TESTS:%d, STATUS:[%s], TYPES:[%s], TOTAL:%d ms, AVG:%7.2f ms\n", (index - 1), status(), types(), total, (index > 1 ? (float) total / (index - 1) : (float) total)));
+            String header = " STATISTICS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ") ";
+            sb.append(header);
+            sb.append(after);
+            sb.append("\n");
+
+            sb.append(String.format(" #TESTS: %d", (index - 1)));
+            sb.append("\n");
+
+            sb.append(String.format("  TOTAL: %d ms", total));
+            sb.append("\n");
+
+            sb.append(String.format("    AVG: %7.2f ms", (index > 1 ? (float) total / (index - 1) : (float) total)));
+            sb.append("\n");
+
+            sb.append(String.format(" STATUS: [%s]", status()));
+            sb.append("\n");
+
+            sb.append(String.format("  TYPES: [%s]", types()));
+            sb.append("\n");
+
             sb.append(gap);
-            sb.append("+----------\n");
+            sb.append(before);
+            for (int i = 0; i < header.length(); i++) {
+                sb.append("-");
+            }
+            sb.append(after);
+            sb.append("\n");
+
         } else {
             sb.append(String.format(" STATISTICS : #TESTS:%d, STATUS:[%s], TYPES:[%s]\n", (index - 1), status(), types()));
         }
