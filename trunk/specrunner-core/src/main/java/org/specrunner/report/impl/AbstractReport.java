@@ -181,43 +181,47 @@ public abstract class AbstractReport implements IReporter {
         String after = "------+";
         if (finalResume) {
             gap = "        ";
-        } else {
-            sb.append(gap);
-            sb.append(before);
         }
         sb.append(gap);
+        sb.append(before);
+        String header = null;
         if (!finalResume) {
-            String header = " STATISTICS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ") ";
-            sb.append(header);
-            sb.append(after);
-            sb.append("\n");
-
-            sb.append(String.format(" #TESTS: %d", (index - 1)));
-            sb.append("\n");
-
-            sb.append(String.format("  TOTAL: %d ms", total));
-            sb.append("\n");
-
-            sb.append(String.format("    AVG: %7.2f ms", (index > 1 ? (float) total / (index - 1) : (float) total)));
-            sb.append("\n");
-
-            sb.append(String.format(" STATUS: [%s]", status()));
-            sb.append("\n");
-
-            sb.append(String.format("  TYPES: [%s]", types()));
-            sb.append("\n");
-
-            sb.append(gap);
-            sb.append(before);
-            for (int i = 0; i < header.length(); i++) {
-                sb.append("-");
-            }
-            sb.append(after);
-            sb.append("\n");
-
+            header = " STATISTICS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ") ";
         } else {
-            sb.append(String.format(" STATISTICS : #TESTS:%d, STATUS:[%s], TYPES:[%s]\n", (index - 1), status(), types()));
+            header = " STATISTICS ";
         }
+        sb.append(header);
+        sb.append(after);
+        sb.append("\n");
+
+        String format = "%16s: ";
+        sb.append(gap);
+        sb.append(String.format(format + "%d", "NUMBER OF TESTS", (index - 1)));
+        sb.append("\n");
+
+        sb.append(gap);
+        sb.append(String.format(format + "%d ms", "TOTAL TIME", total));
+        sb.append("\n");
+
+        sb.append(gap);
+        sb.append(String.format(format + "%7.2f ms", "AVERAGE TIME", (index > 1 ? (float) total / (index - 1) : (float) total)));
+        sb.append("\n");
+
+        sb.append(gap);
+        sb.append(String.format(format + "[%s]", "STATUS", status()));
+        sb.append("\n");
+
+        sb.append(gap);
+        sb.append(String.format(format + "[%s]", "TYPES", types()));
+        sb.append("\n");
+
+        sb.append(gap);
+        sb.append(before);
+        for (int i = 0; i < header.length(); i++) {
+            sb.append("-");
+        }
+        sb.append(after);
+        sb.append("\n");
         return sb.toString();
     }
 
