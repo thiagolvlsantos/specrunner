@@ -22,27 +22,27 @@ import java.util.Comparator;
 /**
  * Default report status comparator.
  * <p>
- * Ordered by fields: status (most relevante first), status counter (countdown),
- * assertion count(countdown), time(countdown), index.
+ * Ordered by fields: index.
  * 
  * @author Thiago Santos
  * 
  */
-public final class StatusComparator implements Comparator<Resume> {
+public final class IndexComparator implements Comparator<Resume> {
+
     /**
      * Thread safe instance.
      */
-    private static final ThreadLocal<StatusComparator> INSTANCE = new ThreadLocal<StatusComparator>() {
+    private static final ThreadLocal<IndexComparator> INSTANCE = new ThreadLocal<IndexComparator>() {
         @Override
-        protected StatusComparator initialValue() {
-            return new StatusComparator();
+        protected IndexComparator initialValue() {
+            return new IndexComparator();
         };
     };
 
     /**
      * Default constructor.
      */
-    private StatusComparator() {
+    private IndexComparator() {
     }
 
     /**
@@ -50,25 +50,12 @@ public final class StatusComparator implements Comparator<Resume> {
      * 
      * @return The comparator.
      */
-    public static StatusComparator get() {
+    public static IndexComparator get() {
         return INSTANCE.get();
     }
 
     @Override
     public int compare(Resume o1, Resume o2) {
-        int result = o1.getStatus().compareTo(o2.getStatus());
-        if (result == 0) {
-            result = o2.getStatusCounter() - o1.getStatusCounter();
-            if (result == 0) {
-                result = o2.getAssertionCounter() - o1.getAssertionCounter();
-                if (result == 0) {
-                    result = (int) (o2.getTime() - o1.getTime());
-                    if (result == 0) {
-                        result = o1.getIndex() - o2.getIndex();
-                    }
-                }
-            }
-        }
-        return result;
+        return o1.getIndex() - o2.getIndex();
     }
 }

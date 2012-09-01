@@ -22,12 +22,37 @@ import java.util.Comparator;
 /**
  * Default report time comparator.
  * <p>
- * Ordered by: time (countdown), index (countdown).
+ * Ordered by: time (countdown), index.
  * 
  * @author Thiago Santos
  * 
  */
-public class TimeComparator implements Comparator<Resume> {
+public final class TimeComparator implements Comparator<Resume> {
+
+    /**
+     * Thread safe instance.
+     */
+    private static final ThreadLocal<TimeComparator> INSTANCE = new ThreadLocal<TimeComparator>() {
+        @Override
+        protected TimeComparator initialValue() {
+            return new TimeComparator();
+        };
+    };
+
+    /**
+     * Default constructor.
+     */
+    private TimeComparator() {
+    }
+
+    /**
+     * The instance access method.
+     * 
+     * @return The comparator.
+     */
+    public static TimeComparator get() {
+        return INSTANCE.get();
+    }
 
     @Override
     public int compare(Resume o1, Resume o2) {

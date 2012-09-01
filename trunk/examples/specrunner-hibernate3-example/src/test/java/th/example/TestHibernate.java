@@ -32,6 +32,10 @@ public class TestHibernate {
 
         fh.put(AbstractPlugin.FEATURE_THREADSAFE, Boolean.TRUE);
 
+        // List<ReportPart> list = new LinkedList<ReportPart>();
+        // list.add(new ReportPart("STATUS", StatusComparator.get()));
+        // fh.put(AbstractReport.FEATURE_PARTS, list);
+
         // IListenerManager lm = SpecRunnerServices.get(IListenerManager.class);
         // lm.add(new AbstractNodeListener() {
         // @Override
