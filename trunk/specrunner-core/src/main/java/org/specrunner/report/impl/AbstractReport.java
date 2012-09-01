@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2012  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.report.impl;
 
 import java.util.Collections;
@@ -178,12 +195,38 @@ public abstract class AbstractReport implements IReporter {
         if (!resumes.isEmpty()) {
             synchronized (System.out) {
                 System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
-                dump("EXECUTION ORDER", resumes);
-                dump("PERCENTAGE ORDER", orderedList(resumes));
+                dump();
                 System.out.print(resume(true));
                 System.out.println("+---------------------------------------------------------------------------------+");
             }
         }
+    }
+
+    /**
+     * Dump report information.
+     */
+    protected void dump() {
+        dump("EXECUTION ORDER", resumes);
+        dump("PERCENTAGE ORDER", orderedList(resumes, new TimeComparator()));
+        dump("STATUS ORDER", orderedList(resumes, new StatusComparator()));
+    }
+
+    /**
+     * Creates a copy of the resume list.
+     * 
+     * @param list
+     *            The list to be ordered.
+     * @param comparator
+     *            The comparator.
+     * 
+     * @return The list ordered.
+     */
+    protected List<Resume> orderedList(List<Resume> list, Comparator<Resume> comparator) {
+        // create a copy, in case of someone call report each test
+        // execution.
+        List<Resume> copy = new LinkedList<Resume>(list);
+        Collections.sort(copy, comparator);
+        return copy;
     }
 
     /**
@@ -195,39 +238,6 @@ public abstract class AbstractReport implements IReporter {
      *            The list of resumes.
      */
     protected abstract void dump(String header, List<Resume> list);
-
-    /**
-     * Creates a copy of the resume list.
-     * 
-     * @param list
-     *            The list to be ordered.
-     * @return The list ordered.
-     */
-    protected List<Resume> orderedList(List<Resume> list) {
-        // create a copy, in case of someone call report each test
-        // execution.
-        List<Resume> copy = new LinkedList<Resume>(list);
-        Collections.sort(copy, getComparator());
-        return copy;
-    }
-
-    /**
-     * Gets the comparator.
-     * 
-     * @return The sorting.
-     */
-    protected Comparator<? super Resume> getComparator() {
-        return new Comparator<Resume>() {
-            @Override
-            public int compare(Resume o1, Resume o2) {
-                int result = (int) (o2.getTime() - o1.getTime());
-                if (result == 0) {
-                    result = o1.getIndex() - o2.getIndex();
-                }
-                return result;
-            }
-        };
-    }
 
     /**
      * Returns a time as percentage.

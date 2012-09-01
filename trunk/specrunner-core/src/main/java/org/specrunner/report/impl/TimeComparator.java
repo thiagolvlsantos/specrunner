@@ -17,18 +17,33 @@
  */
 package org.specrunner.report.impl;
 
+import java.util.Comparator;
+
 /**
- * Default factory implementation.
+ * Default report time comparator.
+ * <p>
+ * Ordered by: time (countdown), index (countdown).
  * 
  * @author Thiago Santos
  * 
  */
-public class ReporterFactoryDefault extends ReporterFactoryImpl {
+public class TimeComparator implements Comparator<Resume> {
 
-    /**
-     * Default constructor.
-     */
-    public ReporterFactoryDefault() {
-        super(new ReporterGroupImpl().add(new ReporterTxt()));
+    @Override
+    public int compare(Resume o1, Resume o2) {
+        int result = (int) (o2.getTime() - o1.getTime());
+        if (result == 0) {
+            result = o1.getStatus().compareTo(o2.getStatus());
+            if (result == 0) {
+                result = o2.getStatusCounter() - o1.getStatusCounter();
+                if (result == 0) {
+                    result = o2.getAssertionCounter() - o1.getAssertionCounter();
+                    if (result == 0) {
+                        result = o1.getIndex() - o2.getIndex();
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

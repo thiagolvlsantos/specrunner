@@ -17,41 +17,34 @@
  */
 package org.specrunner.report.impl;
 
-import java.util.Map;
-
-import org.specrunner.report.IReporter;
-import org.specrunner.report.IReporterGroup;
-import org.specrunner.result.IResultSet;
-import org.specrunner.util.composite.CompositeImpl;
+import java.util.Comparator;
 
 /**
- * Default reporter group implementation.
+ * Default report status comparator.
+ * <p>
+ * Ordered by fields: status (most relevante first), status counter (countdown),
+ * assertion count(countdown), time(countdown), index(countdown).
  * 
  * @author Thiago Santos
  * 
  */
-public class ReporterGroupImpl extends CompositeImpl<IReporterGroup, IReporter> implements IReporterGroup {
+public class StatusComparator implements Comparator<Resume> {
 
     @Override
-    public void analyse(IResultSet result, Map<String, Object> model) {
-        for (IReporter r : getChildren()) {
-            r.analyse(result, model);
+    public int compare(Resume o1, Resume o2) {
+        int result = o1.getStatus().compareTo(o2.getStatus());
+        if (result == 0) {
+            result = o2.getStatusCounter() - o1.getStatusCounter();
+            if (result == 0) {
+                result = o2.getAssertionCounter() - o1.getAssertionCounter();
+                if (result == 0) {
+                    result = (int) (o2.getTime() - o1.getTime());
+                    if (result == 0) {
+                        result = o1.getIndex() - o2.getIndex();
+                    }
+                }
+            }
         }
-    }
-
-    @Override
-    public String resume() {
-        StringBuilder sb = new StringBuilder();
-        for (IReporter r : getChildren()) {
-            sb.append(r.resume());
-        }
-        return sb.toString();
-    }
-
-    @Override
-    public void report() {
-        for (IReporter r : getChildren()) {
-            r.report();
-        }
+        return result;
     }
 }
