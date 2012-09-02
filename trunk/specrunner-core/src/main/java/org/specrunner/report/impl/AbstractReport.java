@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
@@ -48,6 +49,11 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public abstract class AbstractReport implements IReporter {
+
+    /**
+     * One second in millisseconds.
+     */
+    private static final int SECOND = 1000;
 
     /**
      * Lock to avoid report interference among threads.
@@ -201,6 +207,10 @@ public abstract class AbstractReport implements IReporter {
 
         sb.append(gap);
         sb.append(String.format(format + "%d ms", "TOTAL TIME", total));
+        sb.append("\n");
+
+        sb.append(gap);
+        sb.append(String.format(format + "%02d:%02d:%02d.%03d (HH:mm:ss.SSS)", "FORMATED TIME", TimeUnit.MILLISECONDS.toHours(total), TimeUnit.MILLISECONDS.toMinutes(total), TimeUnit.MILLISECONDS.toSeconds(total), total % SECOND));
         sb.append("\n");
 
         sb.append(gap);
