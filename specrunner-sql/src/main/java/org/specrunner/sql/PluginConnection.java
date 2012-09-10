@@ -17,8 +17,6 @@
  */
 package org.specrunner.sql;
 
-import java.io.PrintWriter;
-import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,10 +117,10 @@ public class PluginConnection extends AbstractPluginValue {
      */
     private Boolean reuse = false;
 
-    // TODO: move to a better place.
     static {
         try {
-            DriverManager.setLogWriter(new PrintWriter(System.err));
+            // TODO: move to a better place.
+            // DriverManager.setLogWriter(new PrintWriter(System.err));
             Class.forName(FactoryJdbcBuilder.class.getName());
         } catch (Exception e) {
             throw new RuntimeException(e);

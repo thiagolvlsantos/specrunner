@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	<parent>
+    <parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner</artifactId>
         <version>1.1.1-SNAPSHOT</version>
         <relativePath>../specrunner</relativePath>
-	</parent>
+    </parent>
     <artifactId>specrunner-sql</artifactId>
 
     <distributionManagement>
@@ -27,5 +27,10 @@
             <artifactId>specrunner-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!--dependency>
+            <groupId>javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.12.1.GA</version>
+        </dependency-->
     </dependencies>
 </project>

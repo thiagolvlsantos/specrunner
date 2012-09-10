@@ -2,9 +2,12 @@ package org.specrunner.sql.proxy;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import javax.sql.DataSource;
 
 /**
  * Factory of JDBC items.
@@ -13,6 +16,24 @@ import java.sql.Statement;
  * 
  */
 public interface IFactoryJdbc {
+
+    /**
+     * Creates a driver.
+     * 
+     * @param prefix
+     *            The URL prefix for driver.
+     * @return A wrapped version.
+     */
+    Driver newDriver(String prefix);
+
+    /**
+     * Creates a data source.
+     * 
+     * @param ds
+     *            A data source.
+     * @return A wrapped version.
+     */
+    DataSource newDataSource(DataSource ds);
 
     /**
      * Creates a connection.

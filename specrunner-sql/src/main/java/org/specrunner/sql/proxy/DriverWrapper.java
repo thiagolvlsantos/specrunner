@@ -17,18 +17,21 @@ import java.util.Properties;
 public class DriverWrapper extends AbstractFactoryJdbcAware<Driver> implements IDriver {
 
     /**
-     * JDBC wrapper.
+     * The driver prefix.
      */
-    public static final String WRAPPER_PREFIX = "jdbc:sr:";
+    private final String prefix;
 
     /**
      * Default constructor.
      * 
      * @param factory
      *            The factory.
+     * @param prefix
+     *            URL prefix.
      */
-    public DriverWrapper(IFactoryJdbc factory) {
+    public DriverWrapper(IFactoryJdbc factory, String prefix) {
         super(factory, null);
+        this.prefix = prefix;
     }
 
     @Override
@@ -56,15 +59,15 @@ public class DriverWrapper extends AbstractFactoryJdbcAware<Driver> implements I
      * @return The url without proxy prefix.
      */
     protected String clean(String url) {
-        if (url.startsWith(WRAPPER_PREFIX)) {
-            return url.substring(WRAPPER_PREFIX.length());
+        if (url.startsWith(prefix)) {
+            return url.substring(prefix.length());
         }
         return url;
     }
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
-        return url.startsWith(WRAPPER_PREFIX) && original.acceptsURL(clean(url));
+        return url.startsWith(prefix) && original.acceptsURL(clean(url));
     }
 
     @Override
