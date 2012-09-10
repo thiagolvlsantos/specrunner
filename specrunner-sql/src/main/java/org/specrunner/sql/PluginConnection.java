@@ -17,6 +17,8 @@
  */
 package org.specrunner.sql;
 
+import java.io.PrintWriter;
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,9 +27,9 @@ import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -36,6 +38,7 @@ import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.sql.impl.SimpleDataSource;
+import org.specrunner.sql.proxy.FactoryJdbcBuilder;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -115,6 +118,16 @@ public class PluginConnection extends AbstractPluginValue {
      * Set connection as reusable.
      */
     private Boolean reuse = false;
+
+    // TODO: move to a better place.
+    static {
+        try {
+            DriverManager.setLogWriter(new PrintWriter(System.err));
+            Class.forName(FactoryJdbcBuilder.class.getName());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Driver information.
