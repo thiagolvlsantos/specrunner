@@ -96,7 +96,12 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
             for (int i = 0; i < types.length; i++) {
                 sb.append((i == 0 ? "" : ",") + "%s");
             }
-            m.insertBefore("System.out.println(\"" + m.getName() + "->\" + String.format(\"" + sb + "\",$args));");
+            m.addLocalVariable("time", CtClass.longType);
+            m.insertBefore("time = System.currentTimeMillis(); System.out.println(\" IN." + m.getName() + "(\" + String.format(\"" + sb + "\",$args)+\")\");");
+
+            if (m.getReturnType() != CtClass.voidType) {
+                m.insertAfter("System.out.println(\"OUT(\"+(System.currentTimeMillis()-time)+\")." + m.getName() + "(" + m.getReturnType().getName() + "):\"+$_);");
+            }
         }
         return cc.toClass();
     }
