@@ -27,10 +27,10 @@
             <artifactId>specrunner-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <!--dependency>
+        <dependency>
             <groupId>javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>3.12.1.GA</version>
-        </dependency-->
+        </dependency>
     </dependencies>
 </project>
