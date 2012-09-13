@@ -64,13 +64,13 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
 
     static {
         try {
-            driverWrapper = (Class<Driver>) instrument("org.specrunner.sql.proxy.DriverWrapper");
-            dataSourceWrapper = (Class<DataSource>) instrument("org.specrunner.sql.proxy.DataSourceWrapper");
-            connectionWrapper = (Class<Connection>) instrument("org.specrunner.sql.proxy.ConnectionWrapper");
-            statementWrapper = (Class<Statement>) instrument("org.specrunner.sql.proxy.StatementWrapper");
-            preparedStatementWrapper = (Class<PreparedStatement>) instrument("org.specrunner.sql.proxy.PreparedStatementWrapper");
-            callableStatementWrapper = (Class<CallableStatement>) instrument("org.specrunner.sql.proxy.CallableStatementWrapper");
-            resultSetWrapper = (Class<ResultSet>) instrument("org.specrunner.sql.proxy.ResultSetWrapper");
+            driverWrapper = (Class<Driver>) instrument(Driver.class, "org.specrunner.sql.proxy.DriverWrapper");
+            dataSourceWrapper = (Class<DataSource>) instrument(DataSource.class, "org.specrunner.sql.proxy.DataSourceWrapper");
+            connectionWrapper = (Class<Connection>) instrument(Connection.class, "org.specrunner.sql.proxy.ConnectionWrapper");
+            statementWrapper = (Class<Statement>) instrument(Statement.class, "org.specrunner.sql.proxy.StatementWrapper");
+            preparedStatementWrapper = (Class<PreparedStatement>) instrument(PreparedStatement.class, "org.specrunner.sql.proxy.PreparedStatementWrapper");
+            callableStatementWrapper = (Class<CallableStatement>) instrument(CallableStatement.class, "org.specrunner.sql.proxy.CallableStatementWrapper");
+            resultSetWrapper = (Class<ResultSet>) instrument(ResultSet.class, "org.specrunner.sql.proxy.ResultSetWrapper");
             DriverManager.registerDriver(instance.newDriver(JDBC_SR));
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,15 +81,17 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
     /**
      * Perform instrumentation of classes.
      * 
-     * @param clazz
+     * @param type
+     *            The class type.
+     * @param className
      *            The class name.
      * @return The modified class.
      * @throws Exception
      *             On instrumentation errors.
      */
-    protected static Class<?> instrument(String clazz) throws Exception {
+    protected static Class<?> instrument(Class<?> type, String className) throws Exception {
         ClassPool cp = ClassPool.getDefault();
-        CtClass cc = cp.get(clazz);
+        CtClass cc = cp.get(className);
         for (CtMethod m : cc.getDeclaredMethods()) {
             CtClass[] types = m.getParameterTypes();
             StringBuilder sb = new StringBuilder();
@@ -99,9 +101,9 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
             m.addLocalVariable("time", CtClass.longType);
             m.insertBefore("time = System.currentTimeMillis(); System.out.println(\" IN." + m.getName() + "(\" + String.format(\"" + sb + "\",$args)+\")\");");
 
-            if (m.getReturnType() != CtClass.voidType) {
-                m.insertAfter("System.out.println(\"OUT(\"+(System.currentTimeMillis()-time)+\")." + m.getName() + "(" + m.getReturnType().getName() + "):\"+$_);");
-            }
+            // if (m.getReturnType() != CtClass.voidType) {
+            m.insertAfter("System.out.println(\"OUT(\"+(System.currentTimeMillis()-time)+\")." + m.getName() + "(" + m.getReturnType().getName() + "):\"+$_);");
+            // }
         }
         return cc.toClass();
     }
