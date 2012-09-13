@@ -3,10 +3,8 @@
 <!-- comment -->
 	
 </script>
-
 <div>
     <h1>SpecRunner examples</h1>
-
     <h2>Variable definition</h2>
     Com X global:
     <p>
@@ -15,14 +13,14 @@
     <p>
         y = <span class="global" name="y">c</span>
     <p>
-        então x+y = z = <span class="local" name="z">${x+y}</span>, logo \${"ac".equals(z)} = ${"ac".equals( z )}. Verificando que: \${"ac".equals( z )} = <span class="eq"> <span class="left">${"ac".equals( z )}</span> = <span class="right">true</span>
+        então x+y = z = <span class="local" name="z">${x+y}</span>, logo \${"ac".equals(z)} = ${"ac".equals( z )}. Verificando que: \${"ac".equals( z )} = <span class="eq"> <span class="left">${"ac".equals(
+                z )}</span> = <span class="right">true</span>
         </span>
     <p>Y local:
     <p>
         y = <span class="local" name="y">b</span> então x+y = \${x + y} = ${x + y}.
     <p>Y geral continua em ${y}.
 </div>
-
 <h2>Assertion (equals)</h2>
 <p>
     Positive: <span class="eq">\${2 + 5} = <span class="left">${2 + 5}</span> = <span class="right">7</span>
@@ -43,7 +41,6 @@ Loop com min =
 <span class="for" min="${minimo}" max="${maximo}" var="${varname}">
     <p>Numero ${variavel}
 </span>
-
 <h2>Table generation</h2>
 <p>Gerando tabelas:
 <table border="1">
@@ -52,18 +49,18 @@ Loop com min =
     </caption>
     <tbody class="for" max="${linhas}" var="lin">
         <tr class="for" max="${2 * colunas}" var="col" step="2" style=''>
-            <td>N=<span class="local" name="n" eval="true">${lin + col}</span>, resto=${n > 0 ? (System.currentTimeMillis() % n) : -1} pos=(${lin},${col})</td>
+            <td>N=<span class="local" name="n" eval="true">${lin + col}</span>, resto=${n > 0 ? (System.currentTimeMillis() % n) : -1} pos=(${lin},${col})
+            </td>
         </tr>
     </tbody>
 </table>
-
 <h2>Conditional flows</h2>
 <p>
     Execução condicional: <span class="global" name="num" eval="true">${System.currentTimeMillis() % 2 == 0}</span>
 <p>Normal (${num}):
 <p>
 <div>
-    Se <span class="if">${num}</span> 
+    Se <span class="if">${num}</span>
     <br>
     <div class="then">
         então ${4 + 9} -> Número par ${new java.util.Date()}
@@ -81,17 +78,12 @@ Loop com min =
 </div>
 </p>
 <p>
-    Negação (${!num}): 
-    <if value="${!num}"> 
-        <span class="then"><br>Número par, caso ${!num}</span> 
-        <span class="else"><br>Número impar, caso contrário.</span> 
-    </if>
+    Negação (${!num}):
+    <if value="${!num}"> <span class="then"><br />Número par, caso ${!num}</span> <span class="else"><br>Número impar, caso contrário.</span> </if>
 <h2>File inclusion</h2>
 Usar o arquivo '
 <a class="include" href="source.html">source.html</a>
 '.
-
-
 <h2>Macro definition</h2>
 <p>
     Definindo a macro '<span class="global" name="nome">incluir arquivo</span>' como:
@@ -100,46 +92,42 @@ Usar o arquivo '
         Incluindo o arquivo '<span class="local" name="link">source.html</span>' <span class="local" name="count" eval="true">6</span> vezes:
     <table>
         <tr class="for" max="${count}" align="left" valign="top">
-            <td><a class="include" href="${link}">${index} - nome do arquivo.</a>
-            </td>
+            <td><a class="include" href="${link}">${index} - nome do arquivo.</a></td>
         </tr>
     </table>
     .
     </p>
 </div>
 </p>
-
 <h2>Macro usage</h2>
 <p>
     Usando a macro '<span class="call">incluir arquivo</span>'.
 <p>
     Usando a macro '<span class="call">incluir arquivo</span>' novamente.
 </p>
-
 <h2>While</h2>
 Exemplo com test direto:
 <div>
-    Considerando que x 
-    é <span class="local" name="x">10</span>. Realizar o processo abaixo enquanto x > 5.
+    Considerando que x é <span class="local" name="x">10</span>. Realizar o processo abaixo enquanto x > 5.
     <table>
         <tbody class="while" test="x>5">
-            <tr >
-                <td> valor de x = ${x}</td>
-                <td> x=<span class="local" name="x" scope="div">${x-1}</span></td>
+            <tr>
+                <td>valor de x = ${x}</td>
+                <td>x=<span class="local" name="x" scope="div">${x-1}</span>
+                </td>
             </tr>
         </tbody>
     </table>
 </div>
-
 Exemplo com condição nomeada:
 <div>
-    Considerando que x 
-    é <span class="local" name="x">10</span>. Realizar o processo abaixo enquanto <span class="condition" name="cond1">x > 5</span>.
+    Considerando que x é <span class="local" name="x">10</span>. Realizar o processo abaixo enquanto <span class="condition" name="cond1">x > 5</span>.
     <table>
         <tbody class="while" name="cond1">
-            <tr >
-                <td> valor de x = ${x}</td>
-                <td> x=<span class="local" name="x" scope="div">${x-1}</span></td>
+            <tr>
+                <td>valor de x = ${x}</td>
+                <td>x=<span class="local" name="x" scope="div">${x-1}</span>
+                </td>
             </tr>
         </tbody>
     </table>
