@@ -9,10 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-
 import javax.sql.DataSource;
 
 /**
@@ -27,12 +23,17 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
     /**
      * Prefix for wrapper driver.
      */
-    private static final String JDBC_SR = "jdbc:sr:";
+    public static final String JDBC_SR = "jdbc:sr:";
 
     /**
      * Unique instance.
      */
     protected static FactoryJdbcBuilder instance = new FactoryJdbcBuilder();
+
+    /**
+     * Default implementation of a wrapper.
+     */
+    protected IWrapperFactory classFactory;
 
     /**
      * The JDBC wrapper class.
@@ -76,48 +77,19 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
      */
     public FactoryJdbcBuilder() {
         try {
-            driverWrapper = instrument(Driver.class, "org.specrunner.sql.proxy.DriverWrapper");
-            dataSourceWrapper = instrument(DataSource.class, "org.specrunner.sql.proxy.DataSourceWrapper");
-            connectionWrapper = instrument(Connection.class, "org.specrunner.sql.proxy.ConnectionWrapper");
-            statementWrapper = instrument(Statement.class, "org.specrunner.sql.proxy.StatementWrapper");
-            preparedStatementWrapper = instrument(PreparedStatement.class, "org.specrunner.sql.proxy.PreparedStatementWrapper");
-            callableStatementWrapper = instrument(CallableStatement.class, "org.specrunner.sql.proxy.CallableStatementWrapper");
-            resultSetWrapper = instrument(ResultSet.class, "org.specrunner.sql.proxy.ResultSetWrapper");
+            if (classFactory == null) {
+                classFactory = new WrapperFactoryJdbc();
+            }
+            driverWrapper = classFactory.wrapperClass(Driver.class);
+            dataSourceWrapper = classFactory.wrapperClass(DataSource.class);
+            connectionWrapper = classFactory.wrapperClass(Connection.class);
+            statementWrapper = classFactory.wrapperClass(Statement.class);
+            preparedStatementWrapper = classFactory.wrapperClass(PreparedStatement.class);
+            callableStatementWrapper = classFactory.wrapperClass(CallableStatement.class);
+            resultSetWrapper = classFactory.wrapperClass(ResultSet.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Perform instrumentation of classes.
-     * 
-     * @param <T>
-     *            The object type.
-     * @param type
-     *            The class type.
-     * @param className
-     *            The class name.
-     * @return The modified class.
-     * @throws Exception
-     *             On instrumentation errors.
-     */
-    protected <T> Class<T> instrument(Class<T> type, String className) throws Exception {
-        ClassPool cp = ClassPool.getDefault();
-        CtClass cc = cp.get(className);
-        for (CtMethod m : cc.getDeclaredMethods()) {
-            CtClass[] types = m.getParameterTypes();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < types.length; i++) {
-                sb.append((i == 0 ? "" : ",") + "%s");
-            }
-            m.addLocalVariable("time", CtClass.longType);
-            m.insertBefore("time = System.currentTimeMillis(); System.out.println(\" IN." + m.getName() + "(\" + String.format(\"" + sb + "\",$args)+\")\");");
-
-            // if (m.getReturnType() != CtClass.voidType) {
-            m.insertAfter("System.out.println(\"OUT(\"+(System.currentTimeMillis()-time)+\")." + m.getName() + "(" + m.getReturnType().getName() + "):\"+$_);");
-            // }
-        }
-        return cc.toClass();
     }
 
     /**
