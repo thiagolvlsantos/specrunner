@@ -6,6 +6,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javassist.ClassPool;
@@ -36,44 +37,53 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<Driver> driverWrapper;
+    protected Class<Driver> driverWrapper;
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<DataSource> dataSourceWrapper;
+    protected Class<DataSource> dataSourceWrapper;
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<Connection> connectionWrapper;
+    protected Class<Connection> connectionWrapper;
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<Statement> statementWrapper;
+    protected Class<Statement> statementWrapper;
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<PreparedStatement> preparedStatementWrapper;
+    protected Class<PreparedStatement> preparedStatementWrapper;
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<CallableStatement> callableStatementWrapper;
+    protected Class<CallableStatement> callableStatementWrapper;
     /**
      * The JDBC wrapper class.
      */
-    protected static Class<ResultSet> resultSetWrapper;
+    protected Class<ResultSet> resultSetWrapper;
 
     static {
         try {
-            driverWrapper = (Class<Driver>) instrument(Driver.class, "org.specrunner.sql.proxy.DriverWrapper");
-            dataSourceWrapper = (Class<DataSource>) instrument(DataSource.class, "org.specrunner.sql.proxy.DataSourceWrapper");
-            connectionWrapper = (Class<Connection>) instrument(Connection.class, "org.specrunner.sql.proxy.ConnectionWrapper");
-            statementWrapper = (Class<Statement>) instrument(Statement.class, "org.specrunner.sql.proxy.StatementWrapper");
-            preparedStatementWrapper = (Class<PreparedStatement>) instrument(PreparedStatement.class, "org.specrunner.sql.proxy.PreparedStatementWrapper");
-            callableStatementWrapper = (Class<CallableStatement>) instrument(CallableStatement.class, "org.specrunner.sql.proxy.CallableStatementWrapper");
-            resultSetWrapper = (Class<ResultSet>) instrument(ResultSet.class, "org.specrunner.sql.proxy.ResultSetWrapper");
             DriverManager.registerDriver(instance.newDriver(JDBC_SR));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Default constructor.
+     */
+    public FactoryJdbcBuilder() {
+        try {
+            driverWrapper = instrument(Driver.class, "org.specrunner.sql.proxy.DriverWrapper");
+            dataSourceWrapper = instrument(DataSource.class, "org.specrunner.sql.proxy.DataSourceWrapper");
+            connectionWrapper = instrument(Connection.class, "org.specrunner.sql.proxy.ConnectionWrapper");
+            statementWrapper = instrument(Statement.class, "org.specrunner.sql.proxy.StatementWrapper");
+            preparedStatementWrapper = instrument(PreparedStatement.class, "org.specrunner.sql.proxy.PreparedStatementWrapper");
+            callableStatementWrapper = instrument(CallableStatement.class, "org.specrunner.sql.proxy.CallableStatementWrapper");
+            resultSetWrapper = instrument(ResultSet.class, "org.specrunner.sql.proxy.ResultSetWrapper");
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -81,6 +91,8 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
     /**
      * Perform instrumentation of classes.
      * 
+     * @param <T>
+     *            The object type.
      * @param type
      *            The class type.
      * @param className
@@ -89,7 +101,7 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
      * @throws Exception
      *             On instrumentation errors.
      */
-    protected static Class<?> instrument(Class<?> type, String className) throws Exception {
+    protected <T> Class<T> instrument(Class<T> type, String className) throws Exception {
         ClassPool cp = ClassPool.getDefault();
         CtClass cc = cp.get(className);
         for (CtMethod m : cc.getDeclaredMethods()) {
