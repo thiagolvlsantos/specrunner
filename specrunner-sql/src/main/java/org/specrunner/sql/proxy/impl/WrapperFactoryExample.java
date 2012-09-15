@@ -32,7 +32,7 @@ public class WrapperFactoryExample extends AbstractWrapperFactoryJdbc {
 
         StringBuilder after = new StringBuilder();
         after.append("System.out.println(\"<- :" + name + "(" + m.getReturnType().getName() + "):\"+$_);");
-        after.append("System.out.println(\"ms :(" + name + ")\"+(System.currentTimeMillis()-time));");
+        after.append("System.out.println(\"ms :" + name + " = \"+(System.currentTimeMillis()-time));");
         m.insertAfter(after.toString());
     }
 }
