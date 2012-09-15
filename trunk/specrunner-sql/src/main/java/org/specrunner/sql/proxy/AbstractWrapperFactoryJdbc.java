@@ -49,7 +49,7 @@ public abstract class AbstractWrapperFactoryJdbc implements IWrapperFactory {
             ClassPool cp = ClassPool.getDefault();
             CtClass cc = cp.get(str);
             for (CtMethod m : cc.getDeclaredMethods()) {
-                wrapperMethod(m);
+                wrapperMethod(type, m);
             }
             return cc.toClass();
         }
@@ -59,10 +59,14 @@ public abstract class AbstractWrapperFactoryJdbc implements IWrapperFactory {
     /**
      * Wrap a method.
      * 
+     * @param <T>
+     *            The object type.
+     * @param type
+     *            The type.
      * @param m
      *            The method.
      * @throws Exception
      *             On wrapper error.
      */
-    protected abstract void wrapperMethod(CtMethod m) throws Exception;
+    protected abstract <T> void wrapperMethod(Class<T> type, CtMethod m) throws Exception;
 }
