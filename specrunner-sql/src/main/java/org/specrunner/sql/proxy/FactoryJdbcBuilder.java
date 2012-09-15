@@ -11,14 +11,15 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
+import org.specrunner.SpecRunnerServices;
+
 /**
  * Wrapped version of a factory.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("unchecked")
-public class FactoryJdbcBuilder implements IFactoryJdbc {
+public final class FactoryJdbcBuilder implements IFactoryJdbc {
 
     /**
      * Prefix for wrapper driver.
@@ -33,32 +34,38 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
     /**
      * Default implementation of a wrapper.
      */
-    protected IWrapperFactory classFactory;
+    protected IWrapperFactory wrapperFactory;
 
     /**
      * The JDBC wrapper class.
      */
     protected Class<Driver> driverWrapper;
+
     /**
      * The JDBC wrapper class.
      */
     protected Class<DataSource> dataSourceWrapper;
+
     /**
      * The JDBC wrapper class.
      */
     protected Class<Connection> connectionWrapper;
+
     /**
      * The JDBC wrapper class.
      */
     protected Class<Statement> statementWrapper;
+
     /**
      * The JDBC wrapper class.
      */
     protected Class<PreparedStatement> preparedStatementWrapper;
+
     /**
      * The JDBC wrapper class.
      */
     protected Class<CallableStatement> callableStatementWrapper;
+
     /**
      * The JDBC wrapper class.
      */
@@ -75,18 +82,16 @@ public class FactoryJdbcBuilder implements IFactoryJdbc {
     /**
      * Default constructor.
      */
-    public FactoryJdbcBuilder() {
+    private FactoryJdbcBuilder() {
         try {
-            if (classFactory == null) {
-                classFactory = new WrapperFactoryJdbc();
-            }
-            driverWrapper = classFactory.wrapperClass(Driver.class);
-            dataSourceWrapper = classFactory.wrapperClass(DataSource.class);
-            connectionWrapper = classFactory.wrapperClass(Connection.class);
-            statementWrapper = classFactory.wrapperClass(Statement.class);
-            preparedStatementWrapper = classFactory.wrapperClass(PreparedStatement.class);
-            callableStatementWrapper = classFactory.wrapperClass(CallableStatement.class);
-            resultSetWrapper = classFactory.wrapperClass(ResultSet.class);
+            wrapperFactory = SpecRunnerServices.get(IWrapperFactory.class);
+            driverWrapper = wrapperFactory.wrapperClass(Driver.class);
+            dataSourceWrapper = wrapperFactory.wrapperClass(DataSource.class);
+            connectionWrapper = wrapperFactory.wrapperClass(Connection.class);
+            statementWrapper = wrapperFactory.wrapperClass(Statement.class);
+            preparedStatementWrapper = wrapperFactory.wrapperClass(PreparedStatement.class);
+            callableStatementWrapper = wrapperFactory.wrapperClass(CallableStatement.class);
+            resultSetWrapper = wrapperFactory.wrapperClass(ResultSet.class);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

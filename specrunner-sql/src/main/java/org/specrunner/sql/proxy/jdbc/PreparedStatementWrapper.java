@@ -1,4 +1,4 @@
-package org.specrunner.sql.proxy;
+package org.specrunner.sql.proxy.jdbc;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -22,6 +22,9 @@ import java.sql.SQLXML;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
+
+import org.specrunner.sql.proxy.AbstractFactoryJdbcAware;
+import org.specrunner.sql.proxy.IFactoryJdbc;
 
 /**
  * Wrapper of JDBC equivalent.

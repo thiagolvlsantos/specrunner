@@ -37,6 +37,8 @@ import org.specrunner.reuse.IReusableManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.sql.impl.SimpleDataSource;
 import org.specrunner.sql.proxy.FactoryJdbcBuilder;
+import org.specrunner.sql.proxy.IWrapperFactory;
+import org.specrunner.sql.proxy.impl.WrapperFactoryExample;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -121,6 +123,7 @@ public class PluginConnection extends AbstractPluginValue {
         try {
             // TODO: move to a better place.
             // DriverManager.setLogWriter(new PrintWriter(System.err));
+            SpecRunnerServices.get().bind(IWrapperFactory.class, new WrapperFactoryExample());
             Class.forName(FactoryJdbcBuilder.class.getName());
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -1,4 +1,4 @@
-package org.specrunner.sql.proxy;
+package org.specrunner.sql.proxy.jdbc;
 
 import java.sql.Driver;
 
