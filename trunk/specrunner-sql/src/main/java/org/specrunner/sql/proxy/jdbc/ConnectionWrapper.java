@@ -1,4 +1,4 @@
-package org.specrunner.sql.proxy;
+package org.specrunner.sql.proxy.jdbc;
 
 import java.sql.Array;
 import java.sql.Blob;
@@ -17,6 +17,9 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+
+import org.specrunner.sql.proxy.AbstractFactoryJdbcAware;
+import org.specrunner.sql.proxy.IFactoryJdbc;
 
 /**
  * Wrapper of JDBC equivalent.

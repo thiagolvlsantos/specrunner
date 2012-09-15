@@ -1,4 +1,4 @@
-package org.specrunner.sql.proxy;
+package org.specrunner.sql.proxy.jdbc;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -7,6 +7,9 @@ import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Properties;
+
+import org.specrunner.sql.proxy.AbstractFactoryJdbcAware;
+import org.specrunner.sql.proxy.IFactoryJdbc;
 
 /**
  * Driver wrapper.

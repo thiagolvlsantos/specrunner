@@ -1,10 +1,13 @@
-package org.specrunner.sql.proxy;
+package org.specrunner.sql.proxy.jdbc;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
+
+import org.specrunner.sql.proxy.AbstractFactoryJdbcAware;
+import org.specrunner.sql.proxy.IFactoryJdbc;
 
 /**
  * Wrapper of JDBC equivalent.
