@@ -16,7 +16,7 @@ import org.specrunner.sql.proxy.AbstractWrapperFactoryJdbc;
 public class WrapperFactoryExample extends AbstractWrapperFactoryJdbc {
 
     @Override
-    protected void wrapperMethod(CtMethod m) throws NotFoundException, CannotCompileException {
+    protected <T> void wrapperMethod(Class<T> type, CtMethod m) throws NotFoundException, CannotCompileException {
         StringBuilder before = new StringBuilder();
 
         String name = m.getName();
@@ -27,11 +27,12 @@ public class WrapperFactoryExample extends AbstractWrapperFactoryJdbc {
         }
         m.addLocalVariable("time", CtClass.longType);
         before.append("time = System.currentTimeMillis();");
-        before.append("System.out.println(\"-> " + name + "(\" + String.format(\"" + sb + "\",$args)+\")\");");
+        before.append("System.out.println(\"-> :" + name + "(\" + String.format(\"" + sb + "\",$args)+\")\");");
         m.insertBefore(before.toString());
 
         StringBuilder after = new StringBuilder();
-        after.append("System.out.println(\"<- " + name + "(" + m.getReturnType().getName() + "):\"+$_ +\",TIME:\"+(System.currentTimeMillis()-time) );");
+        after.append("System.out.println(\"<- :" + name + "(" + m.getReturnType().getName() + "):\"+$_);");
+        after.append("System.out.println(\"ms :(" + name + ")\"+(System.currentTimeMillis()-time));");
         m.insertAfter(after.toString());
     }
 }
