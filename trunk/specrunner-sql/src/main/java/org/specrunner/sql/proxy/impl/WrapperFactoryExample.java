@@ -17,14 +17,14 @@ public class WrapperFactoryExample extends AbstractWrapperFactoryJdbc {
 
     @Override
     protected void wrapperMethod(CtMethod m) throws NotFoundException, CannotCompileException {
+        StringBuilder before = new StringBuilder();
+
+        String name = m.getName();
         CtClass[] types = m.getParameterTypes();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < types.length; i++) {
             sb.append((i == 0 ? "" : ",") + "%s");
         }
-        String name = m.getName();
-
-        StringBuilder before = new StringBuilder();
         m.addLocalVariable("time", CtClass.longType);
         before.append("time = System.currentTimeMillis();");
         before.append("System.out.println(\"-> " + name + "(\" + String.format(\"" + sb + "\",$args)+\")\");");
