@@ -20,7 +20,7 @@ package org.specrunner.expressions;
 import org.specrunner.context.IContext;
 
 /**
- * A expression.
+ * An expression.
  * 
  * @author Thiago Santos
  * 

@@ -28,6 +28,7 @@ import org.codehaus.janino.Scanner;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpression;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -58,6 +59,16 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                     types.add(result.getClass());
                 } else { // check predefined values
                     Object value = getPredefinedValues().get(str);
+                    // if value is itself an expression should be evaluated
+                    if (value != null && value instanceof String) {
+                        try {
+                            value = UtilEvaluator.evaluate((String) value, context);
+                        } catch (Exception e) {
+                            if (UtilLog.LOG.isTraceEnabled()) {
+                                UtilLog.LOG.trace(e.getMessage(), e);
+                            }
+                        }
+                    }
                     if (value != null) {
                         args.add(str);
                         values.add(value);
