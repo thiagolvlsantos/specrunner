@@ -39,9 +39,9 @@ public class TestSql {
     @Before
     public void before() {
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern = "yyyy-MM-dd HH:mm:ss.SSSS";
         ief.bindPredefinedValue("pattern", pattern);
-        ief.bindPredefinedValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
+        ief.bindPredefinedValue("time", "{ts '${dt.toString(pattern)}'}");
         ief.bindPredefinedClass("dt", DateTime.class);
     }
 

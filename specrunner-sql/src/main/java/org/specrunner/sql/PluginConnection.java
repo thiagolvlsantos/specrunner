@@ -60,6 +60,14 @@ public class PluginConnection extends AbstractPluginValue {
     public static final String CONNECTION_PROVIDER = "connectionProvider";
 
     /**
+     * Full connection descriptor.
+     */
+    public static final String FEATURE_CONNECTION = PluginConnection.class.getName() + ".connection";
+    /**
+     * Connection descriptor.
+     */
+    private String connection;
+    /**
      * Connection driver.
      */
     public static final String FEATURE_DRIVER = PluginConnection.class.getName() + ".driver";
@@ -127,6 +135,41 @@ public class PluginConnection extends AbstractPluginValue {
             Class.forName(FactoryJdbcBuilder.class.getName());
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Connection information.
+     * 
+     * @return The connection description as
+     *         '&lt;driver&gt;;&lt;url&gt;;&lt;user&gt;;&lt;password&gt;'.
+     */
+    public String getConnection() {
+        return connection;
+    }
+
+    /**
+     * Sets the connection description as
+     * '&lt;driver&gt;;&lt;url&gt;;&lt;user&gt;;&lt;password&gt;'.
+     * 
+     * @param connection
+     *            The connection.
+     */
+    public void setConnection(String connection) {
+        this.connection = connection;
+        String[] tmp = connection.split(";");
+        int index = 0;
+        if (tmp.length > 0) {
+            setDriver(tmp[index++]);
+        }
+        if (tmp.length > 1) {
+            setUrl(tmp[index++]);
+        }
+        if (tmp.length > 2) {
+            setUser(tmp[index++]);
+        }
+        if (tmp.length > 3) {
+            setPassword(tmp[index++]);
         }
     }
 
@@ -275,6 +318,15 @@ public class PluginConnection extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        if (connection == null) {
+            try {
+                fh.set(FEATURE_CONNECTION, "connection", String.class, this);
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        }
         if (driver == null) {
             try {
                 fh.set(FEATURE_DRIVER, "driver", String.class, this);
@@ -345,6 +397,7 @@ public class PluginConnection extends AbstractPluginValue {
             if (ir != null) {
                 Map<String, Object> cfg = new HashMap<String, Object>();
                 cfg.put("name", currentName);
+                cfg.put("connection", connection);
                 cfg.put("provider", provider);
                 cfg.put("providerInstance", providerInstance);
                 cfg.put("driver", driver);
@@ -398,6 +451,7 @@ public class PluginConnection extends AbstractPluginValue {
                 @Override
                 public boolean canReuse(Map<String, Object> cfg) {
                     boolean sameName = currentName.equalsIgnoreCase((String) cfg.get("name"));
+                    boolean sameConnection = connection != null && connection.equals(cfg.get("connection"));
                     boolean sameProvider = provider != null && provider.equals(cfg.get("provider"));
                     boolean sameInstance = providerInstance != null && providerInstance == cfg.get("providerInstance");
                     boolean sameProperties = true;
@@ -405,7 +459,7 @@ public class PluginConnection extends AbstractPluginValue {
                     sameProperties = sameProperties && url != null && url.equalsIgnoreCase((String) cfg.get("url"));
                     sameProperties = sameProperties && user != null && user.equalsIgnoreCase((String) cfg.get("user"));
                     sameProperties = sameProperties && password != null && password.equalsIgnoreCase((String) cfg.get("password"));
-                    return sameName && (sameInstance || sameProvider || sameProperties);
+                    return sameName && (sameConnection || sameInstance || sameProvider || sameProperties);
                 }
             });
         }
@@ -448,5 +502,14 @@ public class PluginConnection extends AbstractPluginValue {
             newUrl = String.valueOf(rm.get("url", newUrl));
         }
         return new SimpleDataSource(driver, newUrl, user, password);
+    }
+
+    public static void main(String[] args) {
+        PluginConnection pc = new PluginConnection();
+        pc.setConnection("a;b;c");
+        System.out.println(pc.getDriver());
+        System.out.println(pc.getUrl());
+        System.out.println(pc.getUser());
+        System.out.println(pc.getPassword());
     }
 }
