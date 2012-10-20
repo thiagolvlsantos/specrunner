@@ -51,6 +51,11 @@ public class TestSql {
     }
 
     @Test
+    public void createConnection() {
+        run("createConnection.html");
+    }
+
+    @Test
     public void createProvider() {
         run("createProvider.html");
     }
