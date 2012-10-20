@@ -18,6 +18,8 @@
 package org.specrunner.sql;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
@@ -157,19 +159,31 @@ public class PluginConnection extends AbstractPluginValue {
      */
     public void setConnection(String connection) {
         this.connection = connection;
-        String[] tmp = connection.split(";");
-        int index = 0;
-        if (tmp.length > 0) {
-            setDriver(tmp[index++]);
+        List<Integer> indexes = new LinkedList<Integer>();
+        String other = ";" + connection + ";";
+        for (int i = 0; i < other.length(); i++) {
+            if (other.charAt(i) == ';') {
+                indexes.add(i);
+            }
         }
-        if (tmp.length > 1) {
-            setUrl(tmp[index++]);
-        }
-        if (tmp.length > 2) {
-            setUser(tmp[index++]);
-        }
-        if (tmp.length > 3) {
-            setPassword(tmp[index++]);
+        for (int i = 0; i < indexes.size() - 1; i++) {
+            String tmp = connection.substring(indexes.get(i), indexes.get(i + 1) - 1);
+            if (driver == null) {
+                setDriver(tmp);
+                continue;
+            }
+            if (url == null) {
+                setUrl(tmp);
+                continue;
+            }
+            if (user == null) {
+                setUser(tmp);
+                continue;
+            }
+            if (password == null) {
+                setPassword(tmp);
+                continue;
+            }
         }
     }
 
