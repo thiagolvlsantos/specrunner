@@ -503,13 +503,4 @@ public class PluginConnection extends AbstractPluginValue {
         }
         return new SimpleDataSource(driver, newUrl, user, password);
     }
-
-    public static void main(String[] args) {
-        PluginConnection pc = new PluginConnection();
-        pc.setConnection("a;b;c");
-        System.out.println(pc.getDriver());
-        System.out.println(pc.getUrl());
-        System.out.println(pc.getUser());
-        System.out.println(pc.getPassword());
-    }
 }
