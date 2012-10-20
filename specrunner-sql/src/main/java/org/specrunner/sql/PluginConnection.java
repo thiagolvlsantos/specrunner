@@ -144,7 +144,7 @@ public class PluginConnection extends AbstractPluginValue {
      * Connection information.
      * 
      * @return The connection description as
-     *         '&lt;driver&gt;;&lt;url&gt;;&lt;user&gt;;&lt;password&gt;'.
+     *         '&lt;driver&gt;|&lt;url&gt;|&lt;user&gt;|&lt;password&gt;'.
      */
     public String getConnection() {
         return connection;
@@ -152,7 +152,7 @@ public class PluginConnection extends AbstractPluginValue {
 
     /**
      * Sets the connection description as
-     * '&lt;driver&gt;;&lt;url&gt;;&lt;user&gt;;&lt;password&gt;'.
+     * '&lt;driver&gt;|&lt;url&gt;|&lt;user&gt;|&lt;password&gt;'.
      * 
      * @param connection
      *            The connection.
@@ -160,9 +160,9 @@ public class PluginConnection extends AbstractPluginValue {
     public void setConnection(String connection) {
         this.connection = connection;
         List<Integer> indexes = new LinkedList<Integer>();
-        String other = ";" + connection + ";";
+        String other = "|" + connection + "|";
         for (int i = 0; i < other.length(); i++) {
-            if (other.charAt(i) == ';') {
+            if (other.charAt(i) == '|') {
                 indexes.add(i);
             }
         }
