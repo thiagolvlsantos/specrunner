@@ -27,9 +27,9 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -218,16 +218,10 @@ public class PluginBrowser extends AbstractPluginScoped {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);
         if (webdriver == null) {
             try {
-                fh.set(FEATURE_WEBDRIVER_TYPE, "webdriver", String.class, this);
+                fh.setStrict(FEATURE_WEBDRIVER_TYPE, "webdriver", String.class, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver type is " + webdriver);
                 }
@@ -239,7 +233,7 @@ public class PluginBrowser extends AbstractPluginScoped {
         }
         if (webdriverfactory == null) {
             try {
-                fh.set(FEATURE_WEBDRIVER_FACTORY, "webdriverfactory", String.class, this);
+                fh.setStrict(FEATURE_WEBDRIVER_FACTORY, "webdriverfactory", String.class, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver factory is " + webdriverfactory);
                 }
@@ -250,13 +244,7 @@ public class PluginBrowser extends AbstractPluginScoped {
             }
         }
         if (webdriverInstance == null) {
-            try {
-                fh.set(FEATURE_WEBDRIVER_INSTANCE, "webdriverInstance", WebDriver.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_WEBDRIVER_INSTANCE, "webdriverInstance", WebDriver.class, this);
         }
     }
 

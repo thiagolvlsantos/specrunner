@@ -75,7 +75,18 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     }
 
     @Override
-    public void set(String feature, String field, Class<?> expectedType, Object target) throws FeatureManagerException {
+    public void set(String feature, String field, Class<?> expectedType, Object target) {
+        try {
+            setStrict(feature, field, expectedType, target);
+        } catch (FeatureManagerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        }
+    }
+
+    @Override
+    public void setStrict(String feature, String field, Class<?> expectedType, Object target) throws FeatureManagerException {
         Object obj = get(feature);
         if (obj != null) {
             if (UtilLog.LOG.isDebugEnabled()) {

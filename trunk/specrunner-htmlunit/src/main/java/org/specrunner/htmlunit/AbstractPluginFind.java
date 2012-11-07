@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.impl.FinderXPath;
 import org.specrunner.parameters.impl.UtilParametrized;
@@ -118,22 +117,10 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (finder == null) {
-            try {
-                fh.set(FEATURE_FINDER_TYPE, "finder", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_FINDER_TYPE, "finder", String.class, this);
         }
         if (finderInstance == null) {
-            try {
-                fh.set(FEATURE_FINDER_INSTANCE, "finderInstance", IFinder.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_FINDER_INSTANCE, "finderInstance", IFinder.class, this);
         }
         if (finder != null && finderInstance == null) {
             try {

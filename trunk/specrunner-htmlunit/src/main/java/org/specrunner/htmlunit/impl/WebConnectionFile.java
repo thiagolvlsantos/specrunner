@@ -28,7 +28,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.specrunner.SpecRunnerServices;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.ICacheable;
 import org.specrunner.htmlunit.IWebConnection;
@@ -95,33 +94,15 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
     public WebConnectionFile(WebClient webClient) {
         super(webClient);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_DIRECTORY, "cacheDirectory", File.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_DIRECTORY, "cacheDirectory", File.class, this);
         if (cacheClean == null) {
-            try {
-                fh.set(FEATURE_CLEAN, "cacheClean", Boolean.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CLEAN, "cacheClean", Boolean.class, this);
         }
         if (cacheClean != null && cacheClean) {
             reset();
         }
         if (strategy == null) {
-            try {
-                fh.set(FEATURE_STRATEGY, "strategy", ICacheable.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_STRATEGY, "strategy", ICacheable.class, this);
         }
         if (strategy != null) {
             try {

@@ -25,7 +25,6 @@ import javax.swing.JOptionPane;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResult;
@@ -122,20 +121,8 @@ public class FailurePausePluginListener extends AbstractPluginListener {
     @Override
     public void onBeforeInit(IPlugin plugin, IContext context, IResultSet result) {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fm.set(FEATURE_PAUSE_ON_FAILURE, "pause", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fm.set(FEATURE_SHOW_DIALOG, "dialog", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(FEATURE_PAUSE_ON_FAILURE, "pause", Boolean.class, this);
+        fm.set(FEATURE_SHOW_DIALOG, "dialog", Boolean.class, this);
         start = result.size();
     }
 

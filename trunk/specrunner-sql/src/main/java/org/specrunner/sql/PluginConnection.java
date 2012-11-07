@@ -25,7 +25,6 @@ import java.util.Map;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -333,73 +332,25 @@ public class PluginConnection extends AbstractPluginValue {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (connection == null) {
-            try {
-                fh.set(FEATURE_CONNECTION, "connection", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CONNECTION, "connection", String.class, this);
         }
         if (driver == null) {
-            try {
-                fh.set(FEATURE_DRIVER, "driver", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_DRIVER, "driver", String.class, this);
         }
         if (url == null) {
-            try {
-                fh.set(FEATURE_URL, "url", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_URL, "url", String.class, this);
         }
         if (user == null) {
-            try {
-                fh.set(FEATURE_USER, "user", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_USER, "user", String.class, this);
         }
         if (password == null) {
-            try {
-                fh.set(FEATURE_PASSWORD, "password", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_PASSWORD, "password", String.class, this);
         }
         if (provider == null) {
-            try {
-                fh.set(FEATURE_PROVIDER, "provider", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_PROVIDER, "provider", String.class, this);
         }
-        try {
-            fh.set(FEATURE_PROVIDER_INSTANCE, "providerInstance", IDataSourceProvider.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_PROVIDER_INSTANCE, "providerInstance", IDataSourceProvider.class, this);
+        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
     }
 
     @Override

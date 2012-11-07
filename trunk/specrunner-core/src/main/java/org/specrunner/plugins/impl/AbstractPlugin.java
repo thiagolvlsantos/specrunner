@@ -20,7 +20,6 @@ package org.specrunner.plugins.impl;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.impl.AbstractParametrized;
 import org.specrunner.plugins.ENext;
@@ -96,40 +95,16 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
         }
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (condition == null) {
-            try {
-                fh.set(FEATURE_CONDITION, "condition", Boolean.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CONDITION, "condition", Boolean.class, this);
         }
         if (sleep == null) {
-            try {
-                fh.set(FEATURE_SLEEP, "sleep", Long.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_SLEEP, "sleep", Long.class, this);
         }
         if (timeout == null) {
-            try {
-                fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
         }
         if (threadsafe == null) {
-            try {
-                fh.set(FEATURE_THREADSAFE, "threadsafe", Boolean.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_THREADSAFE, "threadsafe", Boolean.class, this);
         }
         if (threadsafe == null) {
             threadsafe = false;
