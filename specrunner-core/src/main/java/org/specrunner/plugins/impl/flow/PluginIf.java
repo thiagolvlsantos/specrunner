@@ -22,9 +22,9 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -98,7 +98,7 @@ public class PluginIf extends AbstractPluginValue {
             if ("true".equalsIgnoreCase(strCon) || "false".equalsIgnoreCase(strCon)) {
                 valueCond = Boolean.valueOf(strCon);
             } else {
-                throw new PluginException("If contition result in invalid value: '" + valueCond + "'. ActionType:" + (valueCond != null ? valueCond.getClass() : "null"));
+                throw new PluginException("If contition result in invalid value: '" + valueCond + "'. Returned type:" + (valueCond != null ? valueCond.getClass() : "null"));
             }
         }
         String testName = getName() != null ? getName() : TEST_NAME;
