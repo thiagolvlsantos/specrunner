@@ -23,7 +23,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -180,40 +179,16 @@ public class PluginSessionFactory extends AbstractPluginScoped {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (configuration == null) {
-            try {
-                fh.set(FEATURE_CONFIGURATION, "configuration", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CONFIGURATION, "configuration", String.class, this);
         }
         if (type == null) {
-            try {
-                fh.set(FEATURE_TYPE, "provider", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_TYPE, "provider", String.class, this);
         }
         if (factory == null) {
-            try {
-                fh.set(FEATURE_FACTORY, "factory", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_FACTORY, "factory", String.class, this);
         }
         if (method == null) {
-            try {
-                fh.set(FEATURE_METHOD, "method", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_METHOD, "method", String.class, this);
         }
     }
 

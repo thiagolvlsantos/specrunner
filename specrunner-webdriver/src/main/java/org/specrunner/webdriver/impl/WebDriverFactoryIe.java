@@ -24,7 +24,6 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
@@ -54,13 +53,7 @@ public class WebDriverFactoryIe implements IWebDriverFactory {
      */
     public WebDriverFactoryIe() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fm.set(FEATURE_DRIVER, "driver", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(FEATURE_DRIVER, "driver", String.class, this);
     }
 
     /**

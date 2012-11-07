@@ -24,7 +24,6 @@ import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.listeners.PageListener;
 import org.specrunner.listeners.IListenerManager;
@@ -412,97 +411,31 @@ public class PluginBrowser extends AbstractPluginScoped {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_VERSION, "version", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_VERSION, "version", String.class, this);
         if (host == null) {
-            try {
-                fh.set(FEATURE_HOST, "host", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_HOST, "host", String.class, this);
         }
         if (port == null) {
-            try {
-                fh.set(FEATURE_PORT, "port", Integer.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_PORT, "port", Integer.class, this);
         }
         if (username == null) {
-            try {
-                fh.set(FEATURE_USERNAME, "username", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_USERNAME, "username", String.class, this);
         }
         if (password == null) {
-            try {
-                fh.set(FEATURE_PASSWORD, "password", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_PASSWORD, "password", String.class, this);
         }
-        try {
-            fh.set(FEATURE_HTTPTIMEOUT, "httptimeout", Integer.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_HTTPTIMEOUT, "httptimeout", Integer.class, this);
         if (connection == null) {
-            try {
-                fh.set(FEATURE_CONNECTION, "connection", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CONNECTION, "connection", String.class, this);
         }
         if (cache == null) {
-            try {
-                fh.set(FEATURE_CACHE, "cache", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CACHE, "cache", String.class, this);
         }
         if (cached == null) {
-            try {
-                fh.set(FEATURE_CACHED, "cached", Boolean.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_CACHED, "cached", Boolean.class, this);
         }
-        try {
-            fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);
+        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
 
         if (connection != null) {
             try {

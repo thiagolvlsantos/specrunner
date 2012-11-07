@@ -74,10 +74,25 @@ public interface IFeatureManager extends Map<String, Object> {
      *            The expected type of the feature.
      * @param target
      *            The object where the feature must be set.
+     */
+    void set(String feature, String field, Class<?> expectedType, Object target);
+
+    /**
+     * Sets a feature to an object if the feature exists and the type is
+     * compatible. Throws error if set is not possible.
+     * 
+     * @param feature
+     *            The feature name.
+     * @param field
+     *            The field name.
+     * @param expectedType
+     *            The expected type of the feature.
+     * @param target
+     *            The object where the feature must be set.
      * @throws FeatureManagerException
      *             On object setup.
      */
-    void set(String feature, String field, Class<?> expectedType, Object target) throws FeatureManagerException;
+    void setStrict(String feature, String field, Class<?> expectedType, Object target) throws FeatureManagerException;
 
     /**
      * Set a set of local configuration as complementary information to feature

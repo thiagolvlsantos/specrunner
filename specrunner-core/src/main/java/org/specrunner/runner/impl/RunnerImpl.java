@@ -28,7 +28,6 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.INodeListener;
@@ -163,21 +162,9 @@ public class RunnerImpl implements IRunner {
     protected void setFeature() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         disabledAliases = null;
-        try {
-            fm.set(IRunner.FEATURE_DISABLED_ALIASES, "disabledAliases", List.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(IRunner.FEATURE_DISABLED_ALIASES, "disabledAliases", List.class, this);
         enabledAliases = null;
-        try {
-            fm.set(IRunner.FEATURE_ENABLED_ALIASES, "enabledAliases", List.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(IRunner.FEATURE_ENABLED_ALIASES, "enabledAliases", List.class, this);
     }
 
     /**

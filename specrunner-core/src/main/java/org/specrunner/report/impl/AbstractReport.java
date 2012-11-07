@@ -29,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.impl.pipes.PipeInput;
 import org.specrunner.impl.pipes.PipeTime;
@@ -40,7 +39,6 @@ import org.specrunner.report.IReporter;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
-import org.specrunner.util.UtilLog;
 
 /**
  * Generic extractor of usefull information for reporter dumps.
@@ -51,7 +49,7 @@ import org.specrunner.util.UtilLog;
 public abstract class AbstractReport implements IReporter {
 
     /**
-     * One second in millisseconds.
+     * One second in milliseconds.
      */
     private static final int SECOND = 1000;
 
@@ -133,13 +131,7 @@ public abstract class AbstractReport implements IReporter {
     protected void setFeatures(SpecRunnerServices services) {
         IFeatureManager fm = services.lookup(IFeatureManager.class);
         parts = null;
-        try {
-            fm.set(FEATURE_PARTS, "parts", List.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(FEATURE_PARTS, "parts", List.class, this);
         if (parts == null) {
             parts = DEFAULT_PARTS;
         }
@@ -258,7 +250,7 @@ public abstract class AbstractReport implements IReporter {
         for (Entry<ActionType, Integer> e : types.entrySet()) {
             sb.append(e.getKey().getName() + "=" + e.getValue() + ", ");
         }
-        return sb.substring(0, sb.length() - 2);
+        return sb.length() > 2 ? sb.substring(0, sb.length() - 2) : sb.toString();
     }
 
     /**

@@ -21,12 +21,10 @@ import nu.xom.Element;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.impl.CellAdapter;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -102,22 +100,10 @@ public class PluginCompareDate extends PluginCompare {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (format == null) {
-            try {
-                fh.set(FEATURE_FORMAT, "format", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_FORMAT, "format", String.class, this);
         }
         if (tolerance == null) {
-            try {
-                fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
         }
     }
 

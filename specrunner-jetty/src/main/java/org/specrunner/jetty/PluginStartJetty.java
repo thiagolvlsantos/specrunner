@@ -33,7 +33,6 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
@@ -192,37 +191,13 @@ public class PluginStartJetty extends AbstractPluginScoped {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (file == null) {
-            try {
-                fh.set(FEATURE_FILE, "file", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_FILE, "file", String.class, this);
         }
-        try {
-            fh.set(FEATURE_DYNAMIC, "dynamic", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_DYNAMIC, "dynamic", Boolean.class, this);
         if (port == null) {
-            try {
-                fh.set(FEATURE_PORT, "port", Integer.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_PORT, "port", Integer.class, this);
         }
-        try {
-            fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
     }
 
     @Override

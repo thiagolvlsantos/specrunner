@@ -23,9 +23,7 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
 
 /**
@@ -68,13 +66,7 @@ public class JettyStringProvider implements IStringProvider {
     @Override
     public String newString(IContext context) throws ContextException {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fm.set(FEATURE_URL, "url", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(FEATURE_URL, "url", String.class, this);
         if (url == null) {
             Server s = (Server) context.getByName(PluginStartJetty.JETTY_NAME);
             if (s == null) {

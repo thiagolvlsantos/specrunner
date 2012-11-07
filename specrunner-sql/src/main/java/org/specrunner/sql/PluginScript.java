@@ -39,11 +39,10 @@ import javax.sql.DataSource;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -185,27 +184,9 @@ public class PluginScript extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_SCRIPT_SEPARATOR, "scriptseparator", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_SQL_SEPARATOR, "separator", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_FAILSAFE, "failsafe", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_SCRIPT_SEPARATOR, "scriptseparator", String.class, this);
+        fh.set(FEATURE_SQL_SEPARATOR, "separator", String.class, this);
+        fh.set(FEATURE_FAILSAFE, "failsafe", Boolean.class, this);
         // script manually set should not be changed.
         if (scripts == null) {
             Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);

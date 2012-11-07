@@ -24,7 +24,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
@@ -74,27 +73,9 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         driver = path + "chromedriver.exe";
 
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fm.set(FEATURE_CHROME, "chrome", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fm.set(FEATURE_DRIVER, "driver", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fm.set(FEATURE_SWITCHES, "switches", String.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fm.set(FEATURE_CHROME, "chrome", String.class, this);
+        fm.set(FEATURE_DRIVER, "driver", String.class, this);
+        fm.set(FEATURE_SWITCHES, "switches", String.class, this);
     }
 
     /**

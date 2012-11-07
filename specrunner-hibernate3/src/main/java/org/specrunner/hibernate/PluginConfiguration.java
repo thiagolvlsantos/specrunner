@@ -32,7 +32,6 @@ import org.hibernate.mapping.PersistentClass;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.objects.PluginObjectManager;
 import org.specrunner.plugins.ActionType;
@@ -165,31 +164,13 @@ public class PluginConfiguration extends AbstractPluginValue {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (type == null) {
-            try {
-                fh.set(FEATURE_TYPE, "type", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_TYPE, "type", String.class, this);
         }
         if (factory == null) {
-            try {
-                fh.set(FEATURE_FACTORY, "factory", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_FACTORY, "factory", String.class, this);
         }
         if (method == null) {
-            try {
-                fh.set(FEATURE_METHOD, "method", String.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_METHOD, "method", String.class, this);
         }
     }
 

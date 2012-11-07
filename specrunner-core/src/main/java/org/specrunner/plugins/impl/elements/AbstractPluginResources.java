@@ -19,11 +19,9 @@ package org.specrunner.plugins.impl.elements;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
-import org.specrunner.util.UtilLog;
 
 /**
  * Helper class for resources plugins.
@@ -82,13 +80,7 @@ public abstract class AbstractPluginResources extends AbstractPlugin {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (save == null) {
-            try {
-                fh.set(FEATURE_SAVE, "save", Boolean.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_SAVE, "save", Boolean.class, this);
         }
     }
 }

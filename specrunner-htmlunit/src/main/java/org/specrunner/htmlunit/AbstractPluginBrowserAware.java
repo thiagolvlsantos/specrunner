@@ -19,7 +19,6 @@ package org.specrunner.htmlunit;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
@@ -156,34 +155,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_INTERVAL, "interval", Long.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_MAXWAIT, "maxwait", Long.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_NORMALIZED, "normalized", Boolean.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        try {
-            fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_INTERVAL, "interval", Long.class, this);
+        fh.set(FEATURE_MAXWAIT, "maxwait", Long.class, this);
+        fh.set(FEATURE_NORMALIZED, "normalized", Boolean.class, this);
+        fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
     }
 
     @Override

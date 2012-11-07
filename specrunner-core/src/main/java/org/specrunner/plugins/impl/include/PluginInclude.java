@@ -32,11 +32,10 @@ import nu.xom.Text;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
@@ -186,21 +185,9 @@ public class PluginInclude extends AbstractPlugin {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        try {
-            fh.set(FEATURE_DEPTH, "depth", Integer.class, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        fh.set(FEATURE_DEPTH, "depth", Integer.class, this);
         if (expanded == null) {
-            try {
-                fh.set(FEATURE_EXPANDED, "expanded", Boolean.class, this);
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
+            fh.set(FEATURE_EXPANDED, "expanded", Boolean.class, this);
         }
     }
 
