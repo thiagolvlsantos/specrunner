@@ -5,8 +5,8 @@ import java.io.StringReader;
 import nu.xom.Builder;
 import nu.xom.Document;
 
+import org.apache.xerces.parsers.AbstractSAXParser;
 import org.cyberneko.html.HTMLConfiguration;
-import org.specrunner.source.impl.SourceFactoryImpl.SAXParserLocal;
 
 public final class MainParser {
 
@@ -16,7 +16,8 @@ public final class MainParser {
     public static void main(String[] args) throws Exception {
         HTMLConfiguration config = new HTMLConfiguration();
         // config.setFeature("http://xml.org/sax/features/namespaces", false);
-        SAXParserLocal neko = new SAXParserLocal(config);
+        AbstractSAXParser neko = new AbstractSAXParser(config) {
+        };
         neko.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
         neko.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
         neko.setProperty("http://cyberneko.org/html/properties/default-encoding", "ISO-8859-1");

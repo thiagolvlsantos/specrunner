@@ -22,7 +22,8 @@
     </distributionManagement>
 
     <properties>
-        <org.apache.tomcat.embed.version>7.0.29</org.apache.tomcat.embed.version>
+        <org.apache.tomcat.embed.version>7.0.30</org.apache.tomcat.embed.version>
+        <org.eclipse.jdt.core.compiler.version>3.7.2</org.eclipse.jdt.core.compiler.version>
     </properties>
 
     <dependencies>
@@ -54,7 +55,7 @@
         <dependency>
             <groupId>org.eclipse.jdt.core.compiler</groupId>
             <artifactId>ecj</artifactId>
-            <version>3.7.1</version>
+            <version>${org.eclipse.jdt.core.compiler.version}</version>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

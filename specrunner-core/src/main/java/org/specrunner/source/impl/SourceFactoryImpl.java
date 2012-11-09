@@ -53,44 +53,19 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class SourceFactoryImpl implements ISourceFactory {
-    /**
-     * Builder of XOM documents.
-     */
-    private Builder builder;
 
-    /**
-     * Creates a new source factory using XOM resources.
-     */
-    public SourceFactoryImpl() {
+    protected Builder getBuilder() throws SourceException {
         try {
-            HTMLConfiguration config = new HTMLConfiguration();
-            SAXParserLocal neko = new SAXParserLocal(config);
+            AbstractSAXParser neko = new AbstractSAXParser(new HTMLConfiguration()) {
+            };
             neko.setFeature("http://xml.org/sax/features/namespaces", false);
             neko.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
             neko.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
             neko.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
             neko.setProperty("http://cyberneko.org/html/properties/default-encoding", "ISO-8859-1");
-            builder = new Builder(neko, true);
+            return new Builder(neko, true);
         } catch (Exception e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
-
-    /**
-     * Local SAX configuration.
-     * 
-     * @author Thiago Santos
-     * 
-     */
-    public static class SAXParserLocal extends AbstractSAXParser {
-        /**
-         * Default settings.
-         * 
-         * @param config
-         *            The configuration.
-         */
-        public SAXParserLocal(HTMLConfiguration config) {
-            super(config);
+            throw new SourceException(e);
         }
     }
 
@@ -99,6 +74,7 @@ public class SourceFactoryImpl implements ISourceFactory {
         return new SourceImpl(null, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
+                Builder builder = getBuilder();
                 try {
                     synchronized (builder) {
                         return addDoctype(builder.build(source));
@@ -118,6 +94,7 @@ public class SourceFactoryImpl implements ISourceFactory {
         return new SourceImpl(null, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
+                Builder builder = getBuilder();
                 try {
                     synchronized (builder) {
                         return addDoctype(builder.build(source));
@@ -149,6 +126,7 @@ public class SourceFactoryImpl implements ISourceFactory {
             @Override
             public Document load() throws SourceException {
                 if (uri != null) {
+                    Builder builder = getBuilder();
                     try {
                         synchronized (builder) {
                             return addDoctype(builder.build(target));
