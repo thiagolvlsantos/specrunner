@@ -26,7 +26,14 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 
+/**
+ * Example of plugin.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginHello extends AbstractPlugin {
+    // CHECKSTYLE:OFF
 
     private int times;
 
@@ -58,4 +65,5 @@ public class PluginHello extends AbstractPlugin {
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         super.doEnd(context, result);
     }
+    // CHECKSTYLE:ON
 }

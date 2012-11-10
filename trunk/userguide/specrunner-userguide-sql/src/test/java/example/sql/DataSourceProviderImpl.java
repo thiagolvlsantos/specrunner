@@ -32,6 +32,9 @@ import org.specrunner.sql.impl.SimpleDataSource;
  */
 public class DataSourceProviderImpl implements IDataSourceProvider {
 
+    /**
+     * Example of data source.
+     */
     private final SimpleDataSource source = new SimpleDataSource("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:TESTE_PROVIDER", "sa", "");
 
     @Override

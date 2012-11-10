@@ -7,6 +7,7 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.impl.flow.PluginIfBranch;
 
+//CHECKSTYLE:OFF
 public class TestIf {
 
     @Test
@@ -21,3 +22,4 @@ public class TestIf {
         SpecRunnerJUnit.defaultRun("src/test/resources/income/if.html", "src/test/resources/outcome/ifHide.html", cfg);
     }
 }
+// CHECKSTYLE:ON

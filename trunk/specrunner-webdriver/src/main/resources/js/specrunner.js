@@ -16,16 +16,16 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 $(document).ready(function() {
-	$(".sr_source").mouseover(function() {
-		var link = this.href;
-		$(".sr_frame_link_div").each(function(){
-			this.load(link);
-		});
-	});
-	$(".sr_screen").mouseover(function() {
-		var link = this.href;
-		$(".sr_frame_link_div").each(function(){
-			this.load(link);
-		});
-	});
+    $(".sr_source").mouseover(function() {
+        var link = this.href;
+        $(".sr_frame_link_div").each(function(){
+           this.load(link);
+        });
+    });
+    $(".sr_screen").mouseover(function() {
+        var link = this.href;
+        $(".sr_frame_link_div").each(function(){
+            this.load(link);
+        });
+    });
 });

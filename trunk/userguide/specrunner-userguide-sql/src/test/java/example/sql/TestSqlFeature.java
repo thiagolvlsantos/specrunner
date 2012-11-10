@@ -31,6 +31,7 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginScript;
 
+// CHECKSTYLE:OFF
 @RunWith(ConcurrentRunner.class)
 public class TestSqlFeature {
 
@@ -93,3 +94,4 @@ public class TestSqlFeature {
         run("all.html", "all.html");
     }
 }
+// CHECKSTYLE:ON

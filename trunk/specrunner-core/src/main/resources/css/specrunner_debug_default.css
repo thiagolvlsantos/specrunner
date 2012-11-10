@@ -17,15 +17,15 @@
  */
 /* STATUS DECLARATION */
 .sr_failure,.sr_success,.sr_warning,.sr_info,.sr_detail,.sr_ignored
-	{
-	border-top: 1px solid #EDEDED;
-	border-left: 1px solid #EDEDED;
-	border-right: 1px solid #969696;
-	border-bottom: 1px solid #969696;
+{
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
 }
 
 .sr_failure,.sr_success,.sr_warning,.sr_info,.sr_detail,.sr_ignored {
-/*	padding: 2px; */ 
+/*padding: 2px; */ 
 }
 
 /* TYPE DECLARATION */
@@ -49,13 +49,13 @@
 /* VARIABLE DECLARATION */
 .local:after,.global:after,
 .sr_action:after,.sr_assertion:after,.sr_undef:after {
-	border-top: 1px solid #EDEDED;
-	border-left: 1px solid #EDEDED;
-	border-right: 1px solid #969696;
-	border-bottom: 1px solid #969696;
-	padding: 1px 1px 1px 1px;
-	vertical-align: top;
-	background-color: white;
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+    padding: 1px 1px 1px 1px;
+    vertical-align: top;
+    background-color: white;
 }
 
 .local:after,.global:after{
@@ -63,118 +63,118 @@
 }
 
 .local:after {
-	content: "local(" attr(name) ":" attr(instance) ")" attr(scope);
+    content: "local(" attr(name) ":" attr(instance) ")" attr(scope);
 }
 
 .global:after {
-	content: "global(" attr(name) ":" attr(instance) ")" ;
+    content: "global(" attr(name) ":" attr(instance) ")" ;
 }
 
 /* MACROS */
 .macro,.call,.macro:before,.call:before {
-	border-top: 1px solid #EDEDED;
-	border-left: 1px solid #EDEDED;
-	border-right: 1px solid #969696;
-	border-bottom: 1px solid #969696;
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
 }
 
 .macro:before,.call:before {
-	padding: 1px 1px 1px 1px;
-	font-size: x-small;
-	vertical-align: top;
-	background-color: white;
+    padding: 1px 1px 1px 1px;
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
 }
 
 .macro:before {
-	content: "macro " attr(name) " " attr(run);
+    content: "macro " attr(name) " " attr(run);
 }
 
 .call:before {
-	content: "call (" attr(name) ")";
+    content: "call (" attr(name) ")";
 }
 
 /* LOGICAL */
 .eq:before,.neq:before {
-	border-top: 1px solid #EDEDED;
-	border-left: 1px solid #EDEDED;
-	border-right: 1px solid #969696;
-	border-bottom: 1px solid #969696;
-	/*padding: 1px 1px 1px 1px;*/
-	font-size: x-small;
-	vertical-align: top;
-	background-color: white;
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+    /*padding: 1px 1px 1px 1px;*/
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
 }
 
 .eq:before {
-	content: " = ";
+    content: " = ";
 }
 
 .neq:before {
-	content: " != ";
+    content: " != ";
 }
 
 /* FLOW */
 .if:before,.sr_condition:before,.then:before,.else:before,.for:before,.iterator:before
-	{
-	/*padding: 2px 2px 2px 2px;*/
-	font-size: x-small;
-	vertical-align: top;
-	background-color: white;
+    {
+    /*padding: 2px 2px 2px 2px;*/
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
 }
 
 .if,.sr_condition,.then,.else,.for,.iterator {
-	border-top: 1px solid #EDEDED;
-	border-left: 1px solid #EDEDED;
-	border-right: 1px solid #969696;
-	border-bottom: 1px solid #969696;
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
 }
 
 .if {
-	padding: 4px 4px 4px 4px;
+    padding: 4px 4px 4px 4px;
 }
 
 .if:before {
-	content: "if (" attr(name) ";" attr(value) ";" attr(branch) ")";
+    content: "if (" attr(name) ";" attr(value) ";" attr(branch) ")";
 }
 
 .sr_condition:before {
-	content: "test";
+    content: "test";
 }
 
 .then:before {
-	content: "then (" attr(name) ")";
+    content: "then (" attr(name) ")";
 }
 
 .else:before {
-	content: "else (" attr(name) ")";
+    content: "else (" attr(name) ")";
 }
 
 .selected {
-	border-right: 1px solid green;
-	border-bottom: 1px solid green;
+    border-right: 1px solid green;
+    border-bottom: 1px solid green;
 }
 
 .for:before {
-	content: "for(" attr(min) "<=" attr(var) "<" attr(max) "," attr(step)
-		")";
+    content: "for(" attr(min) "<=" attr(var) "<" attr(max) "," attr(step)
+        ")";
 }
 
 .iterator:before {
-	content: "iterator(" attr(name) ")";
+    content: "iterator(" attr(name) ")";
 }
 
 /* ENUM */
 .map:before {
-	border-top: 1px solid #EDEDED;
-	border-left: 1px solid #EDEDED;
-	border-right: 1px solid #969696;
-	border-bottom: 1px solid #969696;
-	/* padding: 1px 1px 1px 1px; */
-	font-size: x-small;
-	vertical-align: top;
-	background-color: white;
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+    /* padding: 1px 1px 1px 1px; */
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
 }
 
 .map:before {
-	content: "map " attr(name) " " attr(scope);
+    content: "map " attr(name) " " attr(scope);
 }

@@ -26,6 +26,7 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 
+//CHECKSTYLE:OFF
 @RunWith(ConcurrentRunner.class)
 public class TestSql {
 
@@ -70,3 +71,4 @@ public class TestSql {
         run("all.html");
     }
 }
+// CHECKSTYLE:ON
