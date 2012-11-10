@@ -328,7 +328,7 @@ public class PluginScript extends AbstractPluginValue {
                         stmt.executeUpdate(command);
                     } catch (SQLException e) {
                         if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Command error:" + e.getMessage());
+                            UtilLog.LOG.info(" Command error:" + e.getMessage());
                         }
                         if (!failsafe) {
                             failures++;
