@@ -54,6 +54,13 @@ import org.specrunner.util.UtilLog;
  */
 public class SourceFactoryImpl implements ISourceFactory {
 
+    /**
+     * Return the XOM document builder.
+     * 
+     * @return The builder.
+     * @throws SourceException
+     *             On builder recover error.
+     */
     protected Builder getBuilder() throws SourceException {
         try {
             AbstractSAXParser neko = new AbstractSAXParser(new HTMLConfiguration()) {

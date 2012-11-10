@@ -4,10 +4,10 @@ table.hibernate {
 
 .hibernate caption {
     font-family: Verdana;
-	font-size: 12pt;
+    font-size: 12pt;
     padding: 5px;
     font-weight:bold;
-	/*text-shadow: 1px 1px 2px #333333;*/
+    /*text-shadow: 1px 1px 2px #333333;*/
     background: url('images/hibernate.png') 0 0;
     background-repeat: no-repeat;
     background-position: left top;

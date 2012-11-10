@@ -17,7 +17,7 @@
  */
 package org.specrunner;
 
-
+//CHECKSTYLE:OFF
 public class TestStyles {
 
     // @Test
@@ -31,3 +31,4 @@ public class TestStyles {
     // }
 
 }
+// CHECKSTYLE:ON

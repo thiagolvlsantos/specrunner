@@ -20,6 +20,7 @@ package example.core;
 import org.junit.Test;
 import org.specrunner.junit.SpecRunnerJUnit;
 
+//CHECKSTYLE:OFF
 public class TestPlugin {
 
     @Test
@@ -27,3 +28,4 @@ public class TestPlugin {
         SpecRunnerJUnit.defaultRun("src/test/resources/income/hello.html");
     }
 }
+// CHECKSTYLE:ON
