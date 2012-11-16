@@ -15,11 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.jetty;
+package org.specrunner.tomcat;
 
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.apache.catalina.Server;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
@@ -28,17 +26,17 @@ import org.specrunner.util.string.IStringProvider;
 
 /**
  * Default implementation of a string provider which, based on a previous
- * started Jetty server, gets the base url.
+ * started Tomcat server, gets the base url.
  * 
  * @author Thiago Santos
  * 
  */
-public class JettyStringProvider implements IStringProvider {
+public class TomcatStringProvider implements IStringProvider {
 
     /**
      * URL feature.
      */
-    public static final String FEATURE_URL = JettyStringProvider.class.getName() + ".url";
+    public static final String FEATURE_URL = TomcatStringProvider.class.getName() + ".url";
     /**
      * The start url.
      */
@@ -68,19 +66,11 @@ public class JettyStringProvider implements IStringProvider {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         fm.set(FEATURE_URL, "url", String.class, this);
         if (url == null) {
-            Server server = (Server) context.getByName(PluginStartJetty.SERVER_NAME);
+            Server server = (Server) context.getByName(PluginStartTomcat.SERVER_NAME);
             if (server == null) {
-                throw new ContextException("Jetty server named '" + PluginStartJetty.SERVER_NAME + "' does not exists.");
+                throw new ContextException("Tomcat server named '" + PluginStartTomcat.SERVER_NAME + "' does not exists.");
             }
-            final int defaultPort = 8080;
-            int port = defaultPort;
-            for (Connector c : server.getConnectors()) {
-                if (c instanceof SelectChannelConnector) {
-                    port = c.getPort();
-                    break;
-                }
-            }
-            return "http://localhost:" + port;
+            return "http://localhost:" + server.getPort();
         }
         return url;
     }

@@ -54,9 +54,9 @@ import org.specrunner.util.UtilLog;
 public class PluginStartJetty extends AbstractPluginScoped {
 
     /**
-     * Default jetty name.
+     * Default server name.
      */
-    public static final String JETTY_NAME = "jettyName";
+    public static final String SERVER_NAME = "jettyName";
     /**
      * Lock object used to guarantee port exclusion on multi-thread executions.
      */
@@ -72,7 +72,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     private String file;
 
     /**
-     * Feature to enable jetty allocate a dynamic port.
+     * Feature to enable server allocate a dynamic port.
      */
     public static final String FEATURE_DYNAMIC = PluginStartJetty.class.getName() + ".dynamic";
     /**
@@ -81,7 +81,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     private Boolean dynamic = true;
 
     /**
-     * Feature to set jetty port.
+     * Feature to set server port.
      */
     public static final String FEATURE_PORT = PluginStartJetty.class.getName() + ".port";
     /**
@@ -94,7 +94,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
      */
     public static final String FEATURE_REUSE = PluginStartJetty.class.getName() + ".reuse";
     /**
-     * The reuse stats. Default is 'false'.
+     * The reuse status. Default is 'false'.
      */
     private Boolean reuse = false;
 
@@ -102,7 +102,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
      * Default constructor.
      */
     public PluginStartJetty() {
-        setName(JETTY_NAME);
+        setName(SERVER_NAME);
     }
 
     /**
@@ -229,25 +229,25 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     }
                 }
 
-                final Server jetty = createServer();
+                final Server server = createServer();
 
-                LocalSessionManager sm = setSessionManager(jetty);
+                LocalSessionManager sm = setSessionManager(server);
 
                 if (dynamic) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Jetty dynamic port lookup.");
                     }
-                    scanAvailablePort(jetty);
+                    scanAvailablePort(server);
                 }
 
-                waitForStart(jetty);
+                waitForStart(server);
 
-                saveGlobal(context, getName(), jetty);
+                saveGlobal(context, getName(), server);
                 if (reuse) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Jetty reuse enabled.");
                     }
-                    reusables.put(getName(), new ReusableJetty(getName(), jetty, sm));
+                    reusables.put(getName(), new ReusableJetty(getName(), server, sm));
                 }
                 result.addResult(Success.INSTANCE, context.peek());
                 if (!reuse) {
@@ -314,7 +314,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     }
 
     /**
-     * Sets the session manager. for reusable jetty the session manager must
+     * Sets the session manager. for reusable server the session manager must
      * invalidate all previous sessions.
      * 
      * @param server
@@ -338,14 +338,14 @@ public class PluginStartJetty extends AbstractPluginScoped {
     }
 
     /**
-     * Scan for a available port to set into jetty.
+     * Scan for a available port to set into server.
      * 
-     * @param jetty
-     *            The jetty server.
+     * @param server
+     *            The server.
      * @throws PluginException
      *             On setting errors.
      */
-    protected void scanAvailablePort(final Server jetty) throws PluginException {
+    protected void scanAvailablePort(final Server server) throws PluginException {
         boolean available = false;
         final int tries = 1000;
         for (int i = port; !available && i < port + tries; i++) {
@@ -384,7 +384,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Jetty port '" + port + "' available.");
         }
-        for (Connector c : jetty.getConnectors()) {
+        for (Connector c : server.getConnectors()) {
             if (c instanceof SelectChannelConnector) {
                 c.setPort(port);
                 if (UtilLog.LOG.isInfoEnabled()) {
@@ -396,16 +396,16 @@ public class PluginStartJetty extends AbstractPluginScoped {
     }
 
     /**
-     * Start an wait for jetty start.
+     * Start an wait for server start.
      * 
-     * @param s
-     *            The jetty server.
+     * @param server
+     *            The server.
      * @throws Exception
      *             On initialization errors.
      */
-    protected void waitForStart(final Server s) throws Exception {
-        s.start();
-        while (!s.isRunning()) {
+    protected void waitForStart(final Server server) throws Exception {
+        server.start();
+        while (!server.isRunning()) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Waiting Jetty start.");
             }
@@ -446,7 +446,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     }
 
     /**
-     * Reusable jetty resource.
+     * Reusable server resource.
      * 
      * @author Thiago Santos
      * 
@@ -458,17 +458,17 @@ public class PluginStartJetty extends AbstractPluginScoped {
         private final LocalSessionManager sessionManager;
 
         /**
-         * Creates a reusable jetty package.
+         * Creates a reusable server package.
          * 
          * @param name
-         *            The jetty name.
-         * @param jetty
-         *            The jetty instance.
+         *            The server name.
+         * @param server
+         *            The server instance.
          * @param sessionManager
          *            The session manager.
          */
-        protected ReusableJetty(String name, Server jetty, LocalSessionManager sessionManager) {
-            super(name, jetty);
+        protected ReusableJetty(String name, Server server, LocalSessionManager sessionManager) {
+            super(name, server);
             this.sessionManager = sessionManager;
         }
 
