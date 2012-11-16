@@ -15,9 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.jetty;
+package org.specrunner.tomcat;
 
-import org.eclipse.jetty.server.Server;
+import org.apache.catalina.Server;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
@@ -29,12 +29,12 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 
 /**
- * Stop a jetty server.
+ * Stop a Tomcat server.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginStopJetty extends AbstractPluginNamed {
+public class PluginStopTomcat extends AbstractPluginNamed {
 
     @Override
     public ActionType getActionType() {
@@ -43,17 +43,17 @@ public class PluginStopJetty extends AbstractPluginNamed {
 
     @Override
     public void doEnd(IContext context, IResultSet result) throws PluginException {
-        String tmp = getName() != null ? getName() : PluginStartJetty.SERVER_NAME;
+        String tmp = getName() != null ? getName() : PluginStartTomcat.SERVER_NAME;
         Server server = (Server) context.getByName(tmp);
         if (server == null) {
-            result.addResult(Failure.INSTANCE, context.peek(), "Server instance named '" + tmp + "' not found. See PluginStartJetty.");
+            result.addResult(Failure.INSTANCE, context.peek(), "Server instance named '" + tmp + "' not found. See PluginStartTomcat.");
             return;
         }
         try {
             server.stop();
             result.addResult(Success.INSTANCE, context.peek());
             if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Jetty finished.");
+                UtilLog.LOG.info("Tomcat finished.");
             }
         } catch (Exception e) {
             throw new PluginException(e);

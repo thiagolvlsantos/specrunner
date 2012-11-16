@@ -18,53 +18,178 @@
 package org.specrunner.tomcat;
 
 import java.io.File;
+import java.io.InputStream;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginNamed;
+import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Success;
+import org.specrunner.reuse.IReusable;
+import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.impl.AbstractReusable;
+import org.specrunner.util.UtilLog;
 
-public class PluginStartTomcat extends AbstractPluginNamed {
+/**
+ * Start a Tomcat server.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+public class PluginStartTomcat extends AbstractPluginScoped {
 
+    /**
+     * Default tomcat name.
+     */
+    public static final String SERVER_NAME = "tomcatName";
+    /**
+     * Lock object used to guarantee port exclusion on multi-thread executions.
+     */
+    private static Object lock = new Object();
+
+    /**
+     * Feature to set tomcat port.
+     */
+    public static final String FEATURE_PORT = PluginStartTomcat.class.getName() + ".port";
+    /**
+     * The port to be used.
+     */
+    private Integer port;
+
+    /**
+     * Feature to set tomcat basedir.
+     */
+    public static final String FEATURE_BASEDIR = PluginStartTomcat.class.getName() + ".basedir";
+    /**
+     * The base directory.
+     */
     private String basedir;
-    private int port;
+
+    /**
+     * Feature to set tomcat context.
+     */
+    public static final String FEATURE_CONTEXT = PluginStartTomcat.class.getName() + ".context";
+    /**
+     * The application context.
+     */
     private String context;
+
+    /**
+     * Feature to set tomcat war.
+     */
+    public static final String FEATURE_WAR = PluginStartTomcat.class.getName() + ".war";
+    /**
+     * The war directory.
+     */
     private String war;
 
+    /**
+     * Feature to enable tomcat allocate a dynamic port.
+     */
+    public static final String FEATURE_DYNAMIC = PluginStartTomcat.class.getName() + ".dynamic";
+    /**
+     * Set dynamic start up. Default is 'true'.
+     */
+    private final Boolean dynamic = true;
+
+    /**
+     * Feature to set reusable "tomcats".
+     */
+    public static final String FEATURE_REUSE = PluginStartTomcat.class.getName() + ".reuse";
+    /**
+     * The reuse status. Default is 'false'.
+     */
+    private final Boolean reuse = false;
+
+    /**
+     * Default constructor.
+     */
+    public PluginStartTomcat() {
+        setName(SERVER_NAME);
+    }
+
+    /**
+     * Get base directory.
+     * 
+     * @return The base directory.
+     */
     public String getBasedir() {
         return basedir;
     }
 
+    /**
+     * Set the base directory.
+     * 
+     * @param basedir
+     *            The base directory.
+     */
     public void setBasedir(String basedir) {
         this.basedir = basedir;
     }
 
-    public int getPort() {
+    /**
+     * The server port.
+     * 
+     * @return The port.
+     */
+    public Integer getPort() {
         return port;
     }
 
-    public void setPort(int port) {
+    /**
+     * Set the server port.
+     * 
+     * @param port
+     *            The port.
+     */
+    public void setPort(Integer port) {
         this.port = port;
     }
 
+    /**
+     * Get the application context.
+     * 
+     * @return The context.
+     */
     public String getContext() {
         return context;
     }
 
+    /**
+     * Set the application context.
+     * 
+     * @param context
+     *            The application context.
+     */
     public void setContext(String context) {
         this.context = context;
     }
 
+    /**
+     * Get the WAR.
+     * 
+     * @return The war.
+     */
     public String getWar() {
         return war;
     }
 
+    /**
+     * Set the WAR.
+     * 
+     * @param war
+     *            The war.
+     */
     public void setWar(String war) {
         this.war = war;
     }
@@ -75,18 +200,183 @@ public class PluginStartTomcat extends AbstractPluginNamed {
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+    public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
+        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        if (basedir == null) {
+            fh.set(FEATURE_BASEDIR, "basedir", String.class, this);
+        }
+        if (port == null) {
+            fh.set(FEATURE_PORT, "port", Integer.class, this);
+        }
+        if (context == null) {
+            fh.set(FEATURE_CONTEXT, "context", String.class, this);
+        }
+        if (war == null) {
+            fh.set(FEATURE_WAR, "war", String.class, this);
+        }
+        fh.set(FEATURE_DYNAMIC, "dynamic", Boolean.class, this);
+        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
+    }
+
+    @Override
+    public void doEnd(IContext context, IResultSet result) throws PluginException {
+        synchronized (lock) {
+            try {
+                IReusableManager reusables = SpecRunnerServices.get(IReusableManager.class);
+                if (reuse) {
+                    Map<String, Object> cfg = new HashMap<String, Object>();
+                    cfg.put("name", getName());
+                    cfg.put("basedir", basedir);
+                    cfg.put("port", port);
+                    cfg.put("context", getContext());
+                    cfg.put("war", getWar());
+                    IReusable<?> reusable = reusables.get(getName());
+                    if (reusable != null && reusable.canReuse(cfg)) {
+                        reusable.reset();
+                        saveGlobal(context, getName(), reusable.getObject());
+                        result.addResult(Success.INSTANCE, context.peek());
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Tomcat (" + getName() + "/" + reusable.getObject() + ") reused.");
+                        }
+                        return;
+                    }
+                }
+                final Tomcat server = createServer();
+
+                if (dynamic) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Jetty dynamic port lookup.");
+                    }
+                    scanAvailablePort(server);
+                }
+
+                waitForStart(server);
+
+                saveGlobal(context, getName(), server);
+                if (reuse) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Tomcat reuse enabled.");
+                    }
+                    reusables.put(getName(), new AbstractReusable<Tomcat>(getName(), server) {
+                        @Override
+                        public boolean canReuse(Map<String, Object> cfg) {
+                            Object name = cfg.get("name");
+                            Object basedir = cfg.get("basedir");
+                            Object port = cfg.get("port");
+                            Object context = cfg.get("context");
+                            Object war = cfg.get("war");
+                            return name != null && name.equals(PluginStartTomcat.this.getName()) && basedir != null && basedir.equals(getBasedir()) && port != null && port.equals(getPort()) && context != null && context.equals(getContext()) && war != null && war.equals(getWar());
+                        }
+
+                        @Override
+                        public void reset() {
+                        }
+
+                        @Override
+                        public void release() {
+                            try {
+                                server.stop();
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug("Tomcat stopped.");
+                                }
+                            } catch (LifecycleException e) {
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug("Tomcat stopped with fail.", e);
+                                }
+                            }
+                        }
+                    });
+                }
+                result.addResult(Success.INSTANCE, context.peek());
+                if (!reuse) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Tomcat started and ready.");
+                    }
+                }
+                context.saveGlobal(getName(), server);
+            } catch (Exception e) {
+                throw new PluginException(e);
+            }
+        }
+    }
+
+    /**
+     * Creates the server from configuration file.
+     * 
+     * @return The server.
+     */
+    protected Tomcat createServer() {
         Tomcat tomcat = new Tomcat();
         tomcat.setBaseDir(getBasedir());
         tomcat.setPort(getPort());
         Context c = tomcat.addWebapp(null, "/" + getContext(), new File(getWar()).getAbsolutePath());
         c.setReloadable(true);
-        try {
-            tomcat.start();
-        } catch (LifecycleException e) {
-            throw new PluginException(e);
+        return tomcat;
+    }
+
+    /**
+     * Scan for a available port to set into server.
+     * 
+     * @param server
+     *            The server.
+     * @throws PluginException
+     *             On setting errors.
+     */
+    protected void scanAvailablePort(final Tomcat server) throws PluginException {
+        boolean available = false;
+        final int tries = 1000;
+        for (int i = port; !available && i < port + tries; i++) {
+            InputStream in = null;
+            Socket sock = null;
+            try {
+                sock = new Socket("localhost", i);
+                in = sock.getInputStream();
+            } catch (Exception e) {
+                port = i;
+                available = true;
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (Exception e) {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace(e.getMessage(), e);
+                        }
+                    }
+                }
+                if (sock != null) {
+                    try {
+                        sock.close();
+                    } catch (Exception e) {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace(e.getMessage(), e);
+                        }
+                    }
+                }
+            }
         }
-        context.saveGlobal("tomcatName", tomcat);
-        return ENext.DEEP;
+        if (!available) {
+            throw new PluginException("No available port from '" + (port - tries) + "' to '" + port + "'.");
+        }
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Tomcat port '" + port + "' available.");
+        }
+        server.setPort(port);
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Tomcat port set to '" + port + "'.");
+        }
+    }
+
+    /**
+     * Start an wait for server start.
+     * 
+     * @param server
+     *            The server.
+     * @throws Exception
+     *             On initialization errors.
+     */
+    protected void waitForStart(Tomcat server) throws Exception {
+        server.start();
     }
 }
