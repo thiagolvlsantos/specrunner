@@ -22,8 +22,8 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.util.UtilEvaluator;
@@ -56,7 +56,8 @@ public abstract class AbstractPluginDefine extends AbstractPluginDual {
         Node node = context.getNode();
         if (node instanceof Element) {
             Element e = (Element) node;
-            e.addAttribute(new Attribute("instance", obj != null ? obj.getClass().getSimpleName() : "null"));
+            e.addAttribute(new Attribute("iname", super.getName()));
+            e.addAttribute(new Attribute("instance", obj != null ? obj.getClass().getName() : "null"));
         }
         return true;
     }
