@@ -66,6 +66,18 @@ public class PluginConnection extends AbstractPluginValue {
      */
     private String connection;
     /**
+     * Connection separator string.
+     */
+    public static final String FEATURE_SEPARATOR = PluginConnection.class.getName() + ".separator";
+    /**
+     * Default string separator.
+     */
+    public static final String DEFAULT_SEPARATOR = "|";
+    /**
+     * Connection separator.
+     */
+    private String separator = DEFAULT_SEPARATOR;
+    /**
      * Connection driver.
      */
     public static final String FEATURE_DRIVER = PluginConnection.class.getName() + ".driver";
@@ -145,7 +157,7 @@ public class PluginConnection extends AbstractPluginValue {
     public void setConnection(String connection) {
         this.connection = connection;
         List<Integer> indexes = new LinkedList<Integer>();
-        String other = "|" + connection + "|";
+        String other = separator + connection + separator;
         for (int i = 0; i < other.length(); i++) {
             if (other.charAt(i) == '|') {
                 indexes.add(i);
@@ -170,6 +182,25 @@ public class PluginConnection extends AbstractPluginValue {
                 continue;
             }
         }
+    }
+
+    /**
+     * Gets the current separator.
+     * 
+     * @return The separator.
+     */
+    public String getSeparator() {
+        return separator;
+    }
+
+    /**
+     * Set the connection separator.
+     * 
+     * @param separator
+     *            The separator.
+     */
+    public void setSeparator(String separator) {
+        this.separator = separator;
     }
 
     /**

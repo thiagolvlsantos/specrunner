@@ -60,6 +60,12 @@ public class TestSqlFeature {
         fm.add(PluginConnection.FEATURE_URL, "jdbc:hsqldb:mem:TESTE");
         fm.add(PluginConnection.FEATURE_USER, "sa");
         fm.add(PluginConnection.FEATURE_PASSWORD, "");
+        // the above code could be replaced by
+        // fm.add(PluginConnection.FEATURE_CONNECTION, "org.hsqldb.jdbcDriver" +
+        // PluginConnection.DEFAULT_SEPARATOR + "jdbc:hsqldb:mem:TESTE" +
+        // PluginConnection.DEFAULT_SEPARATOR + "sa" +
+        // PluginConnection.DEFAULT_SEPARATOR + "");
+
         fm.add(PluginConnection.FEATURE_REUSE, Boolean.TRUE);
         // setting plugin script features
         fm.add(PluginScript.FEATURE_FAILSAFE, Boolean.TRUE);
