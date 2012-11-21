@@ -23,9 +23,12 @@ import java.util.Map.Entry;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.IParametrized;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
@@ -58,6 +61,7 @@ public final class UtilParametrized {
      */
     public static void setProperties(IContext context, IParametrized p, Element element) throws PluginException {
         if (p != null) {
+            context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (int i = 0; i < element.getAttributeCount(); i++) {
                 Attribute n = element.getAttribute(i);
                 String value = n.getValue();
@@ -68,12 +72,15 @@ public final class UtilParametrized {
                     }
                     String name = n.getQualifiedName();
                     p.setParameter(name, newValue);
+                    // every local attribute became a local variable
+                    context.saveLocal(UtilEvaluator.asVariable(name), newValue);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
                     }
                 }
             }
+            context.pop();
         }
     }
 
@@ -92,18 +99,22 @@ public final class UtilParametrized {
      */
     public static void setProperties(IContext context, IParametrized p, Map<String, Object> parameters) throws PluginException {
         if (p != null) {
+            context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (Entry<String, Object> e : parameters.entrySet()) {
                 try {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("set(" + p + ")." + e.getKey() + "=" + e.getValue());
                     }
                     p.setParameter(e.getKey(), e.getValue());
+                    // every local attribute became a local variable
+                    context.saveLocal(UtilEvaluator.asVariable(e.getKey()), e.getValue());
                 } catch (Exception ex) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(ex.getMessage(), ex);
                     }
                 }
             }
+            context.pop();
         }
     }
 }

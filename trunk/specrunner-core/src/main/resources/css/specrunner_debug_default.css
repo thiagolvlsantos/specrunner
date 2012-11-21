@@ -63,11 +63,11 @@
 }
 
 .local:after {
-    content: "local(" attr(name) ":" attr(instance) ")" attr(scope);
+    content: "local(" attr(iname) ":" attr(instance) ")" attr(scope);
 }
 
 .global:after {
-    content: "global(" attr(name) ":" attr(instance) ")" ;
+    content: "global(" attr(iname) ":" attr(instance) ")" ;
 }
 
 /* MACROS */
