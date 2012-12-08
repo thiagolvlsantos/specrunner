@@ -117,10 +117,10 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (finder == null) {
-            fh.set(FEATURE_FINDER_TYPE, "finder", String.class, this);
+            fh.set(FEATURE_FINDER_TYPE, this);
         }
         if (finderInstance == null) {
-            fh.set(FEATURE_FINDER_INSTANCE, "finderInstance", IFinder.class, this);
+            fh.set(FEATURE_FINDER_INSTANCE, this);
         }
         if (finder != null && finderInstance == null) {
             try {

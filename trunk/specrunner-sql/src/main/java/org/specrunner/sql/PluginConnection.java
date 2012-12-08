@@ -349,25 +349,25 @@ public class PluginConnection extends AbstractPluginValue {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (connection == null) {
-            fh.set(FEATURE_CONNECTION, "connection", String.class, this);
+            fh.set(FEATURE_CONNECTION, this);
         }
         if (driver == null) {
-            fh.set(FEATURE_DRIVER, "driver", String.class, this);
+            fh.set(FEATURE_DRIVER, this);
         }
         if (url == null) {
-            fh.set(FEATURE_URL, "url", String.class, this);
+            fh.set(FEATURE_URL, this);
         }
         if (user == null) {
-            fh.set(FEATURE_USER, "user", String.class, this);
+            fh.set(FEATURE_USER, this);
         }
         if (password == null) {
-            fh.set(FEATURE_PASSWORD, "password", String.class, this);
+            fh.set(FEATURE_PASSWORD, this);
         }
         if (provider == null) {
-            fh.set(FEATURE_PROVIDER, "provider", String.class, this);
+            fh.set(FEATURE_PROVIDER, this);
         }
-        fh.set(FEATURE_PROVIDER_INSTANCE, "providerInstance", IDataSourceProvider.class, this);
-        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
+        fh.set(FEATURE_PROVIDER_INSTANCE, this);
+        fh.set(FEATURE_REUSE, this);
     }
 
     @Override

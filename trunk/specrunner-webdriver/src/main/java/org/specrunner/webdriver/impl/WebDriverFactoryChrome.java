@@ -73,9 +73,9 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         driver = path + "chromedriver.exe";
 
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.set(FEATURE_CHROME, "chrome", String.class, this);
-        fm.set(FEATURE_DRIVER, "driver", String.class, this);
-        fm.set(FEATURE_SWITCHES, "switches", String.class, this);
+        fm.set(FEATURE_CHROME, this);
+        fm.set(FEATURE_DRIVER, this);
+        fm.set(FEATURE_SWITCHES, this);
     }
 
     /**

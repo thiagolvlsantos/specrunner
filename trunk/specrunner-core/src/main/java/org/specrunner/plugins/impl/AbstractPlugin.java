@@ -95,16 +95,16 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
         }
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (condition == null) {
-            fh.set(FEATURE_CONDITION, "condition", Boolean.class, this);
+            fh.set(FEATURE_CONDITION, this);
         }
         if (sleep == null) {
-            fh.set(FEATURE_SLEEP, "sleep", Long.class, this);
+            fh.set(FEATURE_SLEEP, this);
         }
         if (timeout == null) {
-            fh.set(FEATURE_TIMEOUT, "timeout", Long.class, this);
+            fh.set(FEATURE_TIMEOUT, this);
         }
         if (threadsafe == null) {
-            fh.set(FEATURE_THREADSAFE, "threadsafe", Boolean.class, this);
+            fh.set(FEATURE_THREADSAFE, this);
         }
         if (threadsafe == null) {
             threadsafe = false;

@@ -131,7 +131,7 @@ public abstract class AbstractReport implements IReporter {
     protected void setFeatures(SpecRunnerServices services) {
         IFeatureManager fm = services.lookup(IFeatureManager.class);
         parts = null;
-        fm.set(FEATURE_PARTS, "parts", List.class, this);
+        fm.set(FEATURE_PARTS, this);
         if (parts == null) {
             parts = DEFAULT_PARTS;
         }
