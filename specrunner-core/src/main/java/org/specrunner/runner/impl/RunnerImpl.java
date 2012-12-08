@@ -162,9 +162,9 @@ public class RunnerImpl implements IRunner {
     protected void setFeature() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         disabledAliases = null;
-        fm.set(IRunner.FEATURE_DISABLED_ALIASES, "disabledAliases", List.class, this);
+        fm.set(IRunner.FEATURE_DISABLED_ALIASES, this);
         enabledAliases = null;
-        fm.set(IRunner.FEATURE_ENABLED_ALIASES, "enabledAliases", List.class, this);
+        fm.set(IRunner.FEATURE_ENABLED_ALIASES, this);
     }
 
     /**

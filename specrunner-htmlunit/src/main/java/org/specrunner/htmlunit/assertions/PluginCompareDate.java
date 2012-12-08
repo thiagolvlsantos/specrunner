@@ -100,10 +100,10 @@ public class PluginCompareDate extends PluginCompare {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (format == null) {
-            fh.set(FEATURE_FORMAT, "format", String.class, this);
+            fh.set(FEATURE_FORMAT, this);
         }
         if (tolerance == null) {
-            fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
+            fh.set(FEATURE_TOLERANCE, this);
         }
     }
 

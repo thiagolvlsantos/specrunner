@@ -179,16 +179,16 @@ public class PluginSessionFactory extends AbstractPluginScoped {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (configuration == null) {
-            fh.set(FEATURE_CONFIGURATION, "configuration", String.class, this);
+            fh.set(FEATURE_CONFIGURATION, this);
         }
         if (type == null) {
-            fh.set(FEATURE_TYPE, "provider", String.class, this);
+            fh.set(FEATURE_TYPE, this);
         }
         if (factory == null) {
-            fh.set(FEATURE_FACTORY, "factory", String.class, this);
+            fh.set(FEATURE_FACTORY, this);
         }
         if (method == null) {
-            fh.set(FEATURE_METHOD, "method", String.class, this);
+            fh.set(FEATURE_METHOD, this);
         }
     }
 

@@ -191,13 +191,13 @@ public class PluginStartJetty extends AbstractPluginScoped {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (file == null) {
-            fh.set(FEATURE_FILE, "file", String.class, this);
+            fh.set(FEATURE_FILE, this);
         }
-        fh.set(FEATURE_DYNAMIC, "dynamic", Boolean.class, this);
+        fh.set(FEATURE_DYNAMIC, this);
         if (port == null) {
-            fh.set(FEATURE_PORT, "port", Integer.class, this);
+            fh.set(FEATURE_PORT, this);
         }
-        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
+        fh.set(FEATURE_REUSE, this);
     }
 
     @Override

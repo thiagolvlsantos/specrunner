@@ -81,7 +81,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     /**
      * Feature to set webdriver factory class name.
      */
-    public static final String FEATURE_WEBDRIVER_FACTORY = PluginBrowser.class.getName() + ".webdriverFactory";
+    public static final String FEATURE_WEBDRIVER_FACTORY = PluginBrowser.class.getName() + ".webdriverfactory";
     /**
      * The web driver factory.
      */
@@ -218,10 +218,10 @@ public class PluginBrowser extends AbstractPluginScoped {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);
+        fh.set(FEATURE_RECORDING, this);
         if (webdriver == null) {
             try {
-                fh.setStrict(FEATURE_WEBDRIVER_TYPE, "webdriver", String.class, this);
+                fh.setStrict(FEATURE_WEBDRIVER_TYPE, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver type is " + webdriver);
                 }
@@ -233,7 +233,7 @@ public class PluginBrowser extends AbstractPluginScoped {
         }
         if (webdriverfactory == null) {
             try {
-                fh.setStrict(FEATURE_WEBDRIVER_FACTORY, "webdriverfactory", String.class, this);
+                fh.setStrict(FEATURE_WEBDRIVER_FACTORY, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver factory is " + webdriverfactory);
                 }
@@ -244,7 +244,7 @@ public class PluginBrowser extends AbstractPluginScoped {
             }
         }
         if (webdriverInstance == null) {
-            fh.set(FEATURE_WEBDRIVER_INSTANCE, "webdriverInstance", WebDriver.class, this);
+            fh.set(FEATURE_WEBDRIVER_INSTANCE, this);
         }
     }
 

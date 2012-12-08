@@ -64,7 +64,7 @@ public class TomcatStringProvider implements IStringProvider {
     @Override
     public String newString(IContext context) throws ContextException {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.set(FEATURE_URL, "url", String.class, this);
+        fm.set(FEATURE_URL, this);
         if (url == null) {
             Server server = (Server) context.getByName(PluginStartTomcat.SERVER_NAME);
             if (server == null) {

@@ -200,7 +200,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     protected void outputDirectory() throws SourceDumperException {
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         try {
-            fh.setStrict(FEATURE_OUTPUT_DIRECTORY, "outputDirectory", File.class, this);
+            fh.setStrict(FEATURE_OUTPUT_DIRECTORY, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -236,7 +236,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
         }
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         try {
-            fh.setStrict(FEATURE_OUTPUT_NAME, "outputName", String.class, this);
+            fh.setStrict(FEATURE_OUTPUT_NAME, this);
         } catch (SpecRunnerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -257,7 +257,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     protected void charset() throws SourceDumperException {
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         try {
-            fh.setStrict(FEATURE_CHARSET, "charset", String.class, this);
+            fh.setStrict(FEATURE_CHARSET, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);

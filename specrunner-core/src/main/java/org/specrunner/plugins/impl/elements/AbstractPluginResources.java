@@ -80,7 +80,7 @@ public abstract class AbstractPluginResources extends AbstractPlugin {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (save == null) {
-            fh.set(FEATURE_SAVE, "save", Boolean.class, this);
+            fh.set(FEATURE_SAVE, this);
         }
     }
 }

@@ -17,10 +17,12 @@
  */
 package org.specrunner.features.impl;
 
+import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
@@ -75,9 +77,9 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     }
 
     @Override
-    public void set(String feature, String field, Class<?> expectedType, Object target) {
+    public void set(String feature, Object target) {
         try {
-            setStrict(feature, field, expectedType, target);
+            setStrict(feature, target);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -86,12 +88,30 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     }
 
     @Override
-    public void setStrict(String feature, String field, Class<?> expectedType, Object target) throws FeatureManagerException {
+    public void setStrict(String feature, Object target) throws FeatureManagerException {
         Object obj = get(feature);
         if (obj != null) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Trying to set feature '" + feature + "' with value '" + obj + "' to object '" + target + "' on field '" + field + "' of type '" + expectedType + "'.");
+            int pos = feature.lastIndexOf('.');
+            if (pos < 0) {
+                throw new FeatureManagerException("A feature should always end with a attribute name. i.e. '<any class name>.pause', current value:'" + feature + "'.");
             }
+            String field = feature.substring(Math.min(pos + 1, feature.length())).trim();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Trying to set feature '" + feature + "' with value '" + obj + "' to object '" + target + "' on field '" + field + "'.");
+            }
+            PropertyDescriptor pd;
+            try {
+                pd = PropertyUtils.getPropertyDescriptor(target, field);
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("PropertyDescriptor(" + target + "." + field + ") not found: ignoring attempt.", e);
+                }
+                return;
+            }
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Property descriptor '" + pd + "'.");
+            }
+            Class<?> expectedType = pd.getPropertyType();
             if (!expectedType.isAssignableFrom(obj.getClass())) {
                 throw new FeatureManagerException("Object associated to " + feature + " is not a " + expectedType + ", current feature value '" + obj + "' is " + obj.getClass() + ".");
             }

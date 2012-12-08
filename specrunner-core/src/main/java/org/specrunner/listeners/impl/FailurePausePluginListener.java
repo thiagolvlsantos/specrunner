@@ -48,7 +48,7 @@ public class FailurePausePluginListener extends AbstractPluginListener {
     /**
      * Set true, to pause on errors.
      */
-    private Boolean pause;
+    private Boolean pauseOnFailure;
 
     /**
      * Enable error dialog on failures.
@@ -57,7 +57,7 @@ public class FailurePausePluginListener extends AbstractPluginListener {
     /**
      * Set true, to show a dialog.
      */
-    private Boolean dialog;
+    private Boolean showDialog;
 
     /**
      * Auxiliary frame.
@@ -79,18 +79,18 @@ public class FailurePausePluginListener extends AbstractPluginListener {
      * 
      * @return true, for pause on errors, false, otherwise.
      */
-    public Boolean getPause() {
-        return pause;
+    public Boolean getPauseOnFailure() {
+        return pauseOnFailure;
     }
 
     /**
      * Set pause on errors.
      * 
-     * @param pause
+     * @param pauseOnFailure
      *            true, for pause, false, otherwise.
      */
-    public void setPause(Boolean pause) {
-        this.pause = pause;
+    public void setPauseOnFailure(Boolean pauseOnFailure) {
+        this.pauseOnFailure = pauseOnFailure;
     }
 
     /**
@@ -98,37 +98,37 @@ public class FailurePausePluginListener extends AbstractPluginListener {
      * 
      * @return true, if dialog is enabled, false, otherwise.
      */
-    public Boolean getDialog() {
-        return dialog;
+    public Boolean getShowDialog() {
+        return showDialog;
     }
 
     /**
      * Set the dialog status.
      * 
-     * @param dialog
+     * @param showDialog
      *            true, to show dialog, false, otherwise.
      */
-    public void setDialog(Boolean dialog) {
-        this.dialog = dialog;
+    public void setShowDialog(Boolean showDialog) {
+        this.showDialog = showDialog;
     }
 
     @Override
     public void reset() {
-        pause = false;
-        dialog = false;
+        pauseOnFailure = false;
+        showDialog = false;
     }
 
     @Override
     public void onBeforeInit(IPlugin plugin, IContext context, IResultSet result) {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.set(FEATURE_PAUSE_ON_FAILURE, "pause", Boolean.class, this);
-        fm.set(FEATURE_SHOW_DIALOG, "dialog", Boolean.class, this);
+        fm.set(FEATURE_PAUSE_ON_FAILURE, this);
+        fm.set(FEATURE_SHOW_DIALOG, this);
         start = result.size();
     }
 
     @Override
     public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
-        if (pause) {
+        if (pauseOnFailure) {
             List<Status> status = result.errorStatus();
             Status[] array = status.toArray(new Status[status.size()]);
             List<IResult> errors = result.filterByStatus(start, result.size(), array);
@@ -144,7 +144,7 @@ public class FailurePausePluginListener extends AbstractPluginListener {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Errors:" + sb);
                     }
-                    if (dialog) {
+                    if (showDialog) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Click OK on dialog.");
                         }

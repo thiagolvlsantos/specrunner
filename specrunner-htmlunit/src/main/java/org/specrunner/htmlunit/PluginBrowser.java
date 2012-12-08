@@ -411,31 +411,31 @@ public class PluginBrowser extends AbstractPluginScoped {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_VERSION, "version", String.class, this);
+        fh.set(FEATURE_VERSION, this);
         if (host == null) {
-            fh.set(FEATURE_HOST, "host", String.class, this);
+            fh.set(FEATURE_HOST, this);
         }
         if (port == null) {
-            fh.set(FEATURE_PORT, "port", Integer.class, this);
+            fh.set(FEATURE_PORT, this);
         }
         if (username == null) {
-            fh.set(FEATURE_USERNAME, "username", String.class, this);
+            fh.set(FEATURE_USERNAME, this);
         }
         if (password == null) {
-            fh.set(FEATURE_PASSWORD, "password", String.class, this);
+            fh.set(FEATURE_PASSWORD, this);
         }
-        fh.set(FEATURE_HTTPTIMEOUT, "httptimeout", Integer.class, this);
+        fh.set(FEATURE_HTTPTIMEOUT, this);
         if (connection == null) {
-            fh.set(FEATURE_CONNECTION, "connection", String.class, this);
+            fh.set(FEATURE_CONNECTION, this);
         }
         if (cache == null) {
-            fh.set(FEATURE_CACHE, "cache", String.class, this);
+            fh.set(FEATURE_CACHE, this);
         }
         if (cached == null) {
-            fh.set(FEATURE_CACHED, "cached", Boolean.class, this);
+            fh.set(FEATURE_CACHED, this);
         }
-        fh.set(FEATURE_RECORDING, "recording", Boolean.class, this);
-        fh.set(FEATURE_REUSE, "reuse", Boolean.class, this);
+        fh.set(FEATURE_RECORDING, this);
+        fh.set(FEATURE_REUSE, this);
 
         if (connection != null) {
             try {

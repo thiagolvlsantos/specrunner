@@ -184,9 +184,9 @@ public class PluginScript extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_SCRIPT_SEPARATOR, "scriptseparator", String.class, this);
-        fh.set(FEATURE_SQL_SEPARATOR, "separator", String.class, this);
-        fh.set(FEATURE_FAILSAFE, "failsafe", Boolean.class, this);
+        fh.set(FEATURE_SCRIPT_SEPARATOR, this);
+        fh.set(FEATURE_SQL_SEPARATOR, this);
+        fh.set(FEATURE_FAILSAFE, this);
         // script manually set should not be changed.
         if (scripts == null) {
             Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);

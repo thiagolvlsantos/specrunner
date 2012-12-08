@@ -19,7 +19,6 @@ package org.specrunner.util.comparer.impl;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.comparer.IComparator;
 
 /**
@@ -41,14 +40,8 @@ public abstract class AbstractComparatorTime implements IComparator {
 
     @Override
     public void initialize() {
-        try {
-            IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-            fh.set(FEATURE_TOLERANCE, "tolerance", Long.class, this);
-        } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
+        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        fh.set(FEATURE_TOLERANCE, this);
     }
 
     /**
