@@ -40,19 +40,23 @@ No repositório de fontes existe um projeto chamado [http://code.google.com/p/sp
 === Conexão direta ===
 
 Para criar uma conexão com um banco de dados, em *QUALQUER TAG* coloque o estilo `connection`, com os demais atributos da conexão:
-|| Usando atributos separados || Usando atributo único || Atributo único com separador distinto ||
+  # Usando atributos separados
 {{{
 <span class="connection" 
       driver="org.hsqldb.jdbcDriver" 
       url="jdbc:hsqldb:mem:TESTE" 
       user="sa" 
       password="">texto qualquer</span>
-}}} || {{{
+}}}
+  # Usando atributo único
+{{{
 <span class="connection" 
       connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
-}}} || {{{
+}}}
+  # Atributo único com separador distinto
+{{{
 <span class="connection" 
-	  separator=";"
+      separator=";"
       connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;">texto qualquer</span>
 }}}
 Caso deseje dar um nome para a conexão, por exemplo `con1`, de forma que diferentes conexões sejam usadas na mesma especificação para realizar scripts em diferentes bases:
@@ -67,27 +71,36 @@ Caso deseje dar um nome para a conexão, por exemplo `con1`, de forma que difere
 ou,
 {{{
 <span name="con1" 
-	  class="connection" 
+      class="connection" 
       connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
 }}}
 ou,
 {{{
-<span name="con1" 
-	  class="connection" 
-	  separator=";"
-      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
+<span class="connection" 
+      separator=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;">texto qualquer</span>
 }}}
-Outra forma de introduzir a conexão é usando a tag definida no arquivo `plugin_element.properties`, sem texto interno:
+
+Outra forma de introduzir a conexão é usando a tag definida no arquivo `plugin_element.properties`, sem necessidade de texto interno:
+  # Usando tag vazia
 {{{
 <connection driver="org.hsqldb.jdbcDriver" 
             url="jdbc:hsqldb:mem:TESTE" 
             user="sa" 
             password=""/>
 }}}
-ou
+  # Usando tag com atributo único
 {{{
-<connection connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|"/>
+<connection
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|"/>
 }}}
+  # Usando tag com atrinbuto único e separador escolhido
+{{{
+<connection
+      separador=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;"/>
+}}}
+
 Se tiver nome e texto interno:
 {{{
 <connection name="con1" 
@@ -96,8 +109,19 @@ Se tiver nome e texto interno:
             user="sa" 
             password="">texto qualquer</connection>
 }}}
-Ou seja, diferentes formas de fazer a mesma coisa você escolhe qual prefere.
+ou,
+{{{
+<connection name="con1" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer </connection>
+}}}
+ou,
+{{{
+<connection name="con1" 
+      separador=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;"/>
+}}}
 
+Ou seja, diferentes formas de fazer a mesma coisa você escolhe qual prefere.
 
 === Conexão com [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/IDataSourceProvider.java IDataSourceProvider] ===
 
