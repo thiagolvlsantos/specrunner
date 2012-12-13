@@ -39,13 +39,25 @@ No repositório de fontes existe um projeto chamado [http://code.google.com/p/sp
 
 === Conexão direta ===
 
-Para criar uma conexão com um banco de dados, em *QUALQUER TAG* coloque o estilo `connection`, com os demais atributos da conexão, i.e.:
+Para criar uma conexão com um banco de dados, em *QUALQUER TAG* coloque o estilo `connection`, com os demais atributos da conexão:
+  # Usando atributos separados
 {{{
 <span class="connection" 
       driver="org.hsqldb.jdbcDriver" 
       url="jdbc:hsqldb:mem:TESTE" 
       user="sa" 
       password="">texto qualquer</span>
+}}}
+  # Usando atributo único
+{{{
+<span class="connection" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
+}}}
+  # Atributo único com separador distinto
+{{{
+<span class="connection" 
+      separator=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;">texto qualquer</span>
 }}}
 Caso deseje dar um nome para a conexão, por exemplo `con1`, de forma que diferentes conexões sejam usadas na mesma especificação para realizar scripts em diferentes bases:
 {{{
@@ -56,13 +68,39 @@ Caso deseje dar um nome para a conexão, por exemplo `con1`, de forma que difere
       user="sa" 
       password="">texto qualquer</span>
 }}}
-Outra forma de introduzir a conexão é usando a tag definida no arquivo `plugin_element.properties`, se texto interno:
+ou,
+{{{
+<span name="con1" 
+      class="connection" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
+}}}
+ou,
+{{{
+<span class="connection" 
+      separator=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;">texto qualquer</span>
+}}}
+
+Outra forma de introduzir a conexão é usando a tag definida no arquivo `plugin_element.properties`, sem necessidade de texto interno:
+  # Usando tag vazia
 {{{
 <connection driver="org.hsqldb.jdbcDriver" 
             url="jdbc:hsqldb:mem:TESTE" 
             user="sa" 
             password=""/>
 }}}
+  # Usando tag com atributo único
+{{{
+<connection
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|"/>
+}}}
+  # Usando tag com atrinbuto único e separador escolhido
+{{{
+<connection
+      separador=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;"/>
+}}}
+
 Se tiver nome e texto interno:
 {{{
 <connection name="con1" 
@@ -71,8 +109,19 @@ Se tiver nome e texto interno:
             user="sa" 
             password="">texto qualquer</connection>
 }}}
-Ou seja, diferentes formas de fazer a mesma coisa você escolhe qual prefere.
+ou,
+{{{
+<connection name="con1" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer </connection>
+}}}
+ou,
+{{{
+<connection name="con1" 
+      separador=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;"/>
+}}}
 
+Ou seja, diferentes formas de fazer a mesma coisa você escolhe qual prefere.
 
 === Conexão com [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/IDataSourceProvider.java IDataSourceProvider] ===
 
@@ -95,10 +144,20 @@ Se quiser associar o data source a um nome:
 <connection name="con2" 
             provider="example.sql.DataSourceProviderImpl">texto qualquer</connection>
 }}}
+
+Nestes casos acima a instancia do provider é criada dinamicamente, mas se você já possui um provider criado, você pode passá-lo para o plugin usando uma configuração, ou ajustando uma feature, que veremos nas próximas seções.
+
+Por enquanto tenha em mente que podemos fazer:
+{{{
+    IDataSourceProvider dsp = new ...;
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE,dsp);
+}}}
+.
 === Usando as FEATURES ===
 OK, interessante?!: posso configurar conexões na especificação, e também usar uma classe utilitária para recuperar a conexão, mas parece que a especificação ficou com mais informação do que o necessário. Como resolver isso?
 
-Para isso o SpecRunner conta com um mecanismo de ajuste global ou local de cada teste, é o que chamamos de [http://code.google.com/p/specrunner/source/browse/trunk/specrunner/src/main/java/org/specrunner/features/IFeatureManager.java IFeatureManager]. Desta forma as especificações poderiam ter conexões criadas apenas com trechos assim:
+Para isso o SpecRunner conta com um mecanismo de ajuste global ou local de cada teste, é o que chamamos de [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-core/src/main/java/org/specrunner/features/IFeatureManager.java IFeatureManager]. Desta forma as especificações poderiam ter conexões criadas apenas com trechos assim:
 {{{
 <span class="connection">texto qualquer</span>
 }}}
@@ -152,7 +211,7 @@ Desta forma, tanto faz a ordem de execução dos testes. O ajuste global será f
 Entretanto, poderíamos querer que cada teste tivesse seu ajuste de conexão específico. Desta forma, podemos também:
   # definir os parâmetros globais como sendo os já vistos;
   # definir parâmetros locais ao teste desejado.
-Isso é feito através de configurações ([http://code.google.com/p/specrunner/source/browse/trunk/specrunner/src/main/java/org/specrunner/configuration/IConfiguration.java IConfiguration]). Como veremos abaixo:
+Isso é feito através de configurações ([http://code.google.com/p/specrunner/source/browse/trunk/specrunner-core/src/main/java/org/specrunner/configuration/IConfiguration.java IConfiguration]). Como veremos abaixo:
 {{{
 @BeforeClass
 public static void before() {
