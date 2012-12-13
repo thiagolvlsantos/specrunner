@@ -7,6 +7,8 @@
     * [SpecRunnerSql]
     * [SpecRunnerObjects]
     * [SpecRunnerHibernate3]
+    * [SpecRunnerJpa]
     * [SpecRunnerWebdriver]
     * [SpecRunnerHtmlUnit]
     * [SpecRunnerJetty]
+    * [SpecRunnerTomcat]	
