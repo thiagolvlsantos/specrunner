@@ -149,8 +149,9 @@ Nestes casos acima a instancia do provider é criada dinamicamente, mas se você
 
 Por enquanto tenha em mente que podemos fazer:
 {{{
+    IDataSourceProvider dsp = new ...;
     IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-    fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE,minhaInstanciaDeProvider);
+    fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE,dsp);
 }}}
 .
 === Usando as FEATURES ===
