@@ -206,7 +206,9 @@ public class RunnerImpl implements IRunner {
             block = context.newBlock(node, plugin);
             if (plugin != PluginNop.emptyPlugin()) {
                 String alias = factory.getAlias(plugin.getClass());
-                if (alias != null && (disabledAliases != null && disabledAliases.contains(alias)) || (enabledAliases != null && !enabledAliases.contains(alias))) {
+                boolean hasDisabled = disabledAliases != null && disabledAliases.contains(alias);
+                boolean hasEnabled = enabledAliases != null && !enabledAliases.contains(alias);
+                if (alias != null && hasDisabled || hasEnabled) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
                     }
@@ -249,30 +251,28 @@ public class RunnerImpl implements IRunner {
                         sl.onAfterStart(plugin, context, result);
                     }
                 }
-                if (node != null) {
-                    // if plugin indicates to go deeper in node and node has
-                    // children.
-                    if (next == ENext.DEEP && block.hasChildren()) {
-                        Node deep = node;
-                        // if doStart() has changed the block information, for
-                        // example, exchange its node, the deeper must be over
-                        // the current node.
-                        if (block.isChanged()) {
-                            deep = block.getNode();
-                        }
-                        // for each children.
-                        for (int i = 0; i < deep.getChildCount(); i++) {
-                            Node child = deep.getChild(i);
-                            if (child instanceof Element) {
-                                // if not ignored marked
-                                if (!UtilNode.isIgnore(child)) {
-                                    // recursive execution
-                                    local(child, context, result, null);
-                                }
-                            } else {
+                // if plugin indicates to go deeper in node and node has
+                // children.
+                if (node != null && next == ENext.DEEP && block.hasChildren()) {
+                    Node deep = node;
+                    // if doStart() has changed the block information, for
+                    // example, exchange its node, the deeper must be over
+                    // the current node.
+                    if (block.isChanged()) {
+                        deep = block.getNode();
+                    }
+                    // for each children.
+                    for (int i = 0; i < deep.getChildCount(); i++) {
+                        Node child = deep.getChild(i);
+                        if (child instanceof Element) {
+                            // if not ignored marked
+                            if (!UtilNode.isIgnore(child)) {
                                 // recursive execution
                                 local(child, context, result, null);
                             }
+                        } else {
+                            // recursive execution
+                            local(child, context, result, null);
                         }
                     }
                 }
