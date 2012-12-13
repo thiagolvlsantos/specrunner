@@ -144,6 +144,15 @@ Se quiser associar o data source a um nome:
 <connection name="con2" 
             provider="example.sql.DataSourceProviderImpl">texto qualquer</connection>
 }}}
+
+Nestes casos acima a instancia do provider é criada dinamicamente, mas se você já possui um provider criado, você pode passá-lo para o plugin usando uma configuração, ou ajustando uma feature, que veremos nas próximas seções.
+
+Por enquanto tenha em mente que podemos fazer:
+{{{
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE,minhaInstanciaDeProvider);
+}}}
+.
 === Usando as FEATURES ===
 OK, interessante?!: posso configurar conexões na especificação, e também usar uma classe utilitária para recuperar a conexão, mas parece que a especificação ficou com mais informação do que o necessário. Como resolver isso?
 
