@@ -7,7 +7,7 @@
         <relativePath>../specrunner</relativePath>
     </parent>
     <artifactId>specrunner-core</artifactId>
-    
+
     <distributionManagement>
         <repository>
             <id>sonatype-nexus-staging</id>
@@ -20,7 +20,7 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-    
+
     <dependencies>
         <!-- Logging -->
         <dependency>
