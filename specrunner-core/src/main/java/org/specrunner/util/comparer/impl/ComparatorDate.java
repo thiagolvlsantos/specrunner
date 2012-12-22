@@ -33,7 +33,7 @@ public class ComparatorDate extends AbstractComparatorTime {
     }
 
     @Override
-    public boolean equals(Object expected, Object received) {
+    public boolean match(Object expected, Object received) {
         if (expected instanceof Date && received instanceof Date) {
             Date left = (Date) expected;
             Date right = (Date) received;

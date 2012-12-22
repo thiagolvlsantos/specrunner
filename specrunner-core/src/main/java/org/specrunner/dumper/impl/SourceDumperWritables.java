@@ -53,10 +53,8 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
         set(source, result);
         File dir = new File(outputFile.getAbsolutePath() + "_res/snapshots");
-        if (!dir.exists()) {
-            if (!dir.mkdirs()) {
-                throw new SourceDumperException("Could not create snapshot directory '" + dir + "'.");
-            }
+        if (!dir.exists() && !dir.mkdirs()) {
+            throw new SourceDumperException("Could not create snapshot directory '" + dir + "'.");
         }
         try {
             clean(dir);

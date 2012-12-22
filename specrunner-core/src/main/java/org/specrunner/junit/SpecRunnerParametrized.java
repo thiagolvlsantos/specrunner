@@ -283,10 +283,8 @@ public class SpecRunnerParametrized {
         if (!inDir.exists()) {
             throw new IllegalArgumentException("Diretory '" + inDir + "' not found.");
         }
-        if (!outDir.exists()) {
-            if (!outDir.mkdirs()) {
-                throw new IllegalArgumentException("Diretory '" + outDir + "' could not be created.");
-            }
+        if (!outDir.exists() && !outDir.mkdirs()) {
+            throw new IllegalArgumentException("Diretory '" + outDir + "' could not be created.");
         }
         File[] accepted = inDir.listFiles(new FilenameFilter() {
             @Override

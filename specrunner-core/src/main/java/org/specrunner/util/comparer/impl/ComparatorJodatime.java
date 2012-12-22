@@ -33,7 +33,7 @@ public class ComparatorJodatime extends AbstractComparatorTime {
     }
 
     @Override
-    public boolean equals(Object expected, Object received) {
+    public boolean match(Object expected, Object received) {
         if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
             ReadableInstant left = (ReadableInstant) expected;
             ReadableInstant right = (ReadableInstant) received;

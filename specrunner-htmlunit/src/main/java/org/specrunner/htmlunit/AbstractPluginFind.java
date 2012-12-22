@@ -145,11 +145,9 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
             }
         }
         process(context, result, client, page, elements);
-        if (getActionType() instanceof Command) {
-            if (UtilLog.LOG.isInfoEnabled()) {
-                for (int i = 0; i < elements.length; i++) {
-                    UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
-                }
+        if (getActionType() instanceof Command && UtilLog.LOG.isInfoEnabled()) {
+            for (int i = 0; i < elements.length; i++) {
+                UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
             }
         }
     }

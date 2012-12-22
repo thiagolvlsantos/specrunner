@@ -132,17 +132,13 @@ public class PluginPresent extends AbstractPluginFind {
                 failure++;
             }
         }
-        if (getMin() != null) {
-            if (list.size() < getMin()) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected minimum of elements was '" + getMin() + "', but '" + list.size() + "' was received."));
-                failure++;
-            }
+        if (getMin() != null && list.size() < getMin()) {
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected minimum of elements was '" + getMin() + "', but '" + list.size() + "' was received."));
+            failure++;
         }
-        if (getMax() != null) {
-            if (list.size() > getMax()) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected maximum of elements was '" + getMax() + "', but '" + list.size() + "' was received."));
-                failure++;
-            }
+        if (getMax() != null && list.size() > getMax()) {
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The expected maximum of elements was '" + getMax() + "', but '" + list.size() + "' was received."));
+            failure++;
         }
         if (failure == 0) {
             result.addResult(Success.INSTANCE, context.peek());

@@ -295,7 +295,9 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 for (IResult r : filter) {
                     sb.append("\t\t[" + (++index));
                     String msg = r.asString();
-                    msg = (msg != null ? msg.replace("\n", "\n\t\t\t") : msg);
+                    if (msg != null) {
+                        msg = msg.replace("\n", "\n\t\t\t");
+                    }
                     sb.append("]=" + msg + "\n");
                 }
             }

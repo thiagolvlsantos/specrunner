@@ -128,20 +128,16 @@ public class WritablePage implements IWritable {
             File fromFiles = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
             File toFiles = new File(target);
 
-            if (to.exists()) {
-                if (!to.delete()) {
-                    throw new ResultException("Could not remove screen scrap '" + to + "'.");
-                }
+            if (to.exists() && !to.delete()) {
+                throw new ResultException("Could not remove screen scrap '" + to + "'.");
             }
             from.renameTo(to);
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Moving " + from + " to " + to + ".");
             }
 
-            if (toFiles.exists()) {
-                if (!toFiles.delete()) {
-                    throw new ResultException("Could not remove screen scrap resources '" + toFiles + "'.");
-                }
+            if (toFiles.exists() && !toFiles.delete()) {
+                throw new ResultException("Could not remove screen scrap resources '" + toFiles + "'.");
             }
             fromFiles.renameTo(toFiles);
 
