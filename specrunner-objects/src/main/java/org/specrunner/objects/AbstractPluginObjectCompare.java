@@ -92,7 +92,7 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
             if (comparator == null) {
                 comparator = cf.getDefaultComparator();
             }
-            if (comparator.equals(currentInstance, currentBase)) {
+            if (comparator.match(currentInstance, currentBase)) {
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getElement(), this));
             } else {
                 IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(currentInstance), String.valueOf(currentBase));
