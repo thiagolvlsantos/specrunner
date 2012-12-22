@@ -32,11 +32,11 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
     /**
      * The set of predefined values.
      */
-    protected Map<String, Object> predefinedValues = new HashMap<String, Object>();
+    private Map<String, Object> predefinedValues = new HashMap<String, Object>();
     /**
      * The set of predefined classes.
      */
-    protected Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
+    private Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
 
     @Override
     public void clearPredefinedValues() {
@@ -51,6 +51,11 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
     @Override
     public void bindPredefinedValue(String name, Object value) {
         predefinedValues.put(name, value);
+    }
+
+    @Override
+    public void setPredefinedValues(Map<String, Object> predefinedValues) {
+        this.predefinedValues = predefinedValues;
     }
 
     @Override
@@ -71,6 +76,11 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
     @Override
     public void bindPredefinedClass(String name, Class<?> clazz) {
         predefinedClasses.put(name, clazz);
+    }
+
+    @Override
+    public void setPredefinedClasses(Map<String, Class<?>> predefinedClasses) {
+        this.predefinedClasses = predefinedClasses;
     }
 
     @Override

@@ -36,7 +36,7 @@ public abstract class AbstractComparatorTime implements IComparator {
     /**
      * Tolerance for comparisons.
      */
-    protected Long tolerance = 0L;
+    private Long tolerance = 0L;
 
     @Override
     public void initialize() {
