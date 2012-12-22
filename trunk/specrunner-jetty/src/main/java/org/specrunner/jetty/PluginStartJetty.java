@@ -250,10 +250,8 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     reusables.put(getName(), new ReusableJetty(getName(), server, sm));
                 }
                 result.addResult(Success.INSTANCE, context.peek());
-                if (!reuse) {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Jetty started and ready.");
-                    }
+                if (!reuse && UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Jetty started and ready.");
                 }
             } catch (Exception e) {
                 throw new PluginException(e);
