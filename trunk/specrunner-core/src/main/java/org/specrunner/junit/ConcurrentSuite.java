@@ -59,10 +59,7 @@ public final class ConcurrentSuite extends Suite {
                     @Override
                     public Runner runnerForClass(Class<?> testClass) throws Throwable {
                         Concurrent annotation = testClass.getAnnotation(Concurrent.class);
-                        if (annotation != null) {
-                            return new ConcurrentRunner(testClass);
-                        }
-                        return null;
+                        return annotation != null ? new ConcurrentRunner(testClass) : null;
                     }
                 }, ignoredBuilder(), annotatedBuilder(), suiteMethodBuilder(), junit3Builder(), junit4Builder());
                 for (RunnerBuilder each : builders) {

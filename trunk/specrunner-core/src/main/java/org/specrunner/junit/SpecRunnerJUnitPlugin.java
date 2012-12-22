@@ -6,6 +6,7 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilLog;
 
 /**
  * JUnit use simplifier.
@@ -45,7 +46,9 @@ public final class SpecRunnerJUnitPlugin {
             IResultSet result = SpecRunnerServices.getSpecRunnerPlugin().run(input, cfg);
             Assert.assertTrue(result.asString(), !result.getStatus().isError());
         } catch (Exception e) {
-            e.printStackTrace();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
             Assert.fail(e.getMessage());
         }
     }

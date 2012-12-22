@@ -313,10 +313,8 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      */
     protected void saveTo(Document doc, File output) throws SourceDumperException {
         File parent = output.getParentFile();
-        if (!parent.exists()) {
-            if (!parent.mkdirs()) {
-                throw new SourceDumperException("Could not create output directory '" + parent + "'.");
-            }
+        if (!parent.exists() && !parent.mkdirs()) {
+            throw new SourceDumperException("Could not create output directory '" + parent + "'.");
         }
         FileOutputStream fout = null;
         BufferedOutputStream bout = null;

@@ -95,13 +95,11 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                 } else {
                     for (URL url : urls) {
                         String file = url.toString();
-                        String name = file.substring(file.lastIndexOf("/") + 1) + "_res_" + (serialNumber++);
+                        String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + (serialNumber++);
                         Element tag = getHeaderTag(output, name);
                         File resFile = getFile(output, name);
-                        if (!resFile.getParentFile().exists()) {
-                            if (!resFile.getParentFile().mkdirs()) {
-                                throw new ResourceException("Could not create resource directory '" + resFile.getParent() + "'.");
-                            }
+                        if (!resFile.getParentFile().exists() && !resFile.getParentFile().mkdirs()) {
+                            throw new ResourceException("Could not create resource directory '" + resFile.getParent() + "'.");
                         }
                         UtilIO.writeToClose(url, resFile);
                         if (getPosition().getPlace() == EPlace.START) {

@@ -22,9 +22,9 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -168,8 +168,7 @@ public class PluginWhile extends AbstractPluginValue {
      *             On evaluation errors.
      */
     protected boolean checkCondition(String test, IContext context) throws PluginException {
-        System.out.println("check(" + test + "," + context + ")");
         Object tmp = UtilEvaluator.evaluate(test, context);
-        return tmp != null && tmp instanceof Boolean && (Boolean) tmp;
+        return tmp instanceof Boolean && (Boolean) tmp;
     }
 }

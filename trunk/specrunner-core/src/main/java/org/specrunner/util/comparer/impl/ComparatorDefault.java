@@ -38,7 +38,7 @@ public class ComparatorDefault implements IComparator {
     }
 
     @Override
-    public boolean equals(Object expected, Object received) {
+    public boolean match(Object expected, Object received) {
         if (expected == received) {
             return true;
         }

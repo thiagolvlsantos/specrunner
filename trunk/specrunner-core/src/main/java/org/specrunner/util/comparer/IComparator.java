@@ -46,5 +46,5 @@ public interface IComparator {
      *            The received value.
      * @return true, if they are equal, false, otherwise.
      */
-    boolean equals(Object expected, Object received);
+    boolean match(Object expected, Object received);
 }

@@ -41,14 +41,44 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
 
     @Override
     public IExpression create(Object source, IContext context) throws ExpressionException {
+        String expression = String.valueOf(source);
+
         List<String> args = new LinkedList<String>();
         List<Object> values = new LinkedList<Object>();
         List<Class<?>> types = new LinkedList<Class<?>>();
+        arguments(context, expression, args, types, values);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("EXPR>" + expression);
+            UtilLog.LOG.debug("ARGS>" + args);
+            UtilLog.LOG.debug("VALS>" + values);
+            UtilLog.LOG.debug("TYPES>" + types);
+        }
 
-        String original = String.valueOf(source);
+        Object r = eval(source, expression, args, types, values);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+        }
+        return new ExpressionObject(r);
+    }
+
+    /**
+     * Prepare arguments.
+     * 
+     * @param context
+     *            The context.
+     * @param expression
+     *            The expression.
+     * @param args
+     *            The arguments.
+     * @param types
+     *            The types.
+     * @param values
+     *            The values.
+     */
+    protected void arguments(IContext context, String expression, List<String> args, List<Class<?>> types, List<Object> values) {
         Reader rd = null;
         try {
-            rd = new StringReader(original);
+            rd = new StringReader(expression);
             String[] vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
             for (String str : vars) {
                 ExpressionVariable var = new ExpressionVariable(str);
@@ -103,13 +133,24 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                 }
             }
         }
+    }
 
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("EXPR>" + original);
-            UtilLog.LOG.debug("ARGS>" + args);
-            UtilLog.LOG.debug("VALS>" + values);
-            UtilLog.LOG.debug("TYPES>" + types);
-        }
+    /**
+     * Evaluate the expression.
+     * 
+     * @param source
+     *            The expression source.
+     * @param expression
+     *            The expression as string.
+     * @param args
+     *            The arguments.
+     * @param types
+     *            The argument types.
+     * @param values
+     *            The argument values.
+     * @return The resulting object.
+     */
+    protected Object eval(Object source, String expression, List<String> args, List<Class<?>> types, List<Object> values) {
         String[] arrayArgs = new String[args.size()];
         args.toArray(arrayArgs);
         Object[] arrayValues = new Object[values.size()];
@@ -119,30 +160,27 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
 
         Object r = null;
         try {
-            r = valorNumerico(original);
+            r = numericValue(expression);
         } catch (NumberFormatException ne) {
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace(ne.getMessage(), ne);
                 UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
             }
             try {
-                ExpressionEvaluator ee = new ExpressionEvaluator(original, Object.class, arrayArgs, arrayTypes);
+                ExpressionEvaluator ee = new ExpressionEvaluator(expression, Object.class, arrayArgs, arrayTypes);
                 r = ee.evaluate(arrayValues);
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("JANINO(" + source + ")_produced>" + r + "(" + (r != null ? r.getClass().getSimpleName() : "") + ")");
                 }
             } catch (Exception e) {
-                r = original;
+                r = expression;
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                     UtilLog.LOG.trace("JANINO(" + source + ")_unchanged>" + r);
                 }
             }
         }
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
-        }
-        return new ExpressionObject(r);
+        return r;
     }
 
     /**
@@ -152,7 +190,7 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
      *            The text.
      * @return The corresponding value.
      */
-    protected Number valorNumerico(String original) {
+    protected Number numericValue(String original) {
         try {
             return Long.valueOf(original);
         } catch (NumberFormatException e) {
