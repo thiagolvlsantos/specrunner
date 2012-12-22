@@ -74,6 +74,14 @@ public interface IExpressionFactory {
     void bindPredefinedValue(String name, Object value);
 
     /**
+     * Set predefined values in block.
+     * 
+     * @param predefinedValues
+     *            The values.
+     */
+    void setPredefinedValues(Map<String, Object> predefinedValues);
+
+    /**
      * The set of predefined values.
      * 
      * @return A map of name to predefined object instances.
@@ -105,6 +113,14 @@ public interface IExpressionFactory {
      *            The predefined class.
      */
     void bindPredefinedClass(String name, Class<?> clazz);
+
+    /**
+     * Set predefined classes in block.
+     * 
+     * @param predefinedClasses
+     *            Predefined classes.
+     */
+    void setPredefinedClasses(Map<String, Class<?>> predefinedClasses);
 
     /**
      * The set of predefined classes.
