@@ -100,7 +100,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     /**
      * Set dynamic start up. Default is 'true'.
      */
-    private final Boolean dynamic = true;
+    private Boolean dynamic = true;
 
     /**
      * Feature to set reusable "tomcats".
@@ -109,7 +109,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     /**
      * The reuse status. Default is 'false'.
      */
-    private final Boolean reuse = false;
+    private Boolean reuse = false;
 
     /**
      * Default constructor.
@@ -192,6 +192,44 @@ public class PluginStartTomcat extends AbstractPluginScoped {
      */
     public void setWar(String war) {
         this.war = war;
+    }
+
+    /**
+     * Get dynamic status.
+     * 
+     * @return true, if dynamic port allocation is enable, false, otherwise.
+     */
+    public Boolean getDynamic() {
+        return dynamic;
+    }
+
+    /**
+     * Set dynamic mode.
+     * 
+     * @param dynamic
+     *            The dynamic status.
+     */
+    public void setDynamic(Boolean dynamic) {
+        this.dynamic = dynamic;
+    }
+
+    /**
+     * Get reusable server.
+     * 
+     * @return The reuse status.
+     */
+    public Boolean getReuse() {
+        return reuse;
+    }
+
+    /**
+     * Set reuse status.
+     * 
+     * @param reuse
+     *            true, for reuse, false otherwise.
+     */
+    public void setReuse(Boolean reuse) {
+        this.reuse = reuse;
     }
 
     @Override
