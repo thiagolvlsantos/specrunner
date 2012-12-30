@@ -191,7 +191,7 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginMouse {
 
             @Override
             public Object getAuxiliary() {
-                return getAuxiliary();
+                return AbstractPluginCoordinates.this.getAuxiliary();
             }
         };
     }

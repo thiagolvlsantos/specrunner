@@ -190,7 +190,7 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginHasTouchSc
 
             @Override
             public Object getAuxiliary() {
-                return getAuxiliary();
+                return AbstractPluginCoordinates.this.getAuxiliary();
             }
         };
     }
