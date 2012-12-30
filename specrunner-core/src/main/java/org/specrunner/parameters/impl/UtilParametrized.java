@@ -26,7 +26,8 @@ import nu.xom.Element;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.IParametrized;
+import org.specrunner.parameters.IParameterDecorator;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.util.UtilEvaluator;
@@ -51,7 +52,7 @@ public final class UtilParametrized {
      * 
      * @param context
      *            The context.
-     * @param p
+     * @param holder
      *            The parameterized object whose attributes will be set based on
      *            element attributes.
      * @param element
@@ -59,8 +60,9 @@ public final class UtilParametrized {
      * @throws PluginException
      *             On setting errors.
      */
-    public static void setProperties(IContext context, IParametrized p, Element element) throws PluginException {
-        if (p != null) {
+    public static void setProperties(IContext context, IParameterHolder holder, Element element) throws PluginException {
+        if (holder != null) {
+            IParameterDecorator p = holder.getParameters();
             context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (int i = 0; i < element.getAttributeCount(); i++) {
                 Attribute n = element.getAttribute(i);
@@ -68,7 +70,7 @@ public final class UtilParametrized {
                 Object newValue = UtilEvaluator.evaluate(value, context);
                 try {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("set(" + p + ")." + n.getQualifiedName() + "=" + newValue);
+                        UtilLog.LOG.debug("set(" + p.getDecorated() + ")." + n.getQualifiedName() + "=" + newValue);
                     }
                     String name = n.getQualifiedName();
                     p.setParameter(name, newValue);
@@ -89,7 +91,7 @@ public final class UtilParametrized {
      * 
      * @param context
      *            The context.
-     * @param p
+     * @param holder
      *            The parameterized object whose attributes will be set based on
      *            element attributes.
      * @param parameters
@@ -97,13 +99,14 @@ public final class UtilParametrized {
      * @throws PluginException
      *             On setting errors.
      */
-    public static void setProperties(IContext context, IParametrized p, Map<String, Object> parameters) throws PluginException {
-        if (p != null) {
+    public static void setProperties(IContext context, IParameterHolder holder, Map<String, Object> parameters) throws PluginException {
+        if (holder != null) {
+            IParameterDecorator p = holder.getParameters();
             context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (Entry<String, Object> e : parameters.entrySet()) {
                 try {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("set(" + p + ")." + e.getKey() + "=" + e.getValue());
+                        UtilLog.LOG.debug("set(" + p.getDecorated() + ")." + e.getKey() + "=" + e.getValue());
                     }
                     p.setParameter(e.getKey(), e.getValue());
                     // every local attribute became a local variable

@@ -21,7 +21,8 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.parameters.impl.AbstractParametrized;
+import org.specrunner.parameters.IParameterDecorator;
+import org.specrunner.parameters.impl.ParameterDecoratorImpl;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IParalelPlugin;
 import org.specrunner.plugins.IPlugin;
@@ -38,7 +39,12 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPlugin extends AbstractParametrized implements IPlugin, ITestPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
+public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
+
+    /**
+     * The parameters holder.
+     */
+    private IParameterDecorator parameters;
 
     /**
      * Default conditional feature.
@@ -88,6 +94,14 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
      */
     private Boolean threadsafe;
 
+    /**
+     * Default constructor.
+     */
+    public AbstractPlugin() {
+        parameters = new ParameterDecoratorImpl();
+        parameters.setDecorated(this);
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
@@ -124,6 +138,16 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("doEnd>" + context.peek());
         }
+    }
+
+    @Override
+    public IParameterDecorator getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public void setParameters(IParameterDecorator parameters) {
+        this.parameters = parameters;
     }
 
     @Override
@@ -211,7 +235,7 @@ public abstract class AbstractPlugin extends AbstractParametrized implements IPl
      */
     @SuppressWarnings("unchecked")
     public <T extends AbstractPlugin> T set(String name, Object value) throws Exception {
-        this.setParameter(name, value);
+        parameters.setParameter(name, value);
         return (T) this;
     }
 

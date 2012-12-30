@@ -15,39 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.comparer.impl;
-
-import org.specrunner.util.comparer.IComparator;
+package org.specrunner.parameters;
 
 /**
- * A default comparator. It compares nulls values, and if both are not null, it
- * uses <code>Object.equals(Object)</code>.
+ * An object with parameters decorator.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public class ComparatorDefault implements IComparator {
+public interface IParameterHolder {
 
-    @Override
-    public Class<?> getType() {
-        return Object.class;
-    }
+    /**
+     * Get parameters.
+     * 
+     * @return The parameters.
+     */
+    IParameterDecorator getParameters();
 
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean match(Object expected, Object received) {
-        if (expected == received) {
-            return true;
-        }
-        if (expected == null) {
-            return false;
-        }
-        if (received == null) {
-            return false;
-        }
-        return expected.equals(received);
-    }
+    /**
+     * Set the parameters.
+     * 
+     * @param parameters
+     *            The parameters.
+     */
+    void setParameters(IParameterDecorator parameters);
 }

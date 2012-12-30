@@ -124,7 +124,7 @@ public class ResultImpl implements IResult {
         String msg1 = "";
         if (!source.hasNode()) {
             IPlugin plugin = source.getPlugin();
-            msg1 = ". on " + plugin + "[" + plugin.getAllParameters() + "]";
+            msg1 = ". on " + plugin + "[" + plugin.getParameters().getAllParameters() + "]";
         }
 
         String msg2 = getFailure() != null ? getFailure().getMessage() : getMessage();
@@ -147,6 +147,20 @@ public class ResultImpl implements IResult {
 
     @Override
     public String toString() {
-        return status.getName() + "(" + source.getNode() != null ? source.getNode().toXML() : String.valueOf(source.getPlugin()) + "," + message + (failure != null ? "," + failure.getMessage() : "") + ")." + writable;
+        StringBuilder sb = new StringBuilder();
+        sb.append(status.getName());
+        sb.append("(");
+        if (source.hasNode()) {
+            sb.append(source.getNode().toXML());
+        } else {
+            sb.append(source.getPlugin());
+        }
+        sb.append(",");
+        sb.append(message);
+        if (failure != null) {
+            sb.append("," + failure.getMessage());
+        }
+        sb.append(")." + writable);
+        return sb.toString();
     }
 }

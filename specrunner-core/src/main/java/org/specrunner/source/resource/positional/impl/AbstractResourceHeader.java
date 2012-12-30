@@ -47,7 +47,12 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
     /**
      * A sequential number.
      */
-    private static int serialNumber = 0;
+    private static ThreadLocal<Integer> serialNumber = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
 
     /**
      * Creates a header resource.
@@ -95,7 +100,8 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                 } else {
                     for (URL url : urls) {
                         String file = url.toString();
-                        String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + (serialNumber++);
+                        String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + serialNumber.get();
+                        serialNumber.set(serialNumber.get() + 1);
                         Element tag = getHeaderTag(output, name);
                         File resFile = getFile(output, name);
                         if (!resFile.getParentFile().exists() && !resFile.getParentFile().mkdirs()) {

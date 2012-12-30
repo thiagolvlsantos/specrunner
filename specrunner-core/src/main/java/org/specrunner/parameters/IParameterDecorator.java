@@ -20,12 +20,28 @@ package org.specrunner.parameters;
 import java.util.Map;
 
 /**
- * Stand for anything that can have parameters set.
+ * Stand for anything that can have parameters set. It is a bypass parameters
+ * capturer.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IParametrized {
+public interface IParameterDecorator {
+
+    /**
+     * Gets the decorated object.
+     * 
+     * @return The object.
+     */
+    Object getDecorated();
+
+    /**
+     * Sets the decorated object. Reset all parameters information.
+     * 
+     * @param decorated
+     *            The new decorated object.
+     */
+    void setDecorated(Object decorated);
 
     /**
      * Set a parameter.
@@ -64,10 +80,26 @@ public interface IParametrized {
     Map<String, Object> getParameters();
 
     /**
+     * Set parameters map.
+     * 
+     * @param parameters
+     *            The map.
+     */
+    void setParameters(Map<String, Object> parameters);
+
+    /**
      * Map of parameters set. All parameters tried to be set in the object, even
      * those whose corresponding property is not present in object.
      * 
      * @return The parameter mapping containing all parameters set.
      */
     Map<String, Object> getAllParameters();
+
+    /**
+     * Set of all parameters map.
+     * 
+     * @param allParameters
+     *            The map.
+     */
+    void setAllParameters(Map<String, Object> allParameters);
 }

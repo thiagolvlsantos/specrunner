@@ -24,8 +24,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
@@ -125,7 +125,7 @@ public class PluginDragAndDrop extends AbstractPluginFindSingle {
         Action ac = null;
         if (getTarget() != null) {
             IFinder finder = getFinderInstance();
-            finder.setParameter("by", getTarget());
+            finder.getParameters().setParameter("by", getTarget());
             List<WebElement> list = finder.find(context, result, client);
             if (list.isEmpty()) {
                 throw new PluginException("Element " + finder.resume(context) + " not found.");
