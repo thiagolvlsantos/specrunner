@@ -56,20 +56,19 @@ public class TestJettyUnit {
         group.add(notContains);
 
         PluginPresent present = new PluginPresent();
-        present.setParameter("by", "xpath://title");
+        present.getParameters().setParameter("by", "xpath://title");
         group.add(present);
 
         PluginPresent presentOne = new PluginPresent();
         presentOne.setCount(3);
-        presentOne.setParameter("by", "xpath://title");
+        presentOne.getParameters().setParameter("by", "xpath://title");
         group.add(presentOne);
 
         PluginCompare compare = new PluginCompare();
         compare.setValue("SWicket Quickstart Archetype Homepage");
-        compare.setParameter("by", "xpath://title");
+        compare.getParameters().setParameter("by", "xpath://title");
         group.add(compare);
 
         SpecRunnerJUnitPlugin.defaultRun(group);
     }
-
 }

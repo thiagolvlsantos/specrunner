@@ -19,12 +19,12 @@ public class TestRefactoring {
 
         PluginType type = new PluginType();
         type.setValue("buscar");
-        type.setParameter("by", "name:q");
+        type.getParameters().setParameter("by", "name:q");
         group.add(type);
 
         PluginCompare compare = new PluginCompare();
         compare.setValue("Pesquisa googleGGGGG");
-        compare.setParameter("by", "xpath://title");
+        compare.getParameters().setParameter("by", "xpath://title");
         group.add(compare);
 
         SpecRunnerJUnitPlugin.defaultRun(group);

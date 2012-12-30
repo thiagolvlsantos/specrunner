@@ -18,7 +18,7 @@
 package org.specrunner.plugins;
 
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.IParametrized;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -27,7 +27,7 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public interface IPlugin extends IParametrized, IActionType {
+public interface IPlugin extends IParameterHolder, IActionType {
 
     /**
      * Initialize the plugin. Performed after set parameters.

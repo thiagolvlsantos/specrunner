@@ -27,9 +27,9 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginTable;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -110,7 +110,8 @@ public class PluginMap extends AbstractPluginTable {
         RowAdapter ths = tableAdapter.getRow(0);
         List<RowAdapter> trs = tableAdapter.getRows();
         for (int i = 0; i < tableAdapter.getRowCount(); i++) {
-            if (i == 0) { // ignore headers.
+            if (i == 0) {
+                // ignore headers.
                 continue;
             }
             RowAdapter tr = trs.get(i);

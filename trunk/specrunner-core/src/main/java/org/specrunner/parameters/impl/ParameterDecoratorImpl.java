@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.specrunner.parameters.IParametrized;
+import org.specrunner.parameters.IParameterDecorator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -33,8 +33,12 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class AbstractParametrized implements IParametrized {
+public class ParameterDecoratorImpl implements IParameterDecorator {
 
+    /**
+     * The object to be parameterized.
+     */
+    private Object decorated;
     /**
      * Hold information of already checked attributes.
      */
@@ -49,9 +53,19 @@ public class AbstractParametrized implements IParametrized {
     protected Map<String, Object> allParameters = new HashMap<String, Object>();
 
     @Override
+    public Object getDecorated() {
+        return decorated;
+    }
+
+    @Override
+    public void setDecorated(Object decorated) {
+        this.decorated = decorated;
+    }
+
+    @Override
     public Object getParameter(String name) {
         try {
-            return BeanUtils.getProperty(this, name);
+            return BeanUtils.getProperty(decorated, name);
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -65,7 +79,7 @@ public class AbstractParametrized implements IParametrized {
         allParameters.put(name, value);
         try {
             if (hasParameter(name)) {
-                BeanUtils.setProperty(this, name, value);
+                BeanUtils.setProperty(decorated, name, value);
                 parameters.put(name, value);
             }
         } catch (Exception e) {
@@ -81,7 +95,7 @@ public class AbstractParametrized implements IParametrized {
         try {
             Boolean alreadyChecked = checked.get(name);
             if (alreadyChecked == null) {
-                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(this, name);
+                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(decorated, name);
                 result = pd != null;
                 checked.put(name, result);
             } else {
@@ -108,12 +122,7 @@ public class AbstractParametrized implements IParametrized {
         return parameters;
     }
 
-    /**
-     * Set parameters map.
-     * 
-     * @param parameters
-     *            The map.
-     */
+    @Override
     public void setParameters(Map<String, Object> parameters) {
         this.parameters = parameters;
     }
@@ -123,12 +132,7 @@ public class AbstractParametrized implements IParametrized {
         return allParameters;
     }
 
-    /**
-     * Set of all parameters map.
-     * 
-     * @param allParameters
-     *            The map.
-     */
+    @Override
     public void setAllParameters(Map<String, Object> allParameters) {
         this.allParameters = allParameters;
     }

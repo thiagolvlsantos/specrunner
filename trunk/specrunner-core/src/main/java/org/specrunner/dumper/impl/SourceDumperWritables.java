@@ -62,10 +62,8 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
             for (IResult r : result) {
                 IWritable w = r.getWritable();
                 if (w != null) {
-                    if (!dir.exists()) {
-                        if (!dir.mkdirs()) {
-                            throw new ResultException("Could not create details outputFile directory " + dir + ".");
-                        }
+                    if (!dir.exists() && !dir.mkdirs()) {
+                        throw new ResultException("Could not create details outputFile directory " + dir + ".");
                     }
                     try {
                         File file = new File(dir, "" + i);

@@ -293,10 +293,10 @@ public class RunnerImpl implements IRunner {
                     }
                 }
             } else {
-                if (node != null) {
-                    result.addResult(Info.INSTANCE, context.newBlock(node, plugin), "Conditional '" + ((Element) node).getAttributeValue("condition") + "' prevented execution.");
+                if (block.hasNode()) {
+                    result.addResult(Info.INSTANCE, block, "Conditional '" + ((Element) node).getAttributeValue("condition") + "' prevented execution.");
                 } else {
-                    result.addResult(Info.INSTANCE, context.newBlock(node, plugin), "Conditional prevented execution. " + plugin);
+                    result.addResult(Info.INSTANCE, block, "Conditional prevented execution. " + plugin);
                 }
             }
             // sleep if required

@@ -20,7 +20,7 @@ package org.specrunner.htmlunit;
 import java.util.List;
 
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.IParametrized;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
@@ -33,7 +33,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public interface IFinder extends IParametrized {
+public interface IFinder extends IParameterHolder {
 
     /**
      * Clear any previous finder settings.

@@ -80,7 +80,7 @@ public class PageListener extends AbstractPluginListener {
     public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
         IPlugin p = context.getPlugin();
         if (p instanceof AbstractPluginBrowserAware) {
-            String tmp = (String) p.getParameter("name");
+            String tmp = (String) p.getParameters().getParameter("name");
             String browserName = tmp != null ? tmp : PluginBrowser.BROWSER_NAME;
             if (name.equals(browserName)) {
                 WebClient client = (WebClient) context.getByName(browserName);

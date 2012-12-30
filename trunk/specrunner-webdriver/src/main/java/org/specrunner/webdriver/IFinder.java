@@ -22,7 +22,7 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.IParametrized;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
@@ -32,7 +32,7 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public interface IFinder extends IParametrized {
+public interface IFinder extends IParameterHolder {
 
     /**
      * Clear any previous finder settings.

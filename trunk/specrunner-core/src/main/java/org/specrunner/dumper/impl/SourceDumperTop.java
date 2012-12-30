@@ -85,10 +85,12 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
         // result table
         Element table = new Element("table");
         table.addAttribute(new Attribute("class", "sr_table"));
-        { // tr1
+        // tr1
+        {
             Element tr1 = new Element("tr");
             table.appendChild(tr1);
-            { // td1
+            // td1
+            {
                 Element td1 = new Element("td");
                 tr1.appendChild(td1);
 
@@ -112,7 +114,8 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                 td2.appendChild("Time:" + model.get("time") + "mls");
                 tr1.appendChild(td2);
             }
-            { // td2
+            // td2
+            {
                 Element td2 = new Element("td");
                 td2.addAttribute(new Attribute("rowspan", "2"));
                 tr1.appendChild(td2);
@@ -130,7 +133,8 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                 tableMem.addAttribute(new Attribute("class", "sr_memory"));
                 td2.appendChild(tableMem);
                 {
-                    { // trMem1
+                    // trMem1
+                    {
                         Element trMem1 = new Element("tr");
                         tableMem.appendChild(trMem1);
                         Element thMem1 = new Element("th");
@@ -149,7 +153,8 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                         thMem1.appendChild("Diff(Kb)");
                         trMem1.appendChild(thMem1);
                     }
-                    { // trMem2
+                    // trMem2
+                    {
                         Element trMem2 = new Element("tr");
                         tableMem.appendChild(trMem2);
                         Element tdMem2 = new Element("td");
@@ -168,7 +173,8 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                         tdMem2.appendChild(String.format("%d", freeAfter - freeBefore));
                         trMem2.appendChild(tdMem2);
                     }
-                    { // trMem3
+                    // trMem3
+                    {
                         Element trMem3 = new Element("tr");
                         tableMem.appendChild(trMem3);
                         Element tdMem3 = new Element("td");
@@ -187,7 +193,8 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                 }
             }
         }
-        { // tr2
+        // tr2
+        {
             Element tr3 = new Element("tr");
             table.appendChild(tr3);
             {

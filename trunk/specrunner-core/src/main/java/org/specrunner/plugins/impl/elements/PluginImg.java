@@ -50,7 +50,12 @@ public class PluginImg extends AbstractPluginResources {
     /**
      * Static sequential number.
      */
-    private static int serialNumber;
+    private static ThreadLocal<Integer> serialNumber = new ThreadLocal<Integer>() {
+        @Override
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
 
     /**
      * The image source.
@@ -110,7 +115,8 @@ public class PluginImg extends AbstractPluginResources {
                     ISource first = context.getSources().getLast();
                     file = first.getFile();
                 }
-                String newName = file.getName() + "_res/" + (serialNumber++) + "_" + strPath.substring(strPath.lastIndexOf('/') + 1);
+                String newName = file.getName() + "_res/" + serialNumber.get() + "_" + strPath.substring(strPath.lastIndexOf('/') + 1);
+                serialNumber.set(serialNumber.get() + 1);
 
                 img.addAttribute(new Attribute("src", newName));
 

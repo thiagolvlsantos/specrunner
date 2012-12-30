@@ -17,13 +17,9 @@
  */
 package org.specrunner.plugins.impl;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.IParameterDecorator;
+import org.specrunner.parameters.impl.ParameterDecoratorImpl;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IPlugin;
@@ -32,7 +28,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.composite.CompositeImpl;
 
 /**
@@ -44,17 +39,17 @@ import org.specrunner.util.composite.CompositeImpl;
 public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implements IPluginGroup {
 
     /**
-     * Hold information of already checked attributes.
+     * Parameter holder.
      */
-    protected Map<String, Boolean> checked = new HashMap<String, Boolean>();
+    private IParameterDecorator parameters;
+
     /**
-     * Map of valid parameters.
+     * Default constructor.
      */
-    private final Map<String, Object> parameters = new HashMap<String, Object>();
-    /**
-     * Map of all parameters set.
-     */
-    private final Map<String, Object> allParameters = new HashMap<String, Object>();
+    public PluginGroupImpl() {
+        parameters = new ParameterDecoratorImpl();
+        parameters.setDecorated(this);
+    }
 
     /**
      * Adds a child plugin. No repetition is allowed.
@@ -126,68 +121,13 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     }
 
     @Override
-    public Object getParameter(String name) {
-        try {
-            return PropertyUtils.getProperty(this, name);
-        } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void setParameter(String name, Object value) {
-        allParameters.put(name, value);
-        try {
-            if (hasParameter(name)) {
-                PropertyUtils.setProperty(this, name, value);
-                parameters.put(name, value);
-            }
-        } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-        }
-    }
-
-    @Override
-    public boolean hasParameter(String name) {
-        boolean result = false;
-        try {
-            Boolean alreadyChecked = checked.get(name);
-            if (alreadyChecked == null) {
-                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(this, name);
-                result = pd != null;
-                checked.put(name, result);
-            } else {
-                result = alreadyChecked;
-            }
-        } catch (IllegalAccessException e) {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
-            }
-        } catch (InvocationTargetException e) {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
-            }
-        } catch (NoSuchMethodException e) {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public Map<String, Object> getParameters() {
+    public IParameterDecorator getParameters() {
         return parameters;
     }
 
     @Override
-    public Map<String, Object> getAllParameters() {
-        return allParameters;
+    public void setParameters(IParameterDecorator parameters) {
+        this.parameters = parameters;
     }
 
     @Override

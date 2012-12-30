@@ -20,8 +20,8 @@ package org.specrunner.webdriver.assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -44,7 +44,7 @@ public class PluginContains extends AbstractPluginFindSingle {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        getFinderInstance().setParameter("by", "xpath://html");
+        getFinderInstance().getParameters().setParameter("by", "xpath://html");
     }
 
     @Override

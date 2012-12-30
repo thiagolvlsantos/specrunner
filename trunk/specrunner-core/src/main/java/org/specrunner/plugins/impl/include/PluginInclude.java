@@ -341,7 +341,7 @@ public class PluginInclude extends AbstractPlugin {
     protected String normalizeAddParameters(IContext context) throws PluginException {
         String path = href;
         String query = null;
-        int indexParameters = href.indexOf("?");
+        int indexParameters = href.indexOf('?');
         if (indexParameters > 0) {
             path = href.substring(0, indexParameters);
             query = href.substring(indexParameters + 1);
