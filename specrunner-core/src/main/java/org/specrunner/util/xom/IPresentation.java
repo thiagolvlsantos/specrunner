@@ -15,25 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.impl;
+package org.specrunner.util.xom;
 
-import nu.xom.Element;
+import nu.xom.Node;
 
 /**
- * Cell abstraction.
+ * Anything that has a Node representation can implement this interface,
+ * specially Exception, whose presentation is replaced automatically by a call
+ * to asNode().
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends ElementHolderImpl {
+public interface IPresentation {
 
     /**
-     * Construct a cell node.
+     * The object representation as string.
      * 
-     * @param node
-     *            The cell node.
+     * @return String representation.
      */
-    public CellAdapter(Element node) {
-        super(node);
-    }
+    String asString();
+
+    /**
+     * The object representation as node.
+     * 
+     * @return Node representation.
+     */
+    Node asNode();
 }

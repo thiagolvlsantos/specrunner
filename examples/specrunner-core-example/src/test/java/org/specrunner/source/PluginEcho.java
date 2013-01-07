@@ -11,7 +11,7 @@ import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 public class PluginEcho extends AbstractPlugin {
 

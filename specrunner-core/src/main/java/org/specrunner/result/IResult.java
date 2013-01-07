@@ -19,7 +19,7 @@ package org.specrunner.result;
 
 import org.specrunner.context.IBlock;
 import org.specrunner.plugins.IActionType;
-import org.specrunner.util.IPresentation;
+import org.specrunner.util.xom.IPresentation;
 
 /**
  * A individual result.

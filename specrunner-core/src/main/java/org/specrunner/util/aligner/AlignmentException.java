@@ -17,7 +17,7 @@
  */
 package org.specrunner.util.aligner;
 
-import org.specrunner.util.IPresentation;
+import org.specrunner.util.xom.IPresentation;
 
 //CHECKSTYLE:OFF
 @SuppressWarnings("serial")

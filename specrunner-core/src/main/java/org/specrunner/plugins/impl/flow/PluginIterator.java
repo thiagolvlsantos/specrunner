@@ -31,7 +31,7 @@ import org.specrunner.plugins.impl.data.IDataList;
 import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Perform an iteration over a collection.

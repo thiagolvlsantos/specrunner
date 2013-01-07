@@ -31,7 +31,7 @@ import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Detail;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.util.WritablePage;

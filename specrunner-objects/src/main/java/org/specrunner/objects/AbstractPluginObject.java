@@ -45,13 +45,13 @@ import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilNode;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
-import org.specrunner.util.impl.CellAdapter;
-import org.specrunner.util.impl.RowAdapter;
-import org.specrunner.util.impl.TableAdapter;
+import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Generic object plugin. To write object plugins override method

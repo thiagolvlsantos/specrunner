@@ -1,7 +1,7 @@
 package th.example;
 
 import org.specrunner.objects.IObjectCreator;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 public class CriadorExemplo implements IObjectCreator {
 

@@ -24,7 +24,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Warning;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
  * Performs something on a selected object.
