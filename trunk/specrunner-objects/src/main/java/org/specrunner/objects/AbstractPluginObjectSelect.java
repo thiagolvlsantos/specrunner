@@ -24,7 +24,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
  * Performs something on a selected object.

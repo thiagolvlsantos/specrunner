@@ -21,7 +21,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
  * Maps a object but do not persist it. The default behavior of objects, put

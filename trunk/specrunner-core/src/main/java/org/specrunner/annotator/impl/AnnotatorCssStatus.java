@@ -22,7 +22,7 @@ import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Add CSS style related to result status. For each result node add the

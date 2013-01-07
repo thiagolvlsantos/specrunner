@@ -50,7 +50,7 @@ import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.transformer.ITransformer;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Allow a file inclusion.

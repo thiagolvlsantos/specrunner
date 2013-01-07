@@ -26,8 +26,8 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilNode;
-import org.specrunner.util.impl.TableAdapter;
+import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Adapter for plugins on tables.

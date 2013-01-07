@@ -28,8 +28,8 @@ import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
-import org.specrunner.util.impl.CellAdapter;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
  * Performs comparison of objects.

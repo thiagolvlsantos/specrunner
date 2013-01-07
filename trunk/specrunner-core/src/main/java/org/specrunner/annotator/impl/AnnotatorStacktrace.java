@@ -30,8 +30,8 @@ import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.ExceptionUtil;
-import org.specrunner.util.IPresentation;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.IPresentation;
 
 /**
  * Add stack traces to nodes with errors.

@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.specrunner.context.IBlock;
 import org.specrunner.plugins.ActionType;
-import org.specrunner.util.IPresentation;
+import org.specrunner.util.xom.IPresentation;
 
 /**
  * A result set.

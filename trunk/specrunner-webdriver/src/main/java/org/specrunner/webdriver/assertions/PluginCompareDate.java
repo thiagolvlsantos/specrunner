@@ -27,7 +27,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.impl.CellAdapter;
+import org.specrunner.util.xom.CellAdapter;
 
 /**
  * Compare date fields.

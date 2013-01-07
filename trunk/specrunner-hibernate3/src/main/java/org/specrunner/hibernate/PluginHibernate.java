@@ -21,7 +21,7 @@ import org.hibernate.SessionFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.objects.AbstractPluginObject;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
  * Generic Hibernate plugin. To write Hibernate plugins override method

@@ -27,7 +27,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * The plugin which creates a macro. To defined a macro just add the class

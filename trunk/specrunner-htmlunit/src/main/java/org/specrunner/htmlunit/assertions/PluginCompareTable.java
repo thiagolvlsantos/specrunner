@@ -35,11 +35,10 @@ import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilNode;
-import org.specrunner.util.UtilXPath;
-import org.specrunner.util.impl.CellAdapter;
-import org.specrunner.util.impl.RowAdapter;
-import org.specrunner.util.impl.TableAdapter;
+import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.UtilNode;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -89,7 +88,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         boolean success = true;
 
         Nodes tables = node.query("descendant-or-self::table");
-        Node table = UtilXPath.getHighest(tables);
+        Node table = UtilNode.getHighest(tables);
         if (table == null) {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."), new WritablePage(page));
             return false;

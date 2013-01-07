@@ -52,7 +52,7 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Default runner implementation.

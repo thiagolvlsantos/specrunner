@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.impl.RowAdapter;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
  * Perform object searches.

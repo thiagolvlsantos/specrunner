@@ -4,7 +4,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.util.IPresentation;
+import org.specrunner.util.xom.IPresentation;
 
 /**
  * A type for plugins.

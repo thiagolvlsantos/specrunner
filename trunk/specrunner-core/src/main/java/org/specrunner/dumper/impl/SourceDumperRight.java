@@ -32,7 +32,7 @@ import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.source.ISource;
-import org.specrunner.util.UtilXPath;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Dumps the short report of execution (frame right side).
@@ -102,7 +102,7 @@ public class SourceDumperRight extends AbstractSourceDumperFile {
                     Element target = (Element) block.getNode();
                     Nodes nodes = target.query("descendant::a[@name]");
                     if (nodes.size() > 0) {
-                        Node no = UtilXPath.getHighest(nodes);
+                        Node no = UtilNode.getHighest(nodes);
                         Element link = new Element("a");
                         String name = ((Element) no).getAttributeValue("name");
                         link.addAttribute(new Attribute("target", "center"));

@@ -1,9 +1,9 @@
 package org.specrunner;
 
-import org.specrunner.util.IPresentation;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.xom.IPresentation;
 
 public final class MainAlignment {
 

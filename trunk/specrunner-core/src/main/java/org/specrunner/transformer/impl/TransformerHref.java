@@ -23,7 +23,7 @@ import nu.xom.Nodes;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.transformer.ITransformer;
-import org.specrunner.util.UtilNode;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Useful transformer to set all links in specification as included resources
