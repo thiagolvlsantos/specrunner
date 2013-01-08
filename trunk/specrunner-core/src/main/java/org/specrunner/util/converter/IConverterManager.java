@@ -17,30 +17,13 @@
  */
 package org.specrunner.util.converter;
 
+import org.specrunner.util.mapping.IMappingManager;
+
 /**
  * A converter manager.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IConverterManager {
-
-    /**
-     * Binds a converter to a name.
-     * 
-     * @param name
-     *            A name.
-     * @param converter
-     *            A converter.
-     */
-    void bind(String name, IConverter converter);
-
-    /**
-     * Gets a converter by name.
-     * 
-     * @param name
-     *            The name.
-     * @return The converter, if it exists, null, otherwise.
-     */
-    IConverter get(String name);
+public interface IConverterManager extends IMappingManager<IConverter> {
 }

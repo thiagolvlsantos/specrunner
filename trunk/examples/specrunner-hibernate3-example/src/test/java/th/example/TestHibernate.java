@@ -22,7 +22,7 @@ public class TestHibernate {
     public void setUpConverters() {
         pause();
         IConverterManager cf = SpecRunnerServices.get(IConverterManager.class);
-        cf.bind("bool", new ConverterSimNao());
+        cf.put("bool", new ConverterSimNao());
 
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
         ief.bindPredefinedClass("dt", DateTime.class);

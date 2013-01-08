@@ -17,13 +17,15 @@
  */
 package org.specrunner.util.converter;
 
+import org.specrunner.util.mapping.IResetable;
+
 /**
  * A generic converter interface.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IConverter {
+public interface IConverter extends IResetable {
 
     /**
      * Convert a given object to another using some arguments as auxiliary.
@@ -37,5 +39,4 @@ public interface IConverter {
      *             On conversion errors.
      */
     Object convert(Object value, Object[] args) throws ConverterException;
-
 }
