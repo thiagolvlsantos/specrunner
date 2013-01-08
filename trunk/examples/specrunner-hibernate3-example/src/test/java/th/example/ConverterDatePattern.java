@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 
+@SuppressWarnings("serial")
 public class ConverterDatePattern implements IConverter {
+
     @Override
     public void initialize() {
     }
