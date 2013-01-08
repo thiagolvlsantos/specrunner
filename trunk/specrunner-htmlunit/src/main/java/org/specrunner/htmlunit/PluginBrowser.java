@@ -18,7 +18,6 @@
 package org.specrunner.htmlunit;
 
 import java.lang.reflect.Constructor;
-import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +45,7 @@ import com.gargoylesoftware.htmlunit.DefaultCredentialsProvider;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.ProxyConfig;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebClientOptions;
 import com.gargoylesoftware.htmlunit.WebConnection;
 import com.gargoylesoftware.htmlunit.WebResponse;
 
@@ -509,17 +509,14 @@ public class PluginBrowser extends AbstractPluginScoped {
 
             // synchronize Ajax calls
             client.setAjaxController(new NicelyResynchronizingAjaxController());
-            try {
-                client.setUseInsecureSSL(true);
-            } catch (GeneralSecurityException e) {
-                throw new PluginException(e);
-            }
+            WebClientOptions options = client.getOptions();
+            options.setUseInsecureSSL(true);
             if (host != null && port != null) {
                 ProxyConfig config = new ProxyConfig(host, port);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Browser named '" + getName() + "' proxy '" + host + ":" + port + "'.");
                 }
-                client.setProxyConfig(config);
+                options.setProxyConfig(config);
             }
             if (username != null && password != null) {
                 DefaultCredentialsProvider provider = new DefaultCredentialsProvider();
@@ -563,7 +560,7 @@ public class PluginBrowser extends AbstractPluginScoped {
                 }
             }
 
-            client.setTimeout(httptimeout);
+            options.setTimeout(httptimeout);
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Browser named '" + getName() + "' bound to '" + client + "'.");
             }
@@ -614,9 +611,10 @@ public class PluginBrowser extends AbstractPluginScoped {
      */
     protected void setDefaultClientBehaviors(final WebClient client) {
         // print content on error
-        client.setPrintContentOnFailingStatusCode(true);
-        client.setThrowExceptionOnFailingStatusCode(false);
-        client.setThrowExceptionOnScriptError(false);
+        WebClientOptions options = client.getOptions();
+        options.setPrintContentOnFailingStatusCode(true);
+        options.setThrowExceptionOnFailingStatusCode(false);
+        options.setThrowExceptionOnScriptError(false);
         // some handlers are logging without test log enabled, fixing.
         client.setCssErrorHandler(new OptimizedCssErrorHandler());
         client.setIncorrectnessListener(new OptimizedIncorrectnessListener());
