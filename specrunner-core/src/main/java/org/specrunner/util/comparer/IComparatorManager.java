@@ -17,32 +17,15 @@
  */
 package org.specrunner.util.comparer;
 
+import org.specrunner.util.mapping.IMappingManager;
+
 /**
  * A comparator manager.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IComparatorManager {
-
-    /**
-     * Binds a comparator to a name.
-     * 
-     * @param name
-     *            A name.
-     * @param comparator
-     *            A comparator.
-     */
-    void bind(String name, IComparator comparator);
-
-    /**
-     * Gets a comparator by name.
-     * 
-     * @param name
-     *            The name.
-     * @return The comparator, if it exists, null, otherwise.
-     */
-    IComparator get(String name);
+public interface IComparatorManager extends IMappingManager<IComparator> {
 
     /**
      * Gets a comparator by type.

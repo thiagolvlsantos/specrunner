@@ -17,16 +17,9 @@
  */
 package org.specrunner.util.converter.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-
-import org.specrunner.SpecRunnerServices;
-import org.specrunner.properties.IPropertyLoader;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
+import org.specrunner.util.mapping.impl.MappingManagerImpl;
 
 /**
  * Default converter manager implementation.
@@ -34,52 +27,13 @@ import org.specrunner.util.converter.IConverterManager;
  * @author Thiago Santos
  * 
  */
-public class ConverterManagerImpl implements IConverterManager {
+@SuppressWarnings("serial")
+public class ConverterManagerImpl extends MappingManagerImpl<IConverter> implements IConverterManager {
 
     /**
-     * Map of converters.
+     * Default constructor.
      */
-    protected Map<String, IConverter> converters = new HashMap<String, IConverter>();
-    /**
-     * Initialization flag.
-     */
-    protected boolean initialized = false;
-
-    /**
-     * Initialize manager.
-     */
-    public void initialize() {
-        if (!initialized) {
-            try {
-                Properties p = SpecRunnerServices.get(IPropertyLoader.class).load("plugin_converter.properties");
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("features=" + p);
-                }
-                for (Entry<Object, Object> e : p.entrySet()) {
-                    String key = String.valueOf(e.getKey());
-                    @SuppressWarnings("unchecked")
-                    Class<? extends IConverter> c = (Class<? extends IConverter>) Class.forName(p.getProperty(key));
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("put(" + key + "," + c + ")");
-                    }
-                    converters.put(key, c.newInstance());
-                }
-            } catch (Exception e) {
-                throw new ExceptionInInitializerError(e);
-            }
-            initialized = true;
-        }
-    }
-
-    @Override
-    public void bind(String name, IConverter iConverter) {
-        initialize();
-        converters.put(name, iConverter);
-    }
-
-    @Override
-    public IConverter get(String name) {
-        initialize();
-        return converters.get(name);
+    public ConverterManagerImpl() {
+        super("plugin_converter.properties");
     }
 }

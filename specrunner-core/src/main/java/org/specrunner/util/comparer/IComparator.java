@@ -17,13 +17,15 @@
  */
 package org.specrunner.util.comparer;
 
+import org.specrunner.util.mapping.IResetable;
+
 /**
  * Compare tow objects.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IComparator {
+public interface IComparator extends IResetable {
 
     /**
      * The comparator reference type.
@@ -31,11 +33,6 @@ public interface IComparator {
      * @return The comparator target.
      */
     Class<?> getType();
-
-    /**
-     * Initialize the comparator.
-     */
-    void initialize();
 
     /**
      * Says if two objects can be considered equals.

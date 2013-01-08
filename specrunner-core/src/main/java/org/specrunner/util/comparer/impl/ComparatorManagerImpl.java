@@ -17,16 +17,10 @@
  */
 package org.specrunner.util.comparer.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-
-import org.specrunner.SpecRunnerServices;
-import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
+import org.specrunner.util.mapping.impl.MappingManagerImpl;
 
 /**
  * Default comparator manager implementation.
@@ -34,67 +28,25 @@ import org.specrunner.util.comparer.IComparatorManager;
  * @author Thiago Santos
  * 
  */
-public class ComparatorManagerImpl implements IComparatorManager {
+@SuppressWarnings("serial")
+public class ComparatorManagerImpl extends MappingManagerImpl<IComparator> implements IComparatorManager {
 
-    /**
-     * Map of comparators.
-     */
-    protected Map<String, IComparator> comparators = new HashMap<String, IComparator>();
     /**
      * Default comparator instance.
      */
     protected IComparator defaultComparator = new ComparatorDefault();
-    /**
-     * Initialization flag.
-     */
-    protected boolean initialized = false;
 
     /**
-     * Initialize manager.
+     * Default constructor.
      */
-    public void initialize() {
-        if (!initialized) {
-            try {
-                Properties p = SpecRunnerServices.get(IPropertyLoader.class).load("plugin_comparator.properties");
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("features=" + p);
-                }
-                for (Entry<Object, Object> e : p.entrySet()) {
-                    String key = String.valueOf(e.getKey());
-                    @SuppressWarnings("unchecked")
-                    Class<? extends IComparator> c = (Class<? extends IComparator>) Class.forName(p.getProperty(key));
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("put(" + key + "," + c + ")");
-                    }
-                    comparators.put(key, c.newInstance());
-                }
-            } catch (Exception e) {
-                throw new ExceptionInInitializerError(e);
-            }
-            initialized = true;
-        }
-    }
-
-    @Override
-    public void bind(String name, IComparator iComparator) {
-        initialize();
-        comparators.put(name, iComparator);
-    }
-
-    @Override
-    public IComparator get(String name) {
-        initialize();
-        IComparator c = comparators.get(name);
-        if (c != null) {
-            c.initialize();
-        }
-        return c;
+    public ComparatorManagerImpl() {
+        super("plugin_comparator.properties");
     }
 
     @Override
     public IComparator get(Class<?> type) {
         initialize();
-        for (IComparator c : comparators.values()) {
+        for (IComparator c : values()) {
             if (c.getType() != Object.class && c.getType().isAssignableFrom(type)) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Comparator for " + type.getName() + " is " + c);
