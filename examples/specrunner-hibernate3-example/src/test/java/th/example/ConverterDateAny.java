@@ -5,6 +5,7 @@ import java.util.Calendar;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 
+@SuppressWarnings("serial")
 public class ConverterDateAny implements IConverter {
 
     @Override

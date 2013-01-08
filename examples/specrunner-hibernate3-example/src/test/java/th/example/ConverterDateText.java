@@ -5,7 +5,9 @@ import java.util.Date;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 
+@SuppressWarnings("serial")
 public class ConverterDateText implements IConverter {
+
     @Override
     public void initialize() {
     }
