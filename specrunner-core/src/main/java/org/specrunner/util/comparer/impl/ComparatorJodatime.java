@@ -25,6 +25,7 @@ import org.joda.time.ReadableInstant;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class ComparatorJodatime extends AbstractComparatorTime {
 
     @Override

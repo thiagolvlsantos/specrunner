@@ -27,6 +27,7 @@ import org.specrunner.util.comparer.IComparator;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public abstract class AbstractComparatorTime implements IComparator {
 
     /**

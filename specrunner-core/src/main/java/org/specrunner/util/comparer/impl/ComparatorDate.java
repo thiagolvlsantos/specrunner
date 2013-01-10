@@ -25,6 +25,7 @@ import java.util.Date;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class ComparatorDate extends AbstractComparatorTime {
 
     @Override

@@ -25,6 +25,7 @@ import org.specrunner.util.comparer.IComparator;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class ComparatorTrue implements IComparator {
 
     @Override
