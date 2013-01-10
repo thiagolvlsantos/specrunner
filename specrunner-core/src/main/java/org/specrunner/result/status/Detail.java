@@ -17,7 +17,7 @@ public class Detail extends Status {
      */
     protected Detail() {
         // CHECKSTYLE:OFF
-        super("detail", false, -2);
+        super("detail", -2, false);
         // CHECKSTYLE:ON
     }
 }

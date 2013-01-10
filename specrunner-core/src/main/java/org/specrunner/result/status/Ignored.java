@@ -16,6 +16,6 @@ public class Ignored extends Status {
      * Default constructor.
      */
     protected Ignored() {
-        super("ignored", false, -1);
+        super("ignored", -1, false);
     }
 }

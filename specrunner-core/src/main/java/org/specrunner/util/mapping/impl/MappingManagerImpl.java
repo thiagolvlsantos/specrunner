@@ -9,7 +9,6 @@ import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.mapping.IMappingManager;
 import org.specrunner.util.mapping.IResetable;
-//import java.util.Map.Entry;
 
 /**
  * Default implementation of managers loaded by property files.

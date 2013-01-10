@@ -16,6 +16,6 @@ public class Warning extends Status {
      * Default constructor.
      */
     protected Warning() {
-        super("warning", false, 1);
+        super("warning", 1, false);
     }
 }
