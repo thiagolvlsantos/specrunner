@@ -16,6 +16,6 @@ public class Success extends Status {
      * Default constructor.
      */
     protected Success() {
-        super("success", false, 2);
+        super("success", 2, false);
     }
 }

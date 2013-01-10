@@ -16,6 +16,6 @@ public class Info extends Status {
      * Default constructor.
      */
     protected Info() {
-        super("info", false, 0);
+        super("info", 0, false);
     }
 }

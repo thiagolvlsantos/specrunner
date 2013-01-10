@@ -17,7 +17,7 @@ public class Failure extends Status {
      */
     protected Failure() {
         // CHECKSTYLE:OFF
-        super("failure", true, 3);
+        super("failure", 3, true);
         // CHECKSTYLE:ON
     }
 }

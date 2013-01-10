@@ -18,6 +18,7 @@
 package org.specrunner.source.impl;
 
 import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -78,39 +79,48 @@ public class SourceFactoryImpl implements ISourceFactory {
 
     @Override
     public ISource newSource(final InputStream source) throws SourceException {
-        return new SourceImpl(null, this, new IDocumentLoader() {
-            @Override
-            public Document load() throws SourceException {
-                Builder builder = getBuilder();
-                try {
-                    synchronized (builder) {
-                        return addDoctype(builder.build(source));
-                    }
-                } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
-                    }
-                    throw new SourceException("Could not load the 'InputStream' source '" + source + "'.", e);
-                }
-            }
-        });
+        return load(source, null);
     }
 
     @Override
     public ISource newSource(final Reader source) throws SourceException {
+        return load(null, source);
+    }
+
+    /**
+     * Load a source from either an InputStream or a Reader.
+     * 
+     * @param stream
+     *            InputStream.
+     * @param reader
+     *            Reader.
+     * @return The source.
+     */
+    private ISource load(final InputStream stream, final Reader reader) {
+        final Closeable obj = stream != null ? stream : reader;
         return new SourceImpl(null, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
                 Builder builder = getBuilder();
                 try {
                     synchronized (builder) {
-                        return addDoctype(builder.build(source));
+                        Document build = stream != null ? builder.build(stream) : builder.build(reader);
+                        return addDoctype(build);
                     }
                 } catch (Exception e) {
+                    if (obj != null) {
+                        try {
+                            obj.close();
+                        } catch (IOException e1) {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug(e1.getMessage(), e1);
+                            }
+                        }
+                    }
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    throw new SourceException("Could not load the 'Reader' source '" + source + "'.", e);
+                    throw new SourceException("Could not load the '" + obj.getClass() + "' source '" + obj + "'.", e);
                 }
             }
         });
@@ -118,18 +128,19 @@ public class SourceFactoryImpl implements ISourceFactory {
 
     @Override
     public ISource newSource(String source) throws SourceException {
-        URI u = null;
+        String strTmp = source;
+        URI uriTmp = null;
         try {
-            u = new URI(source);
-            source = u.toString();
+            uriTmp = new URI(strTmp);
+            strTmp = uriTmp.toString();
         } catch (URISyntaxException e) {
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace(e.getMessage(), e);
             }
         }
-        final URI uri = u;
-        final String target = source;
-        return new SourceImpl(source, this, new IDocumentLoader() {
+        final URI uri = uriTmp;
+        final String target = strTmp;
+        return new SourceImpl(strTmp, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
                 if (uri != null) {
