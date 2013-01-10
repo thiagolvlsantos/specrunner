@@ -87,7 +87,8 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                     args.add(str);
                     values.add(result);
                     types.add(result.getClass());
-                } else { // check predefined values
+                } else {
+                    // check predefined values
                     Object value = getPredefinedValues().get(str);
                     // if value is itself an expression should be evaluated
                     if (value != null && value instanceof String) {
@@ -103,7 +104,8 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                         args.add(str);
                         values.add(value);
                         types.add(value.getClass());
-                    } else { // check predefined classes
+                    } else {
+                        // check predefined classes
                         Class<?> clazz = getPredefinedClasses().get(str);
                         if (clazz != null) {
                             try {

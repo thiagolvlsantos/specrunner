@@ -120,7 +120,7 @@ public class SourceFactoryImpl implements ISourceFactory {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    throw new SourceException("Could not load the '" + obj.getClass() + "' source '" + obj + "'.", e);
+                    throw new SourceException("Could not load the '" + (obj != null ? obj.getClass() : null) + "' source '" + obj + "'.", e);
                 }
             }
         });
