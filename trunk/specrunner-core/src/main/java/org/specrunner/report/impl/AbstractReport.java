@@ -264,16 +264,16 @@ public abstract class AbstractReport implements IReporter {
      */
     protected Resume createResume(IResultSet result, Map<String, Object> model) {
         Long time = (Long) model.get(PipeTime.TIME);
-        Status status = result.getStatus();
+        Status s = result.getStatus();
         Resume r = createInstance(result, model);
         r.setIndex(index++);
         r.setTime(time);
         r.setTimestamp(model.get(PipeTimestamp.DATE));
         r.setInput(model.get(PipeInput.INPUT));
         r.setOutput(model.get("output"));
-        r.setStatus(status);
+        r.setStatus(s);
 
-        List<IResult> byStatus = result.filterByStatus(status);
+        List<IResult> byStatus = result.filterByStatus(s);
         r.setStatusCounter(byStatus.size());
 
         r.setStatusTotal(result.size());
