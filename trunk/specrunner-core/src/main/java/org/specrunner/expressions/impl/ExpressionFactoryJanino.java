@@ -91,7 +91,7 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                     // check predefined values
                     Object value = getPredefinedValues().get(str);
                     // if value is itself an expression should be evaluated
-                    if (value != null && value instanceof String) {
+                    if (value instanceof String) {
                         try {
                             value = UtilEvaluator.evaluate((String) value, context);
                         } catch (Exception e) {
