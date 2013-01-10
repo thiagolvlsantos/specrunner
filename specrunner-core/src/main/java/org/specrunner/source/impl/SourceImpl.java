@@ -128,8 +128,8 @@ public class SourceImpl implements ISource {
         if (uriBase == null) {
             return null;
         }
-        URI uri = uriBase.resolve(other.getString());
-        return factory.newSource(uri.toString());
+        URI uriTmp = uriBase.resolve(other.getString());
+        return factory.newSource(uriTmp.toString());
     }
 
     @Override

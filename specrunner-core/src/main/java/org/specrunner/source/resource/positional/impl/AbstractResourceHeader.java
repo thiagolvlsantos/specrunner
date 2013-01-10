@@ -89,7 +89,7 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                     Element tag = getHeaderTag();
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     UtilIO.writeAllTo(urls, out);
-                    String content = out.toString();
+                    String content = out.toString("UTF-8");
                     out.close();
                     tag.appendChild(content);
                     if (getPosition().getPlace() == EPlace.START) {

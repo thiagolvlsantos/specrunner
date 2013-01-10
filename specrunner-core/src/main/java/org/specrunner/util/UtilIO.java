@@ -212,9 +212,9 @@ public final class UtilIO {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("(" + cm.getThread() + ") read keybord (press 'Enter' to go on)...");
         }
-        System.in.read(new byte[READ_SIZE]);
+        int count = System.in.read(new byte[READ_SIZE]);
         if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("(" + cm.getThread() + ") done...");
+            UtilLog.LOG.info("(" + cm.getThread() + ") done..." + count);
         }
     }
 }
