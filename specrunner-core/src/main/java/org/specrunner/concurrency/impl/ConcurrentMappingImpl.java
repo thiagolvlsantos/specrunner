@@ -32,7 +32,7 @@ public class ConcurrentMappingImpl implements IConcurrentMapping {
 
     @Override
     public Object get(String name, Object value) {
-        String result = String.valueOf(value) + getThread();
+        String result = value + getThread();
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Mapping '" + name + "'='" + value + "' to '" + result);
         }

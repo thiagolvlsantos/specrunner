@@ -88,10 +88,11 @@ public class DefaultAlignmentException extends AlignmentException {
     /**
      * Provide detailed information of alignment.
      * 
-     * @param td
+     * @param e
      *            The target node.
      */
-    protected void addDetail(Element td) {
+    protected void addDetail(Element e) {
+        Element td = e;
         Element tr;
         Element inner;
         Element input = new Element("input");

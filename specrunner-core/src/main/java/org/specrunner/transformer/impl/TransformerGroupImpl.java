@@ -33,9 +33,10 @@ public class TransformerGroupImpl extends CompositeImpl<ITransformerGroup, ITran
 
     @Override
     public ISource transform(ISource source) throws SourceException {
+        ISource tmp = source;
         for (ITransformer t : getChildren()) {
-            source = t.transform(source);
+            tmp = t.transform(tmp);
         }
-        return source;
+        return tmp;
     }
 }

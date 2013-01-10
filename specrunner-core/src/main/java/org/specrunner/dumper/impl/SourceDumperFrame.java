@@ -95,17 +95,17 @@ public class SourceDumperFrame extends AbstractSourceDumperFile {
 
             horizontalFrame.appendChild(frameTop);
 
-            { // VERTICAL FRAME
+            // VERTICAL FRAME
+            {
                 Element verticalFrame = new Element("frameset");
                 verticalFrame.addAttribute(new Attribute("name", "middle"));
                 verticalFrame.addAttribute(new Attribute("cols", centerHorizontalProportion + "," + rightProportion));
                 horizontalFrame.appendChild(verticalFrame);
                 {
-
                     // CENTER
                     Element frameCenter = new Element("frame");
                     frameCenter.addAttribute(new Attribute("name", "center"));
-                    frameCenter.addAttribute(new Attribute("src", "../../" + String.valueOf(model.get(CENTER_FRAME))));
+                    frameCenter.addAttribute(new Attribute("src", "../../" + model.get(CENTER_FRAME)));
                     frameCenter.addAttribute(new Attribute("scrolling", "auto"));
                     verticalFrame.appendChild(frameCenter);
 

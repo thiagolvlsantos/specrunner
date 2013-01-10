@@ -154,6 +154,7 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                         trMem1.appendChild(thMem1);
                     }
                     // trMem2
+                    String patternMemory = "%d (%s)";
                     {
                         Element trMem2 = new Element("tr");
                         tableMem.appendChild(trMem2);
@@ -162,11 +163,11 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                         trMem2.appendChild(tdMem2);
 
                         tdMem2 = new Element("td");
-                        tdMem2.appendChild(String.format("%d (%s)", freeBefore, nf.format(freePercBefore)));
+                        tdMem2.appendChild(String.format(patternMemory, freeBefore, nf.format(freePercBefore)));
                         trMem2.appendChild(tdMem2);
 
                         tdMem2 = new Element("td");
-                        tdMem2.appendChild(String.format("%d (%s)", freeAfter, nf.format(freePercAfter)));
+                        tdMem2.appendChild(String.format(patternMemory, freeAfter, nf.format(freePercAfter)));
                         trMem2.appendChild(tdMem2);
 
                         tdMem2 = new Element("td");
@@ -181,10 +182,10 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
                         tdMem3.appendChild("Total");
                         trMem3.appendChild(tdMem3);
                         tdMem3 = new Element("td");
-                        tdMem3.appendChild(String.format("%d (%s)", totalBefore, nf.format(totalPercBefore)));
+                        tdMem3.appendChild(String.format(patternMemory, totalBefore, nf.format(totalPercBefore)));
                         trMem3.appendChild(tdMem3);
                         tdMem3 = new Element("td");
-                        tdMem3.appendChild(String.format("%d (%s)", totalAfter, nf.format(totalPercAfter)));
+                        tdMem3.appendChild(String.format(patternMemory, totalAfter, nf.format(totalPercAfter)));
                         trMem3.appendChild(tdMem3);
                         tdMem3 = new Element("td");
                         tdMem3.appendChild(String.format("%d", totalAfter - totalBefore));

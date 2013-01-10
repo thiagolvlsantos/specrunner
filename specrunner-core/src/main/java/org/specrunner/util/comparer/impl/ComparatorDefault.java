@@ -39,15 +39,6 @@ public class ComparatorDefault implements IComparator {
 
     @Override
     public boolean match(Object expected, Object received) {
-        if (expected == received) {
-            return true;
-        }
-        if (expected == null) {
-            return false;
-        }
-        if (received == null) {
-            return false;
-        }
-        return expected.equals(received);
+        return expected == null ? received == null : expected.equals(received);
     }
 }
