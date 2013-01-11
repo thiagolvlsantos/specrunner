@@ -93,8 +93,6 @@ public class DefaultAlignmentException extends AlignmentException {
      */
     protected void addDetail(Element e) {
         Element td = e;
-        Element tr;
-        Element inner;
         Element input = new Element("input");
         String buttonId = "alg_" + System.currentTimeMillis() + "_" + System.nanoTime();
         input.addAttribute(new Attribute("type", "button"));
@@ -103,13 +101,37 @@ public class DefaultAlignmentException extends AlignmentException {
         input.addAttribute(new Attribute("class", "collapsable"));
         td.appendChild(input);
 
+        addTable(td, buttonId);
+    }
+
+    /**
+     * Add the error table.
+     * 
+     * @param td
+     *            The table place.
+     * @param buttonId
+     *            The id for the table.
+     */
+    private void addTable(Element td, String buttonId) {
+        Element tr = new Element("tr");
         Element table = new Element("table");
         table.addAttribute(new Attribute("class", "comparator"));
         table.addAttribute(new Attribute("id", buttonId + "_ref"));
         td.appendChild(table);
-        tr = new Element("tr");
         table.appendChild(tr);
+        addLabels(tr);
+        addComparison(tr);
+    }
 
+    /**
+     * Add label part.
+     * 
+     * @param tr
+     *            The line.
+     */
+    private void addLabels(Element tr) {
+        Element td;
+        Element inner;
         td = new Element("td");
         for (int i = 0; i < 2; i++) {
             Element span = new Element("span");
@@ -132,7 +154,15 @@ public class DefaultAlignmentException extends AlignmentException {
             }
         }
         tr.appendChild(td);
+    }
 
+    /**
+     * Add the comparison to a line.
+     * 
+     * @param tr
+     *            The line.
+     */
+    private void addComparison(Element tr) {
         StringBuilder a = aligner.getExpectedAligned();
         StringBuilder b = aligner.getReceivedAligned();
         StringBuilder aT = new StringBuilder();
@@ -147,16 +177,7 @@ public class DefaultAlignmentException extends AlignmentException {
                 i++;
             }
             if (aT.length() > 0) {
-                Element equals = new Element("td");
-                equals.addAttribute(new Attribute("class", "equals"));
-                equals.appendChild(aT.toString());
-                equals.appendChild(new Element("hr"));
-                equals.appendChild(bT.toString());
-                equals.appendChild(new Element("hr"));
-                equals.appendChild(aT.toString());
-                equals.appendChild(new Element("hr"));
-                equals.appendChild(bT.toString());
-                tr.appendChild(equals);
+                addEquals(tr, aT, bT);
             }
             aT.setLength(0);
             bT.setLength(0);
@@ -167,30 +188,69 @@ public class DefaultAlignmentException extends AlignmentException {
             }
             if (aT.length() > 0) {
                 for (int j = 0; j < aT.length(); j++) {
-                    Element notEquals = new Element("td");
-                    notEquals.addAttribute(new Attribute("class", "notequals"));
-                    notEquals.appendChild(aT.charAt(j) + "");
-                    notEquals.appendChild(new Element("hr"));
-                    notEquals.appendChild(bT.charAt(j) + "");
-                    notEquals.appendChild(new Element("hr"));
-                    notEquals.appendChild(aT.charAt(j) + "");
-                    if (aT.charAt(j) != aligner.getFillCharacter()) {
-                        Element span = new Element("span");
-                        span.addAttribute(new Attribute("class", "code"));
-                        span.appendChild("" + (int) aT.charAt(j));
-                        notEquals.appendChild(span);
-                    }
-                    notEquals.appendChild(new Element("hr"));
-                    notEquals.appendChild(bT.charAt(j) + "");
-                    if (bT.charAt(j) != aligner.getFillCharacter()) {
-                        Element span = new Element("span");
-                        span.addAttribute(new Attribute("class", "code"));
-                        span.appendChild("" + (int) bT.charAt(j));
-                        notEquals.appendChild(span);
-                    }
-                    tr.appendChild(notEquals);
+                    addNotEquals(j, tr, aT, bT);
                 }
             }
         }
+    }
+
+    /**
+     * Add a common part.
+     * 
+     * @param tr
+     *            The line.
+     * @param aT
+     *            Expected.
+     * @param bT
+     *            Received.
+     */
+    protected void addEquals(Element tr, StringBuilder aT, StringBuilder bT) {
+        Element equals = new Element("td");
+        equals.addAttribute(new Attribute("class", "equals"));
+        equals.appendChild(aT.toString());
+        equals.appendChild(new Element("hr"));
+        equals.appendChild(bT.toString());
+        equals.appendChild(new Element("hr"));
+        equals.appendChild(aT.toString());
+        equals.appendChild(new Element("hr"));
+        equals.appendChild(bT.toString());
+        tr.appendChild(equals);
+    }
+
+    /**
+     * Add a diferent part.
+     * 
+     * @param j
+     *            The index.
+     * @param tr
+     *            The line.
+     * @param aT
+     *            The expected.
+     * @param bT
+     *            The received.
+     */
+    protected void addNotEquals(int j, Element tr, StringBuilder aT, StringBuilder bT) {
+        Element notEquals = new Element("td");
+        notEquals.addAttribute(new Attribute("class", "notequals"));
+        notEquals.appendChild(aT.charAt(j) + "");
+        notEquals.appendChild(new Element("hr"));
+        notEquals.appendChild(bT.charAt(j) + "");
+        notEquals.appendChild(new Element("hr"));
+        notEquals.appendChild(aT.charAt(j) + "");
+        if (aT.charAt(j) != aligner.getFillCharacter()) {
+            Element span = new Element("span");
+            span.addAttribute(new Attribute("class", "code"));
+            span.appendChild("" + (int) aT.charAt(j));
+            notEquals.appendChild(span);
+        }
+        notEquals.appendChild(new Element("hr"));
+        notEquals.appendChild(bT.charAt(j) + "");
+        if (bT.charAt(j) != aligner.getFillCharacter()) {
+            Element span = new Element("span");
+            span.addAttribute(new Attribute("class", "code"));
+            span.appendChild("" + (int) bT.charAt(j));
+            notEquals.appendChild(span);
+        }
+        tr.appendChild(notEquals);
     }
 }
