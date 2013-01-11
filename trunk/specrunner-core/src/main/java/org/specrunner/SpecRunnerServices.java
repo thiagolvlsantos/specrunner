@@ -20,60 +20,14 @@ package org.specrunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.annotator.IAnnotatorFactory;
-import org.specrunner.annotator.impl.AnnotatorFactoryDefault;
-import org.specrunner.concurrency.IConcurrentMapping;
-import org.specrunner.concurrency.impl.ConcurrentMappingImpl;
-import org.specrunner.configuration.IConfigurationFactory;
-import org.specrunner.configuration.impl.ConfigurationFactoryImpl;
-import org.specrunner.context.IBlockFactory;
-import org.specrunner.context.IContextFactory;
-import org.specrunner.context.IContextPopulator;
-import org.specrunner.context.impl.BlockFactoryImpl;
-import org.specrunner.context.impl.ContextFactoryImpl;
-import org.specrunner.context.impl.ContextPopulatorImpl;
-import org.specrunner.dumper.ISourceDumperFactory;
-import org.specrunner.dumper.impl.SourceDumperFactoryDefault;
-import org.specrunner.expressions.IExpressionFactory;
-import org.specrunner.expressions.impl.ExpressionFactoryJanino;
-import org.specrunner.features.IFeatureManager;
-import org.specrunner.features.impl.FeatureManagerImpl;
-import org.specrunner.impl.SpecRunnerFactoryDefault;
-import org.specrunner.impl.SpecRunnerFactoryPluginDefault;
-import org.specrunner.listeners.IListenerManager;
-import org.specrunner.listeners.impl.ListenerManagerDefault;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.IPipelineFactory;
 import org.specrunner.pipeline.PipelineException;
-import org.specrunner.pipeline.impl.ChannelFactoryImpl;
-import org.specrunner.pipeline.impl.PipelineFactoryXOM;
-import org.specrunner.plugins.IPluginFactory;
-import org.specrunner.plugins.impl.factories.PluginFactoryGroupDefault;
-import org.specrunner.properties.IPropertyLoader;
-import org.specrunner.properties.impl.PropertyLoaderImpl;
-import org.specrunner.report.IReporterFactory;
-import org.specrunner.report.impl.ReporterFactoryDefault;
-import org.specrunner.result.IResultFactory;
-import org.specrunner.result.impl.ResultFactoryImpl;
-import org.specrunner.reuse.IReusableManager;
-import org.specrunner.reuse.impl.ReusableManagerImpl;
-import org.specrunner.runner.IRunnerFactory;
-import org.specrunner.runner.impl.RunnerFactoryDefault;
-import org.specrunner.source.ISourceFactory;
-import org.specrunner.source.impl.SourceFactoryImpl;
-import org.specrunner.source.resource.IResourceManagerFactory;
-import org.specrunner.source.resource.impl.ResourceManagerFactoryImpl;
-import org.specrunner.transformer.ITransformer;
-import org.specrunner.transformer.impl.TransformerImpl;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.aligner.IStringAlignerFactory;
-import org.specrunner.util.aligner.impl.StringAlignerFactoryImpl;
-import org.specrunner.util.comparer.IComparatorManager;
-import org.specrunner.util.comparer.impl.ComparatorManagerImpl;
-import org.specrunner.util.converter.IConverterManager;
-import org.specrunner.util.converter.impl.ConverterManagerImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Centralizes the services provided by the SpecRunner framework. To get full
@@ -100,6 +54,11 @@ public final class SpecRunnerServices {
     private final Map<Class<?>, Object> servicePool = new HashMap<Class<?>, Object>();
 
     /**
+     * Configuration.
+     */
+    private ApplicationContext context;
+
+    /**
      * Create a group of services provided by SpecRunner.
      */
     private SpecRunnerServices() {
@@ -116,60 +75,13 @@ public final class SpecRunnerServices {
      */
     private <T> T getDefault(Class<T> type) {
         Object result = null;
-        if (type == IPropertyLoader.class) {
-            result = new PropertyLoaderImpl();
-        } else if (type == IConfigurationFactory.class) {
-            result = new ConfigurationFactoryImpl();
-        } else if (type == IFeatureManager.class) {
-            result = new FeatureManagerImpl();
-        } else if (type == IConcurrentMapping.class) {
-            result = new ConcurrentMappingImpl();
-        } else if (type == IResourceManagerFactory.class) {
-            result = new ResourceManagerFactoryImpl();
-        } else if (type == IConverterManager.class) {
-            result = new ConverterManagerImpl();
-        } else if (type == IComparatorManager.class) {
-            result = new ComparatorManagerImpl();
-        } else if (type == ISourceFactory.class) {
-            result = new SourceFactoryImpl();
-        } else if (type == ITransformer.class) {
-            result = new TransformerImpl();
-        } else if (type == IPluginFactory.class) {
-            result = new PluginFactoryGroupDefault();
-        } else if (type == IBlockFactory.class) {
-            result = new BlockFactoryImpl();
-        } else if (type == IExpressionFactory.class) {
-            result = new ExpressionFactoryJanino();
-        } else if (type == IContextFactory.class) {
-            result = new ContextFactoryImpl();
-        } else if (type == IContextPopulator.class) {
-            result = new ContextPopulatorImpl();
-        } else if (type == IRunnerFactory.class) {
-            result = new RunnerFactoryDefault();
-        } else if (type == IResultFactory.class) {
-            result = new ResultFactoryImpl();
-        } else if (type == IAnnotatorFactory.class) {
-            result = new AnnotatorFactoryDefault();
-        } else if (type == ISourceDumperFactory.class) {
-            result = new SourceDumperFactoryDefault();
-        } else if (type == IStringAlignerFactory.class) {
-            result = new StringAlignerFactoryImpl();
-        } else if (type == IListenerManager.class) {
-            result = new ListenerManagerDefault();
-        } else if (type == IReusableManager.class) {
-            result = new ReusableManagerImpl();
-        } else if (type == IChannelFactory.class) {
-            result = new ChannelFactoryImpl();
-        } else if (type == IReporterFactory.class) {
-            result = new ReporterFactoryDefault();
-        } else if (type == IPipelineFactory.class) {
-            result = new PipelineFactoryXOM();
-        } else if (type == ISpecRunnerFactory.class) {
-            result = new SpecRunnerFactoryDefault();
-        } else if (type == ISpecRunnerFactoryPlugin.class) {
-            result = new SpecRunnerFactoryPluginDefault();
-        } else if (type == SpecRunnerServices.class) {
+        if (type == SpecRunnerServices.class) {
             result = this;
+        } else {
+            if (context == null) {
+                context = new ClassPathXmlApplicationContext("applicationContext-SR.xml");
+            }
+            result = context.getBean(type);
         }
         return type.cast(result);
     }

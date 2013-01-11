@@ -89,16 +89,9 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
 
     @Override
     public void setStrict(String feature, Object target) throws FeatureManagerException {
-        Object obj = get(feature);
-        if (obj != null) {
-            int pos = feature.lastIndexOf('.');
-            if (pos < 0) {
-                throw new FeatureManagerException("A feature should always end with a attribute name. i.e. '<any class name>.pause', current value:'" + feature + "'.");
-            }
-            String field = feature.substring(Math.min(pos + 1, feature.length())).trim();
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Trying to set feature '" + feature + "' with value '" + obj + "' to object '" + target + "' on field '" + field + "'.");
-            }
+        Object value = get(feature);
+        if (value != null) {
+            String field = getField(feature, target, value);
             PropertyDescriptor pd;
             try {
                 pd = PropertyUtils.getPropertyDescriptor(target, field);
@@ -111,29 +104,88 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Property descriptor '" + pd + "'.");
             }
-            Class<?> expectedType = pd.getPropertyType();
-            if (!expectedType.isAssignableFrom(obj.getClass())) {
-                throw new FeatureManagerException("Object associated to " + feature + " is not a " + expectedType + ", current feature value '" + obj + "' is " + obj.getClass() + ".");
+            checkType(feature, value, pd);
+            setValue(feature, value, target, field);
+        }
+    }
+
+    /**
+     * Recover the property name for the feature.
+     * 
+     * @param feature
+     *            The feature name.
+     * @param target
+     *            The target object.
+     * @param value
+     *            The value for the feature.
+     * @return The field name, if it exists.
+     * @throws FeatureManagerException
+     *             On field name recovery errors.
+     */
+    protected String getField(String feature, Object target, Object value) throws FeatureManagerException {
+        int pos = feature.lastIndexOf('.');
+        if (pos < 0) {
+            throw new FeatureManagerException("A feature should always end with a attribute name. i.e. '<any class name>.pause', current value:'" + feature + "'.");
+        }
+        String field = feature.substring(Math.min(pos + 1, feature.length())).trim();
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("Trying to set feature '" + feature + "' with value '" + value + "' to object '" + target + "' on field '" + field + "'.");
+        }
+        return field;
+    }
+
+    /**
+     * Check if the feature value is assignable to the property.
+     * 
+     * @param feature
+     *            The feature name.
+     * @param value
+     *            The value.
+     * @param pd
+     *            The property descriptor.
+     * @throws FeatureManagerException
+     *             On invalid feature type for the given value.
+     */
+    protected void checkType(String feature, Object value, PropertyDescriptor pd) throws FeatureManagerException {
+        Class<?> expectedType = pd.getPropertyType();
+        if (!expectedType.isAssignableFrom(value.getClass())) {
+            throw new FeatureManagerException("Object associated to " + feature + " is not a " + expectedType + ", current feature value '" + value + "' is " + value.getClass() + ".");
+        }
+    }
+
+    /**
+     * Set the value.
+     * 
+     * @param feature
+     *            The feature name.
+     * @param value
+     *            The feature value.
+     * @param target
+     *            The target object.
+     * @param field
+     *            The target field.
+     * @throws FeatureManagerException
+     *             On setting error.
+     */
+    protected void setValue(String feature, Object value, Object target, String field) throws FeatureManagerException {
+        try {
+            Boolean override = overrides.get(feature);
+            if (override != null && !override) {
+                Object old = BeanUtils.getProperty(value, field);
+                if (old == null) {
+                    BeanUtils.setProperty(target, field, value);
+                }
+            } else {
+                BeanUtils.setProperty(target, field, value);
             }
-            try {
-                Boolean override = overrides.get(feature);
-                if (override != null && !override) {
-                    Object old = BeanUtils.getProperty(obj, field);
-                    if (old == null) {
-                        BeanUtils.setProperty(target, field, obj);
-                    }
-                } else {
-                    BeanUtils.setProperty(target, field, obj);
-                }
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Feature '" + feature + "' set to object '" + target + ", current value is " + obj + ".");
-                }
-            } catch (Exception e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                throw new FeatureManagerException(e);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Feature '" + feature + "' set to object '" + target + ", current value is " + value + ".");
             }
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new FeatureManagerException(e);
         }
     }
 

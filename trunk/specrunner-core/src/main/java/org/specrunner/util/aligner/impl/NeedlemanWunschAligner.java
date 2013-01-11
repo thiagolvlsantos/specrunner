@@ -233,8 +233,7 @@ public class NeedlemanWunschAligner implements IStringAligner {
      * @return The penalty.
      */
     protected int penalty(int size) {
-        int d = -(size / 2);
-        return d;
+        return -(size / 2);
     }
 
     /**
