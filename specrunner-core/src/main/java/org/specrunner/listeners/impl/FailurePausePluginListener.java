@@ -145,15 +145,7 @@ public class FailurePausePluginListener extends AbstractPluginListener {
                         UtilLog.LOG.info("Errors:" + sb);
                     }
                     if (showDialog) {
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Click OK on dialog.");
-                        }
-                        if (frame == null) {
-                            frame = new JFrame("Error report");
-                        }
-                        frame.setVisible(true);
-                        JOptionPane.showMessageDialog(frame, sb);
-                        frame.setVisible(false);
+                        showDialog(sb);
                     } else {
                         UtilIO.pressKey();
                     }
@@ -164,5 +156,23 @@ public class FailurePausePluginListener extends AbstractPluginListener {
                 }
             }
         }
+    }
+
+    /**
+     * Show message dialog.
+     * 
+     * @param sb
+     *            The message.
+     */
+    protected void showDialog(StringBuilder sb) {
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Click OK on dialog.");
+        }
+        if (frame == null) {
+            frame = new JFrame("Error report");
+        }
+        frame.setVisible(true);
+        JOptionPane.showMessageDialog(frame, sb);
+        frame.setVisible(false);
     }
 }
