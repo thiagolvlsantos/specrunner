@@ -120,7 +120,7 @@ public abstract class PluginIfBranch extends AbstractPluginNamed {
         node.detach();
         if (condition || (hide != null && !hide)) {
             enc.appendChild(node);
-            parent.insertChild(enc, index++);
+            parent.insertChild(enc, index);
         }
     }
 

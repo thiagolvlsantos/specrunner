@@ -43,18 +43,61 @@ public class AnnotatorTitle implements IAnnotator {
             IBlock block = r.getBlock();
             if (block.hasNode()) {
                 Node node = block.getNode();
-                IWritable wrt = r.getWritable();
-                String info = null;
-                if (wrt != null && wrt.getInformation() != null && !wrt.getInformation().isEmpty()) {
-                    info = String.valueOf(wrt.getInformation());
-                }
-                if (r.getMessage() != null) {
-                    addTitle(node, r.getMessage() + (info != null ? ",INFO:" + info : ""), null);
-                }
-                if (r.getMessage() == null && r.getFailure() != null) {
-                    addTitle(node, r.getFailure().getMessage() + (info != null ? ",INFO:" + info : ""), r.getFailure());
-                }
+                String info = getInfo(r.getWritable());
+                addMessage(r, node, info);
+                addFailure(r, node, info);
             }
+        }
+    }
+
+    /**
+     * Return information.
+     * 
+     * @param wrt
+     *            The writable.
+     * @return A information as string.
+     */
+    private String getInfo(IWritable wrt) {
+        String info = null;
+        if (wrt != null && wrt.getInformation() != null && !wrt.getInformation().isEmpty()) {
+            info = String.valueOf(wrt.getInformation());
+        }
+        return info;
+    }
+
+    /**
+     * Add message.
+     * 
+     * @param r
+     *            The result.
+     * @param node
+     *            The node.
+     * @param info
+     *            String information.
+     * @throws AnnotatorException
+     *             On annotation errors.
+     */
+    private void addMessage(IResult r, Node node, String info) throws AnnotatorException {
+        if (r.getMessage() != null) {
+            addTitle(node, r.getMessage() + (info != null ? ",INFO:" + info : ""), null);
+        }
+    }
+
+    /**
+     * Add failure information.
+     * 
+     * @param r
+     *            The result set.
+     * @param node
+     *            The node.
+     * @param info
+     *            String information.
+     * @throws AnnotatorException
+     *             On annotation errors.
+     */
+    private void addFailure(IResult r, Node node, String info) throws AnnotatorException {
+        if (r.getMessage() == null && r.getFailure() != null) {
+            addTitle(node, r.getFailure().getMessage() + (info != null ? ",INFO:" + info : ""), r.getFailure());
         }
     }
 

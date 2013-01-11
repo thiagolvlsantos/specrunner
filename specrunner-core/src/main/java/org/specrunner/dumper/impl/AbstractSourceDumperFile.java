@@ -295,10 +295,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      *             On enconding errors.
      */
     protected Serializer getSerializer(OutputStream fr) throws UnsupportedEncodingException {
-        Serializer sr = new Serializer(fr, charset);
-        // increase performance of execution.
-        // sr.setIndent(GAP);
-        return sr;
+        return new Serializer(fr, charset);
     }
 
     /**

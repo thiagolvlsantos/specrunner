@@ -301,7 +301,7 @@ public class RunnerImpl implements IRunner {
             }
             // sleep if required
             doSleep(plugin, context);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
