@@ -58,44 +58,10 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
         }
         try {
             clean(dir);
-            int i = 0;
+            int index = 0;
             for (IResult r : result) {
-                IWritable w = r.getWritable();
-                if (w != null) {
-                    if (!dir.exists() && !dir.mkdirs()) {
-                        throw new ResultException("Could not create details outputFile directory " + dir + ".");
-                    }
-                    try {
-                        File file = new File(dir, "" + i);
-                        Map<String, String> references = w.writeTo(file.getAbsolutePath());
-                        IBlock block = r.getBlock();
-                        if (block.hasNode()) {
-                            Node node = block.getNode();
-                            ParentNode parent = node instanceof ParentNode ? (ParentNode) node : node.getParent();
-                            for (Entry<String, String> e : references.entrySet()) {
-                                parent.appendChild(new Text(" "));
-                                Element link = new Element("a");
-                                link.addAttribute(new Attribute("class", "sr_" + e.getKey()));
-                                link.addAttribute(new Attribute("href", e.getValue()));
-                                link.addAttribute(new Attribute("target", e.getKey() + "_" + i));
-                                String text = (w.getInformation() != null ? (String) w.getInformation().get(LABEL_FIELD) : null);
-                                if (text != null) {
-                                    text = e.getKey() + " " + text;
-                                } else {
-                                    text = e.getKey();
-                                }
-                                link.appendChild(text);
-                                parent.appendChild(link);
-                            }
-                        }
-                    } catch (Exception e) {
-                        // best effort, do not abort on errors
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e.getMessage(), e);
-                        }
-                    }
-                }
-                i++;
+                addWritable(dir, index, r);
+                index++;
             }
             if (dir.exists() && UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("WRITABLES SAVED TO " + dir.getAbsolutePath());
@@ -105,6 +71,72 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
             throw new SourceDumperException(e);
+        }
+    }
+
+    /**
+     * Write elements.
+     * 
+     * @param dir
+     *            The snapshot file.
+     * @param index
+     *            The index.
+     * @param r
+     *            The result set.
+     * @throws ResultException
+     *             On result exception.
+     */
+    protected void addWritable(File dir, int index, IResult r) throws ResultException {
+        IWritable w = r.getWritable();
+        if (w != null) {
+            if (!dir.exists() && !dir.mkdirs()) {
+                throw new ResultException("Could not create details outputFile directory " + dir + ".");
+            }
+            try {
+                File file = new File(dir, "" + index);
+                Map<String, String> references = w.writeTo(file.getAbsolutePath());
+                IBlock block = r.getBlock();
+                if (block.hasNode()) {
+                    addElement(index, w, references, block);
+                }
+            } catch (Exception e) {
+                // best effort, do not abort on errors
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add element parts of writable elements.
+     * 
+     * @param index
+     *            The index.
+     * @param w
+     *            The writable.
+     * @param references
+     *            A mapping of references.
+     * @param block
+     *            The block.
+     */
+    protected void addElement(int index, IWritable w, Map<String, String> references, IBlock block) {
+        Node node = block.getNode();
+        ParentNode parent = node instanceof ParentNode ? (ParentNode) node : node.getParent();
+        for (Entry<String, String> e : references.entrySet()) {
+            parent.appendChild(new Text(" "));
+            Element link = new Element("a");
+            link.addAttribute(new Attribute("class", "sr_" + e.getKey()));
+            link.addAttribute(new Attribute("href", e.getValue()));
+            link.addAttribute(new Attribute("target", e.getKey() + "_" + index));
+            String text = (w.getInformation() != null ? (String) w.getInformation().get(LABEL_FIELD) : null);
+            if (text != null) {
+                text = e.getKey() + " " + text;
+            } else {
+                text = e.getKey();
+            }
+            link.appendChild(text);
+            parent.appendChild(link);
         }
     }
 }

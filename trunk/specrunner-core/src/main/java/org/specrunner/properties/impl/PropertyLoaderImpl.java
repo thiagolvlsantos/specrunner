@@ -45,6 +45,21 @@ public class PropertyLoaderImpl implements IPropertyLoader {
         } catch (IOException e) {
             throw new PropertyLoaderException(e);
         }
+        loadUrls(files, result);
+        return result;
+    }
+
+    /**
+     * Load given URLs to a properties object.
+     * @param files
+     *            A list of file by URLs.
+     * @param result
+     *            The properties.
+     * 
+     * @throws PropertyLoaderException
+     *             On loading erros.
+     */
+    protected void loadUrls(List<URL> files, Properties result) throws PropertyLoaderException {
         for (URL url : files) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading properties:" + url);
@@ -76,6 +91,5 @@ public class PropertyLoaderImpl implements IPropertyLoader {
                 }
             }
         }
-        return result;
     }
 }
