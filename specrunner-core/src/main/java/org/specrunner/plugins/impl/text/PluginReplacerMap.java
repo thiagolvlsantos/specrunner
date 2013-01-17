@@ -22,11 +22,12 @@ import java.util.Map;
 import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.ParentNode;
+import nu.xom.Text;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -54,7 +55,7 @@ public class PluginReplacerMap extends AbstractPlugin {
             return ENext.DEEP;
         }
         Node node = context.getNode();
-        Nodes replaced = UtilEvaluator.replaceMap(node.getValue(), (Map<String, Node>) map);
+        Nodes replaced = replaceMap(node.getValue(), (Map<String, Node>) map);
         if (replaced.size() > 1) {
             ParentNode parent = node.getParent();
             int index = parent.indexOf(node);
@@ -64,5 +65,47 @@ public class PluginReplacerMap extends AbstractPlugin {
             }
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Replaces text with corresponding values in map.
+     * 
+     * @param text
+     *            The text to be replace.
+     * @param map
+     *            The map of values to be replace.
+     * @return The nodes which represents the replaced text.
+     * @throws PluginException
+     *             On replacement errors.
+     */
+    public Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
+        Nodes nodes = new Nodes();
+        int pos1 = 0;
+        int pos2 = text.indexOf(UtilEvaluator.START_DATA);
+        int pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
+        while (pos2 >= 0 & pos3 > pos2) {
+            nodes.append(new Text(text.substring(pos1, pos2)));
+            String name = text.substring(pos2, pos3 + 1);
+            Node n = map.get(name);
+            if (n != null) {
+                if (n instanceof ParentNode) {
+                    ParentNode pn = (ParentNode) n;
+                    for (int i = 0; i < pn.getChildCount(); i++) {
+                        nodes.append(pn.getChild(i).copy());
+                    }
+                } else {
+                    nodes.append(n.copy());
+                }
+            } else {
+                nodes.append(new Text(text.substring(pos2, pos3)));
+            }
+            pos1 = pos3 + 1;
+            pos2 = text.indexOf(UtilEvaluator.START_DATA, pos1);
+            pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
+        }
+        if (pos1 != text.length() + 1) {
+            nodes.append(new Text(text.substring(pos1, text.length())));
+        }
+        return nodes;
     }
 }

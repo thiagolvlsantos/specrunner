@@ -17,13 +17,6 @@
  */
 package org.specrunner.util;
 
-import java.util.Map;
-
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.ParentNode;
-import nu.xom.Text;
-
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
@@ -211,47 +204,5 @@ public final class UtilEvaluator {
         }
         sb.append(text.substring(pos1, text.length()));
         return sb.toString();
-    }
-
-    /**
-     * Replaces text with corresponding values in map.
-     * 
-     * @param text
-     *            The text to be replace.
-     * @param map
-     *            The map of values to be replace.
-     * @return The nodes which represents the replaced text.
-     * @throws PluginException
-     *             On replacement errors.
-     */
-    public static Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
-        Nodes nodes = new Nodes();
-        int pos1 = 0;
-        int pos2 = text.indexOf(UtilEvaluator.START_DATA);
-        int pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
-        while (pos2 >= 0 & pos3 > pos2) {
-            nodes.append(new Text(text.substring(pos1, pos2)));
-            String name = text.substring(pos2, pos3 + 1);
-            Node n = map.get(name);
-            if (n != null) {
-                if (n instanceof ParentNode) {
-                    ParentNode pn = (ParentNode) n;
-                    for (int i = 0; i < pn.getChildCount(); i++) {
-                        nodes.append(pn.getChild(i).copy());
-                    }
-                } else {
-                    nodes.append(n.copy());
-                }
-            } else {
-                nodes.append(new Text(text.substring(pos2, pos3)));
-            }
-            pos1 = pos3 + 1;
-            pos2 = text.indexOf(UtilEvaluator.START_DATA, pos1);
-            pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
-        }
-        if (pos1 != text.length() + 1) {
-            nodes.append(new Text(text.substring(pos1, text.length())));
-        }
-        return nodes;
     }
 }
