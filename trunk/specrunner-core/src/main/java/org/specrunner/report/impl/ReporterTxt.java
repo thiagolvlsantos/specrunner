@@ -19,6 +19,10 @@ package org.specrunner.report.impl;
 
 import java.util.List;
 
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
+
 /**
  * Basic TXT implementation.
  * 
@@ -29,31 +33,35 @@ public class ReporterTxt extends AbstractReport {
 
     @Override
     protected void dumpStart() {
-        System.out.println("+-------------------------------- TXT REPORT -------------------------------------+");
+        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        out.print("+-------------------------------- TXT REPORT -------------------------------------+\n");
     }
 
     @Override
     protected void dumpPart(String header, List<Resume> list) {
-        System.out.printf("\t+---------------- TXT (%s)---------------------+%n", header);
+        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        out.printf("\t+---------------- TXT (%s)---------------------+%n", header);
         String pattern = "\t%10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s%n";
-        System.out.printf(pattern, "", "#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "INPUT <-> OUTPUT");
+        out.printf(pattern, "", "#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "INPUT <-> OUTPUT");
         pattern = "\t%10s %10s | %10s | %7.2f | %23s  | %-15s | %-10s | %10s%n";
         for (Resume r : list) {
-            System.out.printf(pattern, "", r.getIndex(), r.getTime(), asPercentage(r.getTime()), r.getTimestamp(), r.getStatus().getName() + " " + r.getStatusCounter() + "/" + r.getStatusTotal(), r.getAssertionCounter() + "/" + r.getAssertionTotal(), r.getInput() + " <-> " + r.getOutput());
+            out.printf(pattern, "", r.getIndex(), r.getTime(), asPercentage(r.getTime()), r.getTimestamp(), r.getStatus().getName() + " " + r.getStatusCounter() + "/" + r.getStatusTotal(), r.getAssertionCounter() + "/" + r.getAssertionTotal(), r.getInput() + " <-> " + r.getOutput());
         }
-        System.out.println("\t          ----------------------------------");
+        out.print("\t          ----------------------------------\n");
         pattern = "\t%10s %10s : %10d (AVG: %.2f)%n";
-        System.out.printf(pattern, "", "TOTAL", total, ((double) total / (list.isEmpty() ? 1 : list.size())));
-        System.out.printf("\t+---------------------%s-----------------------+%n", "");
+        out.printf(pattern, "", "TOTAL", total, ((double) total / (list.isEmpty() ? 1 : list.size())));
+        out.printf("\t+---------------------%s-----------------------+%n", "");
     }
 
     @Override
     protected void dumpResume(String resume) {
-        System.out.print(resume);
+        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        out.print(resume);
     }
 
     @Override
     protected void dumpEnd() {
-        System.out.println("+---------------------------------------------------------------------------------+");
+        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        out.print("+---------------------------------------------------------------------------------+\n");
     }
 }

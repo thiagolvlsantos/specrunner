@@ -34,6 +34,8 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.positional.Position;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
 
 /**
  * Dump the central part of the result report (the 'center' element of the
@@ -54,7 +56,8 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         try {
             addLinkToFrame(source.getDocument(), result, model);
             saveTo(source.getDocument(), output);
-            System.out.println("Output (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): " + output);
+            IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+            out.println("Output (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): " + output);
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("DEFAULT   SAVED TO " + output.getAbsolutePath());
             }

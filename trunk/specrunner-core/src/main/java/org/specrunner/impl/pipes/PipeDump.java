@@ -28,6 +28,8 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
 
 /**
  * Make dumpers dump. :)
@@ -69,8 +71,9 @@ public class PipeDump implements IPipe {
      *            The input.
      */
     protected void messageBefore(String input) {
-        System.out.println();
-        System.out.println(" Input " + getNome() + ": " + (input != null ? input.replace('/', File.separatorChar) : "null"));
+        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        out.println("");
+        out.println(" Input " + getNome() + ": " + (input != null ? input.replace('/', File.separatorChar) : "null"));
     }
 
     /**
@@ -91,8 +94,9 @@ public class PipeDump implements IPipe {
      *            The result set.
      */
     protected void messageAfter(Map<String, Object> info, IResultSet result) {
-        System.out.printf("Result " + getNome() + ": %s \n", result.asString());
-        System.out.printf("    In " + getNome() + ": %d ms \n", info.get(PipeTime.TIME));
-        System.out.printf("    At " + getNome() + ": %s \n", info.get(PipeTimestamp.DATE));
+        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        out.printf("Result " + getNome() + ": %s \n", result.asString());
+        out.printf("    In " + getNome() + ": %d ms \n", info.get(PipeTime.TIME));
+        out.printf("    At " + getNome() + ": %s \n", info.get(PipeTimestamp.DATE));
     }
 }

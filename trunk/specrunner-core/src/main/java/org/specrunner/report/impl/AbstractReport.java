@@ -39,6 +39,7 @@ import org.specrunner.report.IReporter;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.util.output.IOutputFactory;
 
 /**
  * Generic extractor of usefull information for reporter dumps.
@@ -161,7 +162,7 @@ public abstract class AbstractReport implements IReporter {
     @Override
     public String resume() {
         String r = resume(false);
-        System.out.print(r);
+        SpecRunnerServices.get(IOutputFactory.class).currentOutput().print(r);
         return r;
     }
 
