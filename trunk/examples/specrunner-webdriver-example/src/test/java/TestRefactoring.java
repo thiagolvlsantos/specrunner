@@ -14,8 +14,14 @@ public class TestRefactoring {
     public void play() throws Exception {
         IPluginGroup group = new PluginGroupImpl();
 
-        group.add(new PluginBrowser().set("webdriverfactory", WebDriverFactoryChrome.class.getName()).set("reuse", Boolean.TRUE));
-        group.add(new PluginOpen().set("url", "http://www.google.com"));
+        PluginBrowser pluginBrowser = new PluginBrowser();
+        pluginBrowser.setWebdriver(WebDriverFactoryChrome.class.getName());
+        pluginBrowser.setReuse(Boolean.TRUE);
+        group.add(pluginBrowser);
+
+        PluginOpen pluginOpen = new PluginOpen();
+        pluginOpen.setUrl("http://www.google.com");
+        group.add(pluginOpen);
 
         PluginType type = new PluginType();
         type.setValue("buscar");

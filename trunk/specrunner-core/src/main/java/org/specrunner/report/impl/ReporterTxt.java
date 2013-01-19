@@ -32,14 +32,14 @@ import org.specrunner.util.output.IOutputFactory;
 public class ReporterTxt extends AbstractReport {
 
     @Override
-    protected void dumpStart() {
-        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+    protected void dumpStart(SpecRunnerServices services) {
+        IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print("+-------------------------------- TXT REPORT -------------------------------------+\n");
     }
 
     @Override
-    protected void dumpPart(String header, List<Resume> list) {
-        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+    protected void dumpPart(SpecRunnerServices services, String header, List<Resume> list) {
+        IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.printf("\t+---------------- TXT (%s)---------------------+%n", header);
         String pattern = "\t%10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s%n";
         out.printf(pattern, "", "#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "INPUT <-> OUTPUT");
@@ -54,14 +54,14 @@ public class ReporterTxt extends AbstractReport {
     }
 
     @Override
-    protected void dumpResume(String resume) {
-        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+    protected void dumpResume(SpecRunnerServices services, String resume) {
+        IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print(resume);
     }
 
     @Override
-    protected void dumpEnd() {
-        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+    protected void dumpEnd(SpecRunnerServices services) {
+        IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print("+---------------------------------------------------------------------------------+\n");
     }
 }

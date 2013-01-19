@@ -306,20 +306,23 @@ public abstract class AbstractReport implements IReporter {
         if (!resumes.isEmpty()) {
             setFeatures(services);
             synchronized (LOCK) {
-                dumpStart();
+                dumpStart(services);
                 for (ReportPart rp : parts) {
-                    dumpPart(rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                    dumpPart(services, rp.getHeader(), orderedList(resumes, rp.getComparator()));
                 }
-                dumpResume(resume(true));
-                dumpEnd();
+                dumpResume(services, resume(true));
+                dumpEnd(services);
             }
         }
     }
 
     /**
      * Dump report starting.
+     * 
+     * @param services
+     *            Current instance.
      */
-    protected abstract void dumpStart();
+    protected abstract void dumpStart(SpecRunnerServices services);
 
     /**
      * Creates a copy of the resume list.
@@ -342,25 +345,32 @@ public abstract class AbstractReport implements IReporter {
     /**
      * Dump the resume declaration.
      * 
+     * @param services
+     *            Current instance.
      * @param header
      *            The header.
      * @param list
      *            The list of resumes.
      */
-    protected abstract void dumpPart(String header, List<Resume> list);
+    protected abstract void dumpPart(SpecRunnerServices services, String header, List<Resume> list);
 
     /**
      * Dump resume.
      * 
+     * @param services
+     *            Current instance.
      * @param resume
      *            Resume information.
      */
-    protected abstract void dumpResume(String resume);
+    protected abstract void dumpResume(SpecRunnerServices services, String resume);
 
     /**
      * Dump report ending.
+     * 
+     * @param services
+     *            Current instance.
      */
-    protected abstract void dumpEnd();
+    protected abstract void dumpEnd(SpecRunnerServices services);
 
     /**
      * Returns a time as percentage.

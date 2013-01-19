@@ -220,25 +220,6 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
         this.threadsafe = threadsafe;
     }
 
-    /**
-     * Set a parameter value.
-     * 
-     * @param <T>
-     *            The plugin type.
-     * @param name
-     *            The name.
-     * @param value
-     *            The value.
-     * @return The plugin instance.
-     * @throws Exception
-     *             On setting errors.
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends AbstractPlugin> T set(String name, Object value) throws Exception {
-        parameters.setParameter(name, value);
-        return (T) this;
-    }
-
     @Override
     public String toString() {
         return getClass().getSimpleName();
