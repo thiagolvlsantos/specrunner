@@ -139,11 +139,9 @@ public class SpecRunnerParametrized {
     /**
      * Runs a specification.
      * 
-     * @throws Exception
-     *             On execution errors.
      */
     @Test
-    public void run() throws Exception {
+    public void run() {
         SpecRunnerJUnit.defaultRun(String.valueOf(entry.input), String.valueOf(entry.output), entry.cfg);
     }
 

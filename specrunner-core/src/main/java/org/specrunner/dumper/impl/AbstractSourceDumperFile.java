@@ -56,13 +56,13 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     public static final int GAP = 4;
 
     /**
-     * The output directory. The default value is 'src/test/resources/outcome'.
+     * The output directory. The default value is 'src/test/outcome'.
      */
     public static final String FEATURE_OUTPUT_DIRECTORY = AbstractSourceDumperFile.class.getName() + ".outputDirectory";
     /**
      * Default output directory.
      */
-    protected File outputDirectory = new File("src/test/resources/outcome");
+    protected File outputDirectory = new File("src/test/outcome");
 
     /**
      * The output file name. The default name is the same of the input file.
