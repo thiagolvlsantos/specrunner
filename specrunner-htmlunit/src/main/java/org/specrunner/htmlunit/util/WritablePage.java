@@ -57,6 +57,11 @@ public class WritablePage implements IWritable {
         this(null, page);
     }
 
+    @Override
+    public boolean hasInformation() {
+        return information != null && !information.isEmpty();
+    }
+
     /**
      * The writable with extra information plus client page.
      * 

@@ -28,6 +28,14 @@ import java.util.Map;
 public interface IWritable {
 
     /**
+     * If writable has information.
+     * 
+     * @return true, if has information (non null and not empty), false,
+     *         otherwise.
+     */
+    boolean hasInformation();
+
+    /**
      * Extra information mapping.
      * 
      * @return The information.

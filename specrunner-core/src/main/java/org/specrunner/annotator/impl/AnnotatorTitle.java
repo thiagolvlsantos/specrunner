@@ -59,7 +59,7 @@ public class AnnotatorTitle implements IAnnotator {
      */
     private String getInfo(IWritable wrt) {
         String info = null;
-        if (wrt != null && wrt.getInformation() != null && !wrt.getInformation().isEmpty()) {
+        if (wrt != null && wrt.hasInformation()) {
             info = String.valueOf(wrt.getInformation());
         }
         return info;
@@ -78,7 +78,7 @@ public class AnnotatorTitle implements IAnnotator {
      *             On annotation errors.
      */
     private void addMessage(IResult r, Node node, String info) throws AnnotatorException {
-        if (r.getMessage() != null) {
+        if (r.hasMessage()) {
             addTitle(node, r.getMessage() + (info != null ? ",INFO:" + info : ""), null);
         }
     }
@@ -96,7 +96,7 @@ public class AnnotatorTitle implements IAnnotator {
      *             On annotation errors.
      */
     private void addFailure(IResult r, Node node, String info) throws AnnotatorException {
-        if (r.getMessage() == null && r.getFailure() != null) {
+        if (!r.hasMessage() && r.hasFailure()) {
             addTitle(node, r.getFailure().getMessage() + (info != null ? ",INFO:" + info : ""), r.getFailure());
         }
     }

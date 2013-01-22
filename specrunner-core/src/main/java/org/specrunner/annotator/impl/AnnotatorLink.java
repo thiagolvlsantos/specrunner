@@ -41,11 +41,8 @@ public class AnnotatorLink implements IAnnotator {
         int stackIndex = 1;
         for (IResult r : result) {
             IBlock block = r.getBlock();
-            if (block.hasNode()) {
-                Node node = block.getNode();
-                if (r.getFailure() != null) {
-                    addLinkToError(node, stackIndex++);
-                }
+            if (block.hasNode() && r.hasFailure()) {
+                addLinkToError(block.getNode(), stackIndex++);
             }
         }
     }
