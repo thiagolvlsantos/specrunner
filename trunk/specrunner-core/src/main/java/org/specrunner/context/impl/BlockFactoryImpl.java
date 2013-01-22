@@ -37,6 +37,19 @@ public class BlockFactoryImpl implements IBlockFactory {
 
     @Override
     public IBlock newBlock(Node element, IPlugin plugin) {
+        check(element, plugin);
+        return newBlock(element, plugin, new HashMap<String, Object>());
+    }
+
+    /**
+     * Check block items.
+     * 
+     * @param element
+     *            The element.
+     * @param plugin
+     *            The plugin.
+     */
+    protected void check(Node element, IPlugin plugin) {
         if (element == null && plugin == null) {
             RuntimeException re = new IllegalArgumentException();
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -44,18 +57,11 @@ public class BlockFactoryImpl implements IBlockFactory {
             }
             throw re;
         }
-        return newBlock(element, plugin, new HashMap<String, Object>());
     }
 
     @Override
     public IBlock newBlock(Node element, IPlugin plugin, Map<String, Object> map) {
-        if (element == null && plugin == null) {
-            RuntimeException re = new IllegalArgumentException();
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(re.getMessage(), re);
-            }
-            throw re;
-        }
+        check(element, plugin);
         return new BlockImpl(element, plugin, map);
     }
 }

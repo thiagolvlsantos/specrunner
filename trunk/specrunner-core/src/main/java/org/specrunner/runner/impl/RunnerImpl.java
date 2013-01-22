@@ -182,8 +182,8 @@ public class RunnerImpl implements IRunner {
      *             On execution errors.
      */
     protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
-        List<INodeListener> nListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
-        ENext doNode = nodeStart(node, context, result, nListeners);
+        List<INodeListener> nodeListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
+        ENext doNode = nodeStart(node, context, result, nodeListeners);
         // if listener were used and they said to skip
         if (doNode == ENext.SKIP) {
             if (UtilLog.LOG.isInfoEnabled()) {
@@ -193,7 +193,6 @@ public class RunnerImpl implements IRunner {
         }
         IPlugin plugin = null;
         IBlock block = null;
-        boolean ignored = false;
         try {
             IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
             if (previous == null) {
@@ -213,7 +212,6 @@ public class RunnerImpl implements IRunner {
                         UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
                     }
                     result.addResult(Ignored.INSTANCE, block, "This plugin has been disabled by our own choice.\n Disabled plugins:" + disabledAliases + ".\n Enabled plugins:" + enabledAliases + ".\n To set disabled or accepted plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)). The same approach for feature IRunner.FEATURE_ENABLED_ALIASES.");
-                    ignored = true;
                     return;
                 }
             }
@@ -234,23 +232,7 @@ public class RunnerImpl implements IRunner {
             initialization(context, result, plugin, listeners);
             // conditional execution
             if (checkConditional(plugin, context)) {
-                // perform before start
-                for (IPluginListener sl : listeners) {
-                    sl.onBeforeStart(plugin, context, result);
-                }
-                ENext next = null;
-                try {
-                    long time = System.currentTimeMillis();
-                    // perform start
-                    next = plugin.doStart(context, result);
-                    // check step timeout
-                    checkTimeout(context, result, plugin, time, "doStart()");
-                } finally {
-                    // perform after start
-                    for (IPluginListener sl : listeners) {
-                        sl.onAfterStart(plugin, context, result);
-                    }
-                }
+                ENext next = start(context, result, plugin, listeners);
                 // if plugin indicates to go deeper in node and node has
                 // children.
                 if (node != null && next == ENext.DEEP && block.hasChildren()) {
@@ -276,22 +258,7 @@ public class RunnerImpl implements IRunner {
                         }
                     }
                 }
-                // perform before end
-                for (IPluginListener sl : listeners) {
-                    sl.onBeforeEnd(plugin, context, result);
-                }
-                try {
-                    final long time = System.currentTimeMillis();
-                    // perform end
-                    plugin.doEnd(context, result);
-                    // check step timeout
-                    checkTimeout(context, result, plugin, time, "doEnd()");
-                } finally {
-                    // perform after end
-                    for (IPluginListener sl : listeners) {
-                        sl.onAfterEnd(plugin, context, result);
-                    }
-                }
+                end(context, result, plugin, listeners);
             } else {
                 if (block.hasNode()) {
                     result.addResult(Info.INSTANCE, block, "Conditional '" + ((Element) node).getAttributeValue("condition") + "' prevented execution.");
@@ -308,12 +275,12 @@ public class RunnerImpl implements IRunner {
             // any failure back to specification
             result.addResult(Failure.INSTANCE, context.newBlock(node, plugin), e);
         } finally {
-            if (block != null && !ignored) {
+            if (block != null) {
                 // remove block from context
                 context.pop();
             }
             // perform after listeners
-            for (INodeListener nl : nListeners) {
+            for (INodeListener nl : nodeListeners) {
                 nl.onAfter(node, context, result);
             }
         }
@@ -373,6 +340,27 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    protected ENext start(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws PluginException, SpecRunnerException {
+        // perform before start
+        for (IPluginListener sl : listeners) {
+            sl.onBeforeStart(plugin, context, result);
+        }
+        ENext next = null;
+        try {
+            long time = System.currentTimeMillis();
+            // perform start
+            next = plugin.doStart(context, result);
+            // check step timeout
+            checkTimeout(context, result, plugin, time, "doStart()");
+        } finally {
+            // perform after start
+            for (IPluginListener sl : listeners) {
+                sl.onAfterStart(plugin, context, result);
+            }
+        }
+        return next;
+    }
+
     /**
      * Check condition to perform the plugin.
      * 
@@ -427,6 +415,25 @@ public class RunnerImpl implements IRunner {
             }
             if (timeout != null && total > timeout) {
                 result.addResult(Failure.INSTANCE, context.peek(), new PluginException(method + " has run out of time. time(" + total + ") > timeout(" + timeout + ")"));
+            }
+        }
+    }
+
+    protected void end(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws PluginException, SpecRunnerException {
+        // perform before end
+        for (IPluginListener sl : listeners) {
+            sl.onBeforeEnd(plugin, context, result);
+        }
+        try {
+            final long time = System.currentTimeMillis();
+            // perform end
+            plugin.doEnd(context, result);
+            // check step timeout
+            checkTimeout(context, result, plugin, time, "doEnd()");
+        } finally {
+            // perform after end
+            for (IPluginListener sl : listeners) {
+                sl.onAfterEnd(plugin, context, result);
             }
         }
     }
