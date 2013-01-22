@@ -46,11 +46,8 @@ public class AnnotatorStacktrace implements IAnnotator {
         int stackIndex = 1;
         for (IResult r : result) {
             IBlock block = r.getBlock();
-            if (block.hasNode()) {
-                Node node = block.getNode();
-                if (r.getFailure() != null) {
-                    addStackTrace(node, r, stackIndex++);
-                }
+            if (block.hasNode() && r.hasFailure()) {
+                addStackTrace(block.getNode(), r, stackIndex++);
             }
         }
     }

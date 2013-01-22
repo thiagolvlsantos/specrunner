@@ -89,8 +89,18 @@ public class ResultImpl implements IResult {
     }
 
     @Override
+    public boolean hasBlock() {
+        return getBlock() != null;
+    }
+
+    @Override
     public IBlock getBlock() {
         return source;
+    }
+
+    @Override
+    public boolean hasMessage() {
+        return getMessage() != null;
     }
 
     @Override
@@ -99,8 +109,18 @@ public class ResultImpl implements IResult {
     }
 
     @Override
+    public boolean hasFailure() {
+        return getFailure() != null;
+    }
+
+    @Override
     public Throwable getFailure() {
         return failure;
+    }
+
+    @Override
+    public boolean hasWritable() {
+        return getWritable() != null;
     }
 
     @Override
@@ -127,8 +147,8 @@ public class ResultImpl implements IResult {
             msg1 = ". on " + plugin + "[" + plugin.getParameters().getAllParameters() + "]";
         }
 
-        String msg2 = getFailure() != null ? getFailure().getMessage() : getMessage();
-        if (UtilLog.LOG.isDebugEnabled() && getFailure() != null) {
+        String msg2 = hasFailure() ? getFailure().getMessage() : getMessage();
+        if (UtilLog.LOG.isDebugEnabled() && hasFailure()) {
             try {
                 msg2 += "\n" + ExceptionUtil.toString(getFailure());
             } catch (IOException e) {

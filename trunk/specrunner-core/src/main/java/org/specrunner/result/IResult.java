@@ -30,11 +30,25 @@ import org.specrunner.util.xom.IPresentation;
 public interface IResult extends IStatus, IActionType, IPresentation {
 
     /**
+     * If result has a block.
+     * 
+     * @return true, if it has a non null value, false, otherwise.
+     */
+    boolean hasBlock();
+
+    /**
      * Block related to this result.
      * 
      * @return The node.
      */
     IBlock getBlock();
+
+    /**
+     * If result has a message.
+     * 
+     * @return true, if it has a non null value, false, otherwise.
+     */
+    boolean hasMessage();
 
     /**
      * Message associated to the result.
@@ -44,11 +58,25 @@ public interface IResult extends IStatus, IActionType, IPresentation {
     String getMessage();
 
     /**
+     * If result has a failure.
+     * 
+     * @return true, if it has a non null value, false, otherwise.
+     */
+    boolean hasFailure();
+
+    /**
      * In case of errors result, an exception hold its information.
      * 
      * @return An error if exists, null, otherwise.
      */
     Throwable getFailure();
+
+    /**
+     * If result has a writable.
+     * 
+     * @return true, if it has a non null value, false, otherwise.
+     */
+    boolean hasWritable();
 
     /**
      * Each result can have its extra information, in the form of a writable

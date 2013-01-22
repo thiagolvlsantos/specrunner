@@ -87,8 +87,8 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
      *             On result exception.
      */
     protected void addWritable(File dir, int index, IResult r) throws ResultException {
-        IWritable w = r.getWritable();
-        if (w != null) {
+        if (r.hasWritable()) {
+            IWritable w = r.getWritable();
             if (!dir.exists() && !dir.mkdirs()) {
                 throw new ResultException("Could not create details outputFile directory " + dir + ".");
             }
@@ -129,7 +129,7 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
             link.addAttribute(new Attribute("class", "sr_" + e.getKey()));
             link.addAttribute(new Attribute("href", e.getValue()));
             link.addAttribute(new Attribute("target", e.getKey() + "_" + index));
-            String text = (w.getInformation() != null ? (String) w.getInformation().get(LABEL_FIELD) : null);
+            String text = (w.hasInformation() ? (String) w.getInformation().get(LABEL_FIELD) : null);
             if (text != null) {
                 text = e.getKey() + " " + text;
             } else {
