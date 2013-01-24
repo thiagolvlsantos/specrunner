@@ -34,11 +34,8 @@ import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.objects.PluginObjectManager;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginValue;
-import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
@@ -63,7 +60,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginConfiguration extends AbstractPluginValue {
+public class PluginConfiguration extends AbstractPluginFactory {
 
     /**
      * Default configuration name.
@@ -75,89 +72,13 @@ public class PluginConfiguration extends AbstractPluginValue {
      */
     public static final String FEATURE_TYPE = PluginConfiguration.class.getName() + ".type";
     /**
-     * The configuration provider class name.
-     */
-    private String type;
-
-    /**
      * Feature to set configuration factory class.
      */
     public static final String FEATURE_FACTORY = PluginConfiguration.class.getName() + ".factory";
     /**
-     * The configuration factory name.
-     */
-    private String factory;
-
-    /**
      * Feature to set method factory name.
      */
     public static final String FEATURE_METHOD = PluginConfiguration.class.getName() + ".method";
-    /**
-     * The method name.
-     */
-    private String method;
-
-    /**
-     * The configuration provider class name.
-     * 
-     * @return The provider class name.
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Set the provider.
-     * 
-     * @param type
-     *            The class name.
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Get the object factory class name.
-     * 
-     * @return The factory name.
-     */
-    public String getFactory() {
-        return factory;
-    }
-
-    /**
-     * Set factory class.
-     * 
-     * @param factory
-     *            The factory.
-     */
-    public void setFactory(String factory) {
-        this.factory = factory;
-    }
-
-    /**
-     * Static creator method name.
-     * 
-     * @return The creator method.
-     */
-    public String getMethod() {
-        return method;
-    }
-
-    /**
-     * Set the method name.
-     * 
-     * @param method
-     *            The name.
-     */
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
-    }
 
     @Override
     public void initialize(IContext context) throws PluginException {
