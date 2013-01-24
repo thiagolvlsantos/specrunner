@@ -289,7 +289,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             URL file = getClass().getResource(mapping);
             if (file == null) {
-                throw new PluginException("The object mapping file '" + file + "' not found.");
+                throw new PluginException("The object mapping file '" + mapping + "' not found.");
             }
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading object mapping file>" + file);
@@ -506,12 +506,13 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      */
     public static String normalize(String text) {
         StringTokenizer st = new StringTokenizer(text, " \t\r\n");
-        String str = st.nextToken().toLowerCase();
+        StringBuilder str = new StringBuilder(st.nextToken().toLowerCase());
         while (st.hasMoreTokens()) {
             String s = st.nextToken();
-            str += Character.toUpperCase(s.charAt(0)) + s.substring(1);
+            str.append(Character.toUpperCase(s.charAt(0)));
+            str.append(s.substring(1));
         }
-        return clean(str);
+        return clean(str.toString());
     }
 
     /**
@@ -769,11 +770,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          * @return The name.
          */
         public String getFullName() {
-            String strNames = "";
+            StringBuilder strNames = new StringBuilder("");
             for (int i = 0; i < names.length; i++) {
-                strNames += (i == 0 ? "" : ".") + names[i];
+                strNames.append(i == 0 ? "" : ".");
+                strNames.append(names[i]);
             }
-            return strNames;
+            return strNames.toString();
         }
 
         /**
@@ -787,21 +789,21 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
         @Override
         public String toString() {
-            String strNames = "";
+            StringBuilder strNames = new StringBuilder("");
             for (int i = 0; names != null && i < names.length; i++) {
-                strNames += (i == 0 ? "" : ",") + names[i];
+                strNames.append((i == 0 ? "" : ",") + names[i]);
             }
-            String strTypes = "";
+            StringBuilder strTypes = new StringBuilder("");
             for (int i = 0; types != null && i < types.length; i++) {
-                strTypes += (i == 0 ? "" : ",") + types[i];
+                strTypes.append((i == 0 ? "" : ",") + types[i]);
             }
-            String strConvs = "";
+            StringBuilder strConvs = new StringBuilder("");
             for (int i = 0; converters != null && i < converters.length; i++) {
-                strConvs += (i == 0 ? "" : ",") + converters[i];
+                strConvs.append((i == 0 ? "" : ",") + converters[i]);
             }
-            String strArgs = "";
+            StringBuilder strArgs = new StringBuilder("");
             for (int i = 0; args != null && i < args.length; i++) {
-                strArgs += (i == 0 ? "" : ",") + args[i];
+                strArgs.append((i == 0 ? "" : ",") + args[i]);
             }
             return index + ",'" + fieldName + "'(" + ignore + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],(" + comparator + ")";
         }
@@ -996,7 +998,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             current = tmp;
         }
         if (value == null) {
-            setObject(instance, f, value);
+            setObject(instance, f, null);
         } else if (f.getSpecificType() == boolean.class || f.getSpecificType() == Boolean.class) {
             setBoolean(instance, f, value);
         } else if (f.getSpecificType() == char.class || f.getSpecificType() == Character.class) {
@@ -1197,17 +1199,17 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      *            The object instance.
      * @return The key corresponding to the object.
      * @throws Exception
-     *             On key generation erros.
+     *             On key generation errors.
      */
     public String makeKey(Object instance) throws Exception {
-        String str = "";
+        StringBuilder str = new StringBuilder("");
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("KEYS>" + reference);
         }
         for (int i = 0; i < references.size(); i++) {
-            str += (i == 0 ? "" : separator) + PropertyUtils.getProperty(instance, references.get(i));
+            str.append((i == 0 ? "" : separator) + PropertyUtils.getProperty(instance, references.get(i)));
         }
-        return str;
+        return str.toString();
     }
 
     /**

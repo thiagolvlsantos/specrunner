@@ -299,12 +299,12 @@ public class PluginStartTomcat extends AbstractPluginScoped {
                     reusables.put(getName(), new AbstractReusable<Tomcat>(getName(), server) {
                         @Override
                         public boolean canReuse(Map<String, Object> cfg) {
-                            Object name = cfg.get("name");
-                            Object basedir = cfg.get("basedir");
-                            Object port = cfg.get("port");
-                            Object context = cfg.get("context");
-                            Object war = cfg.get("war");
-                            return name != null && name.equals(PluginStartTomcat.this.getName()) && basedir != null && basedir.equals(getBasedir()) && port != null && port.equals(getPort()) && context != null && context.equals(getContext()) && war != null && war.equals(getWar());
+                            Object tmpName = cfg.get("name");
+                            Object tmpBasedir = cfg.get("basedir");
+                            Object tmpPort = cfg.get("port");
+                            Object tmpContext = cfg.get("context");
+                            Object tmpWar = cfg.get("war");
+                            return tmpName != null && tmpName.equals(PluginStartTomcat.this.getName()) && tmpBasedir != null && tmpBasedir.equals(getBasedir()) && tmpPort != null && tmpPort.equals(getPort()) && tmpContext != null && tmpContext.equals(getContext()) && tmpWar != null && tmpWar.equals(getWar());
                         }
 
                         @Override

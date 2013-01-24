@@ -215,7 +215,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      */
     protected void waitForClient(WebDriver client) {
         if (getSleep() == null) {
-            (new WebDriverWait(client, maxwait, interval)).until(getCondition(System.currentTimeMillis(), getTimeout()));
+            (new WebDriverWait(client, maxwait, interval)).until(getWaitCondition(System.currentTimeMillis(), getTimeout()));
         }
     }
 
@@ -228,17 +228,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      *            The timeout.
      * @return The expected condition.
      */
-    protected ExpectedCondition<Boolean> getCondition(final long start, final Long timeout) {
+    protected ExpectedCondition<Boolean> getWaitCondition(final long start, final Long timeout) {
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver d) {
-                // WebElement e = d.findElement(By.tagName("body"));
-                // if (UtilLog.LOG.isInfoEnabled()) {
-                // UtilLog.LOG.info("Waiting for body or timeout (" +
-                // (System.currentTimeMillis() - start) + "<" + timeout + ").");
-                // }
-                // return (timeout != null && (System.currentTimeMillis() -
-                // start) > timeout) || e.isDisplayed();
                 return true;
             }
         };

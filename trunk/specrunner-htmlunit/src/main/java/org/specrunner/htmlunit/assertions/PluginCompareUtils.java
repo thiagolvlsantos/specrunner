@@ -100,7 +100,7 @@ public final class PluginCompareUtils {
     protected static void addError(String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
         try {
             IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
-            if (page != null) {
+            if (page == null) {
                 result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(al));
             } else {
                 result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(al), new WritablePage(page));

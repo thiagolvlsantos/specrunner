@@ -23,8 +23,8 @@ import java.net.URL;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -63,7 +63,7 @@ public class PluginOpen extends AbstractPluginUrlAware {
                     UtilLog.LOG.info("Relative url resolved from '" + u + "' to '" + target + "'.");
                 }
             } catch (MalformedURLException e) {
-                throw new PluginException("Could not resolve '" + baseUrl + "' with " + u + ".");
+                throw new PluginException("Could not resolve '" + baseUrl + "' with " + u + ".", e);
             }
             u = target;
         }
