@@ -345,11 +345,13 @@ public class PluginScript extends AbstractPluginValue {
                 }
                 result.addResult(Failure.INSTANCE, context.peek(), e);
             } finally {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug(e.getMessage(), e);
+                        }
                     }
                 }
             }
