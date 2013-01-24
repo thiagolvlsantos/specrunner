@@ -24,11 +24,8 @@ import org.hibernate.cfg.Configuration;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginScoped;
-import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
@@ -50,7 +47,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginSessionFactory extends AbstractPluginScoped {
+public class PluginSessionFactory extends AbstractPluginFactory {
 
     /**
      * Default session factory name.
@@ -71,27 +68,13 @@ public class PluginSessionFactory extends AbstractPluginScoped {
      */
     public static final String FEATURE_TYPE = PluginSessionFactory.class.getName() + ".type";
     /**
-     * The provider class name.
-     */
-    private String type;
-
-    /**
      * Feature to set session factory factory.
      */
     public static final String FEATURE_FACTORY = PluginSessionFactory.class.getName() + ".factory";
     /**
-     * The factory class.
-     */
-    private String factory;
-
-    /**
      * Set feature factory method name.
      */
     public static final String FEATURE_METHOD = PluginSessionFactory.class.getName() + ".method";
-    /**
-     * The method name in object factory.
-     */
-    private String method;
 
     /**
      * Gets the configuration.
@@ -110,68 +93,6 @@ public class PluginSessionFactory extends AbstractPluginScoped {
      */
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
-    }
-
-    /**
-     * Get the session factory provider class name.
-     * 
-     * @return The session factory provider class name.
-     */
-    public String getType() {
-        return type;
-    }
-
-    /**
-     * Set the session factory provider.
-     * 
-     * @param type
-     *            The factory type.
-     */
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Get the session factory factory class.
-     * 
-     * @return The object factory.
-     */
-    public String getFactory() {
-        return factory;
-    }
-
-    /**
-     * Set session factory object factory.
-     * 
-     * @param factory
-     *            The object factory name.
-     */
-    public void setFactory(String factory) {
-        this.factory = factory;
-    }
-
-    /**
-     * Get the static method of object factory.
-     * 
-     * @return The creator method.
-     */
-    public String getMethod() {
-        return method;
-    }
-
-    /**
-     * Set the method of a factory.
-     * 
-     * @param method
-     *            The factory method.
-     */
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
-    @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
     }
 
     @Override
@@ -194,6 +115,9 @@ public class PluginSessionFactory extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
+        if (configuration == null && type == null && (factory == null || method == null)) {
+            throw new PluginException("Parameter 'configuration', 'type', or 'factory' and 'method' missing. In 'type' use an subtype of ISessionFactoryProvider, or choose a class in 'factory' whose 'method' is static and returns a Hibernate Configuration, or a 'configuration' by its name.");
+        }
         try {
             SessionFactory sf = null;
             if (type != null) {
