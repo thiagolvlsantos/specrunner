@@ -32,5 +32,11 @@
 			<artifactId>htmlunit</artifactId>
 			<version>2.11</version>
 		</dependency>
+		<!-- Maven requires -->
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
 	</dependencies>
 </project>
