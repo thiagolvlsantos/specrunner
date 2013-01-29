@@ -1,0 +1,1 @@
+insert into CTI.CIT_CITY values (1,now(),now(),'Nome x',0)
