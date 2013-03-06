@@ -192,6 +192,21 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginHasTouchSc
             public Object getAuxiliary() {
                 return AbstractPluginCoordinates.this.getAuxiliary();
             }
+
+            @Override
+            public Point inViewPort() {
+                return getInviewport();
+            }
+
+            @Override
+            public Point onPage() {
+                return getIndom();
+            }
+
+            @Override
+            public Point onScreen() {
+                return getOnscreen();
+            }
         };
     }
 
