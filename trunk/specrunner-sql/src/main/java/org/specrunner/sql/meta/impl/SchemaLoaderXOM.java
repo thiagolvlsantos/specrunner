@@ -19,13 +19,13 @@ package org.specrunner.sql.meta.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
-import nu.xom.ParsingException;
-import nu.xom.ValidityException;
 
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.IConverter;
@@ -33,8 +33,21 @@ import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 
+/**
+ * A loader to Schema from XML files.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class SchemaLoaderXOM implements ISchemaLoader {
-    private Builder b = new Builder();
+    /**
+     * XML parser.
+     */
+    private Builder builder = new Builder();
+    /**
+     * Mapping of all converter names to their instance, for reuse.
+     */
+    private Map<String, IConverter> converters = new HashMap<String, IConverter>();
 
     @Override
     public Schema load(Object source) {
@@ -45,7 +58,7 @@ public class SchemaLoaderXOM implements ISchemaLoader {
             if (in == null) {
                 throw new RuntimeException("Resource '" + source + "' not found.");
             }
-            Document d = b.build(in);
+            Document d = builder.build(in);
             Element nSchema = d.getRootElement();
             s = new Schema().setName(nSchema.getAttributeValue("name")).setAlias(nSchema.getAttributeValue("alias"));
             Nodes nTables = nSchema.query("child::table");
@@ -61,22 +74,19 @@ public class SchemaLoaderXOM implements ISchemaLoader {
                     String key = nColumn.getAttributeValue("key");
                     c.setKey(key != null && Boolean.parseBoolean(key));
                     String converter = nColumn.getAttributeValue("converter");
-                    c.setConverter(converter != null ? (IConverter) Class.forName(converter).newInstance() : null);
+                    if (converter != null) {
+                        IConverter instance = converters.get(converter);
+                        if (instance == null) {
+                            instance = (IConverter) Class.forName(converter).newInstance();
+                            converters.put(converter, instance);
+                        }
+                        c.setConverter(instance);
+                    }
                     String defaultValue = nColumn.getAttributeValue("default");
                     c.setDefaultValue(defaultValue);
                 }
             }
-        } catch (ValidityException e) {
-            throw new RuntimeException(e);
-        } catch (ParsingException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
             try {

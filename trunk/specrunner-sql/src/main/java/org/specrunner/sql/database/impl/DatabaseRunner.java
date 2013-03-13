@@ -231,7 +231,9 @@ public class DatabaseRunner implements IDatabase {
                 LOG.debug("Release: " + ps);
             }
             try {
-                ps.close();
+                if (!ps.isClosed()) {
+                    ps.close();
+                }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
