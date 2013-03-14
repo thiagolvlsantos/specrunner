@@ -29,6 +29,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Success;
 import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.input.impl.TableXOM;
 import org.specrunner.sql.meta.Schema;
@@ -100,10 +101,10 @@ public class PluginPrepare extends AbstractPluginTable {
         IDataSourceProvider datasource = PluginConnection.getProvider(context, getName());
         IDatabase database = PluginDatabase.getDatabase(context, getDatabase());
         Schema schema = PluginSchema.getSchema(context, getSchema());
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("PluginPrepare datasource:" + datasource);
-            UtilLog.LOG.info("PluginPrepare   database:" + database);
-            UtilLog.LOG.info("PluginPrepare     schema:" + schema);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("PluginPrepare datasource:" + datasource);
+            UtilLog.LOG.debug("PluginPrepare   database:" + database);
+            UtilLog.LOG.debug("PluginPrepare     schema:" + schema);
         }
         DataSource ds = datasource.getDataSource();
         Connection connection = null;
@@ -130,6 +131,7 @@ public class PluginPrepare extends AbstractPluginTable {
                 throw new PluginException(e);
             }
         }
+        result.addResult(Success.INSTANCE, context.peek());
         return ENext.DEEP;
     }
 }

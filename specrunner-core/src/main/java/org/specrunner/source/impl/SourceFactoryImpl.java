@@ -153,6 +153,7 @@ public class SourceFactoryImpl implements ISourceFactory {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
+                        e.printStackTrace();
                         throw new SourceException("Could not load the 'String/URI' source '" + target + "'.", e);
                     }
                 } else {
@@ -166,6 +167,7 @@ public class SourceFactoryImpl implements ISourceFactory {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
+                        e.printStackTrace();
                         throw new SourceException("Could not load the 'String/File' source '" + target + "'.", e);
                     } finally {
                         if (fin != null) {
