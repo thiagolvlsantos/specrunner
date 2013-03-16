@@ -15,10 +15,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.meta;
+package org.specrunner.util.converter.impl;
 
 import org.specrunner.util.converter.IConverter;
 
+/**
+ * Default converter. Return the same input object.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
+@SuppressWarnings("serial")
 public class ConverterDefault implements IConverter {
 
     @Override

@@ -17,7 +17,10 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.impl.ComparatorDefault;
 import org.specrunner.util.converter.IConverter;
+import org.specrunner.util.converter.impl.ConverterDefault;
 
 public class Column {
 
@@ -26,6 +29,7 @@ public class Column {
     private String name;
     private boolean key;
     private IConverter converter = new ConverterDefault();
+    private IComparator comparator = new ComparatorDefault();
     private Object defaultValue;
 
     public Table getTable() {
@@ -71,6 +75,17 @@ public class Column {
     public Column setConverter(IConverter converter) {
         if (converter != null) {
             this.converter = converter;
+        }
+        return this;
+    }
+
+    public IComparator getComparator() {
+        return comparator;
+    }
+
+    public Column setComparator(IComparator comparator) {
+        if (comparator != null) {
+            this.comparator = comparator;
         }
         return this;
     }
