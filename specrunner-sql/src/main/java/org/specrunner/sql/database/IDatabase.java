@@ -24,7 +24,7 @@ import org.specrunner.sql.meta.Schema;
 
 public interface IDatabase {
 
-    void perform(Connection con, Schema schema, ITable data);
+    void perform(Connection con, Schema schema, ITable data, EMode mode);
 
     void release();
 }

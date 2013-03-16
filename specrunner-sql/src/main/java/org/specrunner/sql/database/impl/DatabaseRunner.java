@@ -26,8 +26,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.specrunner.sql.database.EMode;
 import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.input.CommandType;
 import org.specrunner.sql.input.INode;
@@ -38,15 +37,14 @@ import org.specrunner.sql.meta.IConverter;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
+import org.specrunner.util.UtilLog;
 
 public class DatabaseRunner implements IDatabase {
-
-    private static Logger LOG = LoggerFactory.getLogger(DatabaseRunner.class);
 
     protected Map<String, PreparedStatement> operations = new HashMap<String, PreparedStatement>();
 
     @Override
-    public void perform(Connection con, Schema schema, ITable data) {
+    public void perform(Connection con, Schema schema, ITable data, EMode mode) {
         INode caption = data.caption();
 
         String tAlias = caption.getText();
@@ -192,8 +190,8 @@ public class DatabaseRunner implements IDatabase {
     }
 
     protected void perform(Connection con, String sql, Map<String, Integer> indexes, Set<Value> values) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
         }
         try {
             PreparedStatement pstmt = operations.get(sql);
@@ -201,23 +199,23 @@ public class DatabaseRunner implements IDatabase {
                 pstmt = con.prepareStatement(sql);
                 operations.put(sql, pstmt);
             } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("REUSE:" + pstmt);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("REUSE:" + pstmt);
                 }
             }
             pstmt.clearParameters();
             for (Value v : values) {
                 Integer index = indexes.get(v.getColumn().getName());
                 if (index != null) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("SET(" + index + ")=" + v.getValue());
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
                     }
                     pstmt.setObject(index, v.getValue());
                 }
             }
             int count = pstmt.executeUpdate();
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("[" + count + "]=" + sql);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("[" + count + "]=" + sql);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -227,8 +225,8 @@ public class DatabaseRunner implements IDatabase {
     @Override
     public void release() {
         for (PreparedStatement ps : operations.values()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Release: " + ps);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Release: " + ps);
             }
             try {
                 if (!ps.isClosed()) {

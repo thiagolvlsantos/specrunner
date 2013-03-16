@@ -34,7 +34,7 @@ public class TestDbms {
     }
 
     @Test
-    public void create() {
+    public void pluginsSQL() {
         run("dbms.html");
     }
 }
