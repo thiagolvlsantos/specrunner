@@ -28,6 +28,15 @@ import org.specrunner.util.mapping.IResetable;
 public interface IConverter extends IResetable {
 
     /**
+     * Indicate if the converter accepts a given input value.
+     * 
+     * @param value
+     *            The value.
+     * @return true, if accepted, false, otherwise.
+     */
+    boolean accept(Object value);
+
+    /**
      * Convert a given object to another using some arguments as auxiliary.
      * 
      * @param value

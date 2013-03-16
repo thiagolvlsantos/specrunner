@@ -17,12 +17,17 @@
  */
 package org.specrunner.sql.meta.converter;
 
-import org.specrunner.sql.meta.IConverter;
+import org.specrunner.util.converter.IConverter;
 
 public class ConverterNullable implements IConverter {
 
     @Override
-    public boolean accept(String str) {
+    public void initialize() {
+    }
+
+    @Override
+    public boolean accept(Object obj) {
+        String str = String.valueOf(obj);
         if (str == null) {
             return false;
         }
@@ -34,7 +39,8 @@ public class ConverterNullable implements IConverter {
     }
 
     @Override
-    public Object convert(String str) {
+    public Object convert(Object obj, Object[] args) {
+        String str = String.valueOf(obj);
         if (str == null) {
             return null;
         }

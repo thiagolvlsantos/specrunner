@@ -17,15 +17,21 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.util.converter.IConverter;
+
 public class ConverterDefault implements IConverter {
 
     @Override
-    public boolean accept(String str) {
+    public void initialize() {
+    }
+
+    @Override
+    public boolean accept(Object obj) {
         return true;
     }
 
     @Override
-    public Object convert(String str) {
-        return str;
+    public Object convert(Object obj, Object[] args) {
+        return obj;
     }
 }

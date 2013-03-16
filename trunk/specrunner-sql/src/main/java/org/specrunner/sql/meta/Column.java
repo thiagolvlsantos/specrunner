@@ -17,6 +17,8 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.util.converter.IConverter;
+
 public class Column {
 
     private Table table;
