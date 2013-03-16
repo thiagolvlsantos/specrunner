@@ -17,17 +17,20 @@
  */
 package org.specrunner.sql.meta.converter;
 
-import org.specrunner.sql.meta.IConverter;
+import org.specrunner.util.converter.IConverter;
 
 public class ConverterLong implements IConverter {
-
     @Override
-    public boolean accept(String str) {
-        return str.matches("[0-9]");
+    public void initialize() {
     }
 
     @Override
-    public Object convert(String str) {
-        return Long.valueOf(str);
+    public boolean accept(Object obj) {
+        return String.valueOf(obj).matches("[0-9]");
+    }
+
+    @Override
+    public Object convert(Object obj, Object[] args) {
+        return Long.valueOf(String.valueOf(obj));
     }
 }

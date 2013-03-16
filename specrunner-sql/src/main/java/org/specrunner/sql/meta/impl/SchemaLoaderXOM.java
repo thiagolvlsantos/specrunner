@@ -28,10 +28,10 @@ import nu.xom.Element;
 import nu.xom.Nodes;
 
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.IConverter;
 import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.util.converter.IConverter;
 
 /**
  * A loader to Schema from XML files.

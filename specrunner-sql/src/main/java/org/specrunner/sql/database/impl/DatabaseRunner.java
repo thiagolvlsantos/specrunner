@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,11 +34,12 @@ import org.specrunner.sql.input.INode;
 import org.specrunner.sql.input.IRow;
 import org.specrunner.sql.input.ITable;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.IConverter;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.converter.ConverterException;
+import org.specrunner.util.converter.IConverter;
 
 public class DatabaseRunner implements IDatabase {
 
@@ -73,10 +75,22 @@ public class DatabaseRunner implements IDatabase {
                 INode td = tds.get(j);
                 String att = td.getAttribute("title");
                 String value = att != null ? att : td.getText();
+                List<String> args = new LinkedList<String>();
+                int index = 0;
+                String arg = td.getAttribute("arg" + (index++));
+                while (arg != null) {
+                    args.add(arg);
+                    arg = td.getAttribute("arg" + (index++));
+                }
                 Column c = columns[j];
                 IConverter converter = c.getConverter();
                 if (converter.accept(value)) {
-                    Object obj = converter.convert(value);
+                    Object obj;
+                    try {
+                        obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
+                    } catch (ConverterException e) {
+                        throw new RuntimeException(e);
+                    }
                     if (obj == null && ct == CommandType.INSERT) {
                         obj = c.getDefaultValue();
                     }
