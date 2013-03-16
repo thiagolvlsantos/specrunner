@@ -19,19 +19,21 @@ package org.specrunner.sql.meta.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.IConverter;
+import org.specrunner.util.converter.IConverterManager;
 
 /**
  * A loader to Schema from XML files.
@@ -44,10 +46,6 @@ public class SchemaLoaderXOM implements ISchemaLoader {
      * XML parser.
      */
     private Builder builder = new Builder();
-    /**
-     * Mapping of all converter names to their instance, for reuse.
-     */
-    private Map<String, IConverter> converters = new HashMap<String, IConverter>();
 
     @Override
     public Schema load(Object source) {
@@ -75,12 +73,23 @@ public class SchemaLoaderXOM implements ISchemaLoader {
                     c.setKey(key != null && Boolean.parseBoolean(key));
                     String converter = nColumn.getAttributeValue("converter");
                     if (converter != null) {
-                        IConverter instance = converters.get(converter);
+                        IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
+                        IConverter instance = cm.get(converter);
                         if (instance == null) {
                             instance = (IConverter) Class.forName(converter).newInstance();
-                            converters.put(converter, instance);
+                            cm.bind(converter, instance);
                         }
                         c.setConverter(instance);
+                    }
+                    String comparator = nColumn.getAttributeValue("comparator");
+                    if (comparator != null) {
+                        IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
+                        IComparator instance = cm.get(comparator);
+                        if (instance == null) {
+                            instance = (IComparator) Class.forName(comparator).newInstance();
+                            cm.bind(comparator, instance);
+                        }
+                        c.setComparator(instance);
                     }
                     String defaultValue = nColumn.getAttributeValue("default");
                     c.setDefaultValue(defaultValue);
