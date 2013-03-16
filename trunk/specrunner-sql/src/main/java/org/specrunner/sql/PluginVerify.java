@@ -18,26 +18,26 @@
 package org.specrunner.sql;
 
 import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Command;
+import org.specrunner.plugins.type.Assertion;
 import org.specrunner.sql.database.EMode;
 
 /**
- * Prepare a database.
+ * Check a database.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginPrepare extends AbstractPluginDatabase {
+public class PluginVerify extends AbstractPluginDatabase {
 
     /**
      * Default constructor.
      */
-    public PluginPrepare() {
-        super(EMode.INPUT);
+    public PluginVerify() {
+        super(EMode.OUTPUT);
     }
 
     @Override
     public ActionType getActionType() {
-        return Command.INSTANCE;
+        return Assertion.INSTANCE;
     }
 }
