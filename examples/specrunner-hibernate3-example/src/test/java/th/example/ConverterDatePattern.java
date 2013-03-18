@@ -14,6 +14,11 @@ public class ConverterDatePattern implements IConverter {
     }
 
     @Override
+    public boolean accept(Object value) {
+        return true;
+    }
+
+    @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
         if (value == null) {
             return null;

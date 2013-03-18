@@ -13,6 +13,11 @@ public class ConverterDateText implements IConverter {
     }
 
     @Override
+    public boolean accept(Object value) {
+        return true;
+    }
+
+    @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
         return String.valueOf(value).contains("atual") | String.valueOf(value).contains("actual") ? new Date() : null;
     }
