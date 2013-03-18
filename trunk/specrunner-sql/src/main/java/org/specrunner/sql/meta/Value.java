@@ -17,14 +17,18 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.util.comparer.IComparator;
+
 public class Value implements Comparable<Value> {
 
     private Column column;
     private Object value;
+    private IComparator comparator;
 
-    public Value(Column column, Object value) {
+    public Value(Column column, Object value, IComparator comparator) {
         this.column = column;
         this.value = value;
+        this.comparator = comparator;
     }
 
     public Column getColumn() {
@@ -45,6 +49,14 @@ public class Value implements Comparable<Value> {
         return this;
     }
 
+    public IComparator getComparator() {
+        return comparator;
+    }
+
+    public void setComparator(IComparator comparator) {
+        this.comparator = comparator;
+    }
+
     @Override
     public int compareTo(Value v) {
         return column.getName().compareTo(v.column.getName());
@@ -52,6 +64,6 @@ public class Value implements Comparable<Value> {
 
     @Override
     public String toString() {
-        return column.getName() + "=" + value;
+        return column.getName() + "=" + value + "(" + comparator + ")";
     }
 }

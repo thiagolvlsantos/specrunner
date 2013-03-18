@@ -20,7 +20,7 @@ package org.specrunner.util.converter.impl;
 import org.specrunner.util.converter.IConverter;
 
 /**
- * Default converter. Return the same input object.
+ * Default converter. Bypass converter accepts everything.
  * 
  * @author Thiago Santos.
  * 

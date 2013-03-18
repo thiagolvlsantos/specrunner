@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql.meta.converter;
 
+import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 
 public class ConverterLong implements IConverter {
@@ -26,11 +27,15 @@ public class ConverterLong implements IConverter {
 
     @Override
     public boolean accept(Object obj) {
-        return String.valueOf(obj).matches("[0-9]");
+        return true;
     }
 
     @Override
-    public Object convert(Object obj, Object[] args) {
-        return Long.valueOf(String.valueOf(obj));
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        try {
+            return Long.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
+        }
     }
 }

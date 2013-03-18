@@ -28,8 +28,10 @@ public class Column {
     private String alias;
     private String name;
     private boolean key;
-    private IConverter converter = new ConverterDefault();
-    private IComparator comparator = new ComparatorDefault();
+    private static IConverter CONVERTER_DEFAULT = new ConverterDefault();
+    private IConverter converter = CONVERTER_DEFAULT;
+    private static IComparator COMPARATOR_DEFAULT = new ComparatorDefault();
+    private IComparator comparator = COMPARATOR_DEFAULT;
     private Object defaultValue;
 
     public Table getTable() {
