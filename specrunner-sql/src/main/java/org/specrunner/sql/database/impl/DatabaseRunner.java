@@ -19,6 +19,7 @@ package org.specrunner.sql.database.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,18 +40,33 @@ import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
 
+/**
+ * A database runner which uses prepared statements and meta-information to set
+ * objects.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class DatabaseRunner implements IDatabase {
 
+    /**
+     * Prepared statements for input actions.
+     */
     protected Map<String, PreparedStatement> inputs = new HashMap<String, PreparedStatement>();
+    /**
+     * Prepared statements for output actions.
+     */
+    protected Map<String, PreparedStatement> outputs = new HashMap<String, PreparedStatement>();
 
     @Override
     public void perform(Connection con, Schema schema, ITable data, EMode mode) {
         INode caption = data.caption();
-
         String tAlias = caption.getText();
         Table table = schema.getAlias(tAlias);
         if (table == null) {
@@ -66,7 +82,6 @@ public class DatabaseRunner implements IDatabase {
                 throw new RuntimeException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
             }
         }
-
         List<IRow> rows = data.rows();
         for (int i = 0; i < rows.size(); i++) {
             IRow row = rows.get(i);
@@ -95,7 +110,7 @@ public class DatabaseRunner implements IDatabase {
                     if (instance == null) {
                         try {
                             converter = (IConverter) Class.forName(strConverter).newInstance();
-                            cm.bind(strConverter, instance);
+                            cm.bind(strConverter, converter);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
@@ -113,25 +128,51 @@ public class DatabaseRunner implements IDatabase {
                     try {
                         obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
                     } catch (ConverterException e) {
-                        throw new RuntimeException("Convertion error at row:" + i + ", cell:" + j + ". Attemp to convert '" + value + "' using a '" + converter + "'.", e);
+                        throw new RuntimeException("Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'.", e);
                     }
                     if (obj == null && ct == CommandType.INSERT) {
                         obj = c.getDefaultValue();
                     }
-                    Value v = new Value(c, obj);
+                    IComparator comparator = c.getComparator();
+                    String strComparator = td.getAttribute("comparator");
+                    if (strComparator != null) {
+                        IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
+                        IComparator instance = cm.get(converter);
+                        if (instance == null) {
+                            try {
+                                comparator = (IComparator) Class.forName(strComparator).newInstance();
+                                cm.bind(strComparator, comparator);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                    Value v = new Value(c, obj, comparator);
                     values.add(v);
                     filled.put(c.getName(), v);
                 }
             }
             switch (ct) {
             case INSERT:
-                performInsert(con, table, values, filled);
+                if (mode == EMode.INPUT) {
+                    performInsert(con, table, values, filled);
+                } else {
+                    performSelect(con, table, values, filled, 1);
+                }
                 break;
             case UPDATE:
-                performUpdate(con, table, values);
+                if (mode == EMode.INPUT) {
+                    performUpdate(con, table, values);
+                } else {
+                    performSelect(con, table, values, filled, 1);
+                }
                 break;
             case DELETE:
-                performDelete(con, table, values);
+                if (mode == EMode.INPUT) {
+                    performDelete(con, table, values);
+                } else {
+                    performSelect(con, table, values, filled, 0);
+                }
                 break;
             default:
                 throw new RuntimeException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)");
@@ -147,7 +188,7 @@ public class DatabaseRunner implements IDatabase {
     protected void performInsert(Connection con, Table table, Set<Value> values, Map<String, Value> filled) {
         for (Column c : table.getAliasToColumns().values()) {
             if (filled.get(c.getName()) == null && c.getDefaultValue() != null) {
-                values.add(new Value(c, c.getDefaultValue()));
+                values.add(new Value(c, c.getDefaultValue(), c.getComparator()));
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -171,7 +212,7 @@ public class DatabaseRunner implements IDatabase {
         sb.append(") values (");
         sb.append(sbPla);
         sb.append(")");
-        perform(con, sb.toString(), indexes, values);
+        performIn(con, sb.toString(), indexes, values, 1);
     }
 
     protected void performUpdate(Connection con, Table table, Set<Value> values) {
@@ -204,7 +245,7 @@ public class DatabaseRunner implements IDatabase {
         sb.append(" where (");
         sb.append(sbPla);
         sb.append(")");
-        perform(con, sb.toString(), indexes, values);
+        performIn(con, sb.toString(), indexes, values, 1);
     }
 
     protected void performDelete(Connection con, Table table, Set<Value> values) {
@@ -224,10 +265,10 @@ public class DatabaseRunner implements IDatabase {
             sbPla.setLength(sbPla.length() - and.length());
         }
         sb.append(sbPla);
-        perform(con, sb.toString(), indexes, values);
+        performIn(con, sb.toString(), indexes, values, 1);
     }
 
-    protected void perform(Connection con, String sql, Map<String, Integer> indexes, Set<Value> values) {
+    protected void performIn(Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
         }
@@ -237,11 +278,11 @@ public class DatabaseRunner implements IDatabase {
                 pstmt = con.prepareStatement(sql);
                 inputs.put(sql, pstmt);
             } else {
+                pstmt.clearParameters();
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("REUSE:" + pstmt);
                 }
             }
-            pstmt.clearParameters();
             for (Value v : values) {
                 Integer index = indexes.get(v.getColumn().getName());
                 if (index != null) {
@@ -254,6 +295,103 @@ public class DatabaseRunner implements IDatabase {
             int count = pstmt.executeUpdate();
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("[" + count + "]=" + sql);
+            }
+            if (expectedCount != count) {
+                throw new RuntimeException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected void performSelect(Connection con, Table table, Set<Value> values, Map<String, Value> filled, int expectedCount) {
+        StringBuilder sbVal = new StringBuilder();
+        StringBuilder sbPla = new StringBuilder();
+        Map<String, Integer> indexes = new HashMap<String, Integer>();
+        int i = 1;
+        for (Value v : values) {
+            if (!v.getColumn().isKey()) {
+                sbVal.append(v.getColumn().getName() + ",");
+            }
+        }
+        String and = " AND ";
+        for (Value v : values) {
+            if (v.getColumn().isKey()) {
+                indexes.put(v.getColumn().getName(), i++);
+                sbPla.append(v.getColumn().getName() + " = ?" + and);
+            }
+        }
+        if (sbVal.length() > 1) {
+            sbVal.setLength(sbVal.length() - 1);
+        }
+        if (sbPla.length() > and.length()) {
+            sbPla.setLength(sbPla.length() - and.length());
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("select ");
+        sb.append(sbVal);
+        sb.append(" from " + table.getSchema().getName() + "." + table.getName());
+        sb.append(" where ");
+        sb.append(sbPla);
+        performOut(con, sb.toString(), indexes, values, expectedCount);
+    }
+
+    protected void performOut(Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) {
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values + ". indexes = " + indexes);
+        }
+        try {
+            PreparedStatement pstmt = inputs.get(sql);
+            if (pstmt == null) {
+                pstmt = con.prepareStatement(sql);
+                inputs.put(sql, pstmt);
+            } else {
+                pstmt.clearParameters();
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("REUSE:" + pstmt);
+                }
+            }
+            for (Value v : values) {
+                Integer index = indexes.get(v.getColumn().getName());
+                if (index != null) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
+                    }
+                    pstmt.setObject(index, v.getValue());
+                }
+            }
+            ResultSet rs = null;
+            try {
+                rs = pstmt.executeQuery();
+                if (expectedCount == 1) {
+                    if (!rs.next()) {
+                        throw new RuntimeException("None register found with the given conditions: " + sql + "[" + values + "]");
+                    }
+                    for (Value v : values) {
+                        Integer index = indexes.get(v.getColumn().getName());
+                        if (index == null) {
+                            IComparator comparator = v.getComparator();
+                            Object received = rs.getObject(v.getColumn().getName());
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
+                            }
+                            if (!comparator.match(v.getValue(), received)) {
+                                throw new RuntimeException("Expected value '" + v.getValue() + "' does not match received '" + received + "'");
+                            }
+                        }
+                    }
+                    if (rs.next()) {
+                        throw new RuntimeException("More than one register satisfy the condition: " + sql + "[" + values + "]");
+                    }
+                } else {
+                    if (rs.next()) {
+                        throw new RuntimeException("A result for " + sql + "[" + values + "] was not expected.");
+                    }
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
