@@ -29,7 +29,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.PluginConnection;
-import org.specrunner.sql.PluginScript;
+import org.specrunner.sql.PluginScripts;
 
 // CHECKSTYLE:OFF
 @RunWith(ConcurrentRunner.class)
@@ -68,7 +68,7 @@ public class TestSqlFeature {
 
         fm.add(PluginConnection.FEATURE_REUSE, Boolean.TRUE);
         // setting plugin script features
-        fm.add(PluginScript.FEATURE_FAILSAFE, Boolean.TRUE);
+        fm.add(PluginScripts.FEATURE_FAILSAFE, Boolean.TRUE);
     }
 
     @Test

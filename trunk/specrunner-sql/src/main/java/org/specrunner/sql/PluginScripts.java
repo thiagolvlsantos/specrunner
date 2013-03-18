@@ -63,7 +63,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginScript extends AbstractPluginValue {
+public class PluginScripts extends AbstractPluginValue {
 
     /**
      * List of scripts to be performed.
@@ -73,7 +73,7 @@ public class PluginScript extends AbstractPluginValue {
     /**
      * Sets the script separator on specification. Default is ";".
      */
-    public static final String FEATURE_SCRIPT_SEPARATOR = PluginScript.class.getName() + ".scriptseparator";
+    public static final String FEATURE_SCRIPT_SEPARATOR = PluginScripts.class.getName() + ".scriptseparator";
     /**
      * Separator of script names.
      */
@@ -82,7 +82,7 @@ public class PluginScript extends AbstractPluginValue {
     /**
      * Sets the SQL command separator. Default is ";".
      */
-    public static final String FEATURE_SQL_SEPARATOR = PluginScript.class.getName() + ".separator";
+    public static final String FEATURE_SQL_SEPARATOR = PluginScripts.class.getName() + ".separator";
     /**
      * The SQL comand separator.
      */
@@ -92,7 +92,7 @@ public class PluginScript extends AbstractPluginValue {
      * Fail safe feature means that on command execution command errors will not
      * raise errors but warnings instead.
      */
-    public static final String FEATURE_FAILSAFE = PluginScript.class.getName() + ".failsafe";
+    public static final String FEATURE_FAILSAFE = PluginScripts.class.getName() + ".failsafe";
     /**
      * Set fail safe state.
      */
