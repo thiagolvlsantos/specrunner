@@ -13,6 +13,11 @@ public class ConverterDateAny implements IConverter {
     }
 
     @Override
+    public boolean accept(Object value) {
+        return true;
+    }
+
+    @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.DAY_OF_MONTH, (int) (System.currentTimeMillis() % 28) + 1);

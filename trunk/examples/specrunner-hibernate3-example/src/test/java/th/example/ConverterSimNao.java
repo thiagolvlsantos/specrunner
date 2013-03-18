@@ -11,6 +11,11 @@ public class ConverterSimNao implements IConverter {
     }
 
     @Override
+    public boolean accept(Object value) {
+        return true;
+    }
+
+    @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
         String valor = String.valueOf(value);
         if ("Sim".equalsIgnoreCase(valor)) {
