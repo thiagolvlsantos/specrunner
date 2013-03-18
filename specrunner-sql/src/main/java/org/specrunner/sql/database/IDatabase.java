@@ -22,9 +22,31 @@ import java.sql.Connection;
 import org.specrunner.sql.input.ITable;
 import org.specrunner.sql.meta.Schema;
 
+/**
+ * Perform database setup.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public interface IDatabase {
 
+    /**
+     * Perform something (actions or assertions) over the connection, using
+     * schema information and a set of data.
+     * 
+     * @param con
+     *            A connection.
+     * @param schema
+     *            A schema.
+     * @param data
+     *            A data table.
+     * @param mode
+     *            A mode.
+     */
     void perform(Connection con, Schema schema, ITable data, EMode mode);
 
+    /**
+     * Release all database resources.
+     */
     void release();
 }

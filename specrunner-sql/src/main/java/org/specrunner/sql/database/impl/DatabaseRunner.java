@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.sql.database.EMode;
 import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.input.CommandType;
@@ -40,10 +41,11 @@ import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
+import org.specrunner.util.converter.IConverterManager;
 
 public class DatabaseRunner implements IDatabase {
 
-    protected Map<String, PreparedStatement> operations = new HashMap<String, PreparedStatement>();
+    protected Map<String, PreparedStatement> inputs = new HashMap<String, PreparedStatement>();
 
     @Override
     public void perform(Connection con, Schema schema, ITable data, EMode mode) {
@@ -67,14 +69,38 @@ public class DatabaseRunner implements IDatabase {
 
         List<IRow> rows = data.rows();
         for (int i = 0; i < rows.size(); i++) {
-            List<INode> tds = rows.get(i).cells();
-            CommandType ct = CommandType.get(tds.get(0).getText());
+            IRow row = rows.get(i);
+            List<INode> tds = row.cells();
+            if (tds.isEmpty()) {
+                throw new RuntimeException("Empty lines are useless. " + row.getText());
+            }
+            String type = tds.get(0).getText();
+            CommandType ct = CommandType.get(type);
+            if (ct == null) {
+                throw new RuntimeException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)");
+            }
             Map<String, Value> filled = new HashMap<String, Value>();
             Set<Value> values = new TreeSet<Value>();
             for (int j = 1; j < tds.size(); j++) {
+                Column c = columns[j];
                 INode td = tds.get(j);
                 String att = td.getAttribute("title");
                 String value = att != null ? att : td.getText();
+
+                IConverter converter = c.getConverter();
+                String strConverter = td.getAttribute("converter");
+                if (strConverter != null) {
+                    IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
+                    IConverter instance = cm.get(converter);
+                    if (instance == null) {
+                        try {
+                            converter = (IConverter) Class.forName(strConverter).newInstance();
+                            cm.bind(strConverter, instance);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
                 List<String> args = new LinkedList<String>();
                 int index = 0;
                 String arg = td.getAttribute("arg" + (index++));
@@ -82,14 +108,12 @@ public class DatabaseRunner implements IDatabase {
                     args.add(arg);
                     arg = td.getAttribute("arg" + (index++));
                 }
-                Column c = columns[j];
-                IConverter converter = c.getConverter();
                 if (converter.accept(value)) {
                     Object obj;
                     try {
                         obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
                     } catch (ConverterException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Convertion error at row:" + i + ", cell:" + j + ". Attemp to convert '" + value + "' using a '" + converter + "'.", e);
                     }
                     if (obj == null && ct == CommandType.INSERT) {
                         obj = c.getDefaultValue();
@@ -110,7 +134,7 @@ public class DatabaseRunner implements IDatabase {
                 performDelete(con, table, values);
                 break;
             default:
-                throw new RuntimeException("Command type invalid.");
+                throw new RuntimeException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)");
             }
         }
         try {
@@ -208,10 +232,10 @@ public class DatabaseRunner implements IDatabase {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
         }
         try {
-            PreparedStatement pstmt = operations.get(sql);
+            PreparedStatement pstmt = inputs.get(sql);
             if (pstmt == null) {
                 pstmt = con.prepareStatement(sql);
-                operations.put(sql, pstmt);
+                inputs.put(sql, pstmt);
             } else {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("REUSE:" + pstmt);
@@ -238,7 +262,7 @@ public class DatabaseRunner implements IDatabase {
 
     @Override
     public void release() {
-        for (PreparedStatement ps : operations.values()) {
+        for (PreparedStatement ps : inputs.values()) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Release: " + ps);
             }
