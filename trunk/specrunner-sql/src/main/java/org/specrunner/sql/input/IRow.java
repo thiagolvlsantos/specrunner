@@ -19,7 +19,18 @@ package org.specrunner.sql.input;
 
 import java.util.List;
 
+/**
+ * Row abstraction.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public interface IRow extends INode {
 
+    /**
+     * List of row cells.
+     * 
+     * @return A list.
+     */
     List<INode> cells();
 }

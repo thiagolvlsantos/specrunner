@@ -26,9 +26,24 @@ import nu.xom.Nodes;
 
 import org.specrunner.sql.input.INode;
 
+/**
+ * Default implementation using XOM.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class NodeXOM implements INode {
+    /**
+     * The corresponding node element.
+     */
     protected Element element;
 
+    /**
+     * Default constructor.
+     * 
+     * @param element
+     *            A element.
+     */
     public NodeXOM(Element element) {
         this.element = element;
     }
@@ -49,6 +64,13 @@ public class NodeXOM implements INode {
         return element.getValue();
     }
 
+    /**
+     * Convert to a node list.
+     * 
+     * @param name
+     *            The node name to be used in "descendant::&lt;name&gt;".
+     * @return A list of nodes.
+     */
     protected List<INode> toNodeList(String name) {
         List<INode> result = new LinkedList<INode>();
         Nodes es = element.query("descendant::" + name);

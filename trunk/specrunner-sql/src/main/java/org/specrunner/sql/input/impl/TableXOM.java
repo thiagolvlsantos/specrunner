@@ -27,8 +27,20 @@ import org.specrunner.sql.input.INode;
 import org.specrunner.sql.input.IRow;
 import org.specrunner.sql.input.ITable;
 
+/**
+ * Default implementation using XOM.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class TableXOM extends NodeXOM implements ITable {
 
+    /**
+     * Default constructor.
+     * 
+     * @param element
+     *            The element.
+     */
     public TableXOM(Element element) {
         super(element);
     }

@@ -23,6 +23,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.impl.PluginNop;
 
 /**
  * Default block implementation.
@@ -97,7 +98,7 @@ public class BlockImpl implements IBlock {
 
     @Override
     public boolean hasPlugin() {
-        return getPlugin() != null;
+        return getPlugin() != null && getPlugin() != PluginNop.emptyPlugin();
     }
 
     @Override

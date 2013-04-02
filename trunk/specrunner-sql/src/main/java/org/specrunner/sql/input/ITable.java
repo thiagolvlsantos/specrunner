@@ -19,11 +19,32 @@ package org.specrunner.sql.input;
 
 import java.util.List;
 
+/**
+ * A table abstraction.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public interface ITable extends INode {
 
+    /**
+     * A caption.
+     * 
+     * @return The first table caption, others are ignored.
+     */
     INode caption();
 
+    /**
+     * Table headers.
+     * 
+     * @return The headers.
+     */
     List<INode> headers();
 
+    /**
+     * Table rows.
+     * 
+     * @return The rows.
+     */
     List<IRow> rows();
 }
