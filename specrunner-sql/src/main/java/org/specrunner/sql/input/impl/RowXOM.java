@@ -24,8 +24,20 @@ import nu.xom.Element;
 import org.specrunner.sql.input.INode;
 import org.specrunner.sql.input.IRow;
 
+/**
+ * Default implementation using XOM.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class RowXOM extends NodeXOM implements IRow {
 
+    /**
+     * Default constructor.
+     * 
+     * @param element
+     *            The element.
+     */
     public RowXOM(Element element) {
         super(element);
     }

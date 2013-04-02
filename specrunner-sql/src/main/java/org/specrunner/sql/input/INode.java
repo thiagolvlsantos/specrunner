@@ -17,11 +17,38 @@
  */
 package org.specrunner.sql.input;
 
+/**
+ * A node abstraction.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public interface INode {
 
+    /**
+     * Gets a node attribute.
+     * 
+     * @param name
+     *            The attribute name.
+     * @return The attribute, if found, null, otherwise.
+     */
     String getAttribute(String name);
 
+    /**
+     * Sets the attribute value.
+     * 
+     * @param name
+     *            The name.
+     * @param value
+     *            The value.
+     * @return The node itself.
+     */
     INode setAttribute(String name, String value);
 
+    /**
+     * Gets the node text.
+     * 
+     * @return The text.
+     */
     String getText();
 }

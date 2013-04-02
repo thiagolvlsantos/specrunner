@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -28,7 +29,10 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
+import org.specrunner.listeners.IListenerManager;
+import org.specrunner.listeners.impl.ProfilerPluginListener;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
@@ -330,6 +334,9 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             td.appendChild(sub);
             List<IResult> filter = filterByStatus(s);
             List<ActionType> acs = actionTypes(this);
+            IListenerManager lm = SpecRunnerServices.get(IListenerManager.class);
+            List<ProfilerPluginListener> list = lm.filterByType(ProfilerPluginListener.class);
+            Map<ActionType, Long> times = list.get(0).getTimeByType();
             for (ActionType at : acs) {
                 Element subtr = new Element("tr");
                 sub.appendChild(subtr);
@@ -339,7 +346,10 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 td.addAttribute(new Attribute("class", at.getCssName()));
                 subtd = new Element("td");
                 subtr.appendChild(subtd);
-                subtd.appendChild("" + countType(filter, at));
+                subtr.appendChild("" + countType(filter, at) + " in ");
+                subtd = new Element("td");
+                subtr.appendChild(subtd);
+                subtr.appendChild(times.get(at) + " ms");
             }
         }
         return table;

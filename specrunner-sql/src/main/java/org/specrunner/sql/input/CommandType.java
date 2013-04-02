@@ -17,16 +17,49 @@
  */
 package org.specrunner.sql.input;
 
+/**
+ * Abstraction for database command types.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public enum CommandType {
 
-    INSERT("I"), UPDATE("U"), DELETE("D");
+    /**
+     * Stand for insert operations.
+     */
+    INSERT("I"),
+    /**
+     * Stand for update operations.
+     */
+    UPDATE("U"),
+    /**
+     * Stand for delete operations.
+     */
+    DELETE("D");
 
+    /**
+     * The operation key.
+     */
     private String key;
 
+    /**
+     * Default constructor.
+     * 
+     * @param key
+     *            Element key.
+     */
     private CommandType(String key) {
         this.key = key;
     }
 
+    /**
+     * Lookup method.
+     * 
+     * @param key
+     *            The key.
+     * @return The command type, or null, if not found.
+     */
     public static CommandType get(String key) {
         for (CommandType c : values()) {
             if (c.key.equalsIgnoreCase(key)) {

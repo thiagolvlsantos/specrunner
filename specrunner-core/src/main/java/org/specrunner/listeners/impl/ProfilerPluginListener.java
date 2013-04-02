@@ -17,13 +17,21 @@
  */
 package org.specrunner.listeners.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
+import nu.xom.Attribute;
+import nu.xom.Element;
+
+import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.IPluginListener;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Logging profiler implementation.
@@ -49,6 +57,34 @@ public class ProfilerPluginListener implements IPluginListener {
      * Stack of end times.
      */
     private final Stack<Long> timeEnd = new Stack<Long>();
+    /**
+     * Last init count.
+     */
+    private Long lastInit;
+    /**
+     * Last start count.
+     */
+    private Long lastStart;
+    /**
+     * Last end count.
+     */
+    private Long lastEnd;
+    /**
+     * Total init count.
+     */
+    private Long totalInit;
+    /**
+     * Total start count.
+     */
+    private Long totalStart;
+    /**
+     * Total end count.
+     */
+    private Long totalEnd;
+    /**
+     * Mapping of time by action types.
+     */
+    private Map<ActionType, Long> timeByType = new HashMap<ActionType, Long>();
 
     @Override
     public String getName() {
@@ -60,6 +96,10 @@ public class ProfilerPluginListener implements IPluginListener {
         timeInit.clear();
         timeStart.clear();
         timeEnd.clear();
+        totalInit = 0L;
+        totalStart = 0L;
+        totalEnd = 0L;
+        timeByType.clear();
     }
 
     @Override
@@ -69,10 +109,11 @@ public class ProfilerPluginListener implements IPluginListener {
 
     @Override
     public void onAfterInit(IPlugin plugin, IContext context, IResultSet result) {
-        long time = (System.currentTimeMillis() - timeInit.pop());
-        if (UtilLog.LOG.isDebugEnabled() && time > TRESHOLD) {
-            UtilLog.LOG.debug("initialize(): " + time + "mls. On " + context.getPlugin());
+        lastInit = (System.currentTimeMillis() - timeInit.pop());
+        if (UtilLog.LOG.isDebugEnabled() && lastInit > TRESHOLD) {
+            UtilLog.LOG.debug("initialize(): " + lastInit + "mls. On " + context.getPlugin());
         }
+        totalInit += lastInit;
     }
 
     @Override
@@ -82,10 +123,11 @@ public class ProfilerPluginListener implements IPluginListener {
 
     @Override
     public void onAfterStart(IPlugin plugin, IContext context, IResultSet result) {
-        long time = (System.currentTimeMillis() - timeStart.pop());
-        if (UtilLog.LOG.isDebugEnabled() && time > TRESHOLD) {
-            UtilLog.LOG.debug("doStart(): " + time + "mls. On " + context.getPlugin());
+        lastStart = (System.currentTimeMillis() - timeStart.pop());
+        if (UtilLog.LOG.isDebugEnabled() && lastStart > TRESHOLD) {
+            UtilLog.LOG.debug("doStart(): " + lastStart + "mls. On " + context.getPlugin());
         }
+        totalStart += lastStart;
     }
 
     @Override
@@ -95,9 +137,32 @@ public class ProfilerPluginListener implements IPluginListener {
 
     @Override
     public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
-        long time = (System.currentTimeMillis() - timeEnd.pop());
-        if (UtilLog.LOG.isDebugEnabled() && time > TRESHOLD) {
-            UtilLog.LOG.debug("  doEnd(): " + time + "mls. On " + context.getPlugin());
+        lastEnd = (System.currentTimeMillis() - timeEnd.pop());
+        if (UtilLog.LOG.isDebugEnabled() && lastEnd > TRESHOLD) {
+            UtilLog.LOG.debug("  doEnd(): " + lastEnd + "mls. On " + context.getPlugin());
         }
+        totalEnd += lastEnd;
+        IBlock peek = context.peek();
+        if (UtilLog.LOG.isDebugEnabled() && peek.hasPlugin() && peek.getNode() instanceof Element) {
+            ActionType actionType = peek.getPlugin().getActionType();
+            Long time = timeByType.get(actionType);
+            if (time == null) {
+                time = 0L;
+            }
+            timeByType.put(actionType, time + (lastInit + lastStart + lastEnd));
+
+            Element e = (Element) peek.getNode();
+            UtilNode.appendCss(e, "sr_time");
+            e.addAttribute(new Attribute("srtime", actionType.getName() + ":" + lastInit + "/" + lastStart + "/" + lastEnd));
+        }
+    }
+
+    /**
+     * The mapping of time by action type.
+     * 
+     * @return The mapping.
+     */
+    public Map<ActionType, Long> getTimeByType() {
+        return timeByType;
     }
 }
