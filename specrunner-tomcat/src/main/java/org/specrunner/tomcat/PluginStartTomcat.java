@@ -36,7 +36,7 @@ import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.util.UtilLog;
 
@@ -261,7 +261,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         synchronized (lock) {
             try {
-                IReusableManager reusables = SpecRunnerServices.get(IReusableManager.class);
+                IReuseManager reusables = SpecRunnerServices.get(IReuseManager.class);
                 if (reuse) {
                     Map<String, Object> cfg = new HashMap<String, Object>();
                     cfg.put("name", getName());

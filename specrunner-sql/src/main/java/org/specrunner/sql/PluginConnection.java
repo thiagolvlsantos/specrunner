@@ -34,7 +34,7 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.sql.impl.SimpleDataSource;
 import org.specrunner.util.UtilLog;
@@ -373,7 +373,7 @@ public class PluginConnection extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         final String currentName = getName() != null ? getName() : CONNECTION_PROVIDER;
-        IReusableManager rm = SpecRunnerServices.get(IReusableManager.class);
+        IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
             if (ir != null) {
