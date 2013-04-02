@@ -20,7 +20,7 @@ package org.specrunner.reuse.impl;
 import java.util.HashMap;
 
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 
 /**
  * Default reusable manager implementation.
@@ -29,7 +29,7 @@ import org.specrunner.reuse.IReusableManager;
  * 
  */
 @SuppressWarnings("serial")
-public class ReusableManagerImpl extends HashMap<String, IReusable<?>> implements IReusableManager {
+public class ReusableManagerImpl extends HashMap<String, IReusable<?>> implements IReuseManager {
 
     @Override
     public IReusable<?> put(String name, IReusable<?> resource) {

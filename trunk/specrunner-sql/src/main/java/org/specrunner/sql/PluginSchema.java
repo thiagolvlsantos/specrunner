@@ -31,7 +31,7 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
@@ -141,7 +141,7 @@ public class PluginSchema extends AbstractPluginValue {
             UtilLog.LOG.info("PluginSchema provider:" + provider);
         }
         final String currentName = getName() != null ? getName() : SCHEMA_NAME;
-        IReusableManager rm = SpecRunnerServices.get(IReusableManager.class);
+        IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
             if (ir != null) {

@@ -34,7 +34,7 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -466,7 +466,7 @@ public class PluginBrowser extends AbstractPluginScoped {
             } else {
                 fac.remove(getName());
             }
-            IReusableManager reusables = SpecRunnerServices.get(IReusableManager.class);
+            IReuseManager reusables = SpecRunnerServices.get(IReuseManager.class);
             if (reuse) {
                 Map<String, Object> cfg = new HashMap<String, Object>();
                 cfg.put("version", version);

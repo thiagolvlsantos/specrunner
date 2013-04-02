@@ -23,7 +23,7 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 
 /**
  * Finalize all reusable resources.
@@ -40,7 +40,7 @@ public class PipeReusable implements IPipe {
 
     @Override
     public IChannel process(IChannel channel) throws AbortException, PipelineException {
-        IReusableManager rm = ShutDown.recover(channel).lookup(IReusableManager.class);
+        IReuseManager rm = ShutDown.recover(channel).lookup(IReuseManager.class);
         for (IReusable<?> r : rm.values()) {
             r.release();
             rm.remove(r);

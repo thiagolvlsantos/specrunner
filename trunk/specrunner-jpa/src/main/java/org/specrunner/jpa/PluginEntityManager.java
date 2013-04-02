@@ -33,7 +33,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.reuse.IReusable;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.impl.AbstractReusable;
 import org.specrunner.util.xom.RowAdapter;
 
@@ -74,7 +74,7 @@ public class PluginEntityManager extends AbstractPluginObject {
         EntityManagerFactory emf = null;
         EntityManager em = null;
 
-        IReusableManager rm = SpecRunnerServices.get(IReusableManager.class);
+        IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
         Map<String, Object> cfg = new HashMap<String, Object>();
         cfg.put("unit", unit);
 

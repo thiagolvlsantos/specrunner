@@ -25,7 +25,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.reuse.IReusableManager;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
 
 /**
@@ -44,7 +44,7 @@ public class PluginQuit extends AbstractPluginUrlAware {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         // only not reusable browser can be quit.
-        if (SpecRunnerServices.get(IReusableManager.class).get(getBrowserName()) == null) {
+        if (SpecRunnerServices.get(IReuseManager.class).get(getBrowserName()) == null) {
             client.quit();
         }
         result.addResult(Success.INSTANCE, context.peek());
