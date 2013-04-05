@@ -68,17 +68,17 @@ public class PipelineImpl extends LinkedList<IPipe> implements IPipeline {
         for (IPipe p : this) {
             boolean proceed = true;
             try {
-                fireBeforeCheck(channel);
+                fireBeforeCheck(channel, p);
                 proceed = p.check(channel);
             } finally {
-                fireAfterCheck(channel);
+                fireAfterCheck(channel, p);
             }
             if (proceed) {
                 try {
-                    fireBeforePerform(channel);
+                    fireBeforePerform(channel, p);
                     p.process(channel);
                 } finally {
-                    fireAfterPerform(channel);
+                    fireAfterPerform(channel, p);
                 }
             }
         }
@@ -104,10 +104,12 @@ public class PipelineImpl extends LinkedList<IPipe> implements IPipeline {
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source pipe.
      */
-    protected void fireBeforeCheck(IChannel channel) {
+    protected void fireBeforeCheck(IChannel channel, IPipe source) {
         for (IPipeListener p : listeners) {
-            p.onBeforeCheck(channel);
+            p.onBeforeCheck(channel, source);
         }
     }
 
@@ -116,10 +118,12 @@ public class PipelineImpl extends LinkedList<IPipe> implements IPipeline {
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source pipe.
      */
-    protected void fireAfterCheck(IChannel channel) {
+    protected void fireAfterCheck(IChannel channel, IPipe source) {
         for (IPipeListener p : listeners) {
-            p.onAfterCheck(channel);
+            p.onAfterCheck(channel, source);
         }
     }
 
@@ -128,10 +132,12 @@ public class PipelineImpl extends LinkedList<IPipe> implements IPipeline {
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source pipe.
      */
-    protected void fireBeforePerform(IChannel channel) {
+    protected void fireBeforePerform(IChannel channel, IPipe source) {
         for (IPipeListener p : listeners) {
-            p.onBeforeProcess(channel);
+            p.onBeforeProcess(channel, source);
         }
     }
 
@@ -140,10 +146,12 @@ public class PipelineImpl extends LinkedList<IPipe> implements IPipeline {
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source pipe.
      */
-    protected void fireAfterPerform(IChannel channel) {
+    protected void fireAfterPerform(IChannel channel, IPipe source) {
         for (IPipeListener p : listeners) {
-            p.onAfterProcess(channel);
+            p.onAfterProcess(channel, source);
         }
     }
 }

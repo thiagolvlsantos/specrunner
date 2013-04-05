@@ -30,7 +30,9 @@ import org.specrunner.impl.pipes.PipeInput;
 import org.specrunner.impl.pipes.PipeResult;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
+import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.IPipelineFactory;
+import org.specrunner.pipeline.ProfilerPipeListener;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -74,7 +76,9 @@ public class SpecRunnerPipeline implements ISpecRunner {
         try {
             IChannel channel = SpecRunnerServices.get(IChannelFactory.class).newChannel();
             PipeConfiguration.bind(PipeInput.bind(channel, input), configuration);
-            return PipeResult.lookup(SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner.xml").process(channel));
+            IPipeline pipe = SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner.xml");
+            pipe.addPipelineListener(new ProfilerPipeListener());
+            return PipeResult.lookup(pipe.process(channel));
         } catch (Exception e) {
             throw new SpecRunnerException(e);
         }

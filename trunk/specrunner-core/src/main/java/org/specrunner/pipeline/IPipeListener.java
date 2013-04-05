@@ -30,30 +30,38 @@ public interface IPipeListener {
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source.
      */
-    void onBeforeCheck(IChannel channel);
+    void onBeforeCheck(IChannel channel, IPipe source);
 
     /**
      * Perform something after checking.
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source.
      */
-    void onAfterCheck(IChannel channel);
+    void onAfterCheck(IChannel channel, IPipe source);
 
     /**
      * Perform something before processing.
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source.
      */
-    void onBeforeProcess(IChannel channel);
+    void onBeforeProcess(IChannel channel, IPipe source);
 
     /**
      * Perform something after processing.
      * 
      * @param channel
      *            The channel.
+     * @param source
+     *            The source.
      */
-    void onAfterProcess(IChannel channel);
+    void onAfterProcess(IChannel channel, IPipe source);
 }
