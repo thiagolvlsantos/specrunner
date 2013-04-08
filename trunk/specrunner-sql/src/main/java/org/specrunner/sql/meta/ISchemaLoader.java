@@ -17,7 +17,20 @@
  */
 package org.specrunner.sql.meta;
 
+/**
+ * Load the schema information from somewhere.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
 public interface ISchemaLoader {
 
+    /**
+     * Load a Schema object from a object.
+     * 
+     * @param source
+     *            The loader source of information.
+     * @return The schema.
+     */
     Schema load(Object source);
 }
