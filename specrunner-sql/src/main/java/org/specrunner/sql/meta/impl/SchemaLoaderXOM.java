@@ -19,6 +19,8 @@ package org.specrunner.sql.meta.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 
 import nu.xom.Builder;
 import nu.xom.Document;
@@ -32,6 +34,7 @@ import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
+import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
 
@@ -92,7 +95,25 @@ public class SchemaLoaderXOM implements ISchemaLoader {
                         c.setComparator(instance);
                     }
                     String defaultValue = nColumn.getAttributeValue("default");
-                    c.setDefaultValue(defaultValue);
+                    IConverter conv = c.getConverter();
+                    if (conv.accept(defaultValue)) {
+                        List<String> args = new LinkedList<String>();
+                        int index = 0;
+                        String arg = nColumn.getAttributeValue("arg" + (index++));
+                        while (arg != null) {
+                            args.add(arg);
+                            arg = nColumn.getAttributeValue("arg" + (index++));
+                        }
+                        Object obj;
+                        try {
+                            obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());
+                        } catch (ConverterException e) {
+                            throw new RuntimeException("Convertion error at table: " + t.getName() + ", column: " + c.getName() + ". Attempt to convert default value '" + defaultValue + "' using a '" + conv + "'.", e);
+                        }
+                        c.setDefaultValue(obj);
+                    } else {
+                        c.setDefaultValue(conv.convert(defaultValue, null));
+                    }
                 }
             }
         } catch (Exception e) {
