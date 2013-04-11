@@ -18,15 +18,18 @@
 package org.specrunner.sql.meta;
 
 import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.xom.CellAdapter;
 
 public class Value implements Comparable<Value> {
 
     private Column column;
+    private CellAdapter cell;
     private Object value;
     private IComparator comparator;
 
-    public Value(Column column, Object value, IComparator comparator) {
+    public Value(Column column, CellAdapter cell, Object value, IComparator comparator) {
         this.column = column;
+        this.cell = cell;
         this.value = value;
         this.comparator = comparator;
     }
@@ -38,6 +41,14 @@ public class Value implements Comparable<Value> {
     public Value setColumn(Column column) {
         this.column = column;
         return this;
+    }
+
+    public CellAdapter getCell() {
+        return cell;
+    }
+
+    public void setCell(CellAdapter cell) {
+        this.cell = cell;
     }
 
     public Object getValue() {

@@ -32,6 +32,9 @@ public class ConverterLong implements IConverter {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
         try {
             return Long.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {
