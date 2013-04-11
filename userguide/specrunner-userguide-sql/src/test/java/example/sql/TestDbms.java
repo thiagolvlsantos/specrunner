@@ -18,24 +18,27 @@
 package example.sql;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 
 //CHECKSTYLE:OFF
-@RunWith(ConcurrentRunner.class)
+//@RunWith(ConcurrentRunner.class)
 public class TestDbms {
 
     private static final String INCOME = "src/test/resources/income/dbms/";
     private static final String OUTCOME = "src/test/resources/outcome/dbms/";
 
-    private void run(String name) {
-        SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + name);
+    private void run(String name, String out) {
+        SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out);
     }
 
     @Test
     public void pluginsSQL() {
-        run("dbms.html");
+        run("dbms.html", "dbms.html");
+    }
+
+    @Test
+    public void pluginsSQL2() {
+        run("dbms.html", "dbms2.html");
     }
 }
 // CHECKSTYLE:ON
