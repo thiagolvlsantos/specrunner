@@ -1,4 +1,4 @@
-package org.specrunner.sql.database;
+package org.specrunner.sql;
 
 /**
  * Database mode.

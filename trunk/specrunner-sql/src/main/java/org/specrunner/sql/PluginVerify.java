@@ -19,7 +19,6 @@ package org.specrunner.sql;
 
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Assertion;
-import org.specrunner.sql.database.EMode;
 
 /**
  * Check a database.

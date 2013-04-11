@@ -15,35 +15,57 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.input.impl;
-
-import java.util.List;
-
-import nu.xom.Element;
-
-import org.specrunner.sql.input.INode;
-import org.specrunner.sql.input.IRow;
+package org.specrunner.sql;
 
 /**
- * Default implementation using XOM.
+ * Abstraction for database command types.
  * 
  * @author Thiago Santos
  * 
  */
-public class RowXOM extends NodeXOM implements IRow {
+public enum CommandType {
+
+    /**
+     * Stand for insert operations.
+     */
+    INSERT("I"),
+    /**
+     * Stand for update operations.
+     */
+    UPDATE("U"),
+    /**
+     * Stand for delete operations.
+     */
+    DELETE("D");
+
+    /**
+     * The operation key.
+     */
+    private String key;
 
     /**
      * Default constructor.
      * 
-     * @param element
-     *            The element.
+     * @param key
+     *            Element key.
      */
-    public RowXOM(Element element) {
-        super(element);
+    private CommandType(String key) {
+        this.key = key;
     }
 
-    @Override
-    public List<INode> cells() {
-        return toNodeList("td");
+    /**
+     * Lookup method.
+     * 
+     * @param key
+     *            The key.
+     * @return The command type, or null, if not found.
+     */
+    public static CommandType get(String key) {
+        for (CommandType c : values()) {
+            if (c.key.equalsIgnoreCase(key)) {
+                return c;
+            }
+        }
+        return null;
     }
 }
