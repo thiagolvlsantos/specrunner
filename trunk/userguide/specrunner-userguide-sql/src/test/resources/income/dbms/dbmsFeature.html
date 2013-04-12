@@ -3,12 +3,12 @@
 <meta charset="UTF-8" />
 </head>
 <body>
-	Com uma <span class="connection" provider="example.sql.DataSourceProviderImpl">conexão</span>
+	Com uma <span class="connection">conexão</span>
 	deve-se <a class="scripts" href="drop.sql" value="drop.sql" failsafe="true">re</a>
 	<a class="scripts" href="schema.sql" value="schema.sql">criar</a> o esquema. Com um 
-	<span class="schemaloader" provider="org.specrunner.sql.meta.impl.SchemaLoaderXOM" reuse="true">leitor</span> de esquemas se carrega o
-	<span class="schema" source="/income/dbms/schema.cfg.xml" reuse="true">esquema</span> esperado, prepara-se 
-	<span class="database" provider="org.specrunner.sql.impl.Database" reuse="true">o executor de comandos</span>.
+	<span class="schemaloader">leitor</span> de esquemas se carrega o
+	<span class="schema">esquema</span> esperado, prepara-se 
+	<span class="database">o executor de comandos</span>.
 	Por fim	prepara-se o banco de dados preenchendo com:</span>
 	<table class="prepare">
 		<caption>Projeto</caption>
