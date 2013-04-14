@@ -167,11 +167,18 @@ public class Database implements IDatabase {
                 default:
                     throw new PluginException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)");
                 }
-            } catch (PluginException e) {
+            } catch (SQLException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), plugin), e.getMessage());
+                try {
+                    result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), plugin), new PluginException("Error in connection (" + con.getMetaData().getURL() + "): " + e.getMessage(), e));
+                } catch (SQLException e1) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    throw new PluginException("Could not log error:" + e1.getMessage(), e1);
+                }
             }
         }
         try {
@@ -181,7 +188,7 @@ public class Database implements IDatabase {
         }
     }
 
-    protected void performInsert(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled) throws PluginException {
+    protected void performInsert(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled) throws PluginException, SQLException {
         for (Column c : table.getAliasToColumns().values()) {
             if (filled.get(c.getName()) == null && c.getDefaultValue() != null) {
                 values.add(new Value(c, null, c.getDefaultValue(), c.getComparator()));
@@ -211,7 +218,7 @@ public class Database implements IDatabase {
         performIn(context, result, con, sb.toString(), indexes, values, 1);
     }
 
-    protected void performUpdate(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException {
+    protected void performUpdate(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException, SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("update " + table.getSchema().getName() + "." + table.getName() + " set ");
         StringBuilder sbVal = new StringBuilder();
@@ -244,7 +251,7 @@ public class Database implements IDatabase {
         performIn(context, result, con, sb.toString(), indexes, values, 1);
     }
 
-    protected void performDelete(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException {
+    protected void performDelete(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException, SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("delete from " + table.getSchema().getName() + "." + table.getName() + " where ");
         StringBuilder sbPla = new StringBuilder();
@@ -264,43 +271,39 @@ public class Database implements IDatabase {
         performIn(context, result, con, sb.toString(), indexes, values, 1);
     }
 
-    protected void performIn(IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException {
+    protected void performIn(IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
         }
-        try {
-            PreparedStatement pstmt = inputs.get(sql);
-            if (pstmt == null) {
-                pstmt = con.prepareStatement(sql);
-                inputs.put(sql, pstmt);
-            } else {
-                pstmt.clearParameters();
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("REUSE:" + pstmt);
-                }
-            }
-            for (Value v : values) {
-                Integer index = indexes.get(v.getColumn().getName());
-                if (index != null) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
-                    }
-                    pstmt.setObject(index, v.getValue());
-                }
-            }
-            int count = pstmt.executeUpdate();
+        PreparedStatement pstmt = inputs.get(sql);
+        if (pstmt == null) {
+            pstmt = con.prepareStatement(sql);
+            inputs.put(sql, pstmt);
+        } else {
+            pstmt.clearParameters();
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("[" + count + "]=" + sql);
+                UtilLog.LOG.debug("REUSE:" + pstmt);
             }
-            if (expectedCount != count) {
-                throw new PluginException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".");
+        }
+        for (Value v : values) {
+            Integer index = indexes.get(v.getColumn().getName());
+            if (index != null) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
+                }
+                pstmt.setObject(index, v.getValue());
             }
-        } catch (SQLException e) {
-            throw new PluginException(e);
+        }
+        int count = pstmt.executeUpdate();
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("[" + count + "]=" + sql);
+        }
+        if (expectedCount != count) {
+            throw new PluginException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".");
         }
     }
 
-    protected void performSelect(IPlugin plugin, IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled, int expectedCount) throws PluginException {
+    protected void performSelect(IPlugin plugin, IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled, int expectedCount) throws PluginException, SQLException {
         StringBuilder sbVal = new StringBuilder();
         StringBuilder sbPla = new StringBuilder();
         Map<String, Integer> indexes = new HashMap<String, Integer>();
@@ -332,66 +335,62 @@ public class Database implements IDatabase {
         performOut(plugin, context, result, con, sb.toString(), indexes, values, expectedCount);
     }
 
-    protected void performOut(IPlugin plugin, IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException {
+    protected void performOut(IPlugin plugin, IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values + ". indexes = " + indexes);
         }
-        try {
-            PreparedStatement pstmt = inputs.get(sql);
-            if (pstmt == null) {
-                pstmt = con.prepareStatement(sql);
-                inputs.put(sql, pstmt);
-            } else {
-                pstmt.clearParameters();
+        PreparedStatement pstmt = inputs.get(sql);
+        if (pstmt == null) {
+            pstmt = con.prepareStatement(sql);
+            inputs.put(sql, pstmt);
+        } else {
+            pstmt.clearParameters();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("REUSE:" + pstmt);
+            }
+        }
+        for (Value v : values) {
+            Integer index = indexes.get(v.getColumn().getName());
+            if (index != null) {
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("REUSE:" + pstmt);
+                    UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
                 }
+                pstmt.setObject(index, v.getValue());
             }
-            for (Value v : values) {
-                Integer index = indexes.get(v.getColumn().getName());
-                if (index != null) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
-                    }
-                    pstmt.setObject(index, v.getValue());
+        }
+        ResultSet rs = null;
+        try {
+            rs = pstmt.executeQuery();
+            if (expectedCount == 1) {
+                if (!rs.next()) {
+                    throw new PluginException("None register found with the given conditions: " + sql + "[" + values + "]");
                 }
-            }
-            ResultSet rs = null;
-            try {
-                rs = pstmt.executeQuery();
-                if (expectedCount == 1) {
-                    if (!rs.next()) {
-                        throw new PluginException("None register found with the given conditions: " + sql + "[" + values + "]");
-                    }
-                    for (Value v : values) {
-                        Integer index = indexes.get(v.getColumn().getName());
-                        if (index == null) {
-                            IComparator comparator = v.getComparator();
-                            Object received = rs.getObject(v.getColumn().getName());
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
-                            }
-                            if (!comparator.match(v.getValue(), received)) {
-                                IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(v.getValue()), String.valueOf(received));
-                                result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getElement(), plugin), new DefaultAlignmentException(aligner));
-                            }
+                for (Value v : values) {
+                    Integer index = indexes.get(v.getColumn().getName());
+                    if (index == null) {
+                        IComparator comparator = v.getComparator();
+                        Object received = rs.getObject(v.getColumn().getName());
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
+                        }
+                        if (!comparator.match(v.getValue(), received)) {
+                            IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(v.getValue()), String.valueOf(received));
+                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getElement(), plugin), new DefaultAlignmentException(aligner));
                         }
                     }
-                    if (rs.next()) {
-                        throw new PluginException("More than one register satisfy the condition: " + sql + "[" + values + "]");
-                    }
-                } else {
-                    if (rs.next()) {
-                        throw new PluginException("A result for " + sql + "[" + values + "] was not expected.");
-                    }
                 }
-            } finally {
-                if (rs != null) {
-                    rs.close();
+                if (rs.next()) {
+                    throw new PluginException("More than one register satisfy the condition: " + sql + "[" + values + "]");
+                }
+            } else {
+                if (rs.next()) {
+                    throw new PluginException("A result for " + sql + "[" + values + "] was not expected.");
                 }
             }
-        } catch (SQLException e) {
-            throw new PluginException(e);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
         }
     }
 

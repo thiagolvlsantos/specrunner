@@ -19,14 +19,18 @@ package org.specrunner.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.util.UtilLog;
@@ -41,17 +45,41 @@ import org.specrunner.util.xom.TableAdapter;
 public abstract class AbstractPluginDatabase extends AbstractPluginTable {
 
     /**
-     * The schema name.
+     * Feature for schema name.
      */
-    private String datasource;
+    public static final String FEATURE_SCHEMA = AbstractPluginDatabase.class.getName() + ".schema";
     /**
      * The schema name.
      */
     private String schema;
     /**
+     * Feature for datasource names.
+     */
+    public static final String FEATURE_DATASOURCE = AbstractPluginDatabase.class.getName() + ".datasource";
+    /**
+     * The schema name.
+     */
+    private String datasource;
+    /**
+     * Feature for datasource names.
+     */
+    public static final String FEATURE_DATABASE = AbstractPluginDatabase.class.getName() + ".database";
+    /**
      * The schema name.
      */
     private String database;
+    /**
+     * Feature for names separators.
+     */
+    public static final String FEATURE_SEPARATOR = AbstractPluginDatabase.class.getName() + ".separator";
+    /**
+     * Default separator.
+     */
+    public static final String DEFAULT_SEPARATOR = ";";
+    /**
+     * The separator, default is ";".
+     */
+    private String separator = DEFAULT_SEPARATOR;
     /**
      * The database action mode.
      */
@@ -125,6 +153,25 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
     }
 
     /**
+     * Get the name separator.
+     * 
+     * @return The names separator.
+     */
+    public String getSeparator() {
+        return separator;
+    }
+
+    /**
+     * Set the name separator.
+     * 
+     * @param separator
+     *            The separator.
+     */
+    public void setSeparator(String separator) {
+        this.separator = separator;
+    }
+
+    /**
      * Get the plugin mode.
      * 
      * @return The mode.
@@ -144,41 +191,96 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
-        IDataSourceProvider datasource = PluginConnection.getProvider(context, getDatasource());
-        Schema schema = PluginSchema.getSchema(context, getSchema());
-        IDatabase database = PluginDatabase.getDatabase(context, getDatabase());
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug(getClass().getSimpleName() + " datasource:" + datasource);
-            UtilLog.LOG.debug(getClass().getSimpleName() + "     schema:" + schema);
-            UtilLog.LOG.debug(getClass().getSimpleName() + "   database:" + database);
+    public void initialize(IContext context, TableAdapter table) throws PluginException {
+        super.initialize(context, table);
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        if (schema == null) {
+            fm.set(FEATURE_SCHEMA, this);
         }
-        DataSource ds = datasource.getDataSource();
-        Connection connection = null;
-        try {
-            connection = ds.getConnection();
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info(getClass().getSimpleName() + " connection:" + connection);
-            }
-            database.perform(this, context, result, tableAdapter, connection, schema, mode);
-        } catch (SQLException e) {
+        if (datasource == null) {
+            fm.set(FEATURE_DATASOURCE, this);
+        }
+        if (database == null) {
+            fm.set(FEATURE_DATABASE, this);
+        }
+        fm.set(FEATURE_SEPARATOR, this);
+    }
+
+    @Override
+    public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+        Schema schema = PluginSchema.getSchema(context, getSchema());
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug(getClass().getSimpleName() + "     schema(" + getSchema() + "):" + schema);
+        }
+        String[] sources = parts(getDatasource() != null ? getDatasource() : PluginConnection.CONNECTION_PROVIDER);
+        String[] bases = parts(getDatabase() != null ? getDatabase() : PluginDatabase.DATABASE_PROVIDER);
+        int erros = 0;
+        for (int i = 0; i < sources.length && i < bases.length; i++) {
+            String s = sources[i];
+            String b = bases[i];
+            IDataSourceProvider datasource = PluginConnection.getProvider(context, s);
+            IDatabase database = PluginDatabase.getDatabase(context, b);
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+                UtilLog.LOG.debug(getClass().getSimpleName() + " datasource(" + s + "):" + datasource);
+                UtilLog.LOG.debug(getClass().getSimpleName() + "   database(" + b + "):" + database);
             }
-            throw new PluginException(e);
-        } finally {
+            DataSource ds = datasource.getDataSource();
+            Connection connection = null;
             try {
-                if (connection != null) {
-                    connection.commit();
+                connection = ds.getConnection();
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info(getClass().getSimpleName() + " connection:(" + connection.getMetaData().getURL() + ")" + connection);
                 }
+                database.perform(this, context, result, tableAdapter, connection, schema, mode);
             } catch (SQLException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                throw new PluginException(e);
+                erros++;
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + s + ", and database:" + b + ". Error:" + e.getMessage(), e));
+            } catch (PluginException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                erros++;
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + s + ", and database:" + b + ". Error:" + e.getMessage(), e));
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.commit();
+                    }
+                } catch (SQLException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    erros++;
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + s + ", and database:" + b + ". Error:" + e.getMessage(), e));
+                }
             }
         }
-        result.addResult(Success.INSTANCE, context.peek());
+        if (erros == 0) {
+            result.addResult(Success.INSTANCE, context.peek());
+        }
         return ENext.DEEP;
+    }
+
+    /**
+     * Tokenize a string.
+     * 
+     * @param str
+     *            The string.
+     * @return The tokens, using 'separator' as reference.
+     */
+    protected String[] parts(String str) {
+        if (str == null) {
+            return null;
+        }
+        StringTokenizer st = new StringTokenizer(str, separator);
+        String[] result = new String[st.countTokens()];
+        int i = 0;
+        while (st.hasMoreTokens()) {
+            result[i++] = st.nextToken();
+        }
+        return result;
     }
 }

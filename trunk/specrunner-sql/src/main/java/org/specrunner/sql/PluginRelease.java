@@ -21,11 +21,10 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginTable;
+import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.TableAdapter;
 
 /**
  * Perform release of an Database with a given name.
@@ -33,7 +32,7 @@ import org.specrunner.util.xom.TableAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginRelease extends AbstractPluginTable {
+public class PluginRelease extends AbstractPluginValue {
 
     @Override
     public ActionType getActionType() {
@@ -41,7 +40,7 @@ public class PluginRelease extends AbstractPluginTable {
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         IDatabase database = PluginDatabase.getDatabase(context, getName());
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("PluginRelease database:" + database);
