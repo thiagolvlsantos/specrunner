@@ -21,7 +21,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.sql.PluginConnection;
+import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
@@ -30,29 +30,25 @@ import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 //CHECKSTYLE:OFF
 //@RunWith(ConcurrentRunner.class)
-public class TestDbmsFeature extends TestDbms {
+public class TestDbmsNegativeFeature extends TestDbms {
 
     @Before
     public void before() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE, new DataSourceProviderImpl());
-        fm.add(PluginConnection.FEATURE_REUSE, true);
         fm.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
         fm.add(PluginSchemaLoader.FEATURE_REUSE, true);
         fm.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/schema.cfg.xml");
         fm.add(PluginSchema.FEATURE_REUSE, true);
-        fm.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new Database());
+        fm.add(PluginDatabase.FEATURE_PROVIDER, Database.class.getName());
         fm.add(PluginDatabase.FEATURE_REUSE, true);
+        fm.add(AbstractPluginDatabase.FEATURE_DATASOURCE, "conA|conB");
+        fm.add(AbstractPluginDatabase.FEATURE_DATABASE, "dataA|dataB");
+        fm.add(AbstractPluginDatabase.FEATURE_SEPARATOR, "|");
     }
 
     @Test
-    public void pluginsExampleFeature() {
-        run("dbmsFeature.html");
-    }
-
-    @Test
-    public void pluginsExampleFeature2() {
-        run("dbmsFeature.html", "dbmsFeature2.html");
+    public void pluginsNegativeFeature() {
+        run("dbmsNegativeFeature.html");
     }
 }
 // CHECKSTYLE:ON
