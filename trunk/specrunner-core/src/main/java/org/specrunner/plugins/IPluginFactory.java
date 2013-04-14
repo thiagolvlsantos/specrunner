@@ -44,6 +44,19 @@ public interface IPluginFactory {
     String getAlias(Class<? extends IPlugin> type);
 
     /**
+     * Bind a plugin instance to a given type.
+     * 
+     * @param type
+     *            The type.
+     * @param alias
+     *            The alias.
+     * @param plugin
+     *            The plugin instance.
+     * @return The factory itself.
+     */
+    IPluginFactory bind(String type, String alias, IPlugin plugin);
+
+    /**
      * Creates a new plugin.
      * 
      * @param source

@@ -42,6 +42,10 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      */
     protected Map<String, Class<? extends IPlugin>> types = new HashMap<String, Class<? extends IPlugin>>();
     /**
+     * Types of plugins available by name.
+     */
+    protected Map<String, IPlugin> templates = new HashMap<String, IPlugin>();
+    /**
      * Alias of plugins.
      */
     protected Map<Class<? extends IPlugin>, String> aliases = new HashMap<Class<? extends IPlugin>, String>();
@@ -110,4 +114,22 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
         }
         return aliases.get(type);
     }
+
+    @Override
+    public IPluginFactory bind(String type, String alias, IPlugin plugin) {
+        if (test(type)) {
+            templates.put(alias.toLowerCase(), plugin);
+        }
+        return this;
+    }
+
+    /**
+     * Test if the factory accept the plugin.
+     * 
+     * @param type
+     *            The plugin type.
+     * @return <code>true</code>, if accept the <code>type</code>, false,
+     *         otherwise.
+     */
+    protected abstract boolean test(String type);
 }

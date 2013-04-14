@@ -61,19 +61,29 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
             Node att = ele.getAttribute(ATTRIBUTE);
             if (att != null) {
                 String clazz = att.getValue();
-                Class<? extends IPlugin> c = types.get(clazz);
-                try {
-                    if (c == null) {
-                        c = (Class<? extends IPlugin>) Class.forName(clazz);
+                IPlugin template = templates.get(clazz);
+                if (template != null) {
+                    return UtilPlugin.create(context, template, ele);
+                } else {
+                    Class<? extends IPlugin> c = types.get(clazz);
+                    try {
+                        if (c == null) {
+                            c = (Class<? extends IPlugin>) Class.forName(clazz);
+                        }
+                        return UtilPlugin.create(context, c, ele);
+                    } catch (ClassNotFoundException e) {
+                        throw new PluginException("Plugin class " + clazz + " not found.", e);
+                    } catch (ClassCastException e) {
+                        throw new PluginException("Plugin class " + clazz + " is not an instance of IPlugin.", e);
                     }
-                    return UtilPlugin.create(context, c, ele);
-                } catch (ClassNotFoundException e) {
-                    throw new PluginException("Plugin class " + clazz + " not found.", e);
-                } catch (ClassCastException e) {
-                    throw new PluginException("Plugin class " + clazz + " is not an instance of IPlugin.", e);
                 }
             }
         }
         return PluginNop.emptyPlugin();
+    }
+
+    @Override
+    protected boolean test(String type) {
+        return "custom".equalsIgnoreCase(type);
     }
 }

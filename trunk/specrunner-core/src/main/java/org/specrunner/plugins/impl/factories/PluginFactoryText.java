@@ -63,4 +63,12 @@ public class PluginFactoryText implements IPluginFactory {
     public String getAlias(Class<? extends IPlugin> type) {
         return null;
     }
+
+    @Override
+    public IPluginFactory bind(String type, String alias, IPlugin plugin) {
+        if ("text".equals(type)) {
+            ((IPluginGroup) instance.get()).add(plugin);
+        }
+        return this;
+    }
 }
