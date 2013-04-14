@@ -20,6 +20,7 @@ package org.specrunner.plugins.impl;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
@@ -69,6 +70,23 @@ public final class UtilPlugin {
     }
 
     /**
+     * Equivalent to <code>create(...,false)</code>.
+     * 
+     * @param context
+     *            The reference context.
+     * @param instance
+     *            The plugin template instance.
+     * @param element
+     *            The element to be used as reference for plugin creation.
+     * @return The newly created plugin.
+     * @throws PluginException
+     *             On plugin creation errors.
+     */
+    public static IPlugin create(IContext context, IPlugin instance, Element element) throws PluginException {
+        return create(context, instance, element, false);
+    }
+
+    /**
      * Creates a plugin based on its type. The attributes of 'element'will be
      * evaluated as expressions in the given context and used to set plugin
      * attributes with corresponding names.
@@ -103,6 +121,44 @@ public final class UtilPlugin {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
             throw new PluginException("Could not create a plugin for " + type + "." + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Creates a plugin based on its template. The attributes of 'element' will
+     * be evaluated as expressions in the given context and used to set plugin
+     * attributes with corresponding names.
+     * 
+     * @param context
+     *            The reference context.
+     * @param instance
+     *            The template instance.
+     * @param element
+     *            The element to be used as reference for plugin creation.
+     * @param initialize
+     *            true, if initialize() should be called, false, otherwise.
+     * @return The newly created plugin.
+     * @throws PluginException
+     *             On plugin creation errors.
+     */
+    public static IPlugin create(IContext context, IPlugin instance, Element element, boolean initialize) throws PluginException {
+        try {
+            Class<?> clazz = instance.getClass();
+            IPlugin result = (IPlugin) clazz.newInstance();
+            PropertyUtils.copyProperties(result, instance);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("result ->" + result);
+            }
+            UtilParametrized.setProperties(context, result, element);
+            if (initialize) {
+                result.initialize(context);
+            }
+            return result;
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException("Could not create a plugin for " + instance + "." + e.getMessage(), e);
         }
     }
 

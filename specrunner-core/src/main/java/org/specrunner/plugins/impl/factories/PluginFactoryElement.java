@@ -51,11 +51,21 @@ public class PluginFactoryElement extends PluginFactoryImpl {
         if (node instanceof Element) {
             Element ele = (Element) node;
             String name = ele.getQualifiedName().toLowerCase();
-            Class<? extends IPlugin> c = types.get(name);
-            if (c != null) {
-                return UtilPlugin.create(context, c, ele);
+            IPlugin template = templates.get(name);
+            if (template != null) {
+                return UtilPlugin.create(context, template, ele);
+            } else {
+                Class<? extends IPlugin> c = types.get(name);
+                if (c != null) {
+                    return UtilPlugin.create(context, c, ele);
+                }
             }
         }
         return PluginNop.emptyPlugin();
+    }
+
+    @Override
+    protected boolean test(String type) {
+        return false;
     }
 }

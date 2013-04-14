@@ -4,18 +4,13 @@
 </head>
 <body>
 	<p>
-	Uma conexão 
-	<span class="connection" connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_INICIAL|sa|" name="conA">A</span> 
-	e uma conexão
-	<span class="connection" connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|" name="conB">B</span>.
+	Duas conexões <span class="connectionA connectionB">A e B</span>.
 	</p>
 	
 	<p>
-	 <a class="scripts" href="drop.sql" value="drop.sql" failsafe="true" name="conA">Re</a>
-	 <a class="scripts" href="schema.sql" value="schema.sql" name="conA">cria-se</a> o esquema de A
+	 <a class="scriptsDrop" href="drop.sql" name="conA">Re</a><a class="scriptsCreate" href="schema.sql" name="conA">cria-se</a> o esquema de A
 	  e
-	 <a class="scripts" href="drop.sql" value="drop.sql" failsafe="true" name="conB">Re</a>
-	 <a class="scripts" href="schema.sql" value="schema.sql" name="conB">cria-se</a> o esquema de B.
+	 <a class="scriptsDrop" href="drop.sql" name="conB">Re</a><a class="scriptsCreate" href="schema.sql" name="conB">cria-se</a> o esquema de B.
 	 </p>
 
 	<p>

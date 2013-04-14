@@ -63,14 +63,25 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
             if (att != null) {
                 String[] pcs = att.getValue().split(" ");
                 for (String s : pcs) {
-                    Class<? extends IPlugin> c = types.get(s.toLowerCase());
-                    if (c != null) {
-                        result.add(UtilPlugin.create(context, c, ele));
+                    String p = s.toLowerCase();
+                    IPlugin template = templates.get(p);
+                    if (template != null) {
+                        result.add(UtilPlugin.create(context, template, ele));
+                    } else {
+                        Class<? extends IPlugin> c = types.get(p);
+                        if (c != null) {
+                            result.add(UtilPlugin.create(context, c, ele));
+                        }
                     }
                 }
             }
             return result.getNormalized();
         }
         return PluginNop.emptyPlugin();
+    }
+
+    @Override
+    protected boolean test(String type) {
+        return "css".equalsIgnoreCase(type);
     }
 }

@@ -59,4 +59,12 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
         }
         return result;
     }
+
+    @Override
+    public IPluginFactory bind(String type, String alias, IPlugin plugin) {
+        for (IPluginFactory pf : getChildren()) {
+            pf.bind(type, alias, plugin);
+        }
+        return this;
+    }
 }

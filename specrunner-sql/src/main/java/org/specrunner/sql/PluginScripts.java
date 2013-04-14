@@ -187,6 +187,10 @@ public class PluginScripts extends AbstractPluginValue {
         fh.set(FEATURE_SCRIPT_SEPARATOR, this);
         fh.set(FEATURE_SQL_SEPARATOR, this);
         fh.set(FEATURE_FAILSAFE, this);
+    }
+
+    @Override
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         // script manually set should not be changed.
         if (scripts == null) {
             Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
@@ -207,10 +211,6 @@ public class PluginScripts extends AbstractPluginValue {
             }
             scripts = list.toArray(new URI[list.size()]);
         }
-    }
-
-    @Override
-    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         IDataSourceProvider provider = PluginConnection.getProvider(context, getName());
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("PluginScript provider:" + provider);
