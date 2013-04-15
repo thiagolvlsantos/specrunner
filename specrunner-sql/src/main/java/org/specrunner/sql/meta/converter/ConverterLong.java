@@ -20,7 +20,15 @@ package org.specrunner.sql.meta.converter;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 
+/**
+ * Basic long converter.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
+@SuppressWarnings("serial")
 public class ConverterLong implements IConverter {
+
     @Override
     public void initialize() {
     }
