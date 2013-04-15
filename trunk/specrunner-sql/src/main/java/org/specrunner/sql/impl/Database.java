@@ -37,6 +37,12 @@ import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 
+/**
+ * Basic implementation of <code>IDatabase</code> using prepared statements.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class Database implements IDatabase {
 
     /**
@@ -188,6 +194,26 @@ public class Database implements IDatabase {
         }
     }
 
+    /**
+     * Perform database inserts.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param con
+     *            The connection.
+     * @param table
+     *            The specification.
+     * @param values
+     *            The values.
+     * @param filled
+     *            Filled fields.
+     * @throws PluginException
+     *             On plugin errors.
+     * @throws SQLException
+     *             On SQL errors.
+     */
     protected void performInsert(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled) throws PluginException, SQLException {
         for (Column c : table.getAliasToColumns().values()) {
             if (filled.get(c.getName()) == null && c.getDefaultValue() != null) {
@@ -218,6 +244,24 @@ public class Database implements IDatabase {
         performIn(context, result, con, sb.toString(), indexes, values, 1);
     }
 
+    /**
+     * Perform database updates.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param con
+     *            The connection.
+     * @param table
+     *            The specification.
+     * @param values
+     *            The values.
+     * @throws PluginException
+     *             On plugin errors.
+     * @throws SQLException
+     *             On SQL errors.
+     */
     protected void performUpdate(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException, SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("update " + table.getSchema().getName() + "." + table.getName() + " set ");
@@ -251,6 +295,24 @@ public class Database implements IDatabase {
         performIn(context, result, con, sb.toString(), indexes, values, 1);
     }
 
+    /**
+     * Perform database deletes.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param con
+     *            The connection.
+     * @param table
+     *            The specification.
+     * @param values
+     *            The values.
+     * @throws PluginException
+     *             On plugin errors.
+     * @throws SQLException
+     *             On SQL errors.
+     */
     protected void performDelete(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException, SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("delete from " + table.getSchema().getName() + "." + table.getName() + " where ");
@@ -271,6 +333,28 @@ public class Database implements IDatabase {
         performIn(context, result, con, sb.toString(), indexes, values, 1);
     }
 
+    /**
+     * Perform database commands.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param con
+     *            The connection.
+     * @param sql
+     *            The SQL.
+     * @param indexes
+     *            The column indexes.
+     * @param values
+     *            The values.
+     * @param expectedCount
+     *            Expected count to the operation.
+     * @throws PluginException
+     *             On plugin errors.
+     * @throws SQLException
+     *             On SQL errors.
+     */
     protected void performIn(IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
@@ -303,6 +387,30 @@ public class Database implements IDatabase {
         }
     }
 
+    /**
+     * Perform database select verifications.
+     * 
+     * @param plugin
+     *            The source plugin.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param con
+     *            The connection.
+     * @param table
+     *            The specification.
+     * @param values
+     *            The values.
+     * @param filled
+     *            Filled fields.
+     * @param expectedCount
+     *            The select expected count.
+     * @throws PluginException
+     *             On plugin errors.
+     * @throws SQLException
+     *             On SQL errors.
+     */
     protected void performSelect(IPlugin plugin, IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled, int expectedCount) throws PluginException, SQLException {
         StringBuilder sbVal = new StringBuilder();
         StringBuilder sbPla = new StringBuilder();
@@ -335,6 +443,28 @@ public class Database implements IDatabase {
         performOut(plugin, context, result, con, sb.toString(), indexes, values, expectedCount);
     }
 
+    /**
+     * Perform database selects.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param con
+     *            The connection.
+     * @param sql
+     *            The SQL.
+     * @param indexes
+     *            The column indexes.
+     * @param values
+     *            The values.
+     * @param expectedCount
+     *            Expected count to the operation.
+     * @throws PluginException
+     *             On plugin errors.
+     * @throws SQLException
+     *             On SQL errors.
+     */
     protected void performOut(IPlugin plugin, IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values + ". indexes = " + indexes);

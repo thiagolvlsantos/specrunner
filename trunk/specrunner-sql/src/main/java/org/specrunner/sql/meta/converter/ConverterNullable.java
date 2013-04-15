@@ -19,6 +19,13 @@ package org.specrunner.sql.meta.converter;
 
 import org.specrunner.util.converter.IConverter;
 
+/**
+ * Basic nullable converter. Accept only not null values and not empty strings.
+ * 
+ * @author Thiago Santos.
+ * 
+ */
+@SuppressWarnings("serial")
 public class ConverterNullable implements IConverter {
 
     @Override
