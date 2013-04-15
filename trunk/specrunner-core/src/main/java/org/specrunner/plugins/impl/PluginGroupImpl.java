@@ -121,6 +121,15 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     }
 
     @Override
+    public IPlugin copy(IContext context) throws PluginException {
+        IPluginGroup group = new PluginGroupImpl();
+        for (IPlugin p : getChildren()) {
+            group.add(p.copy(context));
+        }
+        return group;
+    }
+
+    @Override
     public IParameterDecorator getParameters() {
         return parameters;
     }

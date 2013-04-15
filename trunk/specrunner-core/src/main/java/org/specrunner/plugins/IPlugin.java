@@ -65,4 +65,15 @@ public interface IPlugin extends IParameterHolder, IActionType {
      *             On execution errors.
      */
     void doEnd(IContext context, IResultSet result) throws PluginException;
+
+    /**
+     * Creates a copy of this plugin.
+     * 
+     * @param context
+     *            The context.
+     * @return A copy.
+     * @throws PluginException
+     *             On copy errors.
+     */
+    IPlugin copy(IContext context) throws PluginException;
 }

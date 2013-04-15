@@ -19,7 +19,6 @@ package org.specrunner.sql;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
@@ -33,6 +32,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.meta.Schema;
+import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.TableAdapter;
 
@@ -212,17 +212,17 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(getClass().getSimpleName() + "     schema(" + getSchema() + "):" + schema);
         }
-        String[] sources = parts(getDatasource() != null ? getDatasource() : PluginConnection.CONNECTION_PROVIDER);
-        String[] bases = parts(getDatabase() != null ? getDatabase() : PluginDatabase.DATABASE_PROVIDER);
+        String[] sources = StringUtil.parts(getDatasource() != null ? getDatasource() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
+        String[] bases = StringUtil.parts(getDatabase() != null ? getDatabase() : PluginDatabase.DEFAULT_DATABASE_NAME, separator);
         int erros = 0;
         for (int i = 0; i < sources.length && i < bases.length; i++) {
-            String s = sources[i];
-            String b = bases[i];
-            IDataSourceProvider datasource = PluginConnection.getProvider(context, s);
-            IDatabase database = PluginDatabase.getDatabase(context, b);
+            String source = sources[i];
+            String base = bases[i];
+            IDataSourceProvider datasource = PluginConnection.getProvider(context, source);
+            IDatabase database = PluginDatabase.getDatabase(context, base);
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(getClass().getSimpleName() + " datasource(" + s + "):" + datasource);
-                UtilLog.LOG.debug(getClass().getSimpleName() + "   database(" + b + "):" + database);
+                UtilLog.LOG.debug(getClass().getSimpleName() + " datasource(" + source + "):" + datasource);
+                UtilLog.LOG.debug(getClass().getSimpleName() + "   database(" + base + "):" + database);
             }
             DataSource ds = datasource.getDataSource();
             Connection connection = null;
@@ -237,13 +237,13 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 erros++;
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + s + ", and database:" + b + ". Error:" + e.getMessage(), e));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ". Error:" + e.getMessage(), e));
             } catch (PluginException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 erros++;
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + s + ", and database:" + b + ". Error:" + e.getMessage(), e));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ". Error:" + e.getMessage(), e));
             } finally {
                 try {
                     if (connection != null) {
@@ -254,7 +254,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
                     erros++;
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + s + ", and database:" + b + ". Error:" + e.getMessage(), e));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ". Error:" + e.getMessage(), e));
                 }
             }
         }
@@ -262,25 +262,5 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
             result.addResult(Success.INSTANCE, context.peek());
         }
         return ENext.DEEP;
-    }
-
-    /**
-     * Tokenize a string.
-     * 
-     * @param str
-     *            The string.
-     * @return The tokens, using 'separator' as reference.
-     */
-    protected String[] parts(String str) {
-        if (str == null) {
-            return null;
-        }
-        StringTokenizer st = new StringTokenizer(str, separator);
-        String[] result = new String[st.countTokens()];
-        int i = 0;
-        while (st.hasMoreTokens()) {
-            result[i++] = st.nextToken();
-        }
-        return result;
     }
 }

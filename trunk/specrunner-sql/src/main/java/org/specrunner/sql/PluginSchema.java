@@ -49,7 +49,7 @@ public class PluginSchema extends AbstractPluginValue {
     /**
      * Default schema name.
      */
-    public static final String SCHEMA_NAME = "schemaProvider";
+    public static final String DEFAULT_SCHEMA_NAME = "schemaName";
 
     /**
      * Provider instance feature.
@@ -140,7 +140,7 @@ public class PluginSchema extends AbstractPluginValue {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("PluginSchema provider:" + provider);
         }
-        final String currentName = getName() != null ? getName() : SCHEMA_NAME;
+        final String currentName = getName() != null ? getName() : DEFAULT_SCHEMA_NAME;
         IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
@@ -212,11 +212,11 @@ public class PluginSchema extends AbstractPluginValue {
      */
     public static Schema getSchema(IContext context, String name) throws PluginException {
         if (name == null) {
-            name = SCHEMA_NAME;
+            name = DEFAULT_SCHEMA_NAME;
         }
         Schema provider = (Schema) context.getByName(name);
         if (provider == null) {
-            throw new PluginException("Instance of '" + Schema.class.getName() + "' not found. Use " + PluginSchema.class.getName() + " first.");
+            throw new PluginException("Instance of '" + Schema.class.getName() + "' named '" + name + "' not found. Use " + PluginSchema.class.getName() + " first.");
         }
         return provider;
     }

@@ -101,8 +101,8 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
                 }
                 return;
             }
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Property descriptor '" + pd + "'.");
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Property descriptor '" + pd + "'.");
             }
             checkType(feature, value, pd);
             setValue(feature, value, target, field);
@@ -127,11 +127,7 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
         if (pos < 0) {
             throw new FeatureManagerException("A feature should always end with a attribute name. i.e. '<any class name>.pause', current value:'" + feature + "'.");
         }
-        String field = feature.substring(Math.min(pos + 1, feature.length())).trim();
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Trying to set feature '" + feature + "' with value '" + value + "' to object '" + target + "' on field '" + field + "'.");
-        }
-        return field;
+        return feature.substring(Math.min(pos + 1, feature.length())).trim();
     }
 
     /**
@@ -179,9 +175,12 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
                 BeanUtils.setProperty(target, field, value);
             }
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Feature '" + feature + "' set to object '" + target + ", current value is " + value + ".");
+                UtilLog.LOG.debug("Feature '" + feature + "' set to object '" + target + "', current value is " + value + ".");
             }
         } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Error trying to set feature '" + feature + "' with value '" + value + "' to object '" + target + "' on field '" + field + "'.");
+            }
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }

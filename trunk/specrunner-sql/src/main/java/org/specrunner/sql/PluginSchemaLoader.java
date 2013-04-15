@@ -47,7 +47,7 @@ public class PluginSchemaLoader extends AbstractPluginValue {
     /**
      * Default database provider name.
      */
-    public static final String SCHEMALOADER_PROVIDER = "schemaLoaderProvider";
+    public static final String DEFAULT_SCHEMALOADER_NAME = "schemaLoaderName";
 
     /**
      * Provider name feature.
@@ -154,7 +154,7 @@ public class PluginSchemaLoader extends AbstractPluginValue {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        final String currentName = getName() != null ? getName() : SCHEMALOADER_PROVIDER;
+        final String currentName = getName() != null ? getName() : DEFAULT_SCHEMALOADER_NAME;
         IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
@@ -226,11 +226,11 @@ public class PluginSchemaLoader extends AbstractPluginValue {
      */
     public static ISchemaLoader getLoader(IContext context, String name) throws PluginException {
         if (name == null) {
-            name = SCHEMALOADER_PROVIDER;
+            name = DEFAULT_SCHEMALOADER_NAME;
         }
         ISchemaLoader provider = (ISchemaLoader) context.getByName(name);
         if (provider == null) {
-            throw new PluginException("Instance of '" + ISchemaLoader.class.getName() + "' not found. Use " + PluginSchemaLoader.class.getName() + " first.");
+            throw new PluginException("Instance of '" + ISchemaLoader.class.getName() + "' named '" + name + "' not found. Use " + PluginSchemaLoader.class.getName() + " first.");
         }
         return provider;
     }

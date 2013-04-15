@@ -53,9 +53,9 @@ import org.specrunner.util.UtilLog;
 public class PluginConnection extends AbstractPluginValue {
 
     /**
-     * Default connection provider name.
+     * Default connection name.
      */
-    public static final String CONNECTION_PROVIDER = "connectionProvider";
+    public static final String DEFAULT_CONNECTION_NAME = "connectionName";
 
     /**
      * Full connection descriptor.
@@ -159,7 +159,7 @@ public class PluginConnection extends AbstractPluginValue {
         List<Integer> indexes = new LinkedList<Integer>();
         String other = separator + connection + separator;
         for (int i = 0; i < other.length(); i++) {
-            if (other.charAt(i) == '|') {
+            if (other.charAt(i) == separator.charAt(0)) {
                 indexes.add(i);
             }
         }
@@ -372,7 +372,7 @@ public class PluginConnection extends AbstractPluginValue {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        final String currentName = getName() != null ? getName() : CONNECTION_PROVIDER;
+        final String currentName = getName() != null ? getName() : DEFAULT_CONNECTION_NAME;
         IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
@@ -402,13 +402,13 @@ public class PluginConnection extends AbstractPluginValue {
                 try {
                     providerInstance = (IDataSourceProvider) Class.forName(provider).newInstance();
                 } catch (Exception e) {
-                    throw new PluginException("Invalid DataSource provider '" + provider + "'.", e);
+                    throw new PluginException("Invalid IDataSourceProvider '" + provider + "'.", e);
                 }
             } else {
                 if (driver != null && url != null && user != null && password != null) {
                     providerInstance = createProvider();
                 } else {
-                    throw new PluginException(PluginConnection.class.getSimpleName() + " must have a provider instance set using feature 'FEATURE_PROVIDER_INSTANCE', a generator of DataSource using feature 'FEATURE_PROVIDER', or connection informations 'driver/url/user/password' passed as attributes or their specific 'FEATURE_...'.");
+                    throw new PluginException(getClass().getSimpleName() + " must have a provider instance set using feature 'FEATURE_PROVIDER_INSTANCE', a generator of DataSource using feature 'FEATURE_PROVIDER', or connection information 'driver/url/user/password' passed as attributes or their specific 'FEATURE_...XXX' set.");
                 }
             }
         } else {
@@ -463,11 +463,11 @@ public class PluginConnection extends AbstractPluginValue {
      */
     public static IDataSourceProvider getProvider(IContext context, String name) throws PluginException {
         if (name == null) {
-            name = CONNECTION_PROVIDER;
+            name = DEFAULT_CONNECTION_NAME;
         }
         IDataSourceProvider provider = (IDataSourceProvider) context.getByName(name);
         if (provider == null) {
-            throw new PluginException("Instance of '" + IDataSourceProvider.class.getName() + "' not found. Use " + PluginConnection.class.getName() + " first.");
+            throw new PluginException("Instance of '" + IDataSourceProvider.class.getName() + "' named '" + name + "' not found. Use " + PluginConnection.class.getName() + " first.");
         }
         return provider;
     }

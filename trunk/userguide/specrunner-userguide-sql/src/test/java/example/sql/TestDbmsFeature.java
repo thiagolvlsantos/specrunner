@@ -17,10 +17,12 @@
  */
 package example.sql;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SpecRunnerServices;
-import org.specrunner.features.IFeatureManager;
+import org.specrunner.configuration.IConfiguration;
+import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
@@ -30,19 +32,31 @@ import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 //CHECKSTYLE:OFF
 //@RunWith(ConcurrentRunner.class)
-public class TestDbmsFeature extends TestDbms {
+public class TestDbmsFeature {
 
-    @Before
-    public void before() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE, new DataSourceProviderImpl());
-        fm.add(PluginConnection.FEATURE_REUSE, true);
-        fm.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
-        fm.add(PluginSchemaLoader.FEATURE_REUSE, true);
-        fm.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/schema.cfg.xml");
-        fm.add(PluginSchema.FEATURE_REUSE, true);
-        fm.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new Database());
-        fm.add(PluginDatabase.FEATURE_REUSE, true);
+    private static final String INCOME = "src/test/resources/income/dbms/";
+    private static final String OUTCOME = "src/test/resources/outcome/dbms/";
+
+    private IConfiguration cfg;
+
+    public TestDbmsFeature() {
+        cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg.add(PluginConnection.FEATURE_PROVIDER_INSTANCE, new DataSourceProviderImpl());
+        cfg.add(PluginConnection.FEATURE_REUSE, true);
+        cfg.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
+        cfg.add(PluginSchemaLoader.FEATURE_REUSE, true);
+        cfg.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/schema.cfg.xml");
+        cfg.add(PluginSchema.FEATURE_REUSE, true);
+        cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new Database() });
+        cfg.add(PluginDatabase.FEATURE_REUSE, true);
+    }
+
+    protected void run(String name) {
+        run(name, name);
+    }
+
+    protected void run(String name, String out) {
+        SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out, cfg);
     }
 
     @Test
