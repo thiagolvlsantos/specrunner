@@ -20,7 +20,6 @@ package org.specrunner.plugins.impl;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
@@ -143,9 +142,7 @@ public final class UtilPlugin {
      */
     public static IPlugin create(IContext context, IPlugin instance, Element element, boolean initialize) throws PluginException {
         try {
-            Class<?> clazz = instance.getClass();
-            IPlugin result = (IPlugin) clazz.newInstance();
-            PropertyUtils.copyProperties(result, instance);
+            IPlugin result = instance.copy(context);
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("result ->" + result);
             }

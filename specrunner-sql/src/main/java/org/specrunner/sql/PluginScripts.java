@@ -37,7 +37,11 @@ import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
+import nu.xom.Attribute;
+import nu.xom.Element;
+
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -50,6 +54,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.source.ISource;
+import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
@@ -66,11 +71,6 @@ import org.specrunner.util.UtilLog;
 public class PluginScripts extends AbstractPluginValue {
 
     /**
-     * List of scripts to be performed.
-     */
-    private URI[] scripts;
-
-    /**
      * Sets the script separator on specification. Default is ";".
      */
     public static final String FEATURE_SCRIPT_SEPARATOR = PluginScripts.class.getName() + ".scriptseparator";
@@ -78,15 +78,32 @@ public class PluginScripts extends AbstractPluginValue {
      * Separator of script names.
      */
     private String scriptseparator = ";";
+    /**
+     * List of scripts to be performed.
+     */
+    private URI[] scripts;
 
     /**
      * Sets the SQL command separator. Default is ";".
      */
-    public static final String FEATURE_SQL_SEPARATOR = PluginScripts.class.getName() + ".separator";
+    public static final String FEATURE_SQL_SEPARATOR = PluginScripts.class.getName() + ".sqlseparator";
     /**
      * The SQL comand separator.
      */
-    private String separator = ";";
+    private String sqlseparator = ";";
+
+    /**
+     * Feature for names separators.
+     */
+    public static final String FEATURE_SEPARATOR = PluginScripts.class.getName() + ".separator";
+    /**
+     * Default separator.
+     */
+    public static final String DEFAULT_SEPARATOR = ";";
+    /**
+     * The separator, default is ";".
+     */
+    private String separator = DEFAULT_SEPARATOR;
 
     /**
      * Fail safe feature means that on command execution command errors will not
@@ -141,15 +158,34 @@ public class PluginScripts extends AbstractPluginValue {
      * 
      * @return The separator.
      */
-    public String getSeparator() {
-        return separator;
+    public String getSqlseparator() {
+        return sqlseparator;
     }
 
     /**
      * Sets the SQL command separators.
      * 
-     * @param separator
+     * @param sqlseparator
      *            Separator.
+     */
+    public void setSqlseparator(String sqlseparator) {
+        this.sqlseparator = sqlseparator;
+    }
+
+    /**
+     * Get the name separator.
+     * 
+     * @return The separator.
+     */
+    public String getSeparator() {
+        return separator;
+    }
+
+    /**
+     * Set the name separator.
+     * 
+     * @param separator
+     *            The separator.
      */
     public void setSeparator(String separator) {
         this.separator = separator;
@@ -186,11 +222,20 @@ public class PluginScripts extends AbstractPluginValue {
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         fh.set(FEATURE_SCRIPT_SEPARATOR, this);
         fh.set(FEATURE_SQL_SEPARATOR, this);
+        fh.set(FEATURE_SEPARATOR, this);
         fh.set(FEATURE_FAILSAFE, this);
+        setScripts(context);
     }
 
-    @Override
-    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+    /**
+     * Set script, if necessary.
+     * 
+     * @param context
+     *            The context.
+     * @throws PluginException
+     *             On error.
+     */
+    protected void setScripts(IContext context) throws PluginException {
         // script manually set should not be changed.
         if (scripts == null) {
             Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
@@ -211,76 +256,89 @@ public class PluginScripts extends AbstractPluginValue {
             }
             scripts = list.toArray(new URI[list.size()]);
         }
-        IDataSourceProvider provider = PluginConnection.getProvider(context, getName());
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("PluginScript provider:" + provider);
-        }
-        DataSource ds = provider.getDataSource();
-        Connection connection = null;
+    }
+
+    @Override
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+        String[] sources = StringUtil.parts(getName() != null ? getName() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
         int failure = 0;
-        try {
-            connection = ds.getConnection();
+        for (String source : sources) {
+            IDataSourceProvider provider = PluginConnection.getProvider(context, source);
             if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("PluginScript connection:" + connection);
+                UtilLog.LOG.info("PluginScript provider:" + provider);
             }
-            for (URI u : scripts) {
-                Reader reader = null;
-                String str = u.toString();
-                if (str != null && str.startsWith("file:")) {
-                    File f = new File(str.replace("file:/", ""));
-                    if (!f.exists()) {
-                        result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Script:" + f + " not found."));
-                        failure++;
+            DataSource ds = provider.getDataSource();
+            Connection connection = null;
+            try {
+                connection = ds.getConnection();
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("PluginScript connection:" + connection);
+                }
+                for (URI u : scripts) {
+                    Reader reader = null;
+                    String str = u.toString();
+                    if (str != null && str.startsWith("file:")) {
+                        File f = new File(str.replace("file:/", ""));
+                        if (!f.exists()) {
+                            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Script:" + f + " not found."));
+                            failure++;
+                        } else {
+                            IBlock block = context.peek();
+                            if (block.getNode() instanceof Element) {
+                                Element old = (Element) block.getNode();
+                                old.addAttribute(new Attribute("href", String.valueOf(f.toURI())));
+                            }
+                            try {
+                                reader = new FileReader(f);
+                            } catch (FileNotFoundException e) {
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug(e.getMessage(), e);
+                                }
+                            }
+                        }
                     } else {
                         try {
-                            reader = new FileReader(f);
-                        } catch (FileNotFoundException e) {
+                            URL url = u.toURL();
+                            URLConnection con = url.openConnection();
+                            reader = new InputStreamReader(con.getInputStream());
+                        } catch (MalformedURLException e) {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug(e.getMessage(), e);
                             }
+                            result.addResult(Failure.INSTANCE, context.peek(), e);
+                            failure++;
+                        } catch (IOException e) {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug(e.getMessage(), e);
+                            }
+                            result.addResult(Failure.INSTANCE, context.peek(), e);
+                            failure++;
                         }
                     }
-                } else {
-                    try {
-                        URL url = u.toURL();
-                        URLConnection con = url.openConnection();
-                        reader = new InputStreamReader(con.getInputStream());
-                    } catch (MalformedURLException e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e.getMessage(), e);
+                    if (reader != null) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("PluginScript perform:" + u);
                         }
-                        result.addResult(Failure.INSTANCE, context.peek(), e);
-                        failure++;
-                    } catch (IOException e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e.getMessage(), e);
-                        }
-                        result.addResult(Failure.INSTANCE, context.peek(), e);
-                        failure++;
+                        failure += perform(context, result, connection, reader);
                     }
-                }
-                if (reader != null) {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("PluginScript perform:" + u);
-                    }
-                    failure += perform(context, result, connection, reader);
-                }
-            }
-        } catch (SQLException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-            throw new PluginException(e);
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.commit();
                 }
             } catch (SQLException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                throw new PluginException(e);
+                failure++;
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in connection:" + source + ". Error:" + e.getMessage(), e));
+            } finally {
+                try {
+                    if (connection != null) {
+                        connection.commit();
+                    }
+                } catch (SQLException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in connection:" + source + ". Error:" + e.getMessage(), e));
+                }
             }
         }
         if (failure == 0) {

@@ -4,13 +4,11 @@
 </head>
 <body>
 	<p>
-	Duas conexões <span class="connectionA connectionB">A e B</span>.
+	Duas conexões <span class="connections">A e B</span>.
 	</p>
 	
 	<p>
-	 <a class="scriptsDrop" href="drop.sql" name="conA">Re</a><a class="scriptsCreate" href="schema.sql" name="conA">cria-se</a> o esquema de A
-	  e
-	 <a class="scriptsDrop" href="drop.sql" name="conB">Re</a><a class="scriptsCreate" href="schema.sql" name="conB">cria-se</a> o esquema de B.
+	 <a class="scriptsDrop" href="drop.sql">Re</a><a class="scriptsSchema" href="schema.sql">cria-se</a> o esquema de A e B.
 	 </p>
 
 	<p>
@@ -18,8 +16,7 @@
 	</p>
 	
 	<p>
-	Prepara-se o executor de comandos de <span class="database" name="dataA">A</span> e 
-	prepara-se o executor de comandos de <span class="database" name="dataB">B</span>.
+	Prepara-se o executor de comandos de <span class="database" name="dataA;dataB">A e B</span>.
 	
 	
 	Por fim	prepara-se o banco de dados preenchendo com:</span>
@@ -88,8 +85,7 @@
 		</tbody>
 	</table>
 	Depois dos dados preenchidos, adiciona-se as 
-	<a class="scripts" href="constraints.sql" value="constraints.sql" name="conA">constraints</a>.
-	<a class="scripts" href="constraints.sql" value="constraints.sql" name="conB">constraints</a>.
+	<a class="scriptsConstraints" href="constraints.sql">A e B</a>.
 
 	<p>No final deve-se verificar se os valores abaixo estão lá na base de dados:</p>
 	<table class="prepare" datasource="conB" database="dataB">
@@ -133,10 +129,7 @@
 	
 	
 	<p>
-	Liberando JDBC 
-	<span class="release" name="dataA">A</span>
-	e
-	<span class="release" name="dataB">B</span>.
+	Liberando JDBC <span class="release">A e B</span>.
 	</p>
 </body>
 </html>

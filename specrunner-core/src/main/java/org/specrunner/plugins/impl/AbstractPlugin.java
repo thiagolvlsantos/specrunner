@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.impl;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
@@ -137,6 +138,22 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("doEnd>" + context.peek());
+        }
+    }
+
+    @Override
+    public IPlugin copy(IContext context) throws PluginException {
+        try {
+            IPlugin p = getClass().newInstance();
+            IParameterDecorator decorator = p.getParameters();
+            PropertyUtils.copyProperties(p, this);
+            p.setParameters(decorator);
+            return p;
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException(e);
         }
     }
 

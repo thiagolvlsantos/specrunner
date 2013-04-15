@@ -17,13 +17,18 @@
  */
 package org.specrunner.sql;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
+import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -34,24 +39,79 @@ import org.specrunner.util.UtilLog;
  */
 public class PluginRelease extends AbstractPluginValue {
 
+    /**
+     * Database name feature.
+     */
+    public static final String FEATURE_NAME = PluginRelease.class.getName() + ".name";
+
+    /**
+     * Feature for names separators.
+     */
+    public static final String FEATURE_SEPARATOR = PluginRelease.class.getName() + ".separator";
+    /**
+     * Default separator.
+     */
+    public static final String DEFAULT_SEPARATOR = ";";
+    /**
+     * The separator, default is ";".
+     */
+    private String separator = DEFAULT_SEPARATOR;
+
+    /**
+     * Get the name separator.
+     * 
+     * @return The separator.
+     */
+    public String getSeparator() {
+        return separator;
+    }
+
+    /**
+     * Set the name separator.
+     * 
+     * @param separator
+     *            The separator.
+     */
+    public void setSeparator(String separator) {
+        this.separator = separator;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        IDatabase database = PluginDatabase.getDatabase(context, getName());
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("PluginRelease database:" + database);
+    public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        if (getName() == null) {
+            fm.set(FEATURE_NAME, this);
         }
-        try {
-            database.release();
-        } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        fm.set(FEATURE_SEPARATOR, this);
+    }
+
+    @Override
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+        String[] bases = StringUtil.parts(getName() != null ? getName() : PluginDatabase.DEFAULT_DATABASE_NAME, separator);
+        int failure = 0;
+        for (String base : bases) {
+            IDatabase database = PluginDatabase.getDatabase(context, base);
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("PluginRelease database:" + database);
             }
-            throw new PluginException(e);
+            try {
+                database.release();
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                failure++;
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in database:" + base + ". Error:" + e.getMessage(), e));
+            }
+        }
+        if (failure == 0) {
+            result.addResult(Success.INSTANCE, context.peek());
         }
         return ENext.DEEP;
     }

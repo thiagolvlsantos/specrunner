@@ -20,11 +20,16 @@ package example.sql;
 import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SpecRunnerServices;
-import org.specrunner.features.IFeatureManager;
+import org.specrunner.configuration.IConfiguration;
+import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginFactory;
+import org.specrunner.plugins.IPluginGroup;
+import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
+import org.specrunner.sql.PluginRelease;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
@@ -33,41 +38,70 @@ import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 //CHECKSTYLE:OFF
 //@RunWith(ConcurrentRunner.class)
-public class TestDbmsNegativeFeature extends TestDbms {
+public class TestDbmsNegativeFeature {
+
+    private static final String INCOME = "src/test/resources/income/dbms/";
+    private static final String OUTCOME = "src/test/resources/outcome/dbms/";
+
+    private IConfiguration cfg;
+
+    public TestDbmsNegativeFeature() {
+        cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
+        cfg.add(PluginSchemaLoader.FEATURE_REUSE, true);
+
+        cfg.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/schema.cfg.xml");
+        cfg.add(PluginSchema.FEATURE_REUSE, true);
+
+        cfg.add(PluginDatabase.FEATURE_PROVIDER, Database.class.getName());
+        cfg.add(PluginDatabase.FEATURE_NAME, "dataA;dataB");
+        cfg.add(PluginDatabase.FEATURE_REUSE, true);
+
+        cfg.add(AbstractPluginDatabase.FEATURE_DATASOURCE, "conA|conB");
+        cfg.add(AbstractPluginDatabase.FEATURE_DATABASE, "dataA|dataB");
+        cfg.add(AbstractPluginDatabase.FEATURE_SEPARATOR, "|");
+
+        cfg.add(PluginRelease.FEATURE_NAME, "dataA;dataB");
+    }
+
+    protected void run(String name) {
+        run(name, name);
+    }
+
+    protected void run(String name, String out) {
+        SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out, cfg);
+    }
 
     @Before
     public void before() {
         IPluginFactory pf = SpecRunnerServices.get(IPluginFactory.class);
 
+        IPluginGroup group = new PluginGroupImpl();
         PluginConnection conA = new PluginConnection();
         conA.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_INICIAL|sa|");
         conA.setName("conA");
-        pf.bind("css", "connectionA", conA);
-
+        group.add(conA);
         PluginConnection conB = new PluginConnection();
         conB.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|");
         conB.setName("conB");
-        pf.bind("css", "connectionB", conB);
+        group.add(conB);
+        pf.bind("css", "connections", group);
 
         PluginScripts drop = new PluginScripts();
         drop.setValue("drop.sql");
         drop.setFailsafe(true);
+        drop.setName("conA;conB");
         pf.bind("css", "scriptsDrop", drop);
 
-        PluginScripts create = new PluginScripts();
-        create.setValue("create.sql");
-        pf.bind("css", "scriptsCreate", create);
+        PluginScripts schema = new PluginScripts();
+        schema.setValue("schema.sql");
+        schema.setName("conA;conB");
+        pf.bind("css", "scriptsSchema", schema);
 
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        fm.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
-        fm.add(PluginSchemaLoader.FEATURE_REUSE, true);
-        fm.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/schema.cfg.xml");
-        fm.add(PluginSchema.FEATURE_REUSE, true);
-        fm.add(PluginDatabase.FEATURE_PROVIDER, Database.class.getName());
-        fm.add(PluginDatabase.FEATURE_REUSE, true);
-        fm.add(AbstractPluginDatabase.FEATURE_DATASOURCE, "conA|conB");
-        fm.add(AbstractPluginDatabase.FEATURE_DATABASE, "dataA|dataB");
-        fm.add(AbstractPluginDatabase.FEATURE_SEPARATOR, "|");
+        PluginScripts constraints = new PluginScripts();
+        constraints.setValue("constraints.sql");
+        constraints.setName("conA;conB");
+        pf.bind("css", "scriptsConstraints", constraints);
     }
 
     @Test

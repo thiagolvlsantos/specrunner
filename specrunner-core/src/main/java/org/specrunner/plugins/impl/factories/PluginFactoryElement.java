@@ -66,6 +66,6 @@ public class PluginFactoryElement extends PluginFactoryImpl {
 
     @Override
     protected boolean test(String type) {
-        return false;
+        return "element".equalsIgnoreCase(type);
     }
 }

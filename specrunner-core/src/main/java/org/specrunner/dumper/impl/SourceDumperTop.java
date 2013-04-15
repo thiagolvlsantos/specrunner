@@ -111,7 +111,8 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
 
                 Element td2 = new Element("td");
                 td2.addAttribute(new Attribute("class", "sr_time"));
-                td2.appendChild("Time:" + model.get("time") + "mls");
+                td2.addAttribute(new Attribute("nowrap", "nowrap"));
+                td2.appendChild("Time:" + model.get("time") + " ms");
                 tr1.appendChild(td2);
             }
             // td2
@@ -207,6 +208,7 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
             {
                 Element td2 = new Element("td");
                 td2.addAttribute(new Attribute("nowrap", "nowrap"));
+                td2.addAttribute(new Attribute("align", "center"));
                 Element exp = new Element("input");
                 exp.addAttribute(new Attribute("type", "button"));
                 exp.addAttribute(new Attribute("class", "top_exp"));
