@@ -47,7 +47,7 @@ public interface ITestPlugin extends IPlugin {
      * 
      * @return The condition is some expression which returns true, or false.
      */
-    IModel<Object, Boolean> getConditionModel();
+    IModel<Boolean> getConditionModel();
 
     /**
      * Set plugin condition model.
@@ -55,5 +55,5 @@ public interface ITestPlugin extends IPlugin {
      * @param model
      *            The plugin condition model.
      */
-    void setConditionModel(IModel<Object, Boolean> model);
+    void setConditionModel(IModel<Boolean> model);
 }

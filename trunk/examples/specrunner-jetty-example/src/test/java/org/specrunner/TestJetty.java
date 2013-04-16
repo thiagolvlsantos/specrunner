@@ -12,7 +12,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IContext;
-import org.specrunner.context.impl.AbstractReadOnlyModel;
+import org.specrunner.context.IModel;
 import org.specrunner.context.impl.Model;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.expressions.IExpressionFactory;
@@ -42,7 +42,7 @@ public class TestJetty {
         // add predefined objRects that can be used in expressions, and add
         // predefined classes that can be used in expressions, default
         // constructor is invoked.
-        ef.bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class).bindModel("ip", new AbstractReadOnlyModel<String>() {
+        ef.bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class).bindModel("ip", new IModel<String>() {
             @Override
             public String getObject(IContext context) throws SpecRunnerException {
                 try {

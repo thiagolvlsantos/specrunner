@@ -376,7 +376,7 @@ public class RunnerImpl implements IRunner {
         Boolean out = null;
         if (plugin instanceof ITestPlugin) {
             ITestPlugin testPlugin = (ITestPlugin) plugin;
-            IModel<Object, Boolean> model = testPlugin.getConditionModel();
+            IModel<Boolean> model = testPlugin.getConditionModel();
             if (model != null) {
                 out = model.getObject(context);
             } else {
@@ -406,7 +406,7 @@ public class RunnerImpl implements IRunner {
         long total = System.currentTimeMillis() - start;
         if (plugin instanceof ITimedPlugin) {
             ITimedPlugin timedPlugin = (ITimedPlugin) plugin;
-            IModel<Object, Long> model = timedPlugin.getTimeoutModel();
+            IModel<Long> model = timedPlugin.getTimeoutModel();
             Long timeout = null;
             if (model != null) {
                 timeout = model.getObject(context);
@@ -451,7 +451,7 @@ public class RunnerImpl implements IRunner {
     protected void doSleep(IPlugin plugin, IContext context) throws SpecRunnerException {
         if (plugin instanceof ISleepPlugin) {
             ISleepPlugin sleepPlugin = (ISleepPlugin) plugin;
-            IModel<Object, Long> model = sleepPlugin.getSleepModel();
+            IModel<Long> model = sleepPlugin.getSleepModel();
             Long sleep = null;
             if (model != null) {
                 sleep = model.getObject(context);

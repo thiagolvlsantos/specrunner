@@ -25,11 +25,9 @@ import org.specrunner.SpecRunnerException;
  * @author Thiago Santos
  * 
  * @param <T>
- *            Input object type.
- * @param <U>
  *            Output object type.
  */
-public interface IModel<T, U> {
+public interface IModel<T> {
 
     /**
      * Return the object.
@@ -38,19 +36,7 @@ public interface IModel<T, U> {
      *            The context.
      * @return The object model.
      * @throws SpecRunnerException
-     *             On model errors.
+     *             On model evaluation errors.
      */
-    U getObject(IContext context) throws SpecRunnerException;
-
-    /**
-     * Sets the model.
-     * 
-     * @param object
-     *            The object model.
-     * @param context
-     *            The context.
-     * @throws SpecRunnerException
-     *             On model errors.
-     */
-    void setObject(T object, IContext context) throws SpecRunnerException;
+    T getObject(IContext context) throws SpecRunnerException;
 }

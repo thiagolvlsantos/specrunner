@@ -58,7 +58,7 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     /**
      * Perform condition model.
      */
-    private IModel<Object, Boolean> conditionModel;
+    private IModel<Boolean> conditionModel;
 
     /**
      * Default sleep time feature.
@@ -71,7 +71,7 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     /**
      * Plugin sleep time model.
      */
-    private IModel<Object, Long> sleepModel;
+    private IModel<Long> sleepModel;
 
     /**
      * Default timeout time feature.
@@ -84,7 +84,7 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     /**
      * Plugin timeout model.
      */
-    private IModel<Object, Long> timeoutModel;
+    private IModel<Long> timeoutModel;
 
     /**
      * Default threadsafe feature.
@@ -178,12 +178,12 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     }
 
     @Override
-    public IModel<Object, Boolean> getConditionModel() {
+    public IModel<Boolean> getConditionModel() {
         return conditionModel;
     }
 
     @Override
-    public void setConditionModel(IModel<Object, Boolean> conditionModel) {
+    public void setConditionModel(IModel<Boolean> conditionModel) {
         this.conditionModel = conditionModel;
     }
 
@@ -198,12 +198,12 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     }
 
     @Override
-    public IModel<Object, Long> getSleepModel() {
+    public IModel<Long> getSleepModel() {
         return sleepModel;
     }
 
     @Override
-    public void setSleepModel(IModel<Object, Long> sleepModel) {
+    public void setSleepModel(IModel<Long> sleepModel) {
         this.sleepModel = sleepModel;
     }
 
@@ -218,12 +218,12 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     }
 
     @Override
-    public IModel<Object, Long> getTimeoutModel() {
+    public IModel<Long> getTimeoutModel() {
         return timeoutModel;
     }
 
     @Override
-    public void setTimeoutModel(IModel<Object, Long> timeoutModel) {
+    public void setTimeoutModel(IModel<Long> timeoutModel) {
         this.timeoutModel = timeoutModel;
     }
 

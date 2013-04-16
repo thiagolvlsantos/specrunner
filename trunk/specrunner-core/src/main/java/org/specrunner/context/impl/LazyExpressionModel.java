@@ -32,7 +32,7 @@ import org.specrunner.util.UtilLog;
  * @param <T>
  *            The return type.
  */
-public class LazyExpressionModel<T> implements IModel<Object, T> {
+public class LazyExpressionModel<T> implements IModel<T> {
 
     /**
      * The source of expression.
@@ -79,10 +79,5 @@ public class LazyExpressionModel<T> implements IModel<Object, T> {
             }
             throw new ContextException(e);
         }
-    }
-
-    @Override
-    public void setObject(Object object, IContext context) throws ContextException {
-        this.source = object;
     }
 }
