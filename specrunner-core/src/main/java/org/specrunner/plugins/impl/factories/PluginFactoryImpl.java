@@ -38,6 +38,10 @@ import org.specrunner.util.UtilLog;
 public abstract class PluginFactoryImpl implements IPluginFactory {
 
     /**
+     * Kind of factory.
+     */
+    private String kind;
+    /**
      * Types of plugins available by name.
      */
     protected Map<String, Class<? extends IPlugin>> types = new HashMap<String, Class<? extends IPlugin>>();
@@ -63,11 +67,23 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      * 
      * @param file
      *            The file to be loaded.
+     * @param kind
+     *            The factory kind.
      */
-    protected PluginFactoryImpl(String file) {
+    protected PluginFactoryImpl(String file, String kind) {
         if (file != null) {
             this.file = file;
         }
+        this.kind = kind;
+    }
+
+    /**
+     * Get the kind to factory.
+     * 
+     * @return The factory.
+     */
+    public String getKind() {
+        return kind;
     }
 
     /**
@@ -131,5 +147,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      * @return <code>true</code>, if accept the <code>type</code>, false,
      *         otherwise.
      */
-    protected abstract boolean test(String type);
+    protected boolean test(String type) {
+        return kind.equalsIgnoreCase(type);
+    }
 }

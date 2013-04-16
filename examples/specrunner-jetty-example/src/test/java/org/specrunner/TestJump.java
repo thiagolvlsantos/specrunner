@@ -23,10 +23,10 @@ public class TestJump {
     public void prepareTest() throws SpecRunnerException {
         IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
         // add predefined objRects that can be used in expressions
-        ef.bindPredefinedValue("pattern", "HH:mm:ss");
+        ef.bindValue("pattern", "HH:mm:ss");
         // add predefined classes that can be used in expressions, default
         // constructor is invoked.
-        ef.bindPredefinedClass("dt", DateTime.class);
+        ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);

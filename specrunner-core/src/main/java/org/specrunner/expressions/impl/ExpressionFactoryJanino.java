@@ -26,6 +26,7 @@ import java.util.List;
 import org.codehaus.janino.ExpressionEvaluator;
 import org.codehaus.janino.Scanner;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IModel;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.util.UtilEvaluator;
@@ -89,7 +90,7 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                     types.add(result.getClass());
                 } else {
                     // check predefined values
-                    Object value = getPredefinedValues().get(str);
+                    Object value = getValues().get(str);
                     // if value is itself an expression should be evaluated
                     if (value instanceof String) {
                         try {
@@ -106,7 +107,7 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                         types.add(value.getClass());
                     } else {
                         // check predefined classes
-                        Class<?> clazz = getPredefinedClasses().get(str);
+                        Class<?> clazz = getClasses().get(str);
                         if (clazz != null) {
                             try {
                                 args.add(str);
@@ -115,6 +116,19 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                                 types.add(value.getClass());
                             } catch (Exception e) {
                                 throw new ExpressionException("Unable to evaluate predefined value:" + str, e);
+                            }
+                        } else {
+                            // check predefined models.
+                            IModel<?, ?> model = getModels().get(str);
+                            if (model != null) {
+                                try {
+                                    value = model.getObject(context);
+                                    args.add(str);
+                                    values.add(value);
+                                    types.add(value.getClass());
+                                } catch (Exception e) {
+                                    throw new ExpressionException("Unable to evaluate predefined value:" + str, e);
+                                }
                             }
                         }
                     }

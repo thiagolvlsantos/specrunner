@@ -49,7 +49,7 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_custom.properties'.
      */
     public PluginFactoryCustom() {
-        super("plugin_custom.properties");
+        super("plugin_custom.properties", "custom");
     }
 
     @Override
@@ -80,10 +80,5 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
             }
         }
         return PluginNop.emptyPlugin();
-    }
-
-    @Override
-    protected boolean test(String type) {
-        return "custom".equalsIgnoreCase(type);
     }
 }

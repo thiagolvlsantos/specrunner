@@ -25,7 +25,7 @@ public class TestHibernate {
         cf.put("bool", new ConverterSimNao());
 
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
-        ief.bindPredefinedClass("dt", DateTime.class);
+        ief.bindClass("dt", DateTime.class);
 
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         fh.put(AbstractComparatorTime.FEATURE_TOLERANCE, 10000L);

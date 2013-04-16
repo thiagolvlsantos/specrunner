@@ -20,6 +20,7 @@ package org.specrunner.expressions.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.specrunner.context.IModel;
 import org.specrunner.expressions.IExpressionFactory;
 
 /**
@@ -37,54 +38,94 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
      * The set of predefined classes.
      */
     private Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
+    /**
+     * The set of predefined models.
+     */
+    private Map<String, IModel<?, ?>> predefinedModels = new HashMap<String, IModel<?, ?>>();
 
     @Override
-    public void clearPredefinedValues() {
+    public IExpressionFactory clearValues() {
         predefinedValues.clear();
+        return this;
     }
 
     @Override
-    public void removePredefinedValue(String name) {
+    public IExpressionFactory removeValue(String name) {
         predefinedValues.remove(name);
+        return this;
     }
 
     @Override
-    public void bindPredefinedValue(String name, Object value) {
+    public IExpressionFactory bindValue(String name, Object value) {
         predefinedValues.put(name, value);
+        return this;
     }
 
     @Override
-    public void setPredefinedValues(Map<String, Object> predefinedValues) {
+    public IExpressionFactory setValues(Map<String, Object> predefinedValues) {
         this.predefinedValues = predefinedValues;
+        return this;
     }
 
     @Override
-    public Map<String, Object> getPredefinedValues() {
+    public Map<String, Object> getValues() {
         return predefinedValues;
     }
 
     @Override
-    public void clearPredefinedClasses() {
+    public IExpressionFactory clearClasses() {
         predefinedClasses.clear();
+        return this;
     }
 
     @Override
-    public void removePredefinedClass(String name) {
+    public IExpressionFactory removeClass(String name) {
         predefinedClasses.remove(name);
+        return this;
     }
 
     @Override
-    public void bindPredefinedClass(String name, Class<?> clazz) {
+    public IExpressionFactory bindClass(String name, Class<?> clazz) {
         predefinedClasses.put(name, clazz);
+        return this;
     }
 
     @Override
-    public void setPredefinedClasses(Map<String, Class<?>> predefinedClasses) {
+    public IExpressionFactory setClasses(Map<String, Class<?>> predefinedClasses) {
         this.predefinedClasses = predefinedClasses;
+        return this;
     }
 
     @Override
-    public Map<String, Class<?>> getPredefinedClasses() {
+    public Map<String, Class<?>> getClasses() {
         return predefinedClasses;
+    }
+
+    @Override
+    public IExpressionFactory clearModels() {
+        predefinedModels.clear();
+        return this;
+    }
+
+    @Override
+    public IExpressionFactory removeModel(String name) {
+        predefinedModels.remove(name);
+        return this;
+    }
+
+    @Override
+    public IExpressionFactory bindModel(String name, IModel<?, ?> model) {
+        predefinedModels.put(name, model);
+        return this;
+    }
+
+    @Override
+    public IExpressionFactory setModels(Map<String, IModel<?, ?>> predefinedModels) {
+        return this;
+    }
+
+    @Override
+    public Map<String, IModel<?, ?>> getModels() {
+        return predefinedModels;
     }
 }
