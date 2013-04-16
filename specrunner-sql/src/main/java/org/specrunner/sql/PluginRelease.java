@@ -28,6 +28,7 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.reuse.IReuseManager;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
 
@@ -101,7 +102,15 @@ public class PluginRelease extends AbstractPluginValue {
                 UtilLog.LOG.info("PluginRelease database:" + database);
             }
             try {
-                database.release();
+                // only not reusable instances can be released this way,
+                // otherwise reuse manager will release in the right time.
+                if (SpecRunnerServices.get(IReuseManager.class).get(base) == null) {
+                    database.release();
+                } else {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("PluginRelease reusable database:" + base + " not release.");
+                    }
+                }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

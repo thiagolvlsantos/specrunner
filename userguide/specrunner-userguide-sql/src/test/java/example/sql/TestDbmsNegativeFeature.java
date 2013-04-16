@@ -27,8 +27,10 @@ import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.sql.AbstractPluginDatabase;
+import org.specrunner.sql.PluginCompareBase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
+import org.specrunner.sql.PluginPrepare;
 import org.specrunner.sql.PluginRelease;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
@@ -60,6 +62,9 @@ public class TestDbmsNegativeFeature {
         cfg.add(AbstractPluginDatabase.FEATURE_DATASOURCE, "conA|conB");
         cfg.add(AbstractPluginDatabase.FEATURE_DATABASE, "dataA|dataB");
         cfg.add(AbstractPluginDatabase.FEATURE_SEPARATOR, "|");
+
+        cfg.add(PluginCompareBase.FEATURE_SYSTEM, "conA");
+        cfg.add(PluginCompareBase.FEATURE_REFERENCE, "conB");
 
         cfg.add(PluginRelease.FEATURE_NAME, "dataA;dataB");
     }
@@ -102,11 +107,31 @@ public class TestDbmsNegativeFeature {
         constraints.setValue("constraints.sql");
         constraints.setName("conA;conB");
         pf.bind("css", "scriptsConstraints", constraints);
+
+        PluginPrepare prepareB = new PluginPrepare();
+        prepareB.setDatasource("conB");
+        prepareB.setDatabase("dataB");
+        pf.bind("css", "prepareB", prepareB);
     }
 
     @Test
     public void pluginsNegativeFeature() {
         run("dbmsNegativeFeature.html");
+    }
+
+    @Test
+    public void pluginsNegativeFeature2() {
+        run("dbmsNegativeFeature.html", "dbmsNegativeFeature2.html");
+    }
+
+    @Test
+    public void pluginsNegativeFeature3() {
+        run("dbmsNegativeFeature.html", "dbmsNegativeFeature3.html");
+    }
+
+    @Test
+    public void pluginsNegativeFeature4() {
+        run("dbmsNegativeFeature.html", "dbmsNegativeFeature4.html");
     }
 }
 // CHECKSTYLE:ON

@@ -18,6 +18,8 @@
 package org.specrunner.sql.meta;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Table {
@@ -84,5 +86,15 @@ public class Table {
 
     public void setNamesToColumns(Map<String, Column> namesToColumns) {
         this.namesToColumns = namesToColumns;
+    }
+
+    public List<Column> getKeys() {
+        List<Column> result = new LinkedList<Column>();
+        for (Column c : namesToColumns.values()) {
+            if (c.isKey()) {
+                result.add(c);
+            }
+        }
+        return result;
     }
 }
