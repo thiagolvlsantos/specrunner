@@ -2,6 +2,7 @@ package org.specrunner.context.impl;
 
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IModel;
 
 /**
  * Utility for models.
@@ -27,8 +28,8 @@ public final class Model {
      *            The object.
      * @return A model with the give object.
      */
-    public static <T> AbstractReadOnlyModel<T> of(final T source) {
-        return new AbstractReadOnlyModel<T>() {
+    public static <T> IModel<T> of(final T source) {
+        return new IModel<T>() {
             @Override
             public T getObject(IContext context) throws SpecRunnerException {
                 return source;

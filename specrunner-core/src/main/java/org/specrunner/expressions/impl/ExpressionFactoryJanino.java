@@ -119,7 +119,7 @@ public class ExpressionFactoryJanino extends AbstractExpressionFactory {
                             }
                         } else {
                             // check predefined models.
-                            IModel<?, ?> model = getModels().get(str);
+                            IModel<?> model = getModels().get(str);
                             if (model != null) {
                                 try {
                                     value = model.getObject(context);

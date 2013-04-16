@@ -49,7 +49,7 @@ public interface ITimedPlugin extends IPlugin {
      * 
      * @return The timeout model.
      */
-    IModel<Object, Long> getTimeoutModel();
+    IModel<Long> getTimeoutModel();
 
     /**
      * Set the model.
@@ -57,5 +57,5 @@ public interface ITimedPlugin extends IPlugin {
      * @param timeoutModel
      *            A time model.
      */
-    void setTimeoutModel(IModel<Object, Long> timeoutModel);
+    void setTimeoutModel(IModel<Long> timeoutModel);
 }

@@ -167,7 +167,7 @@ public interface IExpressionFactory {
      *            The predefined class.
      * @return The factory itself.
      */
-    IExpressionFactory bindModel(String name, IModel<? extends Object, ? extends Object> model);
+    IExpressionFactory bindModel(String name, IModel<?> model);
 
     /**
      * Set predefined model in block.
@@ -176,12 +176,12 @@ public interface IExpressionFactory {
      *            Predefined models.
      * @return The factory itself.
      */
-    IExpressionFactory setModels(Map<String, IModel<?, ?>> predefinedModels);
+    IExpressionFactory setModels(Map<String, IModel<?>> predefinedModels);
 
     /**
      * The set of predefined models.
      * 
      * @return A map of name to predefined models.
      */
-    Map<String, IModel<?, ?>> getModels();
+    Map<String, IModel<?>> getModels();
 }

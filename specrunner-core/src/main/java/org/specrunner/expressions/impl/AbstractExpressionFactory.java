@@ -41,7 +41,7 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
     /**
      * The set of predefined models.
      */
-    private Map<String, IModel<?, ?>> predefinedModels = new HashMap<String, IModel<?, ?>>();
+    private Map<String, IModel<?>> predefinedModels = new HashMap<String, IModel<?>>();
 
     @Override
     public IExpressionFactory clearValues() {
@@ -114,18 +114,18 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
     }
 
     @Override
-    public IExpressionFactory bindModel(String name, IModel<?, ?> model) {
+    public IExpressionFactory bindModel(String name, IModel<?> model) {
         predefinedModels.put(name, model);
         return this;
     }
 
     @Override
-    public IExpressionFactory setModels(Map<String, IModel<?, ?>> predefinedModels) {
+    public IExpressionFactory setModels(Map<String, IModel<?>> predefinedModels) {
         return this;
     }
 
     @Override
-    public Map<String, IModel<?, ?>> getModels() {
+    public Map<String, IModel<?>> getModels() {
         return predefinedModels;
     }
 }

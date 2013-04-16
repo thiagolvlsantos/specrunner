@@ -51,7 +51,7 @@ public interface ISleepPlugin extends IPlugin {
      * 
      * @return A model.
      */
-    IModel<Object, Long> getSleepModel();
+    IModel<Long> getSleepModel();
 
     /**
      * Set sleep model object.
@@ -59,5 +59,5 @@ public interface ISleepPlugin extends IPlugin {
      * @param sleepModel
      *            The model.
      */
-    void setSleepModel(IModel<Object, Long> sleepModel);
+    void setSleepModel(IModel<Long> sleepModel);
 }
