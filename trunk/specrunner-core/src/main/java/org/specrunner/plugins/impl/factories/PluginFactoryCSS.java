@@ -50,7 +50,7 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_css.properties'.
      */
     public PluginFactoryCSS() {
-        super("plugin_css.properties");
+        super("plugin_css.properties", "css");
     }
 
     @Override
@@ -78,10 +78,5 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
             return result.getNormalized();
         }
         return PluginNop.emptyPlugin();
-    }
-
-    @Override
-    protected boolean test(String type) {
-        return "css".equalsIgnoreCase(type);
     }
 }

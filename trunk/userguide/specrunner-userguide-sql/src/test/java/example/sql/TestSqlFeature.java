@@ -50,9 +50,9 @@ public class TestSqlFeature {
     public void before() {
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
         String pattern = "yyyy-MM-dd HH:mm:ss";
-        ief.bindPredefinedValue("pattern", pattern);
-        ief.bindPredefinedValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
-        ief.bindPredefinedClass("dt", DateTime.class);
+        ief.bindValue("pattern", pattern);
+        ief.bindValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
+        ief.bindClass("dt", DateTime.class);
 
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
         // setting plugin connection features

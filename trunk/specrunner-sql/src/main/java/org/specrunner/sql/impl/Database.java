@@ -446,6 +446,8 @@ public class Database implements IDatabase {
     /**
      * Perform database selects.
      * 
+     * @param plugin
+     *            The source plugin.
      * @param context
      *            The context.
      * @param result

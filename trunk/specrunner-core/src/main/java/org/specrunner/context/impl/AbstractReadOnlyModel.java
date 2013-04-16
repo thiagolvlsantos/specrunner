@@ -17,34 +17,22 @@
  */
 package org.specrunner.context.impl;
 
-import java.util.Map.Entry;
-import java.util.Properties;
-
+import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
-import org.specrunner.context.IContextPopulator;
-import org.specrunner.util.UtilEvaluator;
-import org.specrunner.util.UtilLog;
+import org.specrunner.context.IModel;
 
 /**
- * Default populator implementation. Makes all Java System properties available
- * in context as variables.
+ * A model to return values only.
  * 
  * @author Thiago Santos
  * 
+ * @param <T>
+ *            The return type.
  */
-public class ContextPopulatorImpl implements IContextPopulator {
+public abstract class AbstractReadOnlyModel<T> implements IModel<Object, T> {
 
     @Override
-    public IContext populate(IContext context) {
-        Properties p = System.getProperties();
-        for (Entry<Object, Object> e : p.entrySet()) {
-            String key = UtilEvaluator.asVariable(String.valueOf(e.getKey()).replace(".", "_"));
-            String value = String.valueOf(e.getValue());
-            context.saveGlobal(key, value);
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(key + " mapped to '" + value + "'(String).");
-            }
-        }
-        return context;
+    public void setObject(Object object, IContext context) throws ContextException {
+        // do nothing.
     }
 }

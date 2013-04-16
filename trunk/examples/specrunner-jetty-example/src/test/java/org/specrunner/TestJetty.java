@@ -1,6 +1,8 @@
 package org.specrunner;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -9,6 +11,9 @@ import org.openqa.selenium.android.AndroidDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.context.IContext;
+import org.specrunner.context.impl.AbstractReadOnlyModel;
+import org.specrunner.context.impl.Model;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
@@ -34,15 +39,23 @@ public class TestJetty {
     public void prepareTest() throws SpecRunnerException {
 
         IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
-        // add predefined objRects that can be used in expressions
-        ef.bindPredefinedValue("pattern", "HH:mm:ss");
-        // add predefined classes that can be used in expressions, default
+        // add predefined objRects that can be used in expressions, and add
+        // predefined classes that can be used in expressions, default
         // constructor is invoked.
-        ef.bindPredefinedClass("dt", DateTime.class);
+        ef.bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class).bindModel("ip", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return InetAddress.getLocalHost().getHostAddress();
+                } catch (UnknownHostException e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        }).bindModel("host", Model.of("localhost"));
 
         // longer tolerance
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        fh.add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";

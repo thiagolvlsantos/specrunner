@@ -42,7 +42,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
      * Creates a factory loading file 'plugin_element.properties'.
      */
     public PluginFactoryElement() {
-        super("plugin_element.properties");
+        super("plugin_element.properties", "element");
     }
 
     @Override
@@ -62,10 +62,5 @@ public class PluginFactoryElement extends PluginFactoryImpl {
             }
         }
         return PluginNop.emptyPlugin();
-    }
-
-    @Override
-    protected boolean test(String type) {
-        return "element".equalsIgnoreCase(type);
     }
 }

@@ -10,7 +10,7 @@ public class TestFlow {
 
     @Before
     public void before() {
-        SpecRunnerServices.get(IExpressionFactory.class).bindPredefinedClass("dt", LocalDateTime.class);
+        SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", LocalDateTime.class);
     }
 
     @Test

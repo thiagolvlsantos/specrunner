@@ -22,7 +22,7 @@ public class TestAligner {
 
     @Before
     public void antes() {
-        SpecRunnerServices.get(IExpressionFactory.class).bindPredefinedValue("alignerFactory", SpecRunnerServices.get(IStringAlignerFactory.class));
+        SpecRunnerServices.get(IExpressionFactory.class).bindValue("alignerFactory", SpecRunnerServices.get(IStringAlignerFactory.class));
     }
 
     @Test
