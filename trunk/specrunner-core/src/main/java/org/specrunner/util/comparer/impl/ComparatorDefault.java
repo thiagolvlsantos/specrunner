@@ -42,4 +42,15 @@ public class ComparatorDefault implements IComparator {
     public boolean match(Object expected, Object received) {
         return expected == null ? received == null : expected.equals(received);
     }
+
+    @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public int compare(Object o1, Object o2) {
+        if (o1 instanceof Comparable<?> && o2 instanceof Comparable<?>) {
+            Comparable left = (Comparable) o1;
+            Comparable right = (Comparable) o2;
+            return left.compareTo(right);
+        }
+        return 0;
+    }
 }

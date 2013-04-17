@@ -42,4 +42,14 @@ public class ComparatorDate extends AbstractComparatorTime {
         }
         return false;
     }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        if (o1 instanceof Date && o2 instanceof Date) {
+            Date left = (Date) o1;
+            Date right = (Date) o2;
+            return left.compareTo(right);
+        }
+        return 0;
+    }
 }

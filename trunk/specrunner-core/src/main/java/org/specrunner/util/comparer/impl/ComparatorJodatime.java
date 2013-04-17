@@ -42,4 +42,14 @@ public class ComparatorJodatime extends AbstractComparatorTime {
         }
         return false;
     }
+
+    @Override
+    public int compare(Object expected, Object received) {
+        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
+            ReadableInstant left = (ReadableInstant) expected;
+            ReadableInstant right = (ReadableInstant) received;
+            return (int) (left.getMillis() - right.getMillis());
+        }
+        return 0;
+    }
 }

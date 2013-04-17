@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql.meta;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -159,5 +160,14 @@ public class Schema {
      */
     public void setNamesToTables(Map<String, Table> namesToTables) {
         this.namesToTables = namesToTables;
+    }
+
+    /**
+     * Get the column set.
+     * 
+     * @return The columns.
+     */
+    public Collection<Table> getTables() {
+        return namesToTables.values();
     }
 }

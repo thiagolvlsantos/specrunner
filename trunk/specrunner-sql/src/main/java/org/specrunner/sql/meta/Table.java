@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql.meta;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,5 +97,9 @@ public class Table {
             }
         }
         return result;
+    }
+
+    public Collection<Column> getColumns() {
+        return namesToColumns.values();
     }
 }
