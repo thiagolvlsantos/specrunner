@@ -144,13 +144,15 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                 }
                 String sql = "select " + fields + " from " + table.getSchema().getName() + "." + table.getName() + " order by " + order;
-                System.err.println("SQL:" + sql);
+                System.out.println("SQL:" + sql);
                 System.out.println("EXPECTED:");
                 ResultSet rsExpected = stmtExpected.executeQuery(sql);
+                Object obj;
                 while (rsExpected.next()) {
                     for (Entry<String, Column> ec : table.getAliasToColumns().entrySet()) {
                         Column c = ec.getValue();
-                        System.out.println("\t" + c.getName() + ":" + rsExpected.getObject(c.getName()));
+                        obj = rsExpected.getObject(c.getName());
+                        System.out.println("\t" + c.getName() + ":" + obj + " (" + (obj != null ? obj.getClass() : "null") + ")");
                     }
                 }
                 System.out.println("RECEIVED:");
@@ -158,7 +160,8 @@ public class PluginCompareBase extends AbstractPluginValue {
                 while (rsReceived.next()) {
                     for (Entry<String, Column> ec : table.getAliasToColumns().entrySet()) {
                         Column c = ec.getValue();
-                        System.out.println("\t" + c.getName() + ":" + rsReceived.getObject(c.getName()));
+                        obj = rsReceived.getObject(c.getName());
+                        System.out.println("\t" + c.getName() + ":" + obj + " (" + (obj != null ? obj.getClass() : "null") + ")");
                     }
                 }
             }
