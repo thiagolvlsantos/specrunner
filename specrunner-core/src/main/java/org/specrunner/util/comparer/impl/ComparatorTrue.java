@@ -41,4 +41,9 @@ public class ComparatorTrue implements IComparator {
     public boolean match(Object expected, Object received) {
         return true;
     }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        return 0;
+    }
 }

@@ -17,6 +17,8 @@
  */
 package org.specrunner.util.comparer;
 
+import java.util.Comparator;
+
 import org.specrunner.util.mapping.IResetable;
 
 /**
@@ -25,7 +27,7 @@ import org.specrunner.util.mapping.IResetable;
  * @author Thiago Santos
  * 
  */
-public interface IComparator extends IResetable {
+public interface IComparator extends IResetable, Comparator<Object> {
 
     /**
      * The comparator reference type.
