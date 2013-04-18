@@ -31,7 +31,13 @@ public class ReportException extends Exception implements IPresentation {
 
         public static class LineReport implements IPresentation {
             enum Type {
-                MISSING, ALIEN, DIFFERENT;
+                MISSING("-"), ALIEN("+"), DIFFERENT("!=");
+
+                private String code;
+
+                private Type(String code) {
+                    this.code = code;
+                }
 
                 public String getStyle() {
                     return "sr_" + this.name().toLowerCase();
