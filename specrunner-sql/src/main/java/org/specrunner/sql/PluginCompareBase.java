@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map.Entry;
 
 import javax.sql.DataSource;
 
@@ -143,8 +142,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 StringBuilder order = new StringBuilder();
                 int indexFields = 0;
                 int indexOrder = 0;
-                for (Entry<String, Column> ec : table.getAliasToColumns().entrySet()) {
-                    Column c = ec.getValue();
+                for (Column c : table.getColumns()) {
                     fields.append((indexFields++ > 0 ? "," : "") + c.getName());
                     if (c.isKey()) {
                         order.append((indexOrder++ > 0 ? "," : "") + c.getName() + " asc");

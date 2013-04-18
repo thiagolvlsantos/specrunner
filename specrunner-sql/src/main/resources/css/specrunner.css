@@ -7,6 +7,7 @@ table.sr_tablereport caption {
     background-color: gray;
     color: white;
     padding: 4px;
+    font-size: large;
 }
 
 table.sr_tablereport caption:after, table.sr_tablereport th:after {
@@ -14,6 +15,11 @@ table.sr_tablereport caption:after, table.sr_tablereport th:after {
     font-size: x-small;
     vertical-align: top;
     content: attr(title);
+}
+
+table.sr_tablereport th.sr_linereport {
+    border: 1px solid black;
+    padding: 4px;
 }
 
 table.sr_tablereport th:after {
