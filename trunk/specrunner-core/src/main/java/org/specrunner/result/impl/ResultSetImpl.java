@@ -347,10 +347,10 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 subtd = new Element("td");
                 subtr.appendChild(subtd);
                 subtd.addAttribute(new Attribute("style", "text-align:right;"));
-                subtd.appendChild("" + countType(filter, at) + " in ");
+                Long t = times.get(at);
+                subtd.appendChild("" + countType(filter, at) + (t != null ? " in " : ""));
                 subtd = new Element("td");
                 subtr.appendChild(subtd);
-                Long t = times.get(at);
                 if (t != null) {
                     subtd.appendChild(t + " ms");
                 }
