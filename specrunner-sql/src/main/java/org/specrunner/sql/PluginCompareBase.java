@@ -36,6 +36,8 @@ import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.sql.ReportException.TableReport;
+import org.specrunner.sql.ReportException.TableReport.LineReport;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -131,8 +133,12 @@ public class PluginCompareBase extends AbstractPluginValue {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info(getClass().getSimpleName() + " connection expected:" + connectionExpected);
                 UtilLog.LOG.info(getClass().getSimpleName() + " connection received:" + connectionReceived);
+                UtilLog.LOG.info(getClass().getSimpleName() + "  statement expected:" + stmtExpected);
+                UtilLog.LOG.info(getClass().getSimpleName() + "  statement received:" + stmtReceived);
             }
             for (Table table : schema.getTables()) {
+                TableReport tr = new TableReport(table);
+
                 StringBuilder fields = new StringBuilder();
                 StringBuilder order = new StringBuilder();
                 int indexFields = 0;
@@ -145,46 +151,76 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                 }
                 String sql = "select " + fields + " from " + table.getSchema().getName() + "." + table.getName() + " order by " + order;
-                System.out.println("SQL:" + sql);
-
                 ResultSet rsExpected = stmtExpected.executeQuery(sql);
                 ResultSet rsReceived = stmtReceived.executeQuery(sql);
                 ResultSetEnumerator comp = new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
                 while (comp.next()) {
                     ResultSet exp = comp.expected();
                     ResultSet rec = comp.received();
+                    LineReport lr = null;
+                    int index = 0;
                     if (exp == null && rec != null) {
-                        // alien
-                        StringBuilder err = new StringBuilder();
-                        err.append("ALIEN:\n");
+                        lr = new LineReport(LineReport.Type.ALIEN, table);
                         for (Column c : table.getColumns()) {
-                            err.append("\t" + c.getName() + "->" + rec.getObject(c.getName()) + "\n");
+                            lr.indexes.put(c.getName(), index++);
+                            lr.cols.add(c);
+                            lr.rec.add(rec.getObject(c.getName()));
                         }
-                        report.add(err);
-                        System.out.println(err);
+                        tr.lines.add(lr);
                     } else if (exp != null && rec == null) {
-                        // missing
-                        StringBuilder err = new StringBuilder();
-                        err.append("MISSING:\n");
+                        lr = new LineReport(LineReport.Type.MISSING, table);
                         for (Column c : table.getColumns()) {
-                            err.append("\t" + c.getName() + "->" + exp.getObject(c.getName()) + "\n");
+                            lr.indexes.put(c.getName(), index++);
+                            lr.cols.add(c);
+                            lr.exp.add(exp.getObject(c.getName()));
                         }
-                        report.add(err);
-                        System.out.println(err);
+                        tr.lines.add(lr);
                     } else {
-                        // compare
+                        lr = new LineReport(LineReport.Type.DIFFERENT, table);
                         for (Column c : table.getColumns()) {
                             Object objExp = exp.getObject(c.getName());
                             Object objRec = rec.getObject(c.getName());
-                            System.out.println("\t COMPARE(" + objExp + "," + objRec + ")=" + c.getComparator().match(objExp, objRec));
+                            boolean match = c.getComparator().match(objExp, objRec);
+                            if (!c.isKey() && !match) {
+                                lr.indexes.put(c.getName(), index++);
+                                lr.cols.add(c);
+                                lr.exp.add(objExp);
+                                lr.rec.add(objRec);
+                            }
+                        }
+                        if (!lr.cols.isEmpty()) {
+                            for (Column c : table.getKeys()) {
+                                Object objExp = exp.getObject(c.getName());
+                                Object objRec = rec.getObject(c.getName());
+                                lr.indexes.put(c.getName(), index++);
+                                lr.cols.add(c);
+                                lr.exp.add(objExp);
+                                lr.rec.add(objRec);
+                            }
+                            tr.lines.add(lr);
                         }
                     }
+                }
+                if (!tr.lines.isEmpty()) {
+                    report.tabl.add(tr);
                 }
                 rsExpected.close();
                 rsReceived.close();
             }
         } catch (SQLException e) {
             throw new PluginException(e);
+        } finally {
+            try {
+                stmtExpected.close();
+            } catch (SQLException e) {
+                throw new PluginException(e);
+            } finally {
+                try {
+                    stmtReceived.close();
+                } catch (SQLException e) {
+                    throw new PluginException(e);
+                }
+            }
         }
         if (!report.isEmpty()) {
             result.addResult(Failure.INSTANCE, context.peek(), report);
