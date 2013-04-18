@@ -17,7 +17,6 @@
  */
 package org.specrunner.sql.meta;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +27,7 @@ public class Table {
     private Schema schema;
     private String alias;
     private String name;
+    private List<Column> columns = new LinkedList<Column>();
     private Map<String, Column> aliasToColumns = new HashMap<String, Column>();
     private Map<String, Column> namesToColumns = new HashMap<String, Column>();
 
@@ -58,7 +58,12 @@ public class Table {
         return this;
     }
 
+    public void setColumns(List<Column> columns) {
+        this.columns = columns;
+    }
+
     public Table add(Column column) {
+        columns.add(column);
         aliasToColumns.put(column.getAlias(), column);
         namesToColumns.put(column.getName(), column);
         column.setTable(this);
@@ -91,7 +96,7 @@ public class Table {
 
     public List<Column> getKeys() {
         List<Column> result = new LinkedList<Column>();
-        for (Column c : namesToColumns.values()) {
+        for (Column c : columns) {
             if (c.isKey()) {
                 result.add(c);
             }
@@ -99,7 +104,7 @@ public class Table {
         return result;
     }
 
-    public Collection<Column> getColumns() {
-        return namesToColumns.values();
+    public List<Column> getColumns() {
+        return columns;
     }
 }

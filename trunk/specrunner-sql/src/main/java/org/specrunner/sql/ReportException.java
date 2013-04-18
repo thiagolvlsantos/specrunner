@@ -189,10 +189,12 @@ public class ReportException extends Exception implements IPresentation {
                     Element tr = new Element("tr");
                     result.appendChild(tr);
                     Element th = new Element("th");
+                    th.addAttribute(new Attribute("class", "sr_linereport"));
                     th.appendChild("Detail");
                     tr.appendChild(th);
                     for (Column c : table.getColumns()) {
                         th = new Element("th");
+                        th.addAttribute(new Attribute("class", "sr_linereport"));
                         th.appendChild(c.getAlias());
                         th.addAttribute(new Attribute("title", c.getName()));
                         tr.appendChild(th);
