@@ -35,13 +35,24 @@ import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.sql.ReportException.TableReport;
-import org.specrunner.sql.ReportException.TableReport.LineReport;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.sql.report.LineReport;
+import org.specrunner.sql.report.RegisterType;
+import org.specrunner.sql.report.ReportException;
+import org.specrunner.sql.report.SchemaReport;
+import org.specrunner.sql.report.TableReport;
 import org.specrunner.util.UtilLog;
 
+/**
+ * Provided a <code>Schema</code> instance, and to databases, this plugin
+ * compare these database. The database used by the system under test name is '
+ * <code>system</code>' and the reference database is '<code>reference</code>'.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginCompareBase extends AbstractPluginValue {
 
     /**
@@ -69,26 +80,59 @@ public class PluginCompareBase extends AbstractPluginValue {
      */
     private String reference;
 
+    /**
+     * Get the schema name.
+     * 
+     * @return The schema.
+     */
     public String getSchema() {
         return schema;
     }
 
+    /**
+     * Set the schema name.
+     * 
+     * @param schema
+     *            The name.
+     */
     public void setSchema(String schema) {
         this.schema = schema;
     }
 
+    /**
+     * Get the system database name.
+     * 
+     * @return The system database name.
+     */
     public String getSystem() {
         return system;
     }
 
+    /**
+     * Set the system database name.
+     * 
+     * @param system
+     *            The database name.
+     */
     public void setSystem(String system) {
         this.system = system;
     }
 
+    /**
+     * Get the reference database name.
+     * 
+     * @return The reference name.
+     */
     public String getReference() {
         return reference;
     }
 
+    /**
+     * Set the reference database name.
+     * 
+     * @param reference
+     *            The reference.
+     */
     public void setReference(String reference) {
         this.reference = reference;
     }
@@ -123,7 +167,7 @@ public class PluginCompareBase extends AbstractPluginValue {
         Statement stmtExpected = null;
         Connection connectionReceived = null;
         Statement stmtReceived = null;
-        ReportException report = new ReportException();
+        SchemaReport report = new SchemaReport(schema);
         try {
             connectionExpected = dsExcepted.getConnection();
             stmtExpected = connectionExpected.createStatement();
@@ -136,8 +180,6 @@ public class PluginCompareBase extends AbstractPluginValue {
                 UtilLog.LOG.info(getClass().getSimpleName() + "  statement received:" + stmtReceived);
             }
             for (Table table : schema.getTables()) {
-                TableReport tr = new TableReport(table);
-
                 StringBuilder fields = new StringBuilder();
                 StringBuilder order = new StringBuilder();
                 int indexFields = 0;
@@ -149,82 +191,125 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                 }
                 String sql = "select " + fields + " from " + table.getSchema().getName() + "." + table.getName() + " order by " + order;
-                ResultSet rsExpected = stmtExpected.executeQuery(sql);
-                ResultSet rsReceived = stmtReceived.executeQuery(sql);
-                ResultSetEnumerator comp = new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
-                while (comp.next()) {
-                    ResultSet exp = comp.expected();
-                    ResultSet rec = comp.received();
-                    LineReport lr = null;
-                    int index = 0;
-                    if (exp == null && rec != null) {
-                        lr = new LineReport(LineReport.Type.ALIEN, table);
-                        for (Column c : table.getColumns()) {
-                            lr.indexes.put(c.getName(), index++);
-                            lr.cols.add(c);
-                            lr.rec.add(rec.getObject(c.getName()));
+                ResultSet rsExpected = null;
+                ResultSet rsReceived = null;
+                try {
+                    rsExpected = stmtExpected.executeQuery(sql);
+                    rsReceived = stmtReceived.executeQuery(sql);
+                    populateReport(report, table, rsExpected, rsReceived);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    throw new PluginException(e);
+                } finally {
+                    try {
+                        rsExpected.close();
+                    } catch (Exception e) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug(e.getMessage(), e);
                         }
-                        tr.lines.add(lr);
-                    } else if (exp != null && rec == null) {
-                        lr = new LineReport(LineReport.Type.MISSING, table);
-                        for (Column c : table.getColumns()) {
-                            lr.indexes.put(c.getName(), index++);
-                            lr.cols.add(c);
-                            lr.exp.add(exp.getObject(c.getName()));
-                        }
-                        tr.lines.add(lr);
-                    } else {
-                        lr = new LineReport(LineReport.Type.DIFFERENT, table);
-                        for (Column c : table.getColumns()) {
-                            Object objExp = exp.getObject(c.getName());
-                            Object objRec = rec.getObject(c.getName());
-                            boolean match = c.getComparator().match(objExp, objRec);
-                            if (!c.isKey() && !match) {
-                                lr.indexes.put(c.getName(), index++);
-                                lr.cols.add(c);
-                                lr.exp.add(objExp);
-                                lr.rec.add(objRec);
+                        throw new PluginException(e);
+                    } finally {
+                        try {
+                            rsReceived.close();
+                        } catch (Exception e) {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug(e.getMessage(), e);
                             }
-                        }
-                        if (!lr.cols.isEmpty()) {
-                            for (Column c : table.getKeys()) {
-                                Object objExp = exp.getObject(c.getName());
-                                Object objRec = rec.getObject(c.getName());
-                                lr.indexes.put(c.getName(), index++);
-                                lr.cols.add(c);
-                                lr.exp.add(objExp);
-                                lr.rec.add(objRec);
-                            }
-                            tr.lines.add(lr);
+                            throw new PluginException(e);
                         }
                     }
                 }
-                if (!tr.lines.isEmpty()) {
-                    report.tabl.add(tr);
-                }
-                rsExpected.close();
-                rsReceived.close();
             }
         } catch (SQLException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
             throw new PluginException(e);
         } finally {
             try {
                 stmtExpected.close();
             } catch (SQLException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
                 throw new PluginException(e);
             } finally {
                 try {
                     stmtReceived.close();
                 } catch (SQLException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
                     throw new PluginException(e);
                 }
             }
         }
         if (!report.isEmpty()) {
-            result.addResult(Failure.INSTANCE, context.peek(), report);
+            result.addResult(Failure.INSTANCE, context.peek(), new ReportException(report));
         } else {
             result.addResult(Success.INSTANCE, context.peek());
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Populate schema report.
+     * 
+     * @param report
+     *            The report.
+     * @param table
+     *            The current table under analysis.
+     * @param rsExpected
+     *            The result set of reference database.
+     * @param rsReceived
+     *            The result set of system database.
+     * @throws SQLException
+     *             On comparison errors.
+     */
+    protected void populateReport(SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
+        ResultSetEnumerator comp = new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
+        TableReport tr = new TableReport(table);
+        while (comp.next()) {
+            ResultSet exp = comp.expected();
+            ResultSet rec = comp.received();
+            LineReport lr = null;
+            int index = 0;
+            if (exp == null && rec != null) {
+                lr = new LineReport(RegisterType.ALIEN, table);
+                for (Column c : table.getColumns()) {
+                    lr.add(c, index++, null, rec.getObject(c.getName()));
+                }
+                tr.add(lr);
+            } else if (exp != null && rec == null) {
+                lr = new LineReport(RegisterType.MISSING, table);
+                for (Column c : table.getColumns()) {
+                    lr.add(c, index++, exp.getObject(c.getName()), null);
+                }
+                tr.add(lr);
+            } else {
+                lr = new LineReport(RegisterType.DIFFERENT, table);
+                for (Column c : table.getColumns()) {
+                    Object objExp = exp.getObject(c.getName());
+                    Object objRec = rec.getObject(c.getName());
+                    boolean match = c.getComparator().match(objExp, objRec);
+                    if (!c.isKey() && !match) {
+                        lr.add(c, index++, objExp, objRec);
+                    }
+                }
+                if (!lr.isEmpty()) {
+                    for (Column c : table.getKeys()) {
+                        Object objExp = exp.getObject(c.getName());
+                        Object objRec = rec.getObject(c.getName());
+                        lr.add(c, index++, objExp, objRec);
+                    }
+                    tr.add(lr);
+                }
+            }
+        }
+        if (!tr.isEmpty()) {
+            report.add(tr);
+        }
     }
 }
