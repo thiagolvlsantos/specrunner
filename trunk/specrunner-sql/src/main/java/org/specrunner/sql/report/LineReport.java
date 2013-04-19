@@ -1,0 +1,337 @@
+package org.specrunner.sql.report;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.Table;
+import org.specrunner.util.aligner.IStringAligner;
+import org.specrunner.util.aligner.IStringAlignerFactory;
+import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.xom.IPresentation;
+
+/**
+ * A line report. Only differences are shown for partial match of registers,
+ * alien or missing registers as full described.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+public class LineReport implements IPresentation {
+
+    /**
+     * The line type.
+     */
+    private RegisterType type;
+    /**
+     * The parent table.
+     */
+    private Table table;
+    /**
+     * Mapping from column names to their indexes in table report.
+     */
+    private Map<String, Integer> columnsToIndexes = new HashMap<String, Integer>();
+    /**
+     * List of columns.
+     */
+    private List<Column> columns = new LinkedList<Column>();
+    /**
+     * List of expected objects.
+     */
+    private List<Object> expectedObjects = new LinkedList<Object>();
+    /**
+     * List of received objects.
+     */
+    private List<Object> receivedObjects = new LinkedList<Object>();
+
+    /**
+     * Gets the register type.
+     * 
+     * @return The type.
+     */
+    public RegisterType getType() {
+        return type;
+    }
+
+    /**
+     * Set line register type.
+     * 
+     * @param type
+     *            The type.
+     */
+    public void setType(RegisterType type) {
+        this.type = type;
+    }
+
+    /**
+     * Get parent table report.
+     * 
+     * @return The table.
+     */
+    public Table getTable() {
+        return table;
+    }
+
+    /**
+     * Set the table report.
+     * 
+     * @param table
+     *            Set the parent report.
+     */
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    /**
+     * Get the mapping of columns names to indexes.
+     * 
+     * @return The mapping.
+     */
+    public Map<String, Integer> getColumnsToIndexes() {
+        return columnsToIndexes;
+    }
+
+    /**
+     * Set column mapping.
+     * 
+     * @param columnsToIndexes
+     *            A new mapping.
+     */
+    public void setColumnsToIndexes(Map<String, Integer> columnsToIndexes) {
+        this.columnsToIndexes = columnsToIndexes;
+    }
+
+    /**
+     * Get the list of columns.
+     * 
+     * @return The columns.
+     */
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    /**
+     * Set the column list.
+     * 
+     * @param columns
+     *            The columns.
+     */
+    public void setColumns(List<Column> columns) {
+        this.columns = columns;
+    }
+
+    /**
+     * List of expected objects.
+     * 
+     * @return The list of objects.
+     */
+    public List<Object> getExpectedObjects() {
+        return expectedObjects;
+    }
+
+    /**
+     * Set the list of expected objects.
+     * 
+     * @param expectedObjects
+     *            The list of expected values.
+     */
+    public void setExpectedObjects(List<Object> expectedObjects) {
+        this.expectedObjects = expectedObjects;
+    }
+
+    /**
+     * List of received objects.
+     * 
+     * @return The list of objects.
+     */
+    public List<Object> getReceivedObjects() {
+        return receivedObjects;
+    }
+
+    /**
+     * Set the list of expected objects.
+     * 
+     * @param receivedObjects
+     *            The expected objects.
+     */
+    public void setReceivedObjects(List<Object> receivedObjects) {
+        this.receivedObjects = receivedObjects;
+    }
+
+    /**
+     * Default constructor.
+     * 
+     * @param type
+     *            The line type.
+     * @param table
+     *            The parent table.
+     */
+    public LineReport(RegisterType type, Table table) {
+        this.type = type;
+        this.table = table;
+    }
+
+    @Override
+    public String asString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(type.asString() + "|");
+        switch (type) {
+        case ALIEN:
+            for (Column c : table.getColumns()) {
+                Integer index = columnsToIndexes.get(c.getName());
+                if (index != null) {
+                    sb.append(String.valueOf(receivedObjects.get(index)) + "|");
+                }
+            }
+            break;
+        case MISSING:
+            for (Column c : table.getColumns()) {
+                Integer index = columnsToIndexes.get(c.getName());
+                if (index != null) {
+                    sb.append(String.valueOf(expectedObjects.get(index)) + "|");
+                }
+            }
+            break;
+        case DIFFERENT:
+            for (int i = 0; i < columns.size(); i++) {
+                if (columns.get(i).isKey()) {
+                    for (Column c : table.getColumns()) {
+                        Integer index = columnsToIndexes.get(c.getName());
+                        if (index != null) {
+                            sb.append(String.valueOf(receivedObjects.get(index)) + "|");
+                        } else {
+                            sb.append("|");
+                        }
+                    }
+                } else {
+                    for (Column c : table.getColumns()) {
+                        Integer index = columnsToIndexes.get(c.getName());
+                        if (index != null) {
+                            IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expectedObjects.get(i)), String.valueOf(receivedObjects.get(i)));
+                            DefaultAlignmentException def = new DefaultAlignmentException(aligner);
+                            sb.append(def.asString() + "|");
+                        } else {
+                            sb.append("|");
+                        }
+                    }
+                }
+            }
+            break;
+        default:
+            // nothing.
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public Node asNode() {
+        Element tr = new Element("tr");
+        tr.addAttribute(new Attribute("class", type.getStyle() + " sr_lreport"));
+        {
+            Element td = new Element("td");
+            tr.appendChild(td);
+            {
+                td.addAttribute(new Attribute("class", type.getStyle() + " sr_lreport"));
+                td.appendChild(type.asNode());
+            }
+            switch (type) {
+            case ALIEN:
+                line(tr, receivedObjects);
+                break;
+            case MISSING:
+                line(tr, expectedObjects);
+                break;
+            case DIFFERENT:
+                for (Column c : table.getColumns()) {
+                    Integer index = columnsToIndexes.get(c.getName());
+                    if (index != null) {
+                        td = new Element("td");
+                        tr.appendChild(td);
+                        {
+                            td.addAttribute(new Attribute("class", type.getStyle() + " sr_lreport"));
+                        }
+                        if (columns.get(index).isKey()) {
+                            td.appendChild(String.valueOf(receivedObjects.get(index)));
+                        } else {
+                            td.addAttribute(new Attribute("class", td.getAttributeValue("class") + " " + type.getStyle() + "_cell"));
+                            IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expectedObjects.get(index)), String.valueOf(receivedObjects.get(index)));
+                            DefaultAlignmentException def = new DefaultAlignmentException(aligner);
+                            td.appendChild(def.asNode());
+                        }
+
+                    } else {
+                        tr.appendChild(new Element("td"));
+                    }
+                }
+                break;
+            default:
+                // nothing
+            }
+        }
+
+        return tr;
+    }
+
+    /**
+     * Dump a line.
+     * 
+     * @param tr
+     *            The element.
+     * @param vals
+     *            The values to dump.
+     */
+    protected void line(Element tr, List<Object> vals) {
+        for (Column c : table.getColumns()) {
+            Integer index = columnsToIndexes.get(c.getName());
+            if (index != null) {
+                Element td = new Element("td");
+                tr.appendChild(td);
+                {
+                    td.addAttribute(new Attribute("class", type.getStyle()));
+                    td.appendChild(String.valueOf(vals.get(index)));
+                }
+            } else {
+                tr.appendChild(new Element("td"));
+            }
+        }
+    }
+
+    /**
+     * Add register information.
+     * 
+     * @param c
+     *            The column.
+     * @param index
+     *            The column index.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     */
+    public void add(Column c, int index, Object expected, Object received) {
+        columnsToIndexes.put(c.getName(), index);
+        columns.add(c);
+        if (expected != null) {
+            expectedObjects.add(expected);
+        }
+        if (received != null) {
+            receivedObjects.add(received);
+        }
+    }
+
+    /**
+     * Check if there are some columns in this line report.
+     * 
+     * @return true, if enable, false, otherwise.
+     */
+    public boolean isEmpty() {
+        return columns.isEmpty();
+    }
+}

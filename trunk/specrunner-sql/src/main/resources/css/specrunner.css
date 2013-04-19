@@ -1,8 +1,8 @@
-table.sr_tablereport {
+table.sr_sreport, table.sr_treport {
     border: 1px solid black;
 }
 
-table.sr_tablereport caption {
+table.sr_sreport caption.sr_sreport, table.sr_treport caption.sr_treport {
     border: 1px solid black;
     background-color: gray;
     color: white;
@@ -10,19 +10,19 @@ table.sr_tablereport caption {
     font-size: large;
 }
 
-table.sr_tablereport caption:after, table.sr_tablereport th:after {
+table.sr_sreport caption:after, table.sr_treport caption:after, table.sr_treport th:after {
     padding: 1px 1px 1px 1px;
     font-size: x-small;
     vertical-align: top;
     content: attr(title);
 }
 
-table.sr_tablereport th.sr_linereport {
+table.sr_treport th.sr_lreport {
     border: 1px solid black;
     padding: 4px;
 }
 
-table.sr_tablereport th:after {
+table.sr_treport th:after {
     background-color: white;
 }
 
@@ -45,7 +45,8 @@ td.sr_missing, td.sr_alien, td.sr_different {
     vertical-align: top;
 }
 
-table.sr_tablereport td.sr_different_cell {
+table.sr_treport td.sr_different_cell {
     border: 2px dotted red;
+    background-color: #ffd9d9;
 }
 
