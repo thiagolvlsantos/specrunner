@@ -11,7 +11,6 @@ import nu.xom.Node;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.Table;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
@@ -33,7 +32,7 @@ public class LineReport implements IPresentation {
     /**
      * The parent table.
      */
-    private Table table;
+    private TableReport tableReport;
     /**
      * Mapping from column names to their indexes in table report.
      */
@@ -75,8 +74,8 @@ public class LineReport implements IPresentation {
      * 
      * @return The table.
      */
-    public Table getTable() {
-        return table;
+    public TableReport getTable() {
+        return tableReport;
     }
 
     /**
@@ -85,8 +84,8 @@ public class LineReport implements IPresentation {
      * @param table
      *            Set the parent report.
      */
-    public void setTable(Table table) {
-        this.table = table;
+    public void setTable(TableReport table) {
+        this.tableReport = table;
     }
 
     /**
@@ -173,9 +172,9 @@ public class LineReport implements IPresentation {
      * @param table
      *            The parent table.
      */
-    public LineReport(RegisterType type, Table table) {
+    public LineReport(RegisterType type, TableReport table) {
         this.type = type;
-        this.table = table;
+        this.tableReport = table;
     }
 
     @Override
@@ -184,7 +183,7 @@ public class LineReport implements IPresentation {
         sb.append(type.asString() + "|");
         switch (type) {
         case ALIEN:
-            for (Column c : table.getColumns()) {
+            for (Column c : tableReport.getTable().getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
                 if (index != null) {
                     sb.append(String.valueOf(receivedObjects.get(index)) + "|");
@@ -192,7 +191,7 @@ public class LineReport implements IPresentation {
             }
             break;
         case MISSING:
-            for (Column c : table.getColumns()) {
+            for (Column c : tableReport.getTable().getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
                 if (index != null) {
                     sb.append(String.valueOf(expectedObjects.get(index)) + "|");
@@ -202,7 +201,7 @@ public class LineReport implements IPresentation {
         case DIFFERENT:
             for (int i = 0; i < columns.size(); i++) {
                 if (columns.get(i).isKey()) {
-                    for (Column c : table.getColumns()) {
+                    for (Column c : tableReport.getTable().getColumns()) {
                         Integer index = columnsToIndexes.get(c.getName());
                         if (index != null) {
                             sb.append(String.valueOf(receivedObjects.get(index)) + "|");
@@ -211,7 +210,7 @@ public class LineReport implements IPresentation {
                         }
                     }
                 } else {
-                    for (Column c : table.getColumns()) {
+                    for (Column c : tableReport.getTable().getColumns()) {
                         Integer index = columnsToIndexes.get(c.getName());
                         if (index != null) {
                             IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expectedObjects.get(i)), String.valueOf(receivedObjects.get(i)));
@@ -249,7 +248,7 @@ public class LineReport implements IPresentation {
                 line(tr, expectedObjects);
                 break;
             case DIFFERENT:
-                for (Column c : table.getColumns()) {
+                for (Column c : tableReport.getTable().getColumns()) {
                     Integer index = columnsToIndexes.get(c.getName());
                     if (index != null) {
                         td = new Element("td");
@@ -288,7 +287,7 @@ public class LineReport implements IPresentation {
      *            The values to dump.
      */
     protected void line(Element tr, List<Object> vals) {
-        for (Column c : table.getColumns()) {
+        for (Column c : tableReport.getTable().getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
             if (index != null) {
                 Element td = new Element("td");

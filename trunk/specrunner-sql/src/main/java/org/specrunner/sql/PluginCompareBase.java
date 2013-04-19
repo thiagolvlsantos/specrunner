@@ -277,19 +277,19 @@ public class PluginCompareBase extends AbstractPluginValue {
             LineReport lr = null;
             int index = 0;
             if (exp == null && rec != null) {
-                lr = new LineReport(RegisterType.ALIEN, table);
+                lr = new LineReport(RegisterType.ALIEN, tr);
                 for (Column c : table.getColumns()) {
                     lr.add(c, index++, null, rec.getObject(c.getName()));
                 }
                 tr.add(lr);
             } else if (exp != null && rec == null) {
-                lr = new LineReport(RegisterType.MISSING, table);
+                lr = new LineReport(RegisterType.MISSING, tr);
                 for (Column c : table.getColumns()) {
                     lr.add(c, index++, exp.getObject(c.getName()), null);
                 }
                 tr.add(lr);
             } else {
-                lr = new LineReport(RegisterType.DIFFERENT, table);
+                lr = new LineReport(RegisterType.DIFFERENT, tr);
                 for (Column c : table.getColumns()) {
                     Object objExp = exp.getObject(c.getName());
                     Object objRec = rec.getObject(c.getName());
