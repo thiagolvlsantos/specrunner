@@ -26,7 +26,7 @@ import org.specrunner.util.converter.IConverter;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterNotNullOrEmpty implements IConverter {
+public class ConverterNotNullNotEmpty implements IConverter {
 
     @Override
     public void initialize() {
