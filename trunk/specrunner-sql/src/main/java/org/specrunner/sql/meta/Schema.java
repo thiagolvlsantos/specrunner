@@ -94,6 +94,27 @@ public class Schema {
     }
 
     /**
+     * Get the column set.
+     * 
+     * @return The columns.
+     */
+    public List<Table> getTables() {
+        return tables;
+    }
+
+    /**
+     * Set the tables.
+     * 
+     * @param tables
+     *            The tables.
+     * @return The schema itself.
+     */
+    public Schema setTables(List<Table> tables) {
+        this.tables = tables;
+        return this;
+    }
+
+    /**
      * Add a table to the schema.
      * 
      * @param table
@@ -168,22 +189,4 @@ public class Schema {
         this.namesToTables = namesToTables;
     }
 
-    /**
-     * Set the tables.
-     * 
-     * @param tables
-     *            The tables.
-     */
-    public void setTables(List<Table> tables) {
-        this.tables = tables;
-    }
-
-    /**
-     * Get the column set.
-     * 
-     * @return The columns.
-     */
-    public List<Table> getTables() {
-        return tables;
-    }
 }

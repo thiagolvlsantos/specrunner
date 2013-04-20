@@ -22,46 +22,130 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Table meta model.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class Table {
 
+    /**
+     * The parent schema.
+     */
     private Schema schema;
+    /**
+     * The table alias.
+     */
     private String alias;
+    /**
+     * The table name.
+     */
     private String name;
+    /**
+     * List of column names.
+     */
     private List<Column> columns = new LinkedList<Column>();
+    /**
+     * Map from alias to columns.
+     */
     private Map<String, Column> aliasToColumns = new HashMap<String, Column>();
+    /**
+     * Map form names to columns.
+     */
     private Map<String, Column> namesToColumns = new HashMap<String, Column>();
 
+    /**
+     * Get the schema.
+     * 
+     * @return The schema.
+     */
     public Schema getSchema() {
         return schema;
     }
 
+    /**
+     * Set the schema.
+     * 
+     * @param schema
+     *            The schema.
+     * @return The table itself.
+     */
     public Table setSchema(Schema schema) {
         this.schema = schema;
         return this;
     }
 
+    /**
+     * Get the alias.
+     * 
+     * @return The alias.
+     */
     public String getAlias() {
         return alias;
     }
 
+    /**
+     * Set table alias.
+     * 
+     * @param alias
+     *            The alias.
+     * @return The table itself.
+     */
     public Table setAlias(String alias) {
         this.alias = alias;
         return this;
     }
 
+    /**
+     * Get the name.
+     * 
+     * @return The table name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the name.
+     * 
+     * @param name
+     *            The name.
+     * @return The table itself.
+     */
     public Table setName(String name) {
         this.name = name;
         return this;
     }
 
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
+    /**
+     * Get the columns.
+     * 
+     * @return The columns.
+     */
+    public List<Column> getColumns() {
+        return columns;
     }
 
+    /**
+     * Set the columns.
+     * 
+     * @param columns
+     *            The columns.
+     * @return The table itself.
+     */
+    public Table setColumns(List<Column> columns) {
+        this.columns = columns;
+        return this;
+    }
+
+    /**
+     * Add a column.
+     * 
+     * @param column
+     *            A column.
+     * @return The table itself.
+     */
     public Table add(Column column) {
         columns.add(column);
         aliasToColumns.put(column.getAlias(), column);
@@ -70,30 +154,71 @@ public class Table {
         return this;
     }
 
+    /**
+     * Get a column by its alias.
+     * 
+     * @param alias
+     *            The alias.
+     * @return The column.
+     */
     public Column getAlias(String alias) {
         return aliasToColumns.get(alias);
     }
 
+    /**
+     * Get the column by its name.
+     * 
+     * @param name
+     *            The name.
+     * @return The column name.
+     */
     public Column getName(String name) {
         return namesToColumns.get(name);
     }
 
+    /**
+     * Get the alias mapping.
+     * 
+     * @return The mapping.
+     */
     public Map<String, Column> getAliasToColumns() {
         return aliasToColumns;
     }
 
+    /**
+     * Set the alias mapping.
+     * 
+     * @param aliasToColumns
+     *            A new mapping.
+     */
     public void setAliasToColumns(Map<String, Column> aliasToColumns) {
         this.aliasToColumns = aliasToColumns;
     }
 
+    /**
+     * Get the name mapping.
+     * 
+     * @return The mapping
+     */
     public Map<String, Column> getNamesToColumns() {
         return namesToColumns;
     }
 
+    /**
+     * Set the name mapping.
+     * 
+     * @param namesToColumns
+     *            A new mapping.
+     */
     public void setNamesToColumns(Map<String, Column> namesToColumns) {
         this.namesToColumns = namesToColumns;
     }
 
+    /**
+     * Get the columns which are keys.
+     * 
+     * @return The table keys.
+     */
     public List<Column> getKeys() {
         List<Column> result = new LinkedList<Column>();
         for (Column c : columns) {
@@ -102,9 +227,5 @@ public class Table {
             }
         }
         return result;
-    }
-
-    public List<Column> getColumns() {
-        return columns;
     }
 }

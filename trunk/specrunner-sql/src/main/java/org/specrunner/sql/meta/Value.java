@@ -20,13 +20,43 @@ package org.specrunner.sql.meta;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.xom.CellAdapter;
 
+/**
+ * The value for a given cell in data tables.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class Value implements Comparable<Value> {
 
+    /**
+     * The reference column.
+     */
     private Column column;
+    /**
+     * The cell adapter.
+     */
     private CellAdapter cell;
+    /**
+     * The cell value.
+     */
     private Object value;
+    /**
+     * The cell comparator.
+     */
     private IComparator comparator;
 
+    /**
+     * Default constructor.
+     * 
+     * @param column
+     *            The column.
+     * @param cell
+     *            The cell.
+     * @param value
+     *            The value.
+     * @param comparator
+     *            The comparator.
+     */
     public Value(Column column, CellAdapter cell, Object value, IComparator comparator) {
         this.column = column;
         this.cell = cell;
@@ -34,47 +64,91 @@ public class Value implements Comparable<Value> {
         this.comparator = comparator;
     }
 
+    /**
+     * Get the value column.
+     * 
+     * @return The column.
+     */
     public Column getColumn() {
         return column;
     }
 
+    /**
+     * Set the column.
+     * 
+     * @param column
+     *            The column.
+     * @return The value itself.
+     */
     public Value setColumn(Column column) {
         this.column = column;
         return this;
     }
 
+    /**
+     * Get the source cell.
+     * 
+     * @return The source.
+     */
     public CellAdapter getCell() {
         return cell;
     }
 
+    /**
+     * Set the cell.
+     * 
+     * @param cell
+     *            A new cell.
+     */
     public void setCell(CellAdapter cell) {
         this.cell = cell;
     }
 
+    /**
+     * Gets the value corresponding to the value.
+     * 
+     * @return The object.
+     */
     public Object getValue() {
         return value;
     }
 
+    /**
+     * Set the value.
+     * 
+     * @param value
+     *            The new value.
+     * @return The value object itself.
+     */
     public Value setValue(Object value) {
         this.value = value;
         return this;
     }
 
+    /**
+     * Gest the value comparator.
+     * 
+     * @return The comparator.
+     */
     public IComparator getComparator() {
         return comparator;
     }
 
-    public void setComparator(IComparator comparator) {
+    /**
+     * Set the cell comparator.
+     * 
+     * @param comparator
+     *            A comparator.
+     * @return The value itself.
+     */
+    public Value setComparator(IComparator comparator) {
         this.comparator = comparator;
+        return this;
     }
 
     @Override
     public int compareTo(Value v) {
+        // sort names is required by prepared statements cache. Remember.
         return column.getName().compareTo(v.column.getName());
-    }
-
-    @Override
-    public String toString() {
-        return column.getName() + "=" + value + "(" + comparator + ")";
     }
 }
