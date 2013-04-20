@@ -1,6 +1,6 @@
 package org.specrunner.util.converter.impl;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 /**
  * Create current date.
@@ -9,7 +9,7 @@ import java.util.Date;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<Date> {
+public class ConverterDateTimeCurrentTemplate extends AbstractConverterTimeTemplate<DateTime> {
 
     /**
      * See superclass.
@@ -17,7 +17,7 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
      * @param regexp
      *            Regexp.
      */
-    public ConverterDateCurrentTemplate(String regexp) {
+    public ConverterDateTimeCurrentTemplate(String regexp) {
         super(regexp);
     }
 
@@ -27,12 +27,12 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
      * @param values
      *            Value.
      */
-    public ConverterDateCurrentTemplate(String[] values) {
+    public ConverterDateTimeCurrentTemplate(String[] values) {
         super(values);
     }
 
     @Override
-    protected Date instance() {
-        return new Date();
+    protected DateTime instance() {
+        return new DateTime();
     }
 }

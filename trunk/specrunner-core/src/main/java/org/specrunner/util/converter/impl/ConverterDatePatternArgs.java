@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import org.specrunner.util.converter.ConverterException;
 
 /**
- * Convert any date, given a provided pattern in arg[0].
+ * Convert any date (Date from Java), given a provided pattern in arg[0].
  * 
  * @author Thiago Santos
  * 
