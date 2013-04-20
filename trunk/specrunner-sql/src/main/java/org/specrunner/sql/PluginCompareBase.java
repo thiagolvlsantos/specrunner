@@ -81,6 +81,15 @@ public class PluginCompareBase extends AbstractPluginValue {
     private String reference;
 
     /**
+     * Feature for table[cols] ignore.
+     */
+    public static final String FEATURE_SKIP = PluginCompareBase.class.getName() + ".skip";
+    /**
+     * Pattern to ignore some tables and(or) fields.
+     */
+    private String skip;
+
+    /**
      * Get the schema name.
      * 
      * @return The schema.
@@ -135,6 +144,27 @@ public class PluginCompareBase extends AbstractPluginValue {
      */
     public void setReference(String reference) {
         this.reference = reference;
+    }
+
+    /**
+     * Get the skip expression. i.e. '*' skips every table; 'REC*', all tables
+     * starting with REC; '~REC*', all tables not starting with 'REC';
+     * 'USER[*_ID]', table user where fields end with ID, and so on.
+     * 
+     * @return The expression.
+     */
+    public String getSkip() {
+        return skip;
+    }
+
+    /**
+     * Set the skip expression.
+     * 
+     * @param skip
+     *            Expression.
+     */
+    public void setSkip(String skip) {
+        this.skip = skip;
     }
 
     @Override
