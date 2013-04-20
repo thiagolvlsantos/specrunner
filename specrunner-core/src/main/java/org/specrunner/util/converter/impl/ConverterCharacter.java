@@ -15,36 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.meta.converter;
+package org.specrunner.util.converter.impl;
 
 import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 
 /**
- * Basic long converter.
+ * Basic char converter.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLong implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object obj) {
-        return true;
-    }
-
+public class ConverterCharacter extends ConverterDefault {
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {
             return null;
         }
         try {
-            return Long.valueOf(String.valueOf(obj));
+            return Character.valueOf(String.valueOf(obj).charAt(0));
         } catch (NumberFormatException e) {
             throw new ConverterException(e);
         }
