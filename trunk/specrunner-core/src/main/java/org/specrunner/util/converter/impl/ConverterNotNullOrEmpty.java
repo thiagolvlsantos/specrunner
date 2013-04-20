@@ -17,17 +17,16 @@
  */
 package org.specrunner.util.converter.impl;
 
-import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 
 /**
- * Default converter. Bypass converter accepts everything.
+ * Basic nullable converter. Accept only not null values and not empty strings.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDefault implements IConverter {
+public class ConverterNotNullOrEmpty implements IConverter {
 
     @Override
     public void initialize() {
@@ -35,11 +34,27 @@ public class ConverterDefault implements IConverter {
 
     @Override
     public boolean accept(Object obj) {
+        String str = String.valueOf(obj);
+        if (str == null) {
+            return false;
+        }
+        str = str.trim();
+        if (str.isEmpty()) {
+            return false;
+        }
         return true;
     }
 
     @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        return obj;
+    public Object convert(Object obj, Object[] args) {
+        String str = String.valueOf(obj);
+        if (str == null) {
+            return null;
+        }
+        str = str.trim();
+        if (str.isEmpty()) {
+            return null;
+        }
+        return str;
     }
 }

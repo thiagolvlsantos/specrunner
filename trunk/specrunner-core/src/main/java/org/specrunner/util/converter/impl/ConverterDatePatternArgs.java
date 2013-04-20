@@ -1,22 +1,18 @@
-package th.example;
+package org.specrunner.util.converter.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 
+/**
+ * Convert any date, given a provided pattern in arg[0].
+ * 
+ * @author Thiago Santos
+ * 
+ */
 @SuppressWarnings("serial")
-public class ConverterDatePattern implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object value) {
-        return true;
-    }
+public class ConverterDatePatternArgs extends ConverterDefault {
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {

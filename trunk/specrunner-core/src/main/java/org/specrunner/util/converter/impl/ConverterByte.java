@@ -15,46 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.meta.converter;
+package org.specrunner.util.converter.impl;
 
-import org.specrunner.util.converter.IConverter;
+import org.specrunner.util.converter.ConverterException;
 
 /**
- * Basic nullable converter. Accept only not null values and not empty strings.
+ * Basic byte converter.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterNullable implements IConverter {
-
+public class ConverterByte extends ConverterDefault {
     @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object obj) {
-        String str = String.valueOf(obj);
-        if (str == null) {
-            return false;
-        }
-        str = str.trim();
-        if (str.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public Object convert(Object obj, Object[] args) {
-        String str = String.valueOf(obj);
-        if (str == null) {
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
             return null;
         }
-        str = str.trim();
-        if (str.isEmpty()) {
-            return null;
+        try {
+            return Byte.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
         }
-        return str;
     }
 }

@@ -13,6 +13,7 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.util.comparer.impl.AbstractComparatorTime;
 import org.specrunner.util.converter.IConverterManager;
+import org.specrunner.util.converter.impl.ConverterBooleanTemplate;
 
 @RunWith(ConcurrentRunner.class)
 @Concurrent(threads = 3)
@@ -22,7 +23,7 @@ public class TestHibernate {
     public void setUpConverters() {
         pause();
         IConverterManager cf = SpecRunnerServices.get(IConverterManager.class);
-        cf.put("bool", new ConverterSimNao());
+        cf.put("bool", new ConverterBooleanTemplate("Sim", "Não"));
 
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
         ief.bindClass("dt", DateTime.class);

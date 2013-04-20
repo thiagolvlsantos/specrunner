@@ -18,28 +18,25 @@
 package org.specrunner.util.converter.impl;
 
 import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 
 /**
- * Default converter. Bypass converter accepts everything.
+ * Basic long converter.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDefault implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object obj) {
-        return true;
-    }
+public class ConverterLong extends ConverterDefault {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
-        return obj;
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return Long.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
+        }
     }
 }
