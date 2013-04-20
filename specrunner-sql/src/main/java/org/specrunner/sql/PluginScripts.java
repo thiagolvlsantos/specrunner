@@ -260,7 +260,7 @@ public class PluginScripts extends AbstractPluginValue {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        String[] sources = StringUtil.parts(getName() != null ? getName() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
+        String[] sources = StringUtil.tokenize(getName() != null ? getName() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
         int failure = 0;
         for (String source : sources) {
             IDataSourceProvider provider = PluginConnection.getProvider(context, source);

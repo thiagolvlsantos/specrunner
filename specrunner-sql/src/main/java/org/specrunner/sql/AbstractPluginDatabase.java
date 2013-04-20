@@ -212,8 +212,8 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(getClass().getSimpleName() + "     schema(" + getSchema() + "):" + schema);
         }
-        String[] sources = StringUtil.parts(getDatasource() != null ? getDatasource() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
-        String[] bases = StringUtil.parts(getDatabase() != null ? getDatabase() : PluginDatabase.DEFAULT_DATABASE_NAME, separator);
+        String[] sources = StringUtil.tokenize(getDatasource() != null ? getDatasource() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
+        String[] bases = StringUtil.tokenize(getDatabase() != null ? getDatabase() : PluginDatabase.DEFAULT_DATABASE_NAME, separator);
         int erros = 0;
         for (int i = 0; i < sources.length && i < bases.length; i++) {
             String source = sources[i];

@@ -197,7 +197,7 @@ public class PluginDatabase extends AbstractPluginValue {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        String[] bases = StringUtil.parts(getName() != null ? getName() : DEFAULT_DATABASE_NAME, separator);
+        String[] bases = StringUtil.tokenize(getName() != null ? getName() : DEFAULT_DATABASE_NAME, separator);
         if (providerInstance == null) {
             providerInstance = new IDatabase[bases.length];
         }
