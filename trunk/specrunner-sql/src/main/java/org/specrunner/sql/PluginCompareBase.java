@@ -348,22 +348,22 @@ public class PluginCompareBase extends AbstractPluginValue {
             } else {
                 lr = new LineReport(RegisterType.DIFFERENT, tr);
                 for (Column c : table.getColumns()) {
+                    if (!filter.accept(schema, table, c)) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
+                        }
+                        continue;
+                    }
                     Object objExp = exp.getObject(c.getName());
                     Object objRec = rec.getObject(c.getName());
+                    if (!filter.accept(schema, table, c, objRec)) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Value ignored(" + c.getAlias() + "," + c.getName() + "):" + objRec);
+                        }
+                        continue;
+                    }
                     boolean match = c.getComparator().match(objExp, objRec);
                     if (!c.isKey() && !match) {
-                        if (!filter.accept(schema, table, c)) {
-                            if (UtilLog.LOG.isInfoEnabled()) {
-                                UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
-                            }
-                            continue;
-                        }
-                        if (!filter.accept(schema, table, c, objRec)) {
-                            if (UtilLog.LOG.isInfoEnabled()) {
-                                UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
-                            }
-                            continue;
-                        }
                         lr.add(c, index++, objExp, objRec);
                     }
                 }
