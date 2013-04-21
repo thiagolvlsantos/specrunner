@@ -38,9 +38,11 @@ import org.specrunner.result.status.Success;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.sql.report.IReportFilter;
 import org.specrunner.sql.report.LineReport;
 import org.specrunner.sql.report.RegisterType;
 import org.specrunner.sql.report.ReportException;
+import org.specrunner.sql.report.ReportFilterDefault;
 import org.specrunner.sql.report.SchemaReport;
 import org.specrunner.sql.report.TableReport;
 import org.specrunner.util.UtilLog;
@@ -88,6 +90,11 @@ public class PluginCompareBase extends AbstractPluginValue {
      * Pattern to ignore some tables and(or) fields.
      */
     private String skip;
+
+    /**
+     * The report filter.
+     */
+    private IReportFilter filter = new ReportFilterDefault();
 
     /**
      * Get the schema name.
@@ -184,6 +191,12 @@ public class PluginCompareBase extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Schema schema = PluginSchema.getSchema(context, getSchema());
+        if (!filter.accept(schema)) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Schema ignored:" + schema.getAlias() + "(" + schema.getName() + ")");
+            }
+            return ENext.DEEP;
+        }
         IDataSourceProvider expected = PluginConnection.getProvider(context, getReference());
         IDataSourceProvider received = PluginConnection.getProvider(context, getSystem());
         if (UtilLog.LOG.isInfoEnabled()) {
@@ -210,6 +223,12 @@ public class PluginCompareBase extends AbstractPluginValue {
                 UtilLog.LOG.info(getClass().getSimpleName() + "  statement received:" + stmtReceived);
             }
             for (Table table : schema.getTables()) {
+                if (!filter.accept(schema, table)) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Table ignored:" + table.getAlias() + "(" + table.getName() + ")");
+                    }
+                    continue;
+                }
                 StringBuilder fields = new StringBuilder();
                 StringBuilder order = new StringBuilder();
                 int indexFields = 0;
@@ -226,7 +245,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 try {
                     rsExpected = stmtExpected.executeQuery(sql);
                     rsReceived = stmtReceived.executeQuery(sql);
-                    populateReport(report, table, rsExpected, rsReceived);
+                    populateReport(schema, report, table, rsExpected, rsReceived);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -287,6 +306,8 @@ public class PluginCompareBase extends AbstractPluginValue {
     /**
      * Populate schema report.
      * 
+     * @param schema
+     *            The schema object.
      * @param report
      *            The report.
      * @param table
@@ -298,7 +319,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @throws SQLException
      *             On comparison errors.
      */
-    protected void populateReport(SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
+    protected void populateReport(Schema schema, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
         ResultSetEnumerator comp = new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
         TableReport tr = new TableReport(table);
         while (comp.next()) {
@@ -309,6 +330,12 @@ public class PluginCompareBase extends AbstractPluginValue {
             if (exp == null && rec != null) {
                 lr = new LineReport(RegisterType.ALIEN, tr);
                 for (Column c : table.getColumns()) {
+                    if (!filter.accept(schema, table, c)) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Table ignored:" + table.getAlias() + "(" + table.getName() + ")");
+                        }
+                        continue;
+                    }
                     lr.add(c, index++, null, rec.getObject(c.getName()));
                 }
                 tr.add(lr);
@@ -325,6 +352,18 @@ public class PluginCompareBase extends AbstractPluginValue {
                     Object objRec = rec.getObject(c.getName());
                     boolean match = c.getComparator().match(objExp, objRec);
                     if (!c.isKey() && !match) {
+                        if (!filter.accept(schema, table, c)) {
+                            if (UtilLog.LOG.isInfoEnabled()) {
+                                UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
+                            }
+                            continue;
+                        }
+                        if (!filter.accept(schema, table, c, objRec)) {
+                            if (UtilLog.LOG.isInfoEnabled()) {
+                                UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
+                            }
+                            continue;
+                        }
                         lr.add(c, index++, objExp, objRec);
                     }
                 }
