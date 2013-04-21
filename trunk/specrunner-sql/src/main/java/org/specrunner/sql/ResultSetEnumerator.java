@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.specrunner.sql.meta.Column;
 
-public class ResultSetEnumerator {
+public class ResultSetEnumerator implements IResultEnumerator {
 
     private ResultSet rsExpected;
     private ResultSet rsReceived;
@@ -41,6 +41,7 @@ public class ResultSetEnumerator {
         this.keys = keys;
     }
 
+    @Override
     public boolean next() throws SQLException {
         List<Object> keysExp = null;
         List<Object> keysRec = null;
@@ -91,11 +92,13 @@ public class ResultSetEnumerator {
         return exp != null || rec != null;
     }
 
-    public ResultSet expected() {
+    @Override
+    public ResultSet getExpected() {
         return exp;
     }
 
-    public ResultSet received() {
+    @Override
+    public ResultSet getReceived() {
         return rec;
     }
 }

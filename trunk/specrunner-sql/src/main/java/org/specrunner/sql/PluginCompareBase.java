@@ -229,23 +229,13 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                     continue;
                 }
-                StringBuilder fields = new StringBuilder();
-                StringBuilder order = new StringBuilder();
-                int indexFields = 0;
-                int indexOrder = 0;
-                for (Column c : table.getColumns()) {
-                    fields.append((indexFields++ > 0 ? "," : "") + c.getName());
-                    if (c.isKey()) {
-                        order.append((indexOrder++ > 0 ? "," : "") + c.getName() + " asc");
-                    }
-                }
-                String sql = "select " + fields + " from " + table.getSchema().getName() + "." + table.getName() + " order by " + order;
+                String sql = createTableSelect(schema, table);
                 ResultSet rsExpected = null;
                 ResultSet rsReceived = null;
                 try {
                     rsExpected = stmtExpected.executeQuery(sql);
                     rsReceived = stmtReceived.executeQuery(sql);
-                    populateReport(schema, report, table, rsExpected, rsReceived);
+                    populateTableReport(schema, report, table, rsExpected, rsReceived);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -253,7 +243,9 @@ public class PluginCompareBase extends AbstractPluginValue {
                     throw new PluginException(e);
                 } finally {
                     try {
-                        rsExpected.close();
+                        if (rsExpected != null) {
+                            rsExpected.close();
+                        }
                     } catch (Exception e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
@@ -261,7 +253,9 @@ public class PluginCompareBase extends AbstractPluginValue {
                         throw new PluginException(e);
                     } finally {
                         try {
-                            rsReceived.close();
+                            if (rsReceived != null) {
+                                rsReceived.close();
+                            }
                         } catch (Exception e) {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -278,7 +272,9 @@ public class PluginCompareBase extends AbstractPluginValue {
             throw new PluginException(e);
         } finally {
             try {
-                stmtExpected.close();
+                if (stmtExpected != null) {
+                    stmtExpected.close();
+                }
             } catch (SQLException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -286,7 +282,9 @@ public class PluginCompareBase extends AbstractPluginValue {
                 throw new PluginException(e);
             } finally {
                 try {
-                    stmtReceived.close();
+                    if (stmtReceived != null) {
+                        stmtReceived.close();
+                    }
                 } catch (SQLException e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -301,6 +299,29 @@ public class PluginCompareBase extends AbstractPluginValue {
             result.addResult(Success.INSTANCE, context.peek());
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Creates the SQL to be used by comparison algorithm.
+     * 
+     * @param schema
+     *            The schema.
+     * @param table
+     *            The table.
+     * @return The corresponding SQL.
+     */
+    public String createTableSelect(Schema schema, Table table) {
+        StringBuilder fields = new StringBuilder();
+        StringBuilder order = new StringBuilder();
+        int indexFields = 0;
+        int indexOrder = 0;
+        for (Column c : table.getColumns()) {
+            fields.append((indexFields++ > 0 ? "," : "") + c.getName());
+            if (c.isKey()) {
+                order.append((indexOrder++ > 0 ? "," : "") + c.getName() + " asc");
+            }
+        }
+        return "select " + fields + " from " + schema.getName() + "." + table.getName() + " order by " + order;
     }
 
     /**
@@ -319,23 +340,17 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @throws SQLException
      *             On comparison errors.
      */
-    protected void populateReport(Schema schema, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
-        ResultSetEnumerator comp = new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
+    public void populateTableReport(Schema schema, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
+        IResultEnumerator comp = getEnumerator(table, rsExpected, rsReceived);
         TableReport tr = new TableReport(table);
         while (comp.next()) {
-            ResultSet exp = comp.expected();
-            ResultSet rec = comp.received();
+            ResultSet exp = comp.getExpected();
+            ResultSet rec = comp.getReceived();
             LineReport lr = null;
             int index = 0;
             if (exp == null && rec != null) {
                 lr = new LineReport(RegisterType.ALIEN, tr);
                 for (Column c : table.getColumns()) {
-                    if (!filter.accept(schema, table, c)) {
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Table ignored:" + table.getAlias() + "(" + table.getName() + ")");
-                        }
-                        continue;
-                    }
                     lr.add(c, index++, null, rec.getObject(c.getName()));
                 }
                 tr.add(lr);
@@ -369,9 +384,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 }
                 if (!lr.isEmpty()) {
                     for (Column c : table.getKeys()) {
-                        Object objExp = exp.getObject(c.getName());
-                        Object objRec = rec.getObject(c.getName());
-                        lr.add(c, index++, objExp, objRec);
+                        lr.add(c, index++, exp.getObject(c.getName()), rec.getObject(c.getName()));
                     }
                     tr.add(lr);
                 }
@@ -380,5 +393,20 @@ public class PluginCompareBase extends AbstractPluginValue {
         if (!tr.isEmpty()) {
             report.add(tr);
         }
+    }
+
+    /**
+     * Abstraction of enumeration.
+     * 
+     * @param table
+     *            The table source of result sets.
+     * @param rsExpected
+     *            The result from querying reference database.
+     * @param rsReceived
+     *            The result from querying system database.
+     * @return A enumerator.
+     */
+    public IResultEnumerator getEnumerator(Table table, ResultSet rsExpected, ResultSet rsReceived) {
+        return new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
     }
 }
