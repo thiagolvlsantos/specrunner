@@ -38,19 +38,21 @@ import org.specrunner.result.status.Success;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.sql.report.IReportFilter;
+import org.specrunner.sql.report.FilterDefault;
+import org.specrunner.sql.report.IFilter;
 import org.specrunner.sql.report.LineReport;
 import org.specrunner.sql.report.RegisterType;
 import org.specrunner.sql.report.ReportException;
-import org.specrunner.sql.report.ReportFilterDefault;
 import org.specrunner.sql.report.SchemaReport;
 import org.specrunner.sql.report.TableReport;
 import org.specrunner.util.UtilLog;
 
 /**
- * Provided a <code>Schema</code> instance, and to databases, this plugin
- * compare these database. The database used by the system under test name is '
+ * Provided a <code>Schema</code> instance, and two databases, this plugin
+ * compare these databases. The database used by the system under test name is '
  * <code>system</code>' and the reference database is '<code>reference</code>'.
+ * If some tables are expected to be ignored in comparison provide an instance
+ * of <code>IFilter</code> using <code>PluginFilter</code>.
  * 
  * @author Thiago Santos
  * 
@@ -83,18 +85,13 @@ public class PluginCompareBase extends AbstractPluginValue {
     private String reference;
 
     /**
-     * Feature for table[cols] ignore.
+     * Feature for comparison filter.
      */
-    public static final String FEATURE_SKIP = PluginCompareBase.class.getName() + ".skip";
+    public static final String FEATURE_FILTER = PluginCompareBase.class.getName() + ".filter";
     /**
-     * Pattern to ignore some tables and(or) fields.
+     * Pattern name to be used.
      */
-    private String skip;
-
-    /**
-     * The report filter.
-     */
-    private IReportFilter filter = new ReportFilterDefault();
+    private String filter;
 
     /**
      * Get the schema name.
@@ -154,24 +151,22 @@ public class PluginCompareBase extends AbstractPluginValue {
     }
 
     /**
-     * Get the skip expression. i.e. '*' skips every table; 'REC*', all tables
-     * starting with REC; '~REC*', all tables not starting with 'REC';
-     * 'USER[*_ID]', table user where fields end with ID, and so on.
+     * Get the filter name.
      * 
-     * @return The expression.
+     * @return The name.
      */
-    public String getSkip() {
-        return skip;
+    public String getFilter() {
+        return filter;
     }
 
     /**
-     * Set the skip expression.
+     * Set the filter name.
      * 
-     * @param skip
-     *            Expression.
+     * @param filter
+     *            Name.
      */
-    public void setSkip(String skip) {
-        this.skip = skip;
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 
     @Override
@@ -186,11 +181,18 @@ public class PluginCompareBase extends AbstractPluginValue {
         fh.set(FEATURE_SCHEMA, this);
         fh.set(FEATURE_SYSTEM, this);
         fh.set(FEATURE_REFERENCE, this);
+        fh.set(FEATURE_FILTER, this);
     }
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Schema schema = PluginSchema.getSchema(context, getSchema());
+        IFilter filter;
+        try {
+            filter = PluginFilter.getFilter(context, getFilter());
+        } catch (Exception e) {
+            filter = new FilterDefault();
+        }
         if (!filter.accept(schema)) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Schema ignored:" + schema.getAlias() + "(" + schema.getName() + ")");
@@ -235,7 +237,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 try {
                     rsExpected = stmtExpected.executeQuery(sql);
                     rsReceived = stmtReceived.executeQuery(sql);
-                    populateTableReport(schema, report, table, rsExpected, rsReceived);
+                    populateTableReport(schema, filter, report, table, rsExpected, rsReceived);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -329,6 +331,8 @@ public class PluginCompareBase extends AbstractPluginValue {
      * 
      * @param schema
      *            The schema object.
+     * @param filter
+     *            The filter object.
      * @param report
      *            The report.
      * @param table
@@ -340,7 +344,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @throws SQLException
      *             On comparison errors.
      */
-    public void populateTableReport(Schema schema, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
+    public void populateTableReport(Schema schema, IFilter filter, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
         IResultEnumerator comp = getEnumerator(table, rsExpected, rsReceived);
         TableReport tr = new TableReport(table);
         while (comp.next()) {

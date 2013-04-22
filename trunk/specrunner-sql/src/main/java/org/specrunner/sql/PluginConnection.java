@@ -408,7 +408,7 @@ public class PluginConnection extends AbstractPluginValue {
                 if (driver != null && url != null && user != null && password != null) {
                     providerInstance = createProvider();
                 } else {
-                    throw new PluginException(getClass().getSimpleName() + " must have a provider instance set using feature 'FEATURE_PROVIDER_INSTANCE', a generator of DataSource using feature 'FEATURE_PROVIDER', or connection information 'driver/url/user/password' passed as attributes or their specific 'FEATURE_...XXX' set.");
+                    throw new PluginException(getClass().getSimpleName() + " must have a provider instance set using feature 'FEATURE_FILTER_INSTANCE', a generator of DataSource using feature 'FEATURE_FILTER', or connection information 'driver/url/user/password' passed as attributes or their specific 'FEATURE_...XXX' set.");
                 }
             }
         } else {
