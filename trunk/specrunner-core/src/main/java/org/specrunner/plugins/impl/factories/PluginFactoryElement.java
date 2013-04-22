@@ -39,10 +39,15 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryElement extends PluginFactoryImpl {
 
     /**
+     * Kind of 'ELEMENT'.
+     */
+    public static final String KIND = "element";
+
+    /**
      * Creates a factory loading file 'plugin_element.properties'.
      */
     public PluginFactoryElement() {
-        super("plugin_element.properties", "element");
+        super("plugin_element.properties", KIND);
     }
 
     @Override

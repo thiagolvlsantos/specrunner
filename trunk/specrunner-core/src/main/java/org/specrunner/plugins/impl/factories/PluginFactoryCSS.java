@@ -42,6 +42,10 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryCSS extends PluginFactoryImpl {
 
     /**
+     * Kind of 'CSS'.
+     */
+    public static final String KIND = "css";
+    /**
      * Attribute with CSS information.
      */
     public static final String ATTRIBUTE = "class";
@@ -50,7 +54,7 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_css.properties'.
      */
     public PluginFactoryCSS() {
-        super("plugin_css.properties", "css");
+        super("plugin_css.properties", KIND);
     }
 
     @Override

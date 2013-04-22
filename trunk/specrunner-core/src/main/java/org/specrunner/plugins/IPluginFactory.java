@@ -53,8 +53,10 @@ public interface IPluginFactory {
      * @param plugin
      *            The plugin instance.
      * @return The factory itself.
+     * @throws PluginException
+     *             On bind errors.
      */
-    IPluginFactory bind(String type, String alias, IPlugin plugin);
+    IPluginFactory bind(String type, String alias, IPlugin plugin) throws PluginException;
 
     /**
      * Creates a new plugin.

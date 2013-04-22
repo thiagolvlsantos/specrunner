@@ -132,8 +132,14 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     }
 
     @Override
-    public IPluginFactory bind(String type, String alias, IPlugin plugin) {
+    public IPluginFactory bind(String type, String alias, IPlugin plugin) throws PluginException {
+        if (type == null || alias == null || plugin == null) {
+            throw new PluginException("Ivalid bind, all arguments must be not null. Current bind (" + type + "," + alias + "," + plugin + ")");
+        }
         if (test(type)) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("put(" + alias + "," + plugin + ")");
+            }
             templates.put(alias.toLowerCase(), plugin);
         }
         return this;
