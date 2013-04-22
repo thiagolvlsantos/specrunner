@@ -25,7 +25,9 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginGroupImpl;
+import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
 import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginCompareBase;
 import org.specrunner.sql.PluginConnection;
@@ -78,7 +80,7 @@ public class TestDbmsNegativeFeature {
     }
 
     @Before
-    public void before() {
+    public void before() throws PluginException {
         IPluginFactory pf = SpecRunnerServices.get(IPluginFactory.class);
 
         IPluginGroup group = new PluginGroupImpl();
@@ -90,28 +92,29 @@ public class TestDbmsNegativeFeature {
         conB.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|");
         conB.setName("conB");
         group.add(conB);
-        pf.bind("css", "connections", group);
+        String type = PluginFactoryCSS.KIND;
+        pf.bind(type, "connections", group);
 
         PluginScripts drop = new PluginScripts();
         drop.setValue("drop.sql");
         drop.setFailsafe(true);
         drop.setName("conA;conB");
-        pf.bind("css", "scriptsDrop", drop);
+        pf.bind(type, "scriptsDrop", drop);
 
         PluginScripts schema = new PluginScripts();
         schema.setValue("schema.sql");
         schema.setName("conA;conB");
-        pf.bind("css", "scriptsSchema", schema);
+        pf.bind(type, "scriptsSchema", schema);
 
         PluginScripts constraints = new PluginScripts();
         constraints.setValue("constraints.sql");
         constraints.setName("conA;conB");
-        pf.bind("css", "scriptsConstraints", constraints);
+        pf.bind(type, "scriptsConstraints", constraints);
 
         PluginPrepare prepareB = new PluginPrepare();
         prepareB.setDatasource("conB");
         prepareB.setDatabase("dataB");
-        pf.bind("css", "prepareB", prepareB);
+        pf.bind(type, "prepareB", prepareB);
     }
 
     @Test
