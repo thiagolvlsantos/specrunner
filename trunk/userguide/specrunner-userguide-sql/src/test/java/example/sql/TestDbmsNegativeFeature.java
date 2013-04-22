@@ -32,13 +32,16 @@ import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginCompareBase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
+import org.specrunner.sql.PluginFilter;
 import org.specrunner.sql.PluginPrepare;
 import org.specrunner.sql.PluginRelease;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
 import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
+import org.specrunner.sql.report.FilterDefault;
 
 //CHECKSTYLE:OFF
 //@RunWith(ConcurrentRunner.class)
@@ -65,8 +68,16 @@ public class TestDbmsNegativeFeature {
         cfg.add(AbstractPluginDatabase.FEATURE_DATABASE, "dataA|dataB");
         cfg.add(AbstractPluginDatabase.FEATURE_SEPARATOR, "|");
 
+        cfg.add(PluginFilter.FEATURE_FILTER_INSTANCE, new FilterDefault() {
+            @Override
+            public boolean accept(Column column) {
+                return !column.getName().equalsIgnoreCase("PRO_NM");
+            }
+        });
+
         cfg.add(PluginCompareBase.FEATURE_SYSTEM, "conA");
         cfg.add(PluginCompareBase.FEATURE_REFERENCE, "conB");
+        cfg.add(PluginCompareBase.FEATURE_FILTER, PluginFilter.DEFAULT_FILTER_NAME);
 
         cfg.add(PluginRelease.FEATURE_NAME, "dataA;dataB");
     }

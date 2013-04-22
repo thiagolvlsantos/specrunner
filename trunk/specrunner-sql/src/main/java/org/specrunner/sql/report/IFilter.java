@@ -17,6 +17,8 @@
  */
 package org.specrunner.sql.report;
 
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -30,6 +32,18 @@ import org.specrunner.sql.meta.Table;
 public interface IFilter {
 
     /**
+     * Enable the filter to perform some setup before use.
+     * 
+     * @param schema
+     *            The schema under analysis.
+     * @param context
+     *            The context.
+     * @throws PluginException
+     *             On setup errors.
+     */
+    void setup(Schema schema, IContext context) throws PluginException;
+
+    /**
      * Check if a schema is accepted.
      * 
      * @param schema
@@ -41,39 +55,29 @@ public interface IFilter {
     /**
      * Check if a table in a schema is accepted.
      * 
-     * @param schema
-     *            The schema.
      * @param table
      *            The table.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Schema schema, Table table);
+    boolean accept(Table table);
 
     /**
      * Check if a column, in table from a schema is accepted.
      * 
-     * @param schema
-     *            The schema.
-     * @param table
-     *            The table.
      * @param column
      *            The column.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Schema schema, Table table, Column column);
+    boolean accept(Column column);
 
     /**
      * Check if a value, in a column of a table from a schema is accepted.
      * 
-     * @param schema
-     *            The schema.
-     * @param table
-     *            The table.
      * @param column
      *            The column.
      * @param value
      *            The value.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Schema schema, Table table, Column column, Object value);
+    boolean accept(Column column, Object value);
 }
