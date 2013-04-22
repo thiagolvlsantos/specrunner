@@ -61,7 +61,7 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
     }
 
     @Override
-    public IPluginFactory bind(String type, String alias, IPlugin plugin) {
+    public IPluginFactory bind(String type, String alias, IPlugin plugin) throws PluginException {
         for (IPluginFactory pf : getChildren()) {
             pf.bind(type, alias, plugin);
         }

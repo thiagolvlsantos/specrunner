@@ -41,6 +41,10 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryCustom extends PluginFactoryImpl {
 
     /**
+     * Kind of 'ELEMENT'.
+     */
+    public static final String KIND = "custom";
+    /**
      * Attribute with custom plugin information.
      */
     public static final String ATTRIBUTE = "custom";
@@ -49,7 +53,7 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_custom.properties'.
      */
     public PluginFactoryCustom() {
-        super("plugin_custom.properties", "custom");
+        super("plugin_custom.properties", KIND);
     }
 
     @Override
