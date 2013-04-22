@@ -27,7 +27,7 @@ import org.specrunner.sql.meta.Table;
  * @author Thiago Santos
  * 
  */
-public class ReportFilterDefault implements IReportFilter {
+public class FilterDefault implements IFilter {
 
     @Override
     public boolean accept(Schema schema) {
