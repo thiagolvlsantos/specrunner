@@ -32,11 +32,12 @@ import org.specrunner.context.IModel;
 public interface IExpressionFactory {
 
     /**
-     * For expression creation the priority for name resolution is:
+     * For expression creation, the priority for name resolution is:
      * <ul>
      * <li>first - context variables;</li>
      * <li>second - predefined values;</li>
      * <li>third - class generated values.</li>
+     * <li>last - model values.</li>
      * </ul>
      * 
      * @param source
