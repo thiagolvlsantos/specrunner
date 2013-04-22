@@ -25,16 +25,53 @@ import java.util.List;
 
 import org.specrunner.sql.meta.Column;
 
+/**
+ * Default implementation of result set enumeration.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class ResultSetEnumerator implements IResultEnumerator {
 
+    /**
+     * Expected result set.
+     */
     private ResultSet rsExpected;
+    /**
+     * Received result set.
+     */
     private ResultSet rsReceived;
+    /**
+     * Column keys.
+     */
     private List<Column> keys;
+    /**
+     * Flag to read expected.
+     */
     private boolean readExp = true;
+    /**
+     * Temporary reference to expected.
+     */
     private ResultSet exp;
+    /**
+     * Flag to read received.
+     */
     private boolean readRec = true;
+    /**
+     * Temporary reference to received.
+     */
     private ResultSet rec;
 
+    /**
+     * Basic constructor.
+     * 
+     * @param rsExpected
+     *            The expected result set.
+     * @param rsReceived
+     *            The received result set.
+     * @param keys
+     *            The table columns.
+     */
     public ResultSetEnumerator(ResultSet rsExpected, ResultSet rsReceived, List<Column> keys) {
         this.rsExpected = rsExpected;
         this.rsReceived = rsReceived;
