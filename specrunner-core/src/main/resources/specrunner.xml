@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <pipeline>
+    <listener>org.specrunner.pipeline.ProfilerPipeListener</listener>
     <pipe>org.specrunner.impl.pipes.PipeModel</pipe>
     <pipe>org.specrunner.impl.pipes.PipeTime</pipe>
     <pipe>org.specrunner.impl.pipes.PipeMemory</pipe>
