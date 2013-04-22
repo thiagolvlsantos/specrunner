@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import nu.xom.Builder;
+import nu.xom.Document;
 import nu.xom.Nodes;
 
 import org.specrunner.pipeline.IPipe;
+import org.specrunner.pipeline.IPipeListener;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.util.UtilLog;
@@ -47,7 +49,15 @@ public class PipelineFactoryXOM extends PipelineFactoryImpl {
                 }
                 in = new FileInputStream(file);
             }
-            Nodes nodes = builder.build(in).query("//pipe");
+            Document doc = builder.build(in);
+            Nodes nodes = doc.query("//listener");
+            for (int i = 0; i < nodes.size(); i++) {
+                if (pipeline == null) {
+                    pipeline = new PipelineImpl();
+                }
+                pipeline.addPipelineListener((IPipeListener) Class.forName(nodes.get(i).getValue().trim()).newInstance());
+            }
+            nodes = doc.query("//pipe");
             for (int i = 0; i < nodes.size(); i++) {
                 if (pipeline == null) {
                     pipeline = new PipelineImpl();
