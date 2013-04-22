@@ -228,8 +228,8 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
             Connection connection = null;
             try {
                 connection = ds.getConnection();
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info(getClass().getSimpleName() + " connection:(" + connection.getMetaData().getURL() + ")" + connection);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(getClass().getSimpleName() + " connection:(" + connection.getMetaData().getURL() + ")" + connection);
                 }
                 database.perform(this, context, result, tableAdapter, connection, schema, mode);
             } catch (SQLException e) {

@@ -183,8 +183,8 @@ public class PluginSchemaLoader extends AbstractPluginValue {
             }
 
         } else {
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Using instance " + providerInstance + ".");
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Using instance " + providerInstance + ".");
             }
         }
         if (reuse) {
@@ -195,8 +195,8 @@ public class PluginSchemaLoader extends AbstractPluginValue {
 
                 @Override
                 public void release() {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Provider " + providerInstance + " released.");
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Provider " + providerInstance + " released.");
                     }
                 }
 

@@ -98,8 +98,8 @@ public class PluginRelease extends AbstractPluginValue {
         int failure = 0;
         for (String base : bases) {
             IDatabase database = PluginDatabase.getDatabase(context, base);
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("PluginRelease database:" + database);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("PluginRelease database:" + database);
             }
             try {
                 // only not reusable instances can be released this way,
@@ -107,8 +107,8 @@ public class PluginRelease extends AbstractPluginValue {
                 if (SpecRunnerServices.get(IReuseManager.class).get(base) == null) {
                     database.release();
                 } else {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("PluginRelease reusable database:" + base + " not release.");
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("PluginRelease reusable database:" + base + " not release.");
                     }
                 }
             } catch (Exception e) {

@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql.report;
 
+import org.specrunner.context.IContext;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -30,22 +31,27 @@ import org.specrunner.sql.meta.Table;
 public class FilterDefault implements IFilter {
 
     @Override
+    public void setup(Schema schema, IContext context) {
+        // nothing.
+    }
+
+    @Override
     public boolean accept(Schema schema) {
         return true;
     }
 
     @Override
-    public boolean accept(Schema schema, Table table) {
+    public boolean accept(Table table) {
         return true;
     }
 
     @Override
-    public boolean accept(Schema schema, Table table, Column column) {
+    public boolean accept(Column column) {
         return true;
     }
 
     @Override
-    public boolean accept(Schema schema, Table table, Column column, Object value) {
+    public boolean accept(Column column, Object value) {
         return true;
     }
 }

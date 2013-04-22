@@ -187,24 +187,26 @@ public class PluginCompareBase extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Schema schema = PluginSchema.getSchema(context, getSchema());
-        IFilter filter;
-        try {
-            filter = PluginFilter.getFilter(context, getFilter());
-        } catch (Exception e) {
-            filter = new FilterDefault();
+        IFilter currentFilter = null;
+        if (filter != null) {
+            currentFilter = PluginFilter.getFilter(context, getFilter());
+        } else {
+            currentFilter = new FilterDefault();
         }
-        if (!filter.accept(schema)) {
+        currentFilter.setup(schema, context);
+        if (!currentFilter.accept(schema)) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Schema ignored:" + schema.getAlias() + "(" + schema.getName() + ")");
             }
+            result.addResult(Success.INSTANCE, context.peek());
             return ENext.DEEP;
         }
         IDataSourceProvider expected = PluginConnection.getProvider(context, getReference());
         IDataSourceProvider received = PluginConnection.getProvider(context, getSystem());
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("     Schema provider:" + schema);
-            UtilLog.LOG.info("   Datasource system:" + received);
-            UtilLog.LOG.info("Datasource reference:" + expected);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("     Schema provider:" + schema);
+            UtilLog.LOG.debug("   Datasource system:" + received);
+            UtilLog.LOG.debug("Datasource reference:" + expected);
         }
         DataSource dsExcepted = expected.getDataSource();
         DataSource dsReceived = received.getDataSource();
@@ -218,14 +220,14 @@ public class PluginCompareBase extends AbstractPluginValue {
             stmtExpected = connectionExpected.createStatement();
             connectionReceived = dsReceived.getConnection();
             stmtReceived = connectionReceived.createStatement();
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info(getClass().getSimpleName() + " connection expected:" + connectionExpected);
-                UtilLog.LOG.info(getClass().getSimpleName() + " connection received:" + connectionReceived);
-                UtilLog.LOG.info(getClass().getSimpleName() + "  statement expected:" + stmtExpected);
-                UtilLog.LOG.info(getClass().getSimpleName() + "  statement received:" + stmtReceived);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(getClass().getSimpleName() + " connection expected:" + connectionExpected);
+                UtilLog.LOG.debug(getClass().getSimpleName() + " connection received:" + connectionReceived);
+                UtilLog.LOG.debug(getClass().getSimpleName() + "  statement expected:" + stmtExpected);
+                UtilLog.LOG.debug(getClass().getSimpleName() + "  statement received:" + stmtReceived);
             }
             for (Table table : schema.getTables()) {
-                if (!filter.accept(schema, table)) {
+                if (!currentFilter.accept(table)) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Table ignored:" + table.getAlias() + "(" + table.getName() + ")");
                     }
@@ -237,7 +239,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 try {
                     rsExpected = stmtExpected.executeQuery(sql);
                     rsReceived = stmtReceived.executeQuery(sql);
-                    populateTableReport(schema, filter, report, table, rsExpected, rsReceived);
+                    populateTableReport(schema, currentFilter, report, table, rsExpected, rsReceived);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -367,7 +369,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             } else {
                 lr = new LineReport(RegisterType.DIFFERENT, tr);
                 for (Column c : table.getColumns()) {
-                    if (!filter.accept(schema, table, c)) {
+                    if (!filter.accept(c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
                         }
@@ -375,7 +377,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                     Object objExp = exp.getObject(c.getName());
                     Object objRec = rec.getObject(c.getName());
-                    if (!filter.accept(schema, table, c, objRec)) {
+                    if (!filter.accept(c, objRec)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Value ignored(" + c.getAlias() + "," + c.getName() + "):" + objRec);
                         }

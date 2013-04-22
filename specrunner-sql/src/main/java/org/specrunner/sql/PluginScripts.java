@@ -264,15 +264,15 @@ public class PluginScripts extends AbstractPluginValue {
         int failure = 0;
         for (String source : sources) {
             IDataSourceProvider provider = PluginConnection.getProvider(context, source);
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("PluginScript provider:" + provider);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("PluginScript provider:" + provider);
             }
             DataSource ds = provider.getDataSource();
             Connection connection = null;
             try {
                 connection = ds.getConnection();
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("PluginScript connection:" + connection);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("PluginScript connection:" + connection);
                 }
                 for (URI u : scripts) {
                     Reader reader = null;
