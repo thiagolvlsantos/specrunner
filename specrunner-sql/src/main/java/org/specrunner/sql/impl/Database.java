@@ -30,7 +30,6 @@ import java.util.TreeSet;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -72,7 +71,7 @@ public class Database implements IDatabase {
     protected Map<String, PreparedStatement> outputs = new HashMap<String, PreparedStatement>();
 
     @Override
-    public void perform(IPlugin plugin, IContext context, IResultSet result, TableAdapter tableAdapter, Connection con, Schema schema, EMode mode) throws PluginException {
+    public void perform(IContext context, IResultSet result, TableAdapter tableAdapter, Connection con, Schema schema, EMode mode) throws PluginException {
         List<CellAdapter> captions = tableAdapter.getCaptions();
         if (captions.isEmpty()) {
             throw new PluginException("Tables must have a caption.");
@@ -139,7 +138,7 @@ public class Database implements IDatabase {
                     try {
                         obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
                     } catch (ConverterException e) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(td.getElement(), plugin), "Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'.");
+                        result.addResult(Failure.INSTANCE, context.newBlock(td.getElement(), context.getPlugin()), "Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'.");
                         continue;
                     }
                     if (obj == null && ct == CommandType.INSERT) {
@@ -170,21 +169,21 @@ public class Database implements IDatabase {
                     if (mode == EMode.INPUT) {
                         performInsert(context, result, con, table, values, filled);
                     } else {
-                        performSelect(plugin, context, result, con, table, values, filled, 1);
+                        performSelect(context, result, con, table, values, filled, 1);
                     }
                     break;
                 case UPDATE:
                     if (mode == EMode.INPUT) {
                         performUpdate(context, result, con, table, values);
                     } else {
-                        performSelect(plugin, context, result, con, table, values, filled, 1);
+                        performSelect(context, result, con, table, values, filled, 1);
                     }
                     break;
                 case DELETE:
                     if (mode == EMode.INPUT) {
                         performDelete(context, result, con, table, values);
                     } else {
-                        performSelect(plugin, context, result, con, table, values, filled, 0);
+                        performSelect(context, result, con, table, values, filled, 0);
                     }
                     break;
                 default:
@@ -195,7 +194,7 @@ public class Database implements IDatabase {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 try {
-                    result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), plugin), new PluginException("Error in connection (" + con.getMetaData().getURL() + "): " + e.getMessage(), e));
+                    result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), context.getPlugin()), new PluginException("Error in connection (" + con.getMetaData().getURL() + "): " + e.getMessage(), e));
                 } catch (SQLException e1) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -407,8 +406,6 @@ public class Database implements IDatabase {
     /**
      * Perform database select verifications.
      * 
-     * @param plugin
-     *            The source plugin.
      * @param context
      *            The context.
      * @param result
@@ -428,7 +425,7 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performSelect(IPlugin plugin, IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled, int expectedCount) throws PluginException, SQLException {
+    protected void performSelect(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled, int expectedCount) throws PluginException, SQLException {
         StringBuilder sbVal = new StringBuilder();
         StringBuilder sbPla = new StringBuilder();
         Map<String, Integer> indexes = new HashMap<String, Integer>();
@@ -457,14 +454,12 @@ public class Database implements IDatabase {
         sb.append(" from " + table.getSchema().getName() + "." + table.getName());
         sb.append(" where ");
         sb.append(sbPla);
-        performOut(plugin, context, result, con, sb.toString(), indexes, values, expectedCount);
+        performOut(context, result, con, sb.toString(), indexes, values, expectedCount);
     }
 
     /**
      * Perform database selects.
      * 
-     * @param plugin
-     *            The source plugin.
      * @param context
      *            The context.
      * @param result
@@ -484,7 +479,7 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performOut(IPlugin plugin, IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
+    protected void performOut(IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values + ". indexes = " + indexes);
         }
@@ -524,7 +519,7 @@ public class Database implements IDatabase {
                         }
                         if (!comparator.match(v.getValue(), received)) {
                             IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(v.getValue()), String.valueOf(received));
-                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getElement(), plugin), new DefaultAlignmentException(aligner));
+                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getElement(), context.getPlugin()), new DefaultAlignmentException(aligner));
                         }
                     }
                 }

@@ -20,7 +20,6 @@ package org.specrunner.sql;
 import java.sql.Connection;
 
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.sql.meta.Schema;
@@ -54,7 +53,7 @@ public interface IDatabase {
      * @throws PluginException
      *             On perfom erros.
      */
-    void perform(IPlugin source, IContext context, IResultSet result, TableAdapter table, Connection con, Schema schema, EMode mode) throws PluginException;
+    void perform(IContext context, IResultSet result, TableAdapter table, Connection con, Schema schema, EMode mode) throws PluginException;
 
     /**
      * Release database resources.
