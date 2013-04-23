@@ -231,7 +231,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(getClass().getSimpleName() + " connection:(" + connection.getMetaData().getURL() + ")" + connection);
                 }
-                database.perform(this, context, result, tableAdapter, connection, schema, mode);
+                database.perform(context, result, tableAdapter, connection, schema, mode);
             } catch (SQLException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
