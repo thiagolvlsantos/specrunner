@@ -36,8 +36,6 @@ public interface IDatabase {
     /**
      * Perform some actions in a database.
      * 
-     * @param source
-     *            The source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -51,7 +49,7 @@ public interface IDatabase {
      * @param mode
      *            The database mode (in - actions|out - asserts)
      * @throws PluginException
-     *             On perfom erros.
+     *             On perform erros.
      */
     void perform(IContext context, IResultSet result, TableAdapter table, Connection con, Schema schema, EMode mode) throws PluginException;
 
