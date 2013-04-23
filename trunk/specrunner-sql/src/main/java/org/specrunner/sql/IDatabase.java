@@ -49,7 +49,7 @@ public interface IDatabase {
      * @param mode
      *            The database mode (in - actions|out - asserts)
      * @throws PluginException
-     *             On perform erros.
+     *             On perform errors.
      */
     void perform(IContext context, IResultSet result, TableAdapter table, Connection con, Schema schema, EMode mode) throws PluginException;
 
