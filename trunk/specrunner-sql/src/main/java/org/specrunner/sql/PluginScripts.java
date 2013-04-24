@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -57,6 +58,8 @@ import org.specrunner.source.ISource;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * Plugin which specifies the scripts to be performed. Scripts are specification
@@ -82,6 +85,15 @@ public class PluginScripts extends AbstractPluginValue {
      * List of scripts to be performed.
      */
     private URI[] scripts;
+    /**
+     * Cache of scripts.
+     */
+    private static ThreadLocal<ICache<String>> cache = new ThreadLocal<ICache<String>>() {
+        @Override
+        protected ICache<String> initialValue() {
+            return SpecRunnerServices.get(ICacheFactory.class).newCache("scripts");
+        };
+    };
 
     /**
      * Sets the SQL command separator. Default is ";".
@@ -277,49 +289,57 @@ public class PluginScripts extends AbstractPluginValue {
                 for (URI u : scripts) {
                     Reader reader = null;
                     String str = u.toString();
-                    if (str != null && str.startsWith("file:")) {
-                        File f = new File(str.replace("file:/", ""));
-                        if (!f.exists()) {
-                            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Script:" + f + " not found."));
-                            failure++;
-                        } else {
-                            IBlock block = context.peek();
-                            if (block.getNode() instanceof Element) {
-                                Element old = (Element) block.getNode();
-                                old.addAttribute(new Attribute("href", String.valueOf(f.toURI())));
+                    String script = cache.get().get(str);
+                    if (script != null) {
+                        reader = new StringReader(script);
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("Script " + str + " reused.");
+                        }
+                    } else {
+                        if (str != null && str.startsWith("file:")) {
+                            File f = new File(str.replace("file:/", ""));
+                            if (!f.exists()) {
+                                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Script:" + f + " not found."));
+                                failure++;
+                            } else {
+                                IBlock block = context.peek();
+                                if (block.getNode() instanceof Element) {
+                                    Element old = (Element) block.getNode();
+                                    old.addAttribute(new Attribute("href", String.valueOf(f.toURI())));
+                                }
+                                try {
+                                    reader = new FileReader(f);
+                                } catch (FileNotFoundException e) {
+                                    if (UtilLog.LOG.isDebugEnabled()) {
+                                        UtilLog.LOG.debug(e.getMessage(), e);
+                                    }
+                                }
                             }
+                        } else {
                             try {
-                                reader = new FileReader(f);
-                            } catch (FileNotFoundException e) {
+                                URL url = u.toURL();
+                                URLConnection con = url.openConnection();
+                                reader = new InputStreamReader(con.getInputStream());
+                            } catch (MalformedURLException e) {
                                 if (UtilLog.LOG.isDebugEnabled()) {
                                     UtilLog.LOG.debug(e.getMessage(), e);
                                 }
+                                result.addResult(Failure.INSTANCE, context.peek(), e);
+                                failure++;
+                            } catch (IOException e) {
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug(e.getMessage(), e);
+                                }
+                                result.addResult(Failure.INSTANCE, context.peek(), e);
+                                failure++;
                             }
-                        }
-                    } else {
-                        try {
-                            URL url = u.toURL();
-                            URLConnection con = url.openConnection();
-                            reader = new InputStreamReader(con.getInputStream());
-                        } catch (MalformedURLException e) {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug(e.getMessage(), e);
-                            }
-                            result.addResult(Failure.INSTANCE, context.peek(), e);
-                            failure++;
-                        } catch (IOException e) {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug(e.getMessage(), e);
-                            }
-                            result.addResult(Failure.INSTANCE, context.peek(), e);
-                            failure++;
                         }
                     }
                     if (reader != null) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("PluginScript perform:" + u);
                         }
-                        failure += perform(context, result, connection, reader);
+                        failure += perform(context, result, connection, str, reader);
                     }
                 }
             } catch (SQLException e) {
@@ -356,25 +376,29 @@ public class PluginScripts extends AbstractPluginValue {
      *            The result.
      * @param connection
      *            Database connection.
+     * @param reference
+     *            Script reference as string.
      * @param script
      *            Script content.
      * @return The number of errors.
      * @throws SQLException
      *             On SQL errors, only if fail safe is off.
      */
-    protected int perform(IContext context, IResultSet result, Connection connection, Reader script) throws SQLException {
+    protected int perform(IContext context, IResultSet result, Connection connection, String reference, Reader script) throws SQLException {
         int failures = 0;
         Statement stmt = null;
         BufferedReader br = null;
         try {
             stmt = connection.createStatement();
             try {
+                StringBuilder content = new StringBuilder();
                 br = new BufferedReader(script);
                 String command;
                 while ((command = br.readLine()) != null) {
                     if (command.isEmpty()) {
                         continue;
                     }
+                    content.append(command);
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Command before: " + command);
                     }
@@ -395,6 +419,10 @@ public class PluginScripts extends AbstractPluginValue {
                             result.addResult(Warning.INSTANCE, context.peek(), e);
                         }
                     }
+                }
+                cache.get().put(reference, content.toString());
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Script '" + reference + "' added to cache '" + cache.get().getName() + "'.");
                 }
             } catch (Exception e) {
                 failures++;
