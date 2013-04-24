@@ -399,6 +399,7 @@ public class PluginScripts extends AbstractPluginValue {
                         continue;
                     }
                     content.append(command);
+                    content.append('\n');
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Command before: " + command);
                     }
