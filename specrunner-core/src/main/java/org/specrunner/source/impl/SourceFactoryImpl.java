@@ -33,11 +33,14 @@ import nu.xom.Document;
 
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.cyberneko.html.HTMLConfiguration;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * The default implementation. Uses a NekoHTML reader, e XOM to read the
@@ -56,26 +59,14 @@ import org.specrunner.util.UtilLog;
 public class SourceFactoryImpl implements ISourceFactory {
 
     /**
-     * Return the XOM document builder.
-     * 
-     * @return The builder.
-     * @throws SourceException
-     *             On builder recover error.
+     * Cache of files.
      */
-    protected Builder getBuilder() throws SourceException {
-        try {
-            AbstractSAXParser neko = new AbstractSAXParser(new HTMLConfiguration()) {
-            };
-            neko.setFeature("http://xml.org/sax/features/namespaces", false);
-            neko.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
-            neko.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-            neko.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
-            neko.setProperty("http://cyberneko.org/html/properties/default-encoding", "ISO-8859-1");
-            return new Builder(neko, true);
-        } catch (Exception e) {
-            throw new SourceException(e);
-        }
-    }
+    private static ThreadLocal<ICache<Document>> cache = new ThreadLocal<ICache<Document>>() {
+        @Override
+        protected ICache<Document> initialValue() {
+            return SpecRunnerServices.get(ICacheFactory.class).newCache("include");
+        };
+    };
 
     @Override
     public ISource newSource(final InputStream source) throws SourceException {
@@ -147,7 +138,12 @@ public class SourceFactoryImpl implements ISourceFactory {
                     Builder builder = getBuilder();
                     try {
                         synchronized (builder) {
-                            return addDoctype(builder.build(target));
+                            Document document = cache.get().get(target);
+                            if (document == null) {
+                                document = addDoctype(builder.build(target));
+                                cache.get().put(target, document);
+                            }
+                            return (Document) document.copy();
                         }
                     } catch (Exception e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
@@ -198,6 +194,28 @@ public class SourceFactoryImpl implements ISourceFactory {
                 }
             }
         });
+    }
+
+    /**
+     * Return the XOM document builder.
+     * 
+     * @return The builder.
+     * @throws SourceException
+     *             On builder recover error.
+     */
+    protected Builder getBuilder() throws SourceException {
+        try {
+            AbstractSAXParser neko = new AbstractSAXParser(new HTMLConfiguration()) {
+            };
+            neko.setFeature("http://xml.org/sax/features/namespaces", false);
+            neko.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
+            neko.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
+            neko.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
+            neko.setProperty("http://cyberneko.org/html/properties/default-encoding", "ISO-8859-1");
+            return new Builder(neko, true);
+        } catch (Exception e) {
+            throw new SourceException(e);
+        }
     }
 
     /**
