@@ -85,13 +85,18 @@ public class PluginScripts extends AbstractPluginValue {
      * List of scripts to be performed.
      */
     private URI[] scripts;
+
+    /**
+     * Cache name.
+     */
+    public static final String CACHE_NAME = "scripts";
     /**
      * Cache of scripts.
      */
     private static ThreadLocal<ICache<String>> cache = new ThreadLocal<ICache<String>>() {
         @Override
         protected ICache<String> initialValue() {
-            return SpecRunnerServices.get(ICacheFactory.class).newCache("scripts");
+            return SpecRunnerServices.get(ICacheFactory.class).newCache(CACHE_NAME);
         };
     };
 
@@ -290,7 +295,8 @@ public class PluginScripts extends AbstractPluginValue {
                     Reader reader = null;
                     String str = u.toString();
                     String script = cache.get().get(str);
-                    if (script != null) {
+                    boolean fromCache = script != null;
+                    if (fromCache) {
                         reader = new StringReader(script);
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug("Script " + str + " reused.");
@@ -339,7 +345,7 @@ public class PluginScripts extends AbstractPluginValue {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("PluginScript perform:" + u);
                         }
-                        failure += perform(context, result, connection, str, reader);
+                        failure += perform(context, result, connection, str, reader, fromCache);
                     }
                 }
             } catch (SQLException e) {
@@ -380,11 +386,13 @@ public class PluginScripts extends AbstractPluginValue {
      *            Script reference as string.
      * @param script
      *            Script content.
+     * @param fromCache
+     *            Indicates if reader comes from cache or not.
      * @return The number of errors.
      * @throws SQLException
      *             On SQL errors, only if fail safe is off.
      */
-    protected int perform(IContext context, IResultSet result, Connection connection, String reference, Reader script) throws SQLException {
+    protected int perform(IContext context, IResultSet result, Connection connection, String reference, Reader script, boolean fromCache) throws SQLException {
         int failures = 0;
         Statement stmt = null;
         BufferedReader br = null;
@@ -398,8 +406,10 @@ public class PluginScripts extends AbstractPluginValue {
                     if (command.isEmpty()) {
                         continue;
                     }
-                    content.append(command);
-                    content.append('\n');
+                    if (!fromCache) {
+                        content.append(command);
+                        content.append('\n');
+                    }
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Command before: " + command);
                     }
@@ -421,7 +431,9 @@ public class PluginScripts extends AbstractPluginValue {
                         }
                     }
                 }
-                cache.get().put(reference, content.toString());
+                if (!fromCache) {
+                    cache.get().put(reference, content.toString());
+                }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Script '" + reference + "' added to cache '" + cache.get().getName() + "'.");
                 }
