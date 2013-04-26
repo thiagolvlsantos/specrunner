@@ -340,7 +340,7 @@ public class RunnerImpl implements IRunner {
         }
     }
 
-    protected ENext start(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws PluginException, SpecRunnerException {
+    protected ENext start(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws SpecRunnerException {
         // perform before start
         for (IPluginListener sl : listeners) {
             sl.onBeforeStart(plugin, context, result);
@@ -419,7 +419,7 @@ public class RunnerImpl implements IRunner {
         }
     }
 
-    protected void end(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws PluginException, SpecRunnerException {
+    protected void end(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws SpecRunnerException {
         // perform before end
         for (IPluginListener sl : listeners) {
             sl.onBeforeEnd(plugin, context, result);
