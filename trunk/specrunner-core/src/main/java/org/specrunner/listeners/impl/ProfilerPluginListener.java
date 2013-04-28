@@ -144,7 +144,9 @@ public class ProfilerPluginListener implements IPluginListener {
         totalEnd += lastEnd;
         IBlock peek = context.peek();
         if (UtilLog.LOG.isDebugEnabled() && peek.hasPlugin() && peek.getNode() instanceof Element) {
-            ActionType actionType = peek.getPlugin().getActionType();
+            IPlugin p = peek.getPlugin();
+            ActionType actionType = p.getActionType();
+            String name = p.getClass().getSimpleName();
             Long time = timeByType.get(actionType);
             if (time == null) {
                 time = 0L;
@@ -153,7 +155,7 @@ public class ProfilerPluginListener implements IPluginListener {
 
             Element e = (Element) peek.getNode();
             UtilNode.appendCss(e, "sr_time");
-            e.addAttribute(new Attribute("srtime", actionType.getName() + ":" + lastInit + "/" + lastStart + "/" + lastEnd));
+            e.addAttribute(new Attribute("srtime", name + "\n(" + actionType.getName() + ")" + ":" + (lastInit > 0 ? lastInit : "") + "/" + (lastStart > 0 ? lastStart : "") + "/" + (lastEnd > 0 ? lastEnd : "")));
         }
     }
 

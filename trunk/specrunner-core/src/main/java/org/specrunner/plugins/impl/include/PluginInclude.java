@@ -41,6 +41,7 @@ import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
@@ -79,6 +80,10 @@ public class PluginInclude extends AbstractPlugin {
      * Style added to the header file.
      */
     public static final String CSS_INCLUDED_FILE = "included_file";
+    /**
+     * Style added to args.
+     */
+    public static final String CSS_INCLUDED_ARGS = "included_file_args";
     /**
      * Style added to content file.
      */
@@ -196,7 +201,8 @@ public class PluginInclude extends AbstractPlugin {
         Node node = context.getNode();
         ParentNode parent = node.getParent();
         try {
-            String path = normalizeAddParameters(context);
+            String path = getPath(context);
+            Node args = bindParameters(context);
             URI originalHref = new URI(path);
             URI newHref = originalHref;
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -272,6 +278,11 @@ public class PluginInclude extends AbstractPlugin {
             trFile.appendChild(thFile);
             thFile.appendChild(originalHref.toString());
 
+            thFile = new Element("th");
+            UtilNode.appendCss(thFile, CSS_INCLUDED_FILE);
+            trFile.appendChild(thFile);
+            thFile.appendChild(args);
+
             // content
             Element trContent = new Element("tr");
             table.appendChild(trContent);
@@ -279,6 +290,7 @@ public class PluginInclude extends AbstractPlugin {
             int failCount = result.countStatus(Failure.INSTANCE);
 
             Element tdContent = new Element("td");
+            tdContent.addAttribute(new Attribute("colspan", "2"));
             UtilNode.appendCss(tdContent, CSS_INCLUDED_CONTENT);
             trContent.appendChild(tdContent);
             if (context.getSources().size() > depth) {
@@ -315,10 +327,12 @@ public class PluginInclude extends AbstractPlugin {
             failCount = result.countStatus(Failure.INSTANCE) - failCount;
             if (failCount > 0) {
                 UtilNode.appendCss(ele, "expanded");
+                result.addResult(Warning.INSTANCE, context.newBlock(node, this), "Included file failed: " + path);
             } else {
                 if (expanded == null || !expanded) {
                     UtilNode.appendCss(ele, "collapse");
                 }
+                result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }
         } catch (URISyntaxException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -338,32 +352,58 @@ public class PluginInclude extends AbstractPlugin {
      * @throws PluginException
      *             On plugin errors.
      */
-    protected String normalizeAddParameters(IContext context) throws PluginException {
-        String path = href;
-        String query = null;
+    protected Node bindParameters(IContext context) throws PluginException {
         int indexParameters = href.indexOf('?');
         if (indexParameters > 0) {
-            path = href.substring(0, indexParameters);
-            query = href.substring(indexParameters + 1);
-        }
-        if (query != null) {
+            String query = href.substring(indexParameters + 1);
             try {
                 StringTokenizer st = new StringTokenizer(query, "&=");
                 if (st.countTokens() % 2 != 0) {
                     throw new PluginException("The parameters are not valid. Current value:" + query);
                 }
+                Element args = new Element("table");
+                UtilNode.appendCss(args, CSS_INCLUDED_ARGS);
                 while (st.hasMoreTokens()) {
                     String key = URLDecoder.decode(st.nextToken(), "UTF-8");
                     String value = URLDecoder.decode(st.nextToken(), "UTF-8");
                     try {
-                        context.saveLocal(UtilEvaluator.asVariable(key), UtilEvaluator.evaluate(value, context));
+                        String var = UtilEvaluator.asVariable(key);
+                        Object obj = UtilEvaluator.evaluate(value, context);
+                        context.saveLocal(var, obj);
+                        Element tr = new Element("tr");
+                        args.appendChild(tr);
+                        Element td = new Element("td");
+                        args.appendChild(td);
+                        td.appendChild(var);
+                        td = new Element("td");
+                        args.appendChild(td);
+                        td.appendChild(String.valueOf(obj));
                     } catch (Exception e) {
                         throw new PluginException("Invalid parameter (" + key + "," + value + ")", e);
                     }
                 }
+                return args;
             } catch (UnsupportedEncodingException e) {
                 throw new PluginException("Unable do decode query:" + query, e);
             }
+        }
+        return new Text("");
+    }
+
+    /**
+     * Normalize path removing parameters.
+     * 
+     * @param context
+     *            The context.
+     * @return The path to file normalized.
+     * @throws PluginException
+     *             On plugin errors.
+     */
+    protected String getPath(IContext context) throws PluginException {
+        String path = href;
+        int indexParameters = href.indexOf('?');
+        if (indexParameters > 0) {
+            path = href.substring(0, indexParameters);
         }
         return path;
     }

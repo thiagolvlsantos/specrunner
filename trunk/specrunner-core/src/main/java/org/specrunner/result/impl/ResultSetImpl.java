@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,7 +31,6 @@ import nu.xom.Node;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.listeners.IListenerManager;
-import org.specrunner.listeners.impl.ProfilerPluginListener;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
@@ -335,8 +333,6 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             List<IResult> filter = filterByStatus(s);
             List<ActionType> acs = actionTypes(this);
             IListenerManager lm = SpecRunnerServices.get(IListenerManager.class);
-            List<ProfilerPluginListener> list = lm.filterByType(ProfilerPluginListener.class);
-            Map<ActionType, Long> times = list.get(0).getTimeByType();
             for (ActionType at : acs) {
                 Element subtr = new Element("tr");
                 sub.appendChild(subtr);
@@ -347,13 +343,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 subtd = new Element("td");
                 subtr.appendChild(subtd);
                 subtd.addAttribute(new Attribute("style", "text-align:right;"));
-                Long t = times.get(at);
-                subtd.appendChild("" + countType(filter, at) + (t != null ? " in " : ""));
-                subtd = new Element("td");
-                subtr.appendChild(subtd);
-                if (t != null) {
-                    subtd.appendChild(t + " ms");
-                }
+                subtd.appendChild("" + countType(filter, at));
             }
         }
         return table;

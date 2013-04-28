@@ -16,6 +16,13 @@ public class TestInclude {
         SpecRunnerJUnit.defaultRun("src/test/resources/income/include.html", cfg);
     }
 
+    @Test
+    public void testLocal2() throws Exception {
+        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg.add(PluginInclude.FEATURE_EXPANDED, Boolean.TRUE);
+        SpecRunnerJUnit.defaultRun("src/test/resources/income/include.html", "src/test/resources/outcome/include2.html", cfg);
+    }
+
     public static void main(String[] args) {
         try {
             ISource s;

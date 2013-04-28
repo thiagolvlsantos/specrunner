@@ -47,7 +47,7 @@
 
 /* VARIABLE DECLARATION */
 .local:after,.global:after,
-.sr_action:after,.sr_assertion:after,.sr_undef:after,.sr_time:after {
+.sr_action:after,.sr_assertion:after,.sr_undef:after,.sr_time:before {
     border-top: 1px solid #EDEDED;
     border-left: 1px solid #EDEDED;
     border-right: 1px solid #969696;
@@ -57,7 +57,7 @@
     background-color: white;
 }
 
-.local:after,.global:after, .sr_time:after{
+.local:after,.global:after, .sr_time:before{
     font-size: x-small;
 }
 
@@ -69,7 +69,7 @@
     content: "global(" attr(iname) ":" attr(instance) ")" ;
 }
 
-.sr_time:after {
+.sr_time:before {
     vertical-align: bottom;
     content: attr(srtime) " ms" ;
 }
