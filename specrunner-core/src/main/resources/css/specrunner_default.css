@@ -178,6 +178,15 @@ th.included_file {
     padding: 2px;
 }
 
+table.included_file_args td {
+    text-align: left;
+    border-bottom: 1px dotted black;
+    font-family: Verdana;
+    font-size: 6pt;
+    background-color: #E7ECF0;
+    padding: 1px;
+}
+
 /* SPECRUNNER LABEL */
 .sr_fieldset {
     font-family: verdana;
