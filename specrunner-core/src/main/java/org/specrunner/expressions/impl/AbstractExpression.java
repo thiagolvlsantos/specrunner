@@ -41,7 +41,7 @@ public abstract class AbstractExpression implements IExpression {
      * @param parent
      *            The parent.
      */
-    public AbstractExpression(IExpressionFactory parent) {
+    protected AbstractExpression(IExpressionFactory parent) {
         this.parent = parent;
     }
 
