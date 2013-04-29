@@ -86,7 +86,7 @@ public final class UtilEvaluator {
         Object result = text;
         int pos1 = text.indexOf(START_CODE);
         int pos2 = text.indexOf(END, pos1 + 2);
-        if (pos1 < 0 && pos2 < 0 && !isId(text)) {
+        if (pos1 < 0 && pos2 < 0) {
             try {
                 expression = SpecRunnerServices.get(IExpressionFactory.class).create(text, context);
                 result = expression.evaluate(context);
@@ -121,21 +121,6 @@ public final class UtilEvaluator {
             pos2 = text.indexOf(END, pos1 + 2);
         }
         return result;
-    }
-
-    /**
-     * Check if a string can be a id.
-     * 
-     * @param str
-     *            The candidate.
-     * @return true, if is id, false, otherwise.
-     */
-    public static boolean isId(String str) {
-        boolean result = true;
-        for (int i = 0; result && i < str.length(); i++) {
-            result = result && Character.isJavaIdentifierStart(str.charAt(i));
-        }
-        return result && !str.equals("true") && !str.equals("false");
     }
 
     /**

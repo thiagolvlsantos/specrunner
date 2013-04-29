@@ -4,15 +4,19 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div class="for" max="1">
+<div class="for" max="2">
 	<p>
-	${index}-<span class="local" name="data" value="new java.util.Date()">data atual</span>=${obj.call(data)}
+	${index}-<span class="set" name="data" value="dt">data atual</span>=${obj.call(data)}
+	</p>
+	<p>
+		Para o índice ${index}, a saudação esperada é <span class="eq" value="obj.bool(index)">${index%2==0}</span>.
 	</p>
 </div>
 
 <p>
-	Para o nome <span class="local" name="nome">Thiago</span>, a saudação é <span class="eq" value="obj.greeting(nome)">Oi Thiago!</span>.
+	Para o nome <span class="set" name="nome">Thiago</span>, a saudação é <span class="eq" value="obj.greeting(nome)">Oi Thiago!</span>.
 </p>
+
 
 	<!--  primeiro roda-se os comandos do header, depois para cada tr chama-se o 'expression'
 	e coloca-se em contexto uma variável com nome fixo, depois roda-se cada linha copiando os
