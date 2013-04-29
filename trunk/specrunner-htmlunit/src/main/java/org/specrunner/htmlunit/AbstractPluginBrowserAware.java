@@ -25,7 +25,6 @@ import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
@@ -62,15 +61,6 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * The max wait time.
      */
     private Long maxwait = DEFAULT_MAXWAIT;
-
-    /**
-     * Feature to set normalized state.
-     */
-    public static final String FEATURE_NORMALIZED = AbstractPluginBrowserAware.class.getName() + ".normalized";
-    /**
-     * The normalized version.
-     */
-    private Boolean normalized = Boolean.TRUE;
 
     /**
      * Default timeout to finish browser based actions.
@@ -117,47 +107,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         this.interval = interval;
     }
 
-    /**
-     * If normalized is false, the expected and received String are not compared
-     * using their normalized version (trim+remove extra spaces).
-     * 
-     * @return The normalized version of a string.
-     */
-    public Boolean getNormalized() {
-        return normalized;
-    }
-
-    /**
-     * Sets normalized status.
-     * 
-     * @param normalized
-     *            The normalized option.
-     */
-    public void setNormalized(Boolean normalized) {
-        this.normalized = normalized;
-    }
-
-    /**
-     * Gets the normalized version of a string.
-     * 
-     * @param str
-     *            The string to be normalized.
-     * @return The normalized version, if normalized=true.
-     */
-    public String getNormalized(String str) {
-        if (getNormalized()) {
-            return UtilString.normalize(str);
-        }
-        return str;
-    }
-
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         fh.set(FEATURE_INTERVAL, this);
         fh.set(FEATURE_MAXWAIT, this);
-        fh.set(FEATURE_NORMALIZED, this);
         fh.set(FEATURE_TIMEOUT, this);
     }
 

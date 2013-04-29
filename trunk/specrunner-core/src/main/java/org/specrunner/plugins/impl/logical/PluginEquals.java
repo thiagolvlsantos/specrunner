@@ -29,20 +29,37 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.util.UtilEvaluator;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.IComparatorManager;
+import org.specrunner.util.comparer.impl.ComparatorDefault;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.UtilNode;
 
 /**
- * Compare elements. Use class 'eq', with 'left' class to the first argument,
- * and 'right' class to the second argument.
+ * Compare elements. Use class 'eq', there are two approaches:
+ * <ul>
+ * <li>Add two classes with 'left' class to the first argument, and 'right'
+ * class to the second argument.</li>
+ * <li>Value attribute is compared with tag content.</li>
+ * </ul>
  * 
  * @author Thiago Santos
  * 
  */
 public class PluginEquals extends AbstractPluginDual {
+
+    /**
+     * Comparator to be used in comparison.
+     */
+    private String comparator;
+    /**
+     * Comparator default instance.
+     */
+    private IComparator comparatorInstance = new ComparatorDefault();
 
     /**
      * The CSS which set the left side condition of equals.
@@ -58,6 +75,25 @@ public class PluginEquals extends AbstractPluginDual {
      */
     protected Throwable error;
 
+    /**
+     * Get comparator reference.
+     * 
+     * @return The comparator.
+     */
+    public String getComparator() {
+        return comparator;
+    }
+
+    /**
+     * Set the comparator.
+     * 
+     * @param comparator
+     *            The comparator.
+     */
+    public void setComparator(String comparator) {
+        this.comparator = comparator;
+    }
+
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
@@ -66,33 +102,60 @@ public class PluginEquals extends AbstractPluginDual {
     @Override
     protected boolean operation(Object obj, IContext context) throws PluginException {
         Node node = context.getNode();
-        Nodes expectedes = node.query("descendant::*[@class='" + CSS_LETF + "']");
-        Nodes receiveds = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
-        Node expected = UtilNode.getHighest(expectedes);
-        Node received = UtilNode.getHighest(receiveds);
-        if (expected == null) {
-            throw new PluginException("Expected value not found. Missing a element with class='" + CSS_LETF + "' in element:" + node.toXML());
-        }
-        if (received == null) {
-            throw new PluginException("Received value not found. Missing a element with class='" + CSS_RIGHT + "' in element:" + node.toXML());
-        }
-        String expectedValue = expected.getValue();
-        if (received instanceof Element) {
-            CellAdapter cell = new CellAdapter((Element) expected);
-            if (cell.hasAttribute("value")) {
-                expectedValue = cell.getAttribute("value");
-            }
-        }
-        String receivedValue = received.getValue();
-        if (received instanceof Element) {
-            CellAdapter cell = new CellAdapter((Element) received);
-            if (cell.hasAttribute("value")) {
-                receivedValue = cell.getAttribute("value");
+        Object objExpected = null;
+        Object objReceived = null;
+        if (node instanceof Element) {
+            CellAdapter parent = new CellAdapter((Element) node);
+            if (parent.hasAttribute("value")) {
+                objExpected = getNormalized(parent.getValue());
+                objReceived = getNormalized(String.valueOf(obj));
+            } else {
+                Nodes expectedes = node.query("descendant::*[@class='" + CSS_LETF + "']");
+                Nodes receiveds = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
+                Node expected = UtilNode.getHighest(expectedes);
+                Node received = UtilNode.getHighest(receiveds);
+                if (expected == null) {
+                    throw new PluginException("Expected value not found. Missing a element with class='" + CSS_LETF + "' in element:" + node.toXML());
+                }
+                if (received == null) {
+                    throw new PluginException("Received value not found. Missing a element with class='" + CSS_RIGHT + "' in element:" + node.toXML());
+                }
+                String expectedValue = expected.getValue();
+                if (received instanceof Element) {
+                    CellAdapter cell = new CellAdapter((Element) expected);
+                    if (cell.hasAttribute("value")) {
+                        expectedValue = cell.getAttribute("value");
+                    }
+                }
+                String receivedValue = received.getValue();
+                if (received instanceof Element) {
+                    CellAdapter cell = new CellAdapter((Element) received);
+                    if (cell.hasAttribute("value")) {
+                        receivedValue = cell.getAttribute("value");
+                    }
+                }
+                objExpected = UtilEvaluator.evaluate(expectedValue, context);
+                objReceived = UtilEvaluator.evaluate(receivedValue, context);
             }
         }
 
-        Object objExpected = UtilEvaluator.evaluate(expectedValue, context);
-        Object objReceived = UtilEvaluator.evaluate(receivedValue, context);
+        if (node instanceof Element && comparator != null) {
+            IComparatorManager c = SpecRunnerServices.get(IComparatorManager.class);
+            IComparator tmp = c.get(comparator);
+            if (tmp != null) {
+                comparatorInstance = tmp;
+            } else {
+                try {
+                    comparatorInstance = (IComparator) Class.forName(comparator).newInstance();
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    throw new PluginException(e);
+                }
+            }
+        }
+
         try {
             return verify(objExpected, objReceived);
         } catch (SpecRunnerException e) {
@@ -103,22 +166,22 @@ public class PluginEquals extends AbstractPluginDual {
     /**
      * Verify the condition.
      * 
-     * @param reference
+     * @param expected
      *            The reference value.
-     * @param value
+     * @param received
      *            The received value.
      * @return true, if equals, false, otherwise.
      * @throws SpecRunnerException
      *             On condition errors.
      */
-    protected boolean verify(Object reference, Object value) throws SpecRunnerException {
-        boolean result = reference.equals(value);
+    protected boolean verify(Object expected, Object received) throws SpecRunnerException {
+        boolean result = comparatorInstance.match(expected, received);
         if (!result) {
-            if (reference instanceof String && value instanceof String) {
-                IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(reference.toString(), value.toString());
+            if (expected instanceof String && received instanceof String) {
+                IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected.toString(), received.toString());
                 error = new DefaultAlignmentException(al);
             } else {
-                error = new PluginException("Values are different. Expected: '" + reference + "', Received: '" + value + "'.");
+                error = new PluginException("Values are different. Expected: '" + expected + "', Received: '" + received + "'.");
             }
         }
         return result;

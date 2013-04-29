@@ -20,51 +20,38 @@ package org.specrunner.expressions.impl;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpression;
+import org.specrunner.expressions.IExpressionFactory;
 
 /**
- * An expression with a predefined object value.
+ * The expression factory.
  * 
  * @author Thiago Santos
  * 
  */
-public class ExpressionObject implements IExpression {
+public abstract class AbstractExpression implements IExpression {
 
     /**
-     * The expression source.
+     * The parent factory.
      */
-    protected Object source;
+    private IExpressionFactory parent;
 
     /**
-     * Creates an expression with a given object.
+     * Basic constructor.
      * 
-     * @param source
-     *            The source.
+     * @param parent
+     *            The parent.
      */
-    public ExpressionObject(Object source) {
-        setSource(source);
+    public AbstractExpression(IExpressionFactory parent) {
+        this.parent = parent;
     }
 
-    /**
-     * Gets the object source.
-     * 
-     * @return The source.
-     */
-    public Object getSource() {
-        return source;
-    }
-
-    /**
-     * Sets the object source.
-     * 
-     * @param source
-     *            The source.
-     */
-    public void setSource(Object source) {
-        this.source = source;
+    @Override
+    public IExpressionFactory getParent() {
+        return parent;
     }
 
     @Override
     public Object evaluate(IContext context) throws ExpressionException {
-        return getSource();
+        return evaluate(context, true);
     }
 }

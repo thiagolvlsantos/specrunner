@@ -19,7 +19,7 @@ package org.specrunner.expressions.impl;
 
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
-import org.specrunner.expressions.IExpression;
+import org.specrunner.expressions.IExpressionFactory;
 
 /**
  * Expression variable. Lookup by variable name in the context using
@@ -28,7 +28,7 @@ import org.specrunner.expressions.IExpression;
  * @author Thiago
  * 
  */
-public class ExpressionVariable implements IExpression {
+public class ExpressionVariable extends AbstractExpression {
 
     /**
      * The variable name.
@@ -38,10 +38,13 @@ public class ExpressionVariable implements IExpression {
     /**
      * Creates an expression to access a variable.
      * 
+     * @param parent
+     *            The expression factory.
      * @param name
      *            The variable name.
      */
-    public ExpressionVariable(String name) {
+    public ExpressionVariable(IExpressionFactory parent, String name) {
+        super(parent);
         setName(name);
     }
 
@@ -65,7 +68,7 @@ public class ExpressionVariable implements IExpression {
     }
 
     @Override
-    public Object evaluate(IContext context) throws ExpressionException {
+    public Object evaluate(IContext context, boolean silent) throws ExpressionException {
         return context.getByName("${" + name + "}");
     }
 }

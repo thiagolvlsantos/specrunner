@@ -19,6 +19,10 @@ public class TestSR {
         return "funciona " + date;
     }
 
+     public String greeting(String nome) {
+         return "Oi " + nome + "!";
+     }
+
     @After
     public void depois() {
         System.out.println("depois");
