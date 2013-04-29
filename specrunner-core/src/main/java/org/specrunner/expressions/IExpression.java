@@ -28,7 +28,14 @@ import org.specrunner.context.IContext;
 public interface IExpression {
 
     /**
-     * Given a context, evaluates the expression.
+     * The mother factory.
+     * 
+     * @return The factory where the expression came from.
+     */
+    IExpressionFactory getParent();
+
+    /**
+     * Given a context, evaluates an expression silently.
      * 
      * @param context
      *            A contextual information.
@@ -37,4 +44,18 @@ public interface IExpression {
      *             On evaluation errors.
      */
     Object evaluate(IContext context) throws ExpressionException;
+
+    /**
+     * Given a context, evaluates the expression.
+     * 
+     * @param context
+     *            A contextual information.
+     * @param silent
+     *            <code>true</code>, for evaluation without exceptions,
+     *            <code>false</code>, otherwise.
+     * @return The result of expression evaluation.
+     * @throws ExpressionException
+     *             On evaluation errors.
+     */
+    Object evaluate(IContext context, boolean silent) throws ExpressionException;
 }

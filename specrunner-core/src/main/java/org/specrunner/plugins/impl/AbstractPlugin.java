@@ -33,6 +33,7 @@ import org.specrunner.plugins.ITimedPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilString;
 
 /**
  * Adapter for plugins.
@@ -96,6 +97,15 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     private Boolean threadsafe;
 
     /**
+     * Feature to set normalized state.
+     */
+    public static final String FEATURE_NORMALIZED = AbstractPlugin.class.getName() + ".normalized";
+    /**
+     * The normalized version.
+     */
+    private Boolean normalized = Boolean.TRUE;
+
+    /**
      * Default constructor.
      */
     public AbstractPlugin() {
@@ -124,6 +134,7 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
         if (threadsafe == null) {
             threadsafe = false;
         }
+        fh.set(FEATURE_NORMALIZED, this);
     }
 
     @Override
@@ -235,6 +246,40 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     @Override
     public void setThreadsafe(Boolean threadsafe) {
         this.threadsafe = threadsafe;
+    }
+
+    /**
+     * If normalized is false, the expected and received String are not compared
+     * using their normalized version (trim+remove extra spaces).
+     * 
+     * @return If normalized is enable or not.
+     */
+    public Boolean getNormalized() {
+        return normalized;
+    }
+
+    /**
+     * Set the normalized state.
+     * 
+     * @param normalized
+     *            true, to normalize, false, otherwise.
+     */
+    public void setNormalized(Boolean normalized) {
+        this.normalized = normalized;
+    }
+
+    /**
+     * Get the normalized version of a string.
+     * 
+     * @param str
+     *            The string to be normalized.
+     * @return The normalized version of the string, if normalized=true.
+     */
+    public String getNormalized(String str) {
+        if (getNormalized()) {
+            return UtilString.normalize(str);
+        }
+        return str;
     }
 
     @Override
