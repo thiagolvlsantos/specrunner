@@ -49,7 +49,7 @@ public class PluginHtml extends AbstractPluginScoped {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Object obj = SpecRunnerServices.get(IFeatureManager.class).get(BEAN_NAME);
-        context.saveGlobal(UtilEvaluator.asVariable(BEAN_NAME), obj);
+        context.saveLocal(UtilEvaluator.asVariable(BEAN_NAME), obj);
         return ENext.DEEP;
     }
 }

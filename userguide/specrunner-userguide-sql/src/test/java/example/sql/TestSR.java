@@ -1,6 +1,8 @@
 package example.sql;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +30,10 @@ public class TestSR {
 
     public boolean bool(int index) {
         return index % 2 == 0;
+    }
+
+    public List<?> chamar(Date dt) {
+        return Arrays.asList("a", "b", "c");
     }
 
     @After
