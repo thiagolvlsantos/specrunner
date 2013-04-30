@@ -61,9 +61,12 @@ public final class UtilEvaluator {
      * 
      * @param name
      *            The source name.
-     * @return The corresponding variable.
+     * @return The corresponding variable. Null if name is null.
      */
     public static String asVariable(String name) {
+        if (name == null) {
+            return null;
+        }
         return START_CODE + name + END;
     }
 

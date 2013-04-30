@@ -56,7 +56,8 @@ public abstract class AbstractPluginDefine extends AbstractPluginDual {
         Node node = context.getNode();
         if (node instanceof Element) {
             Element e = (Element) node;
-            e.addAttribute(new Attribute("iname", super.getName()));
+            String n = super.getName();
+            e.addAttribute(new Attribute("iname", n != null ? n : "void"));
             e.addAttribute(new Attribute("instance", obj != null ? obj.getClass().getName() : "null"));
         }
         return true;
