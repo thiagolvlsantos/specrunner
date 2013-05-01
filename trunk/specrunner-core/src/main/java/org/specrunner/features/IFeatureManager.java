@@ -23,11 +23,11 @@ import org.specrunner.configuration.IConfiguration;
 
 /**
  * This is the standard way of parameterizing the framework objects. This is the
- * way of parameterizing all tests in the same execution, to set specific
- * features for each test use IConfiguration infra-structure.
+ * standard way of parameterizing all tests in the same execution, to set
+ * specific features for each test separately use IConfiguration object.
  * 
  * <p>
- * Every class can ready a feature by
+ * Every class can read a feature by
  * <code>SpecRunnerService.get(IFeatureManager.class).getFeature("name")</code>.
  * See all <code>IPlugin</code> implementations to check all available features
  * and how to use them.

@@ -17,15 +17,15 @@
  */
 package org.specrunner.features.impl;
 
-import java.beans.PropertyDescriptor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.IAccess;
+import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -91,21 +91,26 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     public void setStrict(String feature, Object target) throws FeatureManagerException {
         Object value = get(feature);
         if (value != null) {
-            String field = getField(feature, target, value);
-            PropertyDescriptor pd;
-            try {
-                pd = PropertyUtils.getPropertyDescriptor(target, field);
-            } catch (Exception e) {
+            String name = getField(feature);
+            IAccess access = SpecRunnerServices.get(IAccessFactory.class).newAccess(target, name);
+            if (access == null) {
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("PropertyDescriptor(" + target + "." + field + ") not found: ignoring attempt.", e);
+                    UtilLog.LOG.debug("Feature(" + target + "." + name + ") not found: ignoring attempt.");
                 }
                 return;
             }
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Property descriptor '" + pd + "'.");
+                UtilLog.LOG.trace("Access '" + access + "'.");
             }
-            checkType(feature, value, pd);
-            setValue(feature, value, target, field);
+            if (!access.valid(target, name, value)) {
+                Class<?>[] types = access.expected(target, name, value);
+                StringBuilder sb = new StringBuilder();
+                for (Class<?> c : types) {
+                    sb.append(String.valueOf(c) + ", ");
+                }
+                throw new FeatureManagerException("Object associated to " + feature + " is not a " + sb + ", current feature value '" + value + "' is " + value.getClass() + ".");
+            }
+            setValue(feature, value, target, name, access);
         }
     }
 
@@ -114,39 +119,16 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
      * 
      * @param feature
      *            The feature name.
-     * @param target
-     *            The target object.
-     * @param value
-     *            The value for the feature.
      * @return The field name, if it exists.
      * @throws FeatureManagerException
      *             On field name recovery errors.
      */
-    protected String getField(String feature, Object target, Object value) throws FeatureManagerException {
+    protected String getField(String feature) throws FeatureManagerException {
         int pos = feature.lastIndexOf('.');
         if (pos < 0) {
             throw new FeatureManagerException("A feature should always end with a attribute name. i.e. '<any class name>.pause', current value:'" + feature + "'.");
         }
         return feature.substring(Math.min(pos + 1, feature.length())).trim();
-    }
-
-    /**
-     * Check if the feature value is assignable to the property.
-     * 
-     * @param feature
-     *            The feature name.
-     * @param value
-     *            The value.
-     * @param pd
-     *            The property descriptor.
-     * @throws FeatureManagerException
-     *             On invalid feature type for the given value.
-     */
-    protected void checkType(String feature, Object value, PropertyDescriptor pd) throws FeatureManagerException {
-        Class<?> expectedType = pd.getPropertyType();
-        if (!expectedType.isAssignableFrom(value.getClass())) {
-            throw new FeatureManagerException("Object associated to " + feature + " is not a " + expectedType + ", current feature value '" + value + "' is " + value.getClass() + ".");
-        }
     }
 
     /**
@@ -160,19 +142,21 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
      *            The target object.
      * @param field
      *            The target field.
+     * @param access
+     *            The field access.
      * @throws FeatureManagerException
      *             On setting error.
      */
-    protected void setValue(String feature, Object value, Object target, String field) throws FeatureManagerException {
+    protected void setValue(String feature, Object value, Object target, String field, IAccess access) throws FeatureManagerException {
         try {
             Boolean override = overrides.get(feature);
             if (override != null && !override) {
-                Object old = BeanUtils.getProperty(value, field);
+                Object old = access.get(target, field);
                 if (old == null) {
-                    BeanUtils.setProperty(target, field, value);
+                    access.set(target, field, value);
                 }
             } else {
-                BeanUtils.setProperty(target, field, value);
+                access.set(target, field, value);
             }
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Feature '" + feature + "' set to object '" + target + "', current value is " + value + ".");
