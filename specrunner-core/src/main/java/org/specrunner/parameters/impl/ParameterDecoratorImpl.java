@@ -18,7 +18,8 @@
 package org.specrunner.parameters.impl;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     /**
      * Hold information of already checked attributes.
      */
-    protected Map<String, Boolean> checked = new HashMap<String, Boolean>();
+    protected Map<String, Setup> checked = new HashMap<String, Setup>();
     /**
      * Set of valid parameters.
      */
@@ -64,11 +65,14 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
 
     @Override
     public Object getParameter(String name) {
-        try {
-            return BeanUtils.getProperty(decorated, name);
-        } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        if (hasParameter(name)) {
+            try {
+                Setup s = checked.get(name);
+                return s.get(decorated, name);
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
             }
         }
         return null;
@@ -77,44 +81,95 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     @Override
     public void setParameter(String name, Object value) {
         allParameters.put(name, value);
-        try {
-            if (hasParameter(name)) {
-                BeanUtils.setProperty(decorated, name, value);
+        if (hasParameter(name)) {
+            try {
+                Setup s = checked.get(name);
+                s.set(decorated, name, value);
                 parameters.put(name, value);
+            } catch (Exception e1) {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace(e1.getMessage(), e1);
+                }
             }
-        } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+        }
+    }
+
+    private class Setup {
+        public Field field;
+        public PropertyDescriptor property;
+        public Method method;
+
+        public void set(Object target, String name, Object value) throws Exception {
+            if (field != null) {
+                field.set(target, value);
+            } else if (property != null) {
+                BeanUtils.setProperty(decorated, name, value);
+            } else if (method != null) {
+                method.invoke(target, value);
             }
+        }
+
+        public Object get(Object target, String name) throws Exception {
+            if (field != null) {
+                return field.get(target);
+            } else if (property != null) {
+                return BeanUtils.getProperty(decorated, name);
+            }
+            return null;
         }
     }
 
     @Override
     public boolean hasParameter(String name) {
-        boolean result = false;
-        try {
-            Boolean alreadyChecked = checked.get(name);
+        Setup alreadyChecked = checked.get(name);
+        if (alreadyChecked == null) {
+            Class<?> c = decorated.getClass();
+            try {
+                Field f = c.getField(name);
+                if (f != null) {
+                    alreadyChecked = new Setup();
+                    alreadyChecked.field = f;
+                }
+            } catch (Exception e) {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace(e.getMessage(), e);
+                }
+            }
             if (alreadyChecked == null) {
-                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(decorated, name);
-                result = pd != null;
-                checked.put(name, result);
-            } else {
-                result = alreadyChecked;
-            }
-        } catch (IllegalAccessException e) {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
-            }
-        } catch (InvocationTargetException e) {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
-            }
-        } catch (NoSuchMethodException e) {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
+                try {
+                    PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(decorated, name);
+                    if (pd != null) {
+                        alreadyChecked = new Setup();
+                        alreadyChecked.property = pd;
+                    }
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+                if (alreadyChecked == null) {
+                    try {
+                        Method m = null;
+                        for (Method i : c.getMethods()) {
+                            if (i.getName().equals(name)) {
+                                m = i;
+                                break;
+                            }
+                        }
+                        if (m != null) {
+                            alreadyChecked = new Setup();
+                            alreadyChecked.method = m;
+                        }
+                    } catch (Exception e) {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace(e.getMessage(), e);
+                        }
+                    }
+                }
             }
         }
-        return result;
+        checked.put(name, alreadyChecked);
+        return alreadyChecked != null;
     }
 
     @Override
