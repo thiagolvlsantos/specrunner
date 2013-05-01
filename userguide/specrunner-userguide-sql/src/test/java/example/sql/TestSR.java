@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
@@ -22,6 +23,7 @@ public class TestSR {
         System.out.println("antes");
         SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", Date.class);
         SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryCSS.KIND, "meu", new MeuPlugin());
+        SpecRunnerServices.get(IFeatureManager.class).add(MeuPlugin.FEATURE_PADRAO, "não");
         SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryElement.KIND, "outro", new OutroPlugin());
     }
 
