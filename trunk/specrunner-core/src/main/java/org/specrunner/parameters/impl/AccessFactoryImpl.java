@@ -43,7 +43,7 @@ public class AccessFactoryImpl implements IAccessFactory {
         Class<?> c = target.getClass();
         try {
             Field f = c.getField(name);
-            if (f != null) {
+            if (f != null && f.isAccessible()) {
                 access = new AccessImpl(f);
             }
         } catch (Exception e) {
