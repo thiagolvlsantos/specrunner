@@ -3,6 +3,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.properties.impl.PropertyLoaderImpl" />
   <bean class="org.specrunner.configuration.impl.ConfigurationFactoryImpl" />
   <bean class="org.specrunner.features.impl.FeatureManagerImpl" />
+  <bean class="org.specrunner.parameters.impl.AccessFactoryImpl" />
   <bean class="org.specrunner.concurrency.impl.ConcurrentMappingImpl" />
   <bean class="org.specrunner.source.resource.impl.ResourceManagerFactoryImpl" />
   <bean class="org.specrunner.source.impl.SourceFactoryImpl" />
