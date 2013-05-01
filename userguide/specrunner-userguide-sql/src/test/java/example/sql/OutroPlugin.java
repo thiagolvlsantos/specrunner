@@ -13,9 +13,14 @@ import org.specrunner.result.status.Success;
 public class OutroPlugin extends AbstractPlugin {
 
     private String texto;
+    private String outro;
 
     public void salvar(Date date) {
         texto = date.toString();
+    }
+
+    private void outro(Date date) {
+        outro = "outro " + date.toString();
     }
 
     @Override
