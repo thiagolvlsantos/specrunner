@@ -10,14 +10,19 @@ import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.SRRunner;
+import org.specrunner.plugins.IPluginFactory;
+import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
+import org.specrunner.plugins.impl.factories.PluginFactoryElement;
 
 @RunWith(SRRunner.class)
 public class TestSR {
 
     @Before
-    public void antes() {
+    public void antes() throws Exception {
         System.out.println("antes");
         SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", Date.class);
+        SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryCSS.KIND, "meu", new MeuPlugin());
+        SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryElement.KIND, "outro", new OutroPlugin());
     }
 
     public String call(Date date) {
