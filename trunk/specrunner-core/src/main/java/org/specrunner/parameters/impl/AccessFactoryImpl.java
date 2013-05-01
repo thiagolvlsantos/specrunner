@@ -43,8 +43,14 @@ public class AccessFactoryImpl implements IAccessFactory {
         Class<?> c = target.getClass();
         try {
             Field f = c.getField(name);
-            if (f != null && f.isAccessible()) {
-                access = new AccessImpl(f);
+            if (f != null) {
+                if (f.isAccessible()) {
+                    access = new AccessImpl(f);
+                } else {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Field '" + f.getName() + "' is not accessible. " + f);
+                    }
+                }
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -67,7 +73,13 @@ public class AccessFactoryImpl implements IAccessFactory {
                     Method m = null;
                     for (Method i : c.getMethods()) {
                         if (i.getName().equals(name)) {
-                            m = i;
+                            if (i.isAccessible()) {
+                                m = i;
+                            } else {
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug("Method '" + i.getName() + "' is not accessible. " + i);
+                                }
+                            }
                             break;
                         }
                     }
