@@ -20,6 +20,7 @@ package org.specrunner.parameters.impl;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.parameters.IAccess;
@@ -42,9 +43,9 @@ public class AccessFactoryImpl implements IAccessFactory {
         IAccess access = null;
         Class<?> c = target.getClass();
         try {
-            Field f = c.getField(name);
+            Field f = c.getDeclaredField(name);
             if (f != null) {
-                if (f.isAccessible()) {
+                if (Modifier.isPublic(f.getModifiers())) {
                     access = new AccessImpl(f);
                 } else {
                     if (UtilLog.LOG.isDebugEnabled()) {
@@ -71,9 +72,9 @@ public class AccessFactoryImpl implements IAccessFactory {
             if (access == null) {
                 try {
                     Method m = null;
-                    for (Method i : c.getMethods()) {
+                    for (Method i : c.getDeclaredMethods()) {
                         if (i.getName().equals(name)) {
-                            if (i.isAccessible()) {
+                            if (Modifier.isPublic(i.getModifiers())) {
                                 m = i;
                             } else {
                                 if (UtilLog.LOG.isDebugEnabled()) {
