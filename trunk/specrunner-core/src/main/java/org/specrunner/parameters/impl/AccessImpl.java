@@ -18,6 +18,7 @@
 package org.specrunner.parameters.impl;
 
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -124,5 +125,17 @@ public class AccessImpl implements IAccess {
             return method.getParameterTypes();
         }
         return new Class<?>[] {};
+    }
+
+    @Override
+    public Annotation[] getAnnotations() {
+        if (field != null) {
+            return field.getAnnotations();
+        } else if (property != null) {
+            return property.getWriteMethod().getAnnotations();
+        } else if (method != null) {
+            return method.getAnnotations();
+        }
+        return new Annotation[] {};
     }
 }

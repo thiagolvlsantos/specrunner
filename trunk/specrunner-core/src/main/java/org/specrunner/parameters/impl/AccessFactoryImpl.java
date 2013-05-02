@@ -23,9 +23,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * Default implementation of <code>IAccessFactory</code>.
@@ -35,23 +38,29 @@ import org.specrunner.util.UtilLog;
  */
 public class AccessFactoryImpl implements IAccessFactory {
 
+    /**
+     * Cache for access information.
+     */
+    private ICache<IAccess> cache;
+
     @Override
     public IAccess newAccess(Object target, String name) {
         if (target == null) {
             return null;
         }
-        IAccess access = null;
         Class<?> c = target.getClass();
+        String key = c.getName() + "." + name;
+        if (cache == null) {
+            cache = SpecRunnerServices.get(ICacheFactory.class).newCache(AccessFactoryImpl.class.getSimpleName());
+        }
+        if (cache.contains(key)) {
+            return cache.get(key);
+        }
+        IAccess access = null;
         try {
-            Field f = c.getDeclaredField(name);
-            if (f != null) {
-                if (Modifier.isPublic(f.getModifiers())) {
-                    access = new AccessImpl(f);
-                } else {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Field '" + f.getName() + "' is not accessible. " + f);
-                    }
-                }
+            PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(target, name);
+            if (pd != null) {
+                access = new AccessImpl(pd);
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -60,40 +69,47 @@ public class AccessFactoryImpl implements IAccessFactory {
         }
         if (access == null) {
             try {
-                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(target, name);
-                if (pd != null) {
-                    access = new AccessImpl(pd);
+                Field f = c.getDeclaredField(name);
+                if (f != null) {
+                    if (Modifier.isPublic(f.getModifiers())) {
+                        access = new AccessImpl(f);
+                    } else {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Field '" + f.getName() + "' is not accessible. " + f);
+                        }
+                    }
                 }
             } catch (Exception e) {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                 }
             }
-            if (access == null) {
-                try {
-                    Method m = null;
-                    for (Method i : c.getDeclaredMethods()) {
-                        if (i.getName().equals(name)) {
-                            if (Modifier.isPublic(i.getModifiers())) {
-                                m = i;
-                            } else {
-                                if (UtilLog.LOG.isDebugEnabled()) {
-                                    UtilLog.LOG.debug("Method '" + i.getName() + "' is not accessible. " + i);
-                                }
+        }
+        if (access == null) {
+            try {
+                Method m = null;
+                for (Method i : c.getDeclaredMethods()) {
+                    if (i.getName().equals(name)) {
+                        if (Modifier.isPublic(i.getModifiers())) {
+                            m = i;
+                        } else {
+                            if (UtilLog.LOG.isTraceEnabled()) {
+                                UtilLog.LOG.trace("Method '" + i.getName() + "' is not accessible. " + i);
                             }
-                            break;
                         }
+                        break;
                     }
-                    if (m != null) {
-                        access = new AccessImpl(m);
-                    }
-                } catch (Exception e) {
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace(e.getMessage(), e);
-                    }
+                }
+                if (m != null) {
+                    access = new AccessImpl(m);
+                }
+            } catch (Exception e) {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace(e.getMessage(), e);
                 }
             }
         }
+        cache.put(key, access);
         return access;
     }
 }

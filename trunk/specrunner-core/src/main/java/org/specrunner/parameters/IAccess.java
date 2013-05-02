@@ -17,6 +17,8 @@
  */
 package org.specrunner.parameters;
 
+import java.lang.annotation.Annotation;
+
 /**
  * Abstraction for object feature access. The features can be a public
  * attribute, a bean property, or a single method.
@@ -80,4 +82,11 @@ public interface IAccess {
      * @return true, if compatible, false, otherwise.
      */
     Class<?>[] expected(Object target, String name, Object... args);
+
+    /**
+     * Get the annotation information of a given access.
+     * 
+     * @return The list of annotations associated to the access.
+     */
+    Annotation[] getAnnotations();
 }

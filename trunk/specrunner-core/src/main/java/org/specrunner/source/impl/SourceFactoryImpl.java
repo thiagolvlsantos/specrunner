@@ -59,16 +59,12 @@ import org.specrunner.util.cache.ICacheFactory;
 public class SourceFactoryImpl implements ISourceFactory {
 
     /**
-     * Cache name.
-     */
-    public static final String CACHE_NAME = "include";
-    /**
      * Cache of files.
      */
     private static ThreadLocal<ICache<Document>> cache = new ThreadLocal<ICache<Document>>() {
         @Override
         protected ICache<Document> initialValue() {
-            return SpecRunnerServices.get(ICacheFactory.class).newCache(CACHE_NAME);
+            return SpecRunnerServices.get(ICacheFactory.class).newCache(SourceFactoryImpl.class.getName());
         };
     };
 

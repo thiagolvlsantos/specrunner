@@ -19,6 +19,8 @@ package org.specrunner.parameters;
 
 import java.util.Map;
 
+import org.specrunner.context.IContext;
+
 /**
  * Stand for anything that can have parameters set. It is a bypass parameters
  * capturer.
@@ -50,8 +52,15 @@ public interface IParameterDecorator {
      *            The parameter name.
      * @param value
      *            The parameter value.
+     * @param context
+     *            The context where value is insert.
+     * @return The resulting value of setting 'name' with the value in a given
+     *         context. i.e. If context has a variable 'x' bind to 1(integer)
+     *         and we ask to set 'name' to 'x', the operation output will be
+     *         '1', but if feature 'name' in the decorated object has a
+     *         annotation @DontEval the result will be 'x'.
      */
-    void setParameter(String name, Object value);
+    Object setParameter(String name, Object value, IContext context);
 
     /**
      * Gets a parameter.
