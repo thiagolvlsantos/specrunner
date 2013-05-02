@@ -87,16 +87,12 @@ public class PluginScripts extends AbstractPluginValue {
     private URI[] scripts;
 
     /**
-     * Cache name.
-     */
-    public static final String CACHE_NAME = "scripts";
-    /**
      * Cache of scripts.
      */
     private static ThreadLocal<ICache<String>> cache = new ThreadLocal<ICache<String>>() {
         @Override
         protected ICache<String> initialValue() {
-            return SpecRunnerServices.get(ICacheFactory.class).newCache(CACHE_NAME);
+            return SpecRunnerServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
         };
     };
 

@@ -81,6 +81,11 @@ public class CacheLRU<T> implements ICache<T> {
     }
 
     @Override
+    public boolean contains(String key) {
+        return items.containsKey(key);
+    }
+
+    @Override
     public T get(String key) {
         CacheEntry<T> item = items.get(key);
         if (item != null) {

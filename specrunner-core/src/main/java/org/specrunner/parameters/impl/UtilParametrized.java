@@ -67,13 +67,9 @@ public final class UtilParametrized {
             for (int i = 0; i < element.getAttributeCount(); i++) {
                 Attribute n = element.getAttribute(i);
                 String value = n.getValue();
-                Object newValue = UtilEvaluator.evaluate(value, context);
                 try {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("set(" + p.getDecorated() + ")." + n.getQualifiedName() + "=" + newValue);
-                    }
                     String name = n.getQualifiedName();
-                    p.setParameter(name, newValue);
+                    Object newValue = p.setParameter(name, value, context);
                     // every local attribute became a local variable
                     context.saveLocal(UtilEvaluator.asVariable(name), newValue);
                 } catch (Exception e) {
@@ -108,7 +104,7 @@ public final class UtilParametrized {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("set(" + p.getDecorated() + ")." + e.getKey() + "=" + e.getValue());
                     }
-                    p.setParameter(e.getKey(), e.getValue());
+                    p.setParameter(e.getKey(), e.getValue(), context);
                     // every local attribute became a local variable
                     context.saveLocal(UtilEvaluator.asVariable(e.getKey()), e.getValue());
                 } catch (Exception ex) {

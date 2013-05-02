@@ -33,6 +33,7 @@ import nu.xom.Nodes;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.parameters.impl.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
@@ -208,6 +209,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @param reference
      *            A new reference list.
      */
+    @DontEval
     public void setReference(String reference) {
         this.reference = reference;
         if (reference != null) {
@@ -845,7 +847,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (obj != null && isMapped()) {
                 result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
                 for (CellAdapter cell : row.getCells()) {
-                    String title = cell.getAttribute("title");
+                    String title = cell.hasAttribute("title") ? cell.getAttribute("title") : "|";
                     String old = title.substring(0, title.lastIndexOf('|'));
                     if (old.isEmpty()) {
                         cell.removeAttribute("title");

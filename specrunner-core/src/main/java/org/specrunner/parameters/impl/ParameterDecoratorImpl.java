@@ -17,13 +17,18 @@
  */
 package org.specrunner.parameters.impl;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.context.IContext;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.parameters.IParameterDecorator;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -77,19 +82,49 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     }
 
     @Override
-    public void setParameter(String name, Object value) {
-        allParameters.put(name, value);
+    public Object setParameter(String name, Object value, IContext context) {
+        Object newValue = value;
         if (hasParameter(name)) {
             try {
                 IAccess s = checked.get(name);
-                s.set(decorated, name, value);
-                parameters.put(name, value);
+                newValue = prepareValue(s, value, context);
+                s.set(decorated, name, newValue);
+                parameters.put(name, newValue);
             } catch (Exception e) {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                 }
             }
         }
+        allParameters.put(name, newValue);
+        return newValue;
+    }
+
+    /**
+     * Prepare the value to set.
+     * 
+     * @param s
+     *            The access information object.
+     * @param value
+     *            The value.
+     * @param context
+     *            The context.
+     * @return The value after preparation.
+     * @throws PluginException
+     *             On processing errors.
+     */
+    private Object prepareValue(IAccess s, Object value, IContext context) throws PluginException {
+        boolean eval = true;
+        for (Annotation a : s.getAnnotations()) {
+            if (a.annotationType() == DontEval.class) {
+                eval = false;
+                break;
+            }
+        }
+        if (eval) {
+            value = UtilEvaluator.evaluate(String.valueOf(value), context);
+        }
+        return value;
     }
 
     @Override
