@@ -46,7 +46,7 @@ public class PluginContains extends AbstractPluginFindSingle {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        getFinderInstance().getParameters().setParameter("by", "xpath://html");
+        getFinderInstance().getParameters().setParameter("by", "xpath://html", context);
     }
 
     @Override
