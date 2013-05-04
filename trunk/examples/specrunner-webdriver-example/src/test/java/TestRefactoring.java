@@ -15,7 +15,7 @@ public class TestRefactoring {
         IPluginGroup group = new PluginGroupImpl();
 
         PluginBrowser pluginBrowser = new PluginBrowser();
-        pluginBrowser.setWebdriver(WebDriverFactoryChrome.class.getName());
+        pluginBrowser.setWebdriverfactory(WebDriverFactoryChrome.class.getName());
         pluginBrowser.setReuse(Boolean.TRUE);
         group.add(pluginBrowser);
 
@@ -25,12 +25,12 @@ public class TestRefactoring {
 
         PluginType type = new PluginType();
         type.setValue("buscar");
-        type.getParameters().setParameter("by", "name:q");
+        type.getParameters().setParameter("by", "name:q", null);
         group.add(type);
 
         PluginCompare compare = new PluginCompare();
         compare.setValue("Pesquisa googleGGGGG");
-        compare.getParameters().setParameter("by", "xpath://title");
+        compare.getParameters().setParameter("by", "xpath://title", null);
         group.add(compare);
 
         SpecRunnerJUnitPlugin.defaultRun(group);
