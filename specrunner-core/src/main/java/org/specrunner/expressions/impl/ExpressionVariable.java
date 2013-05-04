@@ -25,7 +25,7 @@ import org.specrunner.expressions.IExpressionFactory;
  * Expression variable. Lookup by variable name in the context using
  * <code>getByName(&lt;name&gt;)</code> method.
  * 
- * @author Thiago
+ * @author Thiago Santos
  * 
  */
 public class ExpressionVariable extends AbstractExpression {

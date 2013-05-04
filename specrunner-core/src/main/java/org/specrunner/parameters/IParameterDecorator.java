@@ -31,6 +31,13 @@ import org.specrunner.context.IContext;
 public interface IParameterDecorator {
 
     /**
+     * Force the evaluation opposite. If name contains INVERT_FLAG, the
+     * expression before evaluated wont be, and <code>@DontEval</code> annotated
+     * will be evaluated.
+     */
+    String INVERT_FLAG = "_";
+
+    /**
      * Gets the decorated object.
      * 
      * @return The object.
@@ -44,6 +51,15 @@ public interface IParameterDecorator {
      *            The new decorated object.
      */
     void setDecorated(Object decorated);
+
+    /**
+     * Get name cleared.
+     * 
+     * @param name
+     *            The name.
+     * @return Cleared string.
+     */
+    String clear(String name);
 
     /**
      * Set a parameter.
@@ -111,4 +127,5 @@ public interface IParameterDecorator {
      *            The map.
      */
     void setAllParameters(Map<String, Object> allParameters);
+
 }
