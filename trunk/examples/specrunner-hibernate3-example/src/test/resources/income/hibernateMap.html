@@ -7,15 +7,16 @@
 </style>
 
 <p>
-    Dado que a configuração do sistema é: <span class="global" name="configuracao">th.example.CityConfiguration</span>, ajuste a <span class="hbmcfg" type="${configuracao}" name="cfg">configuração
+
+    Dado que a configuração do sistema é: <span class="global" name="configuracao">th.example.CityConfiguration</span>, ajuste a <span class="hbmcfg" type="configuracao" name="cfg">configuração
         Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span> e recrie o <span class="hbmsch" schema="CTI" configuration="cfg">esquema</span>.
 <p>
-    Considerando que o número de registro mínimo em cada tabela é de <span class="global" name="quantidade">20</span> itens. Considerando também o campo de identificador do endereço como <span
+    Considerando que o número de registro mínimo em cada tabela é de <span class="global" name="quantidade">1</span> itens. Considerando também o campo de identificador do endereço como <span
         class="local" name="id">ID</span>, preencha a base de dados com:
 <table>
     <tr>
         <td valign="top">Lista de cidades:
-            <table class="objins" mapping="/city.html" reference="name">
+            <table class="objins" mapping='"/"+"city"+".html"' reference_='"n"+"a"+"m"+"e"'>
                 <caption>Cidades</caption>
                 <tr>
                     <th>Nome</th>

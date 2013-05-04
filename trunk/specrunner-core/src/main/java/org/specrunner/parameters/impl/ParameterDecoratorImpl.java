@@ -67,6 +67,11 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     }
 
     @Override
+    public String clear(String name) {
+        return name.replace(INVERT_FLAG, "");
+    }
+
+    @Override
     public Object getParameter(String name) {
         if (hasParameter(name)) {
             try {
@@ -84,10 +89,14 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     @Override
     public Object setParameter(String name, Object value, IContext context) {
         Object newValue = value;
+        boolean invert = name.contains(INVERT_FLAG);
+        if (invert) {
+            name = clear(name);
+        }
         if (hasParameter(name)) {
             try {
                 IAccess s = checked.get(name);
-                newValue = prepareValue(s, value, context);
+                newValue = prepareValue(s, value, context, invert);
                 s.set(decorated, name, newValue);
                 parameters.put(name, newValue);
             } catch (Exception e) {
@@ -109,22 +118,35 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
      *            The value.
      * @param context
      *            The context.
+     * @param invert
+     *            Force evaluation, despite of having <code>@DontEval</code> in
+     *            plugin code, or give up evaluation if it is expected.
      * @return The value after preparation.
      * @throws PluginException
      *             On processing errors.
      */
-    private Object prepareValue(IAccess s, Object value, IContext context) throws PluginException {
-        boolean eval = true;
+    private Object prepareValue(IAccess s, Object value, IContext context, boolean invert) throws PluginException {
+        boolean enable = evalEnable(s);
+        if (invert) {
+            enable = !enable;
+        }
+        return enable ? UtilEvaluator.evaluate(String.valueOf(value), context) : value;
+    }
+
+    /**
+     * Check if <code>@DontEval</code> annotation is present in feature.
+     * 
+     * @param s
+     *            The feature access.
+     * @return false, if annotation present, true, otherwise.
+     */
+    protected boolean evalEnable(IAccess s) {
         for (Annotation a : s.getAnnotations()) {
             if (a.annotationType() == DontEval.class) {
-                eval = false;
-                break;
+                return false;
             }
         }
-        if (eval) {
-            value = UtilEvaluator.evaluate(String.valueOf(value), context);
-        }
-        return value;
+        return true;
     }
 
     @Override

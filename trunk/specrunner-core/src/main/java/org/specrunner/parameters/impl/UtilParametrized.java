@@ -71,6 +71,7 @@ public final class UtilParametrized {
                     String name = n.getQualifiedName();
                     Object newValue = p.setParameter(name, value, context);
                     // every local attribute became a local variable
+                    name = p.clear(name);
                     context.saveLocal(UtilEvaluator.asVariable(name), newValue);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
