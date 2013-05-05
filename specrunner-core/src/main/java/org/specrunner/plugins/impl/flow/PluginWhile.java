@@ -168,7 +168,7 @@ public class PluginWhile extends AbstractPluginValue {
      *             On evaluation errors.
      */
     protected boolean checkCondition(String test, IContext context) throws PluginException {
-        Object tmp = UtilEvaluator.evaluate(test, context);
+        Object tmp = UtilEvaluator.evaluate(test, context, true);
         return tmp instanceof Boolean && (Boolean) tmp;
     }
 }

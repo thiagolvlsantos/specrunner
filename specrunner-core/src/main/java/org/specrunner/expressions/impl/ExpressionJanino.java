@@ -105,7 +105,7 @@ public class ExpressionJanino extends AbstractExpression {
             String[] vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
             for (String str : vars) {
                 ExpressionVariable var = new ExpressionVariable(getParent(), str);
-                Object result = var.evaluate(context);
+                Object result = var.evaluate(context, silent);
                 if (result != null) {
                     args.add(str);
                     values.add(result);
@@ -116,7 +116,7 @@ public class ExpressionJanino extends AbstractExpression {
                     // if value is itself an expression should be evaluated
                     if (value instanceof String) {
                         try {
-                            value = UtilEvaluator.evaluate((String) value, context);
+                            value = UtilEvaluator.evaluate((String) value, context, silent);
                         } catch (Exception e) {
                             if (UtilLog.LOG.isTraceEnabled()) {
                                 UtilLog.LOG.trace(e.getMessage(), e);
@@ -173,6 +173,9 @@ public class ExpressionJanino extends AbstractExpression {
                 } catch (IOException e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                    if (!silent) {
+                        throw new ExpressionException(e);
                     }
                 }
             }

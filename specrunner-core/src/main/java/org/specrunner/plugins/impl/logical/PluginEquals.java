@@ -134,8 +134,8 @@ public class PluginEquals extends AbstractPluginDual {
                         receivedValue = cell.getAttribute("value");
                     }
                 }
-                objExpected = UtilEvaluator.evaluate(expectedValue, context);
-                objReceived = UtilEvaluator.evaluate(receivedValue, context);
+                objExpected = UtilEvaluator.evaluate(expectedValue, context, true);
+                objReceived = UtilEvaluator.evaluate(receivedValue, context, true);
             }
         }
 

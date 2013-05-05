@@ -409,7 +409,7 @@ public class PluginScripts extends AbstractPluginValue {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Command before: " + command);
                     }
-                    command = UtilEvaluator.replace(command, context);
+                    command = UtilEvaluator.replace(command, context, true);
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info(" Command after: " + command);
                     }

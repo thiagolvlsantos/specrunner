@@ -485,7 +485,7 @@ public class PluginBrowser extends AbstractPluginScoped {
 
             BrowserVersion bVersion = null;
             try {
-                bVersion = (BrowserVersion) UtilEvaluator.evaluate(BrowserVersion.class.getName() + "." + version, context);
+                bVersion = (BrowserVersion) UtilEvaluator.evaluate(BrowserVersion.class.getName() + "." + version, context, false);
             } catch (Exception e) {
                 throw new PluginException("The plugin version " + version + " is invalid.", e);
             }

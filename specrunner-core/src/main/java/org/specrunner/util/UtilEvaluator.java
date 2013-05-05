@@ -77,11 +77,13 @@ public final class UtilEvaluator {
      *            The text expression.
      * @param context
      *            A context.
+     * @param silent
+     *            To evaluate expressions silently.
      * @return The result.
      * @throws PluginException
      *             On evaluation errors.
      */
-    public static Object evaluate(String text, IContext context) throws PluginException {
+    public static Object evaluate(String text, IContext context, boolean silent) throws PluginException {
         if (text == null) {
             return null;
         }
@@ -92,7 +94,7 @@ public final class UtilEvaluator {
         if (pos1 < 0 && pos2 < 0) {
             try {
                 expression = SpecRunnerServices.get(IExpressionFactory.class).create(text, context);
-                result = expression.evaluate(context);
+                result = expression.evaluate(context, silent);
             } catch (SpecRunnerException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -133,11 +135,13 @@ public final class UtilEvaluator {
      *            The text to be replaced.
      * @param context
      *            A context.
+     * @param silent
+     *            To evaluate expressions silently.
      * @return The replaced text.
      * @throws PluginException
      *             On replacing errors.
      */
-    public static String replace(String text, IContext context) throws PluginException {
+    public static String replace(String text, IContext context, boolean silent) throws PluginException {
         String result = text;
         int pos1 = text.indexOf(START_CODE);
         int pos2 = text.indexOf(END, pos1 + 2);
@@ -151,7 +155,7 @@ public final class UtilEvaluator {
             String content = text.substring(pos1 + 2, pos2);
             try {
                 IExpression expression = SpecRunnerServices.get(IExpressionFactory.class).create(content, context);
-                Object local = expression.evaluate(context);
+                Object local = expression.evaluate(context, silent);
                 if (local != null) {
                     String name = START_CODE + content + END;
                     result = replace(result, name, local);

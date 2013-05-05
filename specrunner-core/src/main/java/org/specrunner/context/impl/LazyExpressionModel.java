@@ -72,7 +72,7 @@ public class LazyExpressionModel<T> implements IModel<T> {
     @Override
     public T getObject(IContext context) throws ContextException {
         try {
-            return (T) UtilEvaluator.evaluate(String.valueOf(source), context);
+            return (T) UtilEvaluator.evaluate(String.valueOf(source), context, true);
         } catch (PluginException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
