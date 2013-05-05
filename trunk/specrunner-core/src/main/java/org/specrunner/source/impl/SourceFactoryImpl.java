@@ -23,7 +23,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -31,9 +34,8 @@ import nu.xom.Builder;
 import nu.xom.DocType;
 import nu.xom.Document;
 
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.cyberneko.html.HTMLConfiguration;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -59,6 +61,11 @@ import org.specrunner.util.cache.ICacheFactory;
 public class SourceFactoryImpl implements ISourceFactory {
 
     /**
+     * Default encoding.
+     */
+    public static final String DEFAULT_ENCODING = "ISO-8859-1";
+
+    /**
      * Cache of files.
      */
     private static ThreadLocal<ICache<Document>> cache = new ThreadLocal<ICache<Document>>() {
@@ -67,6 +74,11 @@ public class SourceFactoryImpl implements ISourceFactory {
             return SpecRunnerServices.get(ICacheFactory.class).newCache(SourceFactoryImpl.class.getName());
         };
     };
+
+    /**
+     * A builder instance.
+     */
+    private Builder instance;
 
     @Override
     public ISource newSource(final InputStream source) throws SourceException {
@@ -99,6 +111,7 @@ public class SourceFactoryImpl implements ISourceFactory {
                         return addDoctype(build);
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     if (obj != null) {
                         try {
                             obj.close();
@@ -134,66 +147,123 @@ public class SourceFactoryImpl implements ISourceFactory {
         return new SourceImpl(strTmp, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
-                if (uri != null) {
-                    Builder builder = getBuilder();
-                    try {
-                        synchronized (builder) {
-                            Document document = cache.get().get(target);
-                            if (document == null) {
-                                document = addDoctype(builder.build(target));
-                                cache.get().put(target, document);
-                            }
-                            return (Document) document.copy();
-                        }
-                    } catch (Exception e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e.getMessage(), e);
-                        }
-                        e.printStackTrace();
-                        throw new SourceException("Could not load the 'String/URI' source '" + target + "'.", e);
+                long time = System.currentTimeMillis();
+                Document result = cache.get().get(target);
+                if (result == null) {
+                    result = fromTarget(uri, target);
+                }
+                result = (Document) result.copy();
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Load time " + (System.currentTimeMillis() - time) + " ms for: " + target);
+                }
+                return result;
+            }
+
+        });
+    }
+
+    /**
+     * Load a document from a target.
+     * 
+     * @param uri
+     *            The target corresponding uri (if any).
+     * @param target
+     *            The target.
+     * @return The document, if exists, null, otherwise.
+     * @throws SourceException
+     *             On load error.
+     */
+    protected Document fromTarget(URI uri, String target) throws SourceException {
+        Document document = null;
+        InputStream fin = null;
+        InputStream bin = null;
+        String charset = null;
+        try {
+            if (uri == null || !target.startsWith("http")) {
+                fin = new FileInputStream(cleanTarget(target));
+            } else {
+                fin = uri.toURL().openStream();
+            }
+            bin = new BufferedInputStream(fin);
+            // charset
+            IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+            charset = (String) fm.get(ISourceFactory.FEATURE_ENCODING);
+            if (charset == null) {
+                charset = DEFAULT_ENCODING;
+            }
+            ISource fromReader = newSource(new InputStreamReader(bin, charset));
+            document = fromReader.getDocument();
+            cache.get().put(target, document);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceException("Could not load the source '" + target + "'.", e);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceException("Unsupported charset '" + charset + "'.", e);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceException("Invalid URI '" + uri + "'.", e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceException("Reading exception.", e);
+        } catch (SourceException e) {
+            e.printStackTrace();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceException("Could not load the source '" + target + "'.", e);
+        } finally {
+            if (bin != null) {
+                try {
+                    bin.close();
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Close file buffered inputstream:" + target);
                     }
-                } else {
-                    FileInputStream fin = null;
-                    BufferedInputStream bin = null;
-                    try {
-                        fin = new FileInputStream(target);
-                        bin = new BufferedInputStream(fin);
-                        return newSource(bin).getDocument();
-                    } catch (FileNotFoundException e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e.getMessage(), e);
-                        }
-                        e.printStackTrace();
-                        throw new SourceException("Could not load the 'String/File' source '" + target + "'.", e);
-                    } finally {
-                        if (fin != null) {
-                            try {
-                                fin.close();
-                                if (UtilLog.LOG.isDebugEnabled()) {
-                                    UtilLog.LOG.debug("Close file inputstream:" + target);
-                                }
-                            } catch (IOException e) {
-                                if (UtilLog.LOG.isTraceEnabled()) {
-                                    UtilLog.LOG.trace(e.getMessage(), e);
-                                }
-                            }
-                        }
-                        if (bin != null) {
-                            try {
-                                bin.close();
-                                if (UtilLog.LOG.isDebugEnabled()) {
-                                    UtilLog.LOG.debug("Close file buffered inputstream:" + target);
-                                }
-                            } catch (IOException e) {
-                                if (UtilLog.LOG.isTraceEnabled()) {
-                                    UtilLog.LOG.trace(e.getMessage(), e);
-                                }
-                            }
-                        }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
                     }
                 }
             }
-        });
+            if (fin != null) {
+                try {
+                    fin.close();
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Close file inputstream:" + target);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
+        }
+        return document;
+    }
+
+    /**
+     * Clean the target name.
+     * 
+     * @param target
+     *            The target.
+     * @return The target normalized.
+     */
+    protected String cleanTarget(String target) {
+        return target == null ? target : target.replace("file:///", "").replace("file://", "").replace("file:/", "");
     }
 
     /**
@@ -205,14 +275,10 @@ public class SourceFactoryImpl implements ISourceFactory {
      */
     protected Builder getBuilder() throws SourceException {
         try {
-            AbstractSAXParser neko = new AbstractSAXParser(new HTMLConfiguration()) {
-            };
-            neko.setFeature("http://xml.org/sax/features/namespaces", false);
-            neko.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
-            neko.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-            neko.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
-            neko.setProperty("http://cyberneko.org/html/properties/default-encoding", "ISO-8859-1");
-            return new Builder(neko, true);
+            if (instance == null) {
+                instance = new Builder();
+            }
+            return instance;
         } catch (Exception e) {
             throw new SourceException(e);
         }

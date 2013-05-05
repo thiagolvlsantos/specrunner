@@ -29,6 +29,11 @@ import java.io.Reader;
 public interface ISourceFactory {
 
     /**
+     * Name of feature to set reader encoding.
+     */
+    String FEATURE_ENCODING = ISourceFactory.class + ".encoding";
+
+    /**
      * Creates a source from a InputStream.
      * 
      * @param source

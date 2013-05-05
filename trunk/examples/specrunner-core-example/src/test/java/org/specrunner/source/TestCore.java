@@ -20,7 +20,7 @@ public class TestCore extends TstPai {
     }
 
     public static void main(String[] args) throws Exception {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 1000; i++) {
             new TestCore().rodarTeste();
         }
     }
