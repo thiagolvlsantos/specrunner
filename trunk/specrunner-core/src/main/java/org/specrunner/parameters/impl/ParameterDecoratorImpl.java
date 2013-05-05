@@ -130,7 +130,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
         if (invert) {
             enable = !enable;
         }
-        return enable ? UtilEvaluator.evaluate(String.valueOf(value), context) : value;
+        return enable ? UtilEvaluator.evaluate(String.valueOf(value), context, true) : value;
     }
 
     /**

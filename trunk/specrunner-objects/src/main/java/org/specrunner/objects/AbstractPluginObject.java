@@ -479,7 +479,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 int i = 0;
                 List<Object> args = new LinkedList<Object>();
                 while (cell.hasAttribute("arg" + i)) {
-                    args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context));
+                    args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context, true));
                     i++;
                 }
                 if (f.getArgs() == null || !args.isEmpty()) {
@@ -929,7 +929,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 String text = cell.getElement().getValue();
                 Object value = text;
                 if (text.isEmpty()) {
-                    value = UtilEvaluator.evaluate(f.def, context);
+                    value = UtilEvaluator.evaluate(f.def, context, true);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("USING_DEFAULT>" + value);
                     }

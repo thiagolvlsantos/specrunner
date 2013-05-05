@@ -21,9 +21,9 @@ import nu.xom.Node;
 import nu.xom.Text;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -52,7 +52,7 @@ public class PluginReplacer extends AbstractPlugin {
         Node e = context.getNode();
         if (e instanceof Text) {
             String text = e.getValue();
-            String replaced = UtilEvaluator.replace(text, context);
+            String replaced = UtilEvaluator.replace(text, context, true);
             if (UtilLog.LOG.isDebugEnabled() && !text.equals(replaced)) {
                 UtilLog.LOG.debug("replacer_before>" + text);
                 UtilLog.LOG.debug("replacer_after>" + replaced + "." + replaced.getClass());

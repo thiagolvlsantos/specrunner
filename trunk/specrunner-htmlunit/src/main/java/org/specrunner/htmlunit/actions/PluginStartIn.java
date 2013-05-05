@@ -20,8 +20,8 @@ package org.specrunner.htmlunit.actions;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -83,7 +83,7 @@ public class PluginStartIn extends AbstractPluginUrlAware {
         String u = null;
         if (provider == null) {
             u = getUrl() != null ? getUrl() : node.getValue();
-            u = String.valueOf(UtilEvaluator.evaluate(u, context));
+            u = String.valueOf(UtilEvaluator.evaluate(u, context, true));
         } else {
             try {
                 if (UtilLog.LOG.isInfoEnabled()) {
