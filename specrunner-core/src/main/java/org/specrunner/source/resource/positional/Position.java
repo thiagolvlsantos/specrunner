@@ -18,7 +18,8 @@
 package org.specrunner.source.resource.positional;
 
 /**
- * Stand for a position in the document where something can be, i.e., added.
+ * Stand for a position in the document where something can be added, i.e.,
+ * //head.
  * 
  * @author Thiago Santos
  * 
