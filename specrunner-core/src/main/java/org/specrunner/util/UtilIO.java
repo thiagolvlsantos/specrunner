@@ -71,26 +71,29 @@ public final class UtilIO {
             for (InputStream in : ins) {
                 writeTo(in, out);
                 in.close();
+                ins[i] = null;
                 i++;
             }
         } catch (IOException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+        } finally {
             if (ins != null) {
                 for (int j = 0; j < i; j++) {
                     try {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug("Closing " + ins[j]);
                         }
-                        ins[j].close();
-                    } catch (IOException e1) {
+                        if (ins[j] != null) {
+                            ins[j].close();
+                        }
+                    } catch (IOException e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e1.getMessage(), e1);
+                            UtilLog.LOG.debug(e.getMessage(), e);
                         }
                     }
                 }
-            }
-
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
     }
