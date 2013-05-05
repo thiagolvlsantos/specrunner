@@ -272,7 +272,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      * @param file
      *            The reference file.
      * @throws ResultException
-     *             On result erorrs.
+     *             On cleanup errors.
      */
     protected void clean(File file) throws ResultException {
         if (file.isDirectory()) {
