@@ -1,24 +1,25 @@
 <html>
 <style type="text/css">
 .dados {
-	background-color: #DDDDDD;
-	border: 1px solid black;
+    background-color: #DDDDDD;
+    border: 1px solid black;
 }
 </style>
-
 <p>
 	Dado que a configuração do sistema é: <span class="global"
 		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
 		class="hbmcfg" type="${configuracao}" name="cfg">configuração
-		Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span>
-	e recrie o <span class="hbmsch" schema="CTI"  configuration="cfg">esquema</span>.
-
+		Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span> e
+	recrie o <span class="hbmsch" schema="CTI" configuration="cfg">esquema</span>.
+</p>
 
 <p>
 	Considerando que o número de registro mínimo em cada tabela é de <span
-		class="global" name="quantidade">10</span> itens.
-	Considerando também o campo de identificador do endereço como <span
-		class="local" name="id">ID</span>, preencha a base de dados com:
+		class="global" name="quantidade">10</span> itens. Considerando também
+	o campo de identificador do endereço como <span class="local" name="id">ID</span>,
+	preencha a base de dados com:
+</p>	
+
 <table>
 	<tr>
 		<td valign="top">Lista de cidades:
@@ -28,10 +29,11 @@
 				<tr>
 					<th default="-1">ID</th>
 					<th field="name">Nome</th>
-					<th field="foundation" converter="datePatternArgs" arg0="dd/MM/yyyy">Data
-						de fundação</th>
+					<th field="foundation" converter="datePatternArgs"
+						arg0="dd/MM/yyyy">Data de fundação</th>
 					<th field="status" converter="bool">Ativa</th>
-					<th field="lastUpdate" converter="dateCurrent">Última atualização</th>
+					<th field="lastUpdate" converter="dateCurrent">Última
+						atualização</th>
 				</tr>
 				<tr>
 					<td></td>
@@ -66,10 +68,10 @@
 				</tbody>
 			</table>
 		</td>
-		<td valign=top>Lista de endereços:
+		<td valign="top">Lista de endereços:
 
 			<table class="input map" after="true" type="th.example.Address"
-				reference="id" separator="/" name="enderecos" scope="body">
+				reference="id" separator="/" name="enderecos" scope="html">
 				<caption>Endereço</caption>
 				<tr>
 					<th default="-1" field="id">${id} do endereço</th>
@@ -101,31 +103,32 @@
 			<ul class="iterator" name="enderecos">
 				<li>#{Rua}->#{Cidade}</li>
 			</ul>
+			</p>
 		</td>
 	</tr>
 </table>
 Atualizar os valores:
 <table class="objupd" type="th.example.City" reference="name">
-    <caption>Cidades</caption>
-    <tr>
-        <th field="name">Nome</th>
-        <th field="status" converter="bool">Ativa</th>
-    </tr>
-    <tr>
-        <td>Recife</td>
-        <td>Não</td>
-    </tr>
+	<caption>Cidades</caption>
+	<tr>
+		<th field="name">Nome</th>
+		<th field="status" converter="bool">Ativa</th>
+	</tr>
+	<tr>
+		<td>Recife</td>
+		<td>Não</td>
+	</tr>
 </table>
 
 Remove o valor:
 <table class="objdel" type="th.example.City" reference="name">
-    <caption>Cidades</caption>
-    <tr>
-        <th field="name">Nome</th>
-    </tr>
-    <tr>
-        <td>Salvador</td>
-    </tr>
+	<caption>Cidades</caption>
+	<tr>
+		<th field="name">Nome</th>
+	</tr>
+	<tr>
+		<td>Salvador</td>
+	</tr>
 </table>
 
 Conferir que a base contém:
@@ -165,13 +168,12 @@ Conferir que a base contém:
 
 Conferir que a base NÃO contém:
 <table class="objoff" type="th.example.City" reference="name">
-    <caption>Cidades</caption>
-    <tr>
-        <th field="name">Nome</th>
-    </tr>
-    <tr>
-        <td>Salvador</td>
-    </tr>
+	<caption>Cidades</caption>
+	<tr>
+		<th field="name">Nome</th>
+	</tr>
+	<tr>
+		<td>Salvador</td>
+	</tr>
 </table>
-
 </html>

@@ -1,7 +1,7 @@
+<html>
 <link rel="stylesheet" type="text/css" href="specrunner.css" />
 <script type="text/javascript" src="specrunner.js">
 <!-- comment -->
-	
 </script>
 <div>
     <h1>SpecRunner examples</h1>
@@ -9,25 +9,33 @@
     Com X global:
     <p>
         x = <span class="global" any="x" name='${any}'>a</span>
-    <p>Y global:
+        </p>
+    <p>Y global:</p>
     <p>
         y = <span class="global" name="y">c</span>
+        </p>
     <p>
         então x+y = z = <span class="local" name="z">${x+y}</span>, logo \${"ac".equals(z)} = ${"ac".equals( z )}. Verificando que: \${"ac".equals( z )} = <span class="eq"> <span class="left">${"ac".equals(
                 z )}</span> = <span class="right">true</span>
         </span>
-    <p>Y local:
+        </p>
+    <p>Y local:</p>
     <p>
         y = <span class="local" name="y">b</span> então x+y = \${x + y} = ${x + y}.
+        </p>
     <p>Y geral continua em ${y}.
+    </p>
 </div>
+
 <h2>Assertion (equals)</h2>
 <p>
     Positive: <span class="eq">\${2 + 5} = <span class="left">${2 + 5}</span> = <span class="right">7</span>
     </span>
+    </p>
 <p>
     Negative: <span class="neq">\${2 + 5} != <span class="left">${2 + 7}</span> != <span class="right">10</span>
     </span>
+    </p>
 <h2>Loops</h2>
 Loop com min =
 <span class="local" name="minimo" eval="true">4</span>
@@ -39,7 +47,7 @@ Loop com min =
 <span class="local" name="varname">variavel</span>
 ':
 <span class="for" min="${minimo}" max="${maximo}" var="${varname}" step="${passos}">
-    <p>Numero ${variavel}
+    <p>Numero ${variavel}</p>
 </span>
 <h2>Table generation</h2>
 <p>Gerando tabelas:
@@ -54,14 +62,16 @@ Loop com min =
         </tr>
     </tbody>
 </table>
+</p>
 <h2>Conditional flows</h2>
 <p>
     Execução condicional: <span class="global" name="num" eval="true">${System.currentTimeMillis() % 2 == 0}</span>
-<p>Normal (${num}):
+    </p>
+<p>Normal (${num}):</p>
 <p>
 <div>
     Se <span class="if">${num}</span>
-    <br>
+    <br/>
     <div class="then">
         então ${4 + 9} -> Número par ${new java.util.Date()}
         <table class="if" border="1" value="${System.currentTimeMillis() % 2 == 0}">
@@ -73,35 +83,35 @@ Loop com min =
             </tr>
         </table>
     </div>
-    <br>
+    <br/>
     <div class="else">senão ${3 + 7} -> Número impar ${new java.util.Date()}</div>
 </div>
 </p>
 <p>
     Negação (${!num}):
-    <if value="${!num}"> <span class="then"><br />Número par, caso ${!num}</span> <span class="else"><br>Número impar, caso contrário.</span> </if>
+    <if value="${!num}"> <span class="then"><br />Número par, caso ${!num}</span> <span class="else"><br/>Número impar, caso contrário.</span> </if>
+    </p>
 <h2>File inclusion</h2>
 Usar o arquivo '
 <a class="include" href="source.html">source.html</a>
 '.
 <h2>Macro definition</h2>
-<p>
     Definindo a macro '<span class="global" name="nome">incluir arquivo</span>' como:
-<div class="macro" name="${nome}">
-    <p>
-        Incluindo o arquivo '<span class="local" name="link">source.html</span>' <span class="local" name="count" eval="true">6</span> vezes:
-    <table>
-        <tr class="for" max="${count}" align="left" valign="top">
-            <td><a class="include" href="${link}">${index} - nome do arquivo.</a></td>
-        </tr>
-    </table>
-    .
-    </p>
-</div>
-</p>
+	<div class="macro" name="${nome}">
+	    <p>
+	        Incluindo o arquivo '<span class="local" name="link">source.html</span>' <span class="local" name="count" eval="true">6</span> vezes:
+	    <table>
+	        <tr class="for" max="${count}" align="left" valign="top">
+	            <td><a class="include" href="${link}">${index} - nome do arquivo.</a></td>
+	        </tr>
+	    </table>
+	    .
+	    </p>
+	</div>
 <h2>Macro usage</h2>
 <p>
     Usando a macro '<span class="call">incluir arquivo</span>'.
+    </p>
 <p>
     Usando a macro '<span class="call">incluir arquivo</span>' novamente.
 </p>
@@ -132,3 +142,4 @@ Exemplo com condição nomeada:
         </tbody>
     </table>
 </div>
+</html>

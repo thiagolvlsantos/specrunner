@@ -65,6 +65,7 @@ public final class SpecRunnerJUnit {
             IResultSet result = SpecRunnerServices.getSpecRunner().run(input, cfg);
             Assert.assertTrue(result.asString(), !result.getStatus().isError());
         } catch (Exception e) {
+            e.printStackTrace();
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }

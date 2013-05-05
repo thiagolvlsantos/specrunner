@@ -1,3 +1,4 @@
+<html>
 Browser default in IP(${host}-${ip}).
 <p>
 Start <span class="jettyStart" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> then
@@ -7,6 +8,7 @@ Start <span class="jettyStart" scope="html" file="/jetty.xml" dynamic="true" reu
 <span class="size" condition='!browser_type.equals("HtmlUnitDriverLocal")' width="500" height="500">open</span> ${browser_type} 
 </span> 
 browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvider">default location</span>.
+</p>
 
 <!-- table>
     <tr><td class="open">/application</td></tr>
@@ -27,7 +29,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
 	<li>The page contains <span class="contains">Dynamic dates</span>;</li>
 	<li>The page does not contain <span class="notContains">Static dates</span>;</li>
     <li>Table information might be :<span class="compareTable" by="xpath://table[@id='tableId']" >
-			<table border=1>
+			<table border='1'>
 				<caption>Dynamic dates</caption>
 				<tr>
 					<th>ID</th>
@@ -37,7 +39,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
 				<tr>
 					<td>1</td>
 					<td type="date" format="HH:mm" value='${dt.toString("HH:mm")}'>current date</td>
-					<td>A&aacute;</td>
+					<td>Aá</td>
 				</tr>
 				<tr>
 					<td>2</td>
@@ -45,8 +47,8 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
 					<td>B</td>
 				</tr>
 				<tr>
-					<td colspan=3 type="table">
-						<table border=1>
+					<td colspan="3" type="table">
+						<table border="1">
 							<caption>Inner table</caption>
 							<tr>
 								<th>Name</th>
@@ -58,7 +60,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
 							</tr>
 							<tr>
 								<td type="table">
-									<table border=1>
+									<table border="1">
 										<caption>Super Inner table</caption>
 										<tr>
 											<th>Name</th>
@@ -73,7 +75,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
                                 <td ignore="true">Celula ignorada na comparação</td>
 							</tr>
                             <tr>
-                                <td colspan="2" ignore=true>
+                                <td colspan="2" ignore="true">
                                     Criar uma feature de verificação estrita de elementos um-a-um:
                                     <input type="text" value="Linha1"/>
                                     <textarea>Texto1</textarea>
@@ -185,3 +187,4 @@ Text field and area examples:
 <!-- Perform the same using <a href="other.html" class="include">another strategy</a>. -->
 
 <!--p class="jettyStop">Stop Jetty</p-->
+</html>

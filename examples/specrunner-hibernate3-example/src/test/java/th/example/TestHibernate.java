@@ -127,5 +127,4 @@ public class TestHibernate {
     public void rodarHibernate9() throws Exception {
         run(9);
     }
-
 }
