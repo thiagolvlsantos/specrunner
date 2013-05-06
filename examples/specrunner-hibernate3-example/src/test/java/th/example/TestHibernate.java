@@ -1,7 +1,10 @@
 package th.example;
 
+import java.io.IOException;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
@@ -19,9 +22,21 @@ import org.specrunner.util.converter.impl.ConverterBooleanTemplate;
 @Concurrent(threads = 3)
 public class TestHibernate {
 
+    public static Object lock = new Object();
+    public static Boolean done = false;
+
+    @BeforeClass
+    public static void antes() {
+        synchronized (lock) {
+            if (!done) {
+                // pause();
+                done = true;
+            }
+        }
+    }
+
     @Before
     public void setUpConverters() {
-        pause();
         IConverterManager cf = SpecRunnerServices.get(IConverterManager.class);
         cf.put("bool", new ConverterBooleanTemplate("Sim", "Não"));
 
@@ -63,19 +78,19 @@ public class TestHibernate {
         // "hbmcfg"));
     }
 
-    private void pause() {
-        // try {
-        // System.out.println("Enter");
-        // System.in.read(new byte[12]);
-        // } catch (IOException e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
+    private static void pause() {
+        try {
+            System.out.println("Enter");
+            System.in.read(new byte[12]);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
-    protected void run(int index) {
+    public static void run(int index) {
         SpecRunnerJUnit.defaultRun("src/test/resources/income/hibernate.html", "src/test/resources/outcome/hibernate" + index + ".html");
-        pause();
+        // pause();
     }
 
     @Test

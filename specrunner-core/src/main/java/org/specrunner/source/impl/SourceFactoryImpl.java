@@ -34,6 +34,8 @@ import nu.xom.Builder;
 import nu.xom.DocType;
 import nu.xom.Document;
 
+import org.apache.xerces.parsers.AbstractSAXParser;
+import org.cyberneko.html.HTMLConfiguration;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.source.IDocumentLoader;
@@ -45,9 +47,9 @@ import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 
 /**
- * The default implementation. Uses a NekoHTML reader, e XOM to read the
+ * The default implementation. Uses a NekoHTML parser under XOM to read the
  * specification. The use of NekoHTML allows using less rigid XML/HTML documents
- * which are fixed on reading time.
+ * which are fixed by NekoHTML on reading time.
  * 
  * <p>
  * The settings of NekoHTML makes the XML attributes name be in lower case. This
@@ -74,11 +76,6 @@ public class SourceFactoryImpl implements ISourceFactory {
             return SpecRunnerServices.get(ICacheFactory.class).newCache(SourceFactoryImpl.class.getName());
         };
     };
-
-    /**
-     * A builder instance.
-     */
-    private Builder instance;
 
     @Override
     public ISource newSource(final InputStream source) throws SourceException {
@@ -151,6 +148,7 @@ public class SourceFactoryImpl implements ISourceFactory {
                 Document result = cache.get().get(target);
                 if (result == null) {
                     result = fromTarget(uri, target);
+                    cache.get().put(target, result);
                 }
                 result = (Document) result.copy();
                 if (UtilLog.LOG.isInfoEnabled()) {
@@ -160,6 +158,71 @@ public class SourceFactoryImpl implements ISourceFactory {
             }
 
         });
+    }
+
+    /**
+     * Return the XOM document builder.
+     * 
+     * @return The builder.
+     * @throws SourceException
+     *             On builder recover error.
+     */
+    protected Builder getBuilder() throws SourceException {
+        try {
+            // i've tried to use the same builder, but there is something
+            // wrong with NekoHTML parser o reuse, leaving this way for while.
+            return new Builder(getParser(), true);
+        } catch (Exception e) {
+            throw new SourceException(e);
+        }
+    }
+
+    /**
+     * Get the parser.
+     * 
+     * @return A SaxParser.
+     * @throws Exception
+     *             On creation error.
+     */
+    protected AbstractSAXParser getParser() throws Exception {
+        AbstractSAXParser parser = new AbstractSAXParser(new HTMLConfiguration()) {
+        };
+        parser.setFeature("http://xml.org/sax/features/namespaces", false);
+        parser.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
+        parser.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
+        parser.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
+        parser.setProperty("http://cyberneko.org/html/properties/default-encoding", getEncoding());
+        return parser;
+    }
+
+    /**
+     * Get encoding information.
+     * 
+     * @return The expected encoding of input.
+     */
+    protected String getEncoding() {
+        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        String charset = (String) fm.get(ISourceFactory.FEATURE_ENCODING);
+        if (charset == null) {
+            charset = DEFAULT_ENCODING;
+        }
+        return charset;
+    }
+
+    /**
+     * Adds the XHTML Doctype to the document if none is specified.
+     * 
+     * @param document
+     *            The document.
+     * @return The document itself.
+     */
+    protected Document addDoctype(Document document) {
+        if (document.getDocType() == null) {
+            // <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+            DocType dt = new DocType("html", "-//W3C//DTD XHTML 1.0 Transitional//EN", "");
+            document.insertChild(dt, 0);
+        }
+        return document;
     }
 
     /**
@@ -174,10 +237,10 @@ public class SourceFactoryImpl implements ISourceFactory {
      *             On load error.
      */
     protected Document fromTarget(URI uri, String target) throws SourceException {
+        String encoding = getEncoding();
         Document document = null;
         InputStream fin = null;
         InputStream bin = null;
-        String charset = null;
         try {
             if (uri == null || !target.startsWith("http")) {
                 fin = new FileInputStream(cleanTarget(target));
@@ -185,15 +248,8 @@ public class SourceFactoryImpl implements ISourceFactory {
                 fin = uri.toURL().openStream();
             }
             bin = new BufferedInputStream(fin);
-            // charset
-            IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-            charset = (String) fm.get(ISourceFactory.FEATURE_ENCODING);
-            if (charset == null) {
-                charset = DEFAULT_ENCODING;
-            }
-            ISource fromReader = newSource(new InputStreamReader(bin, charset));
+            ISource fromReader = newSource(new InputStreamReader(bin, encoding));
             document = fromReader.getDocument();
-            cache.get().put(target, document);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -205,7 +261,7 @@ public class SourceFactoryImpl implements ISourceFactory {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
-            throw new SourceException("Unsupported charset '" + charset + "'.", e);
+            throw new SourceException("Unsupported charset '" + encoding + "'.", e);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -264,39 +320,5 @@ public class SourceFactoryImpl implements ISourceFactory {
      */
     protected String cleanTarget(String target) {
         return target == null ? target : target.replace("file:///", "").replace("file://", "").replace("file:/", "");
-    }
-
-    /**
-     * Return the XOM document builder.
-     * 
-     * @return The builder.
-     * @throws SourceException
-     *             On builder recover error.
-     */
-    protected Builder getBuilder() throws SourceException {
-        try {
-            if (instance == null) {
-                instance = new Builder();
-            }
-            return instance;
-        } catch (Exception e) {
-            throw new SourceException(e);
-        }
-    }
-
-    /**
-     * Adds the XHTML Doctype to the document if none is specified.
-     * 
-     * @param document
-     *            The document.
-     * @return The document itself.
-     */
-    protected Document addDoctype(Document document) {
-        if (document.getDocType() == null) {
-            // <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
-            DocType dt = new DocType("html", "-//W3C//DTD XHTML 1.0 Transitional//EN", "");
-            document.insertChild(dt, 0);
-        }
-        return document;
     }
 }
