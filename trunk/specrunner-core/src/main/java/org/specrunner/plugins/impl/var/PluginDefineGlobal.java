@@ -31,7 +31,7 @@ public class PluginDefineGlobal extends AbstractPluginDefine {
     @Override
     protected boolean operation(Object obj, IContext context) {
         if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Bind_global(" + getName() + ")->" + obj + "(" + (obj != null ? obj.getClass() : "null") + ")");
+            UtilLog.LOG.debug("Bind_global(" + getName() + ")->'" + obj + "'(" + (obj != null ? obj.getClass() : "null") + ")");
         }
         saveGlobal(context, getName(), obj);
         return super.operation(obj, context);
