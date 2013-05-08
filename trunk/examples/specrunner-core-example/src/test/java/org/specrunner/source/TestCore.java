@@ -6,7 +6,6 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.transformer.ITransformer;
 import org.specrunner.transformer.impl.TransformerGroupImpl;
 import org.specrunner.transformer.impl.TransformerHref;
-import org.specrunner.util.UtilIO;
 
 public class TestCore extends TstPai {
 
@@ -21,8 +20,9 @@ public class TestCore extends TstPai {
     }
 
     public static void main(String[] args) throws Exception {
-        UtilIO.pressKey();
-        for (int i = 0; i < 1000; i++) {
+        // UtilIO.pressKey();
+        for (int i = 0; i < 10000; i++) {
+            System.out.println(i);
             new TestCore().rodarTeste();
         }
     }
