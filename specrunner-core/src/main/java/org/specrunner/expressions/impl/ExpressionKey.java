@@ -53,6 +53,31 @@ public class ExpressionKey {
     private Class<?>[] arrayTypes;
 
     /**
+     * Basic constructor.
+     */
+    public ExpressionKey() {
+    }
+
+    /**
+     * Basic constructor.
+     * 
+     * @param expression
+     *            The expression.
+     * @param returnType
+     *            The return type.
+     * @param arrayArgs
+     *            Argument names.
+     * @param arrayTypes
+     *            Argument types.
+     */
+    public ExpressionKey(String expression, Class<Object> returnType, String[] arrayArgs, Class<?>[] arrayTypes) {
+        this.expression = expression;
+        this.returnType = returnType;
+        this.arrayArgs = arrayArgs;
+        this.arrayTypes = arrayTypes;
+    }
+
+    /**
      * Assign information to a unique instance.
      * 
      * @param expression

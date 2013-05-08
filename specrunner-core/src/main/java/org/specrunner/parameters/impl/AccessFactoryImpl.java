@@ -41,7 +41,7 @@ public class AccessFactoryImpl implements IAccessFactory {
     /**
      * Cache for access information.
      */
-    private ICache<IAccess> cache;
+    private ICache<String, IAccess> cache;
 
     @Override
     public IAccess newAccess(Object target, String name) {

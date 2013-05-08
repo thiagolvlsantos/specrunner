@@ -15,10 +15,12 @@ import org.specrunner.util.cache.ICache;
  * 
  * @author Thiago Santos
  * 
+ * @param <K>
+ *            Key type.
  * @param <T>
  *            The cache object type.
  */
-public class CacheLRU<T> implements ICache<T> {
+public class CacheLRU<K, T> implements ICache<K, T> {
 
     /**
      * Cache name.
@@ -39,7 +41,7 @@ public class CacheLRU<T> implements ICache<T> {
     /**
      * Map of items.
      */
-    private Map<String, CacheEntry<T>> items = new HashMap<String, CacheEntry<T>>();
+    private Map<K, CacheEntry<K, T>> items = new HashMap<K, CacheEntry<K, T>>();
 
     /**
      * Basic constructor.
@@ -57,37 +59,37 @@ public class CacheLRU<T> implements ICache<T> {
     }
 
     @Override
-    public ICache<T> setName(String name) {
+    public ICache<K, T> setName(String name) {
         this.name = name;
         return this;
     }
 
     @Override
-    public ICache<T> setTimeout(long timeout) {
+    public ICache<K, T> setTimeout(long timeout) {
         this.timeout = timeout;
         return this;
     }
 
     @Override
-    public ICache<T> setSize(long size) {
+    public ICache<K, T> setSize(long size) {
         this.size = size;
         return this;
     }
 
     @Override
-    public ICache<T> setClean(long clean) {
+    public ICache<K, T> setClean(long clean) {
         this.clean = clean;
         return this;
     }
 
     @Override
-    public boolean contains(String key) {
+    public boolean contains(K key) {
         return items.containsKey(key);
     }
 
     @Override
-    public T get(String key) {
-        CacheEntry<T> item = items.get(key);
+    public T get(K key) {
+        CacheEntry<K, T> item = items.get(key);
         if (item != null) {
             if (!item.invalid(timeout)) {
                 item.renew();
@@ -106,20 +108,20 @@ public class CacheLRU<T> implements ICache<T> {
     }
 
     @Override
-    public ICache<T> put(String key, T value) {
+    public ICache<K, T> put(K key, T value) {
         if (items.size() > size) {
-            Set<CacheEntry<T>> set = new TreeSet<CacheEntry<T>>(items.values());
+            Set<CacheEntry<K, T>> set = new TreeSet<CacheEntry<K, T>>(items.values());
             int index = 0;
-            Iterator<CacheEntry<T>> ite = set.iterator();
+            Iterator<CacheEntry<K, T>> ite = set.iterator();
             while (index++ < clean && ite.hasNext()) {
-                CacheEntry<T> next = ite.next();
+                CacheEntry<K, T> next = ite.next();
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Cache '" + name + "' clean: " + key);
                 }
                 items.remove(next.getKey());
             }
         }
-        items.put(key, new CacheEntry<T>(key, value));
+        items.put(key, new CacheEntry<K, T>(key, value));
         return this;
     }
 }

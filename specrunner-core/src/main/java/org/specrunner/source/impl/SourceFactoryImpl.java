@@ -70,9 +70,9 @@ public class SourceFactoryImpl implements ISourceFactory {
     /**
      * Cache of files.
      */
-    private static ThreadLocal<ICache<Document>> cache = new ThreadLocal<ICache<Document>>() {
+    private static ThreadLocal<ICache<String, Document>> cache = new ThreadLocal<ICache<String, Document>>() {
         @Override
-        protected ICache<Document> initialValue() {
+        protected ICache<String, Document> initialValue() {
             return SpecRunnerServices.get(ICacheFactory.class).newCache(SourceFactoryImpl.class.getName());
         };
     };

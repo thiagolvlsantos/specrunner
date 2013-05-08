@@ -5,10 +5,12 @@ package org.specrunner.util.cache;
  * 
  * @author Thiago Santos.
  * 
+ * @param <K>
+ *            Key type.
  * @param <T>
  *            The object cache type.
  */
-public class CacheEntry<T> implements Comparable<CacheEntry<T>> {
+public class CacheEntry<K, T> implements Comparable<CacheEntry<K, T>> {
 
     /**
      * The time flat of this item.
@@ -17,7 +19,7 @@ public class CacheEntry<T> implements Comparable<CacheEntry<T>> {
     /**
      * The cache key.
      */
-    private String key;
+    private K key;
     /**
      * The object value.
      */
@@ -31,7 +33,7 @@ public class CacheEntry<T> implements Comparable<CacheEntry<T>> {
      * @param value
      *            The value.
      */
-    public CacheEntry(String key, T value) {
+    public CacheEntry(K key, T value) {
         timestamp = System.currentTimeMillis();
         this.key = key;
         this.value = value;
@@ -42,7 +44,7 @@ public class CacheEntry<T> implements Comparable<CacheEntry<T>> {
      * 
      * @return The key.
      */
-    public String getKey() {
+    public K getKey() {
         return key;
     }
 
@@ -74,7 +76,7 @@ public class CacheEntry<T> implements Comparable<CacheEntry<T>> {
     }
 
     @Override
-    public int compareTo(CacheEntry<T> o) {
+    public int compareTo(CacheEntry<K, T> o) {
         return (int) (timestamp - o.timestamp);
     }
 

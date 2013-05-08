@@ -11,11 +11,13 @@ public interface ICacheFactory {
     /**
      * Creates a new cache.
      * 
+     * @param <K>
+     *            Key type.
      * @param <T>
      *            Cache object type.
      * @param name
      *            Cache name.
      * @return A cache.
      */
-    <T> ICache<T> newCache(String name);
+    <K, T> ICache<K, T> newCache(String name);
 }

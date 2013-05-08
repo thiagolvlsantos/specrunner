@@ -5,10 +5,12 @@ package org.specrunner.util.cache;
  * 
  * @author Thiago Santos
  * 
+ * @param <K>
+ *            Key type.
  * @param <T>
  *            The cache object type.
  */
-public interface ICache<T> {
+public interface ICache<K, T> {
 
     /**
      * Get the cache name.
@@ -24,7 +26,7 @@ public interface ICache<T> {
      *            A cache.
      * @return The cache itself.
      */
-    ICache<T> setName(String name);
+    ICache<K, T> setName(String name);
 
     /**
      * Feature for cache timeout.
@@ -42,7 +44,7 @@ public interface ICache<T> {
      *            The timeout.
      * @return The cache itself.
      */
-    ICache<T> setTimeout(long timeout);
+    ICache<K, T> setTimeout(long timeout);
 
     /**
      * Feature for cache size.
@@ -60,7 +62,7 @@ public interface ICache<T> {
      *            The size.
      * @return The cache itself.
      */
-    ICache<T> setSize(long size);
+    ICache<K, T> setSize(long size);
 
     /**
      * Feature for cache clean.
@@ -78,7 +80,7 @@ public interface ICache<T> {
      *            The number of items to be removed.
      * @return The cache itself.
      */
-    ICache<T> setClean(long clean);
+    ICache<K, T> setClean(long clean);
 
     /**
      * Says if a key is mapped.
@@ -87,7 +89,7 @@ public interface ICache<T> {
      *            The key.
      * @return true, if mapped, false, otherwise.
      */
-    boolean contains(String key);
+    boolean contains(K key);
 
     /**
      * Get a cache object.
@@ -97,7 +99,7 @@ public interface ICache<T> {
      * @return A object, if an entry exists and is not out of date, null,
      *         otherwise.
      */
-    T get(String key);
+    T get(K key);
 
     /**
      * Put an element to the cache.
@@ -108,5 +110,5 @@ public interface ICache<T> {
      *            The object value.
      * @return The cache itself.
      */
-    ICache<T> put(String key, T value);
+    ICache<K, T> put(K key, T value);
 }
