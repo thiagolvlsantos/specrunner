@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.codehaus.janino.ExpressionEvaluator;
 import org.codehaus.janino.Scanner;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.expressions.ExpressionException;
@@ -32,6 +33,8 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * A Janino expression.
@@ -45,6 +48,11 @@ public class ExpressionJanino extends AbstractExpression {
      * The expression source.
      */
     private Object source;
+
+    /**
+     * Cache of expressions.
+     */
+    private static ICache<ExpressionEvaluator> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
 
     /**
      * Basic constructor.
@@ -219,8 +227,6 @@ public class ExpressionJanino extends AbstractExpression {
         return null;
     }
 
-    private static int serial = 0;
-
     /**
      * Evaluate the expression.
      * 
@@ -254,9 +260,19 @@ public class ExpressionJanino extends AbstractExpression {
                 UtilLog.LOG.trace(ne.getMessage(), ne);
                 UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
             }
-            System.out.println("eval(" + expression + "):" + serial++);
             try {
-                ExpressionEvaluator ee = new ExpressionEvaluator(expression, Object.class, arrayArgs, arrayTypes);
+                ExpressionEvaluator ee = null;
+                synchronized (cache) {
+                    ExpressionKey key = ExpressionKey.unique(expression, Object.class, arrayArgs, arrayTypes);
+                    ee = cache.get(key.toString());
+                    if (ee == null) {
+                        ee = new ExpressionEvaluator(expression, Object.class, arrayArgs, arrayTypes);
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("NEW EXPRESSION(" + expression + "):" + ee);
+                        }
+                        cache.put(key.toString(), ee);
+                    }
+                }
                 r = ee.evaluate(arrayValues);
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("JANINO(" + source + ")_produced>" + r + "(" + (r != null ? r.getClass().getSimpleName() : "") + ")");
