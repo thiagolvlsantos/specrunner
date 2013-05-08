@@ -65,17 +65,22 @@ public class ExpressionJanino extends AbstractExpression {
         List<String> args = new LinkedList<String>();
         List<Object> values = new LinkedList<Object>();
         List<Class<?>> types = new LinkedList<Class<?>>();
-        arguments(context, expression, args, types, values, silent);
+        Object r = arguments(context, expression, args, types, values, silent);
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("EXPR>" + expression);
             UtilLog.LOG.debug("ARGS>" + args);
             UtilLog.LOG.debug("VALS>" + values);
             UtilLog.LOG.debug("TYPES>" + types);
         }
-
-        Object r = eval(source, expression, args, types, values, silent);
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+        if (r == null) {
+            r = eval(source, expression, args, types, values, silent);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+            }
+        } else {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("HIT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+            }
         }
         return r;
     }
@@ -95,14 +100,31 @@ public class ExpressionJanino extends AbstractExpression {
      *            The values.
      * @param silent
      *            Silent option.
+     * @return The resulting object, null, otherwise.
      * @throws ExpressionException
      *             On expression errors.
      */
-    protected void arguments(IContext context, String expression, List<String> args, List<Class<?>> types, List<Object> values, boolean silent) throws ExpressionException {
+    protected Object arguments(IContext context, String expression, List<String> args, List<Class<?>> types, List<Object> values, boolean silent) throws ExpressionException {
+        if (expression.equals("true")) {
+            return Boolean.TRUE;
+        } else if (expression.equals("false")) {
+            return Boolean.FALSE;
+        }
         Reader rd = null;
         try {
             rd = new StringReader(expression);
-            String[] vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
+            String[] vars;
+            try {
+                vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
+            } catch (Exception e) {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace(e.getMessage(), e);
+                }
+                if (!silent) {
+                    throw new PluginException(e);
+                }
+                return expression;
+            }
             for (String str : vars) {
                 ExpressionVariable var = new ExpressionVariable(getParent(), str);
                 Object result = var.evaluate(context, silent);
@@ -158,6 +180,20 @@ public class ExpressionJanino extends AbstractExpression {
                         }
                     }
                 }
+                if (expression.equals(str)) {
+                    if (values.isEmpty()) {
+                        return expression;
+                    } else {
+                        return values.get(0);
+                    }
+                }
+            }
+            try {
+                return numericValue(expression);
+            } catch (NumberFormatException ne) {
+                if (vars.length != args.size()) {
+                    return expression;
+                }
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -180,7 +216,10 @@ public class ExpressionJanino extends AbstractExpression {
                 }
             }
         }
+        return null;
     }
+
+    private static int serial = 0;
 
     /**
      * Evaluate the expression.
@@ -215,6 +254,7 @@ public class ExpressionJanino extends AbstractExpression {
                 UtilLog.LOG.trace(ne.getMessage(), ne);
                 UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
             }
+            System.out.println("eval(" + expression + "):" + serial++);
             try {
                 ExpressionEvaluator ee = new ExpressionEvaluator(expression, Object.class, arrayArgs, arrayTypes);
                 r = ee.evaluate(arrayValues);
