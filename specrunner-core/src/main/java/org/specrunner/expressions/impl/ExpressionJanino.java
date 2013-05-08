@@ -74,20 +74,20 @@ public class ExpressionJanino extends AbstractExpression {
         List<Object> values = new LinkedList<Object>();
         List<Class<?>> types = new LinkedList<Class<?>>();
         Object r = arguments(context, expression, args, types, values, silent);
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("EXPR>" + expression);
-            UtilLog.LOG.debug("ARGS>" + args);
-            UtilLog.LOG.debug("VALS>" + values);
-            UtilLog.LOG.debug("TYPES>" + types);
-        }
         if (r == null) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("EXPR>" + expression);
+                UtilLog.LOG.debug("ARGS>" + args);
+                UtilLog.LOG.debug("VALS>" + values);
+                UtilLog.LOG.debug("TYPES>" + types);
+            }
             r = eval(source, expression, args, types, values, silent);
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
             }
         } else {
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("HIT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+                UtilLog.LOG.debug("DIRECT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
             }
         }
         return r;
@@ -113,7 +113,9 @@ public class ExpressionJanino extends AbstractExpression {
      *             On expression errors.
      */
     protected Object arguments(IContext context, String expression, List<String> args, List<Class<?>> types, List<Object> values, boolean silent) throws ExpressionException {
-        if (expression.equals("true")) {
+        if (expression.equals("")) {
+            return "";
+        } else if (expression.equals("true")) {
             return Boolean.TRUE;
         } else if (expression.equals("false")) {
             return Boolean.FALSE;
