@@ -89,9 +89,9 @@ public class PluginScripts extends AbstractPluginValue {
     /**
      * Cache of scripts.
      */
-    private static ThreadLocal<ICache<String>> cache = new ThreadLocal<ICache<String>>() {
+    private static ThreadLocal<ICache<String, String>> cache = new ThreadLocal<ICache<String, String>>() {
         @Override
-        protected ICache<String> initialValue() {
+        protected ICache<String, String> initialValue() {
             return SpecRunnerServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
         };
     };

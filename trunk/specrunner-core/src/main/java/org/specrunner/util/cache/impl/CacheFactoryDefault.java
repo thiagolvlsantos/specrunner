@@ -9,7 +9,7 @@ package org.specrunner.util.cache.impl;
 public class CacheFactoryDefault extends AbstractCacheFactory {
 
     @Override
-    protected <T> CacheLRU<T> create(String name) {
-        return new CacheLRU<T>(name);
+    protected <K, T> CacheLRU<K, T> create(String name) {
+        return new CacheLRU<K, T>(name);
     }
 }

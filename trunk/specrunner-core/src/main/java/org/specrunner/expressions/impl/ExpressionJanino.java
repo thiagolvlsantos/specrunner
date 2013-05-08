@@ -52,7 +52,7 @@ public class ExpressionJanino extends AbstractExpression {
     /**
      * Cache of expressions.
      */
-    private static ICache<ExpressionEvaluator> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
+    private static ICache<ExpressionKey, ExpressionEvaluator> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
 
     /**
      * Basic constructor.
@@ -265,14 +265,13 @@ public class ExpressionJanino extends AbstractExpression {
             try {
                 ExpressionEvaluator ee = null;
                 synchronized (cache) {
-                    ExpressionKey key = ExpressionKey.unique(expression, Object.class, arrayArgs, arrayTypes);
-                    ee = cache.get(key.toString());
+                    ee = cache.get(ExpressionKey.unique(expression, Object.class, arrayArgs, arrayTypes));
                     if (ee == null) {
                         ee = new ExpressionEvaluator(expression, Object.class, arrayArgs, arrayTypes);
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("NEW EXPRESSION(" + expression + "):" + ee);
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("NEW EXPRESSION(" + expression + "):" + ee);
                         }
-                        cache.put(key.toString(), ee);
+                        cache.put(new ExpressionKey(expression, Object.class, arrayArgs, arrayTypes), ee);
                     }
                 }
                 r = ee.evaluate(arrayValues);

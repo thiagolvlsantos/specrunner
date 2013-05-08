@@ -14,9 +14,9 @@ import org.specrunner.util.cache.ICacheFactory;
 public abstract class AbstractCacheFactory implements ICacheFactory {
 
     @Override
-    public <T> ICache<T> newCache(String name) {
+    public <K, T> ICache<K, T> newCache(String name) {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        CacheLRU<T> cache = create(name);
+        CacheLRU<K, T> cache = create(name);
         fm.set(ICache.FEATURE_TIMEOUT, cache);
         fm.set(ICache.FEATURE_SIZE, cache);
         fm.set(ICache.FEATURE_CLEAN, cache);
@@ -26,11 +26,13 @@ public abstract class AbstractCacheFactory implements ICacheFactory {
     /**
      * Create the cache object.
      * 
+     * @param <K>
+     *            Key type.
      * @param <T>
      *            Cache object type.
      * @param name
      *            Cache name.
      * @return The cache instance.
      */
-    protected abstract <T> CacheLRU<T> create(String name);
+    protected abstract <K, T> CacheLRU<K, T> create(String name);
 }
