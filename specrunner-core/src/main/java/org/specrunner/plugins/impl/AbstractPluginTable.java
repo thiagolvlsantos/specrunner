@@ -67,7 +67,7 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
             table = UtilNode.newTableAdapter((Element) element);
         }
         if (!table.getElement().getQualifiedName().equalsIgnoreCase("table")) {
-            throw new PluginException("IPlugin " + getClass().getName() + " applicable only to 'tables' elements.");
+            throw new PluginException("IPlugin " + getClass().getName() + " applicable only to 'table' elements.");
         }
         return table;
     }

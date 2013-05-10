@@ -83,5 +83,17 @@
 			<version>3.2.0.RELEASE</version>
 		</dependency>
 
+        <!-- POI -->
+        <dependency>
+          <groupId>org.apache.poi</groupId>
+          <artifactId>poi</artifactId>
+          <version>3.9</version>
+        </dependency>
+        <dependency>
+        	<groupId>org.apache.poi</groupId>
+        	<artifactId>poi-ooxml</artifactId>
+        	<version>3.9</version>
+        </dependency>
+            
 	</dependencies>
 </project>

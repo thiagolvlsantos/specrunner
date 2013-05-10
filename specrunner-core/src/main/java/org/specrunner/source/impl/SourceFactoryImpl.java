@@ -29,11 +29,20 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Iterator;
 
+import nu.xom.Attribute;
 import nu.xom.Builder;
 import nu.xom.DocType;
 import nu.xom.Document;
+import nu.xom.Element;
 
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.cyberneko.html.HTMLConfiguration;
 import org.specrunner.SpecRunnerServices;
@@ -237,6 +246,10 @@ public class SourceFactoryImpl implements ISourceFactory {
      *             On load error.
      */
     protected Document fromTarget(URI uri, String target) throws SourceException {
+        System.out.println("DOC:" + target);
+        if (target.endsWith(".xlsx")) {
+            return readExcel(target);
+        }
         String encoding = getEncoding();
         Document document = null;
         InputStream fin = null;
@@ -309,6 +322,96 @@ public class SourceFactoryImpl implements ISourceFactory {
             }
         }
         return document;
+    }
+
+    private Document readExcel(String target) throws SourceException {
+        Element root = new Element("html");
+        Document doc = new Document(root);
+        try {
+            target = target.replace("file:/", "");
+            OPCPackage pkg = OPCPackage.open(target);
+            Workbook wb = new XSSFWorkbook(pkg);
+            for (int i = 0; i < wb.getNumberOfSheets(); i++) {
+                Sheet s = wb.getSheetAt(i);
+                Element table = new Element("table");
+                root.appendChild(table);
+                table.addAttribute(new Attribute("class", "prepare"));
+
+                Element caption = new Element("caption");
+                table.appendChild(caption);
+                caption.appendChild(s.getSheetName());
+
+                Iterator<Row> ite = s.iterator();
+
+                Row r = ite.next();
+                int count = 0;
+                Cell c = r.getCell(count);
+                Element thead = new Element("thead");
+                table.appendChild(thead);
+                Element tr = new Element("tr");
+                thead.appendChild(tr);
+                String value = c.getStringCellValue();
+                while (c != null && value != null) {
+                    Element th = new Element("th");
+                    tr.appendChild(th);
+                    th.appendChild(value);
+                    count++;
+                    c = r.getCell(count);
+                    if (c != null) {
+                        value = c.getStringCellValue();
+                    }
+                }
+                Element tbody = new Element("tbody");
+                table.appendChild(tbody);
+                while (ite.hasNext()) {
+                    tr = new Element("tr");
+                    tbody.appendChild(tr);
+                    Row row = ite.next();
+                    for (int k = 0; k < count; k++) {
+                        Element td = new Element("td");
+                        tr.appendChild(td);
+                        Cell cell = row.getCell(k);
+                        if (cell != null) {
+                            Object val = null;
+                            switch (cell.getCellType()) {
+                            case Cell.CELL_TYPE_BLANK:
+                                val = null;
+                                break;
+                            case Cell.CELL_TYPE_BOOLEAN:
+                                val = cell.getBooleanCellValue();
+                                break;
+                            case Cell.CELL_TYPE_ERROR:
+                                val = cell.getErrorCellValue();
+                                break;
+                            case Cell.CELL_TYPE_FORMULA:
+                                val = cell.getCellFormula();
+                                break;
+                            case Cell.CELL_TYPE_NUMERIC:
+                                double d = cell.getNumericCellValue();
+                                String tmp = String.valueOf(d);
+                                if (tmp.endsWith(".0")) {
+                                    val = tmp.substring(0, tmp.lastIndexOf('.'));
+                                } else {
+                                    val = d;
+                                }
+                                break;
+                            case Cell.CELL_TYPE_STRING:
+                                val = cell.getStringCellValue();
+                                break;
+                            default:
+                            }
+                            td.appendChild(val != null ? String.valueOf(val) : "");
+                        } else {
+                            td.appendChild("");
+                        }
+                    }
+                }
+            }
+            pkg.close();
+        } catch (Exception e) {
+            throw new SourceException(e);
+        }
+        return doc;
     }
 
     /**
