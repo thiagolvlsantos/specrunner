@@ -15,30 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.transformer;
+package org.specrunner.transformer.impl;
 
-import org.specrunner.source.ISource;
-import org.specrunner.source.SourceException;
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.transformer.ITransformer;
+import org.specrunner.transformer.ITransformerManager;
+import org.specrunner.util.mapping.impl.MappingManagerImpl;
 
 /**
- * Perform a transformation from a document source into another. For example,
- * someone can write an pre-processing annotation into specification based on
- * natural language.
+ * Default transformer manager implementation.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ITransformer extends IResetable {
+@SuppressWarnings("serial")
+public class TransformerManagerImpl extends MappingManagerImpl<ITransformer> implements ITransformerManager {
 
     /**
-     * Converts a source into another.
-     * 
-     * @param source
-     *            The source to be transformed.
-     * @return The source transformed.
-     * @throws SourceException
-     *             On transformation errors.
+     * Default constructor.
      */
-    ISource transform(ISource source) throws SourceException;
+    public TransformerManagerImpl() {
+        super("plugin_transformer.properties");
+    }
 }

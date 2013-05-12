@@ -32,6 +32,13 @@ import org.specrunner.util.composite.CompositeImpl;
 public class TransformerGroupImpl extends CompositeImpl<ITransformerGroup, ITransformer> implements ITransformerGroup {
 
     @Override
+    public void initialize() {
+        for (ITransformer t : getChildren()) {
+            t.initialize();
+        }
+    }
+
+    @Override
     public ISource transform(ISource source) throws SourceException {
         ISource tmp = source;
         for (ITransformer t : getChildren()) {

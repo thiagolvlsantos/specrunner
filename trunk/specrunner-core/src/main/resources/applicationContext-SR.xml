@@ -7,7 +7,8 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.concurrency.impl.ConcurrentMappingImpl" />
   <bean class="org.specrunner.source.resource.impl.ResourceManagerFactoryImpl" />
   <bean class="org.specrunner.source.impl.SourceFactoryGroupDefault" />
-  <bean class="org.specrunner.transformer.impl.TransformerImpl" />
+  <bean class="org.specrunner.transformer.impl.TransformerManagerImpl" />
+  <bean class="org.specrunner.transformer.impl.TransformerDefault" />
   <bean class="org.specrunner.plugins.impl.factories.PluginFactoryGroupDefault" />
   <bean class="org.specrunner.context.impl.BlockFactoryImpl" />
   <bean class="org.specrunner.expressions.impl.ExpressionFactoryJanino" />

@@ -74,13 +74,8 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
             Workbook wb = new XSSFWorkbook(pkg);
             for (int i = 0; i < wb.getNumberOfSheets(); i++) {
                 Sheet sheet = wb.getSheetAt(i);
-
                 Element table = new Element("table");
                 html.appendChild(table);
-
-                // TODO: remover esse tipo de ajuste daqui.
-                table.addAttribute(new Attribute("class", "prepare"));
-
                 readCaption(table, sheet);
                 Iterator<Row> ite = sheet.iterator();
                 readBody(table, ite, headers(table, ite));
