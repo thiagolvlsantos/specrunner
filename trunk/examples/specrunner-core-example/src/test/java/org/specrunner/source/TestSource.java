@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.source.impl.SourceFactoryImpl;
+import org.specrunner.source.impl.SourceFactoryHtml;
 
 public class TestSource {
 
@@ -21,7 +21,7 @@ public class TestSource {
 
     @Before
     public void before() throws SpecRunnerException {
-        factory = new SourceFactoryImpl();
+        factory = new SourceFactoryHtml();
         sourceFile = factory.newSource(FILE);
         sourceUri = factory.newSource(URI);
     }

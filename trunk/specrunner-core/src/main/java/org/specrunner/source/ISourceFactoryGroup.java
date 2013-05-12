@@ -17,41 +17,13 @@
  */
 package org.specrunner.source;
 
+import org.specrunner.util.composite.IComposite;
+
 /**
- * A factory of sources.
+ * A group of source factories.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceFactory {
-
-    /**
-     * Name of feature to set reader encoding.
-     */
-    String FEATURE_ENCODING = ISourceFactory.class + ".encoding";
-
-    /**
-     * Default encoding.
-     */
-    String DEFAULT_ENCODING = "ISO-8859-1";
-
-    /**
-     * Check if this factory accept a given source.
-     * 
-     * @param source
-     *            The source.
-     * @return true, if accept, false, otherwise.
-     */
-    boolean accept(Object source);
-
-    /**
-     * Creates a source from a String.
-     * 
-     * @param source
-     *            The source of specification.
-     * @return The source.
-     * @throws SourceException
-     *             On creation errors.
-     */
-    ISource newSource(Object source) throws SourceException;
+public interface ISourceFactoryGroup extends ISourceFactory, IComposite<ISourceFactoryGroup, ISourceFactory> {
 }

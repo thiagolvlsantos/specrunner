@@ -15,43 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.source;
+package org.specrunner.source.impl;
 
 /**
- * A factory of sources.
+ * Default factory implementation.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceFactory {
+public class SourceFactoryGroupDefault extends SourceFactoryGroupImpl {
 
     /**
-     * Name of feature to set reader encoding.
+     * Default constructor.
      */
-    String FEATURE_ENCODING = ISourceFactory.class + ".encoding";
+    public SourceFactoryGroupDefault() {
+        add();
+    }
 
     /**
-     * Default encoding.
+     * Add predefined factories.
      */
-    String DEFAULT_ENCODING = "ISO-8859-1";
-
-    /**
-     * Check if this factory accept a given source.
-     * 
-     * @param source
-     *            The source.
-     * @return true, if accept, false, otherwise.
-     */
-    boolean accept(Object source);
-
-    /**
-     * Creates a source from a String.
-     * 
-     * @param source
-     *            The source of specification.
-     * @return The source.
-     * @throws SourceException
-     *             On creation errors.
-     */
-    ISource newSource(Object source) throws SourceException;
+    protected void add() {
+        add(new SourceFactoryHtml());
+        add(new SourceFactoryExcel());
+    }
 }
