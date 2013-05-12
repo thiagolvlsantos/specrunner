@@ -127,6 +127,7 @@ public class ExpressionJanino extends AbstractExpression {
             try {
                 vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
             } catch (Exception e) {
+                // invalid expressions are values themselves
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                 }
@@ -190,17 +191,26 @@ public class ExpressionJanino extends AbstractExpression {
                         }
                     }
                 }
+                // if the expression is itself a var, it has already been
+                // evaluated.
                 if (expression.equals(str)) {
+                    // if expression is not converted to a value, it wont be in
+                    // the future
                     if (values.isEmpty()) {
+                        // the value is the expression itself
                         return expression;
                     } else {
+                        // otherwise it is first value.
                         return values.get(0);
                     }
                 }
             }
             try {
+                // try return as value
                 return numericValue(expression);
             } catch (NumberFormatException ne) {
+                // if is not a value, and the number of actual parameters is
+                // different of parameters the expression it will fail.
                 if (vars.length != args.size()) {
                     return expression;
                 }
@@ -226,6 +236,7 @@ public class ExpressionJanino extends AbstractExpression {
                 }
             }
         }
+        // if the heuristic fails, the expression has to be evaluated.
         return null;
     }
 
