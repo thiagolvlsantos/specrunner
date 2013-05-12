@@ -49,6 +49,7 @@ import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.transformer.ITransformer;
+import org.specrunner.transformer.ITransformerManager;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
@@ -121,6 +122,16 @@ public class PluginInclude extends AbstractPlugin {
     protected Boolean expanded = null;
 
     /**
+     * Transformer type as feature.
+     */
+    public static final String FEATURE_TRANSFORMER = PluginInclude.class.getName() + ".transformer";
+    /**
+     * Transformer to be used after loading in addiction to the general
+     * transformer.
+     */
+    protected String transformer;
+
+    /**
      * The link reference.
      * 
      * @return The link.
@@ -181,6 +192,14 @@ public class PluginInclude extends AbstractPlugin {
         this.expanded = expanded;
     }
 
+    public String getTransformer() {
+        return transformer;
+    }
+
+    public void setTransformer(String transformer) {
+        this.transformer = transformer;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -193,6 +212,9 @@ public class PluginInclude extends AbstractPlugin {
         fh.set(FEATURE_DEPTH, this);
         if (expanded == null) {
             fh.set(FEATURE_EXPANDED, this);
+        }
+        if (transformer == null) {
+            fh.set(FEATURE_TRANSFORMER, this);
         }
     }
 
@@ -230,6 +252,7 @@ public class PluginInclude extends AbstractPlugin {
                 throw new PluginException(e);
             }
             try {
+                // common transformer
                 newSource = SpecRunnerServices.get(ITransformer.class).transform(newSource);
             } catch (SourceException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -237,6 +260,31 @@ public class PluginInclude extends AbstractPlugin {
                 }
                 throw new PluginException(e);
             }
+            if (transformer != null) {
+                ITransformerManager itm = SpecRunnerServices.get(ITransformerManager.class);
+                ITransformer t = itm.get(transformer);
+                if (t == null) {
+                    try {
+                        t = (ITransformer) Class.forName(transformer).newInstance();
+                        itm.bind(transformer, t);
+                    } catch (Exception e) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug(e.getMessage(), e);
+                        }
+                        throw new PluginException(e);
+                    }
+                }
+                t.initialize();
+                try {
+                    newSource = t.transform(newSource);
+                } catch (SourceException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    throw new PluginException(e);
+                }
+            }
+
             Document document = null;
             try {
                 document = newSource.getDocument();

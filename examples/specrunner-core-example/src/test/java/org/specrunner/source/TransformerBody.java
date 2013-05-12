@@ -10,6 +10,10 @@ import org.specrunner.transformer.ITransformer;
 public class TransformerBody implements ITransformer {
 
     @Override
+    public void initialize() {
+    }
+
+    @Override
     public ISource transform(ISource source) throws SourceException {
         Document d = source.getDocument();
         Nodes ns = d.getRootElement().query("//span");

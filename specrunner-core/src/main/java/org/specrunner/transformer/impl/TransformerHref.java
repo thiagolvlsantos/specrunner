@@ -33,7 +33,12 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class TransformerHref implements ITransformer {
+
+    @Override
+    public void initialize() {
+    }
 
     @Override
     public ISource transform(ISource source) throws SourceException {

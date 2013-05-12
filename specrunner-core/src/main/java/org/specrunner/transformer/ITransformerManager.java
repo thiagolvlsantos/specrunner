@@ -15,22 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.transformer.impl;
+package org.specrunner.transformer;
 
-import org.specrunner.source.ISource;
-import org.specrunner.source.SourceException;
-import org.specrunner.transformer.ITransformer;
+import org.specrunner.util.mapping.IMappingManager;
 
 /**
- * Default transformer implementation. Perform ZERO changes in source.
+ * A transformer manager.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public class TransformerImpl implements ITransformer {
-
-    @Override
-    public ISource transform(ISource source) throws SourceException {
-        return source;
-    }
+public interface ITransformerManager extends IMappingManager<ITransformer> {
 }
