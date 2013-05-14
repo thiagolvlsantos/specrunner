@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import nu.xom.Attribute;
@@ -33,6 +34,8 @@ import nu.xom.Text;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.listeners.IListenerManager;
+import org.specrunner.listeners.ISourceListener;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -192,10 +195,21 @@ public class PluginInclude extends AbstractPlugin {
         this.expanded = expanded;
     }
 
+    /**
+     * Get the transformer field.
+     * 
+     * @return The transformer.
+     */
     public String getTransformer() {
         return transformer;
     }
 
+    /**
+     * Set the transformer.
+     * 
+     * @param transformer
+     *            The transformer.
+     */
     public void setTransformer(String transformer) {
         this.transformer = transformer;
     }
@@ -351,11 +365,20 @@ public class PluginInclude extends AbstractPlugin {
                         Node root = document.getRootElement().copy();
                         tdContent.appendChild(root);
                         context.getSources().push(newSource);
+                        List<ISourceListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(ISourceListener.class);
+                        // perform before listeners
+                        for (ISourceListener sl : listeners) {
+                            sl.onBefore(newSource, context, result);
+                        }
                         try {
                             context.getRunner().run(root, context, result);
                         } finally {
                             IResourceManager importedResources = context.getSources().peek().getManager();
                             context.getSources().pop();
+                            // perform after listeners
+                            for (ISourceListener sl : listeners) {
+                                sl.onAfter(newSource, context, result);
+                            }
                             IResourceManager resources = context.getSources().peek().getManager();
                             resources.merge(importedResources);
                         }
