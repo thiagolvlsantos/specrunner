@@ -56,6 +56,27 @@ public class AccessFactoryImpl implements IAccessFactory {
         if (cache.contains(key)) {
             return cache.get(key);
         }
+        IAccess access = lookupBean(target, name);
+        if (access == null) {
+            access = lookupField(c, name);
+        }
+        if (access == null) {
+            access = lookupMethod(c, name);
+        }
+        cache.put(key, access);
+        return access;
+    }
+
+    /**
+     * Lookup for a bean property.
+     * 
+     * @param target
+     *            The object instance.
+     * @param name
+     *            The feature name.
+     * @return The access object, if property exists, null, otherwise.
+     */
+    protected IAccess lookupBean(Object target, String name) {
         IAccess access = null;
         try {
             PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(target, name);
@@ -67,49 +88,72 @@ public class AccessFactoryImpl implements IAccessFactory {
                 UtilLog.LOG.trace(e.getMessage(), e);
             }
         }
-        if (access == null) {
-            try {
-                Field f = c.getDeclaredField(name);
-                if (f != null) {
-                    if (Modifier.isPublic(f.getModifiers())) {
-                        access = new AccessImpl(f);
+        return access;
+    }
+
+    /**
+     * Lookup for a public attribute.
+     * 
+     * @param clazz
+     *            The class.
+     * @param name
+     *            The feature name.
+     * @return The access object, if the field exists, null, otherwise.
+     */
+    protected IAccess lookupField(Class<?> clazz, String name) {
+        IAccess access = null;
+        try {
+            Field f = clazz.getDeclaredField(name);
+            if (f != null) {
+                if (Modifier.isPublic(f.getModifiers())) {
+                    access = new AccessImpl(f);
+                } else {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Field '" + f.getName() + "' is not accessible. " + f);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
+            }
+        }
+        return access;
+    }
+
+    /**
+     * Lookup for public method.
+     * 
+     * @param clazz
+     *            The class.
+     * @param name
+     *            The feature name.
+     * @return The access object, if the method exists, null, otherwise.
+     */
+    protected IAccess lookupMethod(Class<?> clazz, String name) {
+        IAccess access = null;
+        try {
+            Method m = null;
+            for (Method i : clazz.getDeclaredMethods()) {
+                if (i.getName().equals(name)) {
+                    if (Modifier.isPublic(i.getModifiers())) {
+                        m = i;
                     } else {
                         if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Field '" + f.getName() + "' is not accessible. " + f);
+                            UtilLog.LOG.trace("Method '" + i.getName() + "' is not accessible. " + i);
                         }
                     }
-                }
-            } catch (Exception e) {
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace(e.getMessage(), e);
+                    break;
                 }
             }
-        }
-        if (access == null) {
-            try {
-                Method m = null;
-                for (Method i : c.getDeclaredMethods()) {
-                    if (i.getName().equals(name)) {
-                        if (Modifier.isPublic(i.getModifiers())) {
-                            m = i;
-                        } else {
-                            if (UtilLog.LOG.isTraceEnabled()) {
-                                UtilLog.LOG.trace("Method '" + i.getName() + "' is not accessible. " + i);
-                            }
-                        }
-                        break;
-                    }
-                }
-                if (m != null) {
-                    access = new AccessImpl(m);
-                }
-            } catch (Exception e) {
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace(e.getMessage(), e);
-                }
+            if (m != null) {
+                access = new AccessImpl(m);
+            }
+        } catch (Exception e) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
             }
         }
-        cache.put(key, access);
         return access;
     }
 }

@@ -17,6 +17,8 @@
  */
 package org.specrunner.util.converter.impl;
 
+import java.util.Arrays;
+
 import org.specrunner.util.converter.ConverterException;
 
 /**
@@ -46,7 +48,7 @@ public abstract class AbstractConverterTimeTemplate<T> extends ConverterDefault 
      *            The values to be converted to date.
      */
     public AbstractConverterTimeTemplate(String[] values) {
-        this.values = values;
+        this.values = Arrays.copyOf(values, values.length);
     }
 
     /**
