@@ -128,11 +128,19 @@ public class AccessImpl implements IAccess {
     }
 
     @Override
+    public boolean hasFeature() {
+        return field != null || property != null || method != null;
+    }
+
+    @Override
     public Annotation[] getAnnotations() {
         if (field != null) {
             return field.getAnnotations();
         } else if (property != null) {
-            return property.getWriteMethod().getAnnotations();
+            Method writeMethod = property.getWriteMethod();
+            if (writeMethod != null) {
+                return writeMethod.getAnnotations();
+            }
         } else if (method != null) {
             return method.getAnnotations();
         }

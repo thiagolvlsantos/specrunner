@@ -83,6 +83,8 @@ public interface IAccess {
      */
     Class<?>[] expected(Object target, String name, Object... args);
 
+    boolean hasFeature();
+
     /**
      * Get the annotation information of a given access.
      * 

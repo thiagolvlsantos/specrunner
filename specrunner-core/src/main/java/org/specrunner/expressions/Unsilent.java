@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ FIELD, METHOD })
-public @interface Silent {
+public @interface Unsilent {
 }

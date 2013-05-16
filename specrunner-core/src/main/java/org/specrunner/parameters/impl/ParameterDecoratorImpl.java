@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.Unsilent;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
@@ -67,8 +68,42 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     }
 
     @Override
+    public boolean isEval(String name) {
+        boolean invert = name.contains(INVERT_FLAG);
+        name = clear(name);
+        if (hasParameter(name)) {
+            IAccess access = checked.get(name);
+            if (access != null && access.hasFeature()) {
+                boolean dontEval = hasAnnotation(access, DontEval.class);
+                if (invert) {
+                    dontEval = !dontEval;
+                }
+                return dontEval;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isSilent(String name) {
+        boolean invert = name.contains(SILENT_FLAG);
+        name = clear(name);
+        if (hasParameter(name)) {
+            IAccess access = checked.get(name);
+            if (access != null && access.hasFeature()) {
+                boolean unsilent = hasAnnotation(access, Unsilent.class);
+                if (invert) {
+                    unsilent = !unsilent;
+                }
+                return unsilent;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public String clear(String name) {
-        return name.replace(INVERT_FLAG, "");
+        return name.replace(INVERT_FLAG, "").replace(SILENT_FLAG, "");
     }
 
     @Override
@@ -87,21 +122,22 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     }
 
     @Override
-    public Object setParameter(String name, Object value, IContext context) {
+    public Object setParameter(String name, Object value, IContext context) throws Exception {
         Object newValue = value;
-        boolean invert = name.contains(INVERT_FLAG);
-        if (invert) {
-            name = clear(name);
-        }
+        String old = name;
+        name = clear(name);
         if (hasParameter(name)) {
             try {
                 IAccess s = checked.get(name);
-                newValue = prepareValue(s, value, context, invert);
+                newValue = prepareValue(name, value, context);
                 s.set(decorated, name, newValue);
                 parameters.put(name, newValue);
             } catch (Exception e) {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
+                }
+                if (!isSilent(old)) {
+                    throw e;
                 }
             }
         }
@@ -112,25 +148,18 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     /**
      * Prepare the value to set.
      * 
-     * @param s
-     *            The access information object.
+     * @param name
+     *            The feature name.
      * @param value
      *            The value.
      * @param context
      *            The context.
-     * @param invert
-     *            Force evaluation, despite of having <code>@DontEval</code> in
-     *            plugin code, or give up evaluation if it is expected.
      * @return The value after preparation.
      * @throws PluginException
      *             On processing errors.
      */
-    private Object prepareValue(IAccess s, Object value, IContext context, boolean invert) throws PluginException {
-        boolean enable = evalEnable(s);
-        if (invert) {
-            enable = !enable;
-        }
-        return enable ? UtilEvaluator.evaluate(String.valueOf(value), context, true) : value;
+    private Object prepareValue(String name, Object value, IContext context) throws PluginException {
+        return isEval(name) ? UtilEvaluator.evaluate(String.valueOf(value), context, isSilent(name)) : value;
     }
 
     /**
@@ -138,11 +167,13 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
      * 
      * @param s
      *            The feature access.
+     * @param an
+     *            Annotation type.
      * @return false, if annotation present, true, otherwise.
      */
-    protected boolean evalEnable(IAccess s) {
+    protected boolean hasAnnotation(IAccess s, Class<? extends Annotation> an) {
         for (Annotation a : s.getAnnotations()) {
-            if (a.annotationType() == DontEval.class) {
+            if (a.annotationType() == an) {
                 return false;
             }
         }

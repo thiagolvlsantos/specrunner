@@ -18,6 +18,7 @@
 package org.specrunner.plugins.impl.var;
 
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.Unsilent;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -28,6 +29,12 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class PluginExecute extends AbstractPluginDefine {
+
+    @Override
+    @Unsilent
+    public void setValue(Object value) {
+        super.setValue(value);
+    }
 
     @Override
     protected boolean operation(Object obj, IContext context) {

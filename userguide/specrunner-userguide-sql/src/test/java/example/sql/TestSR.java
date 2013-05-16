@@ -35,6 +35,10 @@ public class TestSR {
         return "Oi " + nome + "!";
     }
 
+    public String split() {
+        return null;
+    }
+
     public boolean bool(int index) {
         return index % 2 == 0;
     }

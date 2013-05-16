@@ -66,16 +66,16 @@ public final class UtilParametrized {
             context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (int i = 0; i < element.getAttributeCount(); i++) {
                 Attribute n = element.getAttribute(i);
-                String value = n.getValue();
+                String name = n.getQualifiedName();
                 try {
-                    String name = n.getQualifiedName();
-                    Object newValue = p.setParameter(name, value, context);
-                    // every local attribute became a local variable
-                    name = p.clear(name);
-                    context.saveLocal(UtilEvaluator.asVariable(name), newValue);
+                    Object newValue = p.setParameter(name, n.getValue(), context);
+                    context.saveLocal(UtilEvaluator.asVariable(p.clear(name)), newValue);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                    if (!p.isSilent(name)) {
+                        throw new PluginException(e);
                     }
                 }
             }

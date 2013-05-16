@@ -99,6 +99,7 @@ public final class UtilEvaluator {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
+                throw new PluginException(e);
             }
         }
         while (pos1 >= 0 & pos2 > pos1) {

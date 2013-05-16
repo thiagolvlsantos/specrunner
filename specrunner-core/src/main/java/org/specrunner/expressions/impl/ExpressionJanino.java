@@ -212,7 +212,11 @@ public class ExpressionJanino extends AbstractExpression {
                 // if is not a value, and the number of actual parameters is
                 // different of parameters the expression it will fail.
                 if (vars.length != args.size()) {
-                    return expression;
+                    if (silent) {
+                        return expression;
+                    } else {
+                        return null;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -256,8 +260,10 @@ public class ExpressionJanino extends AbstractExpression {
      * @param silent
      *            Silent mode.
      * @return The resulting object.
+     * @throws ExpressionException
+     *             On evaluation errors.
      */
-    protected Object eval(Object source, String expression, List<String> args, List<Class<?>> types, List<Object> values, boolean silent) {
+    protected Object eval(Object source, String expression, List<String> args, List<Class<?>> types, List<Object> values, boolean silent) throws ExpressionException {
         String[] arrayArgs = new String[args.size()];
         args.toArray(arrayArgs);
         Object[] arrayValues = new Object[values.size()];
@@ -290,6 +296,9 @@ public class ExpressionJanino extends AbstractExpression {
                     UtilLog.LOG.debug("JANINO(" + source + ")_produced>" + r + "(" + (r != null ? r.getClass().getSimpleName() : "") + ")");
                 }
             } catch (Exception e) {
+                if (!silent) {
+                    throw new ExpressionException(e);
+                }
                 r = expression;
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
