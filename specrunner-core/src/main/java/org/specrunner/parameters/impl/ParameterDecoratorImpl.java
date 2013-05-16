@@ -74,11 +74,11 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
         if (hasParameter(name)) {
             IAccess access = checked.get(name);
             if (access != null && access.hasFeature()) {
-                boolean dontEval = hasAnnotation(access, DontEval.class);
+                boolean eval = !hasAnnotation(access, DontEval.class);
                 if (invert) {
-                    dontEval = !dontEval;
+                    eval = !eval;
                 }
-                return dontEval;
+                return eval;
             }
         }
         return true;
@@ -91,11 +91,11 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
         if (hasParameter(name)) {
             IAccess access = checked.get(name);
             if (access != null && access.hasFeature()) {
-                boolean unsilent = hasAnnotation(access, Unsilent.class);
+                boolean silent = !hasAnnotation(access, Unsilent.class);
                 if (invert) {
-                    unsilent = !unsilent;
+                    silent = !silent;
                 }
-                return unsilent;
+                return silent;
             }
         }
         return true;
@@ -129,7 +129,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
         if (hasParameter(name)) {
             try {
                 IAccess s = checked.get(name);
-                newValue = prepareValue(name, value, context);
+                newValue = prepareValue(value, context, isEval(old), isSilent(old));
                 s.set(decorated, name, newValue);
                 parameters.put(name, newValue);
             } catch (Exception e) {
@@ -148,18 +148,20 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     /**
      * Prepare the value to set.
      * 
-     * @param name
-     *            The feature name.
      * @param value
      *            The value.
      * @param context
      *            The context.
+     * @param eval
+     *            True, to evalualte, false, otherwise.
+     * @param silent
+     *            True, to silent evaluation, false, otherwise.
      * @return The value after preparation.
      * @throws PluginException
      *             On processing errors.
      */
-    private Object prepareValue(String name, Object value, IContext context) throws PluginException {
-        return isEval(name) ? UtilEvaluator.evaluate(String.valueOf(value), context, isSilent(name)) : value;
+    private Object prepareValue(Object value, IContext context, boolean eval, boolean silent) throws PluginException {
+        return eval ? UtilEvaluator.evaluate(String.valueOf(value), context, silent) : value;
     }
 
     /**
@@ -169,15 +171,15 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
      *            The feature access.
      * @param an
      *            Annotation type.
-     * @return false, if annotation present, true, otherwise.
+     * @return true, if annotation present, false, otherwise.
      */
     protected boolean hasAnnotation(IAccess s, Class<? extends Annotation> an) {
         for (Annotation a : s.getAnnotations()) {
             if (a.annotationType() == an) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @Override

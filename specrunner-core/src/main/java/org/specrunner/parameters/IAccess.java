@@ -83,6 +83,11 @@ public interface IAccess {
      */
     Class<?>[] expected(Object target, String name, Object... args);
 
+    /**
+     * Check if access has feature associated or null.
+     * 
+     * @return true, for any associated feature, false, otherwise.
+     */
     boolean hasFeature();
 
     /**

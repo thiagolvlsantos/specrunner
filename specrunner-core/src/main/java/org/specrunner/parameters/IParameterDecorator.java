@@ -57,8 +57,22 @@ public interface IParameterDecorator {
      */
     void setDecorated(Object decorated);
 
+    /**
+     * Check if a given name has to be evaluated.
+     * 
+     * @param name
+     *            The feature name.
+     * @return true, to evaluate, false, otherwise. Default is true.
+     */
     boolean isEval(String name);
 
+    /**
+     * Check if a iven name has to be evaluated silently or not.
+     * 
+     * @param name
+     *            The feature name.
+     * @return true, to silent evaluation, false, otherwise. Default is true.
+     */
     boolean isSilent(String name);
 
     /**
