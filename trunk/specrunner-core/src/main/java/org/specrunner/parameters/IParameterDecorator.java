@@ -38,6 +38,11 @@ public interface IParameterDecorator {
     String INVERT_FLAG = "_";
 
     /**
+     * Force the evaluation silence.
+     */
+    String SILENT_FLAG = "-";
+
+    /**
      * Gets the decorated object.
      * 
      * @return The object.
@@ -51,6 +56,10 @@ public interface IParameterDecorator {
      *            The new decorated object.
      */
     void setDecorated(Object decorated);
+
+    boolean isEval(String name);
+
+    boolean isSilent(String name);
 
     /**
      * Get name cleared.
@@ -75,8 +84,10 @@ public interface IParameterDecorator {
      *         and we ask to set 'name' to 'x', the operation output will be
      *         '1', but if feature 'name' in the decorated object has a
      *         annotation @DontEval the result will be 'x'.
+     * @throws Exception
+     *             On evaluation error.
      */
-    Object setParameter(String name, Object value, IContext context);
+    Object setParameter(String name, Object value, IContext context) throws Exception;
 
     /**
      * Gets a parameter.

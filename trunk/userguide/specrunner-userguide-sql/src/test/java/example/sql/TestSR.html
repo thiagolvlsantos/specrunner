@@ -15,7 +15,7 @@
 </div>
 
 <p>
-	Para o nome <span class="set" name="nome">Thiago</span>, a saudação é <span class="eq" value="obj.greeting(nome)">Oi Thiago!</span>.
+	Para o nome <span class="set" name="nome">Thiago</span>, a saudação é <span class="eq" value="obj.greeting2(nome)">Oi Thiago!</span>.
 </p>
 
 <p>
@@ -28,20 +28,23 @@
 	<!--  primeiro roda-se os comandos do header, depois para cada tr chama-se o 'expression'
 	e coloca-se em contexto uma variável com nome fixo, depois roda-se cada linha copiando os
 	asserts para cada instância individual. -->
-	<table class="execute" expression="obj.split(nome)" name="c">
+	<table class="execute" value="obj.split(nome,title)" name="c">
 		<tr>
 			<th class="local" name="nome">Full Name</th>
+			<th class="local" name="title">Title</th>
 			<th class="compare" value="c.firstName">First Name</th>
 			<th class="compare" value="c.lastName">Last Name</th>
 		</tr>
 		<tr>
 			<td>John Smith</td>
-			<td>John</td>
+			<td>Sr</td>
+			<td>Sr John</td>
 			<td>Smith</td>
 		</tr>
 		<tr>
 			<td>David Peterson</td>
-			<td>David</td>
+			<td>Mr</td>
+			<td>Mr David</td>
 			<td>Peterson</td>
 		</tr>
 	</table>

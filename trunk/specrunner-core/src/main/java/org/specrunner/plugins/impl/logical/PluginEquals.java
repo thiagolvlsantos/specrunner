@@ -24,6 +24,7 @@ import nu.xom.Nodes;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.Unsilent;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
@@ -97,6 +98,12 @@ public class PluginEquals extends AbstractPluginDual {
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
+    }
+
+    @Override
+    @Unsilent
+    public void setValue(Object value) {
+        super.setValue(value);
     }
 
     @Override
