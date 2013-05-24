@@ -46,7 +46,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
      * @param clazz
      *            The test class.
      * @throws InitializationError
-     *             On inicialization errors.
+     *             On initialization errors.
      */
     public SRRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
