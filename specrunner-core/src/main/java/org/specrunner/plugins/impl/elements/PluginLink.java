@@ -102,7 +102,7 @@ public class PluginLink extends AbstractPluginResources {
                 ISource o = sf.newSource(href);
                 URI path = s.resolve(o).getURI();
                 if (isCss()) {
-                    s.getManager().addCss(String.valueOf(path), false, EType.BINARY, Position.HEAD_START);
+                    s.getManager().addCss(String.valueOf(path), false, EType.BINARY, Position.HEAD_END);
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("CSS " + href + " from source " + s.getString() + " added.");
                     }

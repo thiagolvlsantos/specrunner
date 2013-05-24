@@ -27,6 +27,9 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.util.UtilLog;
+
+import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
  * A generic plugin that acts over a webdriver.
@@ -187,6 +190,18 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver d) {
+                if (d instanceof IHtmlUnitDriver) {
+                    WebClient client = ((IHtmlUnitDriver) d).getWebClient();
+                    long time = System.currentTimeMillis();
+                    int count = client.waitForBackgroundJavaScript(interval);
+                    while (count > 0 && (System.currentTimeMillis() - time <= maxwait)) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info(count + " threads, waiting for " + interval + "mls on max of " + maxwait + "mls.");
+                        }
+                        count = client.waitForBackgroundJavaScript(interval);
+                    }
+                    return true;
+                }
                 return true;
             }
         };
