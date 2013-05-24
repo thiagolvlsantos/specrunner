@@ -1,0 +1,22 @@
+body {
+	font-family: verdana;
+	font-size: 8pt;
+}
+
+table.form {
+	border:1px dotted gray;
+}
+
+table.list {
+	border: 1px solid black;
+}
+
+table.list th {
+	background-color: gray;
+	color: white;
+	padding: 4px;
+}
+
+table.list td {
+	border: 1px dotted black;	
+}

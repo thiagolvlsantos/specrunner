@@ -1,0 +1,147 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+</head>
+<body>
+	<p>
+	Duas conexões <span class="connections">A e B</span>.
+	</p>
+	
+	<p>
+	 <a class="scriptsDrop" href="drop.sql">Re</a><a class="scriptsSchema" href="schema.sql">cria-se</a> o esquema de A e B.
+	 </p>
+
+	<p>
+	Com um <span class="schemaloader">leitor</span> de esquemas se carrega o <span class="schema">esquema</span> esperado.
+	</p>
+	
+	<p>
+	Prepara-se o executor de comandos de <span class="database" name="dataA;dataB">A e B</span>.
+	</p>
+	
+	Por fim	prepara-se o banco de dados preenchendo com:
+	<p>
+		Os dados do <a href="projetos_tarefas.xlsx" class="include" transformer="prepare">Excel</a>;
+	</p>
+	
+	<table class="prepare">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Tarefa 1</td>
+				<td>Descr 1</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>2</td>
+				<td>Tarefa 2</td>
+				<td></td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>U</td>
+				<td>1</td>
+				<td>Tarefa 3</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>D</td>
+				<td>2</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>3</td>
+				<td>Tarefa 4</td>
+				<td></td>
+				<td>2</td>
+			</tr>
+		</tbody>
+	</table>
+	Depois dos dados preenchidos, adiciona-se as 
+	<a class="scriptsConstraints" href="constraints.sql">A e B</a>.
+
+	<p>No final deve-se verificar se os valores abaixo estão lá na base de dados:</p>
+	<table class="prepare" datasource="conB" database="dataB">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>U</td>
+				<td>1</td>
+				<td>Nome C</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>2</td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="prepareB">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>D</td>
+				<td>3</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<p>
+	Desconsiderando a coluna <span class="filter">Nome de projeto</span>, comparar as bases <span class="compareBase">A e B</span>.
+	</p>
+	
+	<p>
+	Liberando JDBC <span class="release">A e B</span>.
+	</p>
+</body>
+</html>

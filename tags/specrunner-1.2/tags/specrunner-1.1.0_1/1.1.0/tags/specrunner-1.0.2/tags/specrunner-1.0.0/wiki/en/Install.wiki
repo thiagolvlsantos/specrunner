@@ -1,0 +1,31 @@
+#summary Como instalar
+#labels Featured
+
+= Requirements =
+Maven >= 3 on system PATH.
+
+= Install =
+  * Download the last version available;
+  * Unzip file;
+  * Open a console;
+  * On '*specrunner-all*' call '*mvn clean source:jar install*'.
+
+Ps: This is a temporary solution while SpecRunner is not available at Maven Central repository (registration is under process).
+
+= Adicionando a um projeto =
+Add the dependency to your project.
+{{{
+<dependency>
+    <groupId>org.specrunner</groupId>
+    <artifactId>specrunner</artifactId>
+    <version>1.0.0</version>
+</dependency>
+}}}
+For other profiles, the syntax is like:
+{{{
+<dependency>
+    <groupId>org.specrunner</groupId>
+    <artifactId>specrunner-webdriver</artifactId>
+    <version>1.0.0</version>
+</dependency>
+}}}

@@ -1,0 +1,184 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2013  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+/* STATUS DECLARATION */
+.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_detail,.sr_ignored
+{
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+}
+
+.sr_failure,.sr_success,.sr_warning,.sr_info,.sr_detail,.sr_ignored {
+/*padding: 2px; */ 
+}
+
+/* TYPE DECLARATION */
+.sr_action:after, .sr_assertion:after, .sr_undef:after {
+    font-size: 50%;    
+}
+
+.sr_action:after {
+    content: "IN";
+}
+
+.sr_assertion:after {
+    content: "OUT"
+}
+
+.sr_undef:after {
+    content: "NA";
+}
+
+/* VARIABLE DECLARATION */
+.local:after,.global:after,
+.sr_action:after,.sr_assertion:after,.sr_undef:after,.sr_time:before {
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+    padding: 1px 1px 1px 1px;
+    vertical-align: top;
+    background-color: white;
+}
+
+.local:after,.global:after, .sr_time:before{
+    font-size: x-small;
+}
+
+.local:after {
+    content: "local(" attr(iname) ":" attr(instance) ")" attr(scope);
+}
+
+.global:after {
+    content: "global(" attr(iname) ":" attr(instance) ")" ;
+}
+
+.sr_time:before {
+    vertical-align: bottom;
+    content: attr(srtime) " ms" ;
+}
+
+/* MACROS */
+.macro,.call,.macro:before,.call:before {
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+}
+
+.macro:before,.call:before {
+    padding: 1px 1px 1px 1px;
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+}
+
+.macro:before {
+    content: "macro " attr(name) " " attr(run);
+}
+
+.call:before {
+    content: "call (" attr(name) ")";
+}
+
+/* LOGICAL */
+.eq:before,.neq:before {
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+    /*padding: 1px 1px 1px 1px;*/
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+}
+
+.eq:before {
+    content: " = ";
+}
+
+.neq:before {
+    content: " != ";
+}
+
+/* FLOW */
+.if:before,.sr_condition:before,.then:before,.else:before,.for:before,.iterator:before
+    {
+    /*padding: 2px 2px 2px 2px;*/
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+}
+
+.if,.sr_condition,.then,.else,.for,.iterator {
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+}
+
+.if {
+    padding: 4px 4px 4px 4px;
+}
+
+.if:before {
+    content: "if (" attr(name) ";" attr(value) ";" attr(branch) ")";
+}
+
+.sr_condition:before {
+    content: "test";
+}
+
+.then:before {
+    content: "then (" attr(name) ")";
+}
+
+.else:before {
+    content: "else (" attr(name) ")";
+}
+
+.selected {
+    border-right: 1px solid green;
+    border-bottom: 1px solid green;
+}
+
+.for:before {
+    content: "for(" attr(min) "<=" attr(var) "<" attr(max) "," attr(step)
+        ")";
+}
+
+.iterator:before {
+    content: "iterator(" attr(name) ")";
+}
+
+/* ENUM */
+.map:before {
+    border-top: 1px solid #EDEDED;
+    border-left: 1px solid #EDEDED;
+    border-right: 1px solid #969696;
+    border-bottom: 1px solid #969696;
+    /* padding: 1px 1px 1px 1px; */
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+}
+
+.map:before {
+    content: "map " attr(name) " " attr(scope);
+}
