@@ -74,7 +74,7 @@ public class WritablePage implements IWritable {
         this.information = information;
         try {
             if (page instanceof HtmlPage) {
-                tmp = File.createTempFile("sr", ".html");
+                tmp = File.createTempFile("srunner", ".html");
                 tmp.delete();
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Saving page to temporary file " + tmp);

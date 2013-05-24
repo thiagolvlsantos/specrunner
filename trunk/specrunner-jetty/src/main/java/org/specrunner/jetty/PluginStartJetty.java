@@ -99,6 +99,15 @@ public class PluginStartJetty extends AbstractPluginScoped {
     private Boolean reuse = false;
 
     /**
+     * Feature to set class loader.
+     */
+    public static final String FEATURE_CLASSLOADER = PluginStartJetty.class.getName() + ".classloader";
+    /**
+     * The class loader adjust to current Thread. Default is 'true'.
+     */
+    private Boolean classloader = true;
+
+    /**
      * Default constructor.
      */
     public PluginStartJetty() {
@@ -181,6 +190,25 @@ public class PluginStartJetty extends AbstractPluginScoped {
         this.reuse = reuse;
     }
 
+    /**
+     * Get the classloader setup.
+     * 
+     * @return The classloader state.
+     */
+    public Boolean getClassloader() {
+        return classloader;
+    }
+
+    /**
+     * Enable the revertion of classloader to current thread.
+     * 
+     * @param classloader
+     *            The classloader flag.
+     */
+    public void setClassloader(Boolean classloader) {
+        this.classloader = classloader;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -240,6 +268,8 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     scanAvailablePort(server);
                 }
 
+                perform(server);
+
                 waitForStart(server);
 
                 saveGlobal(context, getName(), server);
@@ -276,6 +306,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
         final Server server = (Server) configuration.configure();
         setShutdownManager(server);
         getPortFromServer(server);
+        setClassloader(server);
         return server;
     }
 
@@ -308,6 +339,19 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 port = c.getPort();
                 break;
             }
+        }
+    }
+
+    /**
+     * Set Jetty classloader.
+     * 
+     * @param server
+     *            The server.
+     */
+    protected void setClassloader(final Server server) {
+        WebAppContext web = server.getChildHandlerByClass(WebAppContext.class);
+        if (web != null && classloader) {
+            web.setClassLoader(Thread.currentThread().getContextClassLoader());
         }
     }
 
@@ -391,6 +435,16 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 break;
             }
         }
+    }
+
+    /**
+     * Hook for customized setups.
+     * 
+     * @param server
+     *            The server object.
+     */
+    public void perform(Server server) {
+        // perform something.
     }
 
     /**
