@@ -155,7 +155,7 @@ public class ProfilerPluginListener implements IPluginListener {
 
             Element e = (Element) peek.getNode();
             UtilNode.appendCss(e, "sr_time");
-            e.addAttribute(new Attribute("srtime", name + "\n(" + actionType.getName() + ")" + ":" + (lastInit > 0 ? lastInit : "") + "/" + (lastStart > 0 ? lastStart : "") + "/" + (lastEnd > 0 ? lastEnd : "")));
+            e.addAttribute(new Attribute("srtime", (UtilLog.LOG.isTraceEnabled() ? name : "") + "\n(" + actionType.getName() + ")" + ":" + (lastInit > 0 ? lastInit : "") + "/" + (lastStart > 0 ? lastStart : "") + "/" + (lastEnd > 0 ? lastEnd : "")));
         }
     }
 
