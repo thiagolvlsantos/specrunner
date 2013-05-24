@@ -1,0 +1,31 @@
+Considerando que a '
+<span class="global" name="teste">verificação de títulos</span>
+' de uma página web é formado pelos passos no arquivo
+<a href="browser_steps.html" class="include">steps.html</a>
+.
+
+<p>Para cada um dos parâmetros abaixo enumerados:
+<table class="data_map" name="itens" scope="body">
+    <tr>
+        <th>URL</th>
+        <th>Texto</th>
+        <th>Título</th>
+    </tr>
+
+    <tr>
+        <td>http://www.google.com.br</td>
+        <td>buscar</td>
+        <td>Google</td>
+    </tr>
+</table>
+<p>
+    Execute a verificação de títulos <span class="global" name="vezes" eval="true">1</span> vez(es).
+</p>
+
+<span class="for" max="${vezes}" var="vez">
+	Vez ${vez} 
+	<span class="iterator" name="itens">
+		<span class="call" name="${teste}"><br> 
+		</span> 
+	</span> 
+</span>
