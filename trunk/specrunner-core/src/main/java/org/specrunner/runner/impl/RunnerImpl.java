@@ -194,6 +194,18 @@ public class RunnerImpl implements IRunner {
         IPlugin plugin = null;
         IBlock block = null;
         try {
+            // new block for node
+            block = context.newBlock(node, null);
+            // queue block to the context
+            context.push(block);
+
+            // ----------- METAVARIABLES --------------
+            // created before to enable plugin use them in values.
+            // meta variable 'node'
+            context.saveLocal(UtilEvaluator.asVariable("node"), node);
+            // meta variable 'block'
+            context.saveLocal(UtilEvaluator.asVariable("block"), block);
+
             IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
             if (previous == null) {
                 // create a plugin based on node information
@@ -201,8 +213,6 @@ public class RunnerImpl implements IRunner {
             } else {
                 plugin = previous;
             }
-            // new block for node
-            block = context.newBlock(node, plugin);
             if (plugin != PluginNop.emptyPlugin()) {
                 String alias = factory.getAlias(plugin.getClass());
                 boolean hasDisabled = disabledAliases != null && disabledAliases.contains(alias);
@@ -215,17 +225,12 @@ public class RunnerImpl implements IRunner {
                     return;
                 }
             }
-
-            // queue block to the context
-            context.push(block);
+            // set after creation.
+            block.setPlugin(plugin);
 
             // ----------- METAVARIABLES --------------
-            // meta variable 'node'
-            context.saveLocal(UtilEvaluator.asVariable("node"), node);
             // meta variable 'plugin'
             context.saveLocal(UtilEvaluator.asVariable("plugin"), plugin);
-            // meta variable 'block'
-            context.saveLocal(UtilEvaluator.asVariable("block"), block);
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
             // initialization

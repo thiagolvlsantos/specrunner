@@ -41,7 +41,7 @@ public class ExpressionKey {
     /**
      * The return type.
      */
-    private Class<Object> returnType;
+    private Class<?> returnType;
     /**
      * The argument names.
      */
@@ -90,7 +90,7 @@ public class ExpressionKey {
      *            The parameter types.
      * @return The expression key.
      */
-    public static ExpressionKey unique(String expression, Class<Object> returnType, String[] arrayArgs, Class<?>[] arrayTypes) {
+    public static ExpressionKey unique(String expression, Class<?> returnType, String[] arrayArgs, Class<?>[] arrayTypes) {
         ExpressionKey key = instance.get();
         key.expression = expression;
         key.returnType = returnType;

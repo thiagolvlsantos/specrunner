@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import nu.xom.Node;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -25,6 +27,16 @@ public class TestSR {
         SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryCSS.KIND, "meu", new MeuPlugin());
         SpecRunnerServices.get(IFeatureManager.class).add(MeuPlugin.FEATURE_PADRAO, "não");
         SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryElement.KIND, "outro", new OutroPlugin());
+    }
+
+    public void test(int index, Node node) {
+        System.out.println("NODE(" + index + "):" + node.toXML());
+    }
+
+    public String imprime(Node node) {
+        String xml = node.toXML();
+        System.out.println(xml);
+        return xml;
     }
 
     public String call(Date date) {
