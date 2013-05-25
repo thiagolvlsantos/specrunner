@@ -23,8 +23,7 @@ import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.codehaus.janino.ExpressionEvaluator;
-import org.codehaus.janino.Scanner;
+import org.codehaus.commons.compiler.jdk.ExpressionEvaluator;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
@@ -125,7 +124,7 @@ public class ExpressionJanino extends AbstractExpression {
             rd = new StringReader(expression);
             String[] vars;
             try {
-                vars = ExpressionEvaluator.guessParameterNames(new Scanner(null, rd));
+                vars = org.codehaus.janino.ExpressionEvaluator.guessParameterNames(new org.codehaus.janino.Scanner(null, rd));
             } catch (Exception e) {
                 // invalid expressions are values themselves
                 if (UtilLog.LOG.isTraceEnabled()) {
@@ -280,18 +279,14 @@ public class ExpressionJanino extends AbstractExpression {
                 UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
             }
             try {
-                ExpressionEvaluator ee = null;
-                synchronized (cache) {
-                    ee = cache.get(ExpressionKey.unique(expression, Object.class, arrayArgs, arrayTypes));
-                    if (ee == null) {
-                        ee = new ExpressionEvaluator(expression, Object.class, arrayArgs, arrayTypes);
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("NEW EXPRESSION(" + expression + "):" + ee);
-                        }
-                        cache.put(new ExpressionKey(expression, Object.class, arrayArgs, arrayTypes), ee);
+                try {
+                    r = tryObject(Object.class, expression, arrayArgs, arrayValues, arrayTypes);
+                } catch (Exception e) {
+                    r = tryObject(void.class, expression, arrayArgs, arrayValues, arrayTypes);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
                     }
                 }
-                r = ee.evaluate(arrayValues);
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("JANINO(" + source + ")_produced>" + r + "(" + (r != null ? r.getClass().getSimpleName() : "") + ")");
                 }
@@ -307,6 +302,38 @@ public class ExpressionJanino extends AbstractExpression {
             }
         }
         return r;
+    }
+
+    /**
+     * Compute the expression assuming return type will be the specified.
+     * 
+     * @param returnType
+     *            The calling result type.
+     * @param expression
+     *            The expression to be evaluated.
+     * @param arrayArgs
+     *            The formal parameters.
+     * @param arrayValues
+     *            The actual parameters.
+     * @param arrayTypes
+     *            The argument types.
+     * @return The expression result.
+     * @throws Exception
+     *             On processing errors.
+     */
+    protected Object tryObject(Class<?> returnType, String expression, String[] arrayArgs, Object[] arrayValues, Class<?>[] arrayTypes) throws Exception {
+        ExpressionEvaluator ee = null;
+        synchronized (cache) {
+            ee = cache.get(ExpressionKey.unique(expression, returnType, arrayArgs, arrayTypes));
+            if (ee == null) {
+                ee = new ExpressionEvaluator(expression, returnType, arrayArgs, arrayTypes);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("NEW EXPRESSION(" + expression + "):" + ee);
+                }
+                cache.put(new ExpressionKey(expression, Object.class, arrayArgs, arrayTypes), ee);
+            }
+        }
+        return ee.evaluate(arrayValues);
     }
 
     /**
