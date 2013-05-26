@@ -26,11 +26,13 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
 
+import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IModel;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.impl.PluginNop;
@@ -269,6 +271,15 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             if (g != null) {
                 Object o = g.getMap().get(name);
                 if (o != null) {
+                    if (o instanceof IModel) {
+                        try {
+                            return ((IModel<?>) o).getObject(this);
+                        } catch (SpecRunnerException e) {
+                            if (UtilLog.LOG.isTraceEnabled()) {
+                                UtilLog.LOG.trace(e.getMessage(), e);
+                            }
+                        }
+                    }
                     return o;
                 }
             }

@@ -70,4 +70,5 @@ public interface IPluginFactory {
      *             On creation error.
      */
     IPlugin newPlugin(Node source, IContext context) throws PluginException;
+
 }

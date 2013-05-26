@@ -7,8 +7,8 @@
 	<p>
 	${index}-<span class="set" name="data" value="dt">data atual</span>=${obj.call(data)}
 	</p>
-	<p>
-		Para o índice ${index * 2}, a <span class="execute" value='obj.test(index,node)'>saudação</span> esperada é <span class="eq" value="obj.bool(index)">${index%2==0}</span>.
+	<p class="execute" value='obj.test(index,$NODE,$TEXT)' >
+		Para o índice ${index * 2}, a <span class="execute" value-='obj.test(index,$NODE,$TEXT)'>saudação</span> esperada é <span class="eq" value="obj.bool(index)">${index%2==0}</span>.
 		<br/>
 		<execute name="x" value='obj.chamar(dt)'>nome</execute> tem valor ${x}.
 	</p>
