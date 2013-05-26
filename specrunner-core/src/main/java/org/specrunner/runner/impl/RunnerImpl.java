@@ -181,7 +181,7 @@ public class RunnerImpl implements IRunner {
      * @throws RunnerException
      *             On execution errors.
      */
-    protected void local(Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
+    protected void local(final Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
         List<INodeListener> nodeListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
         ENext doNode = nodeStart(node, context, result, nodeListeners);
         // if listener were used and they said to skip
@@ -202,9 +202,16 @@ public class RunnerImpl implements IRunner {
             // ----------- METAVARIABLES --------------
             // created before to enable plugin use them in values.
             // meta variable 'node'
-            context.saveLocal(UtilEvaluator.asVariable("node"), node);
+            context.saveLocal(UtilEvaluator.asVariable("$NODE"), node);
+            // meta variable 'text'
+            context.saveLocal(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
+                @Override
+                public String getObject(IContext context) throws SpecRunnerException {
+                    return node.getValue();
+                }
+            });
             // meta variable 'block'
-            context.saveLocal(UtilEvaluator.asVariable("block"), block);
+            context.saveLocal(UtilEvaluator.asVariable("$BLOCK"), block);
 
             IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
             if (previous == null) {
@@ -230,7 +237,7 @@ public class RunnerImpl implements IRunner {
 
             // ----------- METAVARIABLES --------------
             // meta variable 'plugin'
-            context.saveLocal(UtilEvaluator.asVariable("plugin"), plugin);
+            context.saveLocal(UtilEvaluator.asVariable("$PLUGIN"), plugin);
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
             // initialization
