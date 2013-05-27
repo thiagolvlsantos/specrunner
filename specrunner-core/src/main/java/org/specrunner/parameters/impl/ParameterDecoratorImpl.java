@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.Late;
 import org.specrunner.expressions.Unsilent;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.parameters.IAccess;
@@ -69,33 +70,53 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
 
     @Override
     public boolean isEval(String name) {
-        boolean invert = name.contains(INVERT_FLAG);
-        name = clear(name);
-        if (hasParameter(name)) {
-            IAccess access = checked.get(name);
-            if (access != null && access.hasFeature()) {
-                boolean eval = !hasAnnotation(access, DontEval.class);
-                if (invert) {
-                    eval = !eval;
-                }
-                return eval;
-            }
-        }
-        return true;
+        return is(name, INVERT_FLAG, DontEval.class);
     }
 
     @Override
     public boolean isSilent(String name) {
-        boolean invert = name.contains(SILENT_FLAG);
+        return is(name, SILENT_FLAG, Unsilent.class);
+    }
+
+    @Override
+    public boolean isLate(String name) {
+        boolean invert = name.contains(LATE_FLAG);
         name = clear(name);
         if (hasParameter(name)) {
             IAccess access = checked.get(name);
             if (access != null && access.hasFeature()) {
-                boolean silent = !hasAnnotation(access, Unsilent.class);
+                boolean late = hasAnnotation(access, Late.class);
                 if (invert) {
-                    silent = !silent;
+                    late = !late;
                 }
-                return silent;
+                return late;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Combine flag and annotation information.
+     * 
+     * @param name
+     *            The feature name.
+     * @param flag
+     *            The flag name.
+     * @param annotation
+     *            The annotation.
+     * @return true, if conditions as satisfied, false, otherwise.
+     */
+    protected boolean is(String name, String flag, Class<? extends Annotation> annotation) {
+        boolean invert = name.contains(flag);
+        name = clear(name);
+        if (hasParameter(name)) {
+            IAccess access = checked.get(name);
+            if (access != null && access.hasFeature()) {
+                boolean action = !hasAnnotation(access, annotation);
+                if (invert) {
+                    action = !action;
+                }
+                return action;
             }
         }
         return true;
@@ -103,7 +124,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
 
     @Override
     public String clear(String name) {
-        return name.replace(INVERT_FLAG, "").replace(SILENT_FLAG, "");
+        return name.replace(INVERT_FLAG, "").replace(SILENT_FLAG, "").replace(LATE_FLAG, "");
     }
 
     @Override

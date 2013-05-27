@@ -67,14 +67,18 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
                 String clazz = att.getValue();
                 IPlugin template = templates.get(clazz);
                 if (template != null) {
-                    return UtilPlugin.create(context, template, ele);
+                    IPlugin create = UtilPlugin.create(context, template, ele);
+                    create.setParent(this);
+                    return create;
                 } else {
                     Class<? extends IPlugin> c = types.get(clazz);
                     try {
                         if (c == null) {
                             c = (Class<? extends IPlugin>) Class.forName(clazz);
                         }
-                        return UtilPlugin.create(context, c, ele);
+                        IPlugin create = UtilPlugin.create(context, c, ele);
+                        create.setParent(this);
+                        return create;
                     } catch (ClassNotFoundException e) {
                         throw new PluginException("Plugin class " + clazz + " not found.", e);
                     } catch (ClassCastException e) {

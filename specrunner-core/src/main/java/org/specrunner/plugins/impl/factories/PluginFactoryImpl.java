@@ -22,10 +22,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import nu.xom.Element;
+import nu.xom.Node;
+
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.impl.PluginNop;
+import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.util.UtilLog;
 
@@ -155,5 +161,21 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      */
     protected boolean test(String type) {
         return kind.equalsIgnoreCase(type);
+    }
+
+    @Override
+    public boolean finalizePlugin(Node source, IContext context, IPlugin plugin) throws PluginException {
+        if (plugin == null) {
+            return false;
+        }
+        if (plugin instanceof PluginNop) {
+            return false;
+        }
+        if (source instanceof Element && plugin.getParent() == this) {
+            Element ele = (Element) source;
+            UtilPlugin.destroy(context, plugin, ele);
+            return true;
+        }
+        return false;
     }
 }

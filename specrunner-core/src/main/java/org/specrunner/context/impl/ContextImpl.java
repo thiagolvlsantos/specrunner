@@ -146,6 +146,16 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
     }
 
     @Override
+    public void saveStrict(String local, Object obj) {
+        getFirst().getMap().put(local, obj);
+    }
+
+    @Override
+    public void clearStrict(String name) {
+        getFirst().getMap().remove(name);
+    }
+
+    @Override
     public void saveScoped(String scope, String local, Object obj) {
         for (int i = PARENT; i < size(); i++) {
             IBlock g = get(i);

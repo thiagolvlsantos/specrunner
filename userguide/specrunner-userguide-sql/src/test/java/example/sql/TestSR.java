@@ -29,6 +29,10 @@ public class TestSR {
         SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryElement.KIND, "outro", new OutroPlugin());
     }
 
+    public void print(String text) {
+        System.out.println("TEXTO:" + text);
+    }
+
     public void test(int index, Node node, String text) {
         System.out.println("NODE(" + index + "):" + node.toXML());
         System.out.println("TEXT:" + text);

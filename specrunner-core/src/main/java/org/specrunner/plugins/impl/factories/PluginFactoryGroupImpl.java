@@ -67,4 +67,14 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
         }
         return this;
     }
+
+    @Override
+    public boolean finalizePlugin(Node source, IContext context, IPlugin plugin) throws PluginException {
+        for (IPluginFactory pf : getChildren()) {
+            if (pf.finalizePlugin(source, context, plugin)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

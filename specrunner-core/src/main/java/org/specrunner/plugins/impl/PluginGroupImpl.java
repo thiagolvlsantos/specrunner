@@ -23,6 +23,7 @@ import org.specrunner.parameters.impl.ParameterDecoratorImpl;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Undefined;
@@ -39,6 +40,11 @@ import org.specrunner.util.composite.CompositeImpl;
 public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implements IPluginGroup {
 
     /**
+     * The plugin parent factory.
+     */
+    private IPluginFactory parent;
+
+    /**
      * Parameter holder.
      */
     private IParameterDecorator parameters;
@@ -49,6 +55,16 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     public PluginGroupImpl() {
         parameters = new ParameterDecoratorImpl();
         parameters.setDecorated(this);
+    }
+
+    @Override
+    public IPluginFactory getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(IPluginFactory parent) {
+        this.parent = parent;
     }
 
     /**

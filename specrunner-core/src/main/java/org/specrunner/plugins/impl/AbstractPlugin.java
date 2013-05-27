@@ -27,9 +27,11 @@ import org.specrunner.parameters.impl.ParameterDecoratorImpl;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IParalelPlugin;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.ISleepPlugin;
 import org.specrunner.plugins.ITestPlugin;
 import org.specrunner.plugins.ITimedPlugin;
+import org.specrunner.plugins.IWaitPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
@@ -41,7 +43,12 @@ import org.specrunner.util.UtilString;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
+public abstract class AbstractPlugin implements IPlugin, ITestPlugin, IWaitPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
+
+    /**
+     * The plugin parent.
+     */
+    private IPluginFactory parent;
 
     /**
      * The parameters holder.
@@ -60,6 +67,19 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
      * Perform condition model.
      */
     private IModel<Boolean> conditionModel;
+
+    /**
+     * Default wait time feature.
+     */
+    public static final String FEATURE_WAIT = AbstractPlugin.class.getName() + ".wait";
+    /**
+     * Plugin wait time.
+     */
+    private Long wait;
+    /**
+     * Plugin wait time model.
+     */
+    private IModel<Long> waitModel;
 
     /**
      * Default sleep time feature.
@@ -114,6 +134,16 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     }
 
     @Override
+    public IPluginFactory getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(IPluginFactory parent) {
+        this.parent = parent;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("initialize()>" + context.peek());
@@ -121,6 +151,9 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (condition == null) {
             fh.set(FEATURE_CONDITION, this);
+        }
+        if (wait == null) {
+            fh.set(FEATURE_WAIT, this);
         }
         if (sleep == null) {
             fh.set(FEATURE_SLEEP, this);
@@ -196,6 +229,26 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, ISleepPlug
     @Override
     public void setConditionModel(IModel<Boolean> conditionModel) {
         this.conditionModel = conditionModel;
+    }
+
+    @Override
+    public Long getWait() {
+        return wait;
+    }
+
+    @Override
+    public void setWait(Long wait) {
+        this.wait = wait;
+    }
+
+    @Override
+    public IModel<Long> getWaitModel() {
+        return waitModel;
+    }
+
+    @Override
+    public void setWaitModel(IModel<Long> waitModel) {
+        this.waitModel = waitModel;
     }
 
     @Override
