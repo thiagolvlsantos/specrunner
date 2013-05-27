@@ -70,11 +70,15 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
                     String p = s.toLowerCase();
                     IPlugin template = templates.get(p);
                     if (template != null) {
-                        result.add(UtilPlugin.create(context, template, ele));
+                        IPlugin create = UtilPlugin.create(context, template, ele);
+                        create.setParent(this);
+                        result.add(create);
                     } else {
                         Class<? extends IPlugin> c = types.get(p);
                         if (c != null) {
-                            result.add(UtilPlugin.create(context, c, ele));
+                            IPlugin create = UtilPlugin.create(context, c, ele);
+                            create.setParent(this);
+                            result.add(create);
                         }
                     }
                 }

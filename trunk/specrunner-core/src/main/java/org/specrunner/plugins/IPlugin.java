@@ -30,6 +30,21 @@ import org.specrunner.result.IResultSet;
 public interface IPlugin extends IParameterHolder, IActionType {
 
     /**
+     * Get the plugin factory source.
+     * 
+     * @return The plugin.
+     */
+    IPluginFactory getParent();
+
+    /**
+     * Set the plugin factory (where it came from).
+     * 
+     * @param factory
+     *            The factory.
+     */
+    void setParent(IPluginFactory factory);
+
+    /**
      * Initialize the plugin. Performed after set parameters.
      * 
      * @param context

@@ -23,9 +23,9 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -92,7 +92,7 @@ public class PluginFor extends AbstractPlugin {
     /**
      * Maximum value.
      */
-    protected int max;
+    protected Integer max;
     /**
      * Step.
      */
@@ -141,7 +141,7 @@ public class PluginFor extends AbstractPlugin {
      * 
      * @return The last valid index.
      */
-    public int getMax() {
+    public Integer getMax() {
         return max;
     }
 
@@ -151,7 +151,7 @@ public class PluginFor extends AbstractPlugin {
      * @param max
      *            The new last index.
      */
-    public void setMax(int max) {
+    public void setMax(Integer max) {
         this.max = max;
     }
 
@@ -185,6 +185,10 @@ public class PluginFor extends AbstractPlugin {
             UtilLog.LOG.debug("VAR(" + var + "),MIN(" + min + "),MAX(" + max + "),STEP(" + step + ")");
         }
         Node current = context.getNode();
+        if (max == null) {
+            result.addResult(Failure.INSTANCE, context.newBlock(current, this), new PluginException("IPlugin " + " 'max' attribute missing."));
+            return ENext.SKIP;
+        }
         if (min > max) {
             result.addResult(Failure.INSTANCE, context.newBlock(current, this), new PluginException("IPlugin loop 'min'(" + min + ") cannot be greater than 'max'(" + max + ")"));
             return ENext.SKIP;

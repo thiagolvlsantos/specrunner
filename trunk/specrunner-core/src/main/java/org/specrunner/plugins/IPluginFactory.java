@@ -62,7 +62,7 @@ public interface IPluginFactory {
      * Creates a new plugin.
      * 
      * @param source
-     *            The source to create factory.
+     *            The source node for plugin creation.
      * @param context
      *            The context.
      * @return A plugin based on source information.
@@ -71,4 +71,18 @@ public interface IPluginFactory {
      */
     IPlugin newPlugin(Node source, IContext context) throws PluginException;
 
+    /**
+     * Finalize a plugin.
+     * 
+     * @param source
+     *            The source Node..
+     * @param context
+     *            The context.
+     * @param plugin
+     *            The previously created plugin for this node.
+     * @return true, if finalized, false, otherwise.
+     * @throws PluginException
+     *             On finalization error.
+     */
+    boolean finalizePlugin(Node source, IContext context, IPlugin plugin) throws PluginException;
 }

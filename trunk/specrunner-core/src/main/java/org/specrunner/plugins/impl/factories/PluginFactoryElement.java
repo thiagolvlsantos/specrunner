@@ -58,11 +58,15 @@ public class PluginFactoryElement extends PluginFactoryImpl {
             String name = ele.getQualifiedName().toLowerCase();
             IPlugin template = templates.get(name);
             if (template != null) {
-                return UtilPlugin.create(context, template, ele);
+                IPlugin create = UtilPlugin.create(context, template, ele);
+                create.setParent(this);
+                return create;
             } else {
                 Class<? extends IPlugin> c = types.get(name);
                 if (c != null) {
-                    return UtilPlugin.create(context, c, ele);
+                    IPlugin create = UtilPlugin.create(context, c, ele);
+                    create.setParent(this);
+                    return create;
                 }
             }
         }

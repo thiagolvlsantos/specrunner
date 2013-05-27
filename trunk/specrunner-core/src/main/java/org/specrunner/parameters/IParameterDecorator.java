@@ -31,16 +31,23 @@ import org.specrunner.context.IContext;
 public interface IParameterDecorator {
 
     /**
-     * Force the evaluation opposite. If name contains INVERT_FLAG, the
-     * expression before evaluated wont be, and <code>@DontEval</code> annotated
-     * will be evaluated.
+     * All expressions are evaluated unless annotation <code>@DontEval</code> is
+     * added. If the attribute has this flag the evaluation behavior is the
+     * opposite: not annotated attributes wont be evaluated, and annotate
+     * attributes will be evaluated.
      */
     String INVERT_FLAG = "_";
 
     /**
-     * Force the evaluation silence.
+     * Invert evaluation 'silence'. All expression are silent unless
+     * <code>@Unsilent</code> is specified for the feature.
      */
     String SILENT_FLAG = "-";
+
+    /**
+     * Force the evaluation at the end.
+     */
+    String LATE_FLAG = ".";
 
     /**
      * Gets the decorated object.
@@ -67,13 +74,22 @@ public interface IParameterDecorator {
     boolean isEval(String name);
 
     /**
-     * Check if a iven name has to be evaluated silently or not.
+     * Check if a given name has to be evaluated silently or not.
      * 
      * @param name
      *            The feature name.
      * @return true, to silent evaluation, false, otherwise. Default is true.
      */
     boolean isSilent(String name);
+
+    /**
+     * Check if a given name has to be evaluated at the end or not.
+     * 
+     * @param name
+     *            The feature name.
+     * @return true, to late evaluation, false, otherwise. Default is false.
+     */
+    boolean isLate(String name);
 
     /**
      * Get name cleared.

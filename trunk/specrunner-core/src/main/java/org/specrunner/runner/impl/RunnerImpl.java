@@ -40,6 +40,7 @@ import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.ISleepPlugin;
 import org.specrunner.plugins.ITestPlugin;
 import org.specrunner.plugins.ITimedPlugin;
+import org.specrunner.plugins.IWaitPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.result.IResultSet;
@@ -192,26 +193,30 @@ public class RunnerImpl implements IRunner {
             return;
         }
         IPlugin plugin = null;
-        IBlock block = null;
+        // new block for node
+        final IBlock block = context.newBlock(node, null);
         try {
-            // new block for node
-            block = context.newBlock(node, null);
             // queue block to the context
             context.push(block);
 
             // ----------- METAVARIABLES --------------
             // created before to enable plugin use them in values.
             // meta variable 'node'
-            context.saveLocal(UtilEvaluator.asVariable("$NODE"), node);
+            context.saveStrict(UtilEvaluator.asVariable("$NODE"), new IModel<Node>() {
+                @Override
+                public Node getObject(IContext context) throws SpecRunnerException {
+                    return block.getNode();
+                }
+            });
             // meta variable 'text'
-            context.saveLocal(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
+            context.saveStrict(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
                 @Override
                 public String getObject(IContext context) throws SpecRunnerException {
-                    return node.getValue();
+                    return block.getNode().getValue();
                 }
             });
             // meta variable 'block'
-            context.saveLocal(UtilEvaluator.asVariable("$BLOCK"), block);
+            context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
 
             IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
             if (previous == null) {
@@ -237,13 +242,16 @@ public class RunnerImpl implements IRunner {
 
             // ----------- METAVARIABLES --------------
             // meta variable 'plugin'
-            context.saveLocal(UtilEvaluator.asVariable("$PLUGIN"), plugin);
+            context.saveStrict(UtilEvaluator.asVariable("$PLUGIN"), plugin);
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
             // initialization
             initialization(context, result, plugin, listeners);
             // conditional execution
             if (checkConditional(plugin, context)) {
+                // wait if required
+                doWait(plugin, context);
+
                 ENext next = start(context, result, plugin, listeners);
                 // if plugin indicates to go deeper in node and node has
                 // children.
@@ -270,6 +278,7 @@ public class RunnerImpl implements IRunner {
                         }
                     }
                 }
+                factory.finalizePlugin(node, context, plugin);
                 end(context, result, plugin, listeners);
             } else {
                 if (block.hasNode()) {
@@ -287,10 +296,8 @@ public class RunnerImpl implements IRunner {
             // any failure back to specification
             result.addResult(Failure.INSTANCE, context.newBlock(node, plugin), e);
         } finally {
-            if (block != null) {
-                // remove block from context
-                context.pop();
-            }
+            // remove block from context
+            context.pop();
             // perform after listeners
             for (INodeListener nl : nodeListeners) {
                 nl.onAfter(node, context, result);
@@ -352,6 +359,56 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    /**
+     * Perform a sleep for the step, if specified.
+     * 
+     * @param plugin
+     *            The plugin.
+     * @param context
+     *            The context.
+     * @throws SpecRunnerException
+     *             On sleep checking errors.
+     */
+    protected void doWait(IPlugin plugin, IContext context) throws SpecRunnerException {
+        if (plugin instanceof IWaitPlugin) {
+            IWaitPlugin waitPlugin = (IWaitPlugin) plugin;
+            IModel<Long> model = waitPlugin.getWaitModel();
+            Long sleep = null;
+            if (model != null) {
+                sleep = model.getObject(context);
+            } else {
+                sleep = waitPlugin.getWait();
+            }
+            if (sleep != null) {
+                try {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Wait for " + sleep + "mls.");
+                    }
+                    Thread.sleep(sleep);
+                } catch (InterruptedException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Perform start operation of plugins.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param plugin
+     *            The plugin.
+     * @param listeners
+     *            List of listeners.
+     * @return The next step on state machine.
+     * @throws SpecRunnerException
+     *             On start errors.
+     */
     protected ENext start(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws SpecRunnerException {
         // perform before start
         for (IPluginListener sl : listeners) {
@@ -408,7 +465,7 @@ public class RunnerImpl implements IRunner {
      * @param plugin
      *            The plugin.
      * @param start
-     *            The plugin.
+     *            The start time..
      * @param method
      *            The method name.
      * @throws SpecRunnerException
@@ -431,6 +488,20 @@ public class RunnerImpl implements IRunner {
         }
     }
 
+    /**
+     * Perform end operations.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param plugin
+     *            The plugin.
+     * @param listeners
+     *            The listeners.
+     * @throws SpecRunnerException
+     *             On ending errors.
+     */
     protected void end(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws SpecRunnerException {
         // perform before end
         for (IPluginListener sl : listeners) {

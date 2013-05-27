@@ -160,6 +160,33 @@ public final class UtilPlugin {
     }
 
     /**
+     * Make plugin sensible to attributes after running.
+     * 
+     * @param context
+     *            The context.
+     * @param plugin
+     *            The plugin.
+     * @param element
+     *            The element.
+     * @return The plugin itself.
+     * @throws PluginException
+     *             On plugin finalization.
+     */
+    public static IPlugin destroy(IContext context, IPlugin plugin, Element element) throws PluginException {
+        try {
+            if (plugin != PluginNop.emptyPlugin()) {
+                UtilParametrized.setProperties(context, plugin, element, false);
+            }
+            return plugin;
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException("Could not finalize plugin " + plugin + "." + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Executes the children of a given node.
      * 
      * @param node

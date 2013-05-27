@@ -69,7 +69,8 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
     void clearGlobal(String global);
 
     /**
-     * Saves a variable with the given name to the local context.
+     * Saves a variable with the given name to the local context. The local
+     * context is defined as the immediate parent of the current node.
      * 
      * @param local
      *            The variable name.
@@ -85,6 +86,25 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
      *            The variable name.
      */
     void clearLocal(String local);
+
+    /**
+     * Save the value to the current context peek, no matter what type of node
+     * it is.
+     * 
+     * @param name
+     *            The name.
+     * @param value
+     *            The value.
+     */
+    void saveStrict(String name, Object value);
+
+    /**
+     * Clear the context peek mapping from name.
+     * 
+     * @param name
+     *            The name.
+     */
+    void clearStrict(String name);
 
     /**
      * Saves a variable to the given scope.

@@ -24,6 +24,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.text.PluginReplacer;
@@ -70,5 +71,10 @@ public class PluginFactoryText implements IPluginFactory {
             ((IPluginGroup) instance.get()).add(plugin);
         }
         return this;
+    }
+
+    @Override
+    public boolean finalizePlugin(Node source, IContext context, IPlugin plugin) throws PluginException {
+        return false;
     }
 }

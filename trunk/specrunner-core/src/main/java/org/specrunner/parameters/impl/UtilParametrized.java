@@ -47,6 +47,10 @@ public final class UtilParametrized {
     private UtilParametrized() {
     }
 
+    public static void setProperties(IContext context, IParameterHolder holder, Element element) throws PluginException {
+        setProperties(context, holder, element, true);
+    }
+
     /**
      * Sets the properties of a given object based on attributes of a element.
      * 
@@ -57,10 +61,12 @@ public final class UtilParametrized {
      *            element attributes.
      * @param element
      *            The reference element.
+     * @param onCreate
+     *            true, if in creation time, false, otherwise.
      * @throws PluginException
      *             On setting errors.
      */
-    public static void setProperties(IContext context, IParameterHolder holder, Element element) throws PluginException {
+    public static void setProperties(IContext context, IParameterHolder holder, Element element, boolean onCreate) throws PluginException {
         if (holder != null) {
             IParameterDecorator p = holder.getParameters();
             context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
@@ -68,8 +74,13 @@ public final class UtilParametrized {
                 Attribute n = element.getAttribute(i);
                 String name = n.getQualifiedName();
                 try {
-                    Object newValue = p.setParameter(name, n.getValue(), context);
-                    context.saveLocal(UtilEvaluator.asVariable(p.clear(name)), newValue);
+                    boolean onStart = onCreate && !p.isLate(name);
+                    boolean onEnd = !onCreate && p.isLate(name);
+                    if (onStart || onEnd) {
+                        Object newValue = p.setParameter(name, n.getValue(), context);
+                        // every local attribute became a local variable
+                        context.saveLocal(UtilEvaluator.asVariable(p.clear(name)), newValue);
+                    }
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
