@@ -17,6 +17,8 @@
  */
 package org.specrunner.webdriver;
 
+import java.util.Arrays;
+
 import org.openqa.selenium.HasInputDevices;
 import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.Keys;
@@ -66,7 +68,7 @@ public abstract class AbstractPluginKeyboard extends AbstractPluginHasInputDevic
     protected Keys getKey() throws PluginException {
         Keys k = Keys.valueOf(getName());
         if (k == null) {
-            throw new PluginException("Key named '" + getName() + "' not found. Valid values:" + Keys.values());
+            throw new PluginException("Key named '" + getName() + "' not found. Valid values:" + Arrays.toString(Keys.values()));
         }
         return k;
     }
