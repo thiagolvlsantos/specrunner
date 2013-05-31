@@ -28,9 +28,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
-import org.specrunner.listeners.IListenerManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
@@ -332,7 +330,6 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             td.appendChild(sub);
             List<IResult> filter = filterByStatus(s);
             List<ActionType> acs = actionTypes(this);
-            IListenerManager lm = SpecRunnerServices.get(IListenerManager.class);
             for (ActionType at : acs) {
                 Element subtr = new Element("tr");
                 sub.appendChild(subtr);
