@@ -86,7 +86,7 @@ public class AnnotatorStacktrace implements IAnnotator {
             stack = new Element("span");
             stack.appendChild(((IPresentation) failure).asNode());
         } else {
-            // otherwise print default strack trace
+            // otherwise print default stack trace
             stack = new Element("pre");
             try {
                 stack.appendChild(ExceptionUtil.toString(failure));
