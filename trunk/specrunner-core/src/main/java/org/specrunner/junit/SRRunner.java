@@ -113,7 +113,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
                 return tmp;
             }
         }
-        throw new RuntimeException("File with one of extensions '" + extensions + "' to " + prefix + " not found!");
+        throw new RuntimeException("File with one of extensions '" + Arrays.toString(extensions) + "' to " + prefix + " not found!");
     }
 
     /**
