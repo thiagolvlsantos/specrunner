@@ -34,10 +34,10 @@ public class ConverterNotNullNotEmpty implements IConverter {
 
     @Override
     public boolean accept(Object obj) {
-        String str = String.valueOf(obj);
-        if (str == null) {
+        if (obj == null) {
             return false;
         }
+        String str = String.valueOf(obj);
         str = str.trim();
         if (str.isEmpty()) {
             return false;
