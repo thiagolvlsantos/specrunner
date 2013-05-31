@@ -17,6 +17,8 @@
  */
 package org.specrunner.webdriver;
 
+import java.util.Arrays;
+
 import org.openqa.selenium.Rotatable;
 import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebDriver;
@@ -67,7 +69,7 @@ public abstract class AbstractPluginRotatable extends AbstractPluginBrowserAware
     protected ScreenOrientation getOrientationValue() throws PluginException {
         ScreenOrientation so = ScreenOrientation.valueOf(getOrientation());
         if (so == null) {
-            throw new PluginException("Invalid ScreenOrientation value '" + getOrientation() + "'. Valid values:" + ScreenOrientation.values());
+            throw new PluginException("Invalid ScreenOrientation value '" + getOrientation() + "'. Valid values:" + Arrays.toString(ScreenOrientation.values()));
         }
         return so;
     }
