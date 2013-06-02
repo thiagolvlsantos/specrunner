@@ -164,7 +164,7 @@
 }
 
 .iterator:before {
-    content: "iterator(" attr(name) ")";
+    content: "iterator(" attr(name) "," attr(var) ")";
 }
 
 /* ENUM */

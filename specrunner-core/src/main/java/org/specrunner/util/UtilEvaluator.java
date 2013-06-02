@@ -71,6 +71,20 @@ public final class UtilEvaluator {
     }
 
     /**
+     * Remove variable mask.
+     * 
+     * @param name
+     *            The masked name.
+     * @return Name cleaned.
+     */
+    public static String removeVariable(String name) {
+        if (name == null) {
+            return null;
+        }
+        return name.substring(START_CODE.length(), name.length() - END.length());
+    }
+
+    /**
      * Evaluates the text and returns an object.
      * 
      * @param text

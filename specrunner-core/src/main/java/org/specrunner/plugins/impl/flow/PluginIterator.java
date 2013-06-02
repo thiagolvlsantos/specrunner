@@ -17,20 +17,21 @@
  */
 package org.specrunner.plugins.impl.flow;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
-import org.specrunner.plugins.impl.data.IDataList;
 import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -86,6 +87,16 @@ import org.specrunner.util.xom.UtilNode;
  */
 public class PluginIterator extends AbstractPluginNamed {
 
+    private String var = "item";
+
+    public String getVar() {
+        return var;
+    }
+
+    public void setVar(String var) {
+        this.var = var;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -103,18 +114,20 @@ public class PluginIterator extends AbstractPluginNamed {
         }
         node.detach();
 
-        String local = "item_list";
+        String local = var;
         String pos = "${index}";
         if (list instanceof IDataMap<?>) {
             local = "item_map";
         }
+        String tmp = UtilEvaluator.asVariable(local);
 
         Element external = (Element) node.copy();
         external.removeChildren();
+        external.addAttribute(new Attribute("var", local));
 
         int i = 0;
-        for (Object map : (IDataList<?>) list) {
-            context.saveLocal(local, map);
+        for (Object map : (Iterable<?>) list) {
+            context.saveLocal(tmp, map);
             context.saveLocal(pos, "" + i);
             try {
                 Node c = node.copy();
@@ -127,7 +140,7 @@ public class PluginIterator extends AbstractPluginNamed {
                 }
             } finally {
                 context.clearLocal("" + i);
-                context.clearLocal(local);
+                context.clearLocal(tmp);
             }
             i++;
         }
