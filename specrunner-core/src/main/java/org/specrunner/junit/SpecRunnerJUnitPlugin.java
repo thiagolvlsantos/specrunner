@@ -29,8 +29,7 @@ public final class SpecRunnerJUnitPlugin {
      *            The plugin to be performed.
      */
     public static void defaultRun(IPlugin input) {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        defaultRun(input, cfg);
+        defaultRun(input, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     /**
