@@ -4,18 +4,18 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.runner.Description;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * SpecRunner executor.
+ * SpecRunner Spring executor.
  * 
  * @author Thiago Santos
  * 
  */
-public class SRRunner extends BlockJUnit4ClassRunner {
+public class SRRunnerSpring extends SpringJUnit4ClassRunner {
 
     /**
      * Fake method.
@@ -30,7 +30,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
      * @throws InitializationError
      *             On initialization errors.
      */
-    public SRRunner(Class<?> clazz) throws InitializationError {
+    public SRRunnerSpring(Class<?> clazz) throws InitializationError {
         super(clazz);
     }
 
