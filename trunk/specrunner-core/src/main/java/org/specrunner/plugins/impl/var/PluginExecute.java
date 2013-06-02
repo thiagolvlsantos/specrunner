@@ -19,6 +19,7 @@ package org.specrunner.plugins.impl.var;
 
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.Unsilent;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -38,7 +39,7 @@ public class PluginExecute extends AbstractPluginDefine {
 
     @Override
     protected boolean operation(Object obj, IContext context) {
-        String n = getName();
+        String n = UtilEvaluator.removeVariable(getName());
         if (n != null) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Bind_execute(" + n + ")->" + obj + "(" + (obj != null ? obj.getClass() : "null") + ")");
