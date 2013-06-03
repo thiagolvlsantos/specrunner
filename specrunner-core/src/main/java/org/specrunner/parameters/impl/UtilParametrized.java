@@ -47,6 +47,19 @@ public final class UtilParametrized {
     private UtilParametrized() {
     }
 
+    /**
+     * Sets the properties of a given object based on attributes of a element.
+     * 
+     * @param context
+     *            The context.
+     * @param holder
+     *            The parameterized object whose attributes will be set based on
+     *            element attributes.
+     * @param element
+     *            The reference element.
+     * @throws PluginException
+     *             On setting errors.
+     */
     public static void setProperties(IContext context, IParameterHolder holder, Element element) throws PluginException {
         setProperties(context, holder, element, true);
     }
