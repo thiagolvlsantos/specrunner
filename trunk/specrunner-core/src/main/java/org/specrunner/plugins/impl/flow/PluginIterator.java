@@ -87,12 +87,26 @@ import org.specrunner.util.xom.UtilNode;
  */
 public class PluginIterator extends AbstractPluginNamed {
 
+    /**
+     * Iterator variable name.
+     */
     private String var = "item";
 
+    /**
+     * The object variable name.
+     * 
+     * @return The variable name.
+     */
     public String getVar() {
         return var;
     }
 
+    /**
+     * Set the variable name.
+     * 
+     * @param var
+     *            The name.
+     */
     public void setVar(String var) {
         this.var = var;
     }
