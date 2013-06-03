@@ -23,7 +23,6 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -110,12 +109,6 @@ public class PluginIterator extends AbstractPluginNamed {
      */
     public void setVar(String var) {
         this.var = var;
-    }
-
-    @Override
-    @DontEval
-    public void setName(String name) {
-        super.setName(name);
     }
 
     @Override
