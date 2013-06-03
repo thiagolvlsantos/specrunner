@@ -136,55 +136,62 @@ public class ExpressionJanino extends AbstractExpression {
                 return expression;
             }
             for (String str : vars) {
-                ExpressionVariable var = new ExpressionVariable(getParent(), str);
-                Object result = var.evaluate(context, silent);
-                if (result != null) {
+                Object obj = context.getByName(str);
+                if (obj != null) {
                     args.add(str);
-                    values.add(result);
-                    types.add(result.getClass());
+                    values.add(obj);
+                    types.add(obj.getClass());
                 } else {
-                    // check predefined values
-                    Object value = getParent().getValues().get(str);
-                    // if value is itself an expression should be evaluated
-                    if (value instanceof String) {
-                        try {
-                            value = UtilEvaluator.evaluate((String) value, context, silent);
-                        } catch (Exception e) {
-                            if (UtilLog.LOG.isTraceEnabled()) {
-                                UtilLog.LOG.trace(e.getMessage(), e);
-                            }
-                            if (!silent) {
-                                throw new PluginException(e);
+                    ExpressionVariable var = new ExpressionVariable(getParent(), str);
+                    Object result = var.evaluate(context, silent);
+                    if (result != null) {
+                        args.add(str);
+                        values.add(result);
+                        types.add(result.getClass());
+                    } else {
+                        // check predefined values
+                        Object value = getParent().getValues().get(str);
+                        // if value is itself an expression should be evaluated
+                        if (value instanceof String) {
+                            try {
+                                value = UtilEvaluator.evaluate((String) value, context, silent);
+                            } catch (Exception e) {
+                                if (UtilLog.LOG.isTraceEnabled()) {
+                                    UtilLog.LOG.trace(e.getMessage(), e);
+                                }
+                                if (!silent) {
+                                    throw new PluginException(e);
+                                }
                             }
                         }
-                    }
-                    if (value != null) {
-                        args.add(str);
-                        values.add(value);
-                        types.add(value.getClass());
-                    } else {
-                        // check predefined classes
-                        Class<?> clazz = getParent().getClasses().get(str);
-                        if (clazz != null) {
-                            try {
-                                args.add(str);
-                                value = clazz.newInstance();
-                                values.add(value);
-                                types.add(value.getClass());
-                            } catch (Exception e) {
-                                throw new ExpressionException("Unable to evaluate predefined value:" + str, e);
-                            }
+                        if (value != null) {
+                            args.add(str);
+                            values.add(value);
+                            types.add(value.getClass());
                         } else {
-                            // check predefined models.
-                            IModel<?> model = getParent().getModels().get(str);
-                            if (model != null) {
+                            // check predefined classes
+                            Class<?> clazz = getParent().getClasses().get(str);
+                            if (clazz != null) {
                                 try {
-                                    value = model.getObject(context);
                                     args.add(str);
+                                    value = clazz.newInstance();
                                     values.add(value);
                                     types.add(value.getClass());
                                 } catch (Exception e) {
-                                    throw new ExpressionException("Unable to evaluate predefined model:" + str, e);
+                                    throw new ExpressionException("Unable to evaluate predefined value:" + str, e);
+                                }
+                            } else {
+                                // check predefined models.
+                                IModel<?> model = getParent().getModels().get(str);
+                                if (model != null) {
+                                    try {
+                                        value = model.getObject(context);
+                                        args.add(str);
+                                        values.add(value);
+                                        types.add(value.getClass());
+                                    } catch (Exception e) {
+                                        throw new ExpressionException("Unable to evaluate predefined model:" + str, e);
+                                    }
                                 }
                             }
                         }
