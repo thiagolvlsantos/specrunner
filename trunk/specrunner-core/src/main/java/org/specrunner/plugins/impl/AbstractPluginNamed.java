@@ -17,6 +17,8 @@
  */
 package org.specrunner.plugins.impl;
 
+import org.specrunner.parameters.DontEval;
+
 /**
  * A plugin with name information.
  * 
@@ -45,6 +47,7 @@ public abstract class AbstractPluginNamed extends AbstractPlugin {
      * @param name
      *            A new name.
      */
+    @DontEval
     public void setName(String name) {
         this.name = name;
     }
