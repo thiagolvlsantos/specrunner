@@ -1,12 +1,12 @@
 <html>
 <head>
-<meta charset="UTF-8" />
+<meta charset="ISO-8859-1" />
 </head>
 <body>
 	<p>
-	Uma conex√£o 
+	Uma conex„o 
 	<span class="connection" connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_INICIAL|sa|" name="conA" reuse="true">A</span> 
-	e uma conex√£o
+	e uma conex„o
 	<span class="connection" connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|" name="conB" reuse="true">B</span>.
 	</p>
 	
@@ -57,7 +57,7 @@
 				<th>Comando</th>
 				<th>ID</th>
 				<th>Nome</th>
-				<th>Descri√ß√£o</th>
+				<th>DescriÁ„o</th>
 				<th>Projeto</th>
 			</tr>
 		</thead>
@@ -101,7 +101,7 @@
 	<a class="scripts" href="constraints.sql" value="constraints.sql" name="conA">constraints</a>.
 	<a class="scripts" href="constraints.sql" value="constraints.sql" name="conB">constraints</a>.
 
-	<p>No final deve-se verificar se os valores abaixo est√£o l√° na base de dados:</p>
+	<p>No final deve-se verificar se os valores abaixo est„o l· na base de dados:</p>
 	<table class="prepare" datasource="conB" database="dataB">
 		<caption>Projeto</caption>
 		<thead>
@@ -127,7 +127,7 @@
 				<th>Comando</th>
 				<th>ID</th>
 				<th>Nome</th>
-				<th>Descri√ß√£o</th>
+				<th>DescriÁ„o</th>
 				<th>Projeto</th>
 			</tr>
 		</thead>
@@ -141,6 +141,9 @@
 		</tbody>
 	</table>
 	
+	<p>
+		Comparar as bases <span system="conA" reference="conB" class="compareBase">A e B</span>
+	</p>
 	
 	<p>
 	Liberando JDBC 
