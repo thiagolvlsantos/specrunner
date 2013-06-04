@@ -122,7 +122,7 @@ public class PluginIterator extends AbstractPluginNamed {
         ParentNode parent = node.getParent();
         int index = parent.indexOf(node);
 
-        Object list = context.getByName(getName());
+        Object list = context.getByName(UtilEvaluator.asVariable(getName()));
         if (list == null) {
             throw new PluginException("Collection named '" + getName() + "' not found.");
         }
