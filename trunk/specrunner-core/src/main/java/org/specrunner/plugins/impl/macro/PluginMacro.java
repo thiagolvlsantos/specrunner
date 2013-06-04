@@ -21,12 +21,13 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -99,15 +100,16 @@ public class PluginMacro extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        Object macro = context.getByName(getName());
+        String macroName = UtilEvaluator.asVariable(getName());
+        Object macro = context.getByName(macroName);
         if (macro != null) {
             throw new PluginException("Macro name already used in '" + (macro instanceof Node ? ((Node) macro).toXML() : macro) + "'");
         }
         Element ele = (Element) context.getNode();
         if (isGlobal()) {
-            saveGlobal(context, getName(), ele.copy());
+            saveGlobal(context, macroName, ele.copy());
         } else {
-            saveLocal(context, getName(), ele.copy());
+            saveLocal(context, macroName, ele.copy());
         }
         UtilNode.appendCss(ele, CSS_DEFINED);
         return (run ? ENext.DEEP : ENext.SKIP);
