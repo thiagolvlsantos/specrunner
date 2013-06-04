@@ -23,13 +23,14 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilEvaluator;
 
 /**
  * A plugin which calls a macro by its name.
@@ -60,10 +61,12 @@ public class PluginCall extends AbstractPluginNamed {
         // content processing
         UtilPlugin.performChildren(node, context, result);
 
-        if (getName() == null) {
+        String name = getName();
+        if (name == null) {
             setName(node.getValue());
         }
-        Object obj = context.getByName(getName());
+        String macroName = UtilEvaluator.asVariable(getName());
+        Object obj = context.getByName(macroName);
         if (obj == null) {
             throw new PluginException("Macro name '" + getName() + "' not found.");
         }
