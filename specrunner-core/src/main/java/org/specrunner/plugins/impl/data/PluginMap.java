@@ -138,7 +138,7 @@ public class PluginMap extends AbstractPluginTable {
                 return data.iterator();
             }
         };
-        saveLocal(context, getName(), map);
+        saveLocal(context, UtilEvaluator.asVariable(getName()), map);
         for (int i = 0; i < ths.getCellsCount(); i++) {
             result.addResult(Success.INSTANCE, context.newBlock(ths.getCell(i).getElement(), this));
         }
