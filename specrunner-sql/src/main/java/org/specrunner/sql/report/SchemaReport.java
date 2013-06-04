@@ -106,6 +106,7 @@ public class SchemaReport implements IPresentation {
                     td.addAttribute(new Attribute("class", "sr_sreport"));
                     td.appendChild(r.asNode());
                 }
+                td.appendChild(new Element("p"));
             }
         }
         return table;
