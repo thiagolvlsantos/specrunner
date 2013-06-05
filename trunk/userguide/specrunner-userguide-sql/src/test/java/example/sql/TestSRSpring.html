@@ -7,13 +7,56 @@
 
 
 	Obter a
-	<span class="execute" value="obj.lista()" name="lista">listagem</span>
+	<span class="execute" value="obj.lista1()" name="lista">listagem</span>
 	
 	<ul class="iterator" name="lista" var="i">
 		<li>${index} - ${i.numero}/${i.nome}</li>
 	</ul>
 
 	<table class="verifyRows" value="lista" var="i" border=1>
+		<tr>
+			<th class="eq" value="index">Índice</th>
+			<th class="eq" value="i.numero">Número</th>
+			<th class="eq" value="i.nome">Nome</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>1</td>
+			<td>Eu</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>Tu</td>
+		</tr>
+	</table>
+	<p></p>
+
+	<table class="verifyRows" value="obj.lista2()" var="i" border=1>
+		<tr>
+			<th class="eq" value="index">Índice</th>
+			<th class="eq" value="i.numero">Número</th>
+			<th class="eq" value="i.nome">Nome</th>
+		</tr>
+		<tr>
+			<td>0</td>
+			<td>1</td>
+			<td>Eu</td>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>Tu</td>
+		</tr>
+		<tr>
+			<td>2</td>
+			<td>3</td>
+			<td>Ele</td>
+		</tr>
+	</table>
+	<p></p>
+
+	<table class="verifyRows" value="obj.lista3()" var="i" border=1>
 		<tr>
 			<th class="eq" value="index">Índice</th>
 			<th class="eq" value="i.numero">Número</th>
