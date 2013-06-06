@@ -99,19 +99,22 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                     }
                 } else {
                     for (URL url : urls) {
-                        String file = url.toString();
-                        String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + serialNumber.get();
-                        serialNumber.set(serialNumber.get() + 1);
-                        Element tag = getHeaderTag(output, name);
-                        File resFile = getFile(output, name);
-                        if (!resFile.getParentFile().exists() && !resFile.getParentFile().mkdirs()) {
-                            throw new ResourceException("Could not create resource directory '" + resFile.getParent() + "'.");
-                        }
-                        UtilIO.writeToClose(url, resFile);
-                        if (getPosition().getPlace() == EPlace.START) {
-                            target.insertChild(tag, 0);
-                        } else {
-                            target.appendChild(tag);
+                        // if its is an absolute URL copy is not required
+                        if (url.getProtocol().equalsIgnoreCase("file")) {
+                            String file = url.toString();
+                            String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + serialNumber.get();
+                            serialNumber.set(serialNumber.get() + 1);
+                            Element tag = getHeaderTag(output, name);
+                            File resFile = getFile(output, name);
+                            if (!resFile.getParentFile().exists() && !resFile.getParentFile().mkdirs()) {
+                                throw new ResourceException("Could not create resource directory '" + resFile.getParent() + "'.");
+                            }
+                            UtilIO.writeToClose(url, resFile);
+                            if (getPosition().getPlace() == EPlace.START) {
+                                target.insertChild(tag, 0);
+                            } else {
+                                target.appendChild(tag);
+                            }
                         }
                     }
                 }

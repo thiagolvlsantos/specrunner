@@ -17,18 +17,12 @@
  */
 package org.specrunner.source.resource.element.impl;
 
-import java.io.File;
-import java.net.URL;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
-import org.specrunner.source.resource.ResourceException;
-import org.specrunner.util.UtilIO;
-import org.specrunner.util.UtilResources;
 
 /**
  * A image resource.
@@ -36,7 +30,7 @@ import org.specrunner.util.UtilResources;
  * @author Thiago Santos
  * 
  */
-public class ImgResource extends AbstractResourceElement {
+public class ImageResource extends AbstractResourceElementAtt {
 
     /**
      * Creates an image resource.
@@ -52,29 +46,13 @@ public class ImgResource extends AbstractResourceElement {
      * @param element
      *            The referred element.
      */
-    public ImgResource(ISource parent, String path, boolean classpath, EType type, Element element) {
+    public ImageResource(ISource parent, String path, boolean classpath, EType type, Element element) {
         super(parent, path, classpath, type, element);
     }
 
     @Override
-    public ISource writeTo(ISource target) throws ResourceException {
-        try {
-            File fout = null;
-            URL url = null;
-            if (isClasspath()) {
-                url = UtilResources.getMostSpecific(getResourcePath());
-                File f = new File(getResourcePath());
-                fout = new File(target.getFile().getParentFile(), target.getFile().getName() + "_res/" + f.getName());
-            } else {
-                url = new URL(getResourcePath());
-                String srcChanged = getElement().getAttribute("src").getValue();
-                fout = new File(target.getFile().getParentFile(), srcChanged);
-            }
-            UtilIO.writeToClose(url, fout);
-        } catch (Exception e) {
-            throw new ResourceException(e);
-        }
-        return null;
+    protected String getReferenceName() {
+        return "src";
     }
 
     @Override
@@ -84,7 +62,7 @@ public class ImgResource extends AbstractResourceElement {
 
     @Override
     public Node asNode() {
-        Element e = new Element("img");
+        Element e = (Element) getElement().copy();
         e.addAttribute(new Attribute("src", getResourcePath()));
         return e;
     }

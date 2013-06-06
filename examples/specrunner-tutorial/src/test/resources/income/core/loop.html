@@ -44,8 +44,8 @@
     <br> Now consider
     <span class="global" name="filter">even filter</span> as:
     <br>
-    <ul class="macro" name="${filter}">
-        <li>If <span class="if" value='${System.nanoTime()%2==0}'>TODO: category is "Even"</span>, say: <span class="then">"My time is #{Time} mls, and the concatenation of ID
+    <ul class="macro" name_="filter">
+        <li>If <span class="if" value='System.nanoTime()%2==0'>TODO: category is "Even"</span>, say: <span class="then">"My time is #{Time} mls, and the concatenation of ID
                 and Name is ${#{ID} + #{Name}}</span><br>else show <span class="else">"My id is #{ID}"</span>.
         </li>
     </ul>
