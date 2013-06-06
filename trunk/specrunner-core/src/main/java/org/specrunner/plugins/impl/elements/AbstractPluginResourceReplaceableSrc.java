@@ -17,22 +17,45 @@
  */
 package org.specrunner.plugins.impl.elements;
 
-import nu.xom.Element;
-
-import org.specrunner.source.ISource;
-import org.specrunner.source.resource.EType;
-import org.specrunner.source.resource.element.impl.ImageResource;
-
 /**
- * Plugin to add image resources.
+ * Plugin to replace 'src' resources.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginImg extends AbstractPluginResourceReplaceableSrc {
+public abstract class AbstractPluginResourceReplaceableSrc extends AbstractPluginResourceReplaceable {
+
+    /**
+     * The source.
+     */
+    private String src;
+
+    /**
+     * The source attribute.
+     * 
+     * @return The source.
+     */
+    public String getSrc() {
+        return src;
+    }
+
+    /**
+     * Set source object.
+     * 
+     * @param src
+     *            The source.
+     */
+    public void setSrc(String src) {
+        this.src = src;
+    }
 
     @Override
-    protected void addResource(ISource source, String path, Element element) {
-        source.getManager().add(new ImageResource(source, path, false, EType.BINARY, element));
+    protected String getReferenceName() {
+        return "src";
+    }
+
+    @Override
+    protected String getReferenceValue() {
+        return src;
     }
 }

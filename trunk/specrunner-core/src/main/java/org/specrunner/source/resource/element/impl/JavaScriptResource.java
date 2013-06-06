@@ -15,17 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.source.resource.positional.impl;
-
-import java.io.File;
+package org.specrunner.source.resource.element.impl;
 
 import nu.xom.Attribute;
 import nu.xom.Comment;
 import nu.xom.Element;
+import nu.xom.Node;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
-import org.specrunner.source.resource.positional.Position;
 
 /**
  * A JavaScript resource.
@@ -33,7 +31,7 @@ import org.specrunner.source.resource.positional.Position;
  * @author Thiago Santos
  * 
  */
-public class JSResource extends AbstractResourceHeader {
+public class JavaScriptResource extends AbstractResourceElementAtt {
 
     /**
      * Creates a JavaScript resource.
@@ -46,43 +44,28 @@ public class JSResource extends AbstractResourceHeader {
      *            The classpath flag.
      * @param type
      *            The resource nature.
-     * @param position
-     *            The resource position.
+     * @param element
+     *            The referred element.
      */
-    public JSResource(ISource parent, String path, boolean classpath, EType type, Position position) {
-        super(parent, path, classpath, type, position);
+    public JavaScriptResource(ISource parent, String path, boolean classpath, EType type, Element element) {
+        super(parent, path, classpath, type, element);
     }
 
     @Override
-    protected Element getHeaderTag() {
-        Element result = new Element("script");
-        result.addAttribute(new Attribute("type", "text/javascript"));
-        return result;
+    protected String getReferenceName() {
+        return "src";
     }
 
     @Override
-    protected Element getHeaderTag(ISource output, String name) {
-        Element result = getHeaderTag();
-        result.addAttribute(new Attribute("src", localName(output, name)));
-        result.appendChild(new Comment(" comment "));
-        return result;
+    public String asString() {
+        return "SCRIPT(" + getResourcePath() + ")";
     }
 
     @Override
-    protected File getFile(ISource output, String name) {
-        return new File(output.getFile().getParentFile(), localName(output, name));
-    }
-
-    /**
-     * Gets the local disk file name.
-     * 
-     * @param output
-     *            The output source.
-     * @param name
-     *            The name.
-     * @return The name of local resource.
-     */
-    protected String localName(ISource output, String name) {
-        return output.getFile().getName() + "_res/" + name + ".js";
+    public Node asNode() {
+        Element e = (Element) getElement().copy();
+        e.addAttribute(new Attribute("src", getResourcePath()));
+        e.appendChild(new Comment(" comment "));
+        return e;
     }
 }

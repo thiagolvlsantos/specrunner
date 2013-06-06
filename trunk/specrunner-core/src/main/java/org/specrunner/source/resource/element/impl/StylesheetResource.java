@@ -15,45 +15,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.impl.elements;
+package org.specrunner.source.resource.element.impl;
 
+import nu.xom.Attribute;
+import nu.xom.Comment;
 import nu.xom.Element;
+import nu.xom.Node;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
-import org.specrunner.source.resource.element.impl.JavaScriptResource;
-import org.specrunner.source.resource.element.impl.StylesheetResource;
 
 /**
- * Add resources of 'link' tags.
+ * A stylesheet resource.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginLink extends AbstractPluginResourceReplaceable {
+public class StylesheetResource extends AbstractResourceElementAtt {
 
     /**
-     * Location attribute.
-     */
-    private String href;
-
-    /**
-     * Get location.
+     * Creates a stylesheet resource.
      * 
-     * @return The link location.
+     * @param parent
+     *            The source parent.
+     * @param path
+     *            The resource path.
+     * @param classpath
+     *            The classpath flag.
+     * @param type
+     *            The resource nature.
+     * @param element
+     *            The referred element.
      */
-    public String getHref() {
-        return href;
-    }
-
-    /**
-     * Set location.
-     * 
-     * @param href
-     *            The location.
-     */
-    public void setHref(String href) {
-        this.href = href;
+    public StylesheetResource(ISource parent, String path, boolean classpath, EType type, Element element) {
+        super(parent, path, classpath, type, element);
     }
 
     @Override
@@ -62,16 +57,15 @@ public class PluginLink extends AbstractPluginResourceReplaceable {
     }
 
     @Override
-    protected String getReferenceValue() {
-        return href;
+    public String asString() {
+        return "STYLESHEET(" + getResourcePath() + ")";
     }
 
     @Override
-    protected void addResource(ISource source, String path, Element element) {
-        if (href.toLowerCase().endsWith(".css")) {
-            source.getManager().add(new StylesheetResource(source, path, false, EType.BINARY, element));
-        } else {
-            source.getManager().add(new JavaScriptResource(source, path, false, EType.BINARY, element));
-        }
+    public Node asNode() {
+        Element e = (Element) getElement().copy();
+        e.addAttribute(new Attribute("href", getResourcePath()));
+        e.appendChild(new Comment(" comment "));
+        return e;
     }
 }

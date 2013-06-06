@@ -17,12 +17,12 @@
  */
 package org.specrunner.plugins.impl.elements;
 
+import nu.xom.Comment;
 import nu.xom.Element;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.element.impl.JavaScriptResource;
-import org.specrunner.source.resource.element.impl.StylesheetResource;
 
 /**
  * Add resources of 'link' tags.
@@ -30,48 +30,16 @@ import org.specrunner.source.resource.element.impl.StylesheetResource;
  * @author Thiago Santos
  * 
  */
-public class PluginLink extends AbstractPluginResourceReplaceable {
-
-    /**
-     * Location attribute.
-     */
-    private String href;
-
-    /**
-     * Get location.
-     * 
-     * @return The link location.
-     */
-    public String getHref() {
-        return href;
-    }
-
-    /**
-     * Set location.
-     * 
-     * @param href
-     *            The location.
-     */
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    @Override
-    protected String getReferenceName() {
-        return "href";
-    }
-
-    @Override
-    protected String getReferenceValue() {
-        return href;
-    }
+public class PluginScript extends AbstractPluginResourceReplaceableSrc {
 
     @Override
     protected void addResource(ISource source, String path, Element element) {
-        if (href.toLowerCase().endsWith(".css")) {
-            source.getManager().add(new StylesheetResource(source, path, false, EType.BINARY, element));
-        } else {
-            source.getManager().add(new JavaScriptResource(source, path, false, EType.BINARY, element));
-        }
+        source.getManager().add(new JavaScriptResource(source, path, false, EType.BINARY, element));
+    }
+
+    @Override
+    protected void replaceName(Element element, String newName) {
+        super.replaceName(element, newName);
+        element.appendChild(new Comment(" comment "));
     }
 }

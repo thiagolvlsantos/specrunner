@@ -60,15 +60,16 @@
     </span>
 
     <p>Outro exemplo:
-    Considere que nome=<span class="local" name="nome">${System.currentTimeMillis()}</span>
-    Considere que local=<span class="local" name="test">${2 % 2 == 0}</span>
-    <table class="if" border="1" value="nome % 2 == 0">
-        <tr class="then">
-            <td>70% - ${nome % 10}</td>
-        </tr>
-        <tr class="else">
-            <td>30% - ${nome % 10}</td>
-        </tr>
-    </table>
+        Considere que nome=<span class="local" name="nome" value="System.currentTimeMillis()">hora atual</span>
+        Considere que local=<span class="local" name="test">${2 % 2 == 0}</span>
+        <table class="if" border="1" value="nome % 2 == 0">
+            <tr class="then">
+                <td>70% - ${nome % 10}</td>
+            </tr>
+            <tr class="else">
+                <td>30% - ${nome % 10}</td>
+            </tr>
+        </table>
+    </p>
 </body>
 </html>

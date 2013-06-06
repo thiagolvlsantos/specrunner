@@ -29,13 +29,13 @@ import org.specrunner.plugins.impl.AbstractPlugin;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPluginResources extends AbstractPlugin {
+public abstract class AbstractPluginResource extends AbstractPlugin {
 
     /**
      * Default behavior is save resources. To speed up test execution can be
      * disabled.
      */
-    public static final String FEATURE_SAVE = AbstractPluginResources.class.getName() + ".save";
+    public static final String FEATURE_SAVE = AbstractPluginResource.class.getName() + ".save";
     /**
      * Set the save status.
      */
@@ -44,7 +44,7 @@ public abstract class AbstractPluginResources extends AbstractPlugin {
     /**
      * Constructor.
      */
-    protected AbstractPluginResources() {
+    protected AbstractPluginResource() {
     }
 
     /**
