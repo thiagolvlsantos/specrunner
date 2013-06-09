@@ -51,7 +51,7 @@ public class PluginQuit extends AbstractPluginUrlAware {
     }
 
     @Override
-    protected boolean isWait() {
+    protected boolean isWaitForClient() {
         return false;
     }
 }

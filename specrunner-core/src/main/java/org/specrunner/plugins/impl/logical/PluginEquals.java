@@ -154,6 +154,7 @@ public class PluginEquals extends AbstractPluginDual {
             } else {
                 try {
                     comparatorInstance = (IComparator) Class.forName(comparator).newInstance();
+                    c.bind(comparator, tmp);
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
