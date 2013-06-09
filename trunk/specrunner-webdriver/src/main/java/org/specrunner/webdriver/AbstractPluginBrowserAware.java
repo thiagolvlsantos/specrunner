@@ -128,7 +128,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             return;
         }
         doEnd(context, result, client);
-        if (isWait()) {
+        if (isWaitForClient()) {
             waitForClient(client);
         }
     }
@@ -161,7 +161,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * 
      * @return true, when wait is desired, false, otherwise. Default is true.
      */
-    protected boolean isWait() {
+    protected boolean isWaitForClient() {
         return true;
     }
 
