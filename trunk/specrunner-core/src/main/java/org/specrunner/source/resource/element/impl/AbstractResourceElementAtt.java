@@ -26,6 +26,7 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilIO;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilResources;
 
 /**
@@ -70,9 +71,11 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
             }
             UtilIO.writeToClose(url, fout);
         } catch (Exception e) {
-            throw new ResourceException(e);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
         }
-        return null;
+        return target;
     }
 
     protected abstract String getReferenceName();
