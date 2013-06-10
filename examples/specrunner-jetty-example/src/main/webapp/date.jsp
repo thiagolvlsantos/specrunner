@@ -19,7 +19,7 @@ Current date is:
 <span id="idDate"><%=new org.joda.time.DateTime().toString("HH:mm:ss")%></span>
 
 Node example is:
-<span id="idNode">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">node</span></span>
+<span id="idNode">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">node</span><span style="display:none;">oculto</span></span>
 
 <p>Table example:
 <table id="tableId" border=1>
