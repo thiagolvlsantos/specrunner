@@ -121,7 +121,7 @@ public class AnnotatorTitle implements IAnnotator {
                 Attribute title = new Attribute("title", message);
                 element.addAttribute(title);
             } else {
-                old.setValue(old.getValue() + ";" + message);
+                old.setValue(old.getValue() + "; " + message);
             }
         } else {
             if (UtilLog.LOG.isInfoEnabled()) {

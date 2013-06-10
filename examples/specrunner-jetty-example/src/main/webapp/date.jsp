@@ -18,6 +18,9 @@
 Current date is:
 <span id="idDate"><%=new org.joda.time.DateTime().toString("HH:mm:ss")%></span>
 
+Node example is:
+<span id="idNode">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">node</span></span>
+
 <p>Table example:
 <table id="tableId" border=1>
 	<caption>Dynamic dates</caption>
@@ -29,7 +32,7 @@ Current date is:
 	<tr>
 		<td>1</td>
 		<td><%=new org.joda.time.DateTime().toString("HH:mm")%></td>
-		<td>Aá</td>
+		<td>A <span class="blue">á</span></td>
 	</tr>
 	<tr>
 		<td>2</td>

@@ -28,6 +28,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
     <li>Date information might be '<span class="compareDate" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>';</li>
 	<li>The page contains <span class="contains">Dynamic dates</span>;</li>
 	<li>The page does not contain <span class="notContains">Static dates</span>;</li>
+    <li>The node <span class="compareNode" by="id:idNode" contains="true"> My<b>formated</b> <span style="background-color:gray;">${"node"}</span></span> is present;</li>
     <li>Table information might be :<span class="compareTable" by="xpath://table[@id='tableId']" >
 			<table border='1'>
 				<caption>Dynamic dates</caption>
@@ -39,7 +40,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
 				<tr>
 					<td>1</td>
 					<td type="date" format="HH:mm" value='${dt.toString("HH:mm")}'>current date</td>
-					<td>Aá</td>
+					<td type="node" comparator="full">A<span class="blue">á</span></td>
 				</tr>
 				<tr>
 					<td>2</td>

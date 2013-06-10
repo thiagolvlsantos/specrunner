@@ -191,20 +191,24 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
      *             On comparison errors.
      */
     protected boolean compareTerminal(IPlugin plugin, IContext context, IResultSet result, WebDriver client, CellAdapter expected, WebElement received) throws PluginException {
-        if (isTable(expected.getElement())) {
-            return compareTable(context, result, client, received, expected.getElement());
-        } else if (PluginCompareDate.isDate(expected.getElement())) {
-            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, expected.getElement(), true);
+        Element element = expected.getElement();
+        if (isTable(element)) {
+            return compareTable(context, result, client, received, element);
+        } else if (PluginCompareDate.isDate(element)) {
+            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, element, true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.getText();
-            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getElement(), plugin), context, result, client);
+            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(element, plugin), context, result, client);
+        } else if (PluginCompareNode.isNode(element)) {
+            PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, element, true);
+            return PluginCompareUtils.compareNode(compare, element, received, context.newBlock(element, plugin), context, result, client);
         } else {
-            PluginCompare compare = UtilPlugin.create(context, PluginCompareDate.class, expected.getElement(), true);
+            PluginCompare compare = UtilPlugin.create(context, PluginCompareDate.class, element, true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp).trim();
             String rec = received.getText().trim();
-            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getElement(), plugin), context, result, client);
+            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(element, plugin), context, result, client);
         }
     }
 

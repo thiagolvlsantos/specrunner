@@ -17,10 +17,18 @@
  */
 package org.specrunner.webdriver.assertions;
 
+import java.util.List;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Nodes;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
@@ -29,6 +37,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
@@ -163,5 +172,117 @@ public final class PluginCompareUtils {
             }
         }
         return res;
+    }
+
+    /**
+     * Compare two nodes. The expected node can have less attributes than
+     * received content, this is due to WebDriver API which does not provide
+     * much reflection on WebElements.
+     * 
+     * @param compare
+     *            The compare plugin.
+     * @param expected
+     *            The expected content.
+     * @param received
+     *            The received content.
+     * @param block
+     *            The context block.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result information.
+     * @param client
+     *            The WebDriver client.
+     * @return true, if can be considered equals, false, otherwise.
+     */
+    public static boolean compareNode(PluginCompareNode compare, Element expected, WebElement received, IBlock block, IContext context, IResultSet result, WebDriver client) {
+        int errors = compareTexts(compare, context, result, expected, received, 0);
+        Nodes expChildren = expected.query("descendant::*");
+        List<WebElement> recChildren = received.findElements(By.xpath("descendant::*"));
+        int min = Math.min(expChildren.size(), recChildren.size());
+        for (int i = 0; i < min; i++) {
+            errors = compareElements(compare, context, result, (Element) expChildren.get(i), recChildren.get(i), errors);
+        }
+        int max = Math.max(expChildren.size(), recChildren.size());
+        boolean onExpected = (max == expChildren.size());
+        for (int i = min; i < max; i++) {
+            errors++;
+            if (onExpected) {
+                result.addResult(Failure.INSTANCE, context.newBlock(expChildren.get(i), compare), new PluginException("Missing element."));
+            } else {
+                result.addResult(Failure.INSTANCE, context.newBlock(expected, compare), new PluginException("Extra element on screen."));
+            }
+        }
+        return errors == 0;
+    }
+
+    /**
+     * Compare two nodes by theirs texts.
+     * 
+     * @param compare
+     *            The plugin.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param expected
+     *            The expected content.
+     * @param received
+     *            The received content.
+     * @param errors
+     *            The errors count.
+     * @return The errors count adjusted.
+     */
+    protected static int compareTexts(PluginCompareNode compare, IContext context, IResultSet result, Element expected, WebElement received, int errors) {
+        String strExpected = UtilString.normalize(expected.getValue());
+        String strReceived = UtilString.normalize(received.getText());
+        if (!strExpected.equals(strReceived)) {
+            errors++;
+            IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(strExpected, strReceived);
+            result.addResult(Failure.INSTANCE, context.newBlock(expected, compare), new DefaultAlignmentException(sa));
+        }
+        return errors;
+    }
+
+    /**
+     * Compare two elements and return the number of errors in comparison.
+     * 
+     * @param compare
+     *            The compare plugin.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param e
+     *            The expected content.
+     * @param we
+     *            The received content.
+     * @param errors
+     *            The errors count.
+     * @return The errors count adjusted.
+     */
+    protected static int compareElements(PluginCompareNode compare, IContext context, IResultSet result, Element e, WebElement we, int errors) {
+        errors = compareTexts(compare, context, result, e, we, errors);
+        if (!e.getLocalName().equalsIgnoreCase(we.getTagName())) {
+            errors++;
+            result.addResult(Failure.INSTANCE, context.newBlock(e, compare), new PluginException("Tag names do not match (expected: '" + e.getLocalName() + "', received: '" + we.getTagName() + "'."));
+        }
+        for (int j = 0; j < e.getAttributeCount(); j++) {
+            Attribute att = e.getAttribute(j);
+            String name = att.getLocalName();
+            String attExp = e.getAttributeValue(name);
+            String attRec = we.getAttribute(name);
+            if (attRec == null) {
+                errors++;
+                result.addResult(Failure.INSTANCE, context.newBlock(e, compare), new PluginException("Attribute '" + name + "' missing (expected: '" + name + "=" + attExp + "')."));
+                continue;
+            }
+            boolean match = (compare.getContains() && attRec.contains(attExp)) || attExp.equals(attRec);
+            if (!match) {
+                errors++;
+                result.addResult(Failure.INSTANCE, context.newBlock(e, compare), new PluginException("Attribute '" + name + "' does not match (expected: '" + attExp + "', received: '" + attRec + "')."));
+            }
+        }
+        return errors;
     }
 }

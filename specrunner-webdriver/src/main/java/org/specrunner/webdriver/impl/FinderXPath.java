@@ -301,6 +301,6 @@ public class FinderXPath implements IFinder {
 
     @Override
     public String resume(IContext context) throws PluginException {
-        return "by " + getBy() + " with XPath " + getXPath(context);
+        return "strategy: by " + getBy() + " with XPath " + getXPath(context);
     }
 }
