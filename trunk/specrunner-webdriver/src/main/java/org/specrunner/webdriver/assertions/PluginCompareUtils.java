@@ -17,6 +17,7 @@
  */
 package org.specrunner.webdriver.assertions;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import nu.xom.Attribute;
@@ -199,6 +200,13 @@ public final class PluginCompareUtils {
         int errors = compareTexts(compare, context, result, expected, received, 0);
         Nodes expChildren = expected.query("descendant::*");
         List<WebElement> recChildren = received.findElements(By.xpath("descendant::*"));
+        List<WebElement> visible = new LinkedList<WebElement>();
+        for (WebElement we : recChildren) {
+            if (we.isDisplayed()) {
+                visible.add(we);
+            }
+        }
+        recChildren = visible;
         int min = Math.min(expChildren.size(), recChildren.size());
         for (int i = 0; i < min; i++) {
             errors = compareElements(compare, context, result, (Element) expChildren.get(i), recChildren.get(i), errors);
