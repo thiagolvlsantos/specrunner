@@ -29,6 +29,7 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
@@ -148,6 +149,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
      * @param comparator
      *            The comparator.
      */
+    @DontEval
     public void setComparator(String comparator) {
         this.comparator = comparator;
     }
@@ -162,7 +164,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
         super.initialize(context);
         if (comparator != null) {
             IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
-            comparatorInstance = cm.get("comparator");
+            comparatorInstance = cm.get(comparator);
             if (comparatorInstance == null) {
                 try {
                     comparatorInstance = (IComparator) Class.forName(comparator).newInstance();
