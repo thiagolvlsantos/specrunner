@@ -17,31 +17,26 @@
  */
 package org.specrunner.source;
 
+import java.util.Map;
+
+import nu.xom.Builder;
+
 /**
- * A factory of sources.
+ * Return a builder.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public interface ISourceFactory {
+public interface IBuilderFactory extends IEncoded {
 
     /**
-     * Check if this factory accept a given source.
+     * Get a XOM builder.
      * 
-     * @param source
-     *            The source.
-     * @return true, if accept, false, otherwise.
-     */
-    boolean accept(Object source);
-
-    /**
-     * Creates a source from a String.
-     * 
-     * @param source
-     *            The source of specification.
-     * @return The source.
+     * @param properties
+     *            Expected builder properties.
+     * @return A builder.
      * @throws SourceException
-     *             On creation errors.
+     *             On builder creation errors.
      */
-    ISource newSource(Object source) throws SourceException;
+    Builder newBuilder(Map<String, Object> properties) throws SourceException;
 }

@@ -17,31 +17,22 @@
  */
 package org.specrunner.source;
 
-/**
- * A factory of sources.
- * 
- * @author Thiago Santos
- * 
- */
-public interface ISourceFactory {
+public interface IEncoded {
 
     /**
-     * Check if this factory accept a given source.
-     * 
-     * @param source
-     *            The source.
-     * @return true, if accept, false, otherwise.
+     * Name of feature to set reader encoding.
      */
-    boolean accept(Object source);
+    String FEATURE_ENCODING = ISourceFactory.class + ".encoding";
 
     /**
-     * Creates a source from a String.
-     * 
-     * @param source
-     *            The source of specification.
-     * @return The source.
-     * @throws SourceException
-     *             On creation errors.
+     * Default encoding.
      */
-    ISource newSource(Object source) throws SourceException;
+    String DEFAULT_ENCODING = "ISO-8859-1";
+
+    /**
+     * Return the encoding.
+     * 
+     * @return The encoding charset.
+     */
+    String getEncoding();
 }
