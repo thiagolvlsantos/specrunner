@@ -17,13 +17,16 @@
  */
 package org.specrunner.webdriver.assertions;
 
+import java.util.HashMap;
+
+import nu.xom.Builder;
 import nu.xom.Element;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.plugins.ActionType;
@@ -31,8 +34,17 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
+import org.specrunner.source.IBuilderFactory;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.aligner.IStringAligner;
+import org.specrunner.util.aligner.IStringAlignerFactory;
+import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.IComparatorManager;
+import org.specrunner.util.comparer.impl.ComparatorNode;
 import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
 
@@ -48,6 +60,21 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
      * The contains flag.
      */
     private Boolean contains = false;
+
+    /**
+     * Tell the plugin to use comparator.
+     */
+    private Boolean strict = false;
+
+    /**
+     * Comparator type.
+     */
+    private String comparator;
+
+    /**
+     * The comparator instance.
+     */
+    private IComparator comparatorInstance;
 
     /**
      * Defines the attribute comparison strategy as contains. For example, if
@@ -85,20 +112,99 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
         this.contains = contains;
     }
 
+    /**
+     * Gets the strict flag.
+     * 
+     * @return true, to strict comparison, false, otherwise.
+     */
+    public Boolean getStrict() {
+        return strict;
+    }
+
+    /**
+     * Set strict comparator.
+     * 
+     * @param strict
+     *            The comparator flag.
+     */
+    public void setStrict(Boolean strict) {
+        this.strict = strict;
+    }
+
+    /**
+     * Get the comparator alias or class. The comparator can be any mapped in
+     * <code>IComparatorManager</code>, or any class implementor of
+     * <code>IComparator</code>.
+     * 
+     * @return The comparator alias or class name.
+     */
+    public String getComparator() {
+        return comparator;
+    }
+
+    /**
+     * Set the comparator type (alias or class name).
+     * 
+     * @param comparator
+     *            The comparator.
+     */
+    public void setComparator(String comparator) {
+        this.comparator = comparator;
+    }
+
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
     }
 
     @Override
-    protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
-        try {
-            IExpression e = ef.create("$NODE", context);
-            if (!PluginCompareUtils.compareNode(this, (Element) e.evaluate(context), element, context.peek(), context, result, client)) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), new WritablePage(client));
+    public void initialize(IContext context) throws PluginException {
+        super.initialize(context);
+        if (comparator != null) {
+            IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
+            comparatorInstance = cm.get("comparator");
+            if (comparatorInstance == null) {
+                try {
+                    comparatorInstance = (IComparator) Class.forName(comparator).newInstance();
+                    cm.bind(comparator, comparatorInstance);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Comparator '" + comparator + "' not found.");
+                    }
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                }
             }
-        } catch (ExpressionException e) {
+        }
+        if (comparatorInstance == null) {
+            comparatorInstance = new ComparatorNode();
+        }
+    }
+
+    @Override
+    protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
+        try {
+            IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+            IExpression e = ef.create("$NODE", context);
+            Element expected = (Element) e.evaluate(context);
+            if (!strict) {
+                if (!PluginCompareUtils.compareNode(this, expected, element, context.peek(), context, result, client)) {
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), new WritablePage(client));
+                }
+            } else {
+                Object tmp = ((JavascriptExecutor) client).executeScript("return arguments[0].innerHTML", element);
+                IBuilderFactory bf = SpecRunnerServices.get(IBuilderFactory.class);
+                Builder builder = bf.newBuilder(new HashMap<String, Object>());
+                Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
+                if (!comparatorInstance.match(expected, received)) {
+                    IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(UtilNode.getChildrenAsString(expected), UtilNode.getChildrenAsString(received));
+                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(sa));
+                } else {
+                    result.addResult(Success.INSTANCE, context.peek());
+                }
+            }
+        } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace(e.getMessage(), e);
             }

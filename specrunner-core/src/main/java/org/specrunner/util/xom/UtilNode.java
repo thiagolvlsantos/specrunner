@@ -22,7 +22,6 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
-
 /**
  * Node utility class.
  * 
@@ -97,6 +96,22 @@ public final class UtilNode {
     }
 
     /**
+     * Get child elements as a String.
+     * 
+     * @param parent
+     *            The parent element.
+     * @return The inner XML.
+     */
+    public static String getChildrenAsString(Node parent) {
+        StringBuilder str = new StringBuilder();
+        Nodes children = parent.query("child::node()");
+        for (int i = 0; i < children.size(); i++) {
+            str.append(children.get(i).toXML());
+        }
+        return str.toString();
+    }
+
+    /**
      * Get the highest node in the specification hierarchy.
      * 
      * @param nodes
@@ -145,8 +160,8 @@ public final class UtilNode {
      */
     public static boolean matches(Node node, String xpath) {
         return node.getDocument().query(xpath).contains(node);
-    }    
-    
+    }
+
     /**
      * Creates a table adapter for the given node.
      * 

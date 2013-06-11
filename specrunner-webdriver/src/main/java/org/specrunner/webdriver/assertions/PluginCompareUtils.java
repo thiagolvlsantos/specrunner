@@ -221,6 +221,9 @@ public final class PluginCompareUtils {
                 result.addResult(Failure.INSTANCE, context.newBlock(expected, compare), new PluginException("Extra element on screen."));
             }
         }
+        if (errors == 0) {
+            result.addResult(Success.INSTANCE, block);
+        }
         return errors == 0;
     }
 
