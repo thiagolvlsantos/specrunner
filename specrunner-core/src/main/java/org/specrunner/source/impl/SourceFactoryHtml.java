@@ -28,13 +28,14 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.util.HashMap;
 
 import nu.xom.Builder;
 import nu.xom.DocType;
 import nu.xom.Document;
 
-import org.apache.xerces.parsers.AbstractSAXParser;
-import org.cyberneko.html.HTMLConfiguration;
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
@@ -151,7 +152,8 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
         return new SourceImpl(null, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
-                Builder builder = getBuilder();
+                IBuilderFactory factory = SpecRunnerServices.get(IBuilderFactory.class);
+                Builder builder = factory.newBuilder(new HashMap<String, Object>());
                 try {
                     synchronized (builder) {
                         Document build = stream != null ? builder.build(stream) : builder.build(reader);
@@ -175,41 +177,6 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
                 }
             }
         });
-    }
-
-    /**
-     * Return the XOM document builder.
-     * 
-     * @return The builder.
-     * @throws SourceException
-     *             On builder recover error.
-     */
-    protected Builder getBuilder() throws SourceException {
-        try {
-            // i've tried to use the same builder, but there is something
-            // wrong with NekoHTML parser o reuse, leaving this way for while.
-            return new Builder(getParser(), true);
-        } catch (Exception e) {
-            throw new SourceException(e);
-        }
-    }
-
-    /**
-     * Get the parser.
-     * 
-     * @return A SaxParser.
-     * @throws Exception
-     *             On creation error.
-     */
-    protected AbstractSAXParser getParser() throws Exception {
-        AbstractSAXParser parser = new AbstractSAXParser(new HTMLConfiguration()) {
-        };
-        parser.setFeature("http://xml.org/sax/features/namespaces", false);
-        parser.setFeature("http://cyberneko.org/html/features/override-namespaces", false);
-        parser.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-        parser.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
-        parser.setProperty("http://cyberneko.org/html/properties/default-encoding", getEncoding());
-        return parser;
     }
 
     /**

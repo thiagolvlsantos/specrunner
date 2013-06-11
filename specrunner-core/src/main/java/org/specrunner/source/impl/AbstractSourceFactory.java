@@ -23,7 +23,6 @@ import java.net.URISyntaxException;
 import nu.xom.Document;
 
 import org.specrunner.SpecRunnerServices;
-import org.specrunner.features.IFeatureManager;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -38,7 +37,7 @@ import org.specrunner.util.cache.ICacheFactory;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractSourceFactory implements ISourceFactory {
+public abstract class AbstractSourceFactory extends EncodedImpl implements ISourceFactory {
 
     /**
      * Cache of files.
@@ -109,17 +108,4 @@ public abstract class AbstractSourceFactory implements ISourceFactory {
         return target == null ? target : target.replace("file:///", "").replace("file://", "").replace("file:/", "");
     }
 
-    /**
-     * Get encoding information.
-     * 
-     * @return The expected encoding of input.
-     */
-    protected String getEncoding() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        String charset = (String) fm.get(ISourceFactory.FEATURE_ENCODING);
-        if (charset == null) {
-            charset = DEFAULT_ENCODING;
-        }
-        return charset;
-    }
 }
