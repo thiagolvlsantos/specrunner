@@ -288,7 +288,9 @@ public final class PluginCompareUtils {
                 result.addResult(Failure.INSTANCE, context.newBlock(e, compare), new PluginException("Attribute '" + name + "' missing (expected: '" + name + "=" + attExp + "')."));
                 continue;
             }
-            boolean match = (compare.getContains() && attRec.contains(attExp)) || attExp.equals(attRec);
+            String attRecNorm = compare.getNormalized(attRec);
+            String attExpNorm = compare.getNormalized(attExp);
+            boolean match = (compare.getContains() && attRecNorm.contains(attExpNorm)) || attExpNorm.equals(attRecNorm);
             if (!match) {
                 errors++;
                 result.addResult(Failure.INSTANCE, context.newBlock(e, compare), new PluginException("Attribute '" + name + "' does not match (expected: '" + attExp + "', received: '" + attRec + "')."));
