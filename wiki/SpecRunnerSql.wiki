@@ -268,18 +268,18 @@ Ao invés de cada teste que tem a instrumentação CSS ou tags `connection` recr
 }}}
 Isso mesmo, é só colocar *`reuse="true"`* que o SpecRunner resolve isso para você.
 
-== Usando o [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/PluginScript.java PluginScript] ==
+== Usando o [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/PluginScripts.java PluginScripts] ==
 
 Uma vez que há uma fonte de dados disponível, agora é possível solicitar a execução de scripts SQL sobre essa conexão. Uma forma bem simples de fazer isso é:
 {{{
-<table class="script">
+<table class="scripts">
         <tr><td>dir/insert1.sql;</td></tr>
         <tr><td>dir/sub/insert2.sql</td></tr>
 </table>
 }}}
 Desta forma, os arquivos `insert1.sql`, e `insert2.sql` serão automaticamente buscados de forma relativa ao arquivo que contém a especificação e serão executados sobre a conexão. Para executar scripts sobre uma conexão que foi previamente nomeada, é só informar o nome da conexão destino, por exemplo:
 {{{
-<table name="con2" class="script">
+<table name="con2" class="scripts">
         <tr><td>dir/insert1.sql;</td></tr>
         <tr><td>dir/sub/insert2.sql</td></tr>
 </table>
@@ -287,6 +287,6 @@ Desta forma, os arquivos `insert1.sql`, e `insert2.sql` serão automaticamente b
 Convém observar que a mesma lógica aplicada ao PluginConnection também se aplica aqui, existem features, e ajustes que podem ser feitos para simplificar ou modificar a execução dos scripts. Um exemplo de controle possível é informar que na execução dos scripts erros relacionados a execução dos comandos não deve gerar erros e sim advertências. Isso é possível ajustando-se manualmente o atributo `failsafe` para `true` ou ajustando em bloco através do IFeatureManager. Na especificação podemos ter, por exemplo:
 {{{
 Pede-se criar o 
-<a href="dir/create.sql" class="script" failsafe="true" separator="|" value="dir/drop.sql|dir/create.sql">esquema</a>
+<a href="dir/create.sql" class="scripts" failsafe="true" separator="|" value="dir/drop.sql|dir/create.sql">esquema</a>
 }}}
 Neste exemplo, usamos tags diferentes, informamos que o separador de scripts é '|'(o default era ';'), e escondemos a listagem de nomes usando o atributo 'value', lembrando que além disso para o leitor da especificação o texto continua simples.
