@@ -85,8 +85,8 @@ public class ExpressionJanino extends AbstractExpression {
                 UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
             }
         } else {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("DIRECT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("DIRECT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
             }
         }
         return r;

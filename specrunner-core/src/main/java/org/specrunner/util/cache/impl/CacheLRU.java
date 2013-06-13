@@ -93,8 +93,8 @@ public class CacheLRU<K, T> implements ICache<K, T> {
         if (item != null) {
             if (!item.invalid(timeout)) {
                 item.renew();
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Cache '" + name + "' hit: " + key);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Cache '" + name + "' hit: " + key);
                 }
                 return item.getValue();
             } else {
@@ -116,7 +116,7 @@ public class CacheLRU<K, T> implements ICache<K, T> {
             while (index++ < clean && ite.hasNext()) {
                 CacheEntry<K, T> next = ite.next();
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Cache '" + name + "' clean: " + key);
+                    UtilLog.LOG.debug("Cache '" + name + "' clean: " + next.getKey());
                 }
                 items.remove(next.getKey());
             }
