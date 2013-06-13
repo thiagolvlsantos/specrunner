@@ -198,7 +198,8 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     }
 
     /**
-     * Wait for client. If sleep is set, wait for sleep time.
+     * Wait for client. If wait is set it already has waited for the period time
+     * set.
      * 
      * @param client
      *            The client.
