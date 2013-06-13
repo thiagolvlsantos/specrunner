@@ -17,8 +17,10 @@
  */
 package org.specrunner.webdriver;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
@@ -66,9 +68,39 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     private Long maxwait = DEFAULT_MAXWAIT;
 
     /**
+     * Wait for feature. Use it to set generic XPath wait condition.
+     */
+    public static final String FEATURE_WAITFOR = AbstractPluginBrowserAware.class.getName() + ".waitfor";
+
+    /**
+     * Wait for XPath condition.
+     */
+    private String waitfor;
+
+    /**
      * Default timeout to finish the action.
      */
     public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
+
+    /**
+     * The interval between JavaScript finish checks. Default is '100'
+     * milliseconds.
+     * 
+     * @return The interval.
+     */
+    public Long getInterval() {
+        return interval;
+    }
+
+    /**
+     * Change the interval.
+     * 
+     * @param interval
+     *            The interval.
+     */
+    public void setInterval(Long interval) {
+        this.interval = interval;
+    }
 
     /**
      * The max time to wait for JavaScript return. Default is '1000'
@@ -91,23 +123,22 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     }
 
     /**
-     * The interval between JavaScript finish checks. Default is '100'
-     * milliseconds.
+     * XPath expression to wait for.
      * 
-     * @return The interval.
+     * @return The wait expression.
      */
-    public Long getInterval() {
-        return interval;
+    public String getWaitfor() {
+        return waitfor;
     }
 
     /**
-     * Change the interval.
+     * Set the XPath condition to wait for.
      * 
-     * @param interval
-     *            The interval.
+     * @param waitfor
+     *            The condition.
      */
-    public void setInterval(Long interval) {
-        this.interval = interval;
+    public void setWaitfor(String waitfor) {
+        this.waitfor = waitfor;
     }
 
     @Override
@@ -116,6 +147,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         fh.set(FEATURE_INTERVAL, this);
         fh.set(FEATURE_MAXWAIT, this);
+        fh.set(FEATURE_WAITFOR, this);
         fh.set(FEATURE_TIMEOUT, this);
     }
 
@@ -127,10 +159,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), "Browser instance named '" + tmp + "' not created. See PluginBrowser.");
             return;
         }
-        doEnd(context, result, client);
         if (isWaitForClient()) {
             waitForClient(client);
         }
+        doEnd(context, result, client);
     }
 
     /**
@@ -172,13 +204,14 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      *            The client.
      */
     protected void waitForClient(WebDriver client) {
-        if (getSleep() == null) {
+        if (getWait() == null) {
             (new WebDriverWait(client, maxwait, interval)).until(getWaitCondition(System.currentTimeMillis(), getTimeout()));
         }
     }
 
     /**
-     * Return the condition to wait.
+     * Return the condition to wait. If <code>waitfor</code> attribute is
+     * provided, the condition turn into &lt;xpath&gt;.isDisplayed().
      * 
      * @param start
      *            The begin time.
@@ -186,7 +219,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      *            The timeout.
      * @return The expected condition.
      */
-    protected ExpectedCondition<Boolean> getWaitCondition(final long start, final Long timeout) {
+    protected ExpectedCondition<?> getWaitCondition(final long start, final Long timeout) {
+        if (waitfor != null) {
+            return ExpectedConditions.visibilityOfElementLocated(By.xpath(waitfor));
+        }
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver d) {
