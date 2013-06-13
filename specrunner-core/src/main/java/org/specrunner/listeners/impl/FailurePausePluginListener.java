@@ -65,7 +65,7 @@ public class FailurePausePluginListener extends AbstractPluginListener {
     private JFrame frame;
 
     /**
-     * Count to check if errors have be added.
+     * Count to check if errors have been added.
      */
     private int start;
 
