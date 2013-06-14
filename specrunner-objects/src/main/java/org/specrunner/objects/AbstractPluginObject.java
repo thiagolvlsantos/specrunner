@@ -19,7 +19,6 @@ package org.specrunner.objects;
 
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,6 +45,7 @@ import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilString;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
@@ -412,7 +412,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (cell.hasAttribute("field")) {
                 name = cell.getAttribute("field");
             } else {
-                name = normalize(fieldName);
+                name = UtilString.camelCase(fieldName);
             }
 
             Field f = generic.get(fieldName);
@@ -497,35 +497,6 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             list.add(f);
         }
-    }
-
-    /**
-     * Normalize attributes.
-     * 
-     * @param text
-     *            The text to be normalized.
-     * @return The normalized string.
-     */
-    public static String normalize(String text) {
-        StringTokenizer st = new StringTokenizer(text, " \t\r\n");
-        StringBuilder str = new StringBuilder(st.nextToken().toLowerCase());
-        while (st.hasMoreTokens()) {
-            String s = st.nextToken();
-            str.append(Character.toUpperCase(s.charAt(0)));
-            str.append(s.substring(1));
-        }
-        return clean(str.toString());
-    }
-
-    /**
-     * Remove all Latin characters.
-     * 
-     * @param str
-     *            The string to be normalized.
-     * @return The cleaned string.
-     */
-    public static String clean(String str) {
-        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 
     /**
