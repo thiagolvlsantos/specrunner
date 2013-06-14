@@ -17,6 +17,9 @@
  */
 package org.specrunner.util;
 
+import java.text.Normalizer;
+import java.util.StringTokenizer;
+
 /**
  * Utility String class.
  * 
@@ -49,4 +52,50 @@ public final class UtilString {
         }
         return sb.toString();
     }
+
+    /**
+     * Camel case characters, as Java attributes or methods.
+     * 
+     * @param text
+     *            The text to change.
+     * @return The text changed.
+     */
+    public static String camelCase(String text) {
+        return camelCase(text, false);
+    }
+
+    /**
+     * Normalize a string using camel case rules.
+     * 
+     * @param text
+     *            The text to be normalized.
+     * 
+     * @param includeFirst
+     *            Flag to upper first character also.
+     * @return The normalized string.
+     */
+    public static String camelCase(String text, boolean includeFirst) {
+        StringTokenizer st = new StringTokenizer(text, " \t\r\n");
+        StringBuilder str = new StringBuilder(includeFirst ? "" : st.nextToken().toLowerCase());
+        while (st.hasMoreTokens()) {
+            String s = st.nextToken();
+            str.append(Character.toUpperCase(s.charAt(0)));
+            if (s.length() > 1) {
+                str.append(s.substring(1));
+            }
+        }
+        return clean(str.toString());
+    }
+
+    /**
+     * Remove all Latin characters.
+     * 
+     * @param str
+     *            The string to be normalized.
+     * @return The cleaned string.
+     */
+    public static String clean(String str) {
+        return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+    }
+
 }

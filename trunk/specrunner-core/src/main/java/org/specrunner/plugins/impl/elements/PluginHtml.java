@@ -52,4 +52,13 @@ public class PluginHtml extends AbstractPluginScoped {
         context.saveLocal(UtilEvaluator.asVariable(BEAN_NAME), obj);
         return ENext.DEEP;
     }
+
+    /**
+     * Get the test object class.
+     * 
+     * @return The test instance.
+     */
+    public static Object getTestInstance() {
+        return SpecRunnerServices.get(IFeatureManager.class).get(BEAN_NAME);
+    }
 }
