@@ -22,4 +22,5 @@ public class TestSRSpring {
     public List<Qualquer> lista3() {
         return Arrays.asList(new Qualquer(1, "Eu"), new Qualquer(2, "Tu"), new Qualquer(3, "Ele"));
     }
+
 }

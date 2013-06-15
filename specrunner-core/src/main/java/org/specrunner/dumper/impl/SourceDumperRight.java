@@ -99,7 +99,7 @@ public class SourceDumperRight extends AbstractSourceDumperFile {
                     Element li = new Element("li");
                     li.addAttribute(new Attribute("class", "sr_status_item"));
                     IBlock block = local.getBlock();
-                    Element target = (Element) block.getNode();
+                    Node target = block.getNode();
                     Nodes nodes = target.query("descendant::a[@name]");
                     if (nodes.size() > 0) {
                         Node no = UtilNode.getHighest(nodes);

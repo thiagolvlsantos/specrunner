@@ -215,6 +215,28 @@ public class RunnerImpl implements IRunner {
                     return block.getNode().getValue();
                 }
             });
+            // meta variable 'content evaluated silently'
+            context.saveStrict(UtilEvaluator.asVariable("$CONTENT"), new IModel<Object>() {
+                @Override
+                public Object getObject(IContext context) throws SpecRunnerException {
+                    try {
+                        return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
+                    } catch (Exception e) {
+                        throw new SpecRunnerException(e);
+                    }
+                }
+            });
+            // meta variable 'content evaluated'
+            context.saveStrict(UtilEvaluator.asVariable("$CONTENT_UNSILENT"), new IModel<Object>() {
+                @Override
+                public Object getObject(IContext context) throws SpecRunnerException {
+                    try {
+                        return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
+                    } catch (Exception e) {
+                        throw new SpecRunnerException(e);
+                    }
+                }
+            });
             // meta variable 'block'
             context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
 

@@ -52,7 +52,7 @@ public class PluginReplacer extends AbstractPlugin {
         Node e = context.getNode();
         if (e instanceof Text) {
             String text = e.getValue();
-            String replaced = UtilEvaluator.replace(text, context, true);
+            String replaced = UtilEvaluator.replace(text, context, false);
             if (UtilLog.LOG.isDebugEnabled() && !text.equals(replaced)) {
                 UtilLog.LOG.debug("replacer_before>" + text);
                 UtilLog.LOG.debug("replacer_after>" + replaced + "." + replaced.getClass());
