@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>Test</title>
+<style>
+.column {
+    border: 1px solid gray;
+}
+
+.column caption {
+    background-color: silver;
+}
+
+</style>
+</head>
+<body>
+	<h1>Testing</h1>
+
+    <table class="import">
+        <tr><td>example.sql.slim</td></tr>
+    </table>
+
+    PACOTES: ${$PACKAGES}
+    <table class="column">
+        <caption>Clásse qualquer</caption>
+        <tr>
+            <th>X</th>
+            <th>Y</th>
+            <th>Operação</th>
+            <th>Resultado?</th>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>3.0</td>
+            <td>+</td>
+            <td>5.0</td>
+        </tr>
+    </table>
+<p></p>
+    <table class="column" imports="example.sql.slim">
+        <caption>Clásse qualquer</caption>
+        <tr>
+            <th>X</th>
+            <th>Y</th>
+            <th>Operação</th>
+            <th>Resultado?</th>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>3.0</td>
+            <td>+</td>
+            <td>5.0</td>
+        </tr>
+    </table>
+<p></p>
+    <table class="column" type="example.sql.slim.ClasseAlguma">
+        <tr>
+            <th>X</th>
+            <th>Y</th>
+            <th>Operação</th>
+            <th>Resultado?</th>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>3.0</td>
+            <td>-</td>
+            <td>-1.0</td>
+        </tr>
+    </table>
+<p></p>
+    <table class="column">
+        <caption>Usando a própria classe do teste</caption>
+        <tr>
+            <th>X</th>
+            <th method="z">Y</th>
+            <th>Operação</th>
+            <th>Resultado?</th>
+        </tr>
+        <tr>
+            <td>${$BEAN.constante()}</td>
+            <td>${1.0 + 2.0}</td>
+            <td>*</td>
+            <td>${3.0 + 3.0}</td>
+        </tr>
+    </table>
+</body>
+</html>

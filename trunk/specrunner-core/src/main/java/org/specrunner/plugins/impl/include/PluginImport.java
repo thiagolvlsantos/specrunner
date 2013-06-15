@@ -46,7 +46,7 @@ public class PluginImport extends AbstractPluginTable {
     /**
      * The import list name.
      */
-    public static final String PACKAGES_NAME = UtilEvaluator.asVariable("packages");
+    public static final String PACKAGES_NAME = UtilEvaluator.asVariable("$PACKAGES");
 
     @Override
     public ActionType getActionType() {

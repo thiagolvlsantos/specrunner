@@ -1,5 +1,7 @@
 package example.sql.slim;
 
-public class ClasseQualquer {
+import example.sql.TestSLIM;
+
+public class ClasseQualquer extends TestSLIM {
 
 }

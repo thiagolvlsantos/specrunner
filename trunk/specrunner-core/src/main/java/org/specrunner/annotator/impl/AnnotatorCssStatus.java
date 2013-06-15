@@ -17,6 +17,11 @@
  */
 package org.specrunner.annotator.impl;
 
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
+import nu.xom.Text;
+
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
@@ -38,8 +43,31 @@ public class AnnotatorCssStatus implements IAnnotator {
         for (IResult r : result) {
             IBlock block = r.getBlock();
             if (block.hasNode()) {
-                UtilNode.appendCss(block.getNode(), r.getStatus().getCssName());
+                Node node = block.getNode();
+                if (node instanceof Text) {
+                    node = wrapText(node);
+                }
+                UtilNode.appendCss(node, r.getStatus().getCssName());
             }
         }
+    }
+
+    /**
+     * Add a span surrounding the failed text.
+     * 
+     * @param target
+     *            The target node.
+     * @return The new node.
+     */
+    protected Node wrapText(Node target) {
+        ParentNode pn = target.getParent();
+        ParentNode wrap = new Element("span");
+        for (int i = 0; i < pn.getChildCount(); i++) {
+            Node child = pn.getChild(i);
+            child.detach();
+            wrap.appendChild(child);
+        }
+        pn.appendChild(wrap);
+        return wrap;
     }
 }
