@@ -273,6 +273,13 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      * @return The object.
      */
     protected Object findName(int start, String name) {
+        int count = 0;
+        int begin = name.indexOf(UPACCESS, 0);
+        while (name != null && begin >= 0) {
+            count++;
+            begin = name.indexOf(UPACCESS, begin + UPACCESS.length());
+        }
+        name = name.replace(UPACCESS, "");
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -281,6 +288,10 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             if (g != null) {
                 Object o = g.getMap().get(name);
                 if (o != null) {
+                    if (count > 0) {
+                        count--;
+                        continue;
+                    }
                     if (o instanceof IModel) {
                         try {
                             return ((IModel<?>) o).getObject(this);

@@ -35,6 +35,13 @@ import org.specrunner.source.ISource;
 public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
 
     /**
+     * String to label variable up context access. I.e. <code>_$index</code>,
+     * look for first index access, if found, move context down an look for the
+     * occurrence.
+     */
+    String UPACCESS = "_$";
+
+    /**
      * Queue of sources. On file inclusion this queue is changed according and
      * is used to avoid cyclic dependency.
      * 
