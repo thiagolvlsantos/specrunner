@@ -4,23 +4,23 @@
 </head>
 <body>
 
-<div class="execute" value="obj.print($TEXT)">${2 + 2}</div>
+<div class="execute" value="$THIS.print($TEXT)">${2 + 2}</div>
 
-<div class="execute" value.="obj.print($TEXT)">${3 + 3}</div>
+<div class="execute" value.="$THIS.print($TEXT)">${3 + 3}</div>
 
 <div class="for" max="1">
 	<p>
-	${index}-<span class="set" name="data" value="dt">data atual</span>=${obj.call(data)}
+	${index}-<span class="set" name="data" value="dt">data atual</span>=${$THIS.call(data)}
 	</p>
-	<p class="execute" value.='obj.test(index,$NODE,$TEXT)' >
-		Para o índice ${index * 2}, a saudação esperada é <span class="eq" value="obj.bool(index)">${index%2==0}</span>.
+	<p class="execute" value.='$THIS.test(index,$NODE,$TEXT)' >
+		Para o índice ${index * 2}, a saudação esperada é <span class="eq" value="$THIS.bool(index)">${index%2==0}</span>.
 		<br/>
-		<execute name="x" value='obj.chamar(dt)'>nome</execute> tem valor ${x}.
+		<execute name="x" value='$THIS.chamar(dt)'>nome</execute> tem valor ${x}.
 	</p>
 </div>
 
 <p>
-	Para o nome <span class="set" name="nome">Thiago</span>, a saudação é <span class="eq" value="obj.greeting(nome)">Oi Thiago!</span>.
+	Para o nome <span class="set" name="nome">Thiago</span>, a saudação é <span class="eq" value="$THIS.greeting(nome)">Oi Thiago!</span>.
 </p>
 
 <p>
@@ -33,7 +33,7 @@
 	<!--  primeiro roda-se os comandos do header, depois para cada tr chama-se o 'expression'
 	e coloca-se em contexto uma variável com nome fixo, depois roda-se cada linha copiando os
 	asserts para cada instância individual. -->
-	<table class="?" value="obj.split(nome,title)" name="c">
+	<table class="?" value="$THIS.split(nome,title)" name="c">
 		<tr>
 			<th class="local" name="nome">Full Name</th>
 			<th class="local" name="title">Title</th>

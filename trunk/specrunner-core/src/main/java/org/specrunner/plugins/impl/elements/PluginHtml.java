@@ -39,7 +39,7 @@ public class PluginHtml extends AbstractPluginScoped {
     /**
      * The bean name.
      */
-    public static final String BEAN_NAME = "obj";
+    public static final String BEAN_NAME = "$THIS";
 
     @Override
     public ActionType getActionType() {
