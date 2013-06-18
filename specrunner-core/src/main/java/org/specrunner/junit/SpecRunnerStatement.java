@@ -1,8 +1,11 @@
 package org.specrunner.junit;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
@@ -11,6 +14,7 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.plugins.impl.elements.PluginHtml;
+import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -56,14 +60,46 @@ public class SpecRunnerStatement extends Statement {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginHtml.BEAN_NAME, instance);
         Class<?> clazz = test.getJavaClass();
+        String[] messages = getMessages();
         File input = getFile(clazz);
         File output = getOutput(clazz, input);
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, output.getName());
         IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg);
-        if (result.getStatus().isError()) {
-            throw new Exception(result.asString());
+        if (messages == null) {
+            if (result.getStatus().isError()) {
+                throw new Exception(result.asString());
+            }
+        } else {
+            List<String> received = new LinkedList<String>();
+            for (IResult r : result) {
+                if (r.getStatus().isError()) {
+                    received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
+                }
+            }
+            for (int i = 0; i < messages.length; i++) {
+                if (!messages[i].equals(received.get(i))) {
+                    throw new Exception("Message '" + messages[i] + "' does not match '" + received.get(i) + "'");
+                }
+            }
         }
+    }
+
+    /**
+     * Get expected messages if any.
+     * 
+     * @return The list of error messages.
+     */
+    protected String[] getMessages() {
+        String[] messages = null;
+        Annotation[] ans = test.getAnnotations();
+        for (Annotation an : ans) {
+            if (an instanceof ExpectedMessages) {
+                messages = ((ExpectedMessages) an).messages();
+                break;
+            }
+        }
+        return messages;
     }
 
     /**
