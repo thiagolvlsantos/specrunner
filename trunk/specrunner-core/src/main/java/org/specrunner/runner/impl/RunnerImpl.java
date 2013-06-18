@@ -215,6 +215,13 @@ public class RunnerImpl implements IRunner {
                     return block.getNode().getValue();
                 }
             });
+            // meta variable 'XML'
+            context.saveStrict(UtilEvaluator.asVariable("$XML"), new IModel<String>() {
+                @Override
+                public String getObject(IContext context) throws SpecRunnerException {
+                    return block.getNode().toXML();
+                }
+            });
             // meta variable 'content evaluated silently'
             context.saveStrict(UtilEvaluator.asVariable("$CONTENT"), new IModel<Object>() {
                 @Override
