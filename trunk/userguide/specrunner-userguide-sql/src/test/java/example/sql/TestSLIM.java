@@ -1,8 +1,13 @@
 package example.sql;
 
 import org.junit.runner.RunWith;
+import org.specrunner.context.IBlock;
+import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunner;
+import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Failure;
 
+@ExpectedMessages(messages = { "não encontrado." })
 @RunWith(SRRunner.class)
 public class TestSLIM {
 
@@ -55,5 +60,9 @@ public class TestSLIM {
     public double resultado(Object content) {
         System.out.println("CONTEÚDO:" + content);
         return resultado;
+    }
+
+    public void erro(IBlock block, IResultSet result) {
+        result.addResult(Failure.INSTANCE, block, "não encontrado.");
     }
 }
