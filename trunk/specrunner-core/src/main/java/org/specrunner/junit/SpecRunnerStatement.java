@@ -60,13 +60,13 @@ public class SpecRunnerStatement extends Statement {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginHtml.BEAN_NAME, instance);
         Class<?> clazz = test.getJavaClass();
-        String[] messages = getMessages();
+        ExpectedMessages expectedMessages = getMessages();
         File input = getFile(clazz);
         File output = getOutput(clazz, input);
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, output.getName());
         IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg);
-        if (messages == null) {
+        if (expectedMessages == null) {
             if (result.getStatus().isError()) {
                 throw new Exception(result.asString());
             }
@@ -77,10 +77,41 @@ public class SpecRunnerStatement extends Statement {
                     received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
                 }
             }
-            for (int i = 0; i < messages.length; i++) {
-                if (!messages[i].equals(received.get(i))) {
-                    throw new Exception("Message '" + messages[i] + "' does not match '" + received.get(i) + "'");
+            String[] messages = expectedMessages.messages();
+            boolean sorted = expectedMessages.sorted();
+            StringBuilder errors = new StringBuilder();
+            List<String> expected = new LinkedList<String>();
+            for (String s : messages) {
+                expected.add(s);
+            }
+            if (sorted) {
+                int i = 0;
+                int max = Math.min(received.size(), expected.size());
+                for (; i < max; i++) {
+                    if (!expected.get(i).equals(received.get(i))) {
+                        errors.append("Expected '" + expected.get(i) + "' does not match received '" + received.get(i) + "'.\n");
+                    }
                 }
+                if (max < expected.size()) {
+                    errors.append("Expected messages missing:" + expected.subList(max, expected.size()));
+                }
+                if (max < received.size()) {
+                    errors.append("Unexpected messages received:" + received.subList(max, received.size()));
+                }
+            } else {
+                List<String> extraReceived = new LinkedList<String>(received);
+                List<String> extraExpected = new LinkedList<String>(expected);
+                extraReceived.removeAll(expected);
+                extraExpected.removeAll(received);
+                if (extraExpected.size() > 0) {
+                    errors.append("Expected messages missing:" + extraExpected + ".\n");
+                }
+                if (extraReceived.size() > 0) {
+                    errors.append("Unexpected messages received:" + extraReceived + ".\n");
+                }
+            }
+            if (errors.length() != 0) {
+                throw new Exception(errors.toString());
             }
         }
     }
@@ -90,16 +121,14 @@ public class SpecRunnerStatement extends Statement {
      * 
      * @return The list of error messages.
      */
-    protected String[] getMessages() {
-        String[] messages = null;
+    protected ExpectedMessages getMessages() {
         Annotation[] ans = test.getAnnotations();
         for (Annotation an : ans) {
             if (an instanceof ExpectedMessages) {
-                messages = ((ExpectedMessages) an).messages();
-                break;
+                return (ExpectedMessages) an;
             }
         }
-        return messages;
+        return null;
     }
 
     /**
