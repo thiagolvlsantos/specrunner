@@ -18,15 +18,12 @@ public @interface ExpectedMessages {
 
     /**
      * List of messages.
-     * 
-     * @return The List of expected messages.
      */
     String[] messages() default {};
 
     /**
-     * ExpectedMessages messages should be sorted as specified?
-     * 
-     * @return The sort flag. Default is false.
+     * ExpectedMessages messages should be sorted as specified? The sort flag.
+     * Default is false.
      */
     boolean sorted() default false;
 }
