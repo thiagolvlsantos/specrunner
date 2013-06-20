@@ -17,10 +17,13 @@
  */
 package org.specrunner.plugins.impl.logical;
 
+import java.lang.reflect.InvocationTargetException;
+
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
@@ -46,7 +49,10 @@ import org.specrunner.util.xom.UtilNode;
  * <li>Add two classes with 'left' class to the first argument, and 'right'
  * class to the second argument.</li>
  * <li>Value attribute is compared with tag content.</li>
+ * 
  * </ul>
+ * In both comparisons a specific comparator can be set using attribute
+ * <code>comparator</code>.
  * 
  * @author Thiago Santos
  * 
@@ -116,6 +122,23 @@ public class PluginEquals extends AbstractPluginDual {
             if (parent.hasAttribute("value")) {
                 objExpected = getNormalized(parent.getValue());
                 objReceived = getNormalized(String.valueOf(obj));
+            } else if (parent.hasAttribute("property")) {
+                try {
+                    String str = parent.getAttribute("property");
+                    int pos = str.indexOf('.');
+                    if (pos <= 0) {
+                        throw new PluginException("Bean name or property missing in property='" + str + "'.");
+                    }
+                    Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, false);
+                    objExpected = PropertyUtils.getProperty(bean, str.substring(pos + 1));
+                    objReceived = obj;
+                } catch (IllegalAccessException e) {
+                    throw new PluginException(e);
+                } catch (InvocationTargetException e) {
+                    throw new PluginException(e);
+                } catch (NoSuchMethodException e) {
+                    throw new PluginException(e);
+                }
             } else {
                 Nodes expectedes = node.query("descendant::*[@class='" + CSS_LETF + "']");
                 Nodes receiveds = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
