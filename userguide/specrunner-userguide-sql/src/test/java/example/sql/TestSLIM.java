@@ -7,7 +7,7 @@ import org.specrunner.junit.SRRunner;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 
-@ExpectedMessages(messages = { "não encontrado." })
+@ExpectedMessages(messages = { "tu encontrado.", "nós encontrado" })
 @RunWith(SRRunner.class)
 public class TestSLIM {
 
@@ -63,6 +63,8 @@ public class TestSLIM {
     }
 
     public void erro(IBlock block, IResultSet result) {
-        result.addResult(Failure.INSTANCE, block, "não encontrado.");
+        result.addResult(Failure.INSTANCE, block, "eu encontrado.");
+        result.addResult(Failure.INSTANCE, block, "tu encontrado.");
+        result.addResult(Failure.INSTANCE, block, "ele encontrado.");
     }
 }
