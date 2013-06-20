@@ -12,15 +12,15 @@ import org.springframework.test.context.TestExecutionListeners;
 public class TestSRSpring {
 
     public List<Qualquer> lista1() {
-        return Arrays.asList(new Qualquer(1, "Eu"), new Qualquer(2, "Tu"));
+        return Arrays.asList(new Qualquer(1, "Eu", "Tu"), new Qualquer(2, "Tu", "Ele"));
     }
 
     public List<Qualquer> lista2() {
-        return Arrays.asList(new Qualquer(1, "Eu"));
+        return Arrays.asList(new Qualquer(1, "Eu", "Tu"));
     }
 
     public List<Qualquer> lista3() {
-        return Arrays.asList(new Qualquer(1, "Eu"), new Qualquer(2, "Tu"), new Qualquer(3, "Ele"));
+        return Arrays.asList(new Qualquer(1, "Eu", "Tu"), new Qualquer(2, "Tu", "Ele"), new Qualquer(3, "Ele", "Nós"));
     }
 
 }
