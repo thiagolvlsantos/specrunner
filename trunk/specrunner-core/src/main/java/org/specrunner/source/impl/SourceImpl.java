@@ -41,6 +41,10 @@ import org.specrunner.util.UtilLog;
 public class SourceImpl implements ISource {
 
     /**
+     * Input source encoding.
+     */
+    private String encoding;
+    /**
      * The source as String.
      */
     protected String string;
@@ -72,6 +76,8 @@ public class SourceImpl implements ISource {
     /**
      * Creates a source instance.
      * 
+     * @param encoding
+     *            The source encoding.
      * @param string
      *            The source reference.
      * @param factory
@@ -79,7 +85,8 @@ public class SourceImpl implements ISource {
      * @param loader
      *            The document loader.
      */
-    public SourceImpl(String string, ISourceFactory factory, IDocumentLoader loader) {
+    public SourceImpl(String encoding, String string, ISourceFactory factory, IDocumentLoader loader) {
+        this.encoding = encoding;
         this.string = string;
         if (this.string != null) {
             this.file = new File(this.string);
@@ -100,6 +107,11 @@ public class SourceImpl implements ISource {
         }
         this.factory = factory;
         this.loader = loader;
+    }
+
+    @Override
+    public String getEncoding() {
+        return encoding;
     }
 
     @Override

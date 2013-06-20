@@ -30,7 +30,7 @@ import org.specrunner.source.resource.IResourceManager;
  * @author Thiago Santos
  * 
  */
-public interface ISource {
+public interface ISource extends IEncoded {
 
     /**
      * The source reference as String.

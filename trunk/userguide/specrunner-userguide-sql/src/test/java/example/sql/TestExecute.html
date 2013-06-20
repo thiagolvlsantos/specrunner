@@ -3,15 +3,15 @@
 <title>Exemplo LATE</title>
 </head>
 <body>
-	<!--div class="execute" value="obj.externo($NODE)">${2 + 2}</div>
-	<div class="execute" value.="obj.externo($NODE)">${2 + 2}</div-->
+	<!--div class="execute" value="$THIS.externo($NODE)">${2 + 2}</div>
+	<div class="execute" value.="$THIS.externo($NODE)">${2 + 2}</div-->
 	<local wait="100" name="x">VALOR</local>
 	
 	<for max="1">
-		<div class="execute" value="obj.antes(index,$NODE,$TEXT)">${"soma " + "texto"}
-			<div>Subexecute:<!--span class="execute" value="obj.subin($TEXT)"-->${x}<!--/span--></div>
+		<div class="execute" value="$THIS.antes(index,$NODE,$TEXT)">${"soma " + "texto"}
+			<div>Subexecute:<!--span class="execute" value="$THIS.subin($TEXT)"-->${x}<!--/span--></div>
 		</div>
-		<div class="execute" value.-_="obj.depois(index,$NODE,$TEXT)">${"soma " + "texto " + "outro"}</div>
+		<div class="execute" value.-_="$THIS.depois(index,$NODE,$TEXT)">${"soma " + "texto " + "outro"}</div>
 	</for>
 </body>
 </html>

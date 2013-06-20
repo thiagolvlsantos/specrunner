@@ -63,7 +63,7 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
         }
         final URI uri = uriTmp;
         final String target = strTmp;
-        return new SourceImpl(strTmp, this, new IDocumentLoader() {
+        return new SourceImpl(getEncoding(), strTmp, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
                 long time = System.currentTimeMillis();

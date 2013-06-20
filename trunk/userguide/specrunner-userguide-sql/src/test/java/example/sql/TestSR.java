@@ -20,6 +20,16 @@ import org.specrunner.plugins.impl.factories.PluginFactoryElement;
 @RunWith(SRRunner.class)
 public class TestSR {
 
+    private String prop = "valor predefinido.";
+
+    public String getProp() {
+        return prop;
+    }
+
+    public void setProp(String prop) {
+        this.prop = prop;
+    }
+
     @Before
     public void antes() throws Exception {
         System.out.println("antes");

@@ -149,7 +149,7 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
      */
     private ISource load(final InputStream stream, final Reader reader) {
         final Closeable obj = stream != null ? stream : reader;
-        return new SourceImpl(null, this, new IDocumentLoader() {
+        return new SourceImpl(getEncoding(), null, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
                 IBuilderFactory factory = SpecRunnerServices.get(IBuilderFactory.class);
