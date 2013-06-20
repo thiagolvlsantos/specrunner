@@ -17,7 +17,7 @@
 
 
 	Obter a
-	<span class="execute" value="obj.lista1()" name="lista">listagem</span>
+	<span class="execute" value="$THIS.lista1()" name="lista">listagem</span>
 	
 	<ul class="iterator" name="lista" var="i">
 		<li>${index} - ${i.numero}/${i.nome}</li>
@@ -42,7 +42,7 @@
 	</table>
 	<p></p>
 
-	<table class="verifyRows" value="obj.lista2()" var="i" border=1>
+	<table class="verifyRows" value="$THIS.lista2()" var="i" border=1>
 		<tr>
 			<th class="eq" value="index">Índice</th>
 			<th class="eq" value="i.numero">Número</th>
@@ -66,7 +66,7 @@
 	</table>
 	<p></p>
 
-	<table class="verifyRows" value="obj.lista3()" var="i" border=1>
+	<table class="verifyRows" value="$THIS.lista3()" var="i" border=1>
 		<tr>
 			<th class="eq" value="index">Índice</th>
 			<th class="eq" value="i.numero">Número</th>
