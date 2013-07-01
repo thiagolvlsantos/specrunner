@@ -204,10 +204,10 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, element, true);
             return PluginCompareUtils.compareNode(compare, element, received, context.newBlock(element, plugin), context, result, client);
         } else {
-            PluginCompare compare = UtilPlugin.create(context, PluginCompareDate.class, element, true);
+            PluginCompare compare = UtilPlugin.create(context, PluginCompare.class, element, true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
-            String exp = String.valueOf(tmp).trim();
-            String rec = received.getText().trim();
+            String exp = String.valueOf(tmp);
+            String rec = received.getText();
             return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(element, plugin), context, result, client);
         }
     }
