@@ -56,9 +56,17 @@ public class PluginExecuteRows extends AbstractPluginScoped {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
-
+        if (!(node instanceof Element)) {
+            throw new PluginException("Annotation only applicable to table elements.");
+        }
         Element table = (Element) node;
+        if (!"table".equalsIgnoreCase(table.getLocalName())) {
+            throw new PluginException("The element is not a table.");
+        }
         Nodes ns = node.query("descendant::tr");
+        if (ns.size() == 0) {
+            throw new PluginException("Missing rows.");
+        }
         Element head = (Element) ns.get(0);
         Nodes hs = head.query("descendant::th");
         if (hs.size() == 0) {
@@ -94,7 +102,6 @@ public class PluginExecuteRows extends AbstractPluginScoped {
             try {
                 context.saveLocal(pos, String.valueOf(i - 1));
                 context.getRunner().run(row, context, result);
-                // UtilPlugin.performChildren(row, context, result);
             } catch (RunnerException e) {
                 e.printStackTrace();
             } finally {
