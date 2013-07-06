@@ -66,20 +66,25 @@ public class PluginVerifyRows extends AbstractPluginValue {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        Node node = context.getNode();
-        IBlock block = context.peek();
         Object value = getValue();
         if (value == null || !(value instanceof Iterable)) {
             throw new PluginException("Value is null ou not found, or value has an invalid type (should be an Iterable).");
         }
         Iterator<?> ite = ((Iterable<?>) value).iterator();
+
+        Node node = context.getNode();
         Nodes ns = node.query("descendant::tr");
+        if (ns.size() == 0) {
+            throw new PluginException("Missing rows.");
+        }
         Element head = (Element) ns.get(0);
         Nodes hs = head.query("descendant::th");
         if (hs.size() == 0) {
             throw new PluginException("Missing header information.");
         }
         UtilNode.setIgnore(head);
+
+        IBlock block = context.peek();
         String pos = UtilEvaluator.asVariable("index");
         String item = UtilEvaluator.asVariable(var);
         int i = 1;
