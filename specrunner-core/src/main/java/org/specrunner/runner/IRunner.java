@@ -22,6 +22,7 @@ import java.util.List;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
@@ -61,6 +62,32 @@ public interface IRunner {
      *            The alias to be enabled by runner.
      */
     void setEnabledAliases(List<String> enabledAliases);
+
+    /**
+     * Feature to set the disabled type using IFeatureManager or IConfiguration.
+     */
+    String FEATURE_DISABLED_TYPES = IRunner.class.getName() + ".disabledTypes";
+
+    /**
+     * Feature to set the enabled types using IFeatureManager or IConfiguration.
+     */
+    String FEATURE_ENABLED_TYPES = IRunner.class.getName() + ".enabledTypes";
+
+    /**
+     * List of action types that should be ignored by runner.
+     * 
+     * @param disabledTypes
+     *            The types to be ignored by runner.
+     */
+    void setDisabledTypes(List<ActionType> disabledTypes);
+
+    /**
+     * List of action types that should be enabled by runner.
+     * 
+     * @param enabledTypes
+     *            The types to be enabled by runner.
+     */
+    void setEnabledTypes(List<ActionType> enabledTypes);
 
     /**
      * Performs the specification in source.
