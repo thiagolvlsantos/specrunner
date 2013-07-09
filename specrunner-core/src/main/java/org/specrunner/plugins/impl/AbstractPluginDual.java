@@ -20,6 +20,7 @@ package org.specrunner.plugins.impl;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -34,8 +35,33 @@ import org.specrunner.result.status.Success;
  */
 public abstract class AbstractPluginDual extends AbstractPluginValue {
 
+    private Boolean onstart = Boolean.FALSE;
+
+    public Boolean isOnstart() {
+        return onstart;
+    }
+
+    public void setOnstart(Boolean onstart) {
+        this.onstart = onstart;
+    }
+
+    @Override
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+        if (onstart) {
+            perform(context, result);
+            return super.doStart(context, result);
+        }
+        return ENext.DEEP;
+    }
+
     @Override
     public void doEnd(IContext context, IResultSet result) throws PluginException {
+        if (!onstart) {
+            perform(context, result);
+        }
+    }
+
+    protected void perform(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
         Object obj = getValue(node.getValue(), isEval(), context);
         if (operation(obj, context)) {
