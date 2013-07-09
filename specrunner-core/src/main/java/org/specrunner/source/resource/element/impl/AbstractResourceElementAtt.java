@@ -78,5 +78,10 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
         return target;
     }
 
+    /**
+     * Get the attribute name reference.
+     * 
+     * @return The reference. i.e. href, src, etc.
+     */
     protected abstract String getReferenceName();
 }

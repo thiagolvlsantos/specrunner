@@ -17,6 +17,12 @@
  */
 package org.specrunner.source;
 
+/**
+ * Interface of something encoded.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public interface IEncoded {
 
     /**
