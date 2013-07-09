@@ -110,8 +110,8 @@ public final class UtilPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("result ->" + result);
             }
-            UtilParametrized.setProperties(context, result, element);
             if (initialize) {
+                UtilParametrized.setProperties(context, result, element);
                 result.initialize(context);
             }
             return result;
@@ -146,8 +146,8 @@ public final class UtilPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("result ->" + result);
             }
-            UtilParametrized.setProperties(context, result, element);
             if (initialize) {
+                UtilParametrized.setProperties(context, result, element);
                 result.initialize(context);
             }
             return result;

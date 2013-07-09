@@ -17,22 +17,33 @@
  */
 package org.specrunner.listeners.impl;
 
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.impl.PluginNop;
+import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.UtilNode;
+
 /**
- * Default listener manager.
+ * Tag executed plugins with ignore.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public class TagPluginListener extends AbstractPluginListener {
 
-    /**
-     * Default constructor.
-     */
-    public ListenerManagerDefault() {
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new FailurePausePluginListener());
-        add(new TagPluginListener());
+    @Override
+    public String getName() {
+        return "tagListener";
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    @Override
+    public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
+        if (plugin != PluginNop.emptyPlugin()) {
+            UtilNode.setIgnore(context.getNode());
+        }
     }
 }

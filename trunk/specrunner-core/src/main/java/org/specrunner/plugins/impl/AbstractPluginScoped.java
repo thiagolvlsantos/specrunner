@@ -55,6 +55,25 @@ public abstract class AbstractPluginScoped extends AbstractPluginNamed {
 
     /**
      * Save the value to the context, using the given scope, if specified,
+     * otherwise to the strict scope.
+     * 
+     * @param context
+     *            The context.
+     * @param name
+     *            The variable name.
+     * @param value
+     *            The variable value.
+     */
+    protected void saveStrict(IContext context, String name, Object value) {
+        if (scope == null) {
+            context.saveStrict(name, value);
+        } else {
+            context.saveScoped(scope, name, value);
+        }
+    }
+
+    /**
+     * Save the value to the context, using the given scope, if specified,
      * otherwise to the local scope.
      * 
      * @param context

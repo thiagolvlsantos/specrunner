@@ -107,5 +107,8 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         span.appendChild(" at " + model.get("date") + " ");
         span.appendChild(new Element("br"));
         span.appendChild(result.asNode());
+        for (int i = 0; i < result.actionTypes().size() + 5; i++) {
+            body.appendChild(new Element("br"));
+        }
     }
 }

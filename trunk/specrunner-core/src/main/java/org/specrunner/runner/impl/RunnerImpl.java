@@ -17,7 +17,6 @@
  */
 package org.specrunner.runner.impl;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import nu.xom.Element;
@@ -33,6 +32,7 @@ import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IPluginListener;
 import org.specrunner.listeners.ISourceListener;
+import org.specrunner.parameters.impl.UtilParametrized;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IPlugin;
@@ -46,7 +46,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.result.status.Ignored;
 import org.specrunner.result.status.Info;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
@@ -62,99 +61,7 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class RunnerImpl implements IRunner {
-
-    /**
-     * List of disabled aliases.
-     */
-    protected List<String> disabledAliases;
-    /**
-     * List of enabled aliases.
-     */
-    protected List<String> enabledAliases;
-
-    /**
-     * List of disabled types.
-     */
-    protected List<ActionType> disabledTypes;
-    /**
-     * List of enabled types.
-     */
-    protected List<ActionType> enabledTypes;
-
-    @Override
-    public void setDisabledAliases(List<String> disabledAliases) {
-        if (disabledAliases != null) {
-            this.disabledAliases = new LinkedList<String>();
-            for (String s : disabledAliases) {
-                if (s != null) {
-                    this.disabledAliases.add(s.toLowerCase());
-                }
-            }
-        }
-    }
-
-    /**
-     * Get the list of disabled aliases.
-     * 
-     * @return Disabled aliases list.
-     */
-    public List<String> getDisabledAliases() {
-        return disabledAliases;
-    }
-
-    @Override
-    public void setEnabledAliases(List<String> enabledAliases) {
-        if (enabledAliases != null) {
-            this.enabledAliases = new LinkedList<String>();
-            for (String s : enabledAliases) {
-                if (s != null) {
-                    this.enabledAliases.add(s.toLowerCase());
-                }
-            }
-        }
-    }
-
-    /**
-     * Get the list of enabled aliases.
-     * 
-     * @return Enabled aliases list.
-     */
-    public List<String> getEnabledAliases() {
-        return enabledAliases;
-    }
-
-    @Override
-    public void setDisabledTypes(List<ActionType> disabledTypes) {
-        if (disabledTypes != null) {
-            this.disabledTypes = new LinkedList<ActionType>(disabledTypes);
-        }
-    }
-
-    /**
-     * Get the list of disabled types.
-     * 
-     * @return Disabled types list.
-     */
-    public List<ActionType> getDisabledTypes() {
-        return disabledTypes;
-    }
-
-    @Override
-    public void setEnabledTypes(List<ActionType> enabledTypes) {
-        if (enabledTypes != null) {
-            this.enabledTypes = new LinkedList<ActionType>(enabledTypes);
-        }
-    }
-
-    /**
-     * Get the list of enabled types.
-     * 
-     * @return Enabled types list.
-     */
-    public List<ActionType> getEnabledTypes() {
-        return enabledTypes;
-    }
+public class RunnerImpl extends AbstractRunner {
 
     @Override
     public void run(ISource source, IContext context, IResultSet result) throws RunnerException {
@@ -204,13 +111,9 @@ public class RunnerImpl implements IRunner {
      */
     protected void setFeature() {
         IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
-        disabledAliases = null;
         fm.set(IRunner.FEATURE_DISABLED_ALIASES, this);
-        enabledAliases = null;
         fm.set(IRunner.FEATURE_ENABLED_ALIASES, this);
-        disabledTypes = null;
         fm.set(IRunner.FEATURE_DISABLED_TYPES, this);
-        enabledTypes = null;
         fm.set(IRunner.FEATURE_ENABLED_TYPES, this);
     }
 
@@ -238,12 +141,50 @@ public class RunnerImpl implements IRunner {
             }
             return;
         }
-        IPlugin plugin = null;
         // new block for node
         final IBlock block = context.newBlock(node, null);
         try {
             // queue block to the context
             context.push(block);
+
+            // create the plugin instance.
+            IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
+            IPlugin plugin = previous == null ? factory.newPlugin(node, context) : previous;
+            block.setPlugin(plugin);
+
+            if (plugin != PluginNop.emptyPlugin()) {
+                // ignore by alias
+                String alias = factory.getAlias(plugin.getClass());
+                boolean hasDisabled = disabledAliases != null && disabledAliases.contains(alias);
+                boolean hasEnabled = enabledAliases != null && !enabledAliases.contains(alias);
+                if (alias != null && hasDisabled || hasEnabled) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
+                    }
+                    // result.addResult(Ignored.INSTANCE, block,
+                    // "This plugin alias has been disabled by our own choice.\n Disabled plugins:"
+                    // + disabledAliases + ".\n Enabled plugins:" +
+                    // enabledAliases +
+                    // ".\n To set disabled or accepted plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)). The same approach for feature IRunner.FEATURE_ENABLED_ALIASES.");
+                    return;
+                }
+
+                // ignore by type
+                ActionType type = plugin.getActionType();
+                boolean actionDisabled = disabledTypes != null && disabledTypes.contains(type);
+                boolean actionEnabled = enabledTypes != null && !enabledTypes.contains(type);
+                if (type != null && actionDisabled || actionEnabled) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Plugin '" + type.asString() + "' ignored.");
+                    }
+                    // result.addResult(Ignored.INSTANCE, block,
+                    // "This plugin action has been disabled by our own choice.\n Disabled plugins types:"
+                    // + disabledTypes + ".\n Enabled plugins types:" +
+                    // enabledTypes +
+                    // ".\n To set disabled or accepted plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_DISABLED_TYPES,Arrays.asList(<our type list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_DISABLED_TYPES,Arrays.asList(<our type list>)). The same approach for feature IRunner.FEATURE_ENABLED_TYPES.");
+                    return;
+                }
+            }
 
             // ----------- METAVARIABLES --------------
             // created before to enable plugin use them in values.
@@ -254,6 +195,13 @@ public class RunnerImpl implements IRunner {
                     return block.getNode();
                 }
             });
+
+            // meta variable 'plugin'
+            context.saveStrict(UtilEvaluator.asVariable("$PLUGIN"), plugin);
+
+            // meta variable 'block'
+            context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
+
             // meta variable 'text'
             context.saveStrict(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
                 @Override
@@ -261,6 +209,7 @@ public class RunnerImpl implements IRunner {
                     return block.getNode().getValue();
                 }
             });
+
             // meta variable 'XML'
             context.saveStrict(UtilEvaluator.asVariable("$XML"), new IModel<String>() {
                 @Override
@@ -268,6 +217,7 @@ public class RunnerImpl implements IRunner {
                     return block.getNode().toXML();
                 }
             });
+
             // meta variable 'content evaluated silently'
             context.saveStrict(UtilEvaluator.asVariable("$CONTENT"), new IModel<Object>() {
                 @Override
@@ -279,6 +229,7 @@ public class RunnerImpl implements IRunner {
                     }
                 }
             });
+
             // meta variable 'content evaluated'
             context.saveStrict(UtilEvaluator.asVariable("$CONTENT_UNSILENT"), new IModel<Object>() {
                 @Override
@@ -290,49 +241,12 @@ public class RunnerImpl implements IRunner {
                     }
                 }
             });
-            // meta variable 'block'
-            context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
-
-            IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
-            if (previous == null) {
-                // create a plugin based on node information
-                plugin = factory.newPlugin(node, context);
-            } else {
-                plugin = previous;
-            }
-            if (plugin != PluginNop.emptyPlugin()) {
-                String alias = factory.getAlias(plugin.getClass());
-                boolean hasDisabled = disabledAliases != null && disabledAliases.contains(alias);
-                boolean hasEnabled = enabledAliases != null && !enabledAliases.contains(alias);
-                if (alias != null && hasDisabled || hasEnabled) {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
-                    }
-                    result.addResult(Ignored.INSTANCE, block, "This plugin alias has been disabled by our own choice.\n Disabled plugins:" + disabledAliases + ".\n Enabled plugins:" + enabledAliases + ".\n To set disabled or accepted plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_DISABLED_ALIASES,Arrays.asList(<our alias list>)). The same approach for feature IRunner.FEATURE_ENABLED_ALIASES.");
-                    return;
-                }
-
-                ActionType type = plugin.getActionType();
-                boolean actionDisabled = disabledTypes != null && disabledTypes.contains(type);
-                boolean actionEnabled = enabledTypes != null && !enabledTypes.contains(type);
-                if (type != null && actionDisabled || actionEnabled) {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Plugin '" + type.asString() + "' ignored.");
-                    }
-                    result.addResult(Ignored.INSTANCE, block, "This plugin action has been disabled by our own choice.\n Disabled plugins types:" + disabledTypes + ".\n Enabled plugins types:" + enabledTypes + ".\n To set disabled or accepted plugins use SpecRunnerServices.get(IFeatureManager.class).add(IRunner.FEATURE_DISABLED_TYPES,Arrays.asList(<our type list>)) in a global manner or locally using IConfiguration - IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration().add(IRunner.FEATURE_DISABLED_TYPES,Arrays.asList(<our type list>)). The same approach for feature IRunner.FEATURE_ENABLED_TYPES.");
-                    return;
-                }
-            }
-            // set after creation.
-            block.setPlugin(plugin);
-
-            // ----------- METAVARIABLES --------------
-            // meta variable 'plugin'
-            context.saveStrict(UtilEvaluator.asVariable("$PLUGIN"), plugin);
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
+
             // initialization
             initialization(context, result, plugin, listeners);
+
             // conditional execution
             if (checkConditional(plugin, context)) {
                 // wait if required
@@ -380,7 +294,7 @@ public class RunnerImpl implements IRunner {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
             // any failure back to specification
-            result.addResult(Failure.INSTANCE, context.newBlock(node, plugin), e);
+            result.addResult(Failure.INSTANCE, block, e);
         } finally {
             // remove block from context
             context.pop();
@@ -430,6 +344,11 @@ public class RunnerImpl implements IRunner {
      *             On initialization errors.
      */
     protected void initialization(IContext context, IResultSet result, IPlugin plugin, List<IPluginListener> listeners) throws PluginException {
+        Node node = context.getNode();
+        // perform attribute initialization
+        if (node instanceof Element) {
+            UtilParametrized.setProperties(context, plugin, (Element) node);
+        }
         // perform before initialization
         for (IPluginListener sl : listeners) {
             sl.onBeforeInit(plugin, context, result);

@@ -48,22 +48,6 @@ public interface IRunner {
     String FEATURE_ENABLED_ALIASES = IRunner.class.getName() + ".enabledAliases";
 
     /**
-     * List of alias that should be ignored by runner.
-     * 
-     * @param disabledAliases
-     *            The alias to be ignored by runner.
-     */
-    void setDisabledAliases(List<String> disabledAliases);
-
-    /**
-     * List of alias that should be enabled by runner.
-     * 
-     * @param enabledAliases
-     *            The alias to be enabled by runner.
-     */
-    void setEnabledAliases(List<String> enabledAliases);
-
-    /**
      * Feature to set the disabled type using IFeatureManager or IConfiguration.
      */
     String FEATURE_DISABLED_TYPES = IRunner.class.getName() + ".disabledTypes";
@@ -74,12 +58,49 @@ public interface IRunner {
     String FEATURE_ENABLED_TYPES = IRunner.class.getName() + ".enabledTypes";
 
     /**
+     * List of alias that should be ignored by runner.
+     * 
+     * @param disabledAliases
+     *            The alias to be ignored by runner.
+     */
+    void setDisabledAliases(List<String> disabledAliases);
+
+    /**
+     * Get the list of disabled aliases.
+     * 
+     * @return Disabled aliases list.
+     */
+    List<String> getDisabledAliases();
+
+    /**
+     * List of alias that should be enabled by runner.
+     * 
+     * @param enabledAliases
+     *            The alias to be enabled by runner.
+     */
+    void setEnabledAliases(List<String> enabledAliases);
+
+    /**
+     * Get the list of enabled aliases.
+     * 
+     * @return Enabled aliases list.
+     */
+    List<String> getEnabledAliases();
+
+    /**
      * List of action types that should be ignored by runner.
      * 
      * @param disabledTypes
      *            The types to be ignored by runner.
      */
-    void setDisabledTypes(List<ActionType> disabledTypes);
+    void setDisabledTypes(List<? extends ActionType> disabledTypes);
+
+    /**
+     * Get the list of disabled types.
+     * 
+     * @return Disabled types list.
+     */
+    List<? extends ActionType> getDisabledTypes();
 
     /**
      * List of action types that should be enabled by runner.
@@ -87,7 +108,14 @@ public interface IRunner {
      * @param enabledTypes
      *            The types to be enabled by runner.
      */
-    void setEnabledTypes(List<ActionType> enabledTypes);
+    void setEnabledTypes(List<? extends ActionType> enabledTypes);
+
+    /**
+     * Get the list of enabled types.
+     * 
+     * @return Enabled types list.
+     */
+    List<? extends ActionType> getEnabledTypes();
 
     /**
      * Performs the specification in source.

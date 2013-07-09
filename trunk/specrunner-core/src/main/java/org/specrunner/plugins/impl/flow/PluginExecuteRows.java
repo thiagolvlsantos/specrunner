@@ -1,5 +1,8 @@
 package org.specrunner.plugins.impl.flow;
 
+import java.util.Arrays;
+import java.util.List;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
@@ -10,10 +13,13 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
+import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilEvaluator;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -79,12 +85,10 @@ public class PluginExecuteRows extends AbstractPluginScoped {
             Element row = (Element) ns.get(i);
             for (int k = 0; k < table.getAttributeCount(); k++) {
                 Attribute att = (Attribute) table.getAttribute(k).copy();
-                if (att.getLocalName().equals("value")) {
-                    att.setLocalName("value.");
-                }
                 row.addAttribute(att);
             }
             row.addAttribute(new Attribute("class", "execute"));
+            row.addAttribute(new Attribute("onstart", "true"));
 
             Nodes cs = row.query("descendant::td");
             if (hs.size() != cs.size()) {
@@ -99,12 +103,21 @@ public class PluginExecuteRows extends AbstractPluginScoped {
                 }
             }
             context.push(context.newBlock(row, this));
+            IRunner runner = context.getRunner();
+            List<? extends ActionType> types = runner.getDisabledTypes();
             try {
                 context.saveLocal(pos, String.valueOf(i - 1));
-                context.getRunner().run(row, context, result);
+                runner.setEnabledTypes(Arrays.asList(Command.INSTANCE));
+                UtilPlugin.performChildren(row, context, result);
+                runner.setEnabledTypes(null);
+                runner.run(row, context, result);
             } catch (RunnerException e) {
-                e.printStackTrace();
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                throw new PluginException(e.getMessage(), e);
             } finally {
+                runner.setDisabledTypes(types);
                 context.clearLocal(pos);
                 context.pop();
             }
