@@ -35,12 +35,27 @@ import org.specrunner.result.status.Success;
  */
 public abstract class AbstractPluginDual extends AbstractPluginValue {
 
+    /**
+     * Adjust execution moment, if on start node or at the end. Default is
+     * 'false', to perform on end.
+     */
     private Boolean onstart = Boolean.FALSE;
 
+    /**
+     * Get if execute on start.
+     * 
+     * @return true, to perform on start, false, otherwise.
+     */
     public Boolean isOnstart() {
         return onstart;
     }
 
+    /**
+     * Set on start flag.
+     * 
+     * @param onstart
+     *            On start execution.
+     */
     public void setOnstart(Boolean onstart) {
         this.onstart = onstart;
     }
@@ -48,8 +63,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         if (onstart) {
-            perform(context, result);
-            return super.doStart(context, result);
+            return perform(context, result);
         }
         return ENext.DEEP;
     }
@@ -61,7 +75,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
         }
     }
 
-    protected void perform(IContext context, IResultSet result) throws PluginException {
+    protected ENext perform(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
         Object obj = getValue(node.getValue(), isEval(), context);
         if (operation(obj, context)) {
@@ -69,6 +83,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
         } else {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), getError());
         }
+        return ENext.DEEP;
     }
 
     /**
