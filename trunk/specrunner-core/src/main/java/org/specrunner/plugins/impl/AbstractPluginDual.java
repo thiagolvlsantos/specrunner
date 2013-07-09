@@ -75,6 +75,17 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
         }
     }
 
+    /**
+     * Perform plugin action/assertion.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @return The next move.
+     * @throws PluginException
+     *             On plugin execution errors.
+     */
     protected ENext perform(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
         Object obj = getValue(node.getValue(), isEval(), context);

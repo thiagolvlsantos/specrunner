@@ -186,61 +186,7 @@ public class RunnerImpl extends AbstractRunner {
                 }
             }
 
-            // ----------- METAVARIABLES --------------
-            // created before to enable plugin use them in values.
-            // meta variable 'node'
-            context.saveStrict(UtilEvaluator.asVariable("$NODE"), new IModel<Node>() {
-                @Override
-                public Node getObject(IContext context) throws SpecRunnerException {
-                    return block.getNode();
-                }
-            });
-
-            // meta variable 'plugin'
-            context.saveStrict(UtilEvaluator.asVariable("$PLUGIN"), plugin);
-
-            // meta variable 'block'
-            context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
-
-            // meta variable 'text'
-            context.saveStrict(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
-                @Override
-                public String getObject(IContext context) throws SpecRunnerException {
-                    return block.getNode().getValue();
-                }
-            });
-
-            // meta variable 'XML'
-            context.saveStrict(UtilEvaluator.asVariable("$XML"), new IModel<String>() {
-                @Override
-                public String getObject(IContext context) throws SpecRunnerException {
-                    return block.getNode().toXML();
-                }
-            });
-
-            // meta variable 'content evaluated silently'
-            context.saveStrict(UtilEvaluator.asVariable("$CONTENT"), new IModel<Object>() {
-                @Override
-                public Object getObject(IContext context) throws SpecRunnerException {
-                    try {
-                        return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
-                    } catch (Exception e) {
-                        throw new SpecRunnerException(e);
-                    }
-                }
-            });
-
-            // meta variable 'content evaluated'
-            context.saveStrict(UtilEvaluator.asVariable("$CONTENT_UNSILENT"), new IModel<Object>() {
-                @Override
-                public Object getObject(IContext context) throws SpecRunnerException {
-                    try {
-                        return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
-                    } catch (Exception e) {
-                        throw new SpecRunnerException(e);
-                    }
-                }
-            });
+            addMetavariable(context, block);
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
 
@@ -256,13 +202,10 @@ public class RunnerImpl extends AbstractRunner {
                 // if plugin indicates to go deeper in node and node has
                 // children.
                 if (node != null && next == ENext.DEEP && block.hasChildren()) {
-                    Node deep = node;
                     // if doStart() has changed the block information, for
                     // example, exchange its node, the deeper must be over
                     // the current node.
-                    if (block.isChanged()) {
-                        deep = block.getNode();
-                    }
+                    Node deep = block.isChanged() ? block.getNode() : node;
                     // for each children.
                     for (int i = 0; i < deep.getChildCount(); i++) {
                         Node child = deep.getChild(i);
@@ -330,6 +273,77 @@ public class RunnerImpl extends AbstractRunner {
     }
 
     /**
+     * Add a set of metavariables to test environment.
+     * 
+     * @param context
+     *            The context.
+     * @param block
+     *            The block.
+     */
+    protected void addMetavariable(IContext context, final IBlock block) {
+        // ----------- METAVARIABLES --------------
+        // created before to enable plugin use them in values.
+        // meta variable 'node'
+        context.saveStrict(UtilEvaluator.asVariable("$NODE"), new IModel<Node>() {
+            @Override
+            public Node getObject(IContext context) throws SpecRunnerException {
+                return block.getNode();
+            }
+        });
+
+        // meta variable 'plugin'
+        context.saveStrict(UtilEvaluator.asVariable("$PLUGIN"), new IModel<IPlugin>() {
+            @Override
+            public IPlugin getObject(IContext context) throws SpecRunnerException {
+                return block.getPlugin();
+            }
+        });
+
+        // meta variable 'block'
+        context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
+
+        // meta variable 'text'
+        context.saveStrict(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return block.getNode().getValue();
+            }
+        });
+
+        // meta variable 'XML'
+        context.saveStrict(UtilEvaluator.asVariable("$XML"), new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return block.getNode().toXML();
+            }
+        });
+
+        // meta variable 'content evaluated silently'
+        context.saveStrict(UtilEvaluator.asVariable("$CONTENT"), new IModel<Object>() {
+            @Override
+            public Object getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
+                } catch (Exception e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        });
+
+        // meta variable 'content evaluated'
+        context.saveStrict(UtilEvaluator.asVariable("$CONTENT_UNSILENT"), new IModel<Object>() {
+            @Override
+            public Object getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
+                } catch (Exception e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        });
+    }
+
+    /**
      * Perform initialization.
      * 
      * @param context
@@ -362,6 +376,31 @@ public class RunnerImpl extends AbstractRunner {
                 sl.onAfterInit(plugin, context, result);
             }
         }
+    }
+
+    /**
+     * Check condition to perform the plugin.
+     * 
+     * @param plugin
+     *            The plugin.
+     * @param context
+     *            The context.
+     * @return true, if should be performed, false, otherwise.
+     * @throws SpecRunnerException
+     *             On conditional evaluation errors.
+     */
+    protected boolean checkConditional(IPlugin plugin, IContext context) throws SpecRunnerException {
+        Boolean out = null;
+        if (plugin instanceof ITestPlugin) {
+            ITestPlugin testPlugin = (ITestPlugin) plugin;
+            IModel<Boolean> model = testPlugin.getConditionModel();
+            if (model != null) {
+                out = model.getObject(context);
+            } else {
+                out = testPlugin.getCondition();
+            }
+        }
+        return out == null || out;
     }
 
     /**
@@ -433,31 +472,6 @@ public class RunnerImpl extends AbstractRunner {
             }
         }
         return next;
-    }
-
-    /**
-     * Check condition to perform the plugin.
-     * 
-     * @param plugin
-     *            The plugin.
-     * @param context
-     *            The context.
-     * @return true, if should be performed, false, otherwise.
-     * @throws SpecRunnerException
-     *             On conditional evaluation errors.
-     */
-    protected boolean checkConditional(IPlugin plugin, IContext context) throws SpecRunnerException {
-        Boolean out = null;
-        if (plugin instanceof ITestPlugin) {
-            ITestPlugin testPlugin = (ITestPlugin) plugin;
-            IModel<Boolean> model = testPlugin.getConditionModel();
-            if (model != null) {
-                out = model.getObject(context);
-            } else {
-                out = testPlugin.getCondition();
-            }
-        }
-        return out == null || out;
     }
 
     /**

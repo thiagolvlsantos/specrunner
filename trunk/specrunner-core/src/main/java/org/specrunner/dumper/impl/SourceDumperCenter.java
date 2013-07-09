@@ -46,6 +46,11 @@ import org.specrunner.util.output.IOutputFactory;
  */
 public class SourceDumperCenter extends AbstractSourceDumperFile {
 
+    /**
+     * Number of extra spaces at the end.
+     */
+    private static final int TAIL = 5;
+
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
         set(source, result);
@@ -107,7 +112,7 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         span.appendChild(" at " + model.get("date") + " ");
         span.appendChild(new Element("br"));
         span.appendChild(result.asNode());
-        for (int i = 0; i < result.actionTypes().size() + 5; i++) {
+        for (int i = 0; i < result.actionTypes().size() + TAIL; i++) {
             body.appendChild(new Element("br"));
         }
     }
