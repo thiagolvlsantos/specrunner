@@ -1,6 +1,7 @@
 package example;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.junit.runner.RunWith;
@@ -21,6 +22,8 @@ public class TestExecute1 {
     }
 
     public String getGreeting() {
-        return date.getHours() < 12 ? "Good Morning World!" : "Good ...";
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        return c.get(Calendar.HOUR) < 12 ? "Good Morning World!" : "Good ...";
     }
 }
