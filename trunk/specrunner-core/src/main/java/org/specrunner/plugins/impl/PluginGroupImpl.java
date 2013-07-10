@@ -53,7 +53,15 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
      * Default constructor.
      */
     public PluginGroupImpl() {
-        parameters = new ParameterDecoratorImpl();
+        parameters = new ParameterDecoratorImpl() {
+            @Override
+            public Object setParameter(String name, Object value, IContext context) throws Exception {
+                for (IPlugin p : getChildren()) {
+                    p.getParameters().setParameter(name, value, context);
+                }
+                return super.setParameter(name, value, context);
+            }
+        };
         parameters.setDecorated(this);
     }
 
