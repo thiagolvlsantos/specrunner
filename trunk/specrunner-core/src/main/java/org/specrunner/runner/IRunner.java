@@ -17,12 +17,9 @@
  */
 package org.specrunner.runner;
 
-import java.util.List;
-
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
@@ -36,86 +33,19 @@ import org.specrunner.source.ISource;
 public interface IRunner {
 
     /**
-     * Feature to set the disabled aliases using IFeatureManager or
-     * IConfiguration.
-     */
-    String FEATURE_DISABLED_ALIASES = IRunner.class.getName() + ".disabledAliases";
-
-    /**
-     * Feature to set the enabled aliases using IFeatureManager or
-     * IConfiguration.
-     */
-    String FEATURE_ENABLED_ALIASES = IRunner.class.getName() + ".enabledAliases";
-
-    /**
-     * Feature to set the disabled type using IFeatureManager or IConfiguration.
-     */
-    String FEATURE_DISABLED_TYPES = IRunner.class.getName() + ".disabledTypes";
-
-    /**
-     * Feature to set the enabled types using IFeatureManager or IConfiguration.
-     */
-    String FEATURE_ENABLED_TYPES = IRunner.class.getName() + ".enabledTypes";
-
-    /**
-     * List of alias that should be ignored by runner.
+     * Get runner filter.
      * 
-     * @param disabledAliases
-     *            The alias to be ignored by runner.
+     * @return The filter.
      */
-    void setDisabledAliases(List<String> disabledAliases);
+    IFilter getFilter();
 
     /**
-     * Get the list of disabled aliases.
+     * Set a filter.
      * 
-     * @return Disabled aliases list.
+     * @param filter
+     *            A block filter.
      */
-    List<String> getDisabledAliases();
-
-    /**
-     * List of alias that should be enabled by runner.
-     * 
-     * @param enabledAliases
-     *            The alias to be enabled by runner.
-     */
-    void setEnabledAliases(List<String> enabledAliases);
-
-    /**
-     * Get the list of enabled aliases.
-     * 
-     * @return Enabled aliases list.
-     */
-    List<String> getEnabledAliases();
-
-    /**
-     * List of action types that should be ignored by runner.
-     * 
-     * @param disabledTypes
-     *            The types to be ignored by runner.
-     */
-    void setDisabledTypes(List<? extends ActionType> disabledTypes);
-
-    /**
-     * Get the list of disabled types.
-     * 
-     * @return Disabled types list.
-     */
-    List<? extends ActionType> getDisabledTypes();
-
-    /**
-     * List of action types that should be enabled by runner.
-     * 
-     * @param enabledTypes
-     *            The types to be enabled by runner.
-     */
-    void setEnabledTypes(List<? extends ActionType> enabledTypes);
-
-    /**
-     * Get the list of enabled types.
-     * 
-     * @return Enabled types list.
-     */
-    List<? extends ActionType> getEnabledTypes();
+    void setFilter(IFilter filter);
 
     /**
      * Performs the specification in source.
