@@ -16,8 +16,10 @@ import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.runner.IFilter;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
+import org.specrunner.runner.impl.FilterDefault;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
@@ -104,12 +106,17 @@ public class PluginExecuteRows extends AbstractPluginScoped {
             }
             context.push(context.newBlock(row, this));
             IRunner runner = context.getRunner();
-            List<? extends ActionType> types = runner.getDisabledTypes();
+            IFilter filter = runner.getFilter();
+            FilterDefault tmp = FilterDefault.INSTANCE.get();
+            List<? extends ActionType> types = tmp.getDisabledTypes();
+            boolean show = tmp.isShowMessage();
             try {
                 context.saveLocal(pos, String.valueOf(i - 1));
-                runner.setEnabledTypes(Arrays.asList(Command.INSTANCE));
+                tmp.setEnabledTypes(Arrays.asList(Command.INSTANCE));
+                tmp.setShowMessage(false);
+                runner.setFilter(tmp);
                 UtilPlugin.performChildren(row, context, result);
-                runner.setEnabledTypes(null);
+                tmp.setEnabledTypes(null);
                 runner.run(row, context, result);
             } catch (RunnerException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -117,7 +124,9 @@ public class PluginExecuteRows extends AbstractPluginScoped {
                 }
                 throw new PluginException(e.getMessage(), e);
             } finally {
-                runner.setDisabledTypes(types);
+                tmp.setDisabledTypes(types);
+                tmp.setShowMessage(show);
+                runner.setFilter(filter);
                 context.clearLocal(pos);
                 context.pop();
             }
