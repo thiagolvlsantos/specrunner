@@ -265,39 +265,7 @@ public class PluginInclude extends AbstractPlugin {
                 }
                 throw new PluginException(e);
             }
-            try {
-                // common transformer
-                newSource = SpecRunnerServices.get(ITransformer.class).transform(newSource);
-            } catch (SourceException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                throw new PluginException(e);
-            }
-            if (transformer != null) {
-                ITransformerManager itm = SpecRunnerServices.get(ITransformerManager.class);
-                ITransformer t = itm.get(transformer);
-                if (t == null) {
-                    try {
-                        t = (ITransformer) Class.forName(transformer).newInstance();
-                        itm.bind(transformer, t);
-                    } catch (Exception e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug(e.getMessage(), e);
-                        }
-                        throw new PluginException(e);
-                    }
-                }
-                t.initialize();
-                try {
-                    newSource = t.transform(newSource);
-                } catch (SourceException e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
-                    }
-                    throw new PluginException(e);
-                }
-            }
+            newSource = transform(newSource);
 
             Document document = null;
             try {
@@ -412,6 +380,52 @@ public class PluginInclude extends AbstractPlugin {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), e);
         }
         return ENext.SKIP;
+    }
+
+    /**
+     * Perform source transformation.
+     * 
+     * @param newSource
+     *            Source to be transformed.
+     * @return Transformed source, if applied, the original source, otherwise.
+     * @throws PluginException
+     *             On transform errors.
+     */
+    protected ISource transform(ISource newSource) throws PluginException {
+        try {
+            // common transformer
+            newSource = SpecRunnerServices.get(ITransformer.class).transform(newSource);
+        } catch (SourceException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException(e);
+        }
+        if (transformer != null) {
+            ITransformerManager itm = SpecRunnerServices.get(ITransformerManager.class);
+            ITransformer t = itm.get(transformer);
+            if (t == null) {
+                try {
+                    t = (ITransformer) Class.forName(transformer).newInstance();
+                    itm.bind(transformer, t);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    throw new PluginException(e);
+                }
+            }
+            t.initialize();
+            try {
+                newSource = t.transform(newSource);
+            } catch (SourceException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                throw new PluginException(e);
+            }
+        }
+        return newSource;
     }
 
     /**
