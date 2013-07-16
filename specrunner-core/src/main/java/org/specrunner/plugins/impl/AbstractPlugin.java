@@ -148,26 +148,26 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, IWaitPlugi
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("initialize()>" + context.peek());
         }
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (condition == null) {
-            fh.set(FEATURE_CONDITION, this);
+            fm.set(FEATURE_CONDITION, this);
         }
         if (wait == null) {
-            fh.set(FEATURE_WAIT, this);
+            fm.set(FEATURE_WAIT, this);
         }
         if (sleep == null) {
-            fh.set(FEATURE_SLEEP, this);
+            fm.set(FEATURE_SLEEP, this);
         }
         if (timeout == null) {
-            fh.set(FEATURE_TIMEOUT, this);
+            fm.set(FEATURE_TIMEOUT, this);
         }
         if (threadsafe == null) {
-            fh.set(FEATURE_THREADSAFE, this);
+            fm.set(FEATURE_THREADSAFE, this);
         }
         if (threadsafe == null) {
             threadsafe = false;
         }
-        fh.set(FEATURE_NORMALIZED, this);
+        fm.set(FEATURE_NORMALIZED, this);
     }
 
     @Override

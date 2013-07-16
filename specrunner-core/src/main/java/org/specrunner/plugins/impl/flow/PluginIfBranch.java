@@ -86,7 +86,7 @@ public abstract class PluginIfBranch extends AbstractPluginNamed {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         if (hide == null) {
-            IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+            IFeatureManager fm = SpecRunnerServices.getFeatureManager();
             fm.set(FEATURE_HIDE, this);
         }
     }

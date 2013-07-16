@@ -46,8 +46,8 @@ public class TestMultiplo {
         ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";

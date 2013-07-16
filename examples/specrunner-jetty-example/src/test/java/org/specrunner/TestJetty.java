@@ -54,8 +54,8 @@ public class TestJetty {
         }).bindModel("host", Model.of("localhost"));
 
         // longer tolerance
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";
@@ -149,12 +149,12 @@ public class TestJetty {
     public static void main(String[] args) throws Exception {
         TestJetty tj = new TestJetty();
         tj.prepareTest();
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 5; j++) {
             try {
-                fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
+                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
                 tj.runJettyWithRecording();
             } catch (Exception e) {
                 e.printStackTrace();

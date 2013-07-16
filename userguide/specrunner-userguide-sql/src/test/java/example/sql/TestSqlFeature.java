@@ -54,7 +54,7 @@ public class TestSqlFeature {
         ief.bindValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
         ief.bindClass("dt", DateTime.class);
 
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         // setting plugin connection features
         fm.add(PluginConnection.FEATURE_DRIVER, "org.hsqldb.jdbcDriver");
         fm.add(PluginConnection.FEATURE_URL, "jdbc:hsqldb:mem:TESTE");

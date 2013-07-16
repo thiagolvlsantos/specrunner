@@ -144,11 +144,11 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_INTERVAL, this);
-        fh.set(FEATURE_MAXWAIT, this);
-        fh.set(FEATURE_WAITFOR, this);
-        fh.set(FEATURE_TIMEOUT, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_INTERVAL, this);
+        fm.set(FEATURE_MAXWAIT, this);
+        fm.set(FEATURE_WAITFOR, this);
+        fm.set(FEATURE_TIMEOUT, this);
     }
 
     @Override

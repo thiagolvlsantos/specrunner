@@ -43,10 +43,10 @@ public class TestHibernate {
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
         ief.bindClass("dt", DateTime.class);
 
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(AbstractComparatorTime.FEATURE_TOLERANCE, 10000L);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(AbstractComparatorTime.FEATURE_TOLERANCE, 10000L);
 
-        fh.put(AbstractPlugin.FEATURE_THREADSAFE, Boolean.TRUE);
+        fm.put(AbstractPlugin.FEATURE_THREADSAFE, Boolean.TRUE);
 
         // List<ReportPart> list = new LinkedList<ReportPart>();
         // list.add(new ReportPart("STATUS", StatusComparator.get()));

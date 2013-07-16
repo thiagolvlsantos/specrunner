@@ -83,15 +83,15 @@ public class PluginConfiguration extends AbstractPluginFactory {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (type == null) {
-            fh.set(FEATURE_TYPE, this);
+            fm.set(FEATURE_TYPE, this);
         }
         if (factory == null) {
-            fh.set(FEATURE_FACTORY, this);
+            fm.set(FEATURE_FACTORY, this);
         }
         if (method == null) {
-            fh.set(FEATURE_METHOD, this);
+            fm.set(FEATURE_METHOD, this);
         }
     }
 

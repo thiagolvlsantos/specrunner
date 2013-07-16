@@ -224,7 +224,7 @@ public class FilterDefault implements IFilter {
 
     @Override
     public void initialize(IContext context) {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.set(FEATURE_DISABLED_ALIASES, this);
         fm.set(FEATURE_ENABLED_ALIASES, this);
         fm.set(FEATURE_DISABLED_TYPES, this);

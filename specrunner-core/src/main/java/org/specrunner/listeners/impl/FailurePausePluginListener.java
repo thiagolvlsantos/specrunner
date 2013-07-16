@@ -120,7 +120,7 @@ public class FailurePausePluginListener extends AbstractPluginListener {
 
     @Override
     public void onBeforeInit(IPlugin plugin, IContext context, IResultSet result) {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.set(FEATURE_PAUSE_ON_FAILURE, this);
         fm.set(FEATURE_SHOW_DIALOG, this);
         start = result.size();

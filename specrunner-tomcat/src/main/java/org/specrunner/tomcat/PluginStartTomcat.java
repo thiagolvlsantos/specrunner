@@ -240,21 +240,21 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (basedir == null) {
-            fh.set(FEATURE_BASEDIR, this);
+            fm.set(FEATURE_BASEDIR, this);
         }
         if (port == null) {
-            fh.set(FEATURE_PORT, this);
+            fm.set(FEATURE_PORT, this);
         }
         if (context == null) {
-            fh.set(FEATURE_CONTEXT, this);
+            fm.set(FEATURE_CONTEXT, this);
         }
         if (war == null) {
-            fh.set(FEATURE_WAR, this);
+            fm.set(FEATURE_WAR, this);
         }
-        fh.set(FEATURE_DYNAMIC, this);
-        fh.set(FEATURE_REUSE, this);
+        fm.set(FEATURE_DYNAMIC, this);
+        fm.set(FEATURE_REUSE, this);
     }
 
     @Override

@@ -93,16 +93,16 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
      */
     public WebConnectionFile(WebClient webClient) {
         super(webClient);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_DIRECTORY, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_DIRECTORY, this);
         if (cacheClean == null) {
-            fh.set(FEATURE_CLEAN, this);
+            fm.set(FEATURE_CLEAN, this);
         }
         if (cacheClean != null && cacheClean) {
             reset();
         }
         if (strategy == null) {
-            fh.set(FEATURE_STRATEGY, this);
+            fm.set(FEATURE_STRATEGY, this);
         }
         if (strategy != null) {
             try {

@@ -52,7 +52,7 @@ public class WebDriverFactoryIe implements IWebDriverFactory {
      * Default constructor.
      */
     public WebDriverFactoryIe() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.set(FEATURE_DRIVER, this);
     }
 

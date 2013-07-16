@@ -119,12 +119,12 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (finder == null) {
-            fh.set(FEATURE_FINDER_TYPE, this);
+            fm.set(FEATURE_FINDER_TYPE, this);
         }
         if (finderInstance == null) {
-            fh.set(FEATURE_FINDER_INSTANCE, this);
+            fm.set(FEATURE_FINDER_INSTANCE, this);
         }
         if (finder != null && finderInstance == null) {
             try {

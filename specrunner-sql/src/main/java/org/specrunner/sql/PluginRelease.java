@@ -85,7 +85,7 @@ public class PluginRelease extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (getName() == null) {
             fm.set(FEATURE_NAME, this);
         }

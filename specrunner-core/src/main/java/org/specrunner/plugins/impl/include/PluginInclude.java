@@ -222,13 +222,13 @@ public class PluginInclude extends AbstractPlugin {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_DEPTH, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_DEPTH, this);
         if (expanded == null) {
-            fh.set(FEATURE_EXPANDED, this);
+            fm.set(FEATURE_EXPANDED, this);
         }
         if (transformer == null) {
-            fh.set(FEATURE_TRANSFORMER, this);
+            fm.set(FEATURE_TRANSFORMER, this);
         }
     }
 

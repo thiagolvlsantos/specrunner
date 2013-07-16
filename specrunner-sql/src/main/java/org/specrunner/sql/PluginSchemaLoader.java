@@ -144,12 +144,12 @@ public class PluginSchemaLoader extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (provider == null) {
-            fh.set(FEATURE_PROVIDER, this);
+            fm.set(FEATURE_PROVIDER, this);
         }
-        fh.set(FEATURE_PROVIDER_INSTANCE, this);
-        fh.set(FEATURE_REUSE, this);
+        fm.set(FEATURE_PROVIDER_INSTANCE, this);
+        fm.set(FEATURE_REUSE, this);
     }
 
     @Override

@@ -217,15 +217,15 @@ public class PluginStartJetty extends AbstractPluginScoped {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (file == null) {
-            fh.set(FEATURE_FILE, this);
+            fm.set(FEATURE_FILE, this);
         }
-        fh.set(FEATURE_DYNAMIC, this);
+        fm.set(FEATURE_DYNAMIC, this);
         if (port == null) {
-            fh.set(FEATURE_PORT, this);
+            fm.set(FEATURE_PORT, this);
         }
-        fh.set(FEATURE_REUSE, this);
+        fm.set(FEATURE_REUSE, this);
     }
 
     @Override

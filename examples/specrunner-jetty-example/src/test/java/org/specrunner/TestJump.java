@@ -29,8 +29,8 @@ public class TestJump {
         ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";
@@ -61,7 +61,7 @@ public class TestJump {
 
     @Test
     public void exampleGlobal() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         fm.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyGlobal.html");

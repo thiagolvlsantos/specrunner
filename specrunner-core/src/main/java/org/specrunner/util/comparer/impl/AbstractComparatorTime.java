@@ -41,8 +41,8 @@ public abstract class AbstractComparatorTime implements IComparator {
 
     @Override
     public void initialize() {
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_TOLERANCE, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_TOLERANCE, this);
     }
 
     /**

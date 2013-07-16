@@ -26,8 +26,8 @@ public class TstngJetty {
         ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginCompareDate.FEATURE_TOLERANCE, 5000L);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginCompareDate.FEATURE_TOLERANCE, 5000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";
@@ -49,11 +49,11 @@ public class TstngJetty {
 
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runWithoutScreenCapture() throws Exception {
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         // disable recording browser information.
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
 
         // same as before.
         runJetty();
@@ -61,11 +61,11 @@ public class TstngJetty {
 
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runWithoutScreenCapture2() throws Exception {
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         // disable recording browser information.
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
 
         // same as before.
         runJetty();
@@ -73,11 +73,11 @@ public class TstngJetty {
 
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runWithoutScreenCapture3() throws Exception {
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         // disable recording browser information.
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
 
         // same as before.
         runJetty();
@@ -86,27 +86,27 @@ public class TstngJetty {
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runTwice() throws Exception {
         // run again to check time performance after classes are loaded.
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginBrowser.FEATURE_RECORDING, true);
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginBrowser.FEATURE_RECORDING, true);
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
         runJetty();
 
         // run again to check time performance after classes are loaded.
-        fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
+        fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
         runJetty();
     }
 
     public static void main(String[] args) throws Exception {
         TstngJetty tj = new TstngJetty();
         tj.prepareTest();
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 5; j++) {
             try {
-                fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
+                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
                 tj.runJetty();
             } catch (Exception e) {
                 e.printStackTrace();

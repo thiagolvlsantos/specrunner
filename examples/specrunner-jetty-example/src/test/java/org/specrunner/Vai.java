@@ -16,25 +16,26 @@
 package org.specrunner;
 
 import java.io.File;
+
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.webdriver.PluginBrowser;
 
 /**
- *
+ * 
  * @author Thiago
  */
 public class Vai {
-    
+
     public static void main(String[] args) throws Exception {
         TestJetty tj = new TestJetty();
         tj.prepareTest();
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.put(PluginBrowser.FEATURE_RECORDING, false);
-        fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.put(PluginBrowser.FEATURE_RECORDING, false);
+        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 1; j++) {
             try {
-                fh.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
+                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
                 tj.runJettyWithRecording();
             } catch (Exception e) {
                 e.printStackTrace();
