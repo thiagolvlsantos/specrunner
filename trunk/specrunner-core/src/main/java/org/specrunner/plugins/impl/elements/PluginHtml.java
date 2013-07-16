@@ -19,7 +19,6 @@ package org.specrunner.plugins.impl.elements;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -48,7 +47,7 @@ public class PluginHtml extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        Object obj = SpecRunnerServices.get(IFeatureManager.class).get(BEAN_NAME);
+        Object obj = SpecRunnerServices.getFeatureManager().get(BEAN_NAME);
         context.saveLocal(UtilEvaluator.asVariable(BEAN_NAME), obj);
         return ENext.DEEP;
     }
@@ -59,6 +58,6 @@ public class PluginHtml extends AbstractPluginScoped {
      * @return The test instance.
      */
     public static Object getTestInstance() {
-        return SpecRunnerServices.get(IFeatureManager.class).get(BEAN_NAME);
+        return SpecRunnerServices.getFeatureManager().get(BEAN_NAME);
     }
 }

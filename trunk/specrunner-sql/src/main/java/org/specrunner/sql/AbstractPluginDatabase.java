@@ -193,7 +193,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
     @Override
     public void initialize(IContext context, TableAdapter table) throws PluginException {
         super.initialize(context, table);
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (schema == null) {
             fm.set(FEATURE_SCHEMA, this);
         }

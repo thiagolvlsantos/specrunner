@@ -217,11 +217,11 @@ public class PluginBrowser extends AbstractPluginScoped {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_RECORDING, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_RECORDING, this);
         if (webdriver == null) {
             try {
-                fh.setStrict(FEATURE_WEBDRIVER_TYPE, this);
+                fm.setStrict(FEATURE_WEBDRIVER_TYPE, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver type is " + webdriver);
                 }
@@ -233,7 +233,7 @@ public class PluginBrowser extends AbstractPluginScoped {
         }
         if (webdriverfactory == null) {
             try {
-                fh.setStrict(FEATURE_WEBDRIVER_FACTORY, this);
+                fm.setStrict(FEATURE_WEBDRIVER_FACTORY, this);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver factory is " + webdriverfactory);
                 }
@@ -244,7 +244,7 @@ public class PluginBrowser extends AbstractPluginScoped {
             }
         }
         if (webdriverInstance == null) {
-            fh.set(FEATURE_WEBDRIVER_INSTANCE, this);
+            fm.set(FEATURE_WEBDRIVER_INSTANCE, this);
         }
     }
 

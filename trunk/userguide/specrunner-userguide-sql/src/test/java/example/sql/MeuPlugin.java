@@ -26,7 +26,7 @@ public class MeuPlugin extends AbstractPlugin {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.set(FEATURE_PADRAO, this);
     }
 

@@ -143,12 +143,12 @@ public class PluginFilter extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (provider == null) {
-            fh.set(FEATURE_FILTER, this);
+            fm.set(FEATURE_FILTER, this);
         }
-        fh.set(FEATURE_FILTER_INSTANCE, this);
-        fh.set(FEATURE_REUSE, this);
+        fm.set(FEATURE_FILTER_INSTANCE, this);
+        fm.set(FEATURE_REUSE, this);
     }
 
     @Override

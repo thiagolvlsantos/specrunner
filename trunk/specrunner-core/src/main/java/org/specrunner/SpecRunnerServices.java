@@ -172,10 +172,8 @@ public final class SpecRunnerServices {
      * Shortcut method to feature manager.
      * 
      * @return The feature manager..
-     * @throws SpecRunnerException
-     *             On recovering errors.
      */
-    public static IFeatureManager getFeatureManager() throws SpecRunnerException {
+    public static IFeatureManager getFeatureManager() {
         return get(IFeatureManager.class);
     }
 

@@ -68,7 +68,7 @@ public class PipeFeatureManager implements IPipe {
      * @return A manager.
      */
     protected IFeatureManager createFeatureManager() {
-        return SpecRunnerServices.get(IFeatureManager.class);
+        return SpecRunnerServices.getFeatureManager();
     }
 
     /**

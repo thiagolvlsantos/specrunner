@@ -15,7 +15,7 @@ public abstract class AbstractCacheFactory implements ICacheFactory {
 
     @Override
     public <K, T> ICache<K, T> newCache(String name) {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         CacheLRU<K, T> cache = create(name);
         fm.set(ICache.FEATURE_TIMEOUT, cache);
         fm.set(ICache.FEATURE_SIZE, cache);

@@ -32,7 +32,7 @@ public class EncodedImpl implements IEncoded {
 
     @Override
     public String getEncoding() {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         String charset = (String) fm.get(IBuilderFactory.FEATURE_ENCODING);
         if (charset == null) {
             charset = DEFAULT_ENCODING;

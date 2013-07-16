@@ -98,12 +98,12 @@ public class PluginCompareDate extends PluginCompare {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         if (format == null) {
-            fh.set(FEATURE_FORMAT, this);
+            fm.set(FEATURE_FORMAT, this);
         }
         if (tolerance == null) {
-            fh.set(FEATURE_TOLERANCE, this);
+            fm.set(FEATURE_TOLERANCE, this);
         }
     }
 

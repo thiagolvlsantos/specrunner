@@ -198,9 +198,9 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      *             On dumper error.
      */
     protected void outputDirectory() throws SourceDumperException {
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         try {
-            fh.setStrict(FEATURE_OUTPUT_DIRECTORY, this);
+            fm.setStrict(FEATURE_OUTPUT_DIRECTORY, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -234,9 +234,9 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
         if (asFile != null) {
             outputName = asFile.getName();
         }
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         try {
-            fh.setStrict(FEATURE_OUTPUT_NAME, this);
+            fm.setStrict(FEATURE_OUTPUT_NAME, this);
         } catch (SpecRunnerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -255,9 +255,9 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      *             On dumper error.
      */
     protected void charset() throws SourceDumperException {
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         try {
-            fh.setStrict(FEATURE_CHARSET, this);
+            fm.setStrict(FEATURE_CHARSET, this);
         } catch (FeatureManagerException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);

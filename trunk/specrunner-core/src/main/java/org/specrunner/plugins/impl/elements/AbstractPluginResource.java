@@ -78,9 +78,9 @@ public abstract class AbstractPluginResource extends AbstractPlugin {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
         if (save == null) {
-            fh.set(FEATURE_SAVE, this);
+            IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+            fm.set(FEATURE_SAVE, this);
         }
     }
 }

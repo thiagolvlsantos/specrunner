@@ -65,7 +65,7 @@ public class JettyStringProvider implements IStringProvider {
 
     @Override
     public String newString(IContext context) throws ContextException {
-        IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.set(FEATURE_URL, this);
         if (url == null) {
             Server server = (Server) context.getByName(PluginStartJetty.SERVER_NAME);

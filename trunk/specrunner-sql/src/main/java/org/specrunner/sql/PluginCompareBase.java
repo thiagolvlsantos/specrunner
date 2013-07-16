@@ -177,11 +177,11 @@ public class PluginCompareBase extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_SCHEMA, this);
-        fh.set(FEATURE_SYSTEM, this);
-        fh.set(FEATURE_REFERENCE, this);
-        fh.set(FEATURE_FILTER, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_SCHEMA, this);
+        fm.set(FEATURE_SYSTEM, this);
+        fm.set(FEATURE_REFERENCE, this);
+        fm.set(FEATURE_FILTER, this);
     }
 
     @Override

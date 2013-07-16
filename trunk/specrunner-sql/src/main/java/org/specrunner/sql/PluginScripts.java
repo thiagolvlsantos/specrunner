@@ -232,11 +232,11 @@ public class PluginScripts extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fh = SpecRunnerServices.get(IFeatureManager.class);
-        fh.set(FEATURE_SCRIPT_SEPARATOR, this);
-        fh.set(FEATURE_SQL_SEPARATOR, this);
-        fh.set(FEATURE_SEPARATOR, this);
-        fh.set(FEATURE_FAILSAFE, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_SCRIPT_SEPARATOR, this);
+        fm.set(FEATURE_SQL_SEPARATOR, this);
+        fm.set(FEATURE_SEPARATOR, this);
+        fm.set(FEATURE_FAILSAFE, this);
         setScripts(context);
     }
 
