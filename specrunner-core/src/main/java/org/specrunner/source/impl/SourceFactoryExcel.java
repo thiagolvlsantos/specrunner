@@ -133,17 +133,19 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
             Element tr = new Element("tr");
             thead.appendChild(tr);
             {
-                Row row = ite.next();
-                Cell cell = row.getCell(result);
-                String value = cell != null ? String.valueOf(extractVal(cell)) : null;
-                while (cell != null && value != null) {
-                    Element th = new Element("th");
-                    tr.appendChild(th);
-                    th.appendChild(value);
-                    addAttributes(th, cell);
-                    result++;
-                    cell = row.getCell(result);
-                    value = cell != null ? String.valueOf(extractVal(cell)) : null;
+                if (ite.hasNext()) {
+                    Row row = ite.next();
+                    Cell cell = row.getCell(result);
+                    String value = cell != null ? String.valueOf(extractVal(cell)) : null;
+                    while (cell != null && value != null) {
+                        Element th = new Element("th");
+                        tr.appendChild(th);
+                        th.appendChild(value);
+                        addAttributes(table, tr, th, cell);
+                        result++;
+                        cell = row.getCell(result);
+                        value = cell != null ? String.valueOf(extractVal(cell)) : null;
+                    }
                 }
             }
         }
@@ -153,12 +155,16 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
     /**
      * Add information from cell comments.
      * 
-     * @param e
-     *            The element.
+     * @param table
+     *            The table element.
+     * @param row
+     *            The row element.
+     * @param th
+     *            The header element.
      * @param cell
      *            The cell to read comments from.
      */
-    private void addAttributes(Element e, Cell cell) {
+    private void addAttributes(Element table, Element row, Element th, Cell cell) {
         Comment c = cell.getCellComment();
         if (c != null) {
             RichTextString rts = c.getString();
@@ -169,7 +175,15 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                     String token = st.nextToken();
                     int pos = token.indexOf('=');
                     if (pos > 0) {
-                        e.addAttribute(new Attribute(token.substring(0, pos), token.substring(pos + 1).replace("\"", "")));
+                        String name = token.substring(0, pos);
+                        String value = token.substring(pos + 1).replace("\"", "");
+                        if (name.startsWith("t.")) {
+                            table.addAttribute(new Attribute(name.substring("t.".length(), name.length()), value));
+                        } else if (name.startsWith("r.")) {
+                            row.addAttribute(new Attribute(name.substring("r.".length(), name.length()), value));
+                        } else {
+                            th.addAttribute(new Attribute(name, value));
+                        }
                     }
                 }
             }
@@ -201,7 +215,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                         tr.appendChild(td);
                         Cell cell = row.getCell(k);
                         td.appendChild(String.valueOf(extractVal(cell)));
-                        addAttributes(td, cell);
+                        addAttributes(table, tr, td, cell);
                     }
                 }
             }

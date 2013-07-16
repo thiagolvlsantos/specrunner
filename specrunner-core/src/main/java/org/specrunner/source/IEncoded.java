@@ -31,7 +31,7 @@ public interface IEncoded {
     String FEATURE_ENCODING = ISourceFactory.class + ".encoding";
 
     /**
-     * Default encoding.
+     * Default encoding. Value: ISO-8859-1
      */
     String DEFAULT_ENCODING = "ISO-8859-1";
 
