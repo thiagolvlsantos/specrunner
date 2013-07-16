@@ -20,6 +20,7 @@ package org.specrunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
@@ -165,6 +166,17 @@ public final class SpecRunnerServices {
             instance.set(service);
         }
         return instance.get();
+    }
+
+    /**
+     * Shortcut method to feature manager.
+     * 
+     * @return The feature manager..
+     * @throws SpecRunnerException
+     *             On recovering errors.
+     */
+    public static IFeatureManager getFeatureManager() throws SpecRunnerException {
+        return get(IFeatureManager.class);
     }
 
     /**
