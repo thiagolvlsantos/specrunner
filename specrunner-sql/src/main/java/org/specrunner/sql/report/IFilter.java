@@ -18,6 +18,7 @@
 package org.specrunner.sql.report;
 
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
@@ -29,7 +30,7 @@ import org.specrunner.sql.meta.Table;
  * @author Thiago Santos
  * 
  */
-public interface IFilter {
+public interface IFilter extends IParameterHolder {
 
     /**
      * Enable the filter to perform some setup before use.

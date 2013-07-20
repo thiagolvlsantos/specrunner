@@ -15,31 +15,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.impl.factories;
+package org.specrunner.parameters.impl;
+
+import org.specrunner.parameters.IParameterDecorator;
+import org.specrunner.parameters.IParameterHolder;
 
 /**
- * Default factory group implementation populated.
+ * Implementation of parameter holder.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginFactoryGroupDefault extends PluginFactoryGroupImpl {
+public class ParameterHolder implements IParameterHolder {
+
+    /**
+     * The parameters decorator.
+     */
+    private IParameterDecorator parameters;
 
     /**
      * Default constructor.
      */
-    public PluginFactoryGroupDefault() {
-        add();
+    public ParameterHolder() {
+        parameters = new ParameterDecoratorImpl();
+        parameters.setDecorated(this);
     }
 
-    /**
-     * Add predefined factories.
-     */
-    protected void add() {
-        add(new PluginFactoryCSS());
-        add(new PluginFactoryElement());
-        add(new PluginFactoryCustom());
-        add(new PluginFactoryAttribute());
-        add(new PluginFactoryText());
+    @Override
+    public IParameterDecorator getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public void setParameters(IParameterDecorator parameters) {
+        this.parameters = parameters;
     }
 }

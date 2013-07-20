@@ -164,10 +164,11 @@ public class PluginFilter extends AbstractPluginValue {
                 cfg.put("providerInstance", providerInstance);
                 if (ir.canReuse(cfg)) {
                     ir.reset();
+                    Object obj = ir.getObject();
                     if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Reusing Filter " + ir.getObject());
+                        UtilLog.LOG.info("Reusing Filter " + obj);
                     }
-                    context.saveGlobal(currentName, ir.getObject());
+                    context.saveGlobal(currentName, obj);
                     result.addResult(Success.INSTANCE, context.peek());
                     return ENext.DEEP;
                 }

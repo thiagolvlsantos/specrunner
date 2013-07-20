@@ -24,8 +24,7 @@ import java.util.Map;
 
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.IFinder;
-import org.specrunner.parameters.IParameterDecorator;
-import org.specrunner.parameters.impl.ParameterDecoratorImpl;
+import org.specrunner.parameters.impl.ParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
@@ -42,7 +41,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public class FinderXPath implements IFinder {
+public class FinderXPath extends ParameterHolder implements IFinder {
 
     /**
      * Thread safe instance of <code>IFinder</code>.
@@ -53,11 +52,6 @@ public class FinderXPath implements IFinder {
             return new FinderXPath();
         };
     };
-
-    /**
-     * The parameters decorator.
-     */
-    private IParameterDecorator parameters;
 
     /**
      * Mapping of XPath strategies.
@@ -76,8 +70,6 @@ public class FinderXPath implements IFinder {
      * Minimum constructor.
      */
     protected FinderXPath() {
-        parameters = new ParameterDecoratorImpl();
-        parameters.setDecorated(this);
         addStrategy("id", "//*[@id='{0}']");
         addStrategy("name", "//*[@name='{0}']");
         addStrategy("value", "//*[@value='{0}']");
@@ -98,16 +90,6 @@ public class FinderXPath implements IFinder {
      */
     public static FinderXPath get() {
         return instance.get();
-    }
-
-    @Override
-    public IParameterDecorator getParameters() {
-        return parameters;
-    }
-
-    @Override
-    public void setParameters(IParameterDecorator parameters) {
-        this.parameters = parameters;
     }
 
     /**

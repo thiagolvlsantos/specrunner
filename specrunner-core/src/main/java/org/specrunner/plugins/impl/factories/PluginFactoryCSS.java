@@ -68,18 +68,19 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
                 String[] pcs = att.getValue().split(" ");
                 for (String s : pcs) {
                     String p = s.toLowerCase();
+                    IPlugin create = null;
                     IPlugin template = templates.get(p);
                     if (template != null) {
-                        IPlugin create = UtilPlugin.create(context, template, ele);
-                        create.setParent(this);
-                        result.add(create);
+                        create = UtilPlugin.create(context, template, ele);
                     } else {
                         Class<? extends IPlugin> c = types.get(p);
                         if (c != null) {
-                            IPlugin create = UtilPlugin.create(context, c, ele);
-                            create.setParent(this);
-                            result.add(create);
+                            create = UtilPlugin.create(context, c, ele);
                         }
+                    }
+                    if (create != null) {
+                        create.setParent(this);
+                        result.add(create);
                     }
                 }
             }

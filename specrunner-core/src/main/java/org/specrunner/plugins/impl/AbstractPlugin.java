@@ -23,7 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.IParameterDecorator;
-import org.specrunner.parameters.impl.ParameterDecoratorImpl;
+import org.specrunner.parameters.impl.ParameterHolder;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IParalelPlugin;
 import org.specrunner.plugins.IPlugin;
@@ -43,17 +43,12 @@ import org.specrunner.util.UtilString;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractPlugin implements IPlugin, ITestPlugin, IWaitPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
+public abstract class AbstractPlugin extends ParameterHolder implements IPlugin, ITestPlugin, IWaitPlugin, ISleepPlugin, ITimedPlugin, IParalelPlugin {
 
     /**
      * The plugin parent.
      */
     private IPluginFactory parent;
-
-    /**
-     * The parameters holder.
-     */
-    private IParameterDecorator parameters;
 
     /**
      * Default conditional feature.
@@ -129,8 +124,6 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, IWaitPlugi
      * Default constructor.
      */
     public AbstractPlugin() {
-        parameters = new ParameterDecoratorImpl();
-        parameters.setDecorated(this);
     }
 
     @Override
@@ -199,16 +192,6 @@ public abstract class AbstractPlugin implements IPlugin, ITestPlugin, IWaitPlugi
             }
             throw new PluginException(e);
         }
-    }
-
-    @Override
-    public IParameterDecorator getParameters() {
-        return parameters;
-    }
-
-    @Override
-    public void setParameters(IParameterDecorator parameters) {
-        this.parameters = parameters;
     }
 
     @Override
