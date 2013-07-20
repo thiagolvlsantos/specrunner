@@ -1,4 +1,4 @@
-package example.sql;
+package example.shadow;
 
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
