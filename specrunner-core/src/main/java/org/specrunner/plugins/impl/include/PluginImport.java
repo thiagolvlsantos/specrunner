@@ -20,56 +20,137 @@ package org.specrunner.plugins.impl.include;
 import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Element;
+import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginTable;
+import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.UtilNode;
 
 /**
- * Add package information as SLIM import tables.
+ * Add package information as SLIM import tables. Imports can also be performed
+ * simply by adding attribute 'imports' to any element.
+ * 
+ * <p>
+ * Imports can be performed:
+ * <ul>
+ * <li>
+ * in blocks, i.e.
+ * 
+ * <pre>
+ * &lt;.. imports="package1;package2;...;packageN"&gt;
+ * </pre>
+ * 
+ * on every valid tag;</li>
+ * <li>in tables, i.e.
+ * 
+ * In columns
+ * 
+ * <pre>
+ *          &lt;table class="imports"&gt
+ *              &lt;tr&gt;&lt;td&gt;package1&lt;/td&gt;&lt;td&gt;...&lt;/td&gt;&lt;td&gt;packageN&lt;/td&gt;&lt;/tr&gt;
+ *          &lt;/table&gt;
+ * </pre>
+ * 
+ * or in rows
+ * 
+ * <pre>
+ *          &lt;table class="imports"&gt
+ *              &lt;tr&gt;&lt;td&gt;package1&lt;/td&gt;&lt;/tr&gt;
+ *              &lt;tr&gt;&lt;td&gt;...&lt;/td&gt;&lt;/tr&gt;
+ *              &lt;tr&gt;&lt;td&gt;packageN&lt;/td&gt;&lt;/tr&gt;
+ *          &lt;/table&gt;
+ * </pre>
+ * 
+ * </li>
+ * 
+ * <li>in free tags, i.e.
+ * 
+ * <pre>
+ *      &lt;imports&gt;package1;...;packageN&lt;imports&gt;
+ * </pre>
+ * 
+ * </li>
+ * </ul>
+ * 
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginImport extends AbstractPluginTable {
+public class PluginImport extends AbstractPluginValue {
 
     /**
      * The import list name.
      */
     public static final String PACKAGES_NAME = UtilEvaluator.asVariable("$PACKAGES");
 
+    /**
+     * Set a import package names separated by ';'.
+     */
+    private String imports;
+
+    /**
+     * The packages set in imports.
+     */
+    private String[] packages;
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
     }
 
+    /**
+     * Get the list of imports.
+     * 
+     * @return The import list.
+     */
+    public String getImports() {
+        return imports;
+    }
+
+    /**
+     * Set the list of imports.
+     * 
+     * @param imports
+     *            The import list separated by ';'.
+     */
+    public void setImports(String imports) {
+        this.imports = imports;
+        if (imports != null) {
+            packages = imports.split(";");
+        }
+    }
+
     @Override
-    public void doEnd(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+    public void doEnd(IContext context, IResultSet result) throws PluginException {
+        Node node = context.getNode();
         List<String> list = getPackages(context);
-        List<RowAdapter> rows = tableAdapter.getRows();
-        for (RowAdapter r : rows) {
-            if (r.getCellsCount() == 0) {
-                result.addResult(Failure.INSTANCE, context.newBlock(r.getElement(), this), new PluginException("Package name missing. The line is empty."));
-                continue;
+        if (UtilNode.isTable(node)) {
+            TableAdapter tableAdapter = UtilNode.newTableAdapter(node);
+            List<RowAdapter> rows = tableAdapter.getRows();
+            for (RowAdapter r : rows) {
+                for (CellAdapter c : r.getCells()) {
+                    list.add(c.getValue());
+                    result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this));
+                }
             }
-            CellAdapter cell = r.getCell(0);
-            String value = cell.getValue();
-            Element element = cell.getElement();
-            if (value == null) {
-                result.addResult(Failure.INSTANCE, context.newBlock(element, this), new PluginException("Package '" + value + "' not found on classpath."));
-            } else {
-                list.add(value);
-                result.addResult(Success.INSTANCE, context.newBlock(element, this));
+        } else {
+            if (packages == null) {
+                setImports(node.getValue());
+            }
+            if (packages != null) {
+                for (String s : packages) {
+                    list.add(s);
+                }
+                result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }
         }
     }
