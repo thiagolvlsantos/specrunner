@@ -163,13 +163,27 @@ public final class UtilNode {
     }
 
     /**
+     * Check if a node is a table.
+     * 
+     * @param node
+     *            The node.
+     * @return true, if is a table, false, otherwise.
+     */
+    public static boolean isTable(Node node) {
+        return node instanceof Element && "table".equalsIgnoreCase(((Element) node).getQualifiedName());
+    }
+
+    /**
      * Creates a table adapter for the given node.
      * 
-     * @param ele
-     *            The element.
+     * @param node
+     *            The node.
      * @return The adapter.
      */
-    public static TableAdapter newTableAdapter(Element ele) {
-        return new TableAdapter(ele);
+    public static TableAdapter newTableAdapter(Node node) {
+        if (!isTable(node)) {
+            throw new IllegalArgumentException("Node is not a table.");
+        }
+        return new TableAdapter((Element) node);
     }
 }
