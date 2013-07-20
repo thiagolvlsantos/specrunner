@@ -12,7 +12,6 @@
 
     <modules>
         <module>../specrunner-userguide-core</module>
-        <module>../specrunner-userguide-concordion</module>
 
         <module>../specrunner-userguide-sql</module>
 
