@@ -1,0 +1,52 @@
+<html>
+<head>
+<style type="text/css">
+table {
+    border: 1px solid gray;
+}
+
+td {
+    border: 1px solid black;
+}
+</style>
+</head>
+
+<body>
+    <p>
+        Ao importar <span imports="example.imports.a;example.imports.b">A e B</span> a lista importada é <span class="eq" value="$PACKAGES">[example.imports.a,example.imports.b]</span>
+    </p>
+
+    <p>
+        Importando diretamente o pacote
+        <imports>example.imports.c</imports>
+        a lista importada passa a ser <span class="eq" value="$PACKAGES">[example.imports.a,example.imports.b,example.imports.c]</span>
+    </p>
+
+    <p>Importando colunas
+    <table class="imports">
+        <tr>
+            <td>example.imports.d</td>
+            <td>example.imports.e</td>
+        </tr>
+    </table>
+
+    a lista importada passa a ser
+    <span class="eq" value="$PACKAGES">[example.imports.a,example.imports.b,example.imports.c,example.imports.d,example.imports.e]</span>
+    </p>
+
+    <p>Finalmente importando linhas
+    <table class="imports">
+        <tr>
+            <td>example.imports.f</td>
+        </tr>
+        <tr>
+            <td>example.imports.g</td>
+        </tr>
+    </table>
+
+    a lista importada passa a ser
+    <span class="eq" value="$PACKAGES">[example.imports.a,example.imports.b,example.imports.c,example.imports.d,example.imports.e,example.imports.f,example.imports.g]</span>
+    </p>
+
+</body>
+</html>
