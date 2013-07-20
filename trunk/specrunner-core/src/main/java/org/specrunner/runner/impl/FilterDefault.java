@@ -95,12 +95,6 @@ public class FilterDefault implements IFilter {
     protected boolean showMessage = true;
 
     /**
-     * Default constructor.
-     */
-    public FilterDefault() {
-    }
-
-    /**
      * List of alias that should be ignored by runner.
      * 
      * @param disabledAliases

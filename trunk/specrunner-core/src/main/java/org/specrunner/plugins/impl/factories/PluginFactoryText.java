@@ -39,6 +39,11 @@ import org.specrunner.plugins.impl.text.PluginReplacerMap;
 public class PluginFactoryText implements IPluginFactory {
 
     /**
+     * Plugin factory type.
+     */
+    public static final String KIND = "text";
+
+    /**
      * Concurrent instance of plugin.
      */
     private static ThreadLocal<IPlugin> instance = new ThreadLocal<IPlugin>() {
@@ -67,7 +72,7 @@ public class PluginFactoryText implements IPluginFactory {
 
     @Override
     public IPluginFactory bind(String type, String alias, IPlugin plugin) {
-        if ("text".equals(type)) {
+        if (KIND.equals(type)) {
             ((IPluginGroup) instance.get()).add(plugin);
         }
         return this;
