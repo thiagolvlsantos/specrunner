@@ -5,13 +5,13 @@
 <body>
     <h1>Testing shadow variable.</h1>
 
-    <div>
+    <blockquote>
         x = <span class="local" name="x">2</span><br/>
         y = <span class="local" name="y">3</span>
         <div class="eq">
             <span class="left">5</span>=<span class="right">${x + y}</span>
         </div>
-        <div>
+        <blockquote>
             x = <span class="local" name="x">3</span><br/>
             <div class="eq">
                 <span class="left">6</span>=<span class="right">${x + y}</span>
@@ -19,7 +19,7 @@
             <div class="eq">
                 <span class="left">5</span>=<span class="right">${_$x + y}</span>
             </div>
-            <div>
+            <blockquote>
                 x = <span class="local" name="x">4</span><br/>
                 <div class="eq">
                     <span class="left">7</span>=<span class="right">${x + y}</span>
@@ -30,8 +30,8 @@
                 <div class="eq">
                     <span class="left">5</span>=<span class="right">${_$_$x + y}</span>
                 </div>
-            </div>
-        </div>
-    </div>
+            </blockquote>
+        </blockquote>
+    </blockquote>
 </body>
 </html>
