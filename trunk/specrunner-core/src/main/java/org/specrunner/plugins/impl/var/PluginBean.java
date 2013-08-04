@@ -17,15 +17,20 @@
  */
 package org.specrunner.plugins.impl.var;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginNamed;
+import org.specrunner.plugins.impl.include.PluginImport;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilEvaluator;
+import org.specrunner.util.UtilLog;
 
 /**
  * A bean plugin.
@@ -71,24 +76,58 @@ public class PluginBean extends AbstractPluginNamed {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        boolean error = false;
         if (bean instanceof String) {
-            try {
-                bean = Class.forName((String) bean).newInstance();
-            } catch (InstantiationException e) {
-                result.addResult(Failure.INSTANCE, context.peek(), e);
-                error = true;
-            } catch (IllegalAccessException e) {
-                result.addResult(Failure.INSTANCE, context.peek(), e);
-                error = true;
-            } catch (ClassNotFoundException e) {
-                result.addResult(Failure.INSTANCE, context.peek(), e);
-                error = true;
+            String old = (String) bean;
+            List<Exception> errors = new LinkedList<Exception>();
+            bean = create(old, errors);
+            List<String> packages = PluginImport.getPackages(context);
+            if (bean == null) {
+                for (String pkg : packages) {
+                    bean = create(pkg + "." + old, errors);
+                    if (bean != null) {
+                        break;
+                    }
+                }
+            }
+            if (bean == null && !errors.isEmpty()) {
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Class '" + old + "' not found on classpath, and does not belong to any package in list: " + packages));
             }
         }
-        if (!error) {
+        if (bean != null) {
             context.saveStrict(UtilEvaluator.asVariable(BEAN_NAME), bean);
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Try to create the object instance.
+     * 
+     * @param type
+     *            The class name (fully qualified).
+     * @param errors
+     *            The error list.
+     * @return A new object of the given type.
+     */
+    protected Object create(String type, List<Exception> errors) {
+        Object result = null;
+        try {
+            result = Class.forName(type).newInstance();
+        } catch (InstantiationException e) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
+            }
+            errors.add(e);
+        } catch (IllegalAccessException e) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
+            }
+            errors.add(e);
+        } catch (ClassNotFoundException e) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
+            }
+            errors.add(e);
+        }
+        return result;
     }
 }
