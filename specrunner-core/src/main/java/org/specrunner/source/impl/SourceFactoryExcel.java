@@ -45,6 +45,18 @@ import org.specrunner.util.UtilLog;
  */
 public class SourceFactoryExcel extends AbstractSourceFactory {
 
+    /**
+     * Prefix to be used for specify attributes in cell comments expected to be
+     * added to the table definition.
+     */
+    public static final String TABLE_ATTRIBUTE = "t.";
+
+    /**
+     * Prefix to be used for specify attributes in cell comments expected to be
+     * added to the row definition.
+     */
+    public static final String ROW_ATTRIBUTE = "r.";
+
     @Override
     public boolean accept(Object source) {
         String tmp = source != null ? String.valueOf(source).toLowerCase().trim() : "";
@@ -177,10 +189,10 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                     if (pos > 0) {
                         String name = token.substring(0, pos);
                         String value = token.substring(pos + 1).replace("\"", "");
-                        if (name.startsWith("t.")) {
-                            table.addAttribute(new Attribute(name.substring("t.".length(), name.length()), value));
-                        } else if (name.startsWith("r.")) {
-                            row.addAttribute(new Attribute(name.substring("r.".length(), name.length()), value));
+                        if (name.startsWith(TABLE_ATTRIBUTE)) {
+                            table.addAttribute(new Attribute(name.substring(TABLE_ATTRIBUTE.length(), name.length()), value));
+                        } else if (name.startsWith(ROW_ATTRIBUTE)) {
+                            row.addAttribute(new Attribute(name.substring(ROW_ATTRIBUTE.length(), name.length()), value));
                         } else {
                             th.addAttribute(new Attribute(name, value));
                         }
