@@ -24,9 +24,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -58,6 +58,10 @@ public class PluginSchema extends AbstractPlugin {
      * To show/generate script.
      */
     private boolean script = false;
+    /**
+     * To drop schema.
+     */
+    private boolean drop = true;
     /**
      * To export/update schema.
      */
@@ -143,6 +147,25 @@ public class PluginSchema extends AbstractPlugin {
     }
 
     /**
+     * true, if schema has to be dropped, false, otherwise. Default is true.
+     * 
+     * @return Schema drop mode.
+     */
+    public boolean isDrop() {
+        return drop;
+    }
+
+    /**
+     * Set the drop behavior.
+     * 
+     * @param drop
+     *            The drop behavior flag.
+     */
+    public void setDrop(boolean drop) {
+        this.drop = drop;
+    }
+
+    /**
      * true, to perform schema creation on database, false, otherwise. Default
      * is 'true'.
      * 
@@ -170,41 +193,10 @@ public class PluginSchema extends AbstractPlugin {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Configuration cfg = PluginConfiguration.getConfiguration(context, getConfiguration());
-        SessionFactory sf = PluginSessionFactory.getSessionFactory(context, getFactory());
-        Session s = null;
-        try {
-            s = sf.openSession();
-            String str = null;
-            SQLQuery sql = null;
-            try {
-                str = "drop schema " + getSchema() + " cascade";
-                // clear schema
-                sql = s.createSQLQuery(str);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info(str);
-                }
-                sql.executeUpdate();
-            } catch (Exception e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(str, e);
-                }
-            }
-            try {
-                str = "create schema " + getSchema() + " authorization dba";
-                sql = s.createSQLQuery(str);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info(str);
-                }
-                sql.executeUpdate();
-            } catch (Exception e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(str, e);
-                }
-            }
-        } finally {
-            if (s != null) {
-                s.close();
-            }
+        if (isDrop()) {
+            SessionFactory sessionFactory = PluginSessionFactory.getSessionFactory(context, getFactory());
+            dropSchema(context, sessionFactory);
+            createSchema(context, sessionFactory);
         }
         try {
             new SchemaExport(cfg).create(isScript(), isExport());
@@ -213,5 +205,71 @@ public class PluginSchema extends AbstractPlugin {
             result.addResult(Failure.INSTANCE, context.peek(), e);
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Perform drop schema.
+     * 
+     * @param context
+     *            The context.
+     * @param sf
+     *            The session factory.
+     * @throws PluginException
+     *             On drop errors.
+     */
+    protected void dropSchema(IContext context, SessionFactory sf) throws PluginException {
+        Session s = null;
+        try {
+            s = sf.openSession();
+            try {
+                String str = "drop schema " + getSchema() + " cascade";
+                SQLQuery sql = s.createSQLQuery(str);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info(str);
+                }
+                sql.executeUpdate();
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
+
+    /**
+     * Perform create schema.
+     * 
+     * @param context
+     *            The context.
+     * @param sf
+     *            The session factory.
+     * @throws PluginException
+     *             On creation errors.
+     */
+    protected void createSchema(IContext context, SessionFactory sf) throws PluginException {
+        Session s = null;
+        try {
+            s = sf.openSession();
+            try {
+                String str = "create schema " + getSchema() + " authorization dba";
+                SQLQuery sql = s.createSQLQuery(str);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info(str);
+                }
+                sql.executeUpdate();
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
     }
 }
