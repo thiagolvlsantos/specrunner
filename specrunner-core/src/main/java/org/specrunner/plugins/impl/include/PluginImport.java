@@ -24,6 +24,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
@@ -130,7 +131,7 @@ public class PluginImport extends AbstractPluginValue {
     }
 
     @Override
-    public void doEnd(IContext context, IResultSet result) throws PluginException {
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
         List<String> list = getPackages(context);
         if (UtilNode.isTable(node)) {
@@ -153,6 +154,7 @@ public class PluginImport extends AbstractPluginValue {
                 result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }
         }
+        return ENext.DEEP;
     }
 
     /**
