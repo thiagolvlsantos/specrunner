@@ -146,4 +146,9 @@ public class AccessImpl implements IAccess {
         }
         return new Annotation[] {};
     }
+
+    @Override
+    public String toString() {
+        return "Access: " + (field != null ? field : (property != null ? property : (method != null ? method : null)));
+    }
 }
