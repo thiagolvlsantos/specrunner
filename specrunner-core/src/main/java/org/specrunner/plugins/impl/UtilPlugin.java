@@ -226,11 +226,11 @@ public final class UtilPlugin {
      * @throws PluginException
      *             On plugin errors.
      */
-    public static void compare(Node node, IResultSet result, String expected, String received) throws PluginException {
+    public static void compare(Node node, IResultSet result, Object expected, Object received) throws PluginException {
         if (expected.equals(received)) {
             result.addResult(Success.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null));
         } else {
-            IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
+            IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expected), String.valueOf(received));
             result.addResult(Failure.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null), new DefaultAlignmentException(sa));
         }
     }
