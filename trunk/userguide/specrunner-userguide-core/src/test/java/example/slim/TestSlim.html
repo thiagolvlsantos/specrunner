@@ -3,11 +3,12 @@
     Essa tabela sem caption usa diretamente a classe de teste como referência.
     <table class="slim">
         <tr>
-            <th>A</th>
+            <th converter="int">A</th>
             <th>B</th>
             <th feature="action">Ação</th>
             <th feature="result" >Resultado?</th>
             <th feature="parameter" content="true">Resultado?</th>
+            <th feature="time">Data hora</th>
         </tr>
         <tr>
             <td>2</td>
@@ -15,6 +16,7 @@
             <td>+</td>
             <td>5.0</td>
             <td>Qualquer</td>
+            <th converter="datePatternArgs" arg0="dd/MM/yyyy">20/08/2013</th>
         </tr>
         <tr>
             <td>2</td>
@@ -22,6 +24,7 @@
             <td>*</td>
             <td>6.0</td>
             <td>Qualquer</td>
+            <th converter="dateCurrent">Data atual</th>
         </tr>
     </table>
 

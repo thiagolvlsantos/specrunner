@@ -82,4 +82,9 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
         }
         return c;
     }
+
+    @Override
+    public T getDefault() {
+        return get(DEFAULT_NAME);
+    }
 }

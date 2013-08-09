@@ -81,7 +81,9 @@ public class AccessFactoryImpl implements IAccessFactory {
         try {
             PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(target, name);
             if (pd != null) {
-                access = new AccessImpl(pd);
+                if (pd.getReadMethod() != null && pd.getWriteMethod() != null) {
+                    access = new AccessImpl(pd);
+                }
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {

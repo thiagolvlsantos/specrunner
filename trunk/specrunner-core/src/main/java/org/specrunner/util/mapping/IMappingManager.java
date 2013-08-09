@@ -12,6 +12,11 @@ import java.util.Map;
  */
 public interface IMappingManager<T extends IResetable> extends Map<String, T> {
     /**
+     * The name of the default T.
+     */
+    String DEFAULT_NAME = "default";
+
+    /**
      * Binds a T object to a name.
      * 
      * @param name
@@ -21,4 +26,11 @@ public interface IMappingManager<T extends IResetable> extends Map<String, T> {
      * @return The mapping itself.
      */
     IMappingManager<T> bind(String name, T obj);
+
+    /**
+     * Get the default object.
+     * 
+     * @return The default.
+     */
+    T getDefault();
 }

@@ -32,11 +32,6 @@ import org.specrunner.util.mapping.impl.MappingManagerImpl;
 public class ComparatorManagerImpl extends MappingManagerImpl<IComparator> implements IComparatorManager {
 
     /**
-     * Default comparator instance.
-     */
-    protected IComparator defaultComparator = new ComparatorDefault();
-
-    /**
      * Default constructor.
      */
     public ComparatorManagerImpl() {
@@ -60,6 +55,7 @@ public class ComparatorManagerImpl extends MappingManagerImpl<IComparator> imple
 
     @Override
     public IComparator getDefaultComparator() {
+        IComparator defaultComparator = getDefault();
         if (defaultComparator != null) {
             defaultComparator.initialize();
         }
@@ -68,6 +64,6 @@ public class ComparatorManagerImpl extends MappingManagerImpl<IComparator> imple
 
     @Override
     public void setDefaultComparator(IComparator defaultComparator) {
-        this.defaultComparator = defaultComparator;
+        bind(DEFAULT_NAME, defaultComparator);
     }
 }

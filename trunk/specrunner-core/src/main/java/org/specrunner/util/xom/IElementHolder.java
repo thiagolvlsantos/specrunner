@@ -17,7 +17,16 @@
  */
 package org.specrunner.util.xom;
 
+import java.util.List;
+
 import nu.xom.Element;
+
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.util.comparer.ComparatorException;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.converter.ConverterException;
+import org.specrunner.util.converter.IConverter;
 
 /**
  * Stands for any object which hold an element.
@@ -41,13 +50,6 @@ public interface IElementHolder {
      *            The element.
      */
     void setElement(Element element);
-
-    /**
-     * Get element value.
-     * 
-     * @return Element value.
-     */
-    String getValue();
 
     /**
      * Check if an given attribute is present.
@@ -84,4 +86,92 @@ public interface IElementHolder {
      *            The attribute name.
      */
     void removeAttribute(String name);
+
+    /**
+     * Get element value.
+     * 
+     * @return Element value.
+     */
+    String getValue();
+
+    /**
+     * Get the converter.
+     * 
+     * @return A converter.
+     * @throws ConverterException
+     *             On converter lookup error.
+     */
+    IConverter getConverter() throws ConverterException;
+
+    /**
+     * Get the converter, if any, otherwise returns the default converter.
+     * 
+     * @param converterDefault
+     *            The default converter.
+     * @return A converter.
+     * @throws ConverterException
+     *             On converter lookup error.
+     */
+    IConverter getConverter(IConverter converterDefault) throws ConverterException;
+
+    /**
+     * Get element arguments in a array.
+     * 
+     * @return The list of values set for 'arg0', 'arg1',... 'argN'.
+     */
+    List<String> getArguments();
+
+    /**
+     * Get the comparator of the given element.
+     * 
+     * @return The element comparator.
+     * @throws ComparatorException
+     *             O comparator lookup errors.
+     */
+    IComparator getComparator() throws ComparatorException;
+
+    /**
+     * Get the comparator of the given element.
+     * 
+     * @param comparatorDefault
+     *            The default comparator.
+     * @return The element comparator.
+     * @throws ComparatorException
+     *             O comparator lookup errors.
+     */
+    IComparator getComparator(IComparator comparatorDefault) throws ComparatorException;
+
+    /**
+     * Gets the corresponding value object.
+     * 
+     * @param context
+     *            The context.
+     * @param silent
+     *            Flag to evaluate silently or not.
+     * @return The value object.
+     * @throws ConverterException
+     *             On conversion errors.
+     * @throws PluginException
+     *             On plugin errors.
+     */
+    Object getObject(IContext context, boolean silent) throws ConverterException, PluginException;
+
+    /**
+     * Gets the corresponding value object.
+     * 
+     * @param context
+     *            The context.
+     * @param silent
+     *            Flag to evaluate silently or not.
+     * @param converter
+     *            The converter.
+     * @param arguments
+     *            The arguments.
+     * @return The value object.
+     * @throws ConverterException
+     *             On conversion errors.
+     * @throws PluginException
+     *             On plugin errors.
+     */
+    Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws ConverterException, PluginException;
 }

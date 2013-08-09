@@ -1,5 +1,7 @@
 package example.slim;
 
+import java.util.Date;
+
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
@@ -46,5 +48,9 @@ public class TestSlim {
 
     public Object parameter(Object content) {
         return content;
+    }
+
+    public void time(Date data) {
+        System.out.println(data);
     }
 }

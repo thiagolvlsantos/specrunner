@@ -149,6 +149,6 @@ public class AccessImpl implements IAccess {
 
     @Override
     public String toString() {
-        return "Access: " + (field != null ? field : (property != null ? property : (method != null ? method : null)));
+        return "Access: " + (field != null ? field : (property != null ? (property.getPropertyType() + ":" + property.getName() + ":" + property.getReadMethod() + ":" + property.getWriteMethod()) : (method != null ? method : null)));
     }
 }
