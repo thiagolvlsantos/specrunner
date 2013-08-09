@@ -17,8 +17,23 @@
  */
 package org.specrunner.util.xom;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
+
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.util.UtilEvaluator;
+import org.specrunner.util.UtilLog;
+import org.specrunner.util.comparer.ComparatorException;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.IComparatorManager;
+import org.specrunner.util.converter.ConverterException;
+import org.specrunner.util.converter.IConverter;
+import org.specrunner.util.converter.IConverterManager;
 
 /**
  * Default implementation of element holder.
@@ -54,11 +69,6 @@ public class ElementHolderImpl implements IElementHolder {
     }
 
     @Override
-    public String getValue() {
-        return element.getValue();
-    }
-
-    @Override
     public boolean hasAttribute(String name) {
         return element.getAttribute(name) != null;
     }
@@ -86,6 +96,113 @@ public class ElementHolderImpl implements IElementHolder {
                 break;
             }
         }
+    }
+
+    @Override
+    public String getValue() {
+        return element.getValue();
+    }
+
+    @Override
+    public IConverter getConverter() throws ConverterException {
+        return getConverter(SpecRunnerServices.get(IConverterManager.class).getDefault());
+    }
+
+    @Override
+    public IConverter getConverter(IConverter converterDefault) throws ConverterException {
+        IConverter converter = null;
+        if (hasAttribute("converter")) {
+            String str = getAttribute("converter");
+            IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
+            converter = cm.get(str);
+            if (converter == null) {
+                try {
+                    converter = (IConverter) Class.forName(str).newInstance();
+                    cm.bind(str, converter);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                    if (converterDefault == null) {
+                        throw new ConverterException(e);
+                    }
+                }
+            }
+        }
+        if (converter == null) {
+            converter = converterDefault;
+        }
+        return converter;
+    }
+
+    @Override
+    public List<String> getArguments() {
+        List<String> params = new LinkedList<String>();
+        for (int i = 0; i < element.getAttributeCount(); i++) {
+            String arg = getAttribute("arg" + i);
+            if (arg == null) {
+                break;
+            }
+            params.add(arg);
+        }
+        return params;
+    }
+
+    @Override
+    public IComparator getComparator() throws ComparatorException {
+        return getComparator(SpecRunnerServices.get(IComparatorManager.class).getDefault());
+    }
+
+    @Override
+    public IComparator getComparator(IComparator comparatorDefault) throws ComparatorException {
+        IComparator comparator = null;
+        if (hasAttribute("comparator")) {
+            String str = getAttribute("comparator");
+            IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
+            comparator = cm.get(str);
+            if (comparator == null) {
+                try {
+                    comparator = (IComparator) Class.forName(str).newInstance();
+                    cm.bind(str, comparator);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                    if (comparatorDefault == null) {
+                        throw new ComparatorException(e);
+                    }
+                }
+            }
+        }
+        if (comparator == null) {
+            comparator = comparatorDefault;
+        }
+        return comparator;
+    }
+
+    @Override
+    public Object getObject(IContext context, boolean silent) throws ConverterException, PluginException {
+        return getObject(context, silent, getConverter(), getArguments());
+    }
+
+    @Override
+    public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws ConverterException, PluginException {
+        if (converter == null) {
+            converter = getConverter();
+        }
+        if (arguments == null) {
+            arguments = getArguments();
+        }
+        String tmp = getValue();
+        if (hasAttribute("value")) {
+            tmp = getAttribute("value");
+        }
+        Object value = UtilEvaluator.evaluate(tmp, context, silent);
+        Object[] args = new Object[arguments.size()];
+        for (int i = 0; i < arguments.size(); i++) {
+            args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
+        }
+        return converter.convert(value, arguments.toArray());
     }
 
     @Override

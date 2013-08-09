@@ -21,10 +21,19 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
+import org.specrunner.util.comparer.ComparatorException;
+import org.specrunner.util.converter.ConverterException;
+import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 
+/**
+ * This plugin stand for a SLIM like plugin implementation.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginSlim extends AbstractPluginTable {
 
     @Override
@@ -42,12 +51,19 @@ public class PluginSlim extends AbstractPluginTable {
             throw new PluginException("Header information missing.");
         }
         RowAdapter header = rows.get(0);
-        List<String> features = extractFeatures(header);
+        List<String> features = new LinkedList<String>();
+        List<IConverter> converters = new LinkedList<IConverter>();
+        List<List<String>> args = new LinkedList<List<String>>();
+        try {
+            extractFeatures(context, header, features, converters, args);
+        } catch (ConverterException e) {
+            result.addResult(Failure.INSTANCE, context.peek(), e);
+            return ENext.DEEP;
+        }
         IAccessFactory accessFactory = SpecRunnerServices.get(IAccessFactory.class);
         List<IAccess> accesses = new LinkedList<IAccess>();
         for (String f : features) {
-            IAccess ac = accessFactory.newAccess(instance, f.replace("?", ""));
-            accesses.add(ac);
+            accesses.add(accessFactory.newAccess(instance, f.replace("?", "")));
         }
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter r = rows.get(i);
@@ -57,10 +73,19 @@ public class PluginSlim extends AbstractPluginTable {
             }
             for (int j = 0; j < features.size(); j++) {
                 CellAdapter c = r.getCell(j);
-                String v = c.getValue();
-                Object value = UtilEvaluator.evaluate(v, context, true);
+                Object value;
+                try {
+                    value = c.getObject(context, true, c.getConverter(), c.getArguments());
+                } catch (ConverterException e) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Invalid value for '" + c + "'.", e));
+                    continue;
+                }
                 String feature = features.get(j);
                 IAccess access = accesses.get(j);
+                if (access == null) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Invalid access information. Not found public attribute, bean property or method named '" + feature + "'."));
+                    continue;
+                }
                 if (feature.endsWith("?")) {
                     Object received = null;
                     CellAdapter hd = header.getCells().get(j);
@@ -72,7 +97,7 @@ public class PluginSlim extends AbstractPluginTable {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug(e.getMessage(), e);
                             }
-                            result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not get(value)."));
+                            result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not get(value).", e));
                         }
                     } else {
                         try {
@@ -81,18 +106,23 @@ public class PluginSlim extends AbstractPluginTable {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug(e.getMessage(), e);
                             }
-                            result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not get."));
+                            result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not get.", e));
                         }
                     }
-                    UtilPlugin.compare(c.getElement(), result, value, received);
+                    try {
+                        UtilPlugin.compare(c.getElement(), result, c.getComparator(), value, received);
+                    } catch (ComparatorException e) {
+                        result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not find comparator.", e));
+                    }
                 } else {
                     try {
                         access.set(instance, feature, value);
+                        result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this));
                     } catch (Exception e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
-                        result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not set value."));
+                        result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not set value.", e));
                     }
                 }
             }
@@ -166,26 +196,47 @@ public class PluginSlim extends AbstractPluginTable {
     /**
      * Get the feature names from this list.
      * 
+     * @param context
+     *            The test context.
      * @param header
      *            The table rows.
-     * @return The feature names based on header line.
+     * @param features
+     *            The feature list.
+     * @param converters
+     *            The converter list.
+     * @param args
+     *            The arguments. The arguments list.
+     * @throws ConverterException
+     *             On converter lookup errors.
+     * @throws PluginException
+     *             On feature extraction errors.
      */
-    protected List<String> extractFeatures(RowAdapter header) {
-        String attribute = "feature";
-        List<String> methods = new LinkedList<String>();
+    protected void extractFeatures(IContext context, RowAdapter header, List<String> features, List<IConverter> converters, List<List<String>> args) throws ConverterException, PluginException {
         for (CellAdapter h : header.getCells()) {
-            String feature = null;
-            String value = h.getValue();
-            if (h.hasAttribute(attribute)) {
-                feature = h.getAttribute(attribute);
-                if (value != null && value.trim().endsWith("?")) {
-                    feature = feature + "?";
-                }
-            } else {
-                feature = UtilString.camelCase(value);
-            }
-            methods.add(feature);
+            features.add(feature(h));
+            converters.add(h.getConverter());
+            args.add(h.getArguments());
         }
-        return methods;
+    }
+
+    /**
+     * Get a feature name.
+     * 
+     * @param h
+     *            The element.
+     * @return The name.
+     */
+    protected String feature(CellAdapter h) {
+        String feature = null;
+        String value = h.getValue();
+        if (h.hasAttribute("feature")) {
+            feature = h.getAttribute("feature");
+            if (value != null && value.trim().endsWith("?")) {
+                feature = feature + "?";
+            }
+        } else {
+            feature = UtilString.camelCase(value);
+        }
+        return feature;
     }
 }

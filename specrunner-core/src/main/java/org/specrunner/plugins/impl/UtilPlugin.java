@@ -34,6 +34,8 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.comparer.IComparator;
+import org.specrunner.util.comparer.IComparatorManager;
 
 /**
  * Plugins utility class.
@@ -227,7 +229,27 @@ public final class UtilPlugin {
      *             On plugin errors.
      */
     public static void compare(Node node, IResultSet result, Object expected, Object received) throws PluginException {
-        if (expected.equals(received)) {
+        compare(node, result, SpecRunnerServices.get(IComparatorManager.class).getDefault(), expected, received);
+    }
+
+    /**
+     * Perform a comparison and add the result to the given node.
+     * 
+     * @param node
+     *            Node to be annotated.
+     * @param result
+     *            The result set.
+     * @param comparator
+     *            The comparator.
+     * @param expected
+     *            The expected String.
+     * @param received
+     *            The received String
+     * @throws PluginException
+     *             On plugin errors.
+     */
+    public static void compare(Node node, IResultSet result, IComparator comparator, Object expected, Object received) throws PluginException {
+        if (comparator.match(expected, received)) {
             result.addResult(Success.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null));
         } else {
             IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expected), String.valueOf(received));

@@ -186,4 +186,18 @@ public final class UtilNode {
         }
         return new TableAdapter((Element) node);
     }
+
+    /**
+     * Creates a element adapter for the given node.
+     * 
+     * @param node
+     *            The node.
+     * @return The adapter.
+     */
+    public static IElementHolder newElementAdapter(Node node) {
+        if (!(node instanceof Element)) {
+            throw new IllegalArgumentException("Node must be an element.");
+        }
+        return new ElementHolderImpl((Element) node);
+    }
 }
