@@ -1,0 +1,54 @@
+<html>
+<head>
+<script src="jquery-1.10.2.min.js"></script>
+</head>
+<body>
+    <script>
+					function enviar() {
+						var content = {
+							Parameter : {
+								id : $("[name='id']").val(),
+								type : $("[name='type']").val(),
+								value : $("[name='value']").val()
+							}
+						};
+
+						$.ajax({
+							type : "POST",
+							url : "/rest/parameter/set/"
+									+ $("[name='id']").val(),
+							data : JSON.stringify(content),
+							contentType : 'application/json',
+							dataType : 'json'
+						});
+					}
+				</script>
+
+    <table>
+        <tr>
+            <td>id:</td>
+            <td><input type="text" name="id" /></td>
+        </tr>
+
+        <tr>
+            <td>type:</td>
+            <td><select name="type">
+                    <option value="BOOLEAN">boolean</option> long
+                    </option>
+                    <option value="DOUBLE">double</option>
+                    <option value="STRING">string</option>
+            </select></td>
+        </tr>
+
+        <tr>
+            <td>value:</td>
+            <td><input type="text" name="value" /></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td><input type="button" name="send" onclick="enviar();" value="Enviar" /></td>
+        </tr>
+    </table>
+</body>
+</html>
