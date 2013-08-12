@@ -4,25 +4,112 @@
 </head>
 <body>
     <script>
-					function enviar() {
-						var content = {
-							Parameter : {
-								id : $("[name='id']").val(),
-								type : $("[name='type']").val(),
-								value : $("[name='value']").val()
-							}
-						};
+    var prefix = "/rest/parameter";
+    var global;
+    
+    var id = function(){
+    	return $("[name='id']");
+    }
+    
+    var type = function(){
+    	return $("[name='type']");
+    }
+    
+    var value = function(){
+    	return $("[name='value']");
+    }
 
-						$.ajax({
-							type : "POST",
-							url : "/rest/parameter/set/"
-									+ $("[name='id']").val(),
-							data : JSON.stringify(content),
-							contentType : 'application/json',
-							dataType : 'json'
-						});
-					}
-				</script>
+    var msg = function(str){
+    	$("[id='msg']").text(str);
+    }
+    
+    var read = function() {
+        return JSON.stringify({
+            Parameter : {
+                id : id().val(),
+                type : type().val(),
+                value : value().val()
+            }
+        });
+    }
+
+    var write = function(vId, vType, vValue) {
+        id().val(vId);
+		type().val(vType);
+		value().val(vValue);
+    }
+    
+    function onError(data) {
+		global = data;
+		console.log(data);
+		msg(data.responseText);
+    }
+    
+	function onSelect() {
+		$.ajax({
+			type : "GET",
+			url : prefix+"/select/"+id().val(),
+            data : {},
+			contentType : 'application/json',
+			dataType : 'json'
+		}).done(function(data) {
+			global = data;
+			write(data.Parameter.id, data.Parameter.type, data.Parameter.value);
+			msg("Selecionado.");
+		}).fail(function(data){
+			onError(data);
+		});
+	};
+
+	function onInsert() {
+        $.ajax({
+			type : "POST",
+			url : prefix+"/insert",
+            data : read(),
+			contentType : 'application/json',
+			dataType : 'json'
+		}).done(function(data) {
+			global = data;
+			write(data.Parameter.id, data.Parameter.type, data.Parameter.value);
+			msg("Inserido.");
+		}).fail(function(data){
+			onError(data);
+		});
+	};
+	
+	function onUpdate() {
+        $.ajax({
+            type : "PUT",
+            url : prefix+"/update",
+            data : read(),
+            contentType : 'application/json',
+            dataType : 'json'
+        }).done(function(data) {
+			global = data;
+			write(data.Parameter.id, data.Parameter.type, data.Parameter.value);
+			msg("Atualizado.");
+		}).fail(function(data){
+			onError(data);
+		});
+	}
+
+	function onDelete() {
+		$.ajax({
+			type : "DELETE",
+			url : prefix+"/delete/"+id().val(),
+            data : {},
+			contentType : 'application/json',
+			dataType : 'json'
+		}).done(function(data) {
+			global = data;
+			write(id().val(), "", "");
+			msg("Deletado.");
+		}).fail(function(data){
+			onError(data);
+		});
+	};
+	
+</script>
 
     <table>
         <tr>
@@ -33,8 +120,8 @@
         <tr>
             <td>type:</td>
             <td><select name="type">
-                    <option value="BOOLEAN">boolean</option> long
-                    </option>
+                    <option value="BOOLEAN">boolean</option> 
+                    <option value="LONG">long</option>
                     <option value="DOUBLE">double</option>
                     <option value="STRING">string</option>
             </select></td>
@@ -47,8 +134,15 @@
 
         <tr>
             <td></td>
-            <td><input type="button" name="send" onclick="enviar();" value="Enviar" /></td>
+            <td>
+                <input type="button" name="select" onclick="onSelect();" value="Select" /> 
+                <input type="button" name="insert" onclick="onInsert();" value="Insert" /> 
+                <input type="button" name="update" onclick="onUpdate();" value="Update" /> 
+                <input type="button" name="delete" onclick="onDelete();" value="Delete" />
+            </td>
         </tr>
     </table>
+    
+    <span id="msg"></span>
 </body>
 </html>
