@@ -11,6 +11,8 @@
     <name>SpecRunner (User guide).</name>
 
     <modules>
+        <module>../specrunner-userguide-application</module>
+        
         <module>../specrunner-userguide-core</module>
 
         <module>../specrunner-userguide-sql</module>
