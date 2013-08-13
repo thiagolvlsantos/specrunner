@@ -7,12 +7,12 @@ public class Parameter {
 
     private Long id;
     private ParameterType type;
-    private Object value;
+    private String value;
 
     public Parameter() {
     }
 
-    public Parameter(ParameterType type, Object value) {
+    public Parameter(ParameterType type, String value) {
         this.type = type;
         this.value = value;
     }
@@ -33,11 +33,39 @@ public class Parameter {
         this.type = type;
     }
 
-    public Object getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(String value) {
         this.value = value;
+    }
+
+    public void validate() throws Exception {
+        if (type == null) {
+            throw new Exception("Type is null.");
+        }
+        try {
+            getObject();
+        } catch (Throwable e) {
+            throw new Exception(e);
+        }
+    }
+
+    public Object getObject() {
+        if (value == null) {
+            return null;
+        }
+        switch (type) {
+        case BOOLEAN:
+            return Boolean.valueOf(value);
+        case LONG:
+            return Long.valueOf(value);
+        case DOUBLE:
+            return Double.valueOf(value);
+        case STRING:
+            return value;
+        }
+        return value;
     }
 }

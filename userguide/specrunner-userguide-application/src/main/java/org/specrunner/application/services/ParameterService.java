@@ -28,11 +28,11 @@ public class ParameterService {
 
     private static Map<Long, Parameter> params = new HashMap<Long, Parameter>();
     static {
-        Parameter p1 = new Parameter(ParameterType.BOOLEAN, Boolean.TRUE);
+        Parameter p1 = new Parameter(ParameterType.BOOLEAN, "true");
         p1.setId(1L);
-        Parameter p2 = new Parameter(ParameterType.DOUBLE, 10.5);
+        Parameter p2 = new Parameter(ParameterType.DOUBLE, "10.5");
         p2.setId(2L);
-        Parameter p3 = new Parameter(ParameterType.LONG, 35L);
+        Parameter p3 = new Parameter(ParameterType.LONG, "35");
         p3.setId(3L);
         Parameter p4 = new Parameter(ParameterType.STRING, "working!");
         p4.setId(4L);
@@ -61,6 +61,11 @@ public class ParameterService {
     @POST
     @Path("/insert")
     public Response insert(Parameter parameter) {
+        try {
+            parameter.validate();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
         Set<Long> keys = params.keySet();
         Long max = keys.isEmpty() ? 0 : Collections.max(keys);
         parameter.setId(max + 1);
@@ -71,7 +76,15 @@ public class ParameterService {
     @PUT
     @Path("/update")
     public Response update(Parameter parameter) {
+        try {
+            parameter.validate();
+        } catch (Exception e) {
+            return Response.status(Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
         Parameter tmp = params.get(parameter.getId());
+        if (tmp == null) {
+            return Response.status(Status.NOT_FOUND).entity("Invalid register.").build();
+        }
         try {
             BeanUtils.copyProperties(tmp, parameter);
         } catch (Exception e) {
