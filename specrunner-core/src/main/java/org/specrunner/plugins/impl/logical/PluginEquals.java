@@ -17,13 +17,10 @@
  */
 package org.specrunner.plugins.impl.logical;
 
-import java.lang.reflect.InvocationTargetException;
-
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
@@ -32,15 +29,11 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
-import org.specrunner.util.UtilEvaluator;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
-import org.specrunner.util.comparer.impl.ComparatorDefault;
-import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.IElementHolder;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -60,15 +53,6 @@ import org.specrunner.util.xom.UtilNode;
 public class PluginEquals extends AbstractPluginDual {
 
     /**
-     * Comparator to be used in comparison.
-     */
-    private String comparator;
-    /**
-     * Comparator default instance.
-     */
-    private IComparator comparatorInstance = new ComparatorDefault();
-
-    /**
      * The CSS which set the left side condition of equals.
      */
     public static final String CSS_LETF = "left";
@@ -81,25 +65,6 @@ public class PluginEquals extends AbstractPluginDual {
      * Error object after failure.
      */
     protected Throwable error;
-
-    /**
-     * Get comparator reference.
-     * 
-     * @return The comparator.
-     */
-    public String getComparator() {
-        return comparator;
-    }
-
-    /**
-     * Set the comparator.
-     * 
-     * @param comparator
-     *            The comparator.
-     */
-    public void setComparator(String comparator) {
-        this.comparator = comparator;
-    }
 
     @Override
     public ActionType getActionType() {
@@ -115,30 +80,13 @@ public class PluginEquals extends AbstractPluginDual {
     @Override
     protected boolean operation(Object obj, IContext context) throws PluginException {
         Node node = context.getNode();
+        IElementHolder parent = UtilNode.newElementAdapter(node);
         Object objExpected = null;
         Object objReceived = null;
         if (node instanceof Element) {
-            CellAdapter parent = new CellAdapter((Element) node);
-            if (parent.hasAttribute("value")) {
-                objExpected = getNormalized(parent.getValue());
-                objReceived = getNormalized(String.valueOf(obj));
-            } else if (parent.hasAttribute("property")) {
-                try {
-                    String str = parent.getAttribute("property");
-                    int pos = str.indexOf('.');
-                    if (pos <= 0) {
-                        throw new PluginException("Bean name or property missing in property='" + str + "'.");
-                    }
-                    Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, false);
-                    objExpected = PropertyUtils.getProperty(bean, str.substring(pos + 1));
-                    objReceived = obj;
-                } catch (IllegalAccessException e) {
-                    throw new PluginException(e);
-                } catch (InvocationTargetException e) {
-                    throw new PluginException(e);
-                } catch (NoSuchMethodException e) {
-                    throw new PluginException(e);
-                }
+            if (parent.hasAttribute("value") || parent.hasAttribute("property")) {
+                objExpected = parent.getObject(context, false);
+                objReceived = obj instanceof String ? getNormalized(String.valueOf(obj)) : obj;
             } else {
                 Nodes expectedes = node.query("descendant::*[@class='" + CSS_LETF + "']");
                 Nodes receiveds = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
@@ -150,45 +98,13 @@ public class PluginEquals extends AbstractPluginDual {
                 if (received == null) {
                     throw new PluginException("Received value not found. Missing a element with class='" + CSS_RIGHT + "' in element:" + node.toXML());
                 }
-                String expectedValue = expected.getValue();
-                if (received instanceof Element) {
-                    CellAdapter cell = new CellAdapter((Element) expected);
-                    if (cell.hasAttribute("value")) {
-                        expectedValue = cell.getAttribute("value");
-                    }
-                }
-                String receivedValue = received.getValue();
-                if (received instanceof Element) {
-                    CellAdapter cell = new CellAdapter((Element) received);
-                    if (cell.hasAttribute("value")) {
-                        receivedValue = cell.getAttribute("value");
-                    }
-                }
-                objExpected = UtilEvaluator.evaluate(expectedValue, context, true);
-                objReceived = UtilEvaluator.evaluate(receivedValue, context, true);
-            }
-        }
-
-        if (node instanceof Element && comparator != null) {
-            IComparatorManager c = SpecRunnerServices.get(IComparatorManager.class);
-            IComparator tmp = c.get(comparator);
-            if (tmp != null) {
-                comparatorInstance = tmp;
-            } else {
-                try {
-                    comparatorInstance = (IComparator) Class.forName(comparator).newInstance();
-                    c.bind(comparator, tmp);
-                } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
-                    }
-                    throw new PluginException(e);
-                }
+                objExpected = UtilNode.newElementAdapter(expected).getObject(context, true);
+                objReceived = UtilNode.newElementAdapter(received).getObject(context, true);
             }
         }
 
         try {
-            return verify(objExpected, objReceived);
+            return verify(parent.getComparator(), objExpected, objReceived);
         } catch (SpecRunnerException e) {
             throw new PluginException(e);
         }
@@ -197,6 +113,8 @@ public class PluginEquals extends AbstractPluginDual {
     /**
      * Verify the condition.
      * 
+     * @param comparator
+     *            Comparator.
      * @param expected
      *            The reference value.
      * @param received
@@ -205,8 +123,8 @@ public class PluginEquals extends AbstractPluginDual {
      * @throws SpecRunnerException
      *             On condition errors.
      */
-    protected boolean verify(Object expected, Object received) throws SpecRunnerException {
-        boolean result = comparatorInstance.match(expected, received);
+    protected boolean verify(IComparator comparator, Object expected, Object received) throws SpecRunnerException {
+        boolean result = comparator.match(expected, received);
         if (!result) {
             if (expected instanceof String && received instanceof String) {
                 IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected.toString(), received.toString());
