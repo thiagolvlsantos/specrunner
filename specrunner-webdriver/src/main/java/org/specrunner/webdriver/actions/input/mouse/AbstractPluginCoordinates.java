@@ -175,23 +175,8 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginMouse {
         return new Coordinates() {
 
             @Override
-            public Point getLocationOnScreen() {
+            public Point onScreen() {
                 return getOnscreen();
-            }
-
-            @Override
-            public Point getLocationInViewPort() {
-                return getInviewport();
-            }
-
-            @Override
-            public Point getLocationInDOM() {
-                return getIndom();
-            }
-
-            @Override
-            public Object getAuxiliary() {
-                return AbstractPluginCoordinates.this.getAuxiliary();
             }
 
             @Override
@@ -205,8 +190,8 @@ public abstract class AbstractPluginCoordinates extends AbstractPluginMouse {
             }
 
             @Override
-            public Point onScreen() {
-                return getOnscreen();
+            public Object getAuxiliary() {
+                return AbstractPluginCoordinates.this.getAuxiliary();
             }
         };
     }
