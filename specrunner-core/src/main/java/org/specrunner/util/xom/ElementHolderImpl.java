@@ -30,7 +30,6 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
 import org.specrunner.util.comparer.ComparatorException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
@@ -225,11 +224,6 @@ public class ElementHolderImpl implements IElementHolder {
             convert = converter.convert(value, arguments.toArray());
         } catch (Exception e) {
             throw new PluginException(e);
-        }
-        if (convert instanceof String) {
-            if (!hasAttribute("normalized") || Boolean.parseBoolean(getAttribute("normalized"))) {
-                convert = UtilString.normalize((String) convert);
-            }
         }
         return convert;
     }
