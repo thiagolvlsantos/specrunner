@@ -17,21 +17,23 @@
  */
 package org.specrunner.util.xom;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilString;
 import org.specrunner.util.comparer.ComparatorException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
-import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
 
@@ -104,12 +106,12 @@ public class ElementHolderImpl implements IElementHolder {
     }
 
     @Override
-    public IConverter getConverter() throws ConverterException {
+    public IConverter getConverter() {
         return getConverter(SpecRunnerServices.get(IConverterManager.class).getDefault());
     }
 
     @Override
-    public IConverter getConverter(IConverter converterDefault) throws ConverterException {
+    public IConverter getConverter(IConverter converterDefault) {
         IConverter converter = null;
         if (hasAttribute("converter")) {
             String str = getAttribute("converter");
@@ -122,9 +124,6 @@ public class ElementHolderImpl implements IElementHolder {
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
-                    }
-                    if (converterDefault == null) {
-                        throw new ConverterException(e);
                     }
                 }
             }
@@ -181,28 +180,58 @@ public class ElementHolderImpl implements IElementHolder {
     }
 
     @Override
-    public Object getObject(IContext context, boolean silent) throws ConverterException, PluginException {
+    public Object getObject(IContext context, boolean silent) throws PluginException {
         return getObject(context, silent, getConverter(), getArguments());
     }
 
     @Override
-    public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws ConverterException, PluginException {
+    public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException {
         if (converter == null) {
             converter = getConverter();
         }
         if (arguments == null) {
             arguments = getArguments();
         }
-        String tmp = getValue();
-        if (hasAttribute("value")) {
-            tmp = getAttribute("value");
+        Object value = null;
+        if (hasAttribute("property")) {
+            String str = getAttribute("property");
+            int pos = str.indexOf('.');
+            if (pos <= 0) {
+                throw new PluginException("Bean name or property missing in property='" + str + "'.");
+            }
+            Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
+            try {
+                value = PropertyUtils.getProperty(bean, str.substring(pos + 1));
+            } catch (IllegalAccessException e) {
+                throw new PluginException(e);
+            } catch (InvocationTargetException e) {
+                throw new PluginException(e);
+            } catch (NoSuchMethodException e) {
+                throw new PluginException(e);
+            }
+        } else {
+            String tmp = getValue();
+            if (hasAttribute("value")) {
+                tmp = getAttribute("value");
+            }
+            value = UtilEvaluator.evaluate(tmp, context, silent);
         }
-        Object value = UtilEvaluator.evaluate(tmp, context, silent);
         Object[] args = new Object[arguments.size()];
         for (int i = 0; i < arguments.size(); i++) {
             args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
         }
-        return converter.convert(value, arguments.toArray());
+        Object convert;
+        try {
+            convert = converter.convert(value, arguments.toArray());
+        } catch (Exception e) {
+            throw new PluginException(e);
+        }
+        if (convert instanceof String) {
+            if (!hasAttribute("normalized") || Boolean.parseBoolean(getAttribute("normalized"))) {
+                convert = UtilString.normalize((String) convert);
+            }
+        }
+        return convert;
     }
 
     @Override

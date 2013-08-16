@@ -149,12 +149,10 @@ public interface IElementHolder {
      * @param silent
      *            Flag to evaluate silently or not.
      * @return The value object.
-     * @throws ConverterException
-     *             On conversion errors.
      * @throws PluginException
      *             On plugin errors.
      */
-    Object getObject(IContext context, boolean silent) throws ConverterException, PluginException;
+    Object getObject(IContext context, boolean silent) throws PluginException;
 
     /**
      * Gets the corresponding value object.
@@ -168,10 +166,8 @@ public interface IElementHolder {
      * @param arguments
      *            The arguments.
      * @return The value object.
-     * @throws ConverterException
-     *             On conversion errors.
      * @throws PluginException
      *             On plugin errors.
      */
-    Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws ConverterException, PluginException;
+    Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException;
 }

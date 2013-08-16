@@ -25,6 +25,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * A generic plugin which performs a test, it the result is true, a success
@@ -88,7 +89,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      */
     protected ENext perform(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
-        Object obj = getValue(node.getValue(), isEval(), context);
+        Object obj = isEval() ? UtilNode.newElementAdapter(node).getObject(context, true) : node.getValue();
         if (operation(obj, context)) {
             result.addResult(Success.INSTANCE, context.newBlock(node, this));
         } else {

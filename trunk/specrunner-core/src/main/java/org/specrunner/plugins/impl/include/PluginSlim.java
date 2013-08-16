@@ -76,7 +76,7 @@ public class PluginSlim extends AbstractPluginTable {
                 Object value;
                 try {
                     value = c.getObject(context, true, c.getConverter(), c.getArguments());
-                } catch (ConverterException e) {
+                } catch (PluginException e) {
                     result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Invalid value for '" + c + "'.", e));
                     continue;
                 }
