@@ -47,7 +47,7 @@ public class PluginHtml extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        context.saveLocal(UtilEvaluator.asVariable(BEAN_NAME), getTestInstance());
+        context.saveStrict(UtilEvaluator.asVariable(BEAN_NAME), getTestInstance());
         return ENext.DEEP;
     }
 

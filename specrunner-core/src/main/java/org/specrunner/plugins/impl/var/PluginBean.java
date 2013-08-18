@@ -130,4 +130,15 @@ public class PluginBean extends AbstractPluginNamed {
         }
         return result;
     }
+
+    /**
+     * Get the current bean object.
+     * 
+     * @param context
+     *            The context.
+     * @return The bean object, if found, null, otherwise.
+     */
+    public static Object getBean(IContext context) {
+        return context.getByName(UtilEvaluator.asVariable(BEAN_NAME));
+    }
 }

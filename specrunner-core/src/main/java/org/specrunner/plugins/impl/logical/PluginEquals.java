@@ -85,13 +85,19 @@ public class PluginEquals extends AbstractPluginDual {
         Object objReceived = null;
         if (node instanceof Element) {
             if (parent.hasAttribute("value") || parent.hasAttribute("property")) {
-                objExpected = getNormalized(String.valueOf(parent.getObject(context, false)));
-                objReceived = obj instanceof String ? getNormalized(String.valueOf(obj)) : obj;
+                Object tmp = parent.getObject(context, false);
+                if (obj instanceof String) {
+                    objExpected = getNormalized(String.valueOf(tmp));
+                    objReceived = getNormalized(String.valueOf(obj));
+                } else {
+                    objExpected = tmp;
+                    objReceived = obj;
+                }
             } else {
-                Nodes expectedes = node.query("descendant::*[@class='" + CSS_LETF + "']");
-                Nodes receiveds = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
-                Node expected = UtilNode.getHighest(expectedes);
-                Node received = UtilNode.getHighest(receiveds);
+                Nodes exps = node.query("descendant::*[@class='" + CSS_LETF + "']");
+                Nodes recs = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
+                Node expected = UtilNode.getHighest(exps);
+                Node received = UtilNode.getHighest(recs);
                 if (expected == null) {
                     throw new PluginException("Expected value not found. Missing a element with class='" + CSS_LETF + "' in element:" + node.toXML());
                 }

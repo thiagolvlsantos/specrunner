@@ -92,10 +92,12 @@ public class SourceImpl implements ISource {
             this.file = new File(this.string);
             if (this.file.exists()) {
                 this.string = this.file.toURI().toString();
+            } else {
+                this.file = null;
             }
             try {
                 this.uri = new URI(this.string);
-                if (this.string.startsWith("http")) {
+                if (!this.string.startsWith("http") && this.file == null) {
                     this.file = new File(this.string.replace(":", ""));
                 }
             } catch (URISyntaxException e) {

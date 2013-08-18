@@ -76,15 +76,39 @@ public final class UtilString {
      */
     public static String camelCase(String text, boolean includeFirst) {
         StringTokenizer st = new StringTokenizer(text, " \t\r\n");
-        StringBuilder str = new StringBuilder(includeFirst ? "" : st.nextToken().toLowerCase());
+        StringBuilder str = new StringBuilder(includeFirst ? "" : filter(st.nextToken().toLowerCase()));
         while (st.hasMoreTokens()) {
-            String s = st.nextToken();
-            str.append(Character.toUpperCase(s.charAt(0)));
-            if (s.length() > 1) {
-                str.append(s.substring(1));
+            StringBuilder part = filter(st.nextToken());
+            if (part.length() > 0) {
+                str.append(Character.toUpperCase(part.charAt(0)));
+                if (part.length() > 1) {
+                    str.append(part.substring(1).toLowerCase());
+                }
             }
         }
         return clean(str.toString());
+    }
+
+    /**
+     * Filter invalid characters.
+     * 
+     * @param s
+     *            The string.
+     * @return The filtered string.
+     */
+    protected static StringBuilder filter(String s) {
+        StringBuilder part = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (part.length() == 0 && Character.isJavaIdentifierStart(c)) {
+                part.append(c);
+                continue;
+            }
+            if (Character.isJavaIdentifierPart(c)) {
+                part.append(c);
+            }
+        }
+        return part;
     }
 
     /**

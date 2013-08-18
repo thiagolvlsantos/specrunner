@@ -122,6 +122,16 @@ public interface IElementHolder {
     List<String> getArguments();
 
     /**
+     * Get element arguments in a array.
+     * 
+     * @param arguments
+     *            The default arguments in case of not found.
+     * 
+     * @return The list of values set for 'arg0', 'arg1',... 'argN'.
+     */
+    List<String> getArguments(List<String> arguments);
+
+    /**
      * Get the comparator of the given element.
      * 
      * @return The element comparator.

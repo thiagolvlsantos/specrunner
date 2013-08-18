@@ -6,9 +6,9 @@ import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-public class TestSlim {
+public class TestColumn {
 
-    public long a;
+    public int a;
     private double b;
     private double result;
 

@@ -47,7 +47,7 @@ import org.specrunner.util.xom.UtilNode;
  * in blocks, i.e.
  * 
  * <pre>
- * &lt;.. imports="package1;package2;...;packageN"&gt;
+ * &lt;.. imports="package1;package2;...;packageN"/&gt;
  * </pre>
  * 
  * on every valid tag;</li>
