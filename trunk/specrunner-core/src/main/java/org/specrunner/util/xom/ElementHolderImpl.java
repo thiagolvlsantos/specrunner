@@ -135,6 +135,11 @@ public class ElementHolderImpl implements IElementHolder {
 
     @Override
     public List<String> getArguments() {
+        return getArguments(new LinkedList<String>());
+    }
+
+    @Override
+    public List<String> getArguments(List<String> arguments) {
         List<String> params = new LinkedList<String>();
         for (int i = 0; i < element.getAttributeCount(); i++) {
             String arg = getAttribute("arg" + i);
@@ -143,7 +148,7 @@ public class ElementHolderImpl implements IElementHolder {
             }
             params.add(arg);
         }
-        return params;
+        return params.isEmpty() ? arguments : params;
     }
 
     @Override
@@ -185,12 +190,8 @@ public class ElementHolderImpl implements IElementHolder {
 
     @Override
     public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException {
-        if (converter == null) {
-            converter = getConverter();
-        }
-        if (arguments == null) {
-            arguments = getArguments();
-        }
+        converter = getConverter(converter);
+        arguments = getArguments(arguments);
         Object value = null;
         if (hasAttribute("property")) {
             String str = getAttribute("property");

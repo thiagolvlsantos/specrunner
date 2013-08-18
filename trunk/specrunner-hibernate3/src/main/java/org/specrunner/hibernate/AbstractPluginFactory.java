@@ -22,7 +22,7 @@ import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 
 /**
- * Common part of plugin with Spring-linke factory methods.
+ * Common part of plugins with Spring like factory methods.
  * 
  * @author Thiago Santos
  * 

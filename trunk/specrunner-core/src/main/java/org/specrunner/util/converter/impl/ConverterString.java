@@ -15,31 +15,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.impl.factories;
+package org.specrunner.util.converter.impl;
+
+import org.specrunner.util.converter.ConverterException;
 
 /**
- * Default factory group implementation populated.
+ * Convert any object to String using <code>String.valueOf(...)</code>.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class PluginFactoryGroupDefault extends PluginFactoryGroupImpl {
+@SuppressWarnings("serial")
+public class ConverterString extends ConverterDefault {
 
-    /**
-     * Default constructor.
-     */
-    public PluginFactoryGroupDefault() {
-        add();
-    }
-
-    /**
-     * Add predefined factories.
-     */
-    protected void add() {
-        add(new PluginFactoryAttribute());
-        add(new PluginFactoryCustom());
-        add(new PluginFactoryElement());
-        add(new PluginFactoryCSS());
-        add(new PluginFactoryText());
+    @Override
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        return String.valueOf(obj);
     }
 }

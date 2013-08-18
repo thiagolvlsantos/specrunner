@@ -28,10 +28,10 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
     <li>Date information might be '<span class="compareDate" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>';</li>
 	<li>The page contains <span class="contains">Dynamic dates</span>;</li>
 	<li>The page does not contain <span class="notContains">Static dates</span>;</li>
-    <li>The node <span class="compareNode" by="id:idNode" contains="true"> My<b>formated</b> <span style="background-color:gray;">${"node"}</span></span> is present;</li>
-    <li>The node <span class="compareNode" by="id:idNode" strict="true">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">${"node"}</span><span style="display:none;">oculto</span></span> is present;</li>
-    <li>The node <span class="compareNode" by="id:idNode" strict="true" comparator="node">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">${"node"}</span><span style="display:none;">oculto</span></span> is present;</li>
-    <li>The node <span class="compareNode" by="id:idNode" strict="true" comparator="true">My<b>formTEXT IGNOREated</b> <span style="background-color:gray;font-family:verdana;">${"node"}</span><span style="display:none;">oculto</span></span> is present;</li>
+    <li>The node <span class="compareNode" by="id:idNode" contains="true"> My<b>formated</b> <span style="background-color:gray;">${"node"}</span></span> is present (contains strategy);</li>
+    <li>The node <span class="compareNode" by="id:idNode" strict="true">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">${"node"}</span><span style="display:none;">oculto</span></span> is present (strict comparison);</li>
+    <li>The node <span class="compareNode" by="id:idNode" strict="true" comparator="node">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">${"node"}</span><span style="display:none;">oculto</span></span> is present (choosing comparator);</li>
+    <li>The node <span class="compareNode" by="id:idNode" strict="true" comparator="true">My<b>formTEXT IGNOREated</b> <span style="background-color:gray;font-family:verdana;">${"node"}</span><span style="display:none;">oculto</span></span> is present (strict but comparator 'true');</li>
     <li>Table information might be :<span class="compareTable" by="xpath://table[@id='tableId']" >
 			<table border='1'>
 				<caption>Dynamic dates</caption>
@@ -79,10 +79,9 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
                                 <td ignore="true">Celula ignorada na comparação</td>
 							</tr>
                             <tr>
-                                <td colspan="2" ignore="true">
-                                    Criar uma feature de verificação estrita de elementos um-a-um:
-                                    <input type="text" value="Linha1"/>
-                                    <textarea>Texto1</textarea>
+                                <td colspan="2" type="node">
+                                    <input type="text" value="Linha"/>
+                                    <textarea>Texto</textarea>
                                 </td>
                             </tr>
 						</table>
