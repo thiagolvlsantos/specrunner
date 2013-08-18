@@ -47,7 +47,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      * 
      * @return true, to perform on start, false, otherwise.
      */
-    public Boolean isOnstart() {
+    public Boolean getOnstart() {
         return onstart;
     }
 
