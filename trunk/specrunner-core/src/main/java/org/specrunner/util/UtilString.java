@@ -18,7 +18,6 @@
 package org.specrunner.util;
 
 import java.text.Normalizer;
-import java.util.StringTokenizer;
 
 /**
  * Utility String class.
@@ -70,45 +69,40 @@ public final class UtilString {
      * @param text
      *            The text to be normalized.
      * 
-     * @param includeFirst
+     * @param changeFirst
      *            Flag to upper first character also.
      * @return The normalized string.
      */
-    public static String camelCase(String text, boolean includeFirst) {
-        StringTokenizer st = new StringTokenizer(text, " \t\r\n");
-        StringBuilder str = new StringBuilder(includeFirst ? "" : filter(st.nextToken().toLowerCase()));
-        while (st.hasMoreTokens()) {
-            StringBuilder part = filter(st.nextToken());
-            if (part.length() > 0) {
-                str.append(Character.toUpperCase(part.charAt(0)));
-                if (part.length() > 1) {
-                    str.append(part.substring(1).toLowerCase());
-                }
-            }
+    public static String camelCase(String text, boolean changeFirst) {
+        if (text == null) {
+            return null;
         }
-        return clean(str.toString());
-    }
-
-    /**
-     * Filter invalid characters.
-     * 
-     * @param s
-     *            The string.
-     * @return The filtered string.
-     */
-    protected static StringBuilder filter(String s) {
-        StringBuilder part = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (part.length() == 0 && Character.isJavaIdentifierStart(c)) {
-                part.append(c);
+        StringBuilder result = new StringBuilder();
+        boolean whitespace = false;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (Character.isWhitespace(c)) {
+                whitespace = true;
+                continue;
+            }
+            if (result.length() == 0 && Character.isJavaIdentifierStart(c)) {
+                if (changeFirst) {
+                    result.append(Character.toUpperCase(c));
+                } else {
+                    result.append(Character.toLowerCase(c));
+                }
                 continue;
             }
             if (Character.isJavaIdentifierPart(c)) {
-                part.append(c);
+                if (whitespace) {
+                    result.append(Character.toUpperCase(c));
+                    whitespace = false;
+                } else {
+                    result.append(Character.toLowerCase(c));
+                }
             }
         }
-        return part;
+        return clean(result.toString());
     }
 
     /**
