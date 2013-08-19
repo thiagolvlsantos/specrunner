@@ -197,32 +197,44 @@ public class SourceDumperTop extends AbstractSourceDumperFile {
         }
         // tr2
         {
-            Element tr3 = new Element("tr");
-            table.appendChild(tr3);
-            {
-                Element td1 = new Element("td");
-                td1.addAttribute(new Attribute("class", "sr_resume " + result.getStatus().getCssName()));
-                td1.appendChild(result.asNode());
-                tr3.appendChild(td1);
-            }
-            {
-                Element td2 = new Element("td");
-                td2.addAttribute(new Attribute("nowrap", "nowrap"));
-                td2.addAttribute(new Attribute("align", "center"));
-                Element exp = new Element("input");
-                exp.addAttribute(new Attribute("type", "button"));
-                exp.addAttribute(new Attribute("class", "top_exp"));
-                exp.addAttribute(new Attribute("value", " + "));
-                td2.appendChild(exp);
-
-                exp = new Element("input");
-                exp.addAttribute(new Attribute("type", "button"));
-                exp.addAttribute(new Attribute("class", "top_col"));
-                exp.addAttribute(new Attribute("value", " - "));
-                td2.appendChild(exp);
-                tr3.appendChild(td2);
-            }
+            getTr2(result, table);
         }
         return table;
+    }
+
+    /**
+     * Fill tr2.
+     * 
+     * @param result
+     *            The result information.
+     * @param table
+     *            The result table.
+     */
+    protected void getTr2(IResultSet result, Element table) {
+        Element tr3 = new Element("tr");
+        table.appendChild(tr3);
+        {
+            Element td1 = new Element("td");
+            td1.addAttribute(new Attribute("class", "sr_resume " + result.getStatus().getCssName()));
+            td1.appendChild(result.asNode());
+            tr3.appendChild(td1);
+        }
+        {
+            Element td2 = new Element("td");
+            td2.addAttribute(new Attribute("nowrap", "nowrap"));
+            td2.addAttribute(new Attribute("align", "center"));
+            Element exp = new Element("input");
+            exp.addAttribute(new Attribute("type", "button"));
+            exp.addAttribute(new Attribute("class", "top_exp"));
+            exp.addAttribute(new Attribute("value", " + "));
+            td2.appendChild(exp);
+
+            exp = new Element("input");
+            exp.addAttribute(new Attribute("type", "button"));
+            exp.addAttribute(new Attribute("class", "top_col"));
+            exp.addAttribute(new Attribute("value", " - "));
+            td2.appendChild(exp);
+            tr3.appendChild(td2);
+        }
     }
 }

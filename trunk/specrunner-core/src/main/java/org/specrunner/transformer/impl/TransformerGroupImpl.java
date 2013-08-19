@@ -29,6 +29,7 @@ import org.specrunner.util.composite.CompositeImpl;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class TransformerGroupImpl extends CompositeImpl<ITransformerGroup, ITransformer> implements ITransformerGroup {
 
     @Override
