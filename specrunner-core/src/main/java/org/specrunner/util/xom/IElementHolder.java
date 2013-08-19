@@ -52,6 +52,13 @@ public interface IElementHolder {
     void setElement(Element element);
 
     /**
+     * Get local name.
+     * 
+     * @return The local name.
+     */
+    String getLocalName();
+
+    /**
      * Check if an given attribute is present.
      * 
      * @param name
