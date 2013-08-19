@@ -137,7 +137,7 @@ public class PluginColumn extends AbstractPluginTable {
      *            The context.
      * @param tableAdapter
      *            The adapter.
-     * @return An object instance where all action will taken over.
+     * @return An object instance where all actions will be taken over.
      * @throws PluginException
      *             On creation/lookup errors.
      */
