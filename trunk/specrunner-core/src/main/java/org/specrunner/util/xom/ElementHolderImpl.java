@@ -70,6 +70,11 @@ public class ElementHolderImpl implements IElementHolder {
     }
 
     @Override
+    public String getLocalName() {
+        return element.getLocalName();
+    }
+
+    @Override
     public boolean hasAttribute(String name) {
         return element.getAttribute(name) != null;
     }
