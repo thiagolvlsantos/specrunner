@@ -972,24 +972,27 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
         if (value == null) {
             setObject(instance, f, null);
-        } else if (f.getSpecificType() == boolean.class || f.getSpecificType() == Boolean.class) {
-            setBoolean(instance, f, value);
-        } else if (f.getSpecificType() == char.class || f.getSpecificType() == Character.class) {
-            setChar(instance, f, value);
-        } else if (f.getSpecificType() == short.class || f.getSpecificType() == Short.class) {
-            setShort(instance, f, value);
-        } else if (f.getSpecificType() == int.class || f.getSpecificType() == Integer.class) {
-            setInteger(instance, f, value);
-        } else if (f.getSpecificType() == long.class || f.getSpecificType() == Long.class) {
-            setLong(instance, f, value);
-        } else if (f.getSpecificType() == float.class || f.getSpecificType() == Float.class) {
-            setFloat(instance, f, value);
-        } else if (f.getSpecificType() == double.class || f.getSpecificType() == Double.class) {
-            setDouble(instance, f, value);
-        } else if (PluginObjectManager.get().isBound(f.getSpecificType())) {
-            setEntity(instance, f, value);
         } else {
-            setObject(instance, f, value);
+            Class<?> st = f.getSpecificType();
+            if (st == boolean.class || st == Boolean.class) {
+                setBoolean(instance, f, value);
+            } else if (st == char.class || st == Character.class) {
+                setChar(instance, f, value);
+            } else if (st == short.class || st == Short.class) {
+                setShort(instance, f, value);
+            } else if (st == int.class || st == Integer.class) {
+                setInteger(instance, f, value);
+            } else if (st == long.class || st == Long.class) {
+                setLong(instance, f, value);
+            } else if (st == float.class || st == Float.class) {
+                setFloat(instance, f, value);
+            } else if (st == double.class || st == Double.class) {
+                setDouble(instance, f, value);
+            } else if (PluginObjectManager.get().isBound(st)) {
+                setEntity(instance, f, value);
+            } else {
+                setObject(instance, f, value);
+            }
         }
     }
 

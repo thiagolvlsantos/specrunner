@@ -70,7 +70,7 @@ public class PluginObjectManager {
      * @return true, of bound, false, otherwise.
      */
     public boolean isBound(Class<?> clazz) {
-        return entities.keySet().contains(clazz);
+        return entities.containsKey(clazz);
     }
 
     /**
