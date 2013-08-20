@@ -60,12 +60,12 @@ public class SpecRunnerStatement extends Statement {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginHtml.BEAN_NAME, instance);
         Class<?> clazz = test.getJavaClass();
-        ExpectedMessages expectedMessages = getMessages();
         File input = getFile(clazz);
         File output = getOutput(clazz, input);
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, output.getName());
         IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg);
+        ExpectedMessages expectedMessages = getMessages();
         if (expectedMessages == null) {
             if (result.getStatus().isError()) {
                 throw new Exception(result.asString());
