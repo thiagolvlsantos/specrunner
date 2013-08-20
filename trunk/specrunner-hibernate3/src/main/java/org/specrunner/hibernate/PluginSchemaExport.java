@@ -40,7 +40,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginSchema extends AbstractPlugin {
+public class PluginSchemaExport extends AbstractPlugin {
 
     /**
      * The configuration name.
