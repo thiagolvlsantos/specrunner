@@ -107,13 +107,16 @@ public class PluginMap extends AbstractPluginTable {
      */
     private void process(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         final List<Map<String, Node>> data = new LinkedList<Map<String, Node>>();
+        if (tableAdapter.getRowCount() == 0) {
+            throw new PluginException("Table must not be empty.");
+        }
         RowAdapter ths = tableAdapter.getRow(0);
+        List<String> names = new LinkedList<String>();
+        for (int i = 0; i < ths.getCellsCount(); i++) {
+            names.add(ths.getCell(i).getElement().getValue().trim());
+        }
         List<RowAdapter> trs = tableAdapter.getRows();
-        for (int i = 0; i < tableAdapter.getRowCount(); i++) {
-            if (i == 0) {
-                // ignore headers.
-                continue;
-            }
+        for (int i = 1; i < tableAdapter.getRowCount(); i++) {
             RowAdapter tr = trs.get(i);
             if (tr.getCellsCount() != ths.getCellsCount()) {
                 throw new PluginException("Number of headers '" + ths.getCellsCount() + "' is diferent from line columns '" + tr.getCellsCount() + "'.");
@@ -124,7 +127,7 @@ public class PluginMap extends AbstractPluginTable {
             for (int j = 0; j < tds.size(); j++) {
                 Element e = tds.get(j).getElement();
                 line.put(UtilEvaluator.START_DATA + j + UtilEvaluator.END, e);
-                line.put(UtilEvaluator.START_DATA + ths.getCell(j).getElement().getValue().trim() + UtilEvaluator.END, e);
+                line.put(UtilEvaluator.START_DATA + names.get(j) + UtilEvaluator.END, e);
             }
         }
         IDataMap<Node> map = new IDataMap<Node>() {
