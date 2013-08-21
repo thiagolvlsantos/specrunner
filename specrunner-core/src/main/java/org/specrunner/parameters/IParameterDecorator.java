@@ -45,7 +45,8 @@ public interface IParameterDecorator {
     String SILENT_FLAG = "-";
 
     /**
-     * Force the evaluation at the end.
+     * Force the evaluation at the end of plugin execution. Attributes will be
+     * evaluated on end.
      */
     String LATE_FLAG = ".";
 
