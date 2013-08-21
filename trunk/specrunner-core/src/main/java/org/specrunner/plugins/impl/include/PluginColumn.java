@@ -165,7 +165,7 @@ public class PluginColumn extends AbstractPluginTable {
             throw new PluginException("Table has '" + captions.size() + "' captions. Please use only one caption tag.");
         }
         if (captions.size() > 0) {
-            // by captions must use imports to set packages.
+            // captions must use imports to set packages.
             String className = UtilString.camelCase(captions.get(0).getValue(), true);
             for (String pkg : PluginImport.getPackages(context)) {
                 try {
