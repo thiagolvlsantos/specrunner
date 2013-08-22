@@ -17,22 +17,31 @@
  */
 package org.specrunner.source.impl;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Comment;
 import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
@@ -44,6 +53,11 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class SourceFactoryExcel extends AbstractSourceFactory {
+
+    /**
+     * Extension of 2007 Excel files.
+     */
+    public static final String XLSX = ".xlsx";
 
     /**
      * Prefix to be used for specify attributes in cell comments expected to be
@@ -60,7 +74,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
     @Override
     public boolean accept(Object source) {
         String tmp = source != null ? String.valueOf(source).toLowerCase().trim() : "";
-        return tmp.endsWith(".xlsx");
+        return tmp.endsWith(XLSX) || tmp.endsWith(".xls");
     };
 
     /**
@@ -81,16 +95,39 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
         Element html = new Element("html");
         Document result = new Document(html);
         OPCPackage pkg = null;
+        InputStream in = null;
+        POIFSFileSystem fsys = null;
         try {
-            pkg = OPCPackage.open(target);
-            Workbook wb = new XSSFWorkbook(pkg);
+            Workbook wb = null;
+            if (target.trim().toLowerCase().endsWith(XLSX)) {
+                pkg = OPCPackage.open(target);
+                wb = new XSSFWorkbook(pkg);
+            } else {
+                in = new FileInputStream(target);
+                fsys = new POIFSFileSystem(in);
+                wb = new HSSFWorkbook(fsys);
+            }
             for (int i = 0; i < wb.getNumberOfSheets(); i++) {
                 Sheet sheet = wb.getSheetAt(i);
+                Map<String, Dimension> spanMap = new HashMap<String, Dimension>();
+                Set<String> ignoreMap = new HashSet<String>();
+                for (int j = 0; j < sheet.getNumMergedRegions(); j++) {
+                    CellRangeAddress region = sheet.getMergedRegion(j);
+                    for (int x = region.getFirstRow(); x <= region.getLastRow(); x++) {
+                        for (int y = region.getFirstColumn(); y <= region.getLastColumn(); y++) {
+                            if (x == region.getFirstRow() && y == region.getFirstColumn()) {
+                                spanMap.put(x + "," + y, new Dimension(region.getLastRow() - x + 1, region.getLastColumn() - y + 1));
+                            } else {
+                                ignoreMap.add(x + "," + y);
+                            }
+                        }
+                    }
+                }
                 Element table = new Element("table");
                 html.appendChild(table);
                 readCaption(table, sheet);
                 Iterator<Row> ite = sheet.iterator();
-                readBody(table, ite, headers(table, ite));
+                readBody(table, spanMap, ignoreMap, ite, headers(table, spanMap, ignoreMap, ite));
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -108,8 +145,48 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                     throw new SourceException(e);
                 }
             }
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug(e.getMessage(), e);
+                    }
+                    throw new SourceException(e);
+                }
+            }
         }
         return result;
+    }
+
+    /**
+     * Cell span holder.
+     * 
+     * @author Thiago Santos
+     * 
+     */
+    private static class Dimension {
+        /**
+         * Rowspan.
+         */
+        private int rows;
+        /**
+         * Colspan.
+         */
+        private int cols;
+
+        /**
+         * Default constructor.
+         * 
+         * @param rows
+         *            Number of rows.
+         * @param cols
+         *            Number of columns.
+         */
+        public Dimension(int rows, int cols) {
+            this.rows = rows;
+            this.cols = cols;
+        }
     }
 
     /**
@@ -133,11 +210,15 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * 
      * @param table
      *            The target table.
+     * @param spanMap
+     *            Map of span cells.
+     * @param ignore
+     *            Set of cells to ignore.
      * @param ite
      *            The row iterator.
      * @return The number of columns to read.
      */
-    protected int headers(Element table, Iterator<Row> ite) {
+    protected int headers(Element table, Map<String, Dimension> spanMap, Set<String> ignore, Iterator<Row> ite) {
         int result = 0;
         Element thead = new Element("thead");
         table.appendChild(thead);
@@ -147,16 +228,19 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
             {
                 if (ite.hasNext()) {
                     Row row = ite.next();
-                    Cell cell = row.getCell(result);
-                    String value = cell != null ? String.valueOf(extractVal(cell)) : null;
-                    while (cell != null && value != null) {
-                        Element th = new Element("th");
-                        tr.appendChild(th);
-                        th.appendChild(value);
-                        addAttributes(table, tr, th, cell);
-                        result++;
-                        cell = row.getCell(result);
-                        value = cell != null ? String.valueOf(extractVal(cell)) : null;
+                    result = row.getLastCellNum();
+                    for (int i = 0; i < result; i++) {
+                        Cell cell = row.getCell(i);
+                        if (cell != null) {
+                            String key = cell.getRowIndex() + "," + cell.getColumnIndex();
+                            if (ignore.contains(key)) {
+                                continue;
+                            }
+                            Element th = new Element("th");
+                            tr.appendChild(th);
+                            th.appendChild(String.valueOf(extractVal(cell)));
+                            addAttributes(table, tr, th, cell, spanMap.get(key));
+                        }
                     }
                 }
             }
@@ -171,12 +255,14 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      *            The table element.
      * @param row
      *            The row element.
-     * @param th
+     * @param item
      *            The header element.
      * @param cell
      *            The cell to read comments from.
+     * @param p
+     *            The pair, if exist.
      */
-    private void addAttributes(Element table, Element row, Element th, Cell cell) {
+    private void addAttributes(Element table, Element row, Element item, Cell cell, Dimension p) {
         Comment c = cell.getCellComment();
         if (c != null) {
             RichTextString rts = c.getString();
@@ -194,10 +280,18 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                         } else if (name.startsWith(ROW_ATTRIBUTE)) {
                             row.addAttribute(new Attribute(name.substring(ROW_ATTRIBUTE.length(), name.length()), value));
                         } else {
-                            th.addAttribute(new Attribute(name, value));
+                            item.addAttribute(new Attribute(name, value));
                         }
                     }
                 }
+            }
+        }
+        if (p != null) {
+            if (p.rows > 1) {
+                item.addAttribute(new Attribute("rowspan", String.valueOf(p.rows)));
+            }
+            if (p.cols > 1) {
+                item.addAttribute(new Attribute("colspan", String.valueOf(p.cols)));
             }
         }
     }
@@ -208,12 +302,16 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * 
      * @param table
      *            The table.
+     * @param spanMap
+     *            Map of span cells.
+     * @param ignore
+     *            Set of cells to ignore.
      * @param ite
      *            The row iterator.
      * @param columns
      *            The number of columns to read.
      */
-    protected void readBody(Element table, Iterator<Row> ite, int columns) {
+    protected void readBody(Element table, Map<String, Dimension> spanMap, Set<String> ignore, Iterator<Row> ite, int columns) {
         Element tbody = new Element("tbody");
         table.appendChild(tbody);
         {
@@ -223,11 +321,17 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                 {
                     Row row = ite.next();
                     for (int k = 0; k < columns; k++) {
-                        Element td = new Element("td");
-                        tr.appendChild(td);
                         Cell cell = row.getCell(k);
-                        td.appendChild(String.valueOf(extractVal(cell)));
-                        addAttributes(table, tr, td, cell);
+                        if (cell != null) {
+                            String key = cell.getRowIndex() + "," + cell.getColumnIndex();
+                            if (ignore.contains(key)) {
+                                continue;
+                            }
+                            Element td = new Element("td");
+                            tr.appendChild(td);
+                            td.appendChild(String.valueOf(extractVal(cell)));
+                            addAttributes(table, tr, td, cell, spanMap.get(key));
+                        }
                     }
                 }
             }
