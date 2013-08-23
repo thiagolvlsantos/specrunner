@@ -52,4 +52,9 @@ public class TestPhrase {
     public void openFileInBrowserDateTyped(String file, @Converter(type = ConverterDatePatternArgs.class, args = { "dd/MM/yyyy" }) Date other) throws Exception {
         System.out.println("CALLED.6:" + file + "," + other);
     }
+
+    @ExpectedMessages(messages = { "Invalid parameter value for argument(1) in public void example.language.TestPhrase.openFileInBrowserDateTypedFail(java.lang.String,java.util.Date) throws java.lang.Exception. Expected class java.util.Date, received: 23/01/2014 of type class java.lang.String" })
+    public void openFileInBrowserDateTypedFail(String file, @Converter(args = { "dd/MM/yyyy" }) Date other) throws Exception {
+        System.out.println("CALLED.7:" + file + "," + other);
+    }
 }
