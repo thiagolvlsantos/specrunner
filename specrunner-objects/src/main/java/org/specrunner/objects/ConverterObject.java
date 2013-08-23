@@ -27,6 +27,9 @@ public class ConverterObject implements IConverter {
         if (args == null || args.length == 0) {
             throw new ConverterException("Missing object type.");
         }
+        if (!(args[0] instanceof Class)) {
+            throw new ConverterException("Converter argument must be a class type.");
+        }
         Class<?> type = (Class<?>) args[0];
         try {
             return PluginObjectManager.get().lookup(type, String.valueOf(value));
