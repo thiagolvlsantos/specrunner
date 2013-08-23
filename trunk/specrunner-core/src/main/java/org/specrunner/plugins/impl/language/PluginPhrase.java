@@ -74,7 +74,12 @@ public class PluginPhrase extends AbstractPluginLanguage {
                             throw new PluginException(e);
                         }
                     }
-                    converterArguments = annotation.args();
+                    Class<?> resultType = annotation.resultType();
+                    if (resultType != Object.class) {
+                        converterArguments = new Object[] { resultType };
+                    } else {
+                        converterArguments = annotation.args();
+                    }
                 } else {
                     converter = cm.get(type.getSimpleName().toLowerCase());
                     converterArguments = new Object[] {};

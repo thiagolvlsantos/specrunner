@@ -55,13 +55,13 @@ public abstract class AbstractPluginLanguage extends AbstractPlugin {
             UtilLog.LOG.debug("METH:" + method);
             UtilLog.LOG.debug("ARGS:" + arguments);
         }
-        Method m = getMethod(target, method, arguments);
-        prepareArguments(context, m, arguments);
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("TYPED ARGS:" + arguments);
-        }
         Throwable error = null;
+        Method m = getMethod(target, method, arguments);
         try {
+            prepareArguments(context, m, arguments);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("TYPED ARGS:" + arguments);
+            }
             m.invoke(target, arguments.toArray());
             result.addResult(Success.INSTANCE, context.peek());
         } catch (IllegalArgumentException e) {
@@ -70,6 +70,8 @@ public abstract class AbstractPluginLanguage extends AbstractPlugin {
             error = e.getCause();
         } catch (InvocationTargetException e) {
             error = e.getCause();
+        } catch (PluginException e) {
+            error = e;
         }
         if (error != null) {
             ExpectedMessages em = m.getAnnotation(ExpectedMessages.class);
@@ -84,7 +86,7 @@ public abstract class AbstractPluginLanguage extends AbstractPlugin {
                     return;
                 }
             }
-            throw new PluginException("Unexpected message received: " + error.getMessage());
+            throw new PluginException("Unexpected message received: " + error.getMessage(), error);
         }
     }
 
