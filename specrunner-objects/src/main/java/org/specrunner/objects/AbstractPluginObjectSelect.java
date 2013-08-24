@@ -27,7 +27,7 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.RowAdapter;
 
 /**
- * Performs something on a selected object.
+ * Perform something on a selected object.
  * 
  * @author Thiago Santos
  * @param <T>
