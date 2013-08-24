@@ -103,11 +103,11 @@ public class PluginSentence extends AbstractPlugin {
             m.invoke(target, arguments.toArray());
             result.addResult(Success.INSTANCE, context.peek());
         } catch (IllegalArgumentException e) {
-            error = e.getCause();
+            error = e.getCause() != null ? e.getCause() : e;
         } catch (IllegalAccessException e) {
-            error = e.getCause();
+            error = e.getCause() != null ? e.getCause() : e;
         } catch (InvocationTargetException e) {
-            error = e.getCause();
+            error = e.getCause() != null ? e.getCause() : e;
         } catch (PluginException e) {
             error = e;
         }
@@ -284,6 +284,9 @@ public class PluginSentence extends AbstractPlugin {
                     String name = annotation.name();
                     if (!name.isEmpty()) {
                         converter = cm.get(name);
+                        if (converter == null) {
+                            throw new PluginException("Converter named '" + name + "' not found.");
+                        }
                     } else {
                         try {
                             converter = annotation.type().newInstance();
