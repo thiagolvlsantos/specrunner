@@ -1,13 +1,13 @@
 package example.language;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.ExpectedMessages;
+import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
 public class TestSentenceAfter {
 
-    @ExpectedMessages(messages = { "Falhou!" })
+    @ExpectedMessage(message = "Falhou!")
     public void openFileInBrowser(String file) throws Exception {
         String tmp = System.getProperty("user.home");
         if (!tmp.equals(file)) {
