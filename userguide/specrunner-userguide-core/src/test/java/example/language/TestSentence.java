@@ -7,7 +7,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.expressions.IExpressionFactory;
-import org.specrunner.junit.ExpectedMessages;
+import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.impl.language.Converter;
 import org.specrunner.util.converter.impl.ConverterDatePatternArgs;
@@ -20,7 +20,7 @@ public class TestSentence {
         SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", DateTime.class);
     }
 
-    @ExpectedMessages(messages = { "Falhou!" })
+    @ExpectedMessage(message = "Falhou!")
     public void openFileInBrowser(String file) throws Exception {
         String tmp = System.getProperty("user.home");
         if (!tmp.equals(file)) {
@@ -53,7 +53,7 @@ public class TestSentence {
         System.out.println("CALLED.6:" + file + "," + other);
     }
 
-    @ExpectedMessages(messages = { "Invalid parameter value for argument[1] in public void example.language.TestSentence.openFileInBrowserDateTypedFail(java.lang.String,java.util.Date) throws java.lang.Exception. Expected class java.util.Date, received: 23/01/2014 of type class java.lang.String" })
+    @ExpectedMessage(message = "Invalid parameter value for argument[1] in public void example.language.TestSentence.openFileInBrowserDateTypedFail(java.lang.String,java.util.Date) throws java.lang.Exception. Expected class java.util.Date, received: 23/01/2014 of type class java.lang.String")
     public void openFileInBrowserDateTypedFail(String file, @Converter(args = { "dd/MM/yyyy" }) Date other) throws Exception {
         System.out.println("CALLED.7:" + file + "," + other);
     }

@@ -13,7 +13,7 @@ import nu.xom.Text;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.junit.ExpectedMessages;
+import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
@@ -112,17 +112,15 @@ public class PluginSentence extends AbstractPlugin {
             error = e;
         }
         if (error != null) {
-            ExpectedMessages em = m.getAnnotation(ExpectedMessages.class);
+            ExpectedMessage em = m.getAnnotation(ExpectedMessage.class);
             if (em == null) {
                 throw new PluginException(error);
             }
             String received = error.getMessage();
-            String[] expectations = em.messages();
-            for (int i = 0; i < expectations.length; i++) {
-                if (expectations[i].equals(received)) {
-                    result.addResult(Success.INSTANCE, context.peek());
-                    return;
-                }
+            String expectation = em.message();
+            if (expectation.equals(received)) {
+                result.addResult(Success.INSTANCE, context.peek());
+                return;
             }
             throw new PluginException("Unexpected message received: " + error.getMessage(), error);
         }
@@ -187,6 +185,11 @@ public class PluginSentence extends AbstractPlugin {
         for (int i = 0; i < tmp.length(); i++) {
             char c = tmp.charAt(i);
             if (c == '"') {
+                if (i > 0 && tmp.charAt(i - 1) == '\\') {
+                    stack.peek().setLength(stack.peek().length() - 1);
+                    stack.peek().append(c);
+                    continue;
+                }
                 if (stack.size() == 1) {
                     stack.push(new StringBuilder());
                 } else {
