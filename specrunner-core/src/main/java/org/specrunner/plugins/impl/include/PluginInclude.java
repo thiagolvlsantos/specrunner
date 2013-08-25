@@ -305,11 +305,13 @@ public class PluginInclude extends AbstractPlugin {
 
             Element thFile = new Element("th");
             UtilNode.appendCss(thFile, CSS_INCLUDED_FILE);
+            UtilNode.setIgnore(thFile);
             trFile.appendChild(thFile);
             thFile.appendChild(originalHref.toString());
 
             thFile = new Element("th");
             UtilNode.appendCss(thFile, CSS_INCLUDED_FILE);
+            UtilNode.setIgnore(thFile);
             trFile.appendChild(thFile);
             thFile.appendChild(args);
 
@@ -448,6 +450,7 @@ public class PluginInclude extends AbstractPlugin {
                 }
                 Element args = new Element("table");
                 UtilNode.appendCss(args, CSS_INCLUDED_ARGS);
+                UtilNode.setIgnore(args);
                 while (st.hasMoreTokens()) {
                     String key = URLDecoder.decode(st.nextToken(), "UTF-8");
                     String value = URLDecoder.decode(st.nextToken(), "UTF-8");
@@ -461,6 +464,7 @@ public class PluginInclude extends AbstractPlugin {
                         args.appendChild(td);
                         td.appendChild(var);
                         td = new Element("td");
+                        UtilNode.setIgnore(td);
                         args.appendChild(td);
                         td.appendChild(String.valueOf(obj));
                     } catch (Exception e) {

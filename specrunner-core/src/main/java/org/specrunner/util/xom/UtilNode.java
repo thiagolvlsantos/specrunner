@@ -22,6 +22,8 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
+import org.specrunner.plugins.PluginException;
+
 /**
  * Node utility class.
  * 
@@ -40,6 +42,15 @@ public final class UtilNode {
      * The CSS attribute name.
      */
     public static final String ATT_CSS = "class";
+
+    /**
+     * The CSS which set the left argument.
+     */
+    public static final String CSS_LETF = "left";
+    /**
+     * The CSS which set the right argument.
+     */
+    public static final String CSS_RIGHT = "right";
 
     /**
      * Hidden constructor.
@@ -199,5 +210,51 @@ public final class UtilNode {
             throw new IllegalArgumentException("Node must be an element.");
         }
         return new ElementHolderImpl((Element) node);
+    }
+
+    /**
+     * Get highest descendant node with class 'CSS_LEFT'.
+     * 
+     * @param root
+     *            The root.
+     * @return The node, if exist.
+     * @throws PluginException
+     *             If node does not exist.
+     */
+    public static Node getLeft(Node root) throws PluginException {
+        return getCssNode(root, CSS_LETF);
+    }
+
+    /**
+     * Get highest descendant node with class 'CSS_RIGHT'.
+     * 
+     * @param root
+     *            The root.
+     * @return The node, if exist.
+     * @throws PluginException
+     *             If node does not exist.
+     */
+    public static Node getRight(Node root) throws PluginException {
+        return getCssNode(root, CSS_RIGHT);
+    }
+
+    /**
+     * Get the highest node with the style given.
+     * 
+     * @param root
+     *            The root node.
+     * @param css
+     *            The expected css.
+     * @return The expected node.
+     * @throws PluginException
+     *             If child with css does not exist.
+     */
+    public static Node getCssNode(Node root, String css) throws PluginException {
+        Nodes exps = root.query("descendant::*[contains(@class,'" + css + "')]");
+        Node expected = UtilNode.getHighest(exps);
+        if (expected == null) {
+            throw new PluginException("Expected value not found. Missing a element with class='" + css + "' in element:" + root.toXML());
+        }
+        return expected;
     }
 }
