@@ -19,7 +19,6 @@ package org.specrunner.plugins.impl.logical;
 
 import nu.xom.Element;
 import nu.xom.Node;
-import nu.xom.Nodes;
 
 import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
@@ -51,15 +50,6 @@ import org.specrunner.util.xom.UtilNode;
  * 
  */
 public class PluginEquals extends AbstractPluginDual {
-
-    /**
-     * The CSS which set the left side condition of equals.
-     */
-    public static final String CSS_LETF = "left";
-    /**
-     * The CSS which set the right side condition of equals.
-     */
-    public static final String CSS_RIGHT = "right";
 
     /**
      * Error object after failure.
@@ -94,21 +84,10 @@ public class PluginEquals extends AbstractPluginDual {
                     objReceived = obj;
                 }
             } else {
-                Nodes exps = node.query("descendant::*[@class='" + CSS_LETF + "']");
-                Nodes recs = node.query("descendant::*[@class='" + CSS_RIGHT + "']");
-                Node expected = UtilNode.getHighest(exps);
-                Node received = UtilNode.getHighest(recs);
-                if (expected == null) {
-                    throw new PluginException("Expected value not found. Missing a element with class='" + CSS_LETF + "' in element:" + node.toXML());
-                }
-                if (received == null) {
-                    throw new PluginException("Received value not found. Missing a element with class='" + CSS_RIGHT + "' in element:" + node.toXML());
-                }
-                objExpected = UtilNode.newElementAdapter(expected).getObject(context, true);
-                objReceived = UtilNode.newElementAdapter(received).getObject(context, true);
+                objExpected = UtilNode.newElementAdapter(UtilNode.getLeft(node)).getObject(context, true);
+                objReceived = UtilNode.newElementAdapter(UtilNode.getRight(node)).getObject(context, true);
             }
         }
-
         try {
             return verify(parent.getComparator(), objExpected, objReceived);
         } catch (SpecRunnerException e) {

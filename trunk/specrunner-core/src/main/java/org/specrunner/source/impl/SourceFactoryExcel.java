@@ -67,6 +67,12 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
 
     /**
      * Prefix to be used for specify attributes in cell comments expected to be
+     * added to the caption definition.
+     */
+    public static final String CAPTION_ATTRIBUTE = "c.";
+
+    /**
+     * Prefix to be used for specify attributes in cell comments expected to be
      * added to the row definition.
      */
     public static final String ROW_ATTRIBUTE = "r.";
@@ -125,9 +131,9 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                 }
                 Element table = new Element("table");
                 html.appendChild(table);
-                readCaption(table, sheet);
+                Element caption = readCaption(table, sheet);
                 Iterator<Row> ite = sheet.iterator();
-                readBody(table, spanMap, ignoreMap, ite, headers(table, spanMap, ignoreMap, ite));
+                readBody(table, caption, spanMap, ignoreMap, ite, headers(table, caption, spanMap, ignoreMap, ite));
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -196,13 +202,15 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      *            The target table.
      * @param sheet
      *            The sheet.
+     * @return The caption.
      */
-    protected void readCaption(Element table, Sheet sheet) {
+    protected Element readCaption(Element table, Sheet sheet) {
         Element caption = new Element("caption");
         table.appendChild(caption);
         {
             caption.appendChild(sheet.getSheetName());
         }
+        return caption;
     }
 
     /**
@@ -210,6 +218,8 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * 
      * @param table
      *            The target table.
+     * @param caption
+     *            The caption element.
      * @param spanMap
      *            Map of span cells.
      * @param ignore
@@ -218,7 +228,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      *            The row iterator.
      * @return The number of columns to read.
      */
-    protected int headers(Element table, Map<String, Dimension> spanMap, Set<String> ignore, Iterator<Row> ite) {
+    protected int headers(Element table, Element caption, Map<String, Dimension> spanMap, Set<String> ignore, Iterator<Row> ite) {
         int result = 0;
         Element thead = new Element("thead");
         table.appendChild(thead);
@@ -239,7 +249,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                             Element th = new Element("th");
                             tr.appendChild(th);
                             th.appendChild(String.valueOf(extractVal(cell)));
-                            addAttributes(table, tr, th, cell, spanMap.get(key));
+                            addAttributes(table, caption, tr, th, cell, spanMap.get(key));
                         }
                     }
                 }
@@ -253,6 +263,8 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * 
      * @param table
      *            The table element.
+     * @param caption
+     *            The table caption.
      * @param row
      *            The row element.
      * @param item
@@ -262,7 +274,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * @param p
      *            The pair, if exist.
      */
-    private void addAttributes(Element table, Element row, Element item, Cell cell, Dimension p) {
+    private void addAttributes(Element table, Element caption, Element row, Element item, Cell cell, Dimension p) {
         Comment c = cell.getCellComment();
         if (c != null) {
             RichTextString rts = c.getString();
@@ -277,6 +289,8 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                         String value = token.substring(pos + 1).replace("\"", "");
                         if (name.startsWith(TABLE_ATTRIBUTE)) {
                             table.addAttribute(new Attribute(name.substring(TABLE_ATTRIBUTE.length(), name.length()), value));
+                        } else if (name.startsWith(CAPTION_ATTRIBUTE)) {
+                            caption.addAttribute(new Attribute(name.substring(CAPTION_ATTRIBUTE.length(), name.length()), value));
                         } else if (name.startsWith(ROW_ATTRIBUTE)) {
                             row.addAttribute(new Attribute(name.substring(ROW_ATTRIBUTE.length(), name.length()), value));
                         } else {
@@ -302,6 +316,8 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * 
      * @param table
      *            The table.
+     * @param caption
+     *            The table caption.
      * @param spanMap
      *            Map of span cells.
      * @param ignore
@@ -311,7 +327,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
      * @param columns
      *            The number of columns to read.
      */
-    protected void readBody(Element table, Map<String, Dimension> spanMap, Set<String> ignore, Iterator<Row> ite, int columns) {
+    protected void readBody(Element table, Element caption, Map<String, Dimension> spanMap, Set<String> ignore, Iterator<Row> ite, int columns) {
         Element tbody = new Element("tbody");
         table.appendChild(tbody);
         {
@@ -330,7 +346,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                             Element td = new Element("td");
                             tr.appendChild(td);
                             td.appendChild(String.valueOf(extractVal(cell)));
-                            addAttributes(table, tr, td, cell, spanMap.get(key));
+                            addAttributes(table, caption, tr, td, cell, spanMap.get(key));
                         }
                     }
                 }
