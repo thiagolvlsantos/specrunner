@@ -17,12 +17,14 @@
  */
 package example.core;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.specrunner.junit.SpecRunnerJUnit;
 
 //CHECKSTYLE:OFF
 public class TestPlugin {
 
+    @Ignore
     @Test
     public void hello1() {
         SpecRunnerJUnit.defaultRun("src/test/resources/income/hello.html");
