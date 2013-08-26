@@ -50,7 +50,7 @@ public class PluginOpen extends AbstractPluginUrlAware {
         Node node = context.getNode();
         String u = getUrl() != null ? getUrl() : node.getValue();
         String tmp = getBrowserName();
-        if (!u.startsWith("http:") && !u.startsWith("file:")) {
+        if (!u.startsWith("http") && !u.startsWith("file")) {
             String baseUrl = (String) context.getByName(PluginStartIn.getBaseForBrowser(tmp));
             if (baseUrl == null) {
                 throw new PluginException("Could not find base url for browser '" + tmp + "'.");
