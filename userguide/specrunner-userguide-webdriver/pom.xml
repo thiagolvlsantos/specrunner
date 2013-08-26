@@ -13,5 +13,10 @@
             <artifactId>specrunner-webdriver</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.specrunner</groupId>
+            <artifactId>specrunner-jetty</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
