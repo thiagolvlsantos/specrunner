@@ -38,7 +38,8 @@
 }
 
 .sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_detail_b:before,.sr_ignored_b:before,
-.sr_failure_a:after, .sr_success_a:after, .sr_warning_a:after, .sr_info_a:after, .sr_detail_a:after, .sr_ignored_a:after
+.sr_failure_a:after, .sr_success_a:after, .sr_warning_a:after, .sr_info_a:after, .sr_detail_a:after, .sr_ignored_a:after,
+.binary
     {
     padding: 2px;
     font-size: x-small;

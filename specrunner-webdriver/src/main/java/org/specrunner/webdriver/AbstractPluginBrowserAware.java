@@ -17,6 +17,17 @@
  */
 package org.specrunner.webdriver;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -24,14 +35,22 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.IElementHolder;
+import org.specrunner.util.xom.UtilNode;
 
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.WebWindow;
 
 /**
  * A generic plugin that acts over a webdriver.
@@ -162,7 +181,106 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         if (isWaitForClient()) {
             waitForClient(client);
         }
+        Page page = before(context, result, client);
         doEnd(context, result, client);
+        after(context, result, client, page);
+    }
+
+    private Page before(IContext context, IResultSet result, WebDriver client) {
+        if (client instanceof IHtmlUnitDriver) {
+            WebClient wc = ((IHtmlUnitDriver) client).getWebClient();
+            WebWindow window = wc.getCurrentWindow();
+            if (window != null) {
+                return window.getEnclosedPage();
+            }
+        }
+        return null;
+    }
+
+    private void after(IContext context, IResultSet result, WebDriver client, Page page) throws PluginException {
+        if (client instanceof IHtmlUnitDriver) {
+            WebClient wc = ((IHtmlUnitDriver) client).getWebClient();
+            WebWindow window = wc.getCurrentWindow();
+            if (window != null) {
+                Page tmp = window.getEnclosedPage();
+                if (tmp instanceof UnexpectedPage) {
+                    WebResponse response = tmp.getWebResponse();
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Binary file: " + response.getContentType());
+                    }
+                    UnexpectedPage up = (UnexpectedPage) tmp;
+                    Node n = context.getNode();
+                    if (n instanceof Element) {
+                        IElementHolder eh = UtilNode.newElementAdapter(n);
+                        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+                        File target = (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
+                        File to = null;
+                        if (eh.hasAttribute("to")) {
+                            to = new File(target, eh.getAttribute("to"));
+                        } else {
+                            to = new File(target, eh.getAttribute("tmp" + System.currentTimeMillis()));
+                        }
+                        File dir = to.getAbsoluteFile().getParentFile();
+                        if (!dir.exists()) {
+                            if (!dir.mkdirs()) {
+                                throw new PluginException("Could not create binary target directory:" + dir.getAbsolutePath());
+                            }
+                        }
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Download file to '" + to.getAbsolutePath() + "'.");
+                        }
+                        InputStream in = null;
+                        OutputStream out = null;
+                        try {
+                            in = up.getInputStream();
+                            out = new FileOutputStream(to);
+                            UtilIO.writeTo(in, out);
+                        } catch (FileNotFoundException e) {
+                            throw new PluginException(e);
+                        } catch (IOException e) {
+                            throw new PluginException(e);
+                        } finally {
+                            try {
+                                if (in != null) {
+                                    in.close();
+                                }
+                            } catch (IOException e) {
+                                throw new PluginException(e);
+                            }
+                            try {
+                                if (out != null) {
+                                    out.close();
+                                }
+                            } catch (IOException e) {
+                                throw new PluginException(e);
+                            }
+                        }
+                        Node node = context.getNode();
+                        if (node instanceof Element) {
+                            Element span = new Element("span");
+                            UtilNode.setIgnore(span);
+                            span.addAttribute(new Attribute("class", "binary"));
+                            span.appendChild(" [");
+
+                            Element a = new Element("a");
+                            a.addAttribute(new Attribute("href", eh.getAttribute("to")));
+                            a.appendChild(to.getName() + " (" + response.getContentType() + ")");
+                            span.appendChild(a);
+
+                            span.appendChild("] ");
+
+                            Element e = (Element) node;
+                            e.appendChild(span);
+                        }
+                    }
+                    try {
+                        window.getHistory().back();
+                    } catch (IOException e) {
+                        throw new PluginException(e);
+                    }
+                }
+            }
+        }
     }
 
     /**
