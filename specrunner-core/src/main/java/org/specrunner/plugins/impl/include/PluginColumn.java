@@ -94,13 +94,13 @@ public class PluginColumn extends AbstractPluginTable {
                 try {
                     value = c.getObject(context, true, converters.get(j), args.get(j));
                 } catch (PluginException e) {
-                    result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Invalid value for '" + c + "'.", e));
+                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Invalid value for '" + c + "'.", e));
                     continue;
                 }
                 String feature = features.get(j);
                 IAccess access = accesses.get(j);
                 if (access == null) {
-                    result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Invalid access information. Not found public attribute, bean property or method named '" + feature.replace("?", "") + "' in object '" + instance.getClass() + "'."));
+                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Invalid access information. Not found public attribute, bean property or method named '" + feature.replace("?", "") + "' in object '" + instance.getClass() + "'."));
                     continue;
                 }
                 if (feature.endsWith("?")) {
@@ -114,7 +114,7 @@ public class PluginColumn extends AbstractPluginTable {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug(e.getMessage(), e);
                             }
-                            result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not get " + feature + "(" + value + ") in '" + (instance != null ? instance.getClass() : "null") + "'.", e));
+                            result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not get " + feature + "(" + value + ") in '" + (instance != null ? instance.getClass() : "null") + "'.", e));
                         }
                     } else {
                         try {
@@ -123,23 +123,23 @@ public class PluginColumn extends AbstractPluginTable {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug(e.getMessage(), e);
                             }
-                            result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not get " + feature + " in '" + (instance != null ? instance.getClass() : "null") + "'.", e));
+                            result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not get " + feature + " in '" + (instance != null ? instance.getClass() : "null") + "'.", e));
                         }
                     }
                     try {
-                        UtilPlugin.compare(c.getElement(), result, c.getComparator(), value, received);
+                        UtilPlugin.compare(c.getNode(), result, c.getComparator(), value, received);
                     } catch (ComparatorException e) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not find comparator in " + c.toString() + ".", e));
+                        result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not find comparator in " + c.toString() + ".", e));
                     }
                 } else {
                     try {
                         access.set(instance, feature, value);
-                        result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this));
+                        result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
                     } catch (Exception e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug(e.getMessage(), e);
                         }
-                        result.addResult(Failure.INSTANCE, context.newBlock(c.getElement(), this), new PluginException("Could not set value '" + value + "' of type " + (value != null ? value.getClass() : "undefined") + " to " + feature + " in '" + (instance != null ? instance.getClass() : "null") + "'.", e));
+                        result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not set value '" + value + "' of type " + (value != null ? value.getClass() : "undefined") + " to " + feature + " in '" + (instance != null ? instance.getClass() : "null") + "'.", e));
                     }
                 }
             }

@@ -43,7 +43,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.IElementHolder;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 import com.gargoylesoftware.htmlunit.Page;
@@ -211,7 +211,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                     UnexpectedPage up = (UnexpectedPage) tmp;
                     Node n = context.getNode();
                     if (n instanceof Element) {
-                        IElementHolder eh = UtilNode.newElementAdapter(n);
+                        INodeHolder eh = UtilNode.newNodeHolder(n);
                         IFeatureManager fm = SpecRunnerServices.getFeatureManager();
                         File target = (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
                         File to = null;

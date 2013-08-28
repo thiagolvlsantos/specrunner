@@ -138,7 +138,7 @@ public class Database implements IDatabase {
                     try {
                         obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
                     } catch (ConverterException e) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(td.getElement(), context.getPlugin()), "Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'.");
+                        result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), "Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'.");
                         continue;
                     }
                     if (obj == null && ct == CommandType.INSERT) {
@@ -194,7 +194,7 @@ public class Database implements IDatabase {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 try {
-                    result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), context.getPlugin()), new PluginException("Error in connection (" + con.getMetaData().getURL() + "): " + e.getMessage(), e));
+                    result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()), new PluginException("Error in connection (" + con.getMetaData().getURL() + "): " + e.getMessage(), e));
                 } catch (SQLException e1) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -519,7 +519,7 @@ public class Database implements IDatabase {
                         }
                         if (!comparator.match(v.getValue(), received)) {
                             IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(v.getValue()), String.valueOf(received));
-                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getElement(), context.getPlugin()), new DefaultAlignmentException(aligner));
+                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(aligner));
                         }
                     }
                 }

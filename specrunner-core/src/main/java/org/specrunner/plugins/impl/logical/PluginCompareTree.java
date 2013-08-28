@@ -22,7 +22,7 @@ import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.xom.IElementHolder;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -76,8 +76,8 @@ public class PluginCompareTree extends AbstractPlugin {
             Object objExpected = null;
             IComparator comparator = null;
             if (received instanceof Element && expected instanceof Element) {
-                IElementHolder holderReceived = UtilNode.newElementAdapter(received);
-                IElementHolder holderExpected = UtilNode.newElementAdapter(expected);
+                INodeHolder holderReceived = UtilNode.newNodeHolder(received);
+                INodeHolder holderExpected = UtilNode.newNodeHolder(expected);
                 try {
                     IConverter converter = holderExpected.getConverter();
                     List<String> arguments = holderExpected.getArguments();

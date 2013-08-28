@@ -36,6 +36,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
@@ -93,7 +94,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."), new WritablePage(page));
             return false;
         }
-        TableAdapter tableExpected = UtilNode.newTableAdapter((Element) table);
+        TableAdapter tableExpected = UtilNode.newTableAdapter(table);
 
         List<?> tablesReceived = element.getByXPath("descendant-or-self::table");
         if (tablesReceived.isEmpty()) {
@@ -106,7 +107,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         Iterator<?> iteCaptions = tableCaptions.iterator();
         for (CellAdapter expected : tableExpected.getCaptions()) {
             if (!iteCaptions.hasNext()) {
-                result.addResult(Failure.INSTANCE, context.newBlock(expected.getElement(), this), new PluginException("Caption cells missing in received table."));
+                result.addResult(Failure.INSTANCE, context.newBlock(expected.getNode(), this), new PluginException("Caption cells missing in received table."));
                 success = false;
                 continue;
             }
@@ -117,7 +118,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 }
                 received = (HtmlElement) iteCaptions.next();
             }
-            if (expected.getAttribute(UtilNode.IGNORE) != null && received.isDisplayed()) {
+            if (expected.hasAttribute(UtilNode.IGNORE) && received.isDisplayed()) {
                 success = success & compareTerminal(this, context, result, page, expected, received);
             }
         }
@@ -141,7 +142,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         for (RowAdapter rowsExpected : tableExpected.getRows()) {
             for (CellAdapter expected : rowsExpected.getCells()) {
                 if (!iteElements.hasNext()) {
-                    result.addResult(Failure.INSTANCE, context.newBlock(expected.getElement(), this), new PluginException("Cell missing in received table."));
+                    result.addResult(Failure.INSTANCE, context.newBlock(expected.getNode(), this), new PluginException("Cell missing in received table."));
                     success = false;
                     continue;
                 }
@@ -194,36 +195,34 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
      *             On comparison errors.
      */
     protected boolean compareTerminal(IPlugin plugin, IContext context, IResultSet result, SgmlPage page, CellAdapter expected, HtmlElement received) throws PluginException {
-        Element element = expected.getElement();
-        if (isTable(element)) {
-            return compareTable(context, result, page, received, element);
-        } else if (PluginCompareDate.isDate(element)) {
-            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, element);
+        if (isTable(expected)) {
+            return compareTable(context, result, page, received, expected.getNode());
+        } else if (PluginCompareDate.isDate(expected)) {
+            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, (Element) expected.getNode());
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.asText();
-            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(element, plugin), context, result, page);
-        } else if (PluginCompareNode.isNode(element)) {
-            PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, element, true);
-            return PluginCompareUtils.compareNode(compare, element, received, context.newBlock(element, plugin), context, result);
+            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, page);
+        } else if (PluginCompareNode.isNode(expected)) {
+            PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, (Element) expected.getNode(), true);
+            return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);
         } else {
-            PluginCompare compare = UtilPlugin.create(context, PluginCompare.class, element);
+            PluginCompare compare = UtilPlugin.create(context, PluginCompare.class, (Element) expected.getNode());
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.asText();
-            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(element, plugin), context, result, page);
+            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getNode(), plugin), context, result, page);
         }
     }
 
     /**
      * Return if a given element is a table.
      * 
-     * @param element
+     * @param holder
      *            The element type.
      * @return true, if table, false otherwise.
      */
-    public static boolean isTable(Element element) {
-        CellAdapter ca = new CellAdapter(element);
-        return ca.hasAttribute("type") && ca.getAttribute("type").equals("table");
+    public static boolean isTable(INodeHolder holder) {
+        return holder.attributeEquals("type", "table");
     }
 }

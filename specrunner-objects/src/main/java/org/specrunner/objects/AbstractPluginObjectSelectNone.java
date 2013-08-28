@@ -50,12 +50,12 @@ public abstract class AbstractPluginObjectSelectNone<T> extends AbstractPluginOb
     public void processList(IContext context, Object instance, RowAdapter row, IResultSet result, List<Object> list) throws Exception {
         if (list.isEmpty()) {
             for (int i = 0; i < row.getCellsCount(); i++) {
-                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getElement(), this));
+                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getNode(), this));
             }
         } else {
-            Exception e = new PluginException("Element found in object repository. XML:" + row.getElement().toXML());
+            Exception e = new PluginException("Element found in object repository. XML:" + row.getNode().toXML());
             for (int i = 0; i < row.getCellsCount(); i++) {
-                result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
+                result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getNode(), this), i == 0 ? e : null);
             }
         }
     }

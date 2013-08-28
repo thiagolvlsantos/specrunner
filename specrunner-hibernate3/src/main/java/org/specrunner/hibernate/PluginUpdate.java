@@ -60,11 +60,11 @@ public class PluginUpdate extends AbstractPluginObjectSelectUnique<Session> {
             source.update(base);
             source.flush();
             for (int i = 0; i < row.getCellsCount(); i++) {
-                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getElement(), this));
+                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getNode(), this));
             }
         } catch (Exception e) {
             for (int i = 0; i < row.getCellsCount(); i++) {
-                result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getElement(), this), i == 0 ? e : null);
+                result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getNode(), this), i == 0 ? e : null);
             }
         }
     }

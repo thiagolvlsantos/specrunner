@@ -42,8 +42,7 @@ import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.impl.ComparatorNode;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.IElementHolder;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
@@ -139,7 +138,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         try {
-            IElementHolder holder = UtilNode.newElementAdapter(context.getNode());
+            INodeHolder holder = UtilNode.newNodeHolder(context.getNode());
             IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
             IExpression e = ef.create("$NODE", context);
             Element expected = (Element) e.evaluate(context);
@@ -170,12 +169,11 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     /**
      * Check if the element stand for a node.
      * 
-     * @param element
+     * @param holder
      *            The element.
      * @return true, if is node comparison, false, otherwise.
      */
-    public static boolean isNode(Element element) {
-        CellAdapter ca = new CellAdapter(element);
-        return ca.hasAttribute("type") && ca.getAttribute("type").equalsIgnoreCase("node");
+    public static boolean isNode(INodeHolder holder) {
+        return holder.attributeEquals("type", "node");
     }
 }

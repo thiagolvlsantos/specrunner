@@ -205,11 +205,8 @@ public final class UtilNode {
      *            The node.
      * @return The adapter.
      */
-    public static IElementHolder newElementAdapter(Node node) {
-        if (!(node instanceof Element)) {
-            throw new IllegalArgumentException("Node must be an element.");
-        }
-        return new ElementHolderImpl((Element) node);
+    public static INodeHolder newNodeHolder(Node node) {
+        return new NodeHolderImpl(node);
     }
 
     /**

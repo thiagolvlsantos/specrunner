@@ -22,8 +22,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.Window;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -55,10 +55,10 @@ public class PluginSize extends AbstractPluginWindow {
         if (getWidth() == null && getHeight() == null) {
             throw new PluginException("PluginSize assertion requires at least one of attributes 'width' and/or 'height'.");
         }
-        if (getWidth() != null && !getWidth().equals(d.getWidth())) {
+        if (getWidth() != null && d != null && !getWidth().equals(d.getWidth())) {
             throw new PluginException("Width size does not match. Expected:" + getWidth() + ", received:" + (d != null ? d.getWidth() : "null"));
         }
-        if (getHeight() != null && !getHeight().equals(d.getHeight())) {
+        if (getHeight() != null && d != null && !getHeight().equals(d.getHeight())) {
             throw new PluginException("Height size does not match. Expected:" + getHeight() + ", received:" + (d != null ? d.getHeight() : "null"));
         }
         result.addResult(Success.INSTANCE, context.peek());

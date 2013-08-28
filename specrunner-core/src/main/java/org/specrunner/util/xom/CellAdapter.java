@@ -25,7 +25,7 @@ import nu.xom.Element;
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends ElementHolderImpl {
+public class CellAdapter extends NodeHolderImpl {
 
     /**
      * Construct a cell node.

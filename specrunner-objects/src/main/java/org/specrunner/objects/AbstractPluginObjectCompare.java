@@ -93,10 +93,10 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
                 comparator = cf.getDefaultComparator();
             }
             if (comparator.match(currentInstance, currentBase)) {
-                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getElement(), this));
+                result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this));
             } else {
                 IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(currentInstance), String.valueOf(currentBase));
-                result.addResult(Failure.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getElement(), this), new DefaultAlignmentException(aligner));
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this), new DefaultAlignmentException(aligner));
             }
         }
     }

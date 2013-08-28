@@ -23,6 +23,7 @@ import java.util.List;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
+import nu.xom.Node;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
@@ -42,12 +43,12 @@ import org.specrunner.util.converter.IConverterManager;
  * @author Thiago Santos
  * 
  */
-public class ElementHolderImpl implements IElementHolder {
+public class NodeHolderImpl implements INodeHolder {
 
     /**
-     * The element encapsulated.
+     * The node encapsulated.
      */
-    protected Element element;
+    protected Node node;
 
     /**
      * Create a element holder.
@@ -55,58 +56,82 @@ public class ElementHolderImpl implements IElementHolder {
      * @param element
      *            The element.
      */
-    public ElementHolderImpl(Element element) {
-        this.element = element;
+    public NodeHolderImpl(Node element) {
+        this.node = element;
     }
 
     @Override
-    public Element getElement() {
-        return element;
+    public Node getNode() {
+        return node;
     }
 
     @Override
-    public void setElement(Element element) {
-        this.element = element;
+    public void setNode(Node element) {
+        this.node = element;
     }
 
     @Override
-    public String getLocalName() {
-        return element.getLocalName();
+    public String getQualifiedName() {
+        if (node instanceof Element) {
+            return ((Element) node).getQualifiedName();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean hasName(String name) {
+        String tmp = getQualifiedName();
+        return tmp != null && tmp.equalsIgnoreCase(name);
     }
 
     @Override
     public boolean hasAttribute(String name) {
-        return element.getAttribute(name) != null;
+        return node instanceof Element && ((Element) node).getAttribute(name) != null;
     }
 
     @Override
     public String getAttribute(String name) {
-        return hasAttribute(name) ? element.getAttribute(name).getValue() : null;
+        return hasAttribute(name) ? ((Element) node).getAttribute(name).getValue() : null;
     }
 
     @Override
     public void setAttribute(String name, String value) {
         if (hasAttribute(name)) {
-            element.getAttribute(name).setValue(value);
+            ((Element) node).getAttribute(name).setValue(value);
         } else {
-            element.addAttribute(new Attribute(name, value));
-        }
-    }
-
-    @Override
-    public void removeAttribute(String name) {
-        for (int i = 0; i < element.getAttributeCount(); i++) {
-            Attribute att = element.getAttribute(i);
-            if (att.getQualifiedName().equalsIgnoreCase(name)) {
-                element.removeAttribute(att);
-                break;
+            if (node instanceof Element) {
+                ((Element) node).addAttribute(new Attribute(name, value));
             }
         }
     }
 
     @Override
+    public void removeAttribute(String name) {
+        if (node instanceof Element) {
+            Element element = (Element) node;
+            for (int i = 0; i < element.getAttributeCount(); i++) {
+                Attribute att = element.getAttribute(i);
+                if (att.getQualifiedName().equalsIgnoreCase(name)) {
+                    element.removeAttribute(att);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean attributeContains(String name, String value) {
+        return hasAttribute(name) && getAttribute(name).contains(value);
+    }
+
+    @Override
+    public boolean attributeEquals(String name, String value) {
+        return hasAttribute(name) && getAttribute(name).equalsIgnoreCase(value);
+    }
+
+    @Override
     public String getValue() {
-        return element.getValue();
+        return node.getValue();
     }
 
     @Override
@@ -146,12 +171,15 @@ public class ElementHolderImpl implements IElementHolder {
     @Override
     public List<String> getArguments(List<String> arguments) {
         List<String> params = new LinkedList<String>();
-        for (int i = 0; i < element.getAttributeCount(); i++) {
-            String arg = getAttribute("arg" + i);
-            if (arg == null) {
-                break;
+        if (node instanceof Element) {
+            Element element = (Element) node;
+            for (int i = 0; i < element.getAttributeCount(); i++) {
+                String arg = getAttribute("arg" + i);
+                if (arg == null) {
+                    break;
+                }
+                params.add(arg);
             }
-            params.add(arg);
         }
         return params.isEmpty() ? arguments : params;
     }
@@ -215,9 +243,11 @@ public class ElementHolderImpl implements IElementHolder {
                 throw new PluginException(e);
             }
         } else {
-            String tmp = getValue();
+            String tmp;
             if (hasAttribute("value")) {
                 tmp = getAttribute("value");
+            } else {
+                tmp = getValue();
             }
             value = UtilEvaluator.evaluate(tmp, context, silent);
         }
@@ -236,6 +266,6 @@ public class ElementHolderImpl implements IElementHolder {
 
     @Override
     public String toString() {
-        return getElement() != null ? getElement().toXML() : "null";
+        return getNode() != null ? getNode().toXML() : "null";
     }
 }
