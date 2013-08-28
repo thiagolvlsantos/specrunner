@@ -32,7 +32,7 @@ import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.xom.IElementHolder;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -70,7 +70,7 @@ public class PluginEquals extends AbstractPluginDual {
     @Override
     protected boolean operation(Object obj, IContext context) throws PluginException {
         Node node = context.getNode();
-        IElementHolder parent = UtilNode.newElementAdapter(node);
+        INodeHolder parent = UtilNode.newNodeHolder(node);
         Object objExpected = null;
         Object objReceived = null;
         if (node instanceof Element) {
@@ -84,8 +84,8 @@ public class PluginEquals extends AbstractPluginDual {
                     objReceived = obj;
                 }
             } else {
-                objExpected = UtilNode.newElementAdapter(UtilNode.getLeft(node)).getObject(context, true);
-                objReceived = UtilNode.newElementAdapter(UtilNode.getRight(node)).getObject(context, true);
+                objExpected = UtilNode.newNodeHolder(UtilNode.getLeft(node)).getObject(context, true);
+                objReceived = UtilNode.newNodeHolder(UtilNode.getRight(node)).getObject(context, true);
             }
         }
         try {

@@ -19,7 +19,7 @@ package org.specrunner.util.xom;
 
 import java.util.List;
 
-import nu.xom.Element;
+import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
@@ -34,29 +34,38 @@ import org.specrunner.util.converter.IConverter;
  * @author Thiago Santos
  * 
  */
-public interface IElementHolder {
+public interface INodeHolder {
 
     /**
-     * Get the hold element.
+     * Get the hold node.
      * 
-     * @return The element.
+     * @return The node.
      */
-    Element getElement();
+    Node getNode();
 
     /**
-     * Set the hold element.
+     * Set the hold node.
      * 
-     * @param element
-     *            The element.
+     * @param node
+     *            The node.
      */
-    void setElement(Element element);
+    void setNode(Node node);
 
     /**
-     * Get local name.
+     * Get qualified name (include namespace).
      * 
      * @return The local name.
      */
-    String getLocalName();
+    String getQualifiedName();
+
+    /**
+     * Check a tag name.
+     * 
+     * @param name
+     *            The name.
+     * @return true, if element name match, false, otherwise.
+     */
+    boolean hasName(String name);
 
     /**
      * Check if an given attribute is present.
@@ -93,6 +102,32 @@ public interface IElementHolder {
      *            The attribute name.
      */
     void removeAttribute(String name);
+
+    /**
+     * Check if an attribute exists, and if it exists, if it contains the given
+     * value.
+     * 
+     * @param name
+     *            The attribute name.
+     * @param value
+     *            The attribute value.
+     * @return true, if attribute exists and if contains value, false,
+     *         otherwise.
+     */
+    boolean attributeContains(String name, String value);
+
+    /**
+     * Check if an attribute exists, and if it exists, if it is equal to the
+     * given value.
+     * 
+     * @param name
+     *            The attribute name.
+     * @param value
+     *            The attribute value.
+     * @return true, if attribute exists and the value matches, false,
+     *         otherwise.
+     */
+    boolean attributeEquals(String name, String value);
 
     /**
      * Get element value.
@@ -187,4 +222,5 @@ public interface IElementHolder {
      *             On plugin errors.
      */
     Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException;
+
 }

@@ -27,7 +27,7 @@ import org.specrunner.util.UtilString;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.converter.IConverterManager;
-import org.specrunner.util.xom.IElementHolder;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -178,7 +178,7 @@ public class PluginSentence extends AbstractPlugin {
      *             On errors.
      */
     protected void onlyText(IContext context, Node node, StringBuilder text, List<Object> args) throws PluginException {
-        IElementHolder holder = UtilNode.newElementAdapter(node);
+        INodeHolder holder = UtilNode.newNodeHolder(node);
         String tmp = String.valueOf(holder.getObject(context, true));
         Stack<StringBuilder> stack = new Stack<StringBuilder>();
         stack.push(new StringBuilder());
@@ -223,8 +223,8 @@ public class PluginSentence extends AbstractPlugin {
         for (int i = 0; i < node.getChildCount(); i++) {
             Node n = node.getChild(i);
             if (n instanceof Element) {
-                IElementHolder h = UtilNode.newElementAdapter(n);
-                if ("arg".equals(h.getLocalName()) || (h.hasAttribute("class") && h.getAttribute("class").contains("arg"))) {
+                INodeHolder h = UtilNode.newNodeHolder(n);
+                if (h.hasName("arg") || h.attributeContains("class", "arg")) {
                     args.add(h.getObject(context, true));
                 } else {
                     onlyArgs(context, n, text, args);

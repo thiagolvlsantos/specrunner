@@ -22,8 +22,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Options;
 import org.openqa.selenium.WebDriver.Window;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -55,10 +55,10 @@ public class PluginPosition extends AbstractPluginWindow {
         if (getX() == null && getY() == null) {
             throw new PluginException("PluginPosition assertion requires at least one of attributes 'x' and/or 'y'.");
         }
-        if (getX() != null && !getX().equals(p.getX())) {
+        if (getX() != null && p != null && !getX().equals(p.getX())) {
             throw new PluginException("X position does not match. Expected:" + getX() + ", received:" + (p != null ? p.getX() : "null"));
         }
-        if (getY() != null && !getY().equals(p.getY())) {
+        if (getY() != null && p != null && !getY().equals(p.getY())) {
             throw new PluginException("Y position does not match. Expected:" + getY() + ", received:" + (p != null ? p.getY() : "null"));
         }
         result.addResult(Success.INSTANCE, context.peek());

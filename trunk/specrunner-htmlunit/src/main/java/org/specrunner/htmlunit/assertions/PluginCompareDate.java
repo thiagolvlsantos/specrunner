@@ -17,15 +17,13 @@
  */
 package org.specrunner.htmlunit.assertions;
 
-import nu.xom.Element;
-
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -122,12 +120,11 @@ public class PluginCompareDate extends PluginCompare {
     /**
      * Check if the element stand for a date.
      * 
-     * @param element
+     * @param ca
      *            The element.
      * @return true, if is date comparison, false, otherwise.
      */
-    public static boolean isDate(Element element) {
-        CellAdapter ca = new CellAdapter(element);
-        return ca.hasAttribute("type") && ca.getAttribute("type").equals("date");
+    public static boolean isDate(INodeHolder ca) {
+        return ca.attributeEquals("type", "date");
     }
 }

@@ -313,7 +313,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             UtilParametrized.setProperties(context, this, n);
 
             // to replace specific settings back.
-            UtilParametrized.setProperties(context, this, table.getElement());
+            UtilParametrized.setProperties(context, this, (Element) table.getNode());
 
             // set type objects.
             setObjectInformation();
@@ -366,12 +366,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (i == 0) {
                 try {
                     loadFields(context, table.getRow(i), fields);
-                    result.addResult(Success.INSTANCE, context.newBlock(table.getRow(i).getElement(), this));
+                    result.addResult(Success.INSTANCE, context.newBlock(table.getRow(i).getNode(), this));
                 } catch (Exception e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getElement(), this), e);
+                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getNode(), this), e);
                     break;
                 }
             } else {
@@ -381,7 +381,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getElement(), this), e);
+                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getNode(), this), e);
                 }
             }
         }
@@ -816,7 +816,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             Object obj = instances.get(keysBefore.get(keyBefore));
             if (obj != null && isMapped()) {
-                result.addResult(Failure.INSTANCE, context.newBlock(row.getElement(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
                 for (CellAdapter cell : row.getCells()) {
                     String title = cell.hasAttribute("title") ? cell.getAttribute("title") : "|";
                     String old = title.substring(0, title.lastIndexOf('|'));
@@ -838,7 +838,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         UtilLog.LOG.debug("SAVE:" + keysBefore);
                         UtilLog.LOG.debug("INST:" + instances);
                     }
-                    result.addResult(Success.INSTANCE, context.newBlock(row.getElement(), this));
+                    result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), this));
                 }
             }
         }
@@ -897,7 +897,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("ON>" + f.getFullName());
                 }
-                String text = cell.getElement().getValue();
+                String text = cell.getValue();
                 Object value = text;
                 if (text.isEmpty()) {
                     value = UtilEvaluator.evaluate(f.def, context, true);
@@ -930,12 +930,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                result.addResult(Failure.INSTANCE, context.newBlock(cell.getElement(), this), e);
+                result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), this), e);
                 ok = false;
             }
         }
         if (!ok) {
-            result.addResult(Warning.INSTANCE, context.newBlock(row.getElement(), this), "Could not create instance.");
+            result.addResult(Warning.INSTANCE, context.newBlock(row.getNode(), this), "Could not create instance.");
         }
         return ok;
     }

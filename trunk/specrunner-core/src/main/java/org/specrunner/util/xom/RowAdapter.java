@@ -29,7 +29,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class RowAdapter extends ElementHolderImpl {
+public class RowAdapter extends NodeHolderImpl {
 
     /**
      * List of row cells.
@@ -72,7 +72,7 @@ public class RowAdapter extends ElementHolderImpl {
     public List<CellAdapter> getCells() {
         if (cells == null) {
             List<CellAdapter> result = new LinkedList<CellAdapter>();
-            Nodes nodes = getElement().query(getXPath());
+            Nodes nodes = getNode().query(getXPath());
             for (int i = 0; i < nodes.size(); i++) {
                 result.add(new CellAdapter((Element) nodes.get(i)));
             }

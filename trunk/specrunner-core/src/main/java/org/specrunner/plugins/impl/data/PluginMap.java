@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
@@ -113,7 +112,7 @@ public class PluginMap extends AbstractPluginTable {
         RowAdapter ths = tableAdapter.getRow(0);
         List<String> names = new LinkedList<String>();
         for (int i = 0; i < ths.getCellsCount(); i++) {
-            names.add(ths.getCell(i).getElement().getValue().trim());
+            names.add(String.valueOf(ths.getCell(i).getObject(context, true)).trim());
         }
         List<RowAdapter> trs = tableAdapter.getRows();
         for (int i = 1; i < tableAdapter.getRowCount(); i++) {
@@ -125,7 +124,7 @@ public class PluginMap extends AbstractPluginTable {
             Map<String, Node> line = new HashMap<String, Node>();
             data.add(line);
             for (int j = 0; j < tds.size(); j++) {
-                Element e = tds.get(j).getElement();
+                Node e = tds.get(j).getNode();
                 line.put(UtilEvaluator.START_DATA + j + UtilEvaluator.END, e);
                 line.put(UtilEvaluator.START_DATA + names.get(j) + UtilEvaluator.END, e);
             }
@@ -143,7 +142,7 @@ public class PluginMap extends AbstractPluginTable {
         };
         saveLocal(context, UtilEvaluator.asVariable(getName()), map);
         for (int i = 0; i < ths.getCellsCount(); i++) {
-            result.addResult(Success.INSTANCE, context.newBlock(ths.getCell(i).getElement(), this));
+            result.addResult(Success.INSTANCE, context.newBlock(ths.getCell(i).getNode(), this));
         }
     }
 }

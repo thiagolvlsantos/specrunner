@@ -140,7 +140,7 @@ public class PluginImport extends AbstractPluginValue {
             for (RowAdapter r : rows) {
                 for (CellAdapter c : r.getCells()) {
                     list.add(c.getValue());
-                    result.addResult(Success.INSTANCE, context.newBlock(c.getElement(), this));
+                    result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
                 }
             }
         } else {

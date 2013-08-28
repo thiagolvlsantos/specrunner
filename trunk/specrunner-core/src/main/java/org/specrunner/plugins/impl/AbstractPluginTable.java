@@ -17,7 +17,6 @@
  */
 package org.specrunner.plugins.impl;
 
-import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
 
@@ -64,9 +63,9 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
         if (!(element instanceof ParentNode)) {
             throw new PluginException("IPlugin " + getClass().getName() + " applicable only to parent elements.");
         } else {
-            table = UtilNode.newTableAdapter((Element) element);
+            table = UtilNode.newTableAdapter(element);
         }
-        if (!table.getElement().getQualifiedName().equalsIgnoreCase("table")) {
+        if (!table.getQualifiedName().equalsIgnoreCase("table")) {
             throw new PluginException("IPlugin " + getClass().getName() + " applicable only to 'table' elements.");
         }
         return table;

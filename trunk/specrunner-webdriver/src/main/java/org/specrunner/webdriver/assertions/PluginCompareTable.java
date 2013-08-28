@@ -37,6 +37,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
@@ -90,7 +91,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
             return false;
         }
-        TableAdapter tableExpected = UtilNode.newTableAdapter((Element) table);
+        TableAdapter tableExpected = UtilNode.newTableAdapter(table);
 
         List<WebElement> tablesReceived = element.findElements(By.xpath("descendant-or-self::table"));
         if (tablesReceived.isEmpty()) {
@@ -103,7 +104,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         Iterator<WebElement> iteCaptions = tableCaptions.iterator();
         for (CellAdapter expected : tableExpected.getCaptions()) {
             if (!iteCaptions.hasNext()) {
-                result.addResult(Failure.INSTANCE, context.newBlock(expected.getElement(), this), new PluginException("Caption cells missing in received table."));
+                result.addResult(Failure.INSTANCE, context.newBlock(expected.getNode(), this), new PluginException("Caption cells missing in received table."));
                 success = false;
                 continue;
             }
@@ -138,7 +139,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         for (RowAdapter rowsExpected : tableExpected.getRows()) {
             for (CellAdapter expected : rowsExpected.getCells()) {
                 if (!iteElements.hasNext()) {
-                    result.addResult(Failure.INSTANCE, context.newBlock(expected.getElement(), this), new PluginException("Cell missing in received table."));
+                    result.addResult(Failure.INSTANCE, context.newBlock(expected.getNode(), this), new PluginException("Cell missing in received table."));
                     success = false;
                     continue;
                 }
@@ -191,36 +192,34 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
      *             On comparison errors.
      */
     protected boolean compareTerminal(IPlugin plugin, IContext context, IResultSet result, WebDriver client, CellAdapter expected, WebElement received) throws PluginException {
-        Element element = expected.getElement();
-        if (isTable(element)) {
-            return compareTable(context, result, client, received, element);
-        } else if (PluginCompareDate.isDate(element)) {
-            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, element, true);
+        if (isTable(expected)) {
+            return compareTable(context, result, client, received, expected.getNode());
+        } else if (PluginCompareDate.isDate(expected)) {
+            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, (Element) expected.getNode(), true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.getText();
-            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(element, plugin), context, result, client);
-        } else if (PluginCompareNode.isNode(element)) {
-            PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, element, true);
-            return PluginCompareUtils.compareNode(compare, element, received, context.newBlock(element, plugin), context, result, client);
+            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, client);
+        } else if (PluginCompareNode.isNode(expected)) {
+            PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, (Element) expected.getNode(), true);
+            return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result, client);
         } else {
-            PluginCompare compare = UtilPlugin.create(context, PluginCompare.class, element, true);
+            PluginCompare compare = UtilPlugin.create(context, PluginCompare.class, (Element) expected.getNode(), true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.getText();
-            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(element, plugin), context, result, client);
+            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getNode(), plugin), context, result, client);
         }
     }
 
     /**
      * Return if a given element is a table.
      * 
-     * @param element
+     * @param holder
      *            The element type.
      * @return true, if table, false otherwise.
      */
-    public static boolean isTable(Element element) {
-        CellAdapter ca = new CellAdapter(element);
-        return ca.hasAttribute("type") && ca.getAttribute("type").equalsIgnoreCase("table");
+    public static boolean isTable(INodeHolder holder) {
+        return holder.attributeEquals("type", "table");
     }
 }

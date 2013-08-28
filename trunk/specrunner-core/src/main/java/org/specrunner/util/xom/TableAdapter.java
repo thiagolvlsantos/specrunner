@@ -29,7 +29,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class TableAdapter extends ElementHolderImpl {
+public class TableAdapter extends NodeHolderImpl {
 
     /**
      * List of caption elements.
@@ -67,7 +67,7 @@ public class TableAdapter extends ElementHolderImpl {
     public List<CellAdapter> getCaptions() {
         if (captions == null) {
             List<CellAdapter> result = new LinkedList<CellAdapter>();
-            Nodes nodes = getElement().query("child::caption");
+            Nodes nodes = getNode().query("child::caption");
             for (int i = 0; i < nodes.size(); i++) {
                 result.add(new CellAdapter((Element) nodes.get(i)));
             }
@@ -93,7 +93,7 @@ public class TableAdapter extends ElementHolderImpl {
     public List<RowAdapter> getRows() {
         if (rows == null) {
             List<RowAdapter> result = new LinkedList<RowAdapter>();
-            Nodes nodes = getElement().query(getXPath());
+            Nodes nodes = getNode().query(getXPath());
             for (int i = 0; i < nodes.size(); i++) {
                 result.add(new RowAdapter((Element) nodes.get(i)));
             }

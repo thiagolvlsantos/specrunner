@@ -17,8 +17,6 @@
  */
 package org.specrunner.webdriver.assertions;
 
-import nu.xom.Element;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.SpecRunnerServices;
@@ -27,7 +25,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 
 /**
  * Compare date fields.
@@ -118,12 +116,11 @@ public class PluginCompareDate extends PluginCompare {
     /**
      * Check if the element stand for a date.
      * 
-     * @param element
+     * @param holder
      *            The element.
      * @return true, if is date comparison, false, otherwise.
      */
-    public static boolean isDate(Element element) {
-        CellAdapter ca = new CellAdapter(element);
-        return ca.hasAttribute("type") && ca.getAttribute("type").equalsIgnoreCase("date");
+    public static boolean isDate(INodeHolder holder) {
+        return holder.attributeEquals("type", "date");
     }
 }

@@ -43,7 +43,7 @@ import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.comparer.impl.ComparatorNode;
-import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -218,12 +218,11 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     /**
      * Check if the element stand for a node.
      * 
-     * @param element
+     * @param holder
      *            The element.
      * @return true, if is node comparison, false, otherwise.
      */
-    public static boolean isNode(Element element) {
-        CellAdapter ca = new CellAdapter(element);
-        return ca.hasAttribute("type") && ca.getAttribute("type").equalsIgnoreCase("node");
+    public static boolean isNode(INodeHolder holder) {
+        return holder.attributeEquals("type", "node");
     }
 }
