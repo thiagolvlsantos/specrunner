@@ -63,6 +63,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-userguide-core-excel/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-core-excel-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-userguide-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>

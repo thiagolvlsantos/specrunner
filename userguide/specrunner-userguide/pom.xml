@@ -14,6 +14,7 @@
         <module>../specrunner-userguide-application</module>
         
         <module>../specrunner-userguide-core</module>
+        <module>../specrunner-userguide-core-excel</module>
 
         <module>../specrunner-userguide-sql</module>
 
