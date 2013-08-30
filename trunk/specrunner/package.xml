@@ -81,6 +81,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-core-excel/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-core-excel.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
