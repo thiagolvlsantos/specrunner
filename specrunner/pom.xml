@@ -38,6 +38,7 @@
 
     <modules>
         <module>../specrunner-core</module>
+        <module>../specrunner-core-excel</module>
         <!-- Basic database support -->
         <module>../specrunner-sql</module>
         <!-- Basic object mapping -->
