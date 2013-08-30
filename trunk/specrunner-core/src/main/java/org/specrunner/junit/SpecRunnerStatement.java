@@ -68,7 +68,7 @@ public class SpecRunnerStatement extends Statement {
         ExpectedMessages expectedMessages = getMessages();
         if (expectedMessages == null) {
             if (result.getStatus().isError()) {
-                throw new Exception(result.asString());
+                throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
             }
         } else {
             List<String> received = new LinkedList<String>();
