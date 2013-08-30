@@ -129,6 +129,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                     }
                 }
                 Element table = new Element("table");
+                table.addAttribute(new Attribute("border", "1"));
                 html.appendChild(table);
                 Element caption = readCaption(table, sheet);
                 Iterator<Row> ite = sheet.iterator();

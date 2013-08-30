@@ -41,7 +41,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactory;
+import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -296,7 +296,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading object mapping file>" + file);
             }
-            ISource source = SpecRunnerServices.get(ISourceFactory.class).newSource(file.toString());
+            ISource source = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(file.toString());
             Document doc = source.getDocument();
             Nodes ns = doc.query("//table");
             if (ns.size() == 0) {

@@ -15,28 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.source.impl;
+package org.specrunner.source;
+
+import org.specrunner.util.mapping.IMappingManager;
 
 /**
- * Default factory implementation.
+ * A source factory manager.
  * 
  * @author Thiago Santos
  * 
  */
-public class SourceFactoryGroupDefault extends SourceFactoryGroupImpl {
+public interface ISourceFactoryManager extends IMappingManager<ISourceFactory> {
 
     /**
-     * Default constructor.
+     * Get an instance of a source factory compatible with the given source.
+     * 
+     * @param source
+     *            The specification source object.
+     * @return A source factory.
+     * @throws SourceException
+     *             If a reader for source cannot be found.
      */
-    public SourceFactoryGroupDefault() {
-        add();
-    }
+    ISource newSource(Object source) throws SourceException;
 
-    /**
-     * Add predefined factories.
-     */
-    protected void add() {
-        add(new SourceFactoryHtml());
-        add(new SourceFactoryExcel());
-    }
 }

@@ -24,7 +24,7 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactory;
+import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.resource.IResource;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
@@ -48,7 +48,7 @@ public class SourceDumperResources extends AbstractSourceDumperFile {
                 throw new SourceDumperException("Output file could not be created.");
             }
             IResourceManager manager = source.getManager();
-            ISource target = SpecRunnerServices.get(ISourceFactory.class).newSource(outputFile.getAbsolutePath());
+            ISource target = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(outputFile.getAbsolutePath());
             for (IResource r : manager) {
                 r.writeTo(target);
             }

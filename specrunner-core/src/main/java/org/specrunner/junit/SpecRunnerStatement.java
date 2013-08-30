@@ -3,9 +3,9 @@ package org.specrunner.junit;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
@@ -16,6 +16,7 @@ import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.plugins.impl.elements.PluginHtml;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
+import org.specrunner.source.ISourceFactoryManager;
 
 /**
  * Generic statement for SpecRunner Junit extensions.
@@ -24,10 +25,6 @@ import org.specrunner.result.IResultSet;
  * 
  */
 public class SpecRunnerStatement extends Statement {
-    /**
-     * Allowed extensions of file.
-     */
-    public static final String EXTENSIONS = System.getProperty("sr.extensions", ".xhtml,.html,.htm");
     /**
      * Output path.
      */
@@ -63,7 +60,7 @@ public class SpecRunnerStatement extends Statement {
         File input = getFile(clazz);
         File output = getOutput(clazz, input);
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, output.getName());
+        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
         IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg);
         ExpectedMessages expectedMessages = getMessages();
         if (expectedMessages == null) {
@@ -144,14 +141,14 @@ public class SpecRunnerStatement extends Statement {
         String str = location.toString();
         str = str.replace("file:\\\\", "").replace("file:///", "").replace("file:\\", "").replace("file:/", "");
         String prefix = str + clazz.getPackage().getName().replace(".", File.separator) + File.separator + clazz.getSimpleName();
-        String[] extensions = EXTENSIONS.split(",");
+        Set<String> extensions = SpecRunnerServices.get(ISourceFactoryManager.class).keySet();
         for (String s : extensions) {
-            File tmp = new File(prefix + s);
+            File tmp = new File(prefix + "." + s);
             if (tmp.exists()) {
                 return tmp;
             }
         }
-        throw new RuntimeException("File with one of extensions '" + Arrays.toString(extensions) + "' to " + prefix + " not found!");
+        throw new RuntimeException("File with one of extensions '" + extensions + "' to " + prefix + " not found!");
     }
 
     /**
@@ -165,5 +162,21 @@ public class SpecRunnerStatement extends Statement {
      */
     public File getOutput(Class<?> clazz, File input) {
         return new File(new File(PATH + clazz.getPackage().getName().replace('.', File.separatorChar)).getAbsoluteFile(), input.getName());
+    }
+
+    /**
+     * Get the output name adjusted.
+     * 
+     * @param name
+     *            The original name.
+     * @return The adjusted name. ie. Excel (.xls,.xlsx) test files are
+     *         transformed to HTML (.html).
+     */
+    public String getOutputName(String name) {
+        if (name != null && name.contains(".") && !name.endsWith(".html")) {
+            return name.substring(0, name.lastIndexOf('.')) + ".html";
+        } else {
+            return name;
+        }
     }
 }

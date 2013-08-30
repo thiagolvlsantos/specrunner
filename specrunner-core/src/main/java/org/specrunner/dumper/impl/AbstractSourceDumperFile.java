@@ -37,7 +37,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.ResultException;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactory;
+import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.resource.IResource;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
@@ -379,7 +379,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
         File res = new File(output.getAbsoluteFile() + "_res");
         try {
             clean(res);
-            ISource ref = SpecRunnerServices.get(ISourceFactory.class).newSource(output.getAbsolutePath());
+            ISource ref = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(output.getAbsolutePath());
             IResourceManager manager = ref.getManager();
             manager.addDefaultCss();
             manager.addDefaultJs();

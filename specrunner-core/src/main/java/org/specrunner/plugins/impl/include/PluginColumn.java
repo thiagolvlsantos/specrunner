@@ -28,6 +28,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
+import org.specrunner.plugins.impl.PluginAssertion;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.impl.elements.PluginHtml;
 import org.specrunner.plugins.impl.var.PluginBean;
@@ -128,7 +129,7 @@ public class PluginColumn extends AbstractPluginTable {
                         }
                     }
                     try {
-                        UtilPlugin.compare(c.getNode(), result, c.getComparator(SpecRunnerServices.get(IComparatorManager.class).get("string")), value, received);
+                        UtilPlugin.compare(c.getNode(), PluginAssertion.INSTANCE, result, c.getComparator(SpecRunnerServices.get(IComparatorManager.class).get("string")), value, received);
                     } catch (ComparatorException e) {
                         result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not find comparator in " + c.toString() + ".", e));
                     }
