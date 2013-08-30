@@ -65,7 +65,7 @@ public final class SpecRunnerJUnit {
             IResultSet result = SpecRunnerServices.getSpecRunner().run(input, cfg);
             File dir = (File) SpecRunnerServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
             String file = (String) SpecRunnerServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
-            Assert.assertTrue("OUTPUT: " + new File(dir, file).getAbsolutePath() + "\n" + result.asString(), !result.getStatus().isError());
+            Assert.assertTrue((dir != null && file != null ? "OUTPUT: " + new File(dir, file).getAbsolutePath() + "\n" : "") + result.asString(), !result.getStatus().isError());
         } catch (Exception e) {
             e.printStackTrace();
             if (UtilLog.LOG.isDebugEnabled()) {

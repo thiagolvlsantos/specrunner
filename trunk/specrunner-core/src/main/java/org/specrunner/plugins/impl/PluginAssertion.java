@@ -15,15 +15,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.source;
+package org.specrunner.plugins.impl;
 
-import org.specrunner.util.composite.IComposite;
+import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.type.Assertion;
 
 /**
- * A group of source factories.
+ * Plugin of type assertion.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceFactoryGroup extends ISourceFactory, IComposite<ISourceFactoryGroup, ISourceFactory> {
+public class PluginAssertion extends AbstractPlugin {
+
+    /**
+     * Reusable instance for statistics purposes.
+     */
+    public static final PluginAssertion INSTANCE = new PluginAssertion();
+
+    @Override
+    public ActionType getActionType() {
+        return Assertion.INSTANCE;
+    }
 }

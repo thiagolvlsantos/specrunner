@@ -37,6 +37,7 @@ import org.specrunner.util.cache.ICacheFactory;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public abstract class AbstractSourceFactory extends EncodedImpl implements ISourceFactory {
 
     /**
@@ -45,9 +46,14 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
     private static ThreadLocal<ICache<String, Document>> cache = new ThreadLocal<ICache<String, Document>>() {
         @Override
         protected ICache<String, Document> initialValue() {
-            return SpecRunnerServices.get(ICacheFactory.class).newCache(SourceFactoryHtml.class.getName());
+            return SpecRunnerServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName());
         };
     };
+
+    @Override
+    public void initialize() {
+        // empty
+    }
 
     @Override
     public ISource newSource(Object source) throws SourceException {

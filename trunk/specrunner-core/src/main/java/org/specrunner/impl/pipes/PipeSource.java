@@ -26,7 +26,7 @@ import org.specrunner.pipeline.InvalidTypeException;
 import org.specrunner.pipeline.NotFoundException;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactory;
+import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.source.resource.ResourceException;
@@ -71,7 +71,7 @@ public class PipeSource implements IPipe {
      *             On source creation errors.
      */
     protected ISource createSource(String input) throws SourceException {
-        return SpecRunnerServices.get(ISourceFactory.class).newSource(input);
+        return SpecRunnerServices.get(ISourceFactoryManager.class).newSource(input);
     }
 
     /**

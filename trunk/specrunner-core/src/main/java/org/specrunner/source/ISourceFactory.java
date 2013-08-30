@@ -17,22 +17,15 @@
  */
 package org.specrunner.source;
 
+import org.specrunner.util.mapping.IResetable;
+
 /**
  * A factory of sources.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceFactory {
-
-    /**
-     * Check if this factory accept a given source.
-     * 
-     * @param source
-     *            The source.
-     * @return true, if accept, false, otherwise.
-     */
-    boolean accept(Object source);
+public interface ISourceFactory extends IEncoded, IResetable {
 
     /**
      * Creates a source from a String.

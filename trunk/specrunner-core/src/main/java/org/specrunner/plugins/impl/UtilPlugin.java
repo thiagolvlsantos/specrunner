@@ -229,7 +229,7 @@ public final class UtilPlugin {
      *             On plugin errors.
      */
     public static void compare(Node node, IResultSet result, Object expected, Object received) throws PluginException {
-        compare(node, result, SpecRunnerServices.get(IComparatorManager.class).getDefault(), expected, received);
+        compare(node, null, result, SpecRunnerServices.get(IComparatorManager.class).getDefault(), expected, received);
     }
 
     /**
@@ -237,6 +237,8 @@ public final class UtilPlugin {
      * 
      * @param node
      *            Node to be annotated.
+     * @param plugin
+     *            The plugin type.
      * @param result
      *            The result set.
      * @param comparator
@@ -248,12 +250,12 @@ public final class UtilPlugin {
      * @throws PluginException
      *             On plugin errors.
      */
-    public static void compare(Node node, IResultSet result, IComparator comparator, Object expected, Object received) throws PluginException {
+    public static void compare(Node node, IPlugin plugin, IResultSet result, IComparator comparator, Object expected, Object received) throws PluginException {
         if (comparator.match(expected, received)) {
-            result.addResult(Success.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null));
+            result.addResult(Success.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin));
         } else {
             IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expected), String.valueOf(received));
-            result.addResult(Failure.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, null), new DefaultAlignmentException(sa));
+            result.addResult(Failure.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin), new DefaultAlignmentException(sa));
         }
     }
 }

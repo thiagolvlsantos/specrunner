@@ -48,7 +48,7 @@ import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactory;
+import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.transformer.ITransformer;
@@ -258,7 +258,7 @@ public class PluginInclude extends AbstractPlugin {
             }
             ISource newSource = null;
             try {
-                newSource = SpecRunnerServices.get(ISourceFactory.class).newSource(newHref.toString());
+                newSource = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(newHref.toString());
             } catch (SourceException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

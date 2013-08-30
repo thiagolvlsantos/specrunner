@@ -55,13 +55,8 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class SourceFactoryHtml extends AbstractSourceFactory {
-
-    @Override
-    public boolean accept(Object source) {
-        String tmp = source != null ? String.valueOf(source).toLowerCase().trim() : "";
-        return tmp.endsWith(".xhtml") || tmp.endsWith(".html") || tmp.endsWith(".htm") || tmp.endsWith(".xml");
-    };
 
     @Override
     protected Document fromTarget(URI uri, String target, String encoding) throws SourceException {

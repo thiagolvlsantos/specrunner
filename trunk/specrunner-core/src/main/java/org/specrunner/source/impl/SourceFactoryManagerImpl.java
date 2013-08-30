@@ -17,39 +17,50 @@
  */
 package org.specrunner.source.impl;
 
+import java.util.Set;
+
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
-import org.specrunner.source.ISourceFactoryGroup;
+import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
-import org.specrunner.util.composite.CompositeImpl;
+import org.specrunner.util.mapping.impl.MappingManagerImpl;
 
 /**
- * Default source factory group implementation.
+ * Default implementation for a source manager. Get the source factory based on
+ * file extension type.
  * 
  * @author Thiago Santos
  * 
  */
-public class SourceFactoryGroupImpl extends CompositeImpl<ISourceFactoryGroup, ISourceFactory> implements ISourceFactoryGroup {
+@SuppressWarnings("serial")
+public class SourceFactoryManagerImpl extends MappingManagerImpl<ISourceFactory> implements ISourceFactoryManager {
+
+    /**
+     * Default constructor.
+     */
+    public SourceFactoryManagerImpl() {
+        super("sources.properties");
+    }
 
     @Override
-    public boolean accept(Object source) {
-        boolean result = false;
-        for (ISourceFactory sf : getChildren()) {
-            if (sf.accept(source)) {
-                result = true;
-                break;
-            }
-        }
-        return result;
+    public Set<String> keySet() {
+        initialize();
+        return super.keySet();
     }
 
     @Override
     public ISource newSource(Object source) throws SourceException {
-        for (ISourceFactory sf : getChildren()) {
-            if (sf.accept(source)) {
-                return sf.newSource(source);
+        initialize();
+        if (source != null) {
+            String name = String.valueOf(source);
+            int pos = name.lastIndexOf('.');
+            if (pos >= 0) {
+                ISourceFactory sf = get(name.substring(pos + 1));
+                if (sf != null) {
+                    return sf.newSource(source);
+                }
             }
         }
-        return null;
+        throw new SourceException("Source reader for '" + source + "' not found.");
     }
 }

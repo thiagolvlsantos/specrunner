@@ -29,6 +29,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
+import org.specrunner.plugins.impl.PluginAssertion;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.impl.include.PluginInclude;
 import org.specrunner.plugins.type.Assertion;
@@ -114,7 +115,7 @@ public class PluginCompareTree extends AbstractPlugin {
                 comparator = SpecRunnerServices.get(IComparatorManager.class).getDefault();
             }
             try {
-                UtilPlugin.compare(expected, result, comparator, objExpected, objReceived);
+                UtilPlugin.compare(expected, PluginAssertion.INSTANCE, result, comparator, objExpected, objReceived);
             } catch (PluginException e) {
                 result.addResult(Failure.INSTANCE, context.newBlock(expected, this), e);
             }
