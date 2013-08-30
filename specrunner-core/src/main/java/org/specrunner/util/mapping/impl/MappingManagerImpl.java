@@ -1,10 +1,7 @@
 package org.specrunner.util.mapping.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 // CHECKSTYLE: OFF
 import java.util.Map.Entry;
 //CHECKSTYLE: ON
@@ -56,18 +53,11 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("properties=" + p);
                 }
-                List<Entry<Object, Object>> sorted = new ArrayList<Entry<Object, Object>>(p.entrySet());
-                // sorting by size, makes alias free mapping be performed first.
-                Collections.sort(sorted, new Comparator<Entry<Object, Object>>() {
-                    @Override
-                    public int compare(java.util.Map.Entry<Object, Object> o1, java.util.Map.Entry<Object, Object> o2) {
-                        return String.valueOf(o2.getValue()).length() - String.valueOf(o1.getValue()).length();
-                    }
-                });
-                for (Entry<Object, Object> e : sorted) {
+                Map<String, T> instances = new HashMap<String, T>();
+                for (Entry<Object, Object> e : p.entrySet()) {
                     String key = String.valueOf(e.getKey());
                     String property = p.getProperty(key);
-                    T instance = super.get(property);
+                    T instance = instances.get(property);
                     if (instance == null) {
                         @SuppressWarnings("unchecked")
                         Class<? extends T> c = (Class<? extends T>) Class.forName(property);
@@ -81,6 +71,7 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
                         }
                     }
                     put(key, instance);
+                    instances.put(property, instance);
                 }
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
