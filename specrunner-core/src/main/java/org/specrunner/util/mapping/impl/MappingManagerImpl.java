@@ -1,6 +1,10 @@
 package org.specrunner.util.mapping.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 // CHECKSTYLE: OFF
 import java.util.Map.Entry;
 //CHECKSTYLE: ON
@@ -52,14 +56,31 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("properties=" + p);
                 }
-                for (Entry<Object, Object> e : p.entrySet()) {
-                    String key = String.valueOf(e.getKey());
-                    @SuppressWarnings("unchecked")
-                    Class<? extends T> c = (Class<? extends T>) Class.forName(p.getProperty(key));
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("put(" + key + "," + c + ")");
+                List<Entry<Object, Object>> sorted = new ArrayList<Entry<Object, Object>>(p.entrySet());
+                // sorting by size, makes alias free mapping be performed first.
+                Collections.sort(sorted, new Comparator<Entry<Object, Object>>() {
+                    @Override
+                    public int compare(java.util.Map.Entry<Object, Object> o1, java.util.Map.Entry<Object, Object> o2) {
+                        return String.valueOf(o2.getValue()).length() - String.valueOf(o1.getValue()).length();
                     }
-                    put(key, c.newInstance());
+                });
+                for (Entry<Object, Object> e : sorted) {
+                    String key = String.valueOf(e.getKey());
+                    String property = p.getProperty(key);
+                    T instance = super.get(property);
+                    if (instance == null) {
+                        @SuppressWarnings("unchecked")
+                        Class<? extends T> c = (Class<? extends T>) Class.forName(property);
+                        instance = c.newInstance();
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("put(" + key + "," + instance + "[of type " + c + "])");
+                        }
+                    } else {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("reuse.put(" + key + "," + instance + ")");
+                        }
+                    }
+                    put(key, instance);
                 }
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
