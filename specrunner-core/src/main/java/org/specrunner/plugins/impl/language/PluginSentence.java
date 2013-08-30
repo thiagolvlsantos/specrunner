@@ -1,6 +1,22 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2013  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.plugins.impl.language;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -11,7 +27,6 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Text;
 
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.plugins.ActionType;
@@ -24,9 +39,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.converter.IConverterManager;
+import org.specrunner.util.converter.UtilConverter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
@@ -111,8 +124,8 @@ public class PluginSentence extends AbstractPlugin {
         } catch (PluginException e) {
             error = e;
         }
+        ExpectedMessage em = m.getAnnotation(ExpectedMessage.class);
         if (error != null) {
-            ExpectedMessage em = m.getAnnotation(ExpectedMessage.class);
             if (em == null) {
                 throw new PluginException(error);
             }
@@ -123,6 +136,10 @@ public class PluginSentence extends AbstractPlugin {
                 return;
             }
             throw new PluginException("Unexpected message received: " + error.getMessage(), error);
+        } else {
+            if (em != null) {
+                throw new PluginException("Expected message not received. Expected:" + em.message());
+            }
         }
     }
 
@@ -273,73 +290,7 @@ public class PluginSentence extends AbstractPlugin {
      *             On preparation errors.
      */
     protected void prepareArgumentsBefore(IContext context, Method method, List<Object> arguments) throws PluginException {
-        Class<?>[] types = method.getParameterTypes();
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
-        for (int i = 0; i < types.length; i++) {
-            Class<?> type = types[i];
-            Object arg = arguments.get(i);
-            if (!type.isInstance(arg)) {
-                IConverter converter = null;
-                Object[] converterArguments = null;
-                Converter annotation = getConverter(parameterAnnotations[i]);
-                if (annotation != null) {
-                    String name = annotation.name();
-                    if (!name.isEmpty()) {
-                        converter = cm.get(name);
-                        if (converter == null) {
-                            throw new PluginException("Converter named '" + name + "' not found.");
-                        }
-                    } else {
-                        try {
-                            converter = annotation.type().newInstance();
-                        } catch (InstantiationException e) {
-                            throw new PluginException(e);
-                        } catch (IllegalAccessException e) {
-                            throw new PluginException(e);
-                        }
-                    }
-                    Class<?> resultType = annotation.resultType();
-                    if (resultType != Object.class) {
-                        converterArguments = new Object[] { resultType };
-                    } else {
-                        converterArguments = annotation.args();
-                    }
-                } else {
-                    converter = cm.get(type.getSimpleName().toLowerCase());
-                    converterArguments = new Object[] {};
-                }
-                if (converter != null) {
-                    try {
-                        Object tmp = converter.convert(arg, converterArguments);
-                        if (!type.isInstance(tmp)) {
-                            throw new PluginException("Invalid parameter value for argument[" + i + "] in " + method + ". Expected " + type + ", received: " + tmp + " of type " + tmp.getClass());
-                        }
-                        arguments.remove(i);
-                        arguments.add(i, tmp);
-                    } catch (ConverterException e) {
-                        throw new PluginException(e);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Extract converter information from parameter annotations.
-     * 
-     * @param annots
-     *            The annotations.
-     * @return The converter annotation if exists, null, otherwise.
-     */
-    protected Converter getConverter(Annotation[] annots) {
-        Converter conv = null;
-        for (int j = 0; j < annots.length; j++) {
-            if (annots[j] instanceof Converter) {
-                conv = (Converter) annots[j];
-            }
-        }
-        return conv;
+        UtilConverter.prepareMethodArguments(method, arguments);
     }
 
     /**

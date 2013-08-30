@@ -14,7 +14,7 @@ td {
     Essa tabela sem caption usa diretamente a classe de teste como referência.
     <table class="column">
         <tr>
-            <th converter="int">A</th>
+            <th>A</th>
             <th>B</th>
             <th feature="action">Ação</th>
             <th feature="result" >Resultado?</th>
@@ -82,9 +82,9 @@ td {
     <div bean="new example.slim.pacote1.ClasseQualquer()"> 
         <table class="column">
             <tr>
-                <th converter="string">A</th>
-                <th converter="string">B</th>
-                <th feature="c" converter="string">Resultado?</th>
+                <th>A</th>
+                <th>B</th>
+                <th feature="c">Resultado?</th>
             </tr>
             <tr>
                 <td>1</td>
@@ -102,7 +102,7 @@ td {
      Essa tabela cria um bean usando os pacotes importados anteriormente (<imports>example.slim.pacote1</imports>). 
         <table class="column" bean="ClasseQualquer">
             <tr>
-                <th converter="string">A</th>
+                <th>A</th>
                 <th>B</th>
                 <th feature="c" >Resultado?</th>
             </tr>
@@ -125,7 +125,7 @@ td {
         <table class="column">
             <caption>classe quálQuer?</caption>
             <tr>
-                <th converter="string">@A...</th>
+                <th>@A...</th>
                 <th>B</th>
                 <th feature="c" >Resultado?</th>
                 <th>Result?</th>

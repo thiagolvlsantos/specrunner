@@ -1,7 +1,7 @@
 package th.example;
 
 import org.specrunner.junit.ExpectedMessage;
-import org.specrunner.plugins.impl.language.Converter;
+import org.specrunner.util.converter.Converter;
 
 public class ObjetoAlvo {
 

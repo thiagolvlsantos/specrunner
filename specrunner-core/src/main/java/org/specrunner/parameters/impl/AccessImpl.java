@@ -24,6 +24,8 @@ import java.lang.reflect.Method;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.specrunner.parameters.IAccess;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.util.converter.UtilConverter;
 
 /**
  * Default implementation of <code>IAccess</code>.
@@ -82,12 +84,82 @@ public class AccessImpl implements IAccess {
             return;
         }
         if (field != null) {
-            field.set(target, args[0]);
+            field.set(target, prepare(args[0]));
         } else if (property != null) {
-            BeanUtils.setProperty(target, name, args[0]);
+            BeanUtils.setProperty(target, name, prepare(args[0]));
         } else if (method != null) {
-            method.invoke(target, args);
+            method.invoke(target, prepare(args));
         }
+    }
+
+    /**
+     * Prepare an array of arguments. In this caso the only changed value is the
+     * first one.
+     * 
+     * @param args
+     *            The arguments.
+     * @return The array modified.
+     * @throws PluginException
+     *             On preparation errors.
+     */
+    private Object[] prepare(Object[] args) throws PluginException {
+        if (args == null) {
+            return null;
+        }
+        if (args.length == 0) {
+            return args;
+        }
+        args[0] = prepare(args[0]);
+        return args;
+    }
+
+    /**
+     * Prepare argument for set.
+     * 
+     * @param object
+     *            The argument object.
+     * @return The most appropriate value for the access type.
+     * @throws PluginException
+     *             On preparation errors.
+     */
+    private Object prepare(Object object) throws PluginException {
+        if (object == null) {
+            return null;
+        }
+        Class<?> type = null;
+        Annotation[] annotations = null;
+        if (field != null) {
+            type = field.getType();
+            annotations = field.getAnnotations();
+        }
+        if (property != null) {
+            type = property.getPropertyType();
+            annotations = getMethodAnnotations(property.getWriteMethod());
+        }
+        if (method != null) {
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            type = parameterTypes.length > 0 ? parameterTypes[0] : null;
+            annotations = getMethodAnnotations(method);
+        }
+        if (type != null && !type.isInstance(object)) {
+            object = UtilConverter.prepareArgument(toString(), annotations, type, object);
+        }
+        return object;
+    }
+
+    /**
+     * Get annotation for methods.
+     * 
+     * @param method
+     *            The write method.
+     * @return The annotations.
+     */
+    protected Annotation[] getMethodAnnotations(Method method) {
+        Annotation[] annotations = method.getAnnotations();
+        if (UtilConverter.getConverter(annotations) == null) {
+            annotations = method.getParameterAnnotations()[0];
+        }
+        return annotations;
     }
 
     @Override

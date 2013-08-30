@@ -60,6 +60,11 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
     public static final String XLSX = ".xlsx";
 
     /**
+     * Extension of 97-2003 Excel files.
+     */
+    public static final String XLS = ".xls";
+
+    /**
      * Prefix to be used for specify attributes in cell comments expected to be
      * added to the table definition.
      */
@@ -80,7 +85,7 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
     @Override
     public boolean accept(Object source) {
         String tmp = source != null ? String.valueOf(source).toLowerCase().trim() : "";
-        return tmp.endsWith(XLSX) || tmp.endsWith(".xls");
+        return tmp.endsWith(XLSX) || tmp.endsWith(XLS);
     };
 
     /**
