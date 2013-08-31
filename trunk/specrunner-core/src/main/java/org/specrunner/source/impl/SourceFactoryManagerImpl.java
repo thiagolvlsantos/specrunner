@@ -39,7 +39,7 @@ public class SourceFactoryManagerImpl extends MappingManagerImpl<ISourceFactory>
      * Default constructor.
      */
     public SourceFactoryManagerImpl() {
-        super("sources.properties");
+        super("sr_sources.properties");
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SourceFactoryManagerImpl extends MappingManagerImpl<ISourceFactory>
             String name = String.valueOf(source);
             int pos = name.lastIndexOf('.');
             if (pos >= 0) {
-                ISourceFactory sf = get(name.substring(pos + 1));
+                ISourceFactory sf = get(name.substring(pos + 1).toLowerCase().trim());
                 if (sf != null) {
                     return sf.newSource(source);
                 }

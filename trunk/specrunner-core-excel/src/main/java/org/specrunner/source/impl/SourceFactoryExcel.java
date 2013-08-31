@@ -52,6 +52,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class SourceFactoryExcel extends AbstractSourceFactory {
 
     /**

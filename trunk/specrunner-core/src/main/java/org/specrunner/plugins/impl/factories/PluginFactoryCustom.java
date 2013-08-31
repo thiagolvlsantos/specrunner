@@ -53,7 +53,7 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_custom.properties'.
      */
     public PluginFactoryCustom() {
-        super("plugin_custom.properties", KIND);
+        super("sr_plugins_custom.properties", KIND);
     }
 
     @Override

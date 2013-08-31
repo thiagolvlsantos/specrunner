@@ -2,9 +2,7 @@ package org.specrunner.util.mapping.impl;
 
 import java.util.HashMap;
 import java.util.Map;
-// CHECKSTYLE: OFF
 import java.util.Map.Entry;
-//CHECKSTYLE: ON
 import java.util.Properties;
 
 import org.specrunner.SpecRunnerServices;

@@ -34,6 +34,6 @@ public class TransformerManagerImpl extends MappingManagerImpl<ITransformer> imp
      * Default constructor.
      */
     public TransformerManagerImpl() {
-        super("plugin_transformer.properties");
+        super("sr_transformers.properties");
     }
 }
