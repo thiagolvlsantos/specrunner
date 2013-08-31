@@ -21,15 +21,12 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.Unsilent;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.xom.INodeHolder;
@@ -112,8 +109,7 @@ public class PluginEquals extends AbstractPluginDual {
         boolean result = comparator.match(expected, received);
         if (!result) {
             if (expected instanceof String && received instanceof String) {
-                IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected.toString(), received.toString());
-                error = new DefaultAlignmentException(al);
+                error = new DefaultAlignmentException(expected.toString(), received.toString());
             } else {
                 error = new PluginException("Values are different. Expected: '" + expected + "', Received: '" + received + "'.");
             }

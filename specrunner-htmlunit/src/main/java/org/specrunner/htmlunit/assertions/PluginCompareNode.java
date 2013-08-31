@@ -37,8 +37,6 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
@@ -201,8 +199,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
                 if (!comparatorInstance.match(expected, received)) {
-                    IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(UtilNode.getChildrenAsString(expected), UtilNode.getChildrenAsString(received));
-                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(sa));
+                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(UtilNode.getChildrenAsString(expected), UtilNode.getChildrenAsString(received)));
                 } else {
                     result.addResult(Success.INSTANCE, context.peek());
                 }

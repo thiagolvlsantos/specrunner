@@ -23,8 +23,6 @@ import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
@@ -95,8 +93,7 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
             if (comparator.match(currentInstance, currentBase)) {
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this));
             } else {
-                IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(currentInstance), String.valueOf(currentBase));
-                result.addResult(Failure.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this), new DefaultAlignmentException(aligner));
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this), new DefaultAlignmentException(String.valueOf(currentInstance), String.valueOf(currentBase)));
             }
         }
     }

@@ -26,10 +26,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
 
@@ -230,8 +227,7 @@ public class LineReport implements IPresentation {
                     for (Column c : tableReport.getTable().getColumns()) {
                         Integer index = columnsToIndexes.get(c.getName());
                         if (index != null) {
-                            IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expectedObjects.get(i)), String.valueOf(receivedObjects.get(i)));
-                            DefaultAlignmentException def = new DefaultAlignmentException(aligner);
+                            DefaultAlignmentException def = new DefaultAlignmentException(String.valueOf(expectedObjects.get(i)), String.valueOf(receivedObjects.get(i)));
                             sb.append(def.asString() + "|");
                         } else {
                             sb.append("|");
@@ -277,8 +273,7 @@ public class LineReport implements IPresentation {
                             td.appendChild(String.valueOf(receivedObjects.get(index)));
                         } else {
                             td.addAttribute(new Attribute("class", td.getAttributeValue("class") + " " + type.getStyle() + "_cell"));
-                            IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(expectedObjects.get(index)), String.valueOf(receivedObjects.get(index)));
-                            DefaultAlignmentException def = new DefaultAlignmentException(aligner);
+                            DefaultAlignmentException def = new DefaultAlignmentException(String.valueOf(expectedObjects.get(index)), String.valueOf(receivedObjects.get(index)));
                             td.appendChild(def.asNode());
                         }
                     } else {
