@@ -47,7 +47,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
      * Creates a factory loading file 'plugin_element.properties'.
      */
     public PluginFactoryElement() {
-        super("plugin_element.properties", KIND);
+        super("sr_plugins_element.properties", KIND);
     }
 
     @Override

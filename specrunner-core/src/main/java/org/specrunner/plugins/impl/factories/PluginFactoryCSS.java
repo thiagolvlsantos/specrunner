@@ -54,7 +54,7 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_css.properties'.
      */
     public PluginFactoryCSS() {
-        super("plugin_css.properties", KIND);
+        super("sr_plugins_css.properties", KIND);
     }
 
     @Override

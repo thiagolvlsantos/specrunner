@@ -41,10 +41,13 @@ public @interface Converter {
      */
     String name() default "";
 
+    // CHECKSTYLE:OFF
     /**
      * Converter arguments.
      */
     String[] args() default {};
+
+    // CHECKSTYLE:ON
 
     /**
      * ExpectedMessages messages should be sorted as specified? The sort flag.

@@ -34,6 +34,6 @@ public class ConverterManagerImpl extends MappingManagerImpl<IConverter> impleme
      * Default constructor.
      */
     public ConverterManagerImpl() {
-        super("plugin_converter.properties");
+        super("sr_converters.properties");
     }
 }

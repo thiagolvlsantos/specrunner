@@ -35,7 +35,7 @@ public class ComparatorManagerImpl extends MappingManagerImpl<IComparator> imple
      * Default constructor.
      */
     public ComparatorManagerImpl() {
-        super("plugin_comparator.properties");
+        super("sr_comparators.properties");
     }
 
     @Override

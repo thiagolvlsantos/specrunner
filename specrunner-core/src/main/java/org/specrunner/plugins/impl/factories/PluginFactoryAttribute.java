@@ -53,7 +53,7 @@ public class PluginFactoryAttribute extends PluginFactoryImpl {
      * Creates the factory loading file 'plugin_css.properties'.
      */
     public PluginFactoryAttribute() {
-        super("plugin_attribute.properties", KIND);
+        super("sr_plugins_attribute.properties", KIND);
     }
 
     @Override
