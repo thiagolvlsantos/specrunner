@@ -23,16 +23,13 @@ import nu.xom.Nodes;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
@@ -122,8 +119,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
         } else {
             for (int i = 0; i < expecteds.length; i++) {
                 if (!expecteds[i].equals(receiveds[i])) {
-                    IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expecteds[i], receiveds[i]);
-                    result.addResult(Failure.INSTANCE, context.newBlock(nodes.get(i), this), new DefaultAlignmentException(al) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(nodes.get(i), this), new DefaultAlignmentException(expecteds[i], receiveds[i]) {
                         @Override
                         public String getMessage() {
                             return "Selection options are diferent (" + super.getMessage() + ").";

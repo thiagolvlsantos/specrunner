@@ -30,7 +30,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
@@ -39,8 +38,6 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.webdriver.util.WritablePage;
 
@@ -108,11 +105,10 @@ public final class PluginCompareUtils {
      */
     protected static void addError(String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         try {
-            IStringAligner al = SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received);
             if (client != null) {
-                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(al), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), new WritablePage(client));
             } else {
-                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(al));
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received));
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -249,8 +245,7 @@ public final class PluginCompareUtils {
         String strReceived = UtilString.normalize(received.getText());
         if (!strExpected.equals(strReceived)) {
             errors++;
-            IStringAligner sa = SpecRunnerServices.get(IStringAlignerFactory.class).align(strExpected, strReceived);
-            result.addResult(Failure.INSTANCE, context.newBlock(expected, compare), new DefaultAlignmentException(sa));
+            result.addResult(Failure.INSTANCE, context.newBlock(expected, compare), new DefaultAlignmentException(strExpected, strReceived));
         }
         return errors;
     }

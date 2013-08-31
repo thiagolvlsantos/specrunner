@@ -21,8 +21,10 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.util.aligner.AlignmentException;
 import org.specrunner.util.aligner.IStringAligner;
+import org.specrunner.util.aligner.IStringAlignerFactory;
 
 /**
  * A alignment exception. Useful exception to be raised on string comparison
@@ -33,6 +35,18 @@ import org.specrunner.util.aligner.IStringAligner;
  */
 @SuppressWarnings("serial")
 public class DefaultAlignmentException extends AlignmentException {
+
+    /**
+     * Creates a exception with two strings.
+     * 
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     */
+    public DefaultAlignmentException(String expected, String received) {
+        super(SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received));
+    }
 
     /**
      * Creates a exception with an aligner.

@@ -41,8 +41,6 @@ import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.aligner.IStringAligner;
-import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.comparer.IComparatorManager;
@@ -518,8 +516,7 @@ public class Database implements IDatabase {
                             UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                         }
                         if (!comparator.match(v.getValue(), received)) {
-                            IStringAligner aligner = SpecRunnerServices.get(IStringAlignerFactory.class).align(String.valueOf(v.getValue()), String.valueOf(received));
-                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(aligner));
+                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(v.getValue()), String.valueOf(received)));
                         }
                     }
                 }
