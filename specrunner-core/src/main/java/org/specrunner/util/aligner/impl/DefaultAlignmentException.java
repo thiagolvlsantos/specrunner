@@ -39,23 +39,39 @@ public class DefaultAlignmentException extends AlignmentException {
     /**
      * Creates a exception with two strings.
      * 
+     * @param message
+     *            The message.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     */
+    public DefaultAlignmentException(String message, String expected, String received) {
+        super(message, SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received));
+    }
+
+    /**
+     * Creates a exception with two strings.
+     * 
      * @param expected
      *            The expected value.
      * @param received
      *            The received value.
      */
     public DefaultAlignmentException(String expected, String received) {
-        super(SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received));
+        super("Strings are different:", SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received));
     }
 
     /**
      * Creates a exception with an aligner.
      * 
+     * @param message
+     *            The message.
      * @param aligner
      *            The aligner.
      */
-    public DefaultAlignmentException(IStringAligner aligner) {
-        super(aligner);
+    public DefaultAlignmentException(String message, IStringAligner aligner) {
+        super(message, aligner);
     }
 
     @Override

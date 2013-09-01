@@ -9,6 +9,7 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunner;
+import org.specrunner.listeners.impl.FailurePausePluginListener;
 import org.specrunner.util.converter.Converter;
 import org.specrunner.util.converter.impl.ConverterDatePatternArgs;
 
@@ -18,6 +19,7 @@ public class TestSentence {
     @Before
     public void before() {
         SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", DateTime.class);
+        SpecRunnerServices.getFeatureManager().add(FailurePausePluginListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(FailurePausePluginListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
     }
 
     @ExpectedMessage(message = "Falhou!")
@@ -60,5 +62,14 @@ public class TestSentence {
 
     public void anyMethod(int argument) {
         System.out.println("CALLED.8:" + argument);
+    }
+
+    public boolean booleanMethod(int argument) {
+        return argument == 0;
+    }
+
+    @ExpectedMessage(message = "Expected result of booleanMethod must be 'true'. Received 'false'.")
+    public boolean booleanMethodFail(int argument) {
+        return booleanMethod(argument);
     }
 }
