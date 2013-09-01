@@ -29,6 +29,7 @@ import nu.xom.Text;
 
 import org.specrunner.context.IContext;
 import org.specrunner.junit.ExpectedMessage;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
@@ -56,6 +57,11 @@ import org.specrunner.util.xom.UtilNode;
 public class PluginSentence extends AbstractPlugin {
 
     /**
+     * Method to call.
+     */
+    private String method;
+
+    /**
      * Flag to enable lookup method after arguments conversion.
      */
     private Boolean after = Boolean.FALSE;
@@ -63,6 +69,26 @@ public class PluginSentence extends AbstractPlugin {
     @Override
     public ActionType getActionType() {
         return Undefined.INSTANCE;
+    }
+
+    /**
+     * Get method name.
+     * 
+     * @return The method name.
+     */
+    public String getMethod() {
+        return method;
+    }
+
+    /**
+     * The method to call to this sentence.
+     * 
+     * @param method
+     *            The method name.
+     */
+    @DontEval
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     /**
@@ -95,15 +121,15 @@ public class PluginSentence extends AbstractPlugin {
         StringBuilder methodName = new StringBuilder();
         List<Object> arguments = new LinkedList<Object>();
         extractMethodNameArguments(context, methodName, arguments);
-        String method = UtilString.camelCase(methodName.toString());
+        String methodToCall = method != null ? method : UtilString.camelCase(methodName.toString());
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("FULL:" + context.getNode().toXML());
             UtilLog.LOG.debug("TEXT:" + methodName);
-            UtilLog.LOG.debug("METH:" + method);
+            UtilLog.LOG.debug("METH:" + methodToCall);
             UtilLog.LOG.debug("ARGS:" + arguments);
         }
         Throwable error = null;
-        Method m = after ? getMethodAfter(target, method, arguments) : getMethodBefore(target, method, arguments);
+        Method m = after ? getMethodAfter(target, methodToCall, arguments) : getMethodBefore(target, methodToCall, arguments);
         try {
             if (after) {
                 prepareArgumentsAfter(context, m, arguments);

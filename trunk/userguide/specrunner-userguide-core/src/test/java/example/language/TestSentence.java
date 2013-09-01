@@ -57,4 +57,8 @@ public class TestSentence {
     public void openFileInBrowserDateTypedFail(String file, @Converter(args = { "dd/MM/yyyy" }) Date other) throws Exception {
         System.out.println("CALLED.7:" + file + "," + other);
     }
+
+    public void anyMethod(int argument) {
+        System.out.println("CALLED.8:" + argument);
+    }
 }
