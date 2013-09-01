@@ -68,7 +68,7 @@ public class TestSentence {
         return argument == 0;
     }
 
-    @ExpectedMessage(message = "Expected result of booleanMethod must be 'true'. Received 'false'.")
+    @ExpectedMessage(message = "Expected result of booleanMethodFail must be 'true'. Received 'false'.")
     public boolean booleanMethodFail(int argument) {
         return booleanMethod(argument);
     }
