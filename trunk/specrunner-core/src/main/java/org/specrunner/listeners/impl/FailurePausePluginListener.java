@@ -23,10 +23,12 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import nu.xom.Node;
+
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.ENext;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
@@ -39,7 +41,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos.
  * 
  */
-public class FailurePausePluginListener extends AbstractPluginListener {
+public class FailurePausePluginListener extends AbstractNodeListener {
 
     /**
      * Enable pause on errors.
@@ -119,15 +121,16 @@ public class FailurePausePluginListener extends AbstractPluginListener {
     }
 
     @Override
-    public void onBeforeInit(IPlugin plugin, IContext context, IResultSet result) {
+    public ENext onBefore(Node node, IContext context, IResultSet result) {
         IFeatureManager fm = SpecRunnerServices.getFeatureManager();
         fm.set(FEATURE_PAUSE_ON_FAILURE, this);
         fm.set(FEATURE_SHOW_DIALOG, this);
         start = result.size();
+        return ENext.DEEP;
     }
 
     @Override
-    public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
+    public void onAfter(Node node, IContext context, IResultSet result) {
         if (pauseOnFailure) {
             List<Status> status = result.errorStatus();
             Status[] array = status.toArray(new Status[status.size()]);

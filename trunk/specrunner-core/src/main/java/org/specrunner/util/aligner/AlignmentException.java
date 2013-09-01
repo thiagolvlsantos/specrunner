@@ -25,7 +25,8 @@ public abstract class AlignmentException extends Exception implements IPresentat
 
     protected IStringAligner aligner;
 
-    public AlignmentException(IStringAligner aligner) {
+    public AlignmentException(String message, IStringAligner aligner) {
+        super(message);
         this.aligner = aligner;
     }
 
@@ -35,7 +36,7 @@ public abstract class AlignmentException extends Exception implements IPresentat
 
     @Override
     public String getMessage() {
-        return "Strings are different:\n(expected        )" + getAligner().getExpected() + "\n(received        )" + getAligner().getReceived() + "\n(expected aligned)" + aligner.getExpectedAligned() + "\n(received aligned)" + aligner.getReceivedAligned();
+        return super.getMessage() + ":\n(expected        )" + getAligner().getExpected() + "\n(received        )" + getAligner().getReceived() + "\n(expected aligned)" + aligner.getExpectedAligned() + "\n(received aligned)" + aligner.getReceivedAligned();
     }
 }
 // CHECKSTYLE:ON

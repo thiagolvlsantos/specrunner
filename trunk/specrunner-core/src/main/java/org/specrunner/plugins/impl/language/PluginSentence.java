@@ -35,11 +35,15 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPlugin;
 import org.specrunner.plugins.impl.elements.PluginHtml;
 import org.specrunner.plugins.impl.var.PluginBean;
+import org.specrunner.plugins.type.Assertion;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
+import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.converter.UtilConverter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
@@ -57,6 +61,11 @@ import org.specrunner.util.xom.UtilNode;
 public class PluginSentence extends AbstractPlugin {
 
     /**
+     * The plugin type.
+     */
+    private ActionType type = Undefined.INSTANCE;
+
+    /**
      * Method to call.
      */
     private String method;
@@ -68,7 +77,7 @@ public class PluginSentence extends AbstractPlugin {
 
     @Override
     public ActionType getActionType() {
-        return Undefined.INSTANCE;
+        return type;
     }
 
     /**
@@ -130,6 +139,11 @@ public class PluginSentence extends AbstractPlugin {
         }
         Throwable error = null;
         Method m = after ? getMethodAfter(target, methodToCall, arguments) : getMethodBefore(target, methodToCall, arguments);
+        if (m.getReturnType() == Boolean.class || m.getReturnType() == boolean.class) {
+            type = Assertion.INSTANCE;
+        } else {
+            type = Command.INSTANCE;
+        }
         try {
             if (after) {
                 prepareArgumentsAfter(context, m, arguments);
@@ -139,7 +153,12 @@ public class PluginSentence extends AbstractPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("TYPED ARGS:" + arguments);
             }
-            m.invoke(target, arguments.toArray());
+            Object tmp = m.invoke(target, arguments.toArray());
+            if (type == Assertion.INSTANCE) {
+                if (tmp instanceof Boolean && !((Boolean) tmp)) {
+                    throw new PluginException("Expected result of " + method + " must be 'true'. Received 'false'.");
+                }
+            }
             result.addResult(Success.INSTANCE, context.peek());
         } catch (IllegalArgumentException e) {
             error = e.getCause() != null ? e.getCause() : e;
@@ -161,10 +180,10 @@ public class PluginSentence extends AbstractPlugin {
                 result.addResult(Success.INSTANCE, context.peek());
                 return;
             }
-            throw new PluginException("Unexpected message received: " + error.getMessage(), error);
+            result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException("Expected message received different from received.", expectation, received));
         } else {
             if (em != null) {
-                throw new PluginException("Expected message not received. Expected:" + em.message());
+                result.addResult(Failure.INSTANCE, context.peek(), "Expected message not received.\nMessage: " + em.message());
             }
         }
     }
