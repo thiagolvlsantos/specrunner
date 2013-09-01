@@ -180,7 +180,7 @@ public class PluginSentence extends AbstractPlugin {
                 result.addResult(Success.INSTANCE, context.peek());
                 return;
             }
-            result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException("Expected message received different from received.", expectation, received));
+            result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException("" + m + arguments + "\nExpected message does not match.", expectation, received));
         } else {
             if (em != null) {
                 result.addResult(Failure.INSTANCE, context.peek(), "Expected message not received.\nMessage: " + em.message());

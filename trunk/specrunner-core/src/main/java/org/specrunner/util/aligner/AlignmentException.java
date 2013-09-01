@@ -36,7 +36,7 @@ public abstract class AlignmentException extends Exception implements IPresentat
 
     @Override
     public String getMessage() {
-        return super.getMessage() + ":\n(expected        )" + getAligner().getExpected() + "\n(received        )" + getAligner().getReceived() + "\n(expected aligned)" + aligner.getExpectedAligned() + "\n(received aligned)" + aligner.getReceivedAligned();
+        return super.getMessage() + "\n(expected        )" + getAligner().getExpected() + "\n(received        )" + getAligner().getReceived() + "\n(expected aligned)" + aligner.getExpectedAligned() + "\n(received aligned)" + aligner.getReceivedAligned();
     }
 }
 // CHECKSTYLE:ON
