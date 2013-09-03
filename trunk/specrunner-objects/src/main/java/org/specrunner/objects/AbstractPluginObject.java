@@ -48,7 +48,6 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.converter.IConverterManager;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
@@ -912,7 +911,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         convs = cell.getAttribute("converter").split(",");
                     }
                     for (int j = 0; j < convs.length; j++) {
-                        IConverter con = SpecRunnerServices.get(IConverterManager.class).get(convs[j]);
+                        IConverter con = SpecRunnerServices.getConverterManager().get(convs[j]);
                         if (con != null) {
                             value = con.convert(value, f.args);
                         } else {

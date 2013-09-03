@@ -19,24 +19,20 @@ package org.specrunner.sql.meta.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
 import java.util.List;
 
 import nu.xom.Builder;
 import nu.xom.Document;
-import nu.xom.Element;
 import nu.xom.Nodes;
 
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.converter.IConverterManager;
+import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * A loader to Schema from XML files.
@@ -60,50 +56,30 @@ public class SchemaLoaderXOM implements ISchemaLoader {
                 throw new RuntimeException("Resource '" + source + "' not found.");
             }
             Document d = builder.build(in);
-            Element nSchema = d.getRootElement();
-            s = new Schema().setName(nSchema.getAttributeValue("name")).setAlias(nSchema.getAttributeValue("alias"));
-            Nodes nTables = nSchema.query("child::table");
+            INodeHolder nSchema = UtilNode.newNodeHolder(d.getRootElement());
+            s = new Schema().setName(nSchema.getAttribute("name")).setAlias(nSchema.getAttribute("alias"));
+            Nodes nTables = nSchema.getNode().query("child::table");
             for (int i = 0; i < nTables.size(); i++) {
-                Element nTable = (Element) nTables.get(i);
-                Table t = new Table().setName(nTable.getAttributeValue("name")).setAlias(nTable.getAttributeValue("alias"));
+                INodeHolder nTable = UtilNode.newNodeHolder(nTables.get(i));
+                Table t = new Table().setName(nTable.getAttribute("name")).setAlias(nTable.getAttribute("alias"));
                 s.add(t);
-                Nodes nColumns = nTable.query("child::column");
+                Nodes nColumns = nTable.getNode().query("child::column");
                 for (int j = 0; j < nColumns.size(); j++) {
-                    Element nColumn = (Element) nColumns.get(j);
-                    Column c = new Column().setName(nColumn.getAttributeValue("name")).setAlias(nColumn.getAttributeValue("alias"));
+                    INodeHolder nColumn = UtilNode.newNodeHolder(nColumns.get(j));
+                    Column c = new Column().setName(nColumn.getAttribute("name")).setAlias(nColumn.getAttribute("alias"));
                     t.add(c);
-                    String key = nColumn.getAttributeValue("key");
+                    String key = nColumn.getAttribute("key");
                     c.setKey(key != null && Boolean.parseBoolean(key));
-                    String converter = nColumn.getAttributeValue("converter");
-                    if (converter != null) {
-                        IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
-                        IConverter instance = cm.get(converter);
-                        if (instance == null) {
-                            instance = (IConverter) Class.forName(converter).newInstance();
-                            cm.bind(converter, instance);
-                        }
-                        c.setConverter(instance);
+                    if (nColumn.hasAttribute("converter")) {
+                        c.setConverter(nColumn.getConverter());
                     }
-                    String comparator = nColumn.getAttributeValue("comparator");
-                    if (comparator != null) {
-                        IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
-                        IComparator instance = cm.get(comparator);
-                        if (instance == null) {
-                            instance = (IComparator) Class.forName(comparator).newInstance();
-                            cm.bind(comparator, instance);
-                        }
-                        c.setComparator(instance);
+                    if (nColumn.hasAttribute("comparator")) {
+                        c.setComparator(nColumn.getComparator());
                     }
-                    String defaultValue = nColumn.getAttributeValue("default");
+                    String defaultValue = nColumn.getAttribute("default");
                     IConverter conv = c.getConverter();
                     if (conv.accept(defaultValue)) {
-                        List<String> args = new LinkedList<String>();
-                        int index = 0;
-                        String arg = nColumn.getAttributeValue("arg" + (index++));
-                        while (arg != null) {
-                            args.add(arg);
-                            arg = nColumn.getAttributeValue("arg" + (index++));
-                        }
+                        List<String> args = nColumn.getArguments();
                         Object obj;
                         try {
                             obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());

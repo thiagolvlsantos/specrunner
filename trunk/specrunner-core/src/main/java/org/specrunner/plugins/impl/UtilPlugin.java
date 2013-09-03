@@ -33,7 +33,6 @@ import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
 
 /**
  * Plugins utility class.
@@ -227,7 +226,7 @@ public final class UtilPlugin {
      *             On plugin errors.
      */
     public static void compare(Node node, IResultSet result, Object expected, Object received) throws PluginException {
-        compare(node, null, result, SpecRunnerServices.get(IComparatorManager.class).getDefault(), expected, received);
+        compare(node, null, result, SpecRunnerServices.getComparatorManager().getDefault(), expected, received);
     }
 
     /**

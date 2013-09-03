@@ -37,7 +37,7 @@ public class TestHibernate {
 
     @Before
     public void setUpConverters() {
-        IConverterManager cf = SpecRunnerServices.get(IConverterManager.class);
+        IConverterManager cf = SpecRunnerServices.getConverterManager();
         cf.put("bool", new ConverterBooleanTemplate("Sim", "Não"));
 
         IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);

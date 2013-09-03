@@ -52,18 +52,4 @@ public class ComparatorManagerImpl extends MappingManagerImpl<IComparator> imple
         }
         return null;
     }
-
-    @Override
-    public IComparator getDefaultComparator() {
-        IComparator defaultComparator = getDefault();
-        if (defaultComparator != null) {
-            defaultComparator.initialize();
-        }
-        return defaultComparator;
-    }
-
-    @Override
-    public void setDefaultComparator(IComparator defaultComparator) {
-        bind(DEFAULT_NAME, defaultComparator);
-    }
 }

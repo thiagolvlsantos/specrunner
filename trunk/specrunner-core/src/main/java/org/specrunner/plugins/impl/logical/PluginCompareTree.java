@@ -37,7 +37,6 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.comparer.ComparatorException;
 import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.xom.INodeHolder;
@@ -112,7 +111,7 @@ public class PluginCompareTree extends AbstractPlugin {
             } else {
                 objReceived = received.getValue();
                 objExpected = expected.getValue();
-                comparator = SpecRunnerServices.get(IComparatorManager.class).getDefault();
+                comparator = SpecRunnerServices.getComparatorManager().getDefault();
             }
             try {
                 UtilPlugin.compare(expected, PluginAssertion.INSTANCE, result, comparator, objExpected, objReceived);

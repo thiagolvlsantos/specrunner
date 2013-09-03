@@ -40,7 +40,6 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.comparer.ComparatorException;
-import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.xom.CellAdapter;
@@ -129,7 +128,7 @@ public class PluginColumn extends AbstractPluginTable {
                         }
                     }
                     try {
-                        UtilPlugin.compare(c.getNode(), PluginAssertion.INSTANCE, result, c.getComparator(SpecRunnerServices.get(IComparatorManager.class).get("string")), value, received);
+                        UtilPlugin.compare(c.getNode(), PluginAssertion.INSTANCE, result, c.getComparator(SpecRunnerServices.getComparatorManager().get("string")), value, received);
                     } catch (ComparatorException e) {
                         result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not find comparator in " + c.toString() + ".", e));
                     }

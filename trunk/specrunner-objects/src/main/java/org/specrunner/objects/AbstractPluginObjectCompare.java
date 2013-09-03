@@ -70,7 +70,7 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
             }
 
             // lookup for best match comparator
-            IComparatorManager cf = SpecRunnerServices.get(IComparatorManager.class);
+            IComparatorManager cf = SpecRunnerServices.getComparatorManager();
             IComparator comparator = null;
             // specific cell comparator
             CellAdapter cell = row.getCell(f.getIndex());
@@ -88,7 +88,7 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
             }
             // by default
             if (comparator == null) {
-                comparator = cf.getDefaultComparator();
+                comparator = cf.getDefault();
             }
             if (comparator.match(currentInstance, currentBase)) {
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this));

@@ -22,13 +22,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
@@ -43,10 +41,8 @@ import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.converter.ConverterException;
 import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.converter.IConverterManager;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
@@ -110,28 +106,9 @@ public class Database implements IDatabase {
                 String att = td.getAttribute("title");
                 String value = att != null ? att : td.getValue();
 
-                IConverter converter = c.getConverter();
-                String strConverter = td.getAttribute("converter");
-                if (strConverter != null) {
-                    IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
-                    IConverter instance = cm.get(converter);
-                    if (instance == null) {
-                        try {
-                            converter = (IConverter) Class.forName(strConverter).newInstance();
-                            cm.bind(strConverter, converter);
-                        } catch (Exception e) {
-                            throw new PluginException(e);
-                        }
-                    }
-                }
-                List<String> args = new LinkedList<String>();
-                int index = 0;
-                String arg = td.getAttribute("arg" + (index++));
-                while (arg != null) {
-                    args.add(arg);
-                    arg = td.getAttribute("arg" + (index++));
-                }
+                IConverter converter = td.getConverter(c.getConverter());
                 if (converter.accept(value)) {
+                    List<String> args = td.getArguments();
                     Object obj;
                     try {
                         obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
@@ -142,19 +119,11 @@ public class Database implements IDatabase {
                     if (obj == null && ct == CommandType.INSERT) {
                         obj = c.getDefaultValue();
                     }
-                    IComparator comparator = c.getComparator();
-                    String strComparator = td.getAttribute("comparator");
-                    if (strComparator != null) {
-                        IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
-                        IComparator instance = cm.get(converter);
-                        if (instance == null) {
-                            try {
-                                comparator = (IComparator) Class.forName(strComparator).newInstance();
-                                cm.bind(strComparator, comparator);
-                            } catch (Exception e) {
-                                throw new PluginException(e);
-                            }
-                        }
+                    IComparator comparator = null;
+                    try {
+                        comparator = td.getComparator(c.getComparator());
+                    } catch (Exception e) {
+                        throw new PluginException(e);
                     }
                     Value v = new Value(c, td, obj, comparator);
                     values.add(v);

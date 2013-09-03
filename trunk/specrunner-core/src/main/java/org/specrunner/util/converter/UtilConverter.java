@@ -105,7 +105,7 @@ public final class UtilConverter {
             IConverter converter = null;
             Object[] converterArguments = null;
             Converter annotation = getConverter(annotations);
-            IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
+            IConverterManager cm = SpecRunnerServices.getConverterManager();
             if (annotation != null) {
                 String name = annotation.name();
                 if (!name.isEmpty()) {

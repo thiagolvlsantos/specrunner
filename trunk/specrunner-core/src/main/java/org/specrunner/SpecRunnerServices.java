@@ -27,6 +27,8 @@ import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.IPipelineFactory;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.comparer.IComparatorManager;
+import org.specrunner.util.converter.IConverterManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -171,10 +173,28 @@ public final class SpecRunnerServices {
     /**
      * Shortcut method to feature manager.
      * 
-     * @return The feature manager..
+     * @return The feature manager.
      */
     public static IFeatureManager getFeatureManager() {
         return get(IFeatureManager.class);
+    }
+
+    /**
+     * Shortcut method to converter manager.
+     * 
+     * @return The converter manager.
+     */
+    public static IConverterManager getConverterManager() {
+        return get(IConverterManager.class);
+    }
+
+    /**
+     * Shortcut method to comparator manager.
+     * 
+     * @return The feature comparator.
+     */
+    public static IComparatorManager getComparatorManager() {
+        return get(IComparatorManager.class);
     }
 
     /**

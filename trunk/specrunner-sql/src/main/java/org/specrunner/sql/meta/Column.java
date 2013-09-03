@@ -17,10 +17,9 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.impl.ComparatorDefault;
 import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.converter.impl.ConverterDefault;
 
 /**
  * Column meta model.
@@ -49,7 +48,7 @@ public class Column {
     /**
      * Column default converter.
      */
-    private static final IConverter CONVERTER_DEFAULT = new ConverterDefault();
+    private static final IConverter CONVERTER_DEFAULT = SpecRunnerServices.getConverterManager().getDefault();
     /**
      * Column converter.
      */
@@ -57,7 +56,7 @@ public class Column {
     /**
      * Column default comparator.
      */
-    private static final IComparator COMPARATOR_DEFAULT = new ComparatorDefault();
+    private static final IComparator COMPARATOR_DEFAULT = SpecRunnerServices.getComparatorManager().getDefault();
     /**
      * Column comparator.
      */

@@ -35,19 +35,4 @@ public interface IComparatorManager extends IMappingManager<IComparator> {
      * @return The comparator, if it exists, null, otherwise.
      */
     IComparator get(Class<?> type);
-
-    /**
-     * Gets default comparator.
-     * 
-     * @return The default comparator.
-     */
-    IComparator getDefaultComparator();
-
-    /**
-     * Sets the default comparator.
-     * 
-     * @param defaultComparator
-     *            The comparator.
-     */
-    void setDefaultComparator(IComparator defaultComparator);
 }
