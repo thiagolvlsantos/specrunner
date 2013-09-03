@@ -206,7 +206,7 @@ public final class UtilNode {
      * @return The adapter.
      */
     public static INodeHolder newNodeHolder(Node node) {
-        return new NodeHolderImpl(node);
+        return new NodeHolder(node);
     }
 
     /**

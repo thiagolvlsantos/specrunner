@@ -15,27 +15,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.impl.logical;
+package org.specrunner.comparators.impl;
 
-import org.specrunner.SpecRunnerException;
-import org.specrunner.comparators.IComparator;
-import org.specrunner.plugins.PluginException;
+import java.util.Date;
 
 /**
- * The dual of equals.
+ * Comparator of dates.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginNotEquals extends PluginEquals {
+@SuppressWarnings("serial")
+public class ComparatorDate extends AbstractComparatorTime {
 
     @Override
-    protected boolean verify(IComparator comparator, Object reference, Object value) throws SpecRunnerException {
-        boolean result = !super.verify(comparator, reference, value);
-        if (!result) {
-            error = new PluginException("Values are equals.");
-        }
-        return result;
+    public Class<?> getType() {
+        return Date.class;
     }
 
+    @Override
+    public boolean match(Object expected, Object received) {
+        if (expected instanceof Date && received instanceof Date) {
+            Date left = (Date) expected;
+            Date right = (Date) received;
+            return compare(left.getTime(), right.getTime());
+        }
+        return false;
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        if (o1 instanceof Date && o2 instanceof Date) {
+            Date left = (Date) o1;
+            Date right = (Date) o2;
+            return left.compareTo(right);
+        }
+        return 0;
+    }
 }

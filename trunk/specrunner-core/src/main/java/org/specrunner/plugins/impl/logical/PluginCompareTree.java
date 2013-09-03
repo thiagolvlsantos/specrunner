@@ -24,7 +24,11 @@ import nu.xom.Node;
 import nu.xom.Text;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
@@ -35,10 +39,6 @@ import org.specrunner.plugins.impl.include.PluginInclude;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.comparer.ComparatorException;
-import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 

@@ -15,25 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters;
 
-import nu.xom.Element;
+import org.specrunner.util.mapping.IMappingManager;
 
 /**
- * Cell abstraction.
+ * A converter manager.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
-
-    /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
-     */
-    public CellAdapter(Element node) {
-        super(node);
-    }
+public interface IConverterManager extends IMappingManager<IConverter> {
 }

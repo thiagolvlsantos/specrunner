@@ -15,25 +15,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters;
 
-import nu.xom.Element;
+import org.specrunner.util.mapping.IResetable;
 
 /**
- * Cell abstraction.
+ * A generic converter interface.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+public interface IConverter extends IResetable {
 
     /**
-     * Construct a cell node.
+     * Indicate if the converter accepts a given input value.
      * 
-     * @param node
-     *            The cell node.
+     * @param value
+     *            The value.
+     * @return true, if accepted, false, otherwise.
      */
-    public CellAdapter(Element node) {
-        super(node);
-    }
+    boolean accept(Object value);
+
+    /**
+     * Convert a given object to another using some arguments as auxiliary.
+     * 
+     * @param value
+     *            The value to be converted.
+     * @param args
+     *            The arguments.
+     * @return The converted object.
+     * @throws ConverterException
+     *             On conversion errors.
+     */
+    Object convert(Object value, Object[] args) throws ConverterException;
 }

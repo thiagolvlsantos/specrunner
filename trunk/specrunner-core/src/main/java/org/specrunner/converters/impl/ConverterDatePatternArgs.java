@@ -15,25 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters.impl;
 
-import nu.xom.Element;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import org.specrunner.converters.ConverterException;
 
 /**
- * Cell abstraction.
+ * Convert any date (Date from Java), given a provided pattern in arg[0].
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+@SuppressWarnings("serial")
+public class ConverterDatePatternArgs extends ConverterDefault {
 
-    /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
-     */
-    public CellAdapter(Element node) {
-        super(node);
+    @Override
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return new SimpleDateFormat(String.valueOf(args[0])).parse(String.valueOf(value));
+        } catch (ParseException e) {
+            throw new ConverterException(e);
+        }
     }
 }

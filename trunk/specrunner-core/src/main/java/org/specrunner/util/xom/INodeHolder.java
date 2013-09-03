@@ -21,12 +21,12 @@ import java.util.List;
 
 import nu.xom.Node;
 
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.comparer.ComparatorException;
-import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 
 /**
  * Stands for any object which hold an element.

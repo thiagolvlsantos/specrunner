@@ -23,9 +23,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.specrunner.converters.UtilConverter;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.converter.UtilConverter;
 
 /**
  * Default implementation of <code>IAccess</code>.

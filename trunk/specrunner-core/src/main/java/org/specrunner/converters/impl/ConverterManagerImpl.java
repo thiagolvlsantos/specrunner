@@ -15,25 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters.impl;
 
-import nu.xom.Element;
+import org.specrunner.converters.IConverter;
+import org.specrunner.converters.IConverterManager;
+import org.specrunner.util.mapping.impl.MappingManagerImpl;
 
 /**
- * Cell abstraction.
+ * Default converter manager implementation.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+@SuppressWarnings("serial")
+public class ConverterManagerImpl extends MappingManagerImpl<IConverter> implements IConverterManager {
 
     /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
+     * Default constructor.
      */
-    public CellAdapter(Element node) {
-        super(node);
+    public ConverterManagerImpl() {
+        super("sr_converters.properties");
     }
 }

@@ -15,25 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.comparators.impl;
 
-import nu.xom.Element;
+import org.specrunner.comparators.IComparator;
 
 /**
- * Cell abstraction.
+ * Useful comparator to ignore a given cell or row.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+@SuppressWarnings("serial")
+public class ComparatorTrue implements IComparator {
 
-    /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
-     */
-    public CellAdapter(Element node) {
-        super(node);
+    @Override
+    public Class<?> getType() {
+        return Object.class;
+    }
+
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public boolean match(Object expected, Object received) {
+        return true;
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        return 0;
     }
 }

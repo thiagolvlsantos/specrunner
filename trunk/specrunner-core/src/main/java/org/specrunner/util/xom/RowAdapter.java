@@ -29,7 +29,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class RowAdapter extends NodeHolderImpl {
+public class RowAdapter extends NodeHolder {
 
     /**
      * List of row cells.

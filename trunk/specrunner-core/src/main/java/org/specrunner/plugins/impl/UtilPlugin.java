@@ -21,6 +21,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.impl.UtilParametrized;
@@ -32,7 +33,6 @@ import org.specrunner.result.status.Success;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
-import org.specrunner.util.comparer.IComparator;
 
 /**
  * Plugins utility class.

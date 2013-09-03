@@ -15,25 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters.impl;
 
-import nu.xom.Element;
+import org.specrunner.converters.ConverterException;
 
 /**
- * Cell abstraction.
+ * Basic double converter.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class CellAdapter extends NodeHolder {
-
-    /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
-     */
-    public CellAdapter(Element node) {
-        super(node);
+@SuppressWarnings("serial")
+public class ConverterDouble extends ConverterDefault {
+    @Override
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return Double.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
+        }
     }
 }

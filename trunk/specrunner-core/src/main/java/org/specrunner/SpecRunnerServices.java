@@ -20,6 +20,8 @@ package org.specrunner;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.specrunner.comparators.IComparatorManager;
+import org.specrunner.converters.IConverterManager;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
@@ -27,8 +29,6 @@ import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.IPipelineFactory;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.comparer.IComparatorManager;
-import org.specrunner.util.converter.IConverterManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
