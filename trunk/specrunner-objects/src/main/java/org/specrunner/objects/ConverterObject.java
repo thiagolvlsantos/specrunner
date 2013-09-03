@@ -1,8 +1,8 @@
 package org.specrunner.objects;
 
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 
 /**
  * Convert a reference to an object in mapped resources.

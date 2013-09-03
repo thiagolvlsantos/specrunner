@@ -8,15 +8,15 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.comparators.impl.AbstractComparatorTime;
+import org.specrunner.converters.IConverterManager;
+import org.specrunner.converters.impl.ConverterBooleanTemplate;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.impl.AbstractPlugin;
-import org.specrunner.util.comparer.impl.AbstractComparatorTime;
-import org.specrunner.util.converter.IConverterManager;
-import org.specrunner.util.converter.impl.ConverterBooleanTemplate;
 
 @RunWith(ConcurrentRunner.class)
 @Concurrent(threads = 3)

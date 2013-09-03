@@ -1,7 +1,7 @@
 package th.example;
 
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 
 @SuppressWarnings("serial")
 public class ConverterSalary implements IConverter {

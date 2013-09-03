@@ -25,12 +25,12 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Nodes;
 
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 

@@ -17,7 +17,7 @@
  */
 package org.specrunner.sql.meta;
 
-import org.specrunner.util.comparer.IComparator;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.util.xom.CellAdapter;
 
 /**

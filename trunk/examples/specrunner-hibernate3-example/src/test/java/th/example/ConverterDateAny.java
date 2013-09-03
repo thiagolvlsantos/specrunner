@@ -2,8 +2,8 @@ package th.example;
 
 import java.util.Calendar;
 
-import org.specrunner.util.converter.ConverterException;
-import org.specrunner.util.converter.IConverter;
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 
 @SuppressWarnings("serial")
 public class ConverterDateAny implements IConverter {

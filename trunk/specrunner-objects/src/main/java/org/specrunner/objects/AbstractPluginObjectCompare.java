@@ -19,13 +19,13 @@ package org.specrunner.objects;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.comparators.IComparator;
+import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
-import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 
