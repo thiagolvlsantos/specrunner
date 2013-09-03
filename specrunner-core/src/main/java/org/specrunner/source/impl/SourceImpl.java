@@ -20,8 +20,13 @@ package org.specrunner.source.impl;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Nodes;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.source.IDocumentLoader;
@@ -171,6 +176,28 @@ public class SourceImpl implements ISource {
             document = loader.load();
         }
         return document;
+    }
+
+    @Override
+    public List<Element> getScenarios() throws SourceException {
+        Document d = getDocument();
+        Nodes ns = d.query("//*[contains(@class,'scenario')] | //scenario");
+        return ns.size() > 0 ? toElements(ns) : Arrays.asList(d.getRootElement());
+    }
+
+    /**
+     * Convert to a sequence of elements.
+     * 
+     * @param ns
+     *            Nodes.
+     * @return A list of elements.
+     */
+    protected List<Element> toElements(Nodes ns) {
+        List<Element> result = new LinkedList<Element>();
+        for (int i = 0; i < ns.size(); i++) {
+            result.add((Element) ns.get(i));
+        }
+        return result;
     }
 
     @Override
