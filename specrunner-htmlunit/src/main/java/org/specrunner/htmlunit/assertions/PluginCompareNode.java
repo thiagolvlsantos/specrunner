@@ -162,7 +162,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         if (comparator != null) {
-            IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
+            IComparatorManager cm = SpecRunnerServices.getComparatorManager();
             comparatorInstance = cm.get(comparator);
             if (comparatorInstance == null) {
                 try {

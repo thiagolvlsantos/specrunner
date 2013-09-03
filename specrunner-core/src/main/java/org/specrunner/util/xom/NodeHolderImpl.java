@@ -136,7 +136,7 @@ public class NodeHolderImpl implements INodeHolder {
 
     @Override
     public IConverter getConverter() {
-        return getConverter(SpecRunnerServices.get(IConverterManager.class).getDefault());
+        return getConverter(SpecRunnerServices.getConverterManager().getDefault());
     }
 
     @Override
@@ -144,7 +144,7 @@ public class NodeHolderImpl implements INodeHolder {
         IConverter converter = null;
         if (hasAttribute("converter")) {
             String str = getAttribute("converter");
-            IConverterManager cm = SpecRunnerServices.get(IConverterManager.class);
+            IConverterManager cm = SpecRunnerServices.getConverterManager();
             converter = cm.get(str);
             if (converter == null) {
                 try {
@@ -186,7 +186,7 @@ public class NodeHolderImpl implements INodeHolder {
 
     @Override
     public IComparator getComparator() throws ComparatorException {
-        return getComparator(SpecRunnerServices.get(IComparatorManager.class).getDefault());
+        return getComparator(SpecRunnerServices.getComparatorManager().getDefault());
     }
 
     @Override
@@ -194,7 +194,7 @@ public class NodeHolderImpl implements INodeHolder {
         IComparator comparator = null;
         if (hasAttribute("comparator")) {
             String str = getAttribute("comparator");
-            IComparatorManager cm = SpecRunnerServices.get(IComparatorManager.class);
+            IComparatorManager cm = SpecRunnerServices.getComparatorManager();
             comparator = cm.get(str);
             if (comparator == null) {
                 try {
