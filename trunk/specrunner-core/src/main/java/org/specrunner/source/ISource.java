@@ -19,8 +19,10 @@ package org.specrunner.source;
 
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 
 import nu.xom.Document;
+import nu.xom.Element;
 
 import org.specrunner.source.resource.IResourceManager;
 
@@ -98,4 +100,13 @@ public interface ISource extends IEncoded {
      *             On creation error.
      */
     Document getDocument() throws SourceException;
+
+    /**
+     * The specification scenarios.
+     * 
+     * @return The specification as document.
+     * @throws SourceException
+     *             On creation error.
+     */
+    List<Element> getScenarios() throws SourceException;
 }
