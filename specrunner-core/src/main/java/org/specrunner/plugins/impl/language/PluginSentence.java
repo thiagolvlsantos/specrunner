@@ -28,6 +28,7 @@ import nu.xom.Node;
 import nu.xom.Text;
 
 import org.specrunner.context.IContext;
+import org.specrunner.converters.UtilConverter;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
@@ -44,7 +45,6 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
-import org.specrunner.util.converter.UtilConverter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 

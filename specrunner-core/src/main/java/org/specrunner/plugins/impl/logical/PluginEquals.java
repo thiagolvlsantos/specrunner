@@ -21,6 +21,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.Unsilent;
 import org.specrunner.plugins.ActionType;
@@ -28,7 +29,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
-import org.specrunner.util.comparer.IComparator;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 

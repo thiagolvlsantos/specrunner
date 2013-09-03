@@ -29,7 +29,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class TableAdapter extends NodeHolderImpl {
+public class TableAdapter extends NodeHolder {
 
     /**
      * List of caption elements.

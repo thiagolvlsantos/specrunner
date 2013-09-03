@@ -15,25 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters;
 
-import nu.xom.Element;
+import org.specrunner.SpecRunnerException;
 
-/**
- * Cell abstraction.
- * 
- * @author Thiago Santos
- * 
- */
-public class CellAdapter extends NodeHolder {
+//CHECKSTYLE:OFF
+@SuppressWarnings("serial")
+public class ConverterException extends SpecRunnerException {
 
-    /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
-     */
-    public CellAdapter(Element node) {
-        super(node);
+    public ConverterException() {
+        super();
+    }
+
+    public ConverterException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ConverterException(String message) {
+        super(message);
+    }
+
+    public ConverterException(Throwable cause) {
+        super(cause);
     }
 }
+// CHECKSTYLE:ON

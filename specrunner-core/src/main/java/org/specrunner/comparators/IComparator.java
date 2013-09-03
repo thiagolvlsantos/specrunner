@@ -15,25 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.comparators;
 
-import nu.xom.Element;
+import java.util.Comparator;
+
+import org.specrunner.util.mapping.IResetable;
 
 /**
- * Cell abstraction.
+ * Compare tow objects.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+public interface IComparator extends IResetable, Comparator<Object> {
 
     /**
-     * Construct a cell node.
+     * The comparator reference type.
      * 
-     * @param node
-     *            The cell node.
+     * @return The comparator target.
      */
-    public CellAdapter(Element node) {
-        super(node);
-    }
+    Class<?> getType();
+
+    /**
+     * Says if two objects can be considered equals.
+     * 
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @return true, if they are equal, false, otherwise.
+     */
+    boolean match(Object expected, Object received);
 }

@@ -27,15 +27,15 @@ import nu.xom.Node;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
+import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.context.IContext;
+import org.specrunner.converters.IConverter;
+import org.specrunner.converters.IConverterManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.comparer.ComparatorException;
-import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.comparer.IComparatorManager;
-import org.specrunner.util.converter.IConverter;
-import org.specrunner.util.converter.IConverterManager;
 
 /**
  * Default implementation of element holder.
@@ -43,7 +43,7 @@ import org.specrunner.util.converter.IConverterManager;
  * @author Thiago Santos
  * 
  */
-public class NodeHolderImpl implements INodeHolder {
+public class NodeHolder implements INodeHolder {
 
     /**
      * The node encapsulated.
@@ -56,7 +56,7 @@ public class NodeHolderImpl implements INodeHolder {
      * @param element
      *            The element.
      */
-    public NodeHolderImpl(Node element) {
+    public NodeHolder(Node element) {
         this.node = element;
     }
 

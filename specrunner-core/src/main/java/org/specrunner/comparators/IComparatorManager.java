@@ -15,25 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.comparators;
 
-import nu.xom.Element;
+import org.specrunner.util.mapping.IMappingManager;
 
 /**
- * Cell abstraction.
+ * A comparator manager.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+public interface IComparatorManager extends IMappingManager<IComparator> {
 
     /**
-     * Construct a cell node.
+     * Gets a comparator by type.
      * 
-     * @param node
-     *            The cell node.
+     * @param type
+     *            The type of object to be compared.
+     * @return The comparator, if it exists, null, otherwise.
      */
-    public CellAdapter(Element node) {
-        super(node);
-    }
+    IComparator get(Class<?> type);
 }

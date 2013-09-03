@@ -15,25 +15,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
-
-import nu.xom.Element;
+package org.specrunner.converters.impl;
 
 /**
- * Cell abstraction.
+ * A tipical boolean converter.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+@SuppressWarnings("serial")
+public class ConverterBoolean extends ConverterBooleanTemplate {
 
     /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
+     * Constructor using 'true' and 'false'.
      */
-    public CellAdapter(Element node) {
-        super(node);
+    public ConverterBoolean() {
+        super(Boolean.TRUE.toString(), Boolean.FALSE.toString());
     }
 }

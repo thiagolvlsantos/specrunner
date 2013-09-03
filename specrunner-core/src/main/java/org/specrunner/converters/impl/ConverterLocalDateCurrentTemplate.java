@@ -15,25 +15,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters.impl;
 
-import nu.xom.Element;
+import org.joda.time.LocalDate;
 
 /**
- * Cell abstraction.
+ * Create current date.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolder {
+@SuppressWarnings("serial")
+public class ConverterLocalDateCurrentTemplate extends AbstractConverterTimeTemplate<LocalDate> {
 
     /**
-     * Construct a cell node.
+     * See superclass.
      * 
-     * @param node
-     *            The cell node.
+     * @param regexp
+     *            Regexp.
      */
-    public CellAdapter(Element node) {
-        super(node);
+    public ConverterLocalDateCurrentTemplate(String regexp) {
+        super(regexp);
+    }
+
+    /**
+     * See superclass.
+     * 
+     * @param values
+     *            Value.
+     */
+    public ConverterLocalDateCurrentTemplate(String[] values) {
+        super(values);
+    }
+
+    @Override
+    protected LocalDate instance() {
+        return new LocalDate();
     }
 }

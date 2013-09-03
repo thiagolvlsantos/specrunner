@@ -15,25 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.converters.impl;
 
-import nu.xom.Element;
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
 
 /**
- * Cell abstraction.
+ * Default converter. Bypass converter accepts everything.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class CellAdapter extends NodeHolder {
+@SuppressWarnings("serial")
+public class ConverterDefault implements IConverter {
 
-    /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
-     */
-    public CellAdapter(Element node) {
-        super(node);
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public boolean accept(Object obj) {
+        return true;
+    }
+
+    @Override
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        return obj;
     }
 }
