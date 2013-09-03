@@ -6,12 +6,12 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.converters.Converter;
+import org.specrunner.converters.impl.ConverterDatePatternArgs;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.listeners.impl.FailurePausePluginListener;
-import org.specrunner.util.converter.Converter;
-import org.specrunner.util.converter.impl.ConverterDatePatternArgs;
 
 @RunWith(SRRunner.class)
 public class TestSentence {

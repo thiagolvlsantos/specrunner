@@ -18,8 +18,8 @@
 package org.specrunner.sql.meta;
 
 import org.specrunner.SpecRunnerServices;
-import org.specrunner.util.comparer.IComparator;
-import org.specrunner.util.converter.IConverter;
+import org.specrunner.comparators.IComparator;
+import org.specrunner.converters.IConverter;
 
 /**
  * Column meta model.
