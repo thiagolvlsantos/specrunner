@@ -33,7 +33,7 @@ import org.specrunner.util.xom.INodeHolder;
  * @author Thiago Santos
  * 
  */
-public class PluginCompareDate extends PluginCompare {
+public class PluginCompareDate extends PluginCompareText {
 
     /**
      * Feature to set data format on comparisons.

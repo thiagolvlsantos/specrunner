@@ -11,7 +11,7 @@ import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.actions.PluginOpen;
 import org.specrunner.webdriver.actions.PluginStartIn;
 import org.specrunner.webdriver.actions.window.PluginSize;
-import org.specrunner.webdriver.assertions.PluginCompare;
+import org.specrunner.webdriver.assertions.PluginCompareText;
 import org.specrunner.webdriver.assertions.PluginContains;
 import org.specrunner.webdriver.assertions.PluginNotContains;
 import org.specrunner.webdriver.assertions.PluginPresent;
@@ -64,7 +64,7 @@ public class TestJettyUnit {
         presentOne.getParameters().setParameter("by", "xpath://title", null);
         group.add(presentOne);
 
-        PluginCompare compare = new PluginCompare();
+        PluginCompareText compare = new PluginCompareText();
         compare.setValue("SWicket Quickstart Archetype Homepage");
         compare.getParameters().setParameter("by", "xpath://title", null);
         group.add(compare);

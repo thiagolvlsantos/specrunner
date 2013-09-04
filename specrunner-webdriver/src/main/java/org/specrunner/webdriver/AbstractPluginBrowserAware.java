@@ -43,7 +43,6 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 import com.gargoylesoftware.htmlunit.Page;
@@ -100,6 +99,22 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * Default timeout to finish the action.
      */
     public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
+
+    /**
+     * Default directory to save downloaded files.
+     */
+    public static final String FEATURE_DIR = AbstractPluginBrowserAware.class.getName() + ".dir";
+
+    /**
+     * The output directory.
+     */
+    private String dir;
+
+    /**
+     * If and action result in downloading a file, this attribute specify where
+     * download will take place on disk.
+     */
+    private String download;
 
     /**
      * The interval between JavaScript finish checks. Default is '100'
@@ -160,6 +175,44 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         this.waitfor = waitfor;
     }
 
+    /**
+     * Get current download directory, if any.
+     * 
+     * @return The directory.
+     */
+    public String getDir() {
+        return dir;
+    }
+
+    /**
+     * Set current download directory, if any.
+     * 
+     * @param dir
+     *            The directory.
+     */
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+
+    /**
+     * The download target.
+     * 
+     * @return The file target name.
+     */
+    public String getDownload() {
+        return download;
+    }
+
+    /**
+     * Set download name.
+     * 
+     * @param download
+     *            The download file name.
+     */
+    public void setDownload(String download) {
+        this.download = download;
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
@@ -168,6 +221,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_WAITFOR, this);
         fm.set(FEATURE_TIMEOUT, this);
+        fm.set(FEATURE_DIR, this);
     }
 
     @Override
@@ -181,23 +235,25 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         if (isWaitForClient()) {
             waitForClient(client);
         }
-        Page page = before(context, result, client);
         doEnd(context, result, client);
-        after(context, result, client, page);
-    }
-
-    private Page before(IContext context, IResultSet result, WebDriver client) {
-        if (client instanceof IHtmlUnitDriver) {
-            WebClient wc = ((IHtmlUnitDriver) client).getWebClient();
-            WebWindow window = wc.getCurrentWindow();
-            if (window != null) {
-                return window.getEnclosedPage();
-            }
+        if (download != null) {
+            saveDownload(context, result, client);
         }
-        return null;
     }
 
-    private void after(IContext context, IResultSet result, WebDriver client, Page page) throws PluginException {
+    /**
+     * Save the downloaded file, if it exists.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The client.
+     * @throws PluginException
+     *             On download errors.
+     */
+    private void saveDownload(IContext context, IResultSet result, WebDriver client) throws PluginException {
         if (client instanceof IHtmlUnitDriver) {
             WebClient wc = ((IHtmlUnitDriver) client).getWebClient();
             WebWindow window = wc.getCurrentWindow();
@@ -209,75 +265,66 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                         UtilLog.LOG.info("Binary file: " + response.getContentType());
                     }
                     UnexpectedPage up = (UnexpectedPage) tmp;
-                    Node n = context.getNode();
-                    if (n instanceof Element) {
-                        INodeHolder eh = UtilNode.newNodeHolder(n);
-                        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
-                        File target = (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
-                        File to = null;
-                        if (eh.hasAttribute("to")) {
-                            to = new File(target, eh.getAttribute("to"));
-                        } else {
-                            to = new File(target, eh.getAttribute("tmp" + System.currentTimeMillis()));
-                        }
-                        File dir = to.getAbsoluteFile().getParentFile();
-                        if (!dir.exists()) {
-                            if (!dir.mkdirs()) {
-                                throw new PluginException("Could not create binary target directory:" + dir.getAbsolutePath());
-                            }
-                        }
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Download file to '" + to.getAbsolutePath() + "'.");
-                        }
-                        InputStream in = null;
-                        OutputStream out = null;
-                        try {
-                            in = up.getInputStream();
-                            out = new FileOutputStream(to);
-                            UtilIO.writeTo(in, out);
-                        } catch (FileNotFoundException e) {
-                            throw new PluginException(e);
-                        } catch (IOException e) {
-                            throw new PluginException(e);
-                        } finally {
-                            try {
-                                if (in != null) {
-                                    in.close();
-                                }
-                            } catch (IOException e) {
-                                throw new PluginException(e);
-                            }
-                            try {
-                                if (out != null) {
-                                    out.close();
-                                }
-                            } catch (IOException e) {
-                                throw new PluginException(e);
-                            }
-                        }
-                        Node node = context.getNode();
-                        if (node instanceof Element) {
-                            Element span = new Element("span");
-                            UtilNode.setIgnore(span);
-                            span.addAttribute(new Attribute("class", "binary"));
-                            span.appendChild(" [");
-
-                            Element a = new Element("a");
-                            a.addAttribute(new Attribute("href", eh.getAttribute("to")));
-                            a.appendChild(to.getName() + " (" + response.getContentType() + ")");
-                            span.appendChild(a);
-
-                            span.appendChild("] ");
-
-                            Element e = (Element) node;
-                            e.appendChild(span);
+                    IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+                    File outputDirectory = dir != null ? new File(dir) : (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
+                    File outputFile = new File(outputDirectory, download);
+                    File outputParent = outputFile.getAbsoluteFile().getParentFile();
+                    if (!outputParent.exists()) {
+                        if (!outputParent.mkdirs()) {
+                            throw new PluginException("Could not create binary target directory:" + outputParent.getAbsolutePath());
                         }
                     }
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Download file to '" + outputFile.getAbsolutePath() + "'.");
+                    }
+                    InputStream in = null;
+                    OutputStream out = null;
                     try {
-                        window.getHistory().back();
+                        in = up.getInputStream();
+                        out = new FileOutputStream(outputFile);
+                        UtilIO.writeTo(in, out);
+                    } catch (FileNotFoundException e) {
+                        throw new PluginException(e);
                     } catch (IOException e) {
                         throw new PluginException(e);
+                    } finally {
+                        try {
+                            if (in != null) {
+                                in.close();
+                            }
+                        } catch (IOException e) {
+                            throw new PluginException(e);
+                        }
+                        try {
+                            if (out != null) {
+                                out.close();
+                            }
+                        } catch (IOException e) {
+                            throw new PluginException(e);
+                        }
                     }
+                    Node node = context.getNode();
+                    if (node instanceof Element) {
+                        Element span = new Element("span");
+                        UtilNode.setIgnore(span);
+                        span.addAttribute(new Attribute("class", "binary"));
+                        span.appendChild(" [");
+
+                        Element a = new Element("a");
+                        a.addAttribute(new Attribute("href", download));
+                        a.appendChild(outputFile.getName() + " (" + response.getContentType() + ")");
+                        span.appendChild(a);
+
+                        span.appendChild("] ");
+
+                        Element e = (Element) node;
+                        e.appendChild(span);
+                    }
+                }
+                try {
+                    window.getHistory().back();
+                } catch (IOException e) {
+                    throw new PluginException(e);
                 }
             }
         }

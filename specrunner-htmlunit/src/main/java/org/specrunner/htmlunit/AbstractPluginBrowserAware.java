@@ -17,16 +17,34 @@
  */
 package org.specrunner.htmlunit;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
+import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.UtilNode;
 
+import com.gargoylesoftware.htmlunit.Page;
+import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebResponse;
+import com.gargoylesoftware.htmlunit.WebWindow;
 
 /**
  * A generic plugin that acts over a browser.
@@ -68,6 +86,22 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
 
     /**
+     * Default directory to save downloaded files.
+     */
+    public static final String FEATURE_DIR = AbstractPluginBrowserAware.class.getName() + ".dir";
+
+    /**
+     * The output directory.
+     */
+    private String dir;
+
+    /**
+     * If and action result in downloading a file, this attribute specify where
+     * download will take place on disk.
+     */
+    private String download;
+
+    /**
      * The max time to wait for JavaScript return. Default is '1000'
      * milliseconds.
      * 
@@ -107,6 +141,44 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         this.interval = interval;
     }
 
+    /**
+     * Get current download directory, if any.
+     * 
+     * @return The directory.
+     */
+    public String getDir() {
+        return dir;
+    }
+
+    /**
+     * Set current download directory, if any.
+     * 
+     * @param dir
+     *            The directory.
+     */
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+
+    /**
+     * The download target.
+     * 
+     * @return The file target name.
+     */
+    public String getDownload() {
+        return download;
+    }
+
+    /**
+     * Set download name.
+     * 
+     * @param download
+     *            The download file name.
+     */
+    public void setDownload(String download) {
+        this.download = download;
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
@@ -124,9 +196,98 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), "Browser instance named '" + tmp + "' not created. See PluginBrowser.");
             return;
         }
-        doEnd(context, result, client);
         if (isWaitForClient()) {
             waitForClient(client);
+        }
+        doEnd(context, result, client);
+        if (download != null) {
+            saveDownload(context, result, client);
+        }
+    }
+
+    /**
+     * Save the downloaded file, if it exists.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            The client.
+     * @throws PluginException
+     *             On download errors.
+     */
+    private void saveDownload(IContext context, IResultSet result, WebClient client) throws PluginException {
+        WebWindow window = client.getCurrentWindow();
+        if (window != null) {
+            Page tmp = window.getEnclosedPage();
+            if (tmp instanceof UnexpectedPage) {
+                WebResponse response = tmp.getWebResponse();
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Binary file: " + response.getContentType());
+                }
+                UnexpectedPage up = (UnexpectedPage) tmp;
+                IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+                File outputDirectory = dir != null ? new File(dir) : (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
+                File outputFile = new File(outputDirectory, download);
+                File outputParent = outputFile.getAbsoluteFile().getParentFile();
+                if (!outputParent.exists()) {
+                    if (!outputParent.mkdirs()) {
+                        throw new PluginException("Could not create binary target directory:" + outputParent.getAbsolutePath());
+                    }
+                }
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Download file to '" + outputFile.getAbsolutePath() + "'.");
+                }
+                InputStream in = null;
+                OutputStream out = null;
+                try {
+                    in = up.getInputStream();
+                    out = new FileOutputStream(outputFile);
+                    UtilIO.writeTo(in, out);
+                } catch (FileNotFoundException e) {
+                    throw new PluginException(e);
+                } catch (IOException e) {
+                    throw new PluginException(e);
+                } finally {
+                    try {
+                        if (in != null) {
+                            in.close();
+                        }
+                    } catch (IOException e) {
+                        throw new PluginException(e);
+                    }
+                    try {
+                        if (out != null) {
+                            out.close();
+                        }
+                    } catch (IOException e) {
+                        throw new PluginException(e);
+                    }
+                }
+                Node node = context.getNode();
+                if (node instanceof Element) {
+                    Element span = new Element("span");
+                    UtilNode.setIgnore(span);
+                    span.addAttribute(new Attribute("class", "binary"));
+                    span.appendChild(" [");
+
+                    Element a = new Element("a");
+                    a.addAttribute(new Attribute("href", download));
+                    a.appendChild(outputFile.getName() + " (" + response.getContentType() + ")");
+                    span.appendChild(a);
+
+                    span.appendChild("] ");
+
+                    Element e = (Element) node;
+                    e.appendChild(span);
+                }
+            }
+            try {
+                window.getHistory().back();
+            } catch (IOException e) {
+                throw new PluginException(e);
+            }
         }
     }
 

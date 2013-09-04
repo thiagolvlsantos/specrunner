@@ -5,7 +5,7 @@ import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.actions.PluginOpen;
 import org.specrunner.webdriver.actions.PluginType;
-import org.specrunner.webdriver.assertions.PluginCompare;
+import org.specrunner.webdriver.assertions.PluginCompareText;
 import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
 
 public class TestRefactoring {
@@ -28,7 +28,7 @@ public class TestRefactoring {
         type.getParameters().setParameter("by", "name:q", null);
         group.add(type);
 
-        PluginCompare compare = new PluginCompare();
+        PluginCompareText compare = new PluginCompareText();
         compare.setValue("Pesquisa googleGGGGG");
         compare.getParameters().setParameter("by", "xpath://title", null);
         group.add(compare);
