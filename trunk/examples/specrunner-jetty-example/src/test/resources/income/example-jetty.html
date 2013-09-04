@@ -23,7 +23,7 @@ browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvi
     <li><span class="present" by="xpath://title">Title</span> is present;</li>
     <li>None <span class="notPresent" by="xpath://table">table</span> is not present;</li>
     <li>There is only <span class="present" by="xpath://title" count="1">one</span> title;</li>
-    <li>Check title that might be '<span class="compare" by="xpath://title">Wicket Quickstart Archetype Homepage</span>';</li>
+    <li>Check title that might be '<span class="compareText" by="xpath://title">Wicket Quickstart Archetype Homepage</span>';</li>
     <li>Access '<span class="open">/application/date.jsp</span>';</li>
     <li>Date information might be '<span class="compareDate" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>';</li>
 	<li>The page contains <span class="contains">Dynamic dates</span>;</li>
@@ -170,17 +170,17 @@ Select examples:
 </ul>
 Text field and area examples:
 <ul>
-	<li>Check if text field is <span class="compare" by="name:txtName" value='""'>empty</span>;</li>
+	<li>Check if text field is <span class="compareText" by="name:txtName" value='""'>empty</span>;</li>
 	<li>Type <span class="type" by="name:txtName" value='dt.toString(pattern)'>current date in format 'HH:mm:ss'</span>;</li>
 	<li>Check if the text field value is the <span class="compareDate" by="name:txtName" format="HH:mm:ss" value='dt.toString("HH:mm:ss")'>current date</span>;</li>
 
-	<li>Check if text area is '<span class="compare" by="name:areaName">type here</span>';</li>
+	<li>Check if text area is '<span class="compareText" by="name:areaName">type here</span>';</li>
 	<li>Type <span class="type" by="name:areaName">new value</span> in text area;</li>
-	<li>Check if the text area value is <span class="compare" by="name:areaName">new value</span>;</li>
+	<li>Check if the text area value is <span class="compareText" by="name:areaName">new value</span>;</li>
 	<li>Append text area value with '<span class="type" by="name:areaName" append="true"> twice</span>';</li>
-	<li>Check if the text area value is <span class="local" scope="ul" name="txtContent"><span class="compare" by="name:areaName">new value twice</span></span>;</li>
+	<li>Check if the text area value is <span class="local" scope="ul" name="txtContent"><span class="compareText" by="name:areaName">new value twice</span></span>;</li>
 	<li>Add '<span class="type" by="name:areaName" position='${txtContent.indexOf("value")}'>inside </span>' between 'new' and 'value';</li>
-	<li>Check if the text area value is <span class="compare" by="name:areaName">new inside value twice</span>;</li>
+	<li>Check if the text area value is <span class="compareText" by="name:areaName">new inside value twice</span>;</li>
 </ul>
 
 <span class="quit">Fechar navegador.</span>

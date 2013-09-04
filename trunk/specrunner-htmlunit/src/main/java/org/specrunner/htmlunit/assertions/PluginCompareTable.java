@@ -207,7 +207,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, (Element) expected.getNode(), true);
             return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);
         } else {
-            PluginCompare compare = UtilPlugin.create(context, PluginCompare.class, (Element) expected.getNode());
+            PluginCompareText compare = UtilPlugin.create(context, PluginCompareText.class, (Element) expected.getNode());
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             String rec = received.asText();

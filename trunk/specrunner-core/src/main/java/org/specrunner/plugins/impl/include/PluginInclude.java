@@ -94,6 +94,11 @@ public class PluginInclude extends AbstractPlugin {
     public static final String CSS_INCLUDED_CONTENT = "included_content";
 
     /**
+     * Input directory file.
+     */
+    private String dir;
+
+    /**
      * Link to file.
      */
     protected String href;
@@ -133,6 +138,25 @@ public class PluginInclude extends AbstractPlugin {
      * transformer.
      */
     protected String transformer;
+
+    /**
+     * The input directory.
+     * 
+     * @return The directory.
+     */
+    public String getDir() {
+        return dir;
+    }
+
+    /**
+     * Output directory file.
+     * 
+     * @param dir
+     *            The directory.
+     */
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
 
     /**
      * The link reference.
@@ -252,7 +276,7 @@ public class PluginInclude extends AbstractPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("SRC>" + source);
             }
-            newHref = source.resolve(newHref);
+            newHref = dir == null ? source.resolve(newHref) : newHref;
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("URI_RESOLVED>" + newHref);
             }
@@ -493,6 +517,9 @@ public class PluginInclude extends AbstractPlugin {
         int indexParameters = href.indexOf('?');
         if (indexParameters > 0) {
             path = href.substring(0, indexParameters);
+        }
+        if (dir != null) {
+            path = dir + "/" + path;
         }
         return path;
     }
