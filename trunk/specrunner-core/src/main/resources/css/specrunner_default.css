@@ -221,7 +221,7 @@ table.included_file_args td {
     padding: 2px;
 }
 
-.sr_resume,.sr_time {
+.sr_resume {
     font-weight: bold;
     width: 100%;
 }
