@@ -142,7 +142,7 @@ public class PluginIterator extends AbstractPluginNamed {
         int i = 0;
         for (Object map : (Iterable<?>) list) {
             context.saveLocal(tmp, map);
-            context.saveLocal(pos, "" + i);
+            context.saveLocal(pos, i);
             try {
                 Node c = node.copy();
                 UtilNode.setIgnore(c);
@@ -153,7 +153,7 @@ public class PluginIterator extends AbstractPluginNamed {
                     external.appendChild(ch);
                 }
             } finally {
-                context.clearLocal("" + i);
+                context.clearLocal(pos);
                 context.clearLocal(tmp);
             }
             i++;

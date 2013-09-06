@@ -156,7 +156,7 @@ public class PluginSentence extends AbstractPlugin {
             Object tmp = m.invoke(target, arguments.toArray());
             if (type == Assertion.INSTANCE) {
                 if (tmp instanceof Boolean && !((Boolean) tmp)) {
-                    throw new PluginException("Expected result of " + method + " must be 'true'. Received 'false'.");
+                    throw new PluginException("Expected result of '" + m + "' must be 'true'. Received 'false'.");
                 }
             }
             result.addResult(Success.INSTANCE, context.peek());

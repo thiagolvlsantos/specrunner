@@ -140,7 +140,11 @@ public class SpecRunnerStatement extends Statement {
         URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
         String str = location.toString();
         str = str.replace("file:\\\\", "").replace("file:///", "").replace("file:\\", "").replace("file:/", "");
-        String prefix = str + clazz.getPackage().getName().replace(".", File.separator) + File.separator + clazz.getSimpleName();
+        Package pkg = clazz.getPackage();
+        if (pkg == null) {
+            throw new RuntimeException("Test classe must be in a package.");
+        }
+        String prefix = str + pkg.getName().replace(".", File.separator) + File.separator + clazz.getSimpleName();
         Set<String> extensions = SpecRunnerServices.get(ISourceFactoryManager.class).keySet();
         for (String s : extensions) {
             File tmp = new File(prefix + "." + s);
