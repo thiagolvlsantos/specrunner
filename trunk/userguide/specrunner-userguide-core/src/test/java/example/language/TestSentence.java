@@ -22,7 +22,7 @@ public class TestSentence {
         SpecRunnerServices.getFeatureManager().add(FailurePausePluginListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(FailurePausePluginListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
     }
 
-    @ExpectedMessage(message = "Falhou!")
+    @ExpectedMessage("Falhou!")
     public void openFileInBrowser(String file) throws Exception {
         String tmp = System.getProperty("user.home");
         if (!tmp.equals(file)) {
@@ -55,7 +55,7 @@ public class TestSentence {
         System.out.println("CALLED.6:" + file + "," + other);
     }
 
-    @ExpectedMessage(message = "Invalid parameter value [23/01/2014] in public void example.language.TestSentence.openFileInBrowserDateTypedFail(java.lang.String,java.util.Date) throws java.lang.Exception. Expected class java.util.Date, received: 23/01/2014 of type class java.lang.String")
+    @ExpectedMessage("Invalid parameter value [23/01/2014] in public void example.language.TestSentence.openFileInBrowserDateTypedFail(java.lang.String,java.util.Date) throws java.lang.Exception. Expected class java.util.Date, received: 23/01/2014 of type class java.lang.String")
     public void openFileInBrowserDateTypedFail(String file, @Converter(args = { "dd/MM/yyyy" }) Date other) throws Exception {
         System.out.println("CALLED.7:" + file + "," + other);
     }
@@ -68,7 +68,7 @@ public class TestSentence {
         return argument == 0;
     }
 
-    @ExpectedMessage(message = "Expected result of booleanMethodFail must be 'true'. Received 'false'.")
+    @ExpectedMessage("Expected result of 'public boolean example.language.TestSentence.booleanMethodFail(int)' must be 'true'. Received 'false'.")
     public boolean booleanMethodFail(int argument) {
         return booleanMethod(argument);
     }
