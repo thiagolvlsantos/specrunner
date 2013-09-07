@@ -22,11 +22,14 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Text;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.UtilConverter;
 import org.specrunner.junit.ExpectedMessage;
@@ -45,6 +48,8 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
@@ -74,6 +79,11 @@ public class PluginSentence extends AbstractPlugin {
      * Flag to enable lookup method after arguments conversion.
      */
     private Boolean after = Boolean.FALSE;
+
+    /**
+     * Cache of patterns.
+     */
+    private static ICache<String, Pattern> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName());
 
     @Override
     public ActionType getActionType() {
@@ -127,10 +137,13 @@ public class PluginSentence extends AbstractPlugin {
         if (target == null) {
             throw new PluginException("Target object cannot be null.");
         }
+        String methodToCall = method;
         StringBuilder methodName = new StringBuilder();
         List<Object> arguments = new LinkedList<Object>();
-        extractMethodNameArguments(context, methodName, arguments);
-        String methodToCall = method != null ? method : UtilString.camelCase(methodName.toString());
+        extractMethodNameArguments(context, target, methodName, arguments);
+        if (methodToCall == null) {
+            methodToCall = methodName.toString();
+        }
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("FULL:" + context.getNode().toXML());
             UtilLog.LOG.debug("TEXT:" + methodName);
@@ -151,7 +164,11 @@ public class PluginSentence extends AbstractPlugin {
                 prepareArgumentsBefore(context, m, arguments);
             }
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("TYPED ARGS:" + arguments);
+                UtilLog.LOG.debug("TYPED ARGS[" + arguments.size() + "]:");
+                for (int i = 0; i < arguments.size(); i++) {
+                    Object tmp = arguments.get(i);
+                    UtilLog.LOG.debug("\t ARGS(" + i + "):" + tmp + " of type '" + (tmp != null ? tmp.getClass() : "null") + "'.");
+                }
             }
             Object tmp = m.invoke(target, arguments.toArray());
             if (type == Assertion.INSTANCE) {
@@ -175,7 +192,7 @@ public class PluginSentence extends AbstractPlugin {
                 throw new PluginException(error);
             }
             String received = error.getMessage();
-            String expectation = em.message();
+            String expectation = em.value();
             if (expectation.equals(received)) {
                 result.addResult(Success.INSTANCE, context.peek());
                 return;
@@ -183,7 +200,7 @@ public class PluginSentence extends AbstractPlugin {
             result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException("" + m + arguments + "\nExpected message does not match.", expectation, received));
         } else {
             if (em != null) {
-                result.addResult(Failure.INSTANCE, context.peek(), "Expected message not received.\nMessage: " + em.message());
+                result.addResult(Failure.INSTANCE, context.peek(), "Expected message not received.\nMessage: " + em.value());
             }
         }
     }
@@ -208,46 +225,105 @@ public class PluginSentence extends AbstractPlugin {
      * 
      * @param context
      *            The context.
-     * @param text
+     * @param target
+     *            The target object.
+     * @param methodName
      *            The text part.
-     * @param args
+     * @param arguments
      *            The argument objects.
      * @throws PluginException
      *             On errors.
      */
-    protected void extractMethodNameArguments(IContext context, StringBuilder text, List<Object> args) throws PluginException {
+    protected void extractMethodNameArguments(IContext context, Object target, StringBuilder methodName, List<Object> arguments) throws PluginException {
+        boolean camel = true;
         Node node = context.getNode();
         if (node.getChildCount() == 1 && node.getChild(0) instanceof Text) {
-            onlyText(context, node, text, args);
+            INodeHolder holder = UtilNode.newNodeHolder(node);
+            String value = String.valueOf(holder.getObject(context, true));
+            boolean annotation = fromAnnotations(value, target, methodName, arguments);
+            if (annotation) {
+                camel = false;
+            } else {
+                onlyText(value, methodName, arguments);
+            }
         } else {
-            onlyArgs(context, node, text, args);
+            onlyArgs(context, node, methodName, arguments);
+        }
+        if (camel) {
+            String tmp = UtilString.camelCase(methodName.toString());
+            methodName.setLength(0);
+            methodName.append(tmp);
         }
     }
 
     /**
-     * Extract parameters from text. In this approach, all parameters are
-     * expected as strings.
+     * Perform method search from annotations.
      * 
-     * @param context
-     *            The context.
-     * @param node
-     *            The current node.
+     * @param value
+     *            The node text value.
+     * @param target
+     *            The target object.
      * @param text
      *            The text.
      * @param args
      *            The arguments.
-     * @throws PluginException
-     *             On errors.
+     * @return true, if some method annotation matches the value, false,
+     *         otherwise.
      */
-    protected void onlyText(IContext context, Node node, StringBuilder text, List<Object> args) throws PluginException {
-        INodeHolder holder = UtilNode.newNodeHolder(node);
-        String tmp = String.valueOf(holder.getObject(context, true));
+    protected boolean fromAnnotations(String value, Object target, StringBuilder text, List<Object> args) {
+        // when a method is specified regular expressions are useless.
+        if (method != null) {
+            return false;
+        }
+        Class<?> type = target.getClass();
+        Method[] ms = type.getMethods();
+        for (Method m : ms) {
+            Sentence s = m.getAnnotation(Sentence.class);
+            if (s != null) {
+                String str = s.value();
+                Pattern pattern = cache.get(str);
+                if (pattern == null) {
+                    pattern = Pattern.compile(str, Pattern.CASE_INSENSITIVE);
+                    cache.put(str, pattern);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("New pattern for '" + str + "' created.");
+                    }
+                } else {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
+                    }
+                }
+                Matcher matcher = pattern.matcher(value);
+                if (matcher.find()) {
+                    for (int i = 1; i <= matcher.groupCount(); i++) {
+                        args.add(matcher.group(i));
+                    }
+                    text.append(m.getName());
+                    break;
+                }
+            }
+        }
+        return text.length() != 0;
+    }
+
+    /**
+     * Extract parameters from text. In this approach, all parameters are
+     * expected as strings delimited by quotes.
+     * 
+     * @param text
+     *            The text.
+     * @param methodName
+     *            The method name.
+     * @param arguments
+     *            The arguments.
+     */
+    protected void onlyText(String text, StringBuilder methodName, List<Object> arguments) {
         Stack<StringBuilder> stack = new Stack<StringBuilder>();
         stack.push(new StringBuilder());
-        for (int i = 0; i < tmp.length(); i++) {
-            char c = tmp.charAt(i);
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
             if (c == '"') {
-                if (i > 0 && tmp.charAt(i - 1) == '\\') {
+                if (i > 0 && text.charAt(i - 1) == '\\') {
                     stack.peek().setLength(stack.peek().length() - 1);
                     stack.peek().append(c);
                     continue;
@@ -255,13 +331,13 @@ public class PluginSentence extends AbstractPlugin {
                 if (stack.size() == 1) {
                     stack.push(new StringBuilder());
                 } else {
-                    args.add(stack.pop().toString());
+                    arguments.add(stack.pop().toString());
                 }
                 continue;
             }
             stack.peek().append(c);
         }
-        text.append(stack.pop().toString());
+        methodName.append(stack.pop().toString());
     }
 
     /**

@@ -9,7 +9,7 @@ public class ObjetoAlvo {
         System.out.println("PESSOA:" + p);
     }
 
-    @ExpectedMessage(message = "Converter named 'testing' not found.")
+    @ExpectedMessage("Converter named 'testing' not found.")
     public void erro(@Converter(name = "testing", resultType = Person.class) Person p) {
         System.out.println("PESSOA:" + p);
     }
