@@ -23,7 +23,7 @@ public class TestAnnotation {
         System.out.println("OTHER_ARG:" + arg);
     }
 
-    @Sentence("result (\\d+) of (\\d+) is (\\d+)\\.")
+    @Sentence("result of (\\d+) plus (\\d+) is (\\d+)\\.")
     public boolean otherCall(int a, int b, int c) {
         System.out.println("ASSERTION (a+b)=c");
         return a + b == c;

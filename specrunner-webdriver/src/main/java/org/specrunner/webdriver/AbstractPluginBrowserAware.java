@@ -311,7 +311,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                         span.appendChild(" [");
 
                         Element a = new Element("a");
-                        a.addAttribute(new Attribute("href", download));
+                        a.addAttribute(new Attribute("href", outputFile.getAbsolutePath()));
                         a.appendChild(outputFile.getName() + " (" + response.getContentType() + ")");
                         span.appendChild(a);
 
