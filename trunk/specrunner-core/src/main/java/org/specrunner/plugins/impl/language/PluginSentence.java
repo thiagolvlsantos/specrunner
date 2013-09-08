@@ -81,9 +81,14 @@ public class PluginSentence extends AbstractPlugin {
     private Boolean after = Boolean.FALSE;
 
     /**
+     * Cache of type to methods annotated with sentence.
+     */
+    private static ICache<Class<?>, List<Method>> methods = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_methods");
+
+    /**
      * Cache of patterns.
      */
-    private static ICache<String, Pattern> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName());
+    private static ICache<String, Pattern> patterns = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_patterns");
 
     @Override
     public ActionType getActionType() {
@@ -276,31 +281,46 @@ public class PluginSentence extends AbstractPlugin {
             return false;
         }
         Class<?> type = target.getClass();
-        Method[] ms = type.getMethods();
+        List<Method> ms = methods.get(type);
+        if (ms == null) {
+            ms = new LinkedList<Method>();
+            for (Method m : type.getMethods()) {
+                Sentence s = m.getAnnotation(Sentence.class);
+                if (s != null) {
+                    ms.add(m);
+                }
+            }
+            methods.put(type, ms);
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Class " + type + " mapped to @Sentence annotated methods: '" + ms + "'.");
+            }
+        } else {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Class " + type + " map to @Sentence reused.");
+            }
+        }
         for (Method m : ms) {
             Sentence s = m.getAnnotation(Sentence.class);
-            if (s != null) {
-                String str = s.value();
-                Pattern pattern = cache.get(str);
-                if (pattern == null) {
-                    pattern = Pattern.compile(str, Pattern.CASE_INSENSITIVE);
-                    cache.put(str, pattern);
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("New pattern for '" + str + "' created.");
-                    }
-                } else {
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
-                    }
+            String str = s.value();
+            Pattern pattern = patterns.get(str);
+            if (pattern == null) {
+                pattern = Pattern.compile(str, Pattern.CASE_INSENSITIVE);
+                patterns.put(str, pattern);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("New pattern for '" + str + "' created.");
                 }
-                Matcher matcher = pattern.matcher(value);
-                if (matcher.find()) {
-                    for (int i = 1; i <= matcher.groupCount(); i++) {
-                        args.add(matcher.group(i));
-                    }
-                    text.append(m.getName());
-                    break;
+            } else {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
                 }
+            }
+            Matcher matcher = pattern.matcher(value);
+            if (matcher.find()) {
+                for (int i = 1; i <= matcher.groupCount(); i++) {
+                    args.add(matcher.group(i));
+                }
+                text.append(m.getName());
+                break;
             }
         }
         return text.length() != 0;
