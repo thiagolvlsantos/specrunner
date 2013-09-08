@@ -69,6 +69,7 @@ public class ExpressionVariable extends AbstractExpression {
 
     @Override
     public Object evaluate(IContext context, boolean silent) throws ExpressionException {
-        return context.getByName("${" + name + "}");
+        Object obj = context.getByName("${" + name + "}");
+        return obj == null ? context.getByName(name) : obj;
     }
 }
