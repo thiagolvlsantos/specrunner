@@ -89,18 +89,18 @@ $(document).ready(function() {
     $("*[id*='_inc']").each(function(event) {
         //$(this).hide();
     });
-    $("a.include").each(function() {
+    $(".include").each(function() {
         $(this).click(function(event){
             var name = "#" + $(this).attr("id") + "_inc";
             $(name).slideToggle();
             event.preventDefault();
         });
     });
-    $("a.collapse").each(function() {
+    $(".collapse").each(function() {
         var name = "#" + $(this).attr("id") + "_inc";
         $(name).hide();
     });
-    $("a.expanded").each(function() {
+    $(".expanded").each(function() {
         var name = "#" + $(this).attr("id") + "_inc";
         $(name).show();
     });
