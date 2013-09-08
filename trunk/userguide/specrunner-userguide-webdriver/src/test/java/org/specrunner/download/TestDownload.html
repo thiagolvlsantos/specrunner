@@ -7,6 +7,7 @@
     <ul>
         <li>Ligar <span class="jettyStart" file="/jetty.xml">Jetty</span>;</li>
         <li>Abrir um <span class="browser startin" provider="org.specrunner.jetty.JettyStringProvider">browser</span>;</li>
+        <li>Verificar <sentence>qual browser <arg value="browser"/></sentence> está sendo usado;</li>
         <li>Acessar "<span class="open" url="/application/download.html">a lista</span>";</li>
         <li>Clicar no <span class="clickon" by="link" dir="target/downloads" download="qualquer.xls">download</span>;</li>
         <li>Clicar no <span class="clickon" by="id:check">checkbox</span>;</li>
@@ -17,4 +18,11 @@
         <!--li>Fechar o <span class="close">browser</span>.</li-->
     </ul>
 
+    <ul>
+        <li>Abrir um <span class="browser startin" name="outro" provider="org.specrunner.jetty.JettyStringProvider">browser</span>;</li>
+        <li>Verificar <sentence>qual browser <arg value="browser"/></sentence> estava sendo usado;</li>
+        <li>Verificar <sentence>qual browser <arg value="outro"/></sentence> está sendo usado agora;</li>
+        <li>Declara um número <local name="n" value="10"/> e depois chama 
+            o negócio com esse <sentence>número<arg value="n"/></sentence>;</li>
+    </ul>
 </html>
