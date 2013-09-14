@@ -40,8 +40,9 @@ public interface IPluginFactory {
      *         means a invalid plugin, but the plugin is either not mapped in
      *         the usual way, or the factory of plugins is not based on alias
      *         premisses.
+     * @throws PluginException
      */
-    String getAlias(Class<? extends IPlugin> type);
+    String getAlias(Class<? extends IPlugin> type) throws PluginException;
 
     /**
      * Bind a plugin instance to a given kind.

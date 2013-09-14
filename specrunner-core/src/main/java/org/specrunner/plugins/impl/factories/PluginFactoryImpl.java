@@ -130,7 +130,8 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     }
 
     @Override
-    public String getAlias(Class<? extends IPlugin> type) {
+    public String getAlias(Class<? extends IPlugin> type) throws PluginException {
+        initialize();
         if (type == null) {
             return null;
         }

@@ -49,7 +49,7 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
     }
 
     @Override
-    public String getAlias(Class<? extends IPlugin> type) {
+    public String getAlias(Class<? extends IPlugin> type) throws PluginException {
         String result = null;
         for (IPluginFactory pf : getChildren()) {
             result = pf.getAlias(type);
