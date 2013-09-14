@@ -2,6 +2,7 @@ package org.specrunner.junit;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.specrunner.plugins.impl.elements.PluginHtml;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISourceFactoryManager;
+import org.specrunner.util.UtilLog;
 
 /**
  * Generic statement for SpecRunner Junit extensions.
@@ -61,6 +63,8 @@ public class SpecRunnerStatement extends Statement {
         File output = getOutput(clazz, input);
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
+        configure(cfg);
+
         IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg);
         ExpectedMessages expectedMessages = getMessages();
         if (expectedMessages == null) {
@@ -109,6 +113,37 @@ public class SpecRunnerStatement extends Statement {
             }
             if (errors.length() != 0) {
                 throw new Exception(errors.toString());
+            }
+        }
+    }
+
+    /**
+     * Set configuration.
+     * 
+     * @param cfg
+     *            The configuration.
+     * @throws Throwable
+     *             On configuration errors.
+     */
+    protected void configure(IConfiguration cfg) throws Throwable {
+        if (instance != null) {
+            Method[] ms = instance.getClass().getMethods();
+            List<Method> candidates = new LinkedList<Method>();
+            for (Method m : ms) {
+                Configuration c = m.getAnnotation(Configuration.class);
+                if (c != null) {
+                    candidates.add(m);
+                }
+            }
+            for (Method m : candidates) {
+                Class<?>[] types = m.getParameterTypes();
+                if (types.length == 1 && types[0] == IConfiguration.class) {
+                    m.invoke(instance, new Object[] { cfg });
+                } else {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Invalid @Configuration method '" + m + "'");
+                    }
+                }
             }
         }
     }

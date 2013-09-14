@@ -27,6 +27,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.runner.IFilter;
 import org.specrunner.util.UtilLog;
@@ -230,25 +231,32 @@ public class FilterDefault implements IFilter {
         IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
         IPlugin plugin = block.getPlugin();
         if (plugin != PluginNop.emptyPlugin()) {
-            // ignore by alias
-            String alias = factory.getAlias(plugin.getClass());
-            boolean hasDisabled = disabledAliases != null && disabledAliases.contains(alias);
-            boolean hasEnabled = enabledAliases != null && !enabledAliases.contains(alias);
-            if (alias != null && hasDisabled || hasEnabled) {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
+            try {
+                // ignore by alias
+                String alias = factory.getAlias(plugin.getClass());
+                boolean hasDisabled = disabledAliases != null && disabledAliases.contains(alias);
+                boolean hasEnabled = enabledAliases != null && !enabledAliases.contains(alias);
+                if (alias != null && hasDisabled || hasEnabled) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Plugin '" + alias + "' ignored.");
+                    }
+                    return false;
                 }
-                return false;
-            }
-            // ignore by type
-            ActionType type = plugin.getActionType();
-            boolean actionDisabled = disabledTypes != null && disabledTypes.contains(type);
-            boolean actionEnabled = enabledTypes != null && !enabledTypes.contains(type);
-            if (type != null && actionDisabled || actionEnabled) {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Plugin '" + type.asString() + "' ignored.");
+                // ignore by type
+                ActionType type = plugin.getActionType();
+                boolean actionDisabled = disabledTypes != null && disabledTypes.contains(type);
+                boolean actionEnabled = enabledTypes != null && !enabledTypes.contains(type);
+                if (type != null && actionDisabled || actionEnabled) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Plugin '" + type.asString() + "' ignored.");
+                    }
+                    return false;
                 }
-                return false;
+            } catch (PluginException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Plugin '" + plugin.getClass() + "' has no alias.");
+                }
+                return true;
             }
         }
         return true;
