@@ -4,24 +4,20 @@ import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
-import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.impl.var.PluginBean;
 
 @RunWith(SRRunner.class)
-public class TestCfg2 extends TestCfg1 {
+public class TestCfg3 extends TestCfg2 {
 
-    @Override
     @Configuration
-    public void prepare(IConfiguration cfg) {
-        // override parent to not add BEAN_NAME
-        SpecRunnerServices.getFeatureManager().add(PluginBean.FEATURE_WAIT, "wait");
+    public void prepareOther(IConfiguration cfg) {
+        // complement super class configuration (order is not deterministic).
+        cfg.add(PluginBean.BEAN_NAME, "any");
     }
 
     @Override
-    @ExpectedMessage("Expected result of 'public boolean example.configuration.TestCfg2.checkCfg(java.lang.String)' must be 'true'. Received 'false'.")
     public boolean checkCfg(String value) {
-        // in this example BEAN_NAME is not bound
         return value.equals(SpecRunnerServices.getFeatureManager().get(PluginBean.BEAN_NAME));
     }
 }
