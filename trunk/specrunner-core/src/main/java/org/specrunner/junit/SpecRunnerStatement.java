@@ -61,91 +61,8 @@ public class SpecRunnerStatement extends Statement {
         Class<?> clazz = test.getJavaClass();
         File input = getFile(clazz);
         File output = getOutput(clazz, input);
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
-        configure(cfg);
-
-        IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg);
-        ExpectedMessages expectedMessages = getMessages();
-        if (expectedMessages == null) {
-            if (result.getStatus().isError()) {
-                throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
-            }
-        } else {
-            List<String> received = new LinkedList<String>();
-            for (IResult r : result) {
-                if (r.getStatus().isError()) {
-                    received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
-                }
-            }
-            String[] messages = expectedMessages.messages();
-            boolean sorted = expectedMessages.sorted();
-            StringBuilder errors = new StringBuilder();
-            List<String> expected = new LinkedList<String>();
-            for (String s : messages) {
-                expected.add(s);
-            }
-            if (sorted) {
-                int i = 0;
-                int max = Math.min(received.size(), expected.size());
-                for (; i < max; i++) {
-                    if (!expected.get(i).equals(received.get(i))) {
-                        errors.append("Expected '" + expected.get(i) + "' does not match received '" + received.get(i) + "'.\n");
-                    }
-                }
-                if (max < expected.size()) {
-                    errors.append("Expected messages missing:" + expected.subList(max, expected.size()));
-                }
-                if (max < received.size()) {
-                    errors.append("Unexpected messages received:" + received.subList(max, received.size()));
-                }
-            } else {
-                List<String> extraReceived = new LinkedList<String>(received);
-                List<String> extraExpected = new LinkedList<String>(expected);
-                extraReceived.removeAll(expected);
-                extraExpected.removeAll(received);
-                if (extraExpected.size() > 0) {
-                    errors.append("Expected messages missing:" + extraExpected + ".\n");
-                }
-                if (extraReceived.size() > 0) {
-                    errors.append("Unexpected messages received:" + extraReceived + ".\n");
-                }
-            }
-            if (errors.length() != 0) {
-                throw new Exception(errors.toString());
-            }
-        }
-    }
-
-    /**
-     * Set configuration.
-     * 
-     * @param cfg
-     *            The configuration.
-     * @throws Throwable
-     *             On configuration errors.
-     */
-    protected void configure(IConfiguration cfg) throws Throwable {
-        if (instance != null) {
-            Method[] ms = instance.getClass().getMethods();
-            List<Method> candidates = new LinkedList<Method>();
-            for (Method m : ms) {
-                Configuration c = m.getAnnotation(Configuration.class);
-                if (c != null) {
-                    candidates.add(m);
-                }
-            }
-            for (Method m : candidates) {
-                Class<?>[] types = m.getParameterTypes();
-                if (types.length == 1 && types[0] == IConfiguration.class) {
-                    m.invoke(instance, new Object[] { cfg });
-                } else {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Invalid @Configuration method '" + m + "'");
-                    }
-                }
-            }
-        }
+        configure(output, cfg);
+        verify(output, SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg));
     }
 
     /**
@@ -216,6 +133,104 @@ public class SpecRunnerStatement extends Statement {
             return name.substring(0, name.lastIndexOf('.')) + ".html";
         } else {
             return name;
+        }
+    }
+
+    /**
+     * Set configuration.
+     * 
+     * @param output
+     *            The expected output file.
+     * 
+     * @param cfg
+     *            The configuration.
+     * @throws Throwable
+     *             On configuration errors.
+     */
+    protected void configure(File output, IConfiguration cfg) throws Throwable {
+        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
+        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
+        if (instance != null) {
+            Method[] ms = instance.getClass().getMethods();
+            List<Method> candidates = new LinkedList<Method>();
+            for (Method m : ms) {
+                Configuration c = m.getAnnotation(Configuration.class);
+                if (c != null) {
+                    candidates.add(m);
+                }
+            }
+            for (Method m : candidates) {
+                Class<?>[] types = m.getParameterTypes();
+                if (types.length == 1 && types[0] == IConfiguration.class) {
+                    m.invoke(instance, new Object[] { cfg });
+                } else {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Invalid @Configuration method '" + m + "'");
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Check final state.
+     * 
+     * @param output
+     *            The output file name.
+     * @param result
+     *            The result.
+     * @throws Exception
+     *             On processing errors.
+     */
+    protected void verify(File output, IResultSet result) throws Exception {
+        ExpectedMessages expectedMessages = getMessages();
+        if (expectedMessages == null) {
+            if (result.getStatus().isError()) {
+                throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
+            }
+        } else {
+            List<String> received = new LinkedList<String>();
+            for (IResult r : result) {
+                if (r.getStatus().isError()) {
+                    received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
+                }
+            }
+            String[] messages = expectedMessages.messages();
+            boolean sorted = expectedMessages.sorted();
+            StringBuilder errors = new StringBuilder();
+            List<String> expected = new LinkedList<String>();
+            for (String s : messages) {
+                expected.add(s);
+            }
+            if (sorted) {
+                int i = 0;
+                int max = Math.min(received.size(), expected.size());
+                for (; i < max; i++) {
+                    if (!expected.get(i).equals(received.get(i))) {
+                        errors.append("Expected '" + expected.get(i) + "' does not match received '" + received.get(i) + "'.\n");
+                    }
+                }
+                if (max < expected.size()) {
+                    errors.append("Expected messages missing:" + expected.subList(max, expected.size()));
+                }
+                if (max < received.size()) {
+                    errors.append("Unexpected messages received:" + received.subList(max, received.size()));
+                }
+            } else {
+                List<String> extraReceived = new LinkedList<String>(received);
+                List<String> extraExpected = new LinkedList<String>(expected);
+                extraReceived.removeAll(expected);
+                extraExpected.removeAll(received);
+                if (extraExpected.size() > 0) {
+                    errors.append("Expected messages missing:" + extraExpected + ".\n");
+                }
+                if (extraReceived.size() > 0) {
+                    errors.append("Unexpected messages received:" + extraReceived + ".\n");
+                }
+            }
+            if (errors.length() != 0) {
+                throw new Exception(errors.toString());
+            }
         }
     }
 }
