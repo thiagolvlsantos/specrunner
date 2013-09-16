@@ -37,6 +37,31 @@ import org.specrunner.plugins.PluginException;
 public interface INodeHolder {
 
     /**
+     * Attribute for property access.
+     */
+    String ATTRIBUTE_PROPERTY = "property";
+    /**
+     * Attribute for value.
+     */
+    String ATTRIBUTE_VALUE = "value";
+    /**
+     * Attribute for comparator.
+     */
+    String ATTRIBUTE_COMPARATOR = "comparator";
+    /**
+     * Attribute for value evaluation.
+     */
+    String ATTRIBUTE_EVALUATION = "eval";
+    /**
+     * Attribute for converter.
+     */
+    String ATTRIBUTE_CONVERTER = "converter";
+    /**
+     * Attribute for arguments prefix.
+     */
+    String ATTRIBUTE_ARGUMENT_PREFIX = "arg";
+
+    /**
      * Get the hold node.
      * 
      * @return The node.

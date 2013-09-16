@@ -383,11 +383,7 @@ public class PluginSentence extends AbstractPlugin {
             if (n instanceof Element) {
                 INodeHolder h = UtilNode.newNodeHolder(n);
                 if (h.hasName("arg") || h.attributeContains("class", "arg")) {
-                    if (!h.attributeEquals("eval", "false")) {
-                        args.add(h.getObject(context, true));
-                    } else {
-                        args.add(h.getValue());
-                    }
+                    args.add(h.getObject(context, true));
                 } else {
                     onlyArgs(context, n, text, args);
                 }
