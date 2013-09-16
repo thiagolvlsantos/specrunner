@@ -3,6 +3,7 @@ package example.language;
 import java.util.Date;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
@@ -55,7 +56,6 @@ public class TestSentence {
         System.out.println("CALLED.6:" + file + "," + other);
     }
 
-    @ExpectedMessage("Invalid parameter value [23/01/2014] in public void example.language.TestSentence.openFileInBrowserDateTypedFail(java.lang.String,java.util.Date) throws java.lang.Exception. Expected class java.util.Date, received: 23/01/2014 of type class java.lang.String")
     public void openFileInBrowserDateTypedFail(String file, @Converter(args = { "dd/MM/yyyy" }) Date other) throws Exception {
         System.out.println("CALLED.7:" + file + "," + other);
     }
@@ -71,5 +71,17 @@ public class TestSentence {
     @ExpectedMessage("Expected result of 'public boolean example.language.TestSentence.booleanMethodFail(int)' must be 'true'. Received 'false'.")
     public boolean booleanMethodFail(int argument) {
         return booleanMethod(argument);
+    }
+
+    public void convertDate(@Converter(args = { "dd/MM/yyyy" }) Date date) {
+        System.out.println("CALLED.9: date = " + date);
+    }
+
+    public void convertLocalDate(@Converter(args = { "dd/MM/yyyy" }) LocalDate date) {
+        System.out.println("CALLED.10: localDate = " + date);
+    }
+
+    public void convertDateTime(@Converter(args = { "dd/MM/yyyy HH:mm:ss" }) DateTime date) {
+        System.out.println("CALLED.11: dateTime = " + date);
     }
 }

@@ -102,6 +102,7 @@ public final class UtilConverter {
             type = tmpType;
         }
         if (!type.isInstance(arg)) {
+            String simpleName = type.getSimpleName().toLowerCase();
             IConverter converter = null;
             Object[] converterArguments = null;
             Converter annotation = getConverter(annotations);
@@ -114,12 +115,15 @@ public final class UtilConverter {
                         throw new PluginException("Converter named '" + name + "' not found.");
                     }
                 } else {
-                    try {
-                        converter = annotation.type().newInstance();
-                    } catch (InstantiationException e) {
-                        throw new PluginException(e);
-                    } catch (IllegalAccessException e) {
-                        throw new PluginException(e);
+                    converter = cm.get(simpleName);
+                    if (converter == null) {
+                        try {
+                            converter = annotation.type().newInstance();
+                        } catch (InstantiationException e) {
+                            throw new PluginException(e);
+                        } catch (IllegalAccessException e) {
+                            throw new PluginException(e);
+                        }
                     }
                 }
                 Class<?> resultType = annotation.resultType();
@@ -129,7 +133,7 @@ public final class UtilConverter {
                     converterArguments = annotation.args();
                 }
             } else {
-                converter = cm.get(type.getSimpleName().toLowerCase());
+                converter = cm.get(simpleName);
                 converterArguments = new Object[] {};
             }
             if (converter != null) {

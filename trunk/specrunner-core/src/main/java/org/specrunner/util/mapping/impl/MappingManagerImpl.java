@@ -55,20 +55,21 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
                 for (Entry<Object, Object> e : p.entrySet()) {
                     String key = String.valueOf(e.getKey());
                     String property = p.getProperty(key);
+                    String keyNormalized = normalizeKey(key);
                     T instance = instances.get(property);
                     if (instance == null) {
                         @SuppressWarnings("unchecked")
                         Class<? extends T> c = (Class<? extends T>) Class.forName(property);
                         instance = c.newInstance();
                         if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("put(" + key + "," + instance + "[of type " + c + "])");
+                            UtilLog.LOG.info("put(" + keyNormalized + "," + instance + "[of type " + c + "])");
                         }
                     } else {
                         if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("reuse.put(" + key + "," + instance + ")");
+                            UtilLog.LOG.info("reuse.put(" + keyNormalized + "," + instance + ")");
                         }
                     }
-                    put(key, instance);
+                    put(keyNormalized, instance);
                     instances.put(property, instance);
                 }
             } catch (Exception e) {
@@ -76,6 +77,17 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
             }
             initialized = true;
         }
+    }
+
+    /**
+     * Normalize keys.
+     * 
+     * @param key
+     *            The key.
+     * @return The key normalized.
+     */
+    protected String normalizeKey(Object key) {
+        return key == null ? null : String.valueOf(key).toLowerCase();
     }
 
     @Override
@@ -87,8 +99,11 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
 
     @Override
     public T get(Object name) {
+        if (name == null) {
+            return null;
+        }
         initialize();
-        T c = super.get(name);
+        T c = super.get(normalizeKey(name));
         if (c != null) {
             c.initialize();
         }

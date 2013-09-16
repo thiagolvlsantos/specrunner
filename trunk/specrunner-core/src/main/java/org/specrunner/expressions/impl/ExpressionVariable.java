@@ -20,6 +20,7 @@ package org.specrunner.expressions.impl;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.util.UtilEvaluator;
 
 /**
  * Expression variable. Lookup by variable name in the context using
@@ -69,7 +70,6 @@ public class ExpressionVariable extends AbstractExpression {
 
     @Override
     public Object evaluate(IContext context, boolean silent) throws ExpressionException {
-        Object obj = context.getByName("${" + name + "}");
-        return obj == null ? context.getByName(name) : obj;
+        return context.getByName(UtilEvaluator.asVariable(name));
     }
 }
