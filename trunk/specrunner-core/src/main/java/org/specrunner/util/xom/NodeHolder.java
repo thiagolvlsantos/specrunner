@@ -18,6 +18,7 @@
 package org.specrunner.util.xom;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -142,8 +143,8 @@ public class NodeHolder implements INodeHolder {
     @Override
     public IConverter getConverter(IConverter converterDefault) {
         IConverter converter = null;
-        if (hasAttribute("converter")) {
-            String str = getAttribute("converter");
+        if (hasAttribute(ATTRIBUTE_CONVERTER)) {
+            String str = getAttribute(ATTRIBUTE_CONVERTER);
             IConverterManager cm = SpecRunnerServices.getConverterManager();
             converter = cm.get(str);
             if (converter == null) {
@@ -174,7 +175,7 @@ public class NodeHolder implements INodeHolder {
         if (node instanceof Element) {
             Element element = (Element) node;
             for (int i = 0; i < element.getAttributeCount(); i++) {
-                String arg = getAttribute("arg" + i);
+                String arg = getAttribute(ATTRIBUTE_ARGUMENT_PREFIX + i);
                 if (arg == null) {
                     break;
                 }
@@ -192,8 +193,8 @@ public class NodeHolder implements INodeHolder {
     @Override
     public IComparator getComparator(IComparator comparatorDefault) throws ComparatorException {
         IComparator comparator = null;
-        if (hasAttribute("comparator")) {
-            String str = getAttribute("comparator");
+        if (hasAttribute(ATTRIBUTE_COMPARATOR)) {
+            String str = getAttribute(ATTRIBUTE_COMPARATOR);
             IComparatorManager cm = SpecRunnerServices.getComparatorManager();
             comparator = cm.get(str);
             if (comparator == null) {
@@ -226,42 +227,68 @@ public class NodeHolder implements INodeHolder {
         converter = getConverter(converter);
         arguments = getArguments(arguments);
         Object value = null;
-        if (hasAttribute("property")) {
-            String str = getAttribute("property");
-            int pos = str.indexOf('.');
-            if (pos <= 0) {
-                throw new PluginException("Bean name or property missing in property='" + str + "'.");
-            }
-            Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
-            try {
-                value = PropertyUtils.getProperty(bean, str.substring(pos + 1));
-            } catch (IllegalAccessException e) {
-                throw new PluginException(e);
-            } catch (InvocationTargetException e) {
-                throw new PluginException(e);
-            } catch (NoSuchMethodException e) {
-                throw new PluginException(e);
+        if (attributeEquals(ATTRIBUTE_EVALUATION, Boolean.FALSE.toString())) {
+            value = getValue();
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Evaluation ignored, value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
             }
         } else {
-            String tmp;
-            if (hasAttribute("value")) {
-                tmp = getAttribute("value");
+            if (hasAttribute(ATTRIBUTE_PROPERTY)) {
+                String str = getAttribute(ATTRIBUTE_PROPERTY);
+                int pos = str.indexOf('.');
+                if (pos <= 0) {
+                    throw new PluginException("Bean name or property missing in property='" + str + "'.");
+                }
+                Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
+                try {
+                    value = PropertyUtils.getProperty(bean, str.substring(pos + 1));
+                } catch (IllegalAccessException e) {
+                    throw new PluginException(e);
+                } catch (InvocationTargetException e) {
+                    throw new PluginException(e);
+                } catch (NoSuchMethodException e) {
+                    throw new PluginException(e);
+                }
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Bean property (" + str + ") value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
+                }
             } else {
-                tmp = getValue();
+                String tmp;
+                if (hasAttribute(ATTRIBUTE_VALUE)) {
+                    tmp = getAttribute(ATTRIBUTE_VALUE);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Attribute value present, value is '" + tmp + "'.");
+                    }
+                } else {
+                    tmp = getValue();
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Content value is '" + tmp + "'.");
+                    }
+                }
+                value = UtilEvaluator.evaluate(tmp, context, silent);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
+                }
             }
-            value = UtilEvaluator.evaluate(tmp, context, silent);
+            Object[] args = new Object[arguments.size()];
+            for (int i = 0; i < arguments.size(); i++) {
+                args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
+            }
+            Object convert;
+            try {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + Arrays.toString(args));
+                }
+                convert = converter.convert(value, arguments.toArray());
+            } catch (Exception e) {
+                throw new PluginException(e);
+            }
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Converted value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
+            }
+            return convert;
         }
-        Object[] args = new Object[arguments.size()];
-        for (int i = 0; i < arguments.size(); i++) {
-            args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
-        }
-        Object convert;
-        try {
-            convert = converter.convert(value, arguments.toArray());
-        } catch (Exception e) {
-            throw new PluginException(e);
-        }
-        return convert;
+        return value;
     }
 
     @Override
