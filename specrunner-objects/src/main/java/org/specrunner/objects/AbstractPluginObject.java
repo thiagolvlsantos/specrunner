@@ -1231,4 +1231,27 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
         return result;
     }
+
+    /**
+     * Remove an object from mapping.
+     * 
+     * @param key
+     *            The key.
+     * @return The object removed.
+     * @throws PluginException
+     *             On lookup errors.
+     */
+    public Object removeObject(String key) throws PluginException {
+        Object old = keysBefore.get(key);
+        keysBefore.remove(key);
+        if (old == null) {
+            throw new PluginException("Instance '" + key + "' of '" + typeInstance.getName() + "' not found.");
+        }
+        old = instances.get(old);
+        instances.remove(old);
+        if (old == null) {
+            throw new PluginException("Instance '" + key + "' of '" + typeInstance.getName() + "' not found.");
+        }
+        return old;
+    }
 }

@@ -15,22 +15,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.objects;
+package org.specrunner.objects.impl;
+
+import java.util.Map;
 
 import org.specrunner.context.IContext;
+import org.specrunner.objects.AbstractPluginObject;
+import org.specrunner.objects.AbstractPluginObjectSelectUnique;
+import org.specrunner.objects.PluginObjectManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.RowAdapter;
 
 /**
- * Maps a object but do not persist it. The default behavior of objects, put
- * them all in memory.
+ * Delete object from memory.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginObjectMemory extends AbstractPluginObject {
+public class PluginDelete extends AbstractPluginObjectSelectUnique<PluginObjectManager> {
+
+    /**
+     * Create an update plugin.
+     */
+    public PluginDelete() {
+        super(ObjectSelector.get());
+    }
 
     @Override
     public ActionType getActionType() {
@@ -38,12 +49,9 @@ public class PluginObjectMemory extends AbstractPluginObject {
     }
 
     @Override
-    protected boolean isMapped() {
-        return true;
-    }
-
-    @Override
-    protected void action(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
-        // nothing: memory mapping is default.
+    public void perform(IContext context, Object base, Object instance, RowAdapter row, IResultSet result) throws Exception {
+        Map<Class<?>, AbstractPluginObject> entities = source.getEntities();
+        AbstractPluginObject plugin = entities.get(base.getClass());
+        plugin.removeObject(plugin.makeKey(base));
     }
 }

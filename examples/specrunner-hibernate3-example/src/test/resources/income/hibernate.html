@@ -23,13 +23,13 @@
 <table>
 	<tr>
 		<td valign="top">Lista de cidades:
-			<table class="dados objins" type="th.example.City" reference="id"
+			<table class="dados hbmins" type="th.example.City" reference="id"
 				separator="/">
 				<caption>Cidades</caption>
 				<tr>
 					<th default="-1">ID</th>
 					<th field="name">Nome</th>
-					<th field="foundation" converter="datePatternArgs"
+					<th field="foundation" converter="date"
 						arg0="dd/MM/yyyy">Data de fundação</th>
 					<th field="status" converter="bool">Ativa</th>
 					<th field="lastUpdate" converter="dateCurrent">Última
@@ -108,7 +108,7 @@
 	</tr>
 </table>
 Atualizar os valores:
-<table class="objupd" type="th.example.City" reference="name">
+<table class="hbmupd" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 		<th field="name">Nome</th>
@@ -121,7 +121,7 @@ Atualizar os valores:
 </table>
 
 Remove o valor:
-<table class="objdel" type="th.example.City" reference="name">
+<table class="hbmdel" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 		<th field="name">Nome</th>
@@ -132,12 +132,12 @@ Remove o valor:
 </table>
 
 Conferir que a base contém:
-<table class="objon" type="th.example.City" reference="name">
+<table class="hbmon" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 
 		<th field="name">Nome</th>
-		<th field="foundation" converter="datePatternArgs" arg0="dd/MM/yyyy">Data
+		<th field="foundation" converter="date" arg0="dd/MM/yyyy">Data
 			de fundação</th>
 		<th field="status" converter="bool">Ativa</th>
 		<th field="lastUpdate" converter="dateCurrent" comparator="true">Última
@@ -167,7 +167,7 @@ Conferir que a base contém:
 </table>
 
 Conferir que a base NÃO contém:
-<table class="objoff" type="th.example.City" reference="name">
+<table class="hbmoff" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 		<th field="name">Nome</th>
