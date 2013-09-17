@@ -48,7 +48,7 @@ public class TestSentence {
         System.out.println("CALLED.4:" + file + "," + other);
     }
 
-    public void openFileInBrowserDate(String file, @Converter(name = "datePatternArgs", args = { "dd/MM/yyyy" }) Date other) throws Exception {
+    public void openFileInBrowserDate(String file, @Converter(name = "date", args = { "dd/MM/yyyy" }) Date other) throws Exception {
         System.out.println("CALLED.5:" + file + "," + other);
     }
 

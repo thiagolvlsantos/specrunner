@@ -22,7 +22,7 @@ import org.specrunner.util.xom.RowAdapter;
 public class ObjectSelector implements IObjectSelector<Session> {
 
     /**
-     * Thread safe instance of <code>IFinder</code>.
+     * Thread safe instance of <code>ObjectSelector</code>.
      */
     private static ThreadLocal<ObjectSelector> instance = new ThreadLocal<ObjectSelector>() {
         @Override
@@ -46,10 +46,10 @@ public class ObjectSelector implements IObjectSelector<Session> {
     }
 
     @Override
-    public Session getSource(AbstractPluginObject plugin, IContext context) throws Exception {
+    public Session getSource(AbstractPluginObject caller, IContext context) throws Exception {
         // recover the plugin session factory.
         if (session == null) {
-            SessionFactory sf = PluginSessionFactory.getSessionFactory(context, plugin.getName());
+            SessionFactory sf = PluginSessionFactory.getSessionFactory(context, caller.getName());
             session = sf.openSession();
         }
         return session;
@@ -57,10 +57,10 @@ public class ObjectSelector implements IObjectSelector<Session> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<Object> select(AbstractPluginObject plugin, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
-        session = getSource(plugin, context);
+    public List<Object> select(AbstractPluginObject caller, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
+        session = getSource(caller, context);
         Criteria c = session.createCriteria(instance.getClass());
-        String[] keyFields = plugin.getReference().split(",");
+        String[] keyFields = caller.getReference().split(",");
         for (int i = 0; i < keyFields.length; i++) {
             c.add(Restrictions.eq(keyFields[i], PropertyUtils.getProperty(instance, keyFields[i])));
         }

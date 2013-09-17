@@ -35,7 +35,7 @@ public interface IObjectSelector<T> {
     /**
      * The source for object selection.
      * 
-     * @param plugin
+     * @param caller
      *            The plugin.
      * @param context
      *            The testing context.
@@ -43,13 +43,13 @@ public interface IObjectSelector<T> {
      * @throws Exception
      *             On selection errors.
      */
-    T getSource(AbstractPluginObject plugin, IContext context) throws Exception;
+    T getSource(AbstractPluginObject caller, IContext context) throws Exception;
 
     /**
      * Performs a select on object repository to compare with the reference.
      * 
-     * @param plugin
-     *            The object plugin information.
+     * @param caller
+     *            The caller plugin.
      * @param context
      *            The test context.
      * @param instance
@@ -62,7 +62,7 @@ public interface IObjectSelector<T> {
      * @throws Exception
      *             On selection errors.
      */
-    List<Object> select(AbstractPluginObject plugin, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
+    List<Object> select(AbstractPluginObject caller, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception;
 
     /**
      * Release comparison resources. i.e. For Hibernate repositories free
