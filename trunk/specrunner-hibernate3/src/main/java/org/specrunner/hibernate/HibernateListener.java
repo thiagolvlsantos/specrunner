@@ -23,7 +23,7 @@ import org.hibernate.event.PostInsertEvent;
 import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PreInsertEvent;
 import org.hibernate.event.PreInsertEventListener;
-import org.specrunner.objects.AbstractPluginObject;
+import org.specrunner.plugins.impl.objects.AbstractPluginObject;
 import org.specrunner.util.UtilLog;
 
 /**

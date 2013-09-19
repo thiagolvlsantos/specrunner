@@ -41,8 +41,6 @@
         <module>../specrunner-core-excel</module>
         <!-- Basic database support -->
         <module>../specrunner-sql</module>
-        <!-- Basic object mapping -->
-        <module>../specrunner-objects</module>
         <!-- ORM -->
         <module>../specrunner-hibernate3</module>
         <module>../specrunner-jpa</module>

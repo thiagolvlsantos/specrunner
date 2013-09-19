@@ -1,0 +1,142 @@
+<h1>Users</h1>
+
+<h2>Adding users to memory</h2>
+<table class="objins" mapping="users">
+    <caption>User information</caption>
+    <tr>
+        <th>User Login</th>
+        <th field="name">Name</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+        <td>Thiago Santos</td>
+    </tr>
+    <tr>
+        <td>lab</td>
+        <td>Luciano Barbosa</td>
+    </tr>
+    <tr>
+        <td>ogm</td>
+        <td>Oscar Miranda</td>
+    </tr>
+</table>
+
+<h2>Memory contains</h2>
+<table class="objon" mapping="users">
+    <caption>User information</caption>
+    <tr>
+        <th>Login</th>
+        <th>Name</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+        <td>Thiago Santos</td>
+    </tr>
+</table>
+
+<h2>Memory does not contain</h2>
+<table class="objoff" mapping="users">
+    <caption>User information</caption>
+    <tr>
+        <th field="login">User Login</th>
+        <th field="name">Name</th>
+    </tr>
+    <tr>
+        <td>crb</td>
+        <td>Carlos Branco</td>
+    </tr>
+</table>
+
+<h1>Roles</h1>
+<h2>Adding roles to memory</h2>
+<table class="objins" mapping="roles">
+    <caption>Roles set</caption>
+    <tr>
+        <th>Alias</th>
+        <th>Name</th>
+    </tr>
+    <tr>
+        <td>admin</td>
+        <td>Administrator</td>
+    </tr>
+    <tr>
+        <td>manag</td>
+        <td>Manager</td>
+    </tr>
+    <tr>
+        <td>usr</td>
+        <td>User</td>
+    </tr>
+</table>
+
+<h1>Relations</h1>
+
+<h2>Relate users to roles</h2>
+<table class="objins" type="example.objects.Authorization" reference="user.login,role.alias" separator="|">
+    <caption>Roles set</caption>
+    <tr>
+        <th>User</th>
+        <th>Role</th>
+        <th field="expiration" converter="date" arg0="dd/MM/yyyy">Expiration date</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+        <td>admin</td>
+        <td converter="dateCurrent">ano atual</td>
+    </tr>
+    <tr>
+        <td>lab</td>
+        <td>manag</td>
+        <td>10/12/2014</td>
+    </tr>
+</table>
+
+
+<h1>Call fixture</h1>
+<p>
+    Call something to
+    <sentence method="perform">ok "tlvls|admin"</sentence>
+    .
+</p>
+
+<p class="sentence">Or something else lab</p>
+
+<h1>Delete from memory</h1>
+
+Remove objects (only key is required to remove):
+<table class="objdel" mapping="users">
+    <caption>User information</caption>
+    <tr>
+        <th>Login</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+    </tr>
+</table>
+
+<h2>Memory does not contain (only key is required to check)</h2>
+<table class="objoff" mapping="users">
+    <caption>User information</caption>
+    <tr>
+        <th field="login">Login</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+    </tr>
+</table>
+
+<h2>Delete does not remove relationships</h2>
+Relation is not present in memory:
+<table class="objon" type="example.objects.Authorization" reference="user.login,role.alias" separator="|">
+    <caption>Relation information</caption>
+    <tr>
+        <th>User</th>
+        <th>Role</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+        <td>admin</td>
+    </tr>
+</table>
+
+<p>
