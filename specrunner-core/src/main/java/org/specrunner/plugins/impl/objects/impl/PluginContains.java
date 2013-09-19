@@ -15,19 +15,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.hibernate;
+package org.specrunner.plugins.impl.objects.impl;
 
-import org.hibernate.Session;
 import org.specrunner.plugins.impl.objects.AbstractPluginObjectCompare;
+import org.specrunner.plugins.impl.objects.PluginObjectManager;
 
 /**
- * Check if a given list of objects is present in database. The object output
- * list has the same format of input.
+ * Check if a given list of objects is present in memory. The object output list
+ * has the same format of input.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginContains extends AbstractPluginObjectCompare<Session> {
+public class PluginContains extends AbstractPluginObjectCompare<PluginObjectManager> {
 
     /**
      * Create a output comparison.

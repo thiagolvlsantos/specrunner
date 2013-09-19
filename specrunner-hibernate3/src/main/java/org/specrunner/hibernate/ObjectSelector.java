@@ -8,8 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.specrunner.context.IContext;
-import org.specrunner.objects.AbstractPluginObject;
-import org.specrunner.objects.IObjectSelector;
+import org.specrunner.plugins.impl.objects.AbstractPluginObject;
+import org.specrunner.plugins.impl.objects.IObjectSelector;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.RowAdapter;
 

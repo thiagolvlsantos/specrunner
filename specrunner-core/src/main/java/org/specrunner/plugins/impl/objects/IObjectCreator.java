@@ -15,24 +15,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.hibernate;
+package org.specrunner.plugins.impl.objects;
 
-import org.hibernate.Session;
-import org.specrunner.plugins.impl.objects.AbstractPluginObjectCompare;
+import org.specrunner.util.xom.RowAdapter;
 
 /**
- * Check if a given list of objects is present in database. The object output
- * list has the same format of input.
+ * Based on object type creates an instance of it, using another row information
+ * or not.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginContains extends AbstractPluginObjectCompare<Session> {
+public interface IObjectCreator {
 
     /**
-     * Create a output comparison.
+     * Creates a instance of the given type.
+     * 
+     * @param type
+     *            The object type.
+     * @param row
+     *            The row with all informations.
+     * @return A new object instance, or null.
+     * @throws Exception
+     *             On object creation error.
      */
-    public PluginContains() {
-        super(ObjectSelector.get());
-    }
+    Object create(Class<?> type, RowAdapter row) throws Exception;
 }
