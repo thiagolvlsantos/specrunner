@@ -20,6 +20,7 @@ package org.specrunner.annotator.impl;
 import java.io.IOException;
 
 import nu.xom.Attribute;
+import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
@@ -69,6 +70,10 @@ public class AnnotatorStacktrace implements IAnnotator {
         if (parent == null) {
             parent = node.getDocument();
         }
+        if (parent instanceof Document) {
+            parent = ((Document) parent).getRootElement();
+        }
+
         int index = parent.indexOf(node) + 1;
 
         Element button = new Element("input");

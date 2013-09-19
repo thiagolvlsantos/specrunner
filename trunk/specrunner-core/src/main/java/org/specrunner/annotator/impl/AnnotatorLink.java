@@ -18,6 +18,7 @@
 package org.specrunner.annotator.impl;
 
 import nu.xom.Attribute;
+import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
@@ -58,6 +59,9 @@ public class AnnotatorLink implements IAnnotator {
     protected void addLinkToError(Node node, int errorIndex) {
         if (node instanceof ParentNode) {
             ParentNode ele = (ParentNode) node;
+            if (ele instanceof Document) {
+                ele = ((Document) ele).getRootElement();
+            }
             Element child = new Element("a");
             child.addAttribute(new Attribute("name", "" + errorIndex));
             ele.insertChild(child, 0);
