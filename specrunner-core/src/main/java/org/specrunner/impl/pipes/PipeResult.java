@@ -18,6 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
@@ -57,7 +58,11 @@ public class PipeResult implements IPipe {
      * @return A result set.
      */
     protected IResultSet createResult() {
-        return SpecRunnerServices.get(IResultFactory.class).newResult();
+        IResultSet result = SpecRunnerServices.get(IResultFactory.class).newResult();
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(IResultSet.FEATURE_EXPECTED_MESSAGES, result);
+        fm.set(IResultSet.FEATURE_EXPECTED_SORTED, result);
+        return result;
     }
 
     /**

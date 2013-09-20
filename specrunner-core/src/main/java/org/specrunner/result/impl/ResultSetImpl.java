@@ -29,13 +29,16 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
+import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
+import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.source.SourceException;
 
 /**
  * Default result set implementation.
@@ -45,6 +48,71 @@ import org.specrunner.result.status.Success;
  */
 @SuppressWarnings("serial")
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
+
+    /**
+     * List of expected messages.
+     */
+    private List<String> messages;
+
+    /**
+     * Ordered flag.
+     */
+    private boolean sorted;
+
+    @Override
+    public void setMessages(String[] messages) {
+        if (messages != null && messages.length > 0) {
+            this.messages = new LinkedList<String>();
+            for (int i = 0; i < messages.length; i++) {
+                this.messages.add(messages[i]);
+            }
+        }
+    }
+
+    @Override
+    public String[] getMessages() {
+        return messages == null ? null : messages.toArray(new String[messages.size()]);
+    }
+
+    @Override
+    public void setSorted(boolean sorted) {
+        this.sorted = sorted;
+    }
+
+    @Override
+    public boolean isSorted() {
+        return sorted;
+    }
+
+    @Override
+    public void consolidate(IContext context) {
+        if (messages == null) {
+            return;
+        }
+        List<String> received = new LinkedList<String>();
+        for (IResult r : this) {
+            if (r.getStatus().isError()) {
+                received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
+            }
+        }
+        if (received.isEmpty() && messages.isEmpty()) {
+            // received equals to expected
+            return;
+        }
+        StringBuilder errors = new StringBuilder();
+        errors.append("Expected messages does not match.");
+        if (!received.isEmpty()) {
+            errors.append("\nReceived messages missing:" + received);
+        }
+        if (!messages.isEmpty()) {
+            errors.append("\nExpected messages missing:" + messages);
+        }
+        try {
+            addResult(Failure.INSTANCE, context.newBlock(context.getSources().getLast().getDocument().getRootElement(), null), new Exception(errors.toString()));
+        } catch (SourceException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public Status getStatus() {
@@ -206,11 +274,44 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      * @return The result new created.
      */
     protected IResult addResult(Status status, IBlock source, String message, Throwable failure, IWritable writable) {
+        status = analiseStatus(status, message, failure);
         IResult result = new ResultImpl(status, source, message, failure, writable);
         if (add(result)) {
             return result;
         }
         return null;
+    }
+
+    protected Status analiseStatus(Status status, String message, Throwable failure) {
+        if (messages != null && status.isError()) {
+            System.out.println("AJUSTAR:" + status + ", " + message + ", " + failure);
+            if (!sorted) {
+                String tmp = getMessage(message, failure);
+                if (messages.contains(tmp)) {
+                    messages.remove(tmp);
+                    status = Success.INSTANCE;
+                }
+            } else {
+                if (!messages.isEmpty() && messages.get(0).equals(message)) {
+                    messages.remove(0);
+                    status = Success.INSTANCE;
+                }
+            }
+        }
+        return status;
+    }
+
+    /**
+     * Obtain message from error notification.
+     * 
+     * @param message
+     *            The message.
+     * @param failure
+     *            The failure.
+     * @return The message.
+     */
+    protected String getMessage(String message, Throwable failure) {
+        return message != null ? message : (failure != null ? failure.getMessage() : null);
     }
 
     @Override

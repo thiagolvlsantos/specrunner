@@ -15,7 +15,6 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.plugins.impl.elements.PluginHtml;
-import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.util.UtilLog;
@@ -42,6 +41,16 @@ public class SpecRunnerStatement extends Statement {
     private Object instance;
 
     /**
+     * The input file.
+     */
+    private File input;
+
+    /**
+     * The output file.
+     */
+    private File output;
+
+    /**
      * The testing object.
      * 
      * @param test
@@ -52,32 +61,9 @@ public class SpecRunnerStatement extends Statement {
     public SpecRunnerStatement(TestClass test, Object instance) {
         this.test = test;
         this.instance = instance;
-    }
-
-    @Override
-    public void evaluate() throws Throwable {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(PluginHtml.BEAN_NAME, instance);
         Class<?> clazz = test.getJavaClass();
-        File input = getFile(clazz);
-        File output = getOutput(clazz, input);
-        configure(output, cfg);
-        verify(output, SpecRunnerServices.getSpecRunner().run(input.getPath(), cfg));
-    }
-
-    /**
-     * Get expected messages if any.
-     * 
-     * @return The list of error messages.
-     */
-    protected ExpectedMessages getMessages() {
-        Annotation[] ans = test.getAnnotations();
-        for (Annotation an : ans) {
-            if (an instanceof ExpectedMessages) {
-                return (ExpectedMessages) an;
-            }
-        }
-        return null;
+        input = getFile(clazz);
+        output = getOutput(clazz, input);
     }
 
     /**
@@ -120,6 +106,69 @@ public class SpecRunnerStatement extends Statement {
         return new File(new File(PATH + clazz.getPackage().getName().replace('.', File.separatorChar)).getAbsoluteFile(), input.getName());
     }
 
+    @Override
+    public void evaluate() throws Throwable {
+        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), configure(cfg));
+        if (result.getStatus().isError()) {
+            throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
+        }
+    }
+
+    /**
+     * Get expected messages if any.
+     * 
+     * @return The list of error messages.
+     */
+    protected ExpectedMessages getMessages() {
+        Annotation[] ans = test.getAnnotations();
+        for (Annotation an : ans) {
+            if (an instanceof ExpectedMessages) {
+                return (ExpectedMessages) an;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Set configuration.
+     * 
+     * @param cfg
+     *            The configuration.
+     * @return The configuration itself.
+     * @throws Throwable
+     *             On configuration errors.
+     */
+    protected IConfiguration configure(IConfiguration cfg) throws Throwable {
+        cfg.add(PluginHtml.BEAN_NAME, instance);
+        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
+        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
+        ExpectedMessages expected = getMessages();
+        if (expected != null) {
+            cfg.add(IResultSet.FEATURE_EXPECTED_MESSAGES, expected.messages());
+            cfg.add(IResultSet.FEATURE_EXPECTED_SORTED, expected.sorted());
+        }
+        Method[] ms = instance.getClass().getMethods();
+        List<Method> candidates = new LinkedList<Method>();
+        for (Method m : ms) {
+            Configuration c = m.getAnnotation(Configuration.class);
+            if (c != null) {
+                candidates.add(m);
+            }
+        }
+        for (Method m : candidates) {
+            Class<?>[] types = m.getParameterTypes();
+            if (types.length == 1 && types[0] == IConfiguration.class) {
+                m.invoke(instance, new Object[] { cfg });
+            } else {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Invalid @Configuration method '" + m + "'");
+                }
+            }
+        }
+        return cfg;
+    }
+
     /**
      * Get the output name adjusted.
      * 
@@ -133,104 +182,6 @@ public class SpecRunnerStatement extends Statement {
             return name.substring(0, name.lastIndexOf('.')) + ".html";
         } else {
             return name;
-        }
-    }
-
-    /**
-     * Set configuration.
-     * 
-     * @param output
-     *            The expected output file.
-     * 
-     * @param cfg
-     *            The configuration.
-     * @throws Throwable
-     *             On configuration errors.
-     */
-    protected void configure(File output, IConfiguration cfg) throws Throwable {
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
-        if (instance != null) {
-            Method[] ms = instance.getClass().getMethods();
-            List<Method> candidates = new LinkedList<Method>();
-            for (Method m : ms) {
-                Configuration c = m.getAnnotation(Configuration.class);
-                if (c != null) {
-                    candidates.add(m);
-                }
-            }
-            for (Method m : candidates) {
-                Class<?>[] types = m.getParameterTypes();
-                if (types.length == 1 && types[0] == IConfiguration.class) {
-                    m.invoke(instance, new Object[] { cfg });
-                } else {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Invalid @Configuration method '" + m + "'");
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Check final state.
-     * 
-     * @param output
-     *            The output file name.
-     * @param result
-     *            The result.
-     * @throws Exception
-     *             On processing errors.
-     */
-    protected void verify(File output, IResultSet result) throws Exception {
-        ExpectedMessages expectedMessages = getMessages();
-        if (expectedMessages == null) {
-            if (result.getStatus().isError()) {
-                throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
-            }
-        } else {
-            List<String> received = new LinkedList<String>();
-            for (IResult r : result) {
-                if (r.getStatus().isError()) {
-                    received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
-                }
-            }
-            String[] messages = expectedMessages.messages();
-            boolean sorted = expectedMessages.sorted();
-            StringBuilder errors = new StringBuilder();
-            List<String> expected = new LinkedList<String>();
-            for (String s : messages) {
-                expected.add(s);
-            }
-            if (sorted) {
-                int i = 0;
-                int max = Math.min(received.size(), expected.size());
-                for (; i < max; i++) {
-                    if (!expected.get(i).equals(received.get(i))) {
-                        errors.append("Expected '" + expected.get(i) + "' does not match received '" + received.get(i) + "'.\n");
-                    }
-                }
-                if (max < expected.size()) {
-                    errors.append("Expected messages missing:" + expected.subList(max, expected.size()));
-                }
-                if (max < received.size()) {
-                    errors.append("Unexpected messages received:" + received.subList(max, received.size()));
-                }
-            } else {
-                List<String> extraReceived = new LinkedList<String>(received);
-                List<String> extraExpected = new LinkedList<String>(expected);
-                extraReceived.removeAll(expected);
-                extraExpected.removeAll(received);
-                if (extraExpected.size() > 0) {
-                    errors.append("Expected messages missing:" + extraExpected + ".\n");
-                }
-                if (extraReceived.size() > 0) {
-                    errors.append("Unexpected messages received:" + extraReceived + ".\n");
-                }
-            }
-            if (errors.length() != 0) {
-                throw new Exception(errors.toString());
-            }
         }
     }
 }
