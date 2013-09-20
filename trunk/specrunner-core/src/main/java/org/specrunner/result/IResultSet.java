@@ -20,6 +20,7 @@ package org.specrunner.result;
 import java.util.List;
 
 import org.specrunner.context.IBlock;
+import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.util.xom.IPresentation;
 
@@ -30,6 +31,55 @@ import org.specrunner.util.xom.IPresentation;
  * 
  */
 public interface IResultSet extends List<IResult>, IStatus, IPresentation {
+
+    /**
+     * Feature for expected messages.
+     */
+    String FEATURE_EXPECTED_MESSAGES = IResultSet.class.getName() + ".messages";
+
+    /**
+     * Feature for messages expectation order.
+     */
+    String FEATURE_EXPECTED_SORTED = IResultSet.class.getName() + ".sorted";
+
+    /**
+     * Set expected messages.
+     * 
+     * @param expected
+     *            Expected messages.
+     */
+    void setMessages(String[] expected);
+
+    /**
+     * Get the expected messages.
+     * 
+     * @return The messages.
+     */
+    String[] getMessages();
+
+    /**
+     * Set expected order of messages.
+     * 
+     * @param sorted
+     *            true, if expected messages must obey the specification order,
+     *            false, otherwise. Default might be false.
+     */
+    void setSorted(boolean sorted);
+
+    /**
+     * Get the sort flag.
+     * 
+     * @return true, of order required, false, otherwise.
+     */
+    boolean isSorted();
+
+    /**
+     * Consolidate expectations and received errors.
+     * 
+     * @param context
+     *            The context.
+     */
+    void consolidate(IContext context);
 
     /**
      * Lists status in result.

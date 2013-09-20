@@ -337,6 +337,10 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                 tbody.appendChild(tr);
                 {
                     Row row = ite.next();
+                    // invalid lines return -1 in row.getFirstCellNum().
+                    if (row.getFirstCellNum() < 0) {
+                        continue;
+                    }
                     for (int k = 0; k < columns; k++) {
                         Cell cell = row.getCell(k);
                         if (cell != null) {
