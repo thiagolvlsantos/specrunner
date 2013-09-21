@@ -52,7 +52,8 @@ public class PipeSource implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            ISource source = createSource(PipeInput.lookup(channel));
+            String input = PipeInput.lookup(channel);
+            ISource source = createSource(input);
             addResources(source);
             bind(channel, source);
         } catch (SpecRunnerException e) {
@@ -111,7 +112,7 @@ public class PipeSource implements IPipe {
      * @throws InvalidTypeException
      *             On type errors.
      */
-    public static ISource recover(IChannel channel) throws NotFoundException, InvalidTypeException {
+    public static ISource lookup(IChannel channel) throws NotFoundException, InvalidTypeException {
         return channel.get(SOURCE, ISource.class);
     }
 }

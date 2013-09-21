@@ -18,10 +18,12 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotator.IAnnotator;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.result.IResultSet;
 
 /**
  * Pipe to call annotation service.
@@ -39,7 +41,9 @@ public class PipeAnnotate implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            PipeAnnotator.lookup(channel).annotate(PipeResult.lookup(channel));
+            IAnnotator annotator = PipeAnnotator.lookup(channel);
+            IResultSet result = PipeResult.lookup(channel);
+            annotator.annotate(result);
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

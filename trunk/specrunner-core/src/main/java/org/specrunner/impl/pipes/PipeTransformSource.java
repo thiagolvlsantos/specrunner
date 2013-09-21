@@ -43,7 +43,8 @@ public class PipeTransformSource implements IPipe {
     public IChannel process(IChannel channel) throws PipelineException {
         try {
             // performs source transformation.
-            PipeSource.bind(channel, transformSource(PipeSource.recover(channel)));
+            ISource context = PipeSource.lookup(channel);
+            PipeSource.bind(channel, transformSource(context));
         } catch (SourceException e) {
             throw new PipelineException(e);
         }

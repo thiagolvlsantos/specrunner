@@ -18,6 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.configuration.IConfiguration;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
@@ -54,11 +55,9 @@ public class PipeFeatureManager implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         IFeatureManager features = createFeatureManager();
-
-        features.setConfiguration(PipeConfiguration.lookup(channel));
-
+        IConfiguration configuration = PipeConfiguration.lookup(channel);
+        features.setConfiguration(configuration);
         channel.add(FEATURE_MANAGER, features);
-
         return channel;
     }
 

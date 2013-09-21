@@ -115,26 +115,31 @@ public final class UtilConverter {
                         throw new PluginException("Converter named '" + name + "' not found.");
                     }
                 } else {
-                    converter = cm.get(simpleName);
-                    if (converter == null) {
+                    Class<? extends IConverter> converterType = annotation.type();
+                    if (converterType != null) {
                         try {
-                            converter = annotation.type().newInstance();
+                            converter = converterType.newInstance();
                         } catch (InstantiationException e) {
                             throw new PluginException(e);
                         } catch (IllegalAccessException e) {
                             throw new PluginException(e);
                         }
                     }
+                    if (converter == null) {
+                        // lookup for converter that match class simple name
+                        converter = cm.get(simpleName);
+                    }
                 }
-                Class<?> resultType = annotation.resultType();
-                if (resultType != Object.class) {
-                    converterArguments = new Object[] { resultType };
-                } else {
-                    converterArguments = annotation.args();
-                }
+                converterArguments = annotation.args();
             } else {
+                // lookup for converter that match class simple name
                 converter = cm.get(simpleName);
                 converterArguments = new Object[] {};
+            }
+            if (converter == null) {
+                // special converter for objects, lookup object in memory
+                converter = cm.get("object");
+                converterArguments = new Object[] { type };
             }
             if (converter != null) {
                 try {

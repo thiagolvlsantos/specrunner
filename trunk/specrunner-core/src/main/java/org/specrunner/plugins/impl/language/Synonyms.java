@@ -8,19 +8,19 @@ import java.lang.annotation.Target;
 import java.util.regex.Pattern;
 
 /**
- * Expected message on test execution.
+ * List of regular expressions which are synonyms.
  * 
  * @author Thiago Santos
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD })
-public @interface Sentence {
+public @interface Synonyms {
 
     /**
-     * Regular expression.
+     * List of synonyms.
      */
-    String value() default "";
+    String[] value() default {};
 
     /**
      * Expression options. Values of <code>Pattern</code> constants. Default is

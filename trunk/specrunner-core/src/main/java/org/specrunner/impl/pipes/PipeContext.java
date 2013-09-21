@@ -55,7 +55,8 @@ public class PipeContext implements IPipe {
             // for doRun(IPlugin m,...), the source cannot be present.
             ISource source = (ISource) channel.get(PipeSource.SOURCE);
             // a new context
-            bind(channel, createContext(source, PipeRunner.lookup(channel)));
+            IRunner runner = PipeRunner.lookup(channel);
+            bind(channel, createContext(source, runner));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

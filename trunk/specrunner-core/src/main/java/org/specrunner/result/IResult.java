@@ -27,7 +27,7 @@ import org.specrunner.util.xom.IPresentation;
  * @author Thiago Santos
  * 
  */
-public interface IResult extends IStatus, IActionType, IPresentation {
+public interface IResult extends IStatusVariable, IActionType, IPresentation {
 
     /**
      * If result has a block.

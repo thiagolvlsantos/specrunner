@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import nu.xom.Attribute;
+import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -38,6 +39,7 @@ import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 
 /**
@@ -89,29 +91,73 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         if (messages == null) {
             return;
         }
+        List<IResult> items = new LinkedList<IResult>();
         List<String> received = new LinkedList<String>();
         for (IResult r : this) {
             if (r.getStatus().isError()) {
-                received.add(r.getMessage() != null ? r.getMessage() : r.getFailure().getMessage());
+                items.add(r);
+                received.add(getMessage(r.getMessage(), r.getFailure()));
             }
         }
-        if (received.isEmpty() && messages.isEmpty()) {
-            // received equals to expected
-            return;
-        }
         StringBuilder errors = new StringBuilder();
-        errors.append("Expected messages does not match.");
-        if (!received.isEmpty()) {
-            errors.append("\nReceived messages missing:" + received);
+        List<String> expected = new LinkedList<String>(messages);
+        if (sorted) {
+            int i = 0;
+            int max = Math.min(received.size(), expected.size());
+            for (; i < max; i++) {
+                if (!expected.get(i).equals(received.get(i))) {
+                    errors.append("Expected '" + expected.get(i) + "' does not match received '" + received.get(i) + "'.\n");
+                } else {
+                    items.get(i).setStatus(Success.INSTANCE);
+                }
+            }
+            if (max < expected.size()) {
+                errors.append("Expected messages missing:" + expected.subList(max, expected.size()));
+            }
+            if (max < received.size()) {
+                errors.append("Unexpected messages received:" + received.subList(max, received.size()));
+            }
+        } else {
+            List<String> extraReceived = new LinkedList<String>(received);
+            List<String> extraExpected = new LinkedList<String>(expected);
+            extraReceived.removeAll(expected);
+            extraExpected.removeAll(received);
+            if (extraExpected.size() > 0) {
+                errors.append("Expected messages missing:" + extraExpected + ".\n");
+            }
+            if (extraReceived.size() > 0) {
+                errors.append("Unexpected messages received:" + extraReceived + ".\n");
+            }
         }
-        if (!messages.isEmpty()) {
-            errors.append("\nExpected messages missing:" + messages);
+        if (errors.length() == 0) {
+            for (IResult r : items) {
+                if (r.getStatus().isError()) {
+                    r.setStatus(Success.INSTANCE);
+                }
+            }
+        } else {
+            try {
+                ISource source = context.getSources().getLast();
+                Document document = source.getDocument();
+                Element root = document.getRootElement();
+                addResult(Failure.INSTANCE, context.newBlock(root, null), new Exception(errors.toString()));
+            } catch (SourceException e) {
+                throw new RuntimeException(e);
+            }
         }
-        try {
-            addResult(Failure.INSTANCE, context.newBlock(context.getSources().getLast().getDocument().getRootElement(), null), new Exception(errors.toString()));
-        } catch (SourceException e) {
-            throw new RuntimeException(e);
-        }
+    }
+
+    /**
+     * Obtain message from error notification.
+     * 
+     * @param message
+     *            The message.
+     * @param failure
+     *            The failure.
+     * @return The message.
+     */
+    protected String getMessage(String message, Throwable failure) {
+        return message != null ? message : (failure != null ? failure.getMessage() : null);
     }
 
     @Override
@@ -274,7 +320,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      * @return The result new created.
      */
     protected IResult addResult(Status status, IBlock source, String message, Throwable failure, IWritable writable) {
-        status = analiseStatus(status, message, failure);
+        status = analyzeStatus(status, message, failure);
         IResult result = new ResultImpl(status, source, message, failure, writable);
         if (add(result)) {
             return result;
@@ -282,9 +328,19 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         return null;
     }
 
-    protected Status analiseStatus(Status status, String message, Throwable failure) {
+    /**
+     * Perform status analysis based on expected message.
+     * 
+     * @param status
+     *            The status.
+     * @param message
+     *            The message.
+     * @param failure
+     *            The failure.
+     * @return The adjusted status.
+     */
+    protected Status analyzeStatus(Status status, String message, Throwable failure) {
         if (messages != null && status.isError()) {
-            System.out.println("AJUSTAR:" + status + ", " + message + ", " + failure);
             if (!sorted) {
                 String tmp = getMessage(message, failure);
                 if (messages.contains(tmp)) {
@@ -299,19 +355,6 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             }
         }
         return status;
-    }
-
-    /**
-     * Obtain message from error notification.
-     * 
-     * @param message
-     *            The message.
-     * @param failure
-     *            The failure.
-     * @return The message.
-     */
-    protected String getMessage(String message, Throwable failure) {
-        return message != null ? message : (failure != null ? failure.getMessage() : null);
     }
 
     @Override

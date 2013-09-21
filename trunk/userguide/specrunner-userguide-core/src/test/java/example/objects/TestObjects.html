@@ -125,8 +125,8 @@ Remove objects (only key is required to remove):
     </tr>
 </table>
 
-<h2>Delete does not remove relationships</h2>
-Relation is not present in memory:
+<h2>Relationships are still mapped</h2>
+but... attempts to find them fail:
 <table class="objon" type="example.objects.Authorization" reference="user.login,role.alias" separator="|">
     <caption>Relation information</caption>
     <tr>
@@ -138,5 +138,8 @@ Relation is not present in memory:
         <td>admin</td>
     </tr>
 </table>
+The lookup strategy of this plugin try first create an object projection, in this moment 'tlvls' lookup fail and a valid Authorization object can not be found. 
+
+<p class="sentence">However, if the attempt use a converter the authorization is found. i.e. Lookup "tlvls|admin", using lookup method.</p> 
 
 <p>

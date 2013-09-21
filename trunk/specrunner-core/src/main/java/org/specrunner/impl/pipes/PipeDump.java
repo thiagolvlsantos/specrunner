@@ -54,7 +54,7 @@ public class PipeDump implements IPipe {
             IResultSet result = PipeResult.lookup(channel);
             Map<String, Object> model = PipeModel.recover(channel);
 
-            PipeDumper.lookup(channel).dump(PipeSource.recover(channel), result, model);
+            PipeDumper.lookup(channel).dump(PipeSource.lookup(channel), result, model);
 
             // message after dump
             messageAfter(model, result);

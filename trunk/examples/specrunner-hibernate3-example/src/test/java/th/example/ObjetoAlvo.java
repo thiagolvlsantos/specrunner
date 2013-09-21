@@ -5,12 +5,12 @@ import org.specrunner.junit.ExpectedMessage;
 
 public class ObjetoAlvo {
 
-    public void abrir(@Converter(name = "object", resultType = Person.class) Person p) {
+    public void abrir(Person p) {
         System.out.println("PESSOA:" + p);
     }
 
     @ExpectedMessage("Converter named 'testing' not found.")
-    public void erro(@Converter(name = "testing", resultType = Person.class) Person p) {
+    public void erro(@Converter(name = "testing") Person p) {
         System.out.println("PESSOA:" + p);
     }
 }

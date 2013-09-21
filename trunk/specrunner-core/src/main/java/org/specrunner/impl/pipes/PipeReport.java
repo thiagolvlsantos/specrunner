@@ -17,11 +17,14 @@
  */
 package org.specrunner.impl.pipes;
 
+import java.util.Map;
+
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.report.IReporter;
+import org.specrunner.result.IResultSet;
 
 /**
  * Pipe to add report information.
@@ -39,7 +42,9 @@ public class PipeReport implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         IReporter reporter = PipeReporter.lookup(channel);
-        reporter.analyse(PipeResult.lookup(channel), PipeModel.recover(channel));
+        IResultSet result = PipeResult.lookup(channel);
+        Map<String, Object> model = PipeModel.recover(channel);
+        reporter.analyse(result, model);
         reporter.resume();
         return channel;
     }

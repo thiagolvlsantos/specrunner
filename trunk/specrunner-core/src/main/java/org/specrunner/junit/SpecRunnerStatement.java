@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
+import org.specrunner.ISpecRunner;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
@@ -109,7 +110,8 @@ public class SpecRunnerStatement extends Statement {
     @Override
     public void evaluate() throws Throwable {
         IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        IResultSet result = SpecRunnerServices.getSpecRunner().run(input.getPath(), configure(cfg));
+        ISpecRunner srunner = SpecRunnerServices.getSpecRunner();
+        IResultSet result = srunner.run(input.getPath(), configure(cfg));
         if (result.getStatus().isError()) {
             throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
         }
