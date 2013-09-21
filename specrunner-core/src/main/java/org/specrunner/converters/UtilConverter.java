@@ -116,7 +116,7 @@ public final class UtilConverter {
                     }
                 } else {
                     Class<? extends IConverter> converterType = annotation.type();
-                    if (converterType != null) {
+                    if (converterType != IConverter.class) {
                         try {
                             converter = converterType.newInstance();
                         } catch (InstantiationException e) {
