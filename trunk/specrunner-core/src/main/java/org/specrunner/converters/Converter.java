@@ -24,8 +24,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.specrunner.converters.impl.ConverterDefault;
-
 /**
  * Annotation to sign the evaluator to ignore an attribute or method.
  * 
@@ -53,5 +51,5 @@ public @interface Converter {
      * ExpectedMessages messages should be sorted as specified? The sort flag.
      * Default is false.
      */
-    Class<? extends IConverter> type() default ConverterDefault.class;
+    Class<? extends IConverter> type() default IConverter.class;
 }
