@@ -18,6 +18,7 @@
 package org.specrunner.impl.pipes.plugin;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.context.IContext;
 import org.specrunner.impl.pipes.PipeContext;
 import org.specrunner.impl.pipes.PipeResult;
 import org.specrunner.impl.pipes.PipeRunner;
@@ -25,6 +26,9 @@ import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.plugins.IPlugin;
+import org.specrunner.result.IResultSet;
+import org.specrunner.runner.IRunner;
 
 /**
  * The runner version for plugins.
@@ -42,7 +46,11 @@ public class PipeRun implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            PipeRunner.lookup(channel).run(PipePlugin.lookup(channel), PipeContext.lookup(channel), PipeResult.lookup(channel));
+            IRunner runner = PipeRunner.lookup(channel);
+            IPlugin plugin = PipePlugin.lookup(channel);
+            IContext context = PipeContext.lookup(channel);
+            IResultSet result = PipeResult.lookup(channel);
+            runner.run(plugin, context, result);
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

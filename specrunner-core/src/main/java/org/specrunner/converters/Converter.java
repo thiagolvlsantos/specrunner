@@ -54,9 +54,4 @@ public @interface Converter {
      * Default is false.
      */
     Class<? extends IConverter> type() default ConverterDefault.class;
-
-    /**
-     * The possible object of expression.
-     */
-    Class<?> resultType() default Object.class;
 }

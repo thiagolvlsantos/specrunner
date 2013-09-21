@@ -301,25 +301,40 @@ public class PluginSentence extends AbstractPlugin {
         }
         for (Method m : ms) {
             Sentence s = m.getAnnotation(Sentence.class);
-            String str = s.value();
-            Pattern pattern = patterns.get(str);
-            if (pattern == null) {
-                pattern = Pattern.compile(str, Pattern.CASE_INSENSITIVE);
-                patterns.put(str, pattern);
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("New pattern for '" + str + "' created.");
-                }
-            } else {
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
+            List<String> strs = new LinkedList<String>();
+            strs.add(s.value());
+            Synonyms sm = m.getAnnotation(Synonyms.class);
+            if (sm != null) {
+                for (String syn : sm.value()) {
+                    strs.add(syn);
                 }
             }
-            Matcher matcher = pattern.matcher(value);
-            if (matcher.find()) {
-                for (int i = 1; i <= matcher.groupCount(); i++) {
-                    args.add(matcher.group(i));
+            boolean found = false;
+            for (int i = 0; i < strs.size(); i++) {
+                String str = strs.get(i);
+                Pattern pattern = patterns.get(str);
+                if (pattern == null) {
+                    pattern = Pattern.compile(str, i == 0 || sm == null ? s.options() : sm.options());
+                    patterns.put(str, pattern);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("New pattern for '" + str + "' created.");
+                    }
+                } else {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
+                    }
                 }
-                text.append(m.getName());
+                Matcher matcher = pattern.matcher(value);
+                if (matcher.find()) {
+                    for (int j = 1; j <= matcher.groupCount(); j++) {
+                        args.add(matcher.group(j));
+                    }
+                    text.append(m.getName());
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
                 break;
             }
         }
@@ -415,7 +430,7 @@ public class PluginSentence extends AbstractPlugin {
                 return m;
             }
         }
-        throw new PluginException("Method named '" + method + "' with " + args.size() + " parameter(s) not found for " + type);
+        throw new PluginException("Method named '" + method + "' with " + args.size() + " parameter(s) not found for " + type + ".\n Another reason to this error show up is when you have defined a wrong regular expression for the target method you expected to call [Check @Sentence and @Synonyms annotations].");
     }
 
     /**

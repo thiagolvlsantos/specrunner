@@ -24,6 +24,7 @@ import org.specrunner.impl.pipes.PipeModel;
 import org.specrunner.impl.pipes.PipeResult;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -36,7 +37,8 @@ public class PipeShortDump extends PipeDump {
 
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
-        messageBefore(PipePlugin.lookup(channel).toString());
+        IPlugin plugin = PipePlugin.lookup(channel);
+        messageBefore(plugin.toString());
         IResultSet result = PipeResult.lookup(channel);
         Map<String, Object> model = PipeModel.recover(channel);
         messageAfter(model, result);

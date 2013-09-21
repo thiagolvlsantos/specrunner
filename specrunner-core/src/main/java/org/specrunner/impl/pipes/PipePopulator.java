@@ -43,7 +43,8 @@ public class PipePopulator implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
-            PipeContext.bind(channel, populate(PipeContext.lookup(channel)));
+            IContext context = PipeContext.lookup(channel);
+            PipeContext.bind(channel, populate(context));
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

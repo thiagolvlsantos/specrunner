@@ -18,11 +18,14 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.context.IContext;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.runner.IRunner;
+import org.specrunner.source.ISource;
 
 /**
  * Call a specification runner.
@@ -40,9 +43,12 @@ public class PipeRun implements IPipe {
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
         try {
+            IRunner runner = PipeRunner.lookup(channel);
+            ISource source = PipeSource.lookup(channel);
+            IContext context = PipeContext.lookup(channel);
             IResultSet result = PipeResult.lookup(channel);
-            PipeRunner.lookup(channel).run(PipeSource.recover(channel), PipeContext.lookup(channel), result);
-            result.consolidate(PipeContext.lookup(channel));
+            runner.run(source, context, result);
+            result.consolidate(context);
         } catch (SpecRunnerException e) {
             throw new PipelineException(e);
         }

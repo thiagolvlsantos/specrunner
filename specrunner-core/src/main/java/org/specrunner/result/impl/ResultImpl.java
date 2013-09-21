@@ -89,6 +89,11 @@ public class ResultImpl implements IResult {
     }
 
     @Override
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
     public boolean hasBlock() {
         return getBlock() != null;
     }
