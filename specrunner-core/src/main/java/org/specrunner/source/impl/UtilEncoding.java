@@ -15,33 +15,39 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.dumper;
+package org.specrunner.source.impl;
 
-import java.util.Map;
-
-import org.specrunner.result.IResultSet;
+import org.specrunner.SpecRunnerServices;
+import org.specrunner.features.IFeatureManager;
+import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.IEncoded;
-import org.specrunner.source.ISource;
 
 /**
- * Dumps source and results to files.
+ * Useful encoding services.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceDumper extends IEncoded {
+public final class UtilEncoding {
 
     /**
-     * Extra information to be dumped.
-     * 
-     * @param source
-     *            The specification input.
-     * @param result
-     *            The result.
-     * @param model
-     *            Extra information model.
-     * @throws SourceDumperException
-     *             On dumping error.
+     * Hidden constructor.
      */
-    void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException;
+    private UtilEncoding() {
+        super();
+    }
+
+    /**
+     * Get encoding information.
+     * 
+     * @return The set encoding.
+     */
+    public static String getEncoding() {
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        String charset = (String) fm.get(IBuilderFactory.FEATURE_ENCODING);
+        if (charset == null) {
+            charset = IEncoded.DEFAULT_ENCODING;
+        }
+        return charset;
+    }
 }
