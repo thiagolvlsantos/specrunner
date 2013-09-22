@@ -17,9 +17,6 @@
  */
 package org.specrunner.source.impl;
 
-import org.specrunner.SpecRunnerServices;
-import org.specrunner.features.IFeatureManager;
-import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.IEncoded;
 
 /**
@@ -32,11 +29,6 @@ public class EncodedImpl implements IEncoded {
 
     @Override
     public String getEncoding() {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
-        String charset = (String) fm.get(IBuilderFactory.FEATURE_ENCODING);
-        if (charset == null) {
-            charset = DEFAULT_ENCODING;
-        }
-        return charset;
+        return UtilEncoding.getEncoding();
     }
 }

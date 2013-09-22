@@ -23,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 
 import nu.xom.Document;
 import nu.xom.Serializer;
@@ -38,6 +37,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.ResultException;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
+import org.specrunner.source.impl.EncodedImpl;
 import org.specrunner.source.resource.IResource;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
@@ -48,7 +48,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractSourceDumperFile implements ISourceDumper {
+public abstract class AbstractSourceDumperFile extends EncodedImpl implements ISourceDumper {
 
     /**
      * Gap used to dump sources.
@@ -76,15 +76,6 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      * Output file (absolute).
      */
     protected File outputFile;
-
-    /**
-     * The output charset.
-     */
-    public static final String FEATURE_CHARSET = AbstractSourceDumperFile.class.getName() + ".charset";
-    /**
-     * Charset of output.
-     */
-    protected String charset = Charset.defaultCharset().name();
 
     /**
      * Set source and result objects.
@@ -159,25 +150,6 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     }
 
     /**
-     * The output charset.
-     * 
-     * @return The charset.
-     */
-    public String getCharset() {
-        return charset;
-    }
-
-    /**
-     * Set the charset.
-     * 
-     * @param charset
-     *            The charset.
-     */
-    public void setCharset(String charset) {
-        this.charset = charset;
-    }
-
-    /**
      * Set features.
      * 
      * @param source
@@ -188,7 +160,6 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     protected void setFeatures(ISource source) throws SourceDumperException {
         outputDirectory();
         outputName(source);
-        charset();
     }
 
     /**
@@ -249,24 +220,6 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
     }
 
     /**
-     * Set the charset based on a feature.
-     * 
-     * @throws SourceDumperException
-     *             On dumper error.
-     */
-    protected void charset() throws SourceDumperException {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
-        try {
-            fm.setStrict(FEATURE_CHARSET, this);
-        } catch (FeatureManagerException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-            throw new SourceDumperException(e);
-        }
-    }
-
-    /**
      * Clean up directory files before dumping resources.
      * 
      * @param file
@@ -295,7 +248,7 @@ public abstract class AbstractSourceDumperFile implements ISourceDumper {
      *             On enconding errors.
      */
     protected Serializer getSerializer(OutputStream fr) throws UnsupportedEncodingException {
-        return new Serializer(fr, charset);
+        return new Serializer(fr, getEncoding());
     }
 
     /**

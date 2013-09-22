@@ -24,6 +24,7 @@ import org.specrunner.dumper.ISourceDumperGroup;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
+import org.specrunner.source.impl.UtilEncoding;
 import org.specrunner.util.composite.CompositeImpl;
 
 /**
@@ -33,6 +34,11 @@ import org.specrunner.util.composite.CompositeImpl;
  * 
  */
 public class SourceDumperGroupImpl extends CompositeImpl<ISourceDumperGroup, ISourceDumper> implements ISourceDumperGroup {
+
+    @Override
+    public String getEncoding() {
+        return UtilEncoding.getEncoding();
+    }
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
