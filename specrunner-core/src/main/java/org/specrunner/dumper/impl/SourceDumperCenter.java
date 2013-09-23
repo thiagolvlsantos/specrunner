@@ -54,9 +54,7 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
         set(source, result);
-        String frameName = outputName;
-        model.put(SourceDumperFrame.CENTER_FRAME, frameName);
-        File output = new File(outputDirectory, frameName);
+        File output = new File(outputDirectory, outputName);
         model.put("output", String.valueOf(output));
         try {
             addLinkToFrame(source.getDocument(), result, model);
@@ -100,9 +98,9 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
 
         Element link = new Element("a");
         span.appendChild(link);
-        link.addAttribute(new Attribute("href", getFilePrefix() + "_frame.html"));
-        link.addAttribute(new Attribute("title", "This is a framed report where errors are easier to find and test meta-information is available."));
-        link.appendChild("Framed report");
+        link.addAttribute(new Attribute("href", detailReport()));
+        link.addAttribute(new Attribute("title", "This is a detailed report."));
+        link.appendChild("Detailed report");
         span.appendChild(" [");
         Status s = result.getStatus();
         span.appendChild(s.asNode());

@@ -239,6 +239,15 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
     }
 
     /**
+     * Get detail report name.
+     * 
+     * @return The detail report name.
+     */
+    protected String detailReport() {
+        return outputName.substring(0, outputName.lastIndexOf('.')) + "_details.html";
+    }
+
+    /**
      * Gets document serializer.
      * 
      * @param fr
@@ -309,15 +318,6 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
         if (!parent.exists() && !parent.mkdirs()) {
             throw new SourceDumperException("Could not create output directory '" + parent + "'.");
         }
-    }
-
-    /**
-     * Get file prefix.
-     * 
-     * @return The file prefix.
-     */
-    protected String getFilePrefix() {
-        return outputName + "_res/" + outputName.substring(0, outputName.lastIndexOf('.')) + "_frame/" + outputName.substring(0, outputName.lastIndexOf('.'));
     }
 
     /**
