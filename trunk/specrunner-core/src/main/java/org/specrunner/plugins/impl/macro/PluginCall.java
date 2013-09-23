@@ -68,7 +68,7 @@ public class PluginCall extends AbstractPluginNamed {
         String macroName = UtilEvaluator.asVariable(getName());
         Object obj = context.getByName(macroName);
         if (obj == null) {
-            throw new PluginException("Macro name '" + getName() + "' not found.");
+            throw new PluginException("Macro named '" + getName() + "' not found.");
         }
         if (!(obj instanceof Node)) {
             throw new PluginException("Object with name '" + getName() + "' is not a macro.");

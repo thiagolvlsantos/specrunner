@@ -206,7 +206,7 @@ table.included_file_args td {
 }
 
 .sr_on {
-    font-size: 8pt;
+    font-size: 10pt;
     vertical-align: bottom;
 }
 
@@ -228,6 +228,10 @@ table.included_file_args td {
 
 .sr_resultset {
     border: 1px solid black;
+    text-align: right;
+    font-weight: bold;
+    font-size: 10pt;
+    font-family: verdana;
 }
 
 .sr_resultset th {
@@ -247,15 +251,11 @@ table.included_file_args td {
 }
 
 
-.sr_resultset {
-    float: right;
-}
-
 .sr_resume {
     vertical-align: middle;
 }
 
-.sr_time {
+.sr_milis {
     vertical-align: middle;
 }
 
@@ -273,6 +273,7 @@ table.included_file_args td {
 
 /* LINK frame */
 .sr_frame_link_div {
+    float: right;
     text-align: right;
     font-weight: bold;
     font-size: 10pt;

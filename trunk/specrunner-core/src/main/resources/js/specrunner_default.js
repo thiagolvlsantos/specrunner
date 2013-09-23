@@ -36,26 +36,14 @@ $(document).ready(function() {
             }
         );
     });
-    $(":button.top_exp").click(function(event) {
-        parent.center.$(":button.stackbutton[value*='+']").each(function() {
-            $(this).click();
-        });
-        event.preventDefault();
-    });
-    $(":button.top_col").click(function(event) {
-        parent.center.$(":button.stackbutton[value*='-']").each(function() {
-            $(this).click();
-        });
-        event.preventDefault();
-    });
     $("#right_exp").click(function(event) {
-        parent.center.$(":button.stackbutton[value*='+']").each(function() {
+        window.opener.document.$(":button.stackbutton[value*='+']").each(function() {
             $(this).click();
         });
         event.preventDefault();
     });
     $("#right_col").click(function(event) {
-        parent.center.$(":button.stackbutton[value*='-']").each(function() {
+        window.opener.document.$(":button.stackbutton[value*='-']").each(function() {
             $(this).click();
         });
         event.preventDefault();
@@ -77,13 +65,26 @@ $(document).ready(function() {
         $(ref).toggle("slow");
     });
 
-    $(".sr_status_item a").click(function(event) {
-        var href = $(this).attr("href");
-        var index = href.substring(href.lastIndexOf("#")+1,href.length);
-        var target = parent.center.$("#error"+index);
-        if( target.attr("value").indexOf("+")>=0 ){
-            target.click();
+    $(".sr_frame_link_span a").click(function(event) {
+        event.preventDefault();
+        var height = screen.height - 100;
+        var width = screen.width * 0.75;
+        if(!$(this).data("done")){
+            window.moveTo(0,0);
+            window.resizeTo(width,height);
+            $(".sr_frame_link_span").hide();
+            $(".sr_resultset").hide();
+            $(".sr_frame_link_span").show();
+            $(this).data("done",true);
         }
+        var href = $(this).attr("href");
+        var other = window.open(href, href, 'top=0,left='+(width-20)+',width='+(screen.width-width)+',height='+height);
+    });
+    
+    $(".sr_status_item a").click(function(event) {
+        event.preventDefault();
+        var href = $(this).attr("href");
+        window.opener.location.href = href;
     });
 
     $("*[id*='_inc']").each(function(event) {
@@ -108,17 +109,13 @@ $(document).ready(function() {
     $(":button.top_exp, #right_exp, :button.top_col, #right_col").css("width","45%");
     $(":button.top_exp, #right_exp").attr("title","Expand all");
     $(":button.top_col, #right_col").attr("title","Collapse all");
-
-    if(parent != null && parent.center != null){
-        parent.center.$("#linkFrame").replaceWith("<span class='sr_frame_link_span'><a href='"+getFileName()+"' target='parent'>Frameless report</a></span>");
-    }
 });
 
 $(function() {
 });
 
 function getFileName() {
-    var url = parent.center.location.href;
+    var url = window.location.href;
     url = url.substring(0, (url.indexOf("#") == -1) ? url.length : url.indexOf("#"));
     url = url.substring(0, (url.indexOf("?") == -1) ? url.length : url.indexOf("?"));
     url = url.substring(url.lastIndexOf("/") + 1, url.length);

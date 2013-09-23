@@ -29,6 +29,6 @@ public class SourceDumperFactoryDefault extends SourceDumperFactoryImpl {
      * Default constructor.
      */
     public SourceDumperFactoryDefault() {
-        super(new SourceDumperGroupImpl().add(new SourceDumperResources()).add(new SourceDumperWritables()).add(new SourceDumperTop()).add(new SourceDumperCenter()).add(new SourceDumperRight()).add(new SourceDumperFrame()));
+        super(new SourceDumperGroupImpl().add(new SourceDumperResources()).add(new SourceDumperWritables()).add(new SourceDumperCenter()).add(new SourceDumperDetails()));
     }
 }
