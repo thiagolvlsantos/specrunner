@@ -78,12 +78,12 @@ $(document).ready(function() {
             $(this).data("done",true);
         }
         var href = $(this).attr("href");
-        var other = window.open(href, href, 'top=0,left='+(width-20)+',width='+(screen.width-width)+',height='+height);
+        var other = window.open(href, "sr_details", 'top=0,left='+(width-20)+',width='+(screen.width-width)+',height='+height);
     });
     
     $(".sr_status_item a").click(function(event) {
         event.preventDefault();
-        var href = $(this).attr("href");
+        var href = "../"+$(this).attr("href");
         window.opener.location.href = href;
     });
 

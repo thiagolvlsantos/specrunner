@@ -244,7 +244,7 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
      * @return The detail report name.
      */
     protected String detailReport() {
-        return outputName.substring(0, outputName.lastIndexOf('.')) + "_details.html";
+        return outputName + "_res" + File.separator + outputName.substring(0, outputName.lastIndexOf('.')) + "_details.html";
     }
 
     /**

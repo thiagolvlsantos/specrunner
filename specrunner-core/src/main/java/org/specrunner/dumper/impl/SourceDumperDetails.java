@@ -178,6 +178,7 @@ public class SourceDumperDetails extends AbstractSourceDumperFile {
                                 Element link = new Element("a");
                                 String name = ((Element) UtilNode.getHighest(nodes)).getAttributeValue("name");
                                 link.addAttribute(new Attribute("href", outputName + "#" + name));
+                                link.addAttribute(new Attribute("id", "error" + name));
                                 li.appendChild(link);
                                 {
                                     if (!s.isError()) {
