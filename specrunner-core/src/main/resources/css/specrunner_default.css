@@ -284,6 +284,10 @@ table.included_file_args td {
     right: 20px;
 }
 
+.sr_frame_link_div .sr_resultset {
+    float:right;
+}
+
 .sr_frame_link_span {
 /*    border-style: solid;
     border-color: black;
