@@ -57,8 +57,9 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         File output = new File(outputDirectory, outputName);
         model.put("output", String.valueOf(output));
         try {
-            addLinkToFrame(source.getDocument(), result, model);
-            saveTo(source.getDocument(), output);
+            Document document = source.getDocument();
+            addLinkToFrame(document, result, model);
+            saveTo(document, output);
             IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
             out.println("Output (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): " + output);
             if (UtilLog.LOG.isInfoEnabled()) {
