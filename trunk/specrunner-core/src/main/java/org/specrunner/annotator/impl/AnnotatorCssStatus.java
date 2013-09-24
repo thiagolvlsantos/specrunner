@@ -62,12 +62,16 @@ public class AnnotatorCssStatus implements IAnnotator {
     protected Node wrapText(Node target) {
         ParentNode pn = target.getParent();
         ParentNode wrap = new Element("span");
-        for (int i = 0; i < pn.getChildCount(); i++) {
-            Node child = pn.getChild(i);
-            child.detach();
-            wrap.appendChild(child);
+        if (pn != null) {
+            for (int i = 0; i < pn.getChildCount(); i++) {
+                Node child = pn.getChild(i);
+                child.detach();
+                wrap.appendChild(child);
+            }
+            pn.appendChild(wrap);
+        } else {
+            wrap.appendChild(target);
         }
-        pn.appendChild(wrap);
         return wrap;
     }
 }
