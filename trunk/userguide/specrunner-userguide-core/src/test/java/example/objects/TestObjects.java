@@ -4,11 +4,13 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessages;
-import org.specrunner.junit.SRRunner;
+import org.specrunner.junit.SRRunnerConcurrent;
 import org.specrunner.plugins.impl.language.Sentence;
 
-@RunWith(SRRunner.class)
+@RunWith(SRRunnerConcurrent.class)
+@Concurrent(threads = 4)
 @ExpectedMessages(messages = { "Instance 'tlvls' of 'example.objects.User' not found." })
 public class TestObjects {
 

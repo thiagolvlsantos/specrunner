@@ -1,10 +1,12 @@
 package example.language;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.SRRunner;
+import org.specrunner.junit.Concurrent;
+import org.specrunner.junit.SRRunnerConcurrent;
 import org.specrunner.plugins.impl.language.Sentence;
 
-@RunWith(SRRunner.class)
+@RunWith(SRRunnerConcurrent.class)
+@Concurrent(threads = 4)
 public class TestAnnotation {
 
     @Sentence("nothing")
