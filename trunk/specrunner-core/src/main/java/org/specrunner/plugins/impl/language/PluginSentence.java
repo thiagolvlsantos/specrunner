@@ -242,7 +242,11 @@ public class PluginSentence extends AbstractPlugin {
     protected void extractMethodNameArguments(IContext context, Object target, StringBuilder methodName, List<Object> arguments) throws PluginException {
         boolean camel = true;
         Node node = context.getNode();
-        if (node.getChildCount() == 1 && node.getChild(0) instanceof Text) {
+        boolean text = true;
+        for (int i = 0; text && i < node.getChildCount(); i++) {
+            text = node.getChild(i) instanceof Text;
+        }
+        if (text) {
             INodeHolder holder = UtilNode.newNodeHolder(node);
             String value = String.valueOf(holder.getObject(context, true));
             boolean annotation = fromAnnotations(value, target, methodName, arguments);

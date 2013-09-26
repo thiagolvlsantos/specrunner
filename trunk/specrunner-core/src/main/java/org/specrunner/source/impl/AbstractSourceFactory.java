@@ -20,6 +20,7 @@ package org.specrunner.source.impl;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import nu.xom.DocType;
 import nu.xom.Document;
 
 import org.specrunner.SpecRunnerServices;
@@ -76,6 +77,7 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
                 Document result = cache.get().get(target);
                 if (result == null) {
                     result = fromTarget(uri, cleanTarget(target), getEncoding());
+                    addDoctype(result);
                     cache.get().put(target, result);
                 }
                 result = (Document) result.copy();
@@ -114,4 +116,19 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
         return target == null ? target : target.replace("file:///", "").replace("file://", "").replace("file:/", "");
     }
 
+    /**
+     * Adds the XHTML Doctype to the document if none is specified.
+     * 
+     * @param document
+     *            The document.
+     * @return The document itself.
+     */
+    protected Document addDoctype(Document document) {
+        if (document.getDocType() == null) {
+            // <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
+            DocType dt = new DocType("html", "-//W3C//DTD XHTML 1.0 Transitional//EN", "");
+            document.insertChild(dt, 0);
+        }
+        return document;
+    }
 }

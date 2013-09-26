@@ -70,17 +70,17 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-core-text/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-core-text-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-sql-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-objects/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-objects-clean.zip</include>
             </includes>
         </fileSet>
         <fileSet>

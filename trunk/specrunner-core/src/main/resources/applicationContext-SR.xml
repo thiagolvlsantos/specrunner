@@ -5,6 +5,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.features.impl.FeatureManagerImpl" />
   <bean class="org.specrunner.converters.impl.ConverterManagerImpl" />
   <bean class="org.specrunner.comparators.impl.ComparatorManagerImpl" />
+  <bean class="org.specrunner.util.xom.impl.PresenterManagerImpl" />
   <bean class="org.specrunner.parameters.impl.AccessFactoryImpl" />
   <bean class="org.specrunner.concurrency.impl.ConcurrentMappingImpl" />
   <bean class="org.specrunner.source.resource.impl.ResourceManagerFactoryImpl" />

@@ -88,17 +88,17 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-core-text/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-core-text.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-sql.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-objects/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-objects.zip</include>
             </includes>
         </fileSet>
         <fileSet>
