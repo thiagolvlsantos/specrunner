@@ -10,11 +10,13 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.converters.Converter;
 import org.specrunner.converters.impl.ConverterDatePatternArgs;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessage;
-import org.specrunner.junit.SRRunner;
+import org.specrunner.junit.SRRunnerConcurrent;
 import org.specrunner.listeners.impl.FailurePausePluginListener;
 
-@RunWith(SRRunner.class)
+@RunWith(SRRunnerConcurrent.class)
+@Concurrent(threads = 4)
 public class TestSentence {
 
     @Before
