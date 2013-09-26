@@ -31,7 +31,6 @@ import java.net.URI;
 import java.util.HashMap;
 
 import nu.xom.Builder;
-import nu.xom.DocType;
 import nu.xom.Document;
 
 import org.specrunner.SpecRunnerServices;
@@ -172,21 +171,5 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
                 }
             }
         });
-    }
-
-    /**
-     * Adds the XHTML Doctype to the document if none is specified.
-     * 
-     * @param document
-     *            The document.
-     * @return The document itself.
-     */
-    protected Document addDoctype(Document document) {
-        if (document.getDocType() == null) {
-            // <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">
-            DocType dt = new DocType("html", "-//W3C//DTD XHTML 1.0 Transitional//EN", "");
-            document.insertChild(dt, 0);
-        }
-        return document;
     }
 }
