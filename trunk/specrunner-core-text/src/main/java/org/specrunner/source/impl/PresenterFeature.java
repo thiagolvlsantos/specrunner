@@ -34,6 +34,13 @@ import org.specrunner.plugins.impl.macro.PluginMacro;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.IPresenter;
 
+/**
+ * Perform convertion of an object <code>Feature</code> to a <code>Node</code>.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+@SuppressWarnings("serial")
 public class PresenterFeature implements IPresenter {
 
     @Override
@@ -43,37 +50,70 @@ public class PresenterFeature implements IPresenter {
     @Override
     public Node asNode(Object obj, Object[] args) {
         if (!(obj instanceof Feature)) {
-            return null;
+            throw new IllegalArgumentException("Invalid source instance:" + obj + " of type " + (obj != null ? obj.getClass() : null));
         }
-        return addFeature(new Element("div"), (Feature) obj);
+        if (args == null || args.length == 0) {
+            throw new IllegalArgumentException("Missing keyword mapping.");
+        }
+        if (!(args[0] instanceof Keywords)) {
+            throw new IllegalArgumentException("Argument[0] is not a instance of Keyword.");
+        }
+        return dumpFeature(new Element("div"), (Keywords) args[0], (Feature) obj);
     }
 
-    protected Node addFeature(Element root, Feature feature) {
-        addDescription(root, Type.FEATURE, feature, "h1");
-
-        list(root, feature.getDescription());
-
+    /**
+     * Dump feature to root node.
+     * 
+     * @param root
+     *            The node.
+     * @param words
+     *            The keyword mapping.
+     * @param feature
+     *            The feature.
+     * @return The node.
+     */
+    protected Node dumpFeature(Element root, Keywords words, Feature feature) {
+        dumpDescription(root, words.getFeature(), feature, "h1");
+        dumpList(root, feature.getDescription());
         List<Scenario> scenarios = feature.getScenarios();
         if (!scenarios.isEmpty()) {
             for (Scenario s : scenarios) {
-                addScenario(root, s);
+                dumpScenario(root, words, s);
             }
         }
         return root;
     }
 
-    protected void addDescription(Element root, Type type, Description description, String tag) {
+    /**
+     * Dump description.
+     * 
+     * @param root
+     *            The node.
+     * @param keyword
+     *            The keyword.
+     * @param description
+     *            The content object.
+     * @param tag
+     *            The tag to be added.
+     */
+    protected void dumpDescription(Element root, String keyword, Description description, String tag) {
         Element e = new Element(tag);
         root.appendChild(e);
-
-        e.appendChild(type.text() + (description != null ? description.getName() : ""));
+        e.appendChild(keyword + (description != null ? description.getName() : ""));
     }
 
-    protected void list(Element root, List<String> list) {
+    /**
+     * Dump a list.
+     * 
+     * @param root
+     *            The node.
+     * @param list
+     *            The list to dump.
+     */
+    protected void dumpList(Element root, List<String> list) {
         if (list != null && !list.isEmpty()) {
             Element quote = new Element("blockquote");
             root.appendChild(quote);
-
             for (String s : list) {
                 quote.appendChild(s);
                 quote.appendChild(new Element("br"));
@@ -81,25 +121,54 @@ public class PresenterFeature implements IPresenter {
         }
     }
 
-    protected void addScenario(Element root, Scenario scenario) {
+    /**
+     * Dump a scenario.
+     * 
+     * @param root
+     *            The node.
+     * @param words
+     *            The keyword mapping.
+     * @param scenario
+     *            The scenario.
+     */
+    protected void dumpScenario(Element root, Keywords words, Scenario scenario) {
         Element divScenario = new Element("div");
         root.appendChild(divScenario);
-
         if (scenario instanceof ScenarioOutline) {
-            addMultiScenario(divScenario, (ScenarioOutline) scenario);
+            dumpMultiScenario(divScenario, words, (ScenarioOutline) scenario);
         } else {
-            addSingleScenario(divScenario, scenario);
+            dumpSingleScenario(divScenario, words, scenario);
         }
     }
 
-    protected void addMultiScenario(Element root, ScenarioOutline scenario) {
-        addExamples(root, scenario, addMacro(root, scenario));
+    /**
+     * Dump scenario outlines.
+     * 
+     * @param root
+     *            The node.
+     * @param words
+     *            The keyword mapping.
+     * @param scenario
+     *            The scenario outline.
+     */
+    protected void dumpMultiScenario(Element root, Keywords words, ScenarioOutline scenario) {
+        dumpExamples(root, words, scenario, dumpMacro(root, words, scenario));
     }
 
-    protected String addMacro(Element root, Scenario scenario) {
+    /**
+     * Dump the scenario as a macro from SpecRunner core.
+     * 
+     * @param root
+     *            The root.
+     * @param words
+     *            The words.
+     * @param scenario
+     *            The scenario.
+     * @return The newly created macro name.
+     */
+    protected String dumpMacro(Element root, Keywords words, Scenario scenario) {
         Element macro = new Element("div");
         root.appendChild(macro);
-
         String alias;
         try {
             alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMacro.class);
@@ -107,29 +176,74 @@ public class PresenterFeature implements IPresenter {
             alias = "macro";
         }
         macro.addAttribute(new Attribute("class", alias));
-
         String name = UtilString.camelCase(scenario.getName());
         macro.addAttribute(new Attribute("name", name));
-
-        addDescription(macro, Type.SCENARIO_OUTLINE, scenario, "h2");
-        runList(macro, scenario.getParent().getBackground());
-        runList(macro, scenario.getDescription());
-        runList(macro, scenario.getParent().getFinallys());
-
+        {
+            dumpDescription(macro, words.getScenarioOutline(), scenario, "h2");
+            dumpExecutableList(macro, scenario.getParent().getBackground());
+            dumpExecutableList(macro, scenario.getDescription());
+            dumpExecutableList(macro, scenario.getParent().getFinallys());
+        }
         return name;
     }
 
-    protected void addExamples(Element root, ScenarioOutline scenarioOutline, String name) {
+    /**
+     * Dump an executable list.
+     * 
+     * @param root
+     *            The node.
+     * @param list
+     *            The executable list.
+     */
+    protected void dumpExecutableList(Element root, List<String> list) {
+        Element quote = new Element("blockquote");
+        String alias;
+        try {
+            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginSentence.class);
+        } catch (PluginException e) {
+            alias = "sentence";
+        }
+        for (String s : list) {
+            Element sentence = new Element("span");
+            sentence.appendChild(s);
+            sentence.addAttribute(new Attribute("class", alias));
+            quote.appendChild(sentence);
+            quote.appendChild(new Element("br"));
+        }
+        root.appendChild(quote);
+    }
+
+    /**
+     * Dump the scenario examples.
+     * 
+     * @param root
+     *            The node.
+     * @param words
+     *            The keyword mapping.
+     * @param outline
+     *            The scenario outline.
+     * @param name
+     *            The macro name.
+     */
+    protected void dumpExamples(Element root, Keywords words, ScenarioOutline outline, String name) {
         Element examples = new Element("div");
         root.appendChild(examples);
         {
-            addDescription(examples, Type.EXAMPLES, null, "h3");
-            addMap(examples, scenarioOutline);
-            addIterator(examples, name);
+            dumpDescription(examples, words.getExamples(), null, "h3");
+            dumpMap(examples, outline);
+            dumpIterator(examples, name);
         }
     }
 
-    protected void addMap(Element root, ScenarioOutline scenarioOutline) {
+    /**
+     * Dump example table as a mapping with attributes named.
+     * 
+     * @param root
+     *            The root.
+     * @param outline
+     *            The scenario outline.
+     */
+    protected void dumpMap(Element root, ScenarioOutline outline) {
         Element quote = new Element("blockquote");
         root.appendChild(quote);
         {
@@ -147,12 +261,12 @@ public class PresenterFeature implements IPresenter {
             {
                 Element tr = new Element("tr");
                 table.appendChild(tr);
-                for (String str : scenarioOutline.getNames()) {
+                for (String str : outline.getNames()) {
                     Element td = new Element("td");
                     td.appendChild(str);
                     tr.appendChild(td);
                 }
-                for (List<String> e : scenarioOutline.getExamples()) {
+                for (List<String> e : outline.getExamples()) {
                     tr = new Element("tr");
                     for (String str : e) {
                         Element td = new Element("td");
@@ -165,7 +279,15 @@ public class PresenterFeature implements IPresenter {
         }
     }
 
-    protected void addIterator(Element root, String name) {
+    /**
+     * Dump the iterator to call examples.
+     * 
+     * @param root
+     *            The node.
+     * @param name
+     *            The macro name.
+     */
+    protected void dumpIterator(Element root, String name) {
         Element iterator = new Element("span");
         String alias;
         try {
@@ -177,17 +299,25 @@ public class PresenterFeature implements IPresenter {
         iterator.addAttribute(new Attribute("name", "examples"));
         root.appendChild(iterator);
         {
-            addCall(iterator, name);
+            dumpCall(iterator, name);
         }
     }
 
-    protected void addCall(Element iterator, String name) {
+    /**
+     * Dump the macro call.
+     * 
+     * @param root
+     *            The root.
+     * @param name
+     *            The macro name.
+     */
+    protected void dumpCall(Element root, String name) {
         Element h4 = new Element("h4");
         h4.appendChild("Example ${index+1}:");
-        iterator.appendChild(h4);
+        root.appendChild(h4);
         {
             Element quo = new Element("blockquote");
-            iterator.appendChild(quo);
+            root.appendChild(quo);
             {
                 Element call = new Element("p");
                 String alias;
@@ -203,29 +333,21 @@ public class PresenterFeature implements IPresenter {
         }
     }
 
-    public void addSingleScenario(Element root, Scenario scenario) {
-        addDescription(root, Type.SCENARIO, scenario, "h2");
-        runList(root, scenario.getParent().getBackground());
-        runList(root, scenario.getDescription());
-        runList(root, scenario.getParent().getFinallys());
-    }
-
-    protected void runList(Element root, List<String> list) {
-        Element quote = new Element("blockquote");
-        String alias;
-        try {
-            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginSentence.class);
-        } catch (PluginException e) {
-            alias = "sentence";
-        }
-        for (String s : list) {
-            Element sentence = new Element("span");
-            sentence.appendChild(s);
-            sentence.addAttribute(new Attribute("class", alias));
-            quote.appendChild(sentence);
-            quote.appendChild(new Element("br"));
-        }
-        root.appendChild(quote);
+    /**
+     * Dump a scenario without examples.
+     * 
+     * @param root
+     *            The node.
+     * @param words
+     *            The keyword mapping.
+     * @param scenario
+     *            The scenario.
+     */
+    public void dumpSingleScenario(Element root, Keywords words, Scenario scenario) {
+        dumpDescription(root, words.getScenario(), scenario, "h2");
+        dumpExecutableList(root, scenario.getParent().getBackground());
+        dumpExecutableList(root, scenario.getDescription());
+        dumpExecutableList(root, scenario.getParent().getFinallys());
     }
 
     @Override

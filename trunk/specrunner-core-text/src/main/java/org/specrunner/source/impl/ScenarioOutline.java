@@ -20,38 +20,106 @@ package org.specrunner.source.impl;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Stand for a scenario outline.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class ScenarioOutline extends Scenario {
 
+    /**
+     * The parameter names.
+     */
     private List<String> names = new LinkedList<String>();
+    /**
+     * The list of example elements.
+     */
     private List<List<String>> examples = new LinkedList<List<String>>();
 
+    /**
+     * Create an outline with scenario.
+     * 
+     * @param name
+     *            The name.
+     */
     public ScenarioOutline(String name) {
         super(name);
     }
 
+    /**
+     * Get the parameter names.
+     * 
+     * @return The list.
+     */
     public List<String> getNames() {
         return names;
     }
 
+    /**
+     * Set the parameter names.
+     * 
+     * @param names
+     *            The names.
+     */
     public void setNames(List<String> names) {
         this.names = names;
     }
 
+    /**
+     * Add a parameter name.
+     * 
+     * @param name
+     *            A name.
+     * @return The scenario itself.
+     */
     public ScenarioOutline add(String name) {
         names.add(name);
         return this;
     }
 
+    /**
+     * Get the list of examples line.
+     * 
+     * @return The list.
+     */
     public List<List<String>> getExamples() {
         return examples;
     }
 
+    /**
+     * Set the examples list.
+     * 
+     * @param examples
+     *            The examples.
+     */
     public void setExamples(List<List<String>> examples) {
         this.examples = examples;
     }
 
+    /**
+     * Add a list of examples.
+     * 
+     * @param example
+     *            The example.
+     * @return The scenario itself.
+     */
     public ScenarioOutline add(List<String> example) {
         examples.add(example);
         return this;
+    }
+
+    @Override
+    public String validate() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.validate());
+        int index = 0;
+        for (List<String> e : examples) {
+            if (names.size() != e.size()) {
+                sb.append("\n Example[" + index + "] size is different of expected arguments, args: " + names + ", example:" + e);
+            }
+            index++;
+        }
+        return sb.toString();
     }
 }
