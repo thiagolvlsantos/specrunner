@@ -20,35 +20,91 @@ package org.specrunner.source.impl;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Any object with a name as a group os sentences.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public abstract class Description {
 
+    /**
+     * Group name.
+     */
     protected String name;
+    /**
+     * Sentences set.
+     */
     protected List<String> description = new LinkedList<String>();
 
+    /**
+     * The object name.
+     * 
+     * @param name
+     *            The name.
+     */
     public Description(String name) {
         this.name = name;
     }
 
+    /**
+     * Get the name.
+     * 
+     * @return The name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Set the name.
+     * 
+     * @param name
+     *            The name.
+     * @return The object itself.
+     */
     public Description setName(String name) {
         this.name = name;
         return this;
     }
 
+    /**
+     * Get the list of sentences.
+     * 
+     * @return The list.
+     */
     public List<String> getDescription() {
         return description;
     }
 
+    /**
+     * Set the sentences list.
+     * 
+     * @param description
+     *            The descriptions.
+     * @return The object itself.
+     */
     public Description setDescription(List<String> description) {
         this.description = description;
         return this;
     }
 
+    /**
+     * Add a description.
+     * 
+     * @param description
+     *            A description.
+     * @return The object itself.
+     */
     public Description addDescription(String description) {
         this.description.add(description);
         return this;
     }
+
+    /**
+     * Perform object validation.
+     * 
+     * @return The description of errors, if any, empty string otherwise.
+     */
+    public abstract String validate();
 }

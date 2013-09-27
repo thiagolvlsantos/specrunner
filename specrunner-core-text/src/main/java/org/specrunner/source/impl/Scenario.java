@@ -17,19 +17,54 @@
  */
 package org.specrunner.source.impl;
 
+/**
+ * Stand for a scenario.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class Scenario extends Description {
 
+    /**
+     * The parent feature.
+     */
     private Feature parent;
 
+    /**
+     * Create a scenario with a name.
+     * 
+     * @param name
+     *            A name.
+     */
     public Scenario(String name) {
         super(name);
     }
 
+    /**
+     * Get the feature parent.
+     * 
+     * @return The parent.
+     */
     public Feature getParent() {
         return parent;
     }
 
+    /**
+     * Set the parent.
+     * 
+     * @param parent
+     *            The scenario parent.
+     */
     public void setParent(Feature parent) {
         this.parent = parent;
+    }
+
+    @Override
+    public String validate() {
+        StringBuilder sb = new StringBuilder();
+        if (parent == null) {
+            sb.append("\n" + getName() + ": missing feature reference.");
+        }
+        return sb.toString();
     }
 }
