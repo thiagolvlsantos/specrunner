@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Read a feature from a input.
+ * Read a feature from a input stream.
  * 
  * @author Thiago Santos
  * 
