@@ -26,7 +26,7 @@ import java.util.List;
  * @author Thiago Santos
  * 
  */
-public abstract class Description {
+public abstract class NamedSentence {
 
     /**
      * Group name.
@@ -43,7 +43,7 @@ public abstract class Description {
      * @param name
      *            The name.
      */
-    public Description(String name) {
+    public NamedSentence(String name) {
         this.name = name;
     }
 
@@ -63,7 +63,7 @@ public abstract class Description {
      *            The name.
      * @return The object itself.
      */
-    public Description setName(String name) {
+    public NamedSentence setName(String name) {
         this.name = name;
         return this;
     }
@@ -84,7 +84,7 @@ public abstract class Description {
      *            The descriptions.
      * @return The object itself.
      */
-    public Description setDescription(List<String> description) {
+    public NamedSentence setDescription(List<String> description) {
         this.description = description;
         return this;
     }
@@ -96,7 +96,7 @@ public abstract class Description {
      *            A description.
      * @return The object itself.
      */
-    public Description addDescription(String description) {
+    public NamedSentence addDescription(String description) {
         this.description.add(description);
         return this;
     }
