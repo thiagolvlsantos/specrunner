@@ -26,8 +26,12 @@ import java.util.List;
  * @author Thiago Santos
  * 
  */
-public class Feature extends Description {
+public class Feature extends NamedSentence {
 
+    /**
+     * Keyword set.
+     */
+    private Keywords keywords;
     /**
      * List of background sentences.
      */
@@ -49,6 +53,25 @@ public class Feature extends Description {
      */
     public Feature(String name) {
         super(name);
+    }
+
+    /**
+     * Get the keywords used.
+     * 
+     * @return The keywords.
+     */
+    public Keywords getKeywords() {
+        return keywords;
+    }
+
+    /**
+     * Set the keywords used.
+     * 
+     * @param keywords
+     *            The keywords.
+     */
+    public void setKeywords(Keywords keywords) {
+        this.keywords = keywords;
     }
 
     /**

@@ -35,30 +35,29 @@ import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.IPresenter;
 
 /**
- * Perform convertion of an object <code>Feature</code> to a <code>Node</code>.
+ * Perform conversion of an object <code>Feature</code> to a <code>Node</code>.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class PresenterFeature implements IPresenter {
+public class FeaturePresenter implements IPresenter {
 
     @Override
     public void initialize() {
     }
 
     @Override
-    public Node asNode(Object obj, Object[] args) {
+    public Node asNode(Object obj, Object... args) {
         if (!(obj instanceof Feature)) {
             throw new IllegalArgumentException("Invalid source instance:" + obj + " of type " + (obj != null ? obj.getClass() : null));
         }
-        if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("Missing keyword mapping.");
+        Feature feature = (Feature) obj;
+        Keywords keywords = feature.getKeywords();
+        if (keywords == null) {
+            throw new IllegalArgumentException("Feature keywords not set.");
         }
-        if (!(args[0] instanceof Keywords)) {
-            throw new IllegalArgumentException("Argument[0] is not a instance of Keyword.");
-        }
-        return dumpFeature(new Element("div"), (Keywords) args[0], (Feature) obj);
+        return dumpFeature(new Element("div"), keywords, feature);
     }
 
     /**
@@ -96,7 +95,7 @@ public class PresenterFeature implements IPresenter {
      * @param tag
      *            The tag to be added.
      */
-    protected void dumpDescription(Element root, String keyword, Description description, String tag) {
+    protected void dumpDescription(Element root, String keyword, NamedSentence description, String tag) {
         Element e = new Element(tag);
         root.appendChild(e);
         e.appendChild(keyword + (description != null ? description.getName() : ""));
@@ -180,9 +179,9 @@ public class PresenterFeature implements IPresenter {
         macro.addAttribute(new Attribute("name", name));
         {
             dumpDescription(macro, words.getScenarioOutline(), scenario, "h2");
-            dumpExecutableList(macro, scenario.getParent().getBackground());
-            dumpExecutableList(macro, scenario.getDescription());
-            dumpExecutableList(macro, scenario.getParent().getFinallys());
+            dumpExecutableList(macro, scenario.getParent().getBackground(), true);
+            dumpExecutableList(macro, scenario.getDescription(), true);
+            dumpExecutableList(macro, scenario.getParent().getFinallys(), true);
         }
         return name;
     }
@@ -194,8 +193,10 @@ public class PresenterFeature implements IPresenter {
      *            The node.
      * @param list
      *            The executable list.
+     * @param replace
+     *            Flga to replace &gt; and &lt; by their corresponding in SR.
      */
-    protected void dumpExecutableList(Element root, List<String> list) {
+    protected void dumpExecutableList(Element root, List<String> list, boolean replace) {
         Element quote = new Element("blockquote");
         String alias;
         try {
@@ -205,7 +206,7 @@ public class PresenterFeature implements IPresenter {
         }
         for (String s : list) {
             Element sentence = new Element("span");
-            sentence.appendChild(s);
+            sentence.appendChild(replace ? s.replace("<", "#{").replace(">", "}") : s);
             sentence.addAttribute(new Attribute("class", alias));
             quote.appendChild(sentence);
             quote.appendChild(new Element("br"));
@@ -345,13 +346,13 @@ public class PresenterFeature implements IPresenter {
      */
     public void dumpSingleScenario(Element root, Keywords words, Scenario scenario) {
         dumpDescription(root, words.getScenario(), scenario, "h2");
-        dumpExecutableList(root, scenario.getParent().getBackground());
-        dumpExecutableList(root, scenario.getDescription());
-        dumpExecutableList(root, scenario.getParent().getFinallys());
+        dumpExecutableList(root, scenario.getParent().getBackground(), false);
+        dumpExecutableList(root, scenario.getDescription(), false);
+        dumpExecutableList(root, scenario.getParent().getFinallys(), false);
     }
 
     @Override
-    public String asString(Object obj, Object[] args) {
+    public String asString(Object obj, Object... args) {
         if (!(obj instanceof Feature)) {
             return null;
         }
