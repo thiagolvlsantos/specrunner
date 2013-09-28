@@ -38,7 +38,7 @@ public interface IPresenter extends IResetable {
      *            The conversion arguments.
      * @return The node representation.
      */
-    Node asNode(Object obj, Object[] args);
+    Node asNode(Object obj, Object... args);
 
     /**
      * Create a string representation.
@@ -49,5 +49,5 @@ public interface IPresenter extends IResetable {
      *            The conversion arguments.
      * @return The node representation.
      */
-    String asString(Object obj, Object[] args);
+    String asString(Object obj, Object... args);
 }
