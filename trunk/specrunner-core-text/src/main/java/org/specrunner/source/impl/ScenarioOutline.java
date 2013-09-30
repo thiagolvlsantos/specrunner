@@ -17,9 +17,6 @@
  */
 package org.specrunner.source.impl;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Stand for a scenario outline.
  * 
@@ -29,13 +26,9 @@ import java.util.List;
 public class ScenarioOutline extends Scenario {
 
     /**
-     * The parameter names.
+     * The data table.
      */
-    private List<String> names = new LinkedList<String>();
-    /**
-     * The list of example elements.
-     */
-    private List<List<String>> examples = new LinkedList<List<String>>();
+    private DataTable table = new DataTable();
 
     /**
      * Create an outline with scenario.
@@ -48,78 +41,29 @@ public class ScenarioOutline extends Scenario {
     }
 
     /**
-     * Get the parameter names.
+     * Get the examples.
      * 
-     * @return The list.
+     * @return The examples data.
      */
-    public List<String> getNames() {
-        return names;
+    public DataTable getTable() {
+        return table;
     }
 
     /**
-     * Set the parameter names.
+     * Set the table.
      * 
-     * @param names
-     *            The names.
+     * @param table
+     *            The table.
      */
-    public void setNames(List<String> names) {
-        this.names = names;
-    }
-
-    /**
-     * Add a parameter name.
-     * 
-     * @param name
-     *            A name.
-     * @return The scenario itself.
-     */
-    public ScenarioOutline add(String name) {
-        names.add(name);
-        return this;
-    }
-
-    /**
-     * Get the list of examples line.
-     * 
-     * @return The list.
-     */
-    public List<List<String>> getExamples() {
-        return examples;
-    }
-
-    /**
-     * Set the examples list.
-     * 
-     * @param examples
-     *            The examples.
-     */
-    public void setExamples(List<List<String>> examples) {
-        this.examples = examples;
-    }
-
-    /**
-     * Add a list of examples.
-     * 
-     * @param example
-     *            The example.
-     * @return The scenario itself.
-     */
-    public ScenarioOutline add(List<String> example) {
-        examples.add(example);
-        return this;
+    public void setTable(DataTable table) {
+        this.table = table;
     }
 
     @Override
     public String validate() {
         StringBuilder sb = new StringBuilder();
         sb.append(super.validate());
-        int index = 0;
-        for (List<String> e : examples) {
-            if (names.size() != e.size()) {
-                sb.append("\n Example[" + index + "] size is different of expected arguments, args: " + names + ", example:" + e);
-            }
-            index++;
-        }
+        sb.append(table.validate());
         return sb.toString();
     }
 }

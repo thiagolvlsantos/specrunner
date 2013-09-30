@@ -218,7 +218,7 @@ public class FeatureReaderImpl implements IFeatureReader {
         if (line != null) {
             StringTokenizer st = new StringTokenizer(line.trim(), "|");
             while (st.hasMoreTokens()) {
-                outline.add(st.nextToken());
+                outline.getTable().add(st.nextToken());
             }
             line = reader.readLine();
             while (line != null) {
@@ -231,7 +231,7 @@ public class FeatureReaderImpl implements IFeatureReader {
                 while (st.hasMoreTokens()) {
                     args.add(st.nextToken().trim());
                 }
-                outline.add(args);
+                outline.getTable().add(args);
                 line = reader.readLine();
             }
         }

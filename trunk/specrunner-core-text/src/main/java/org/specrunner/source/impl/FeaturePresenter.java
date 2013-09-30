@@ -262,12 +262,13 @@ public class FeaturePresenter implements IPresenter {
             {
                 Element tr = new Element("tr");
                 table.appendChild(tr);
-                for (String str : outline.getNames()) {
+                DataTable examples = outline.getTable();
+                for (String str : examples.getNames()) {
                     Element td = new Element("td");
                     td.appendChild(str);
                     tr.appendChild(td);
                 }
-                for (List<String> e : outline.getExamples()) {
+                for (List<String> e : examples.getExamples()) {
                     tr = new Element("tr");
                     for (String str : e) {
                         Element td = new Element("td");
