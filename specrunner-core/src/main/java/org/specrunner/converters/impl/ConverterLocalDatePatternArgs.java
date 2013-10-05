@@ -17,30 +17,22 @@
  */
 package org.specrunner.converters.impl;
 
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.DateTime;
 import org.specrunner.converters.ConverterException;
 
 /**
- * Convert any date (DateTime form Jodatime), given a provided pattern in
+ * Convert any date (LocalDate from Jodatime), given a provided pattern in
  * arg[0].
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLocalDatePatternArgs extends ConverterDefault {
+public class ConverterLocalDatePatternArgs extends ConverterDateTimePatternArgs {
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
-        if (value == null) {
-            return null;
-        }
-        try {
-            DateTimeFormatter formatter = DateTimeFormat.forPattern(String.valueOf(args[0]));
-            return formatter.parseDateTime(String.valueOf(value)).toLocalDate();
-        } catch (IllegalArgumentException e) {
-            throw new ConverterException(e);
-        }
+        DateTime date = (DateTime) super.convert(value, args);
+        return date != null ? date.toLocalDate() : null;
     }
 }

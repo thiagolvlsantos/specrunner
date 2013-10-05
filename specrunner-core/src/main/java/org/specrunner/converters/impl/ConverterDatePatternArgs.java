@@ -20,7 +20,10 @@ package org.specrunner.converters.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.converters.ConverterException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * Convert any date (Date from Java), given a provided pattern in arg[0].
@@ -31,13 +34,24 @@ import org.specrunner.converters.ConverterException;
 @SuppressWarnings("serial")
 public class ConverterDatePatternArgs extends ConverterDefault {
 
+    /**
+     * Cache of formatters.
+     */
+    private static ICache<String, SimpleDateFormat> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ConverterDatePatternArgs.class.getName());
+
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
         if (value == null) {
             return null;
         }
         try {
-            return new SimpleDateFormat(String.valueOf(args[0])).parse(String.valueOf(value));
+            String pattern = String.valueOf(args[0]);
+            SimpleDateFormat formatter = cache.get(pattern);
+            if (formatter == null) {
+                formatter = new SimpleDateFormat(pattern);
+                cache.put(pattern, formatter);
+            }
+            return formatter.parse(String.valueOf(value));
         } catch (ParseException e) {
             throw new ConverterException(e);
         }
