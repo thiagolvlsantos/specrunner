@@ -1,5 +1,6 @@
 package example.language;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -85,5 +86,9 @@ public class TestSentence {
 
     public void convertDateTime(@Converter(args = { "dd/MM/yyyy HH:mm:ss" }) DateTime date) {
         System.out.println("CALLED.11: dateTime = " + date);
+    }
+
+    public void convertBigDecimal(BigDecimal big) {
+        System.out.println("CALLED.12: big decimal = " + big);
     }
 }

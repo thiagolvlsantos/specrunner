@@ -19,7 +19,10 @@ package org.specrunner.converters.impl;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.converters.ConverterException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * Convert any date (DateTime form Jodatime), given a provided pattern in
@@ -30,6 +33,10 @@ import org.specrunner.converters.ConverterException;
  */
 @SuppressWarnings("serial")
 public class ConverterDateTimePatternArgs extends ConverterDefault {
+    /**
+     * Cache of formatters.
+     */
+    private static ICache<String, DateTimeFormatter> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ConverterDateTimePatternArgs.class.getName());
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
@@ -37,7 +44,12 @@ public class ConverterDateTimePatternArgs extends ConverterDefault {
             return null;
         }
         try {
-            DateTimeFormatter formatter = DateTimeFormat.forPattern(String.valueOf(args[0]));
+            String pattern = String.valueOf(args[0]);
+            DateTimeFormatter formatter = cache.get(pattern);
+            if (formatter == null) {
+                formatter = DateTimeFormat.forPattern(pattern);
+                cache.put(pattern, formatter);
+            }
             return formatter.parseDateTime(String.valueOf(value));
         } catch (IllegalArgumentException e) {
             throw new ConverterException(e);
