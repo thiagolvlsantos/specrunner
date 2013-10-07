@@ -50,6 +50,13 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
     Deque<ISource> getSources();
 
     /**
+     * Get current source.
+     * 
+     * @return The top source.
+     */
+    ISource getCurrentSource();
+
+    /**
      * The runner related to the context.
      * 
      * @return The runner.

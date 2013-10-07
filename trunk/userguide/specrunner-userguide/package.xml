@@ -88,6 +88,20 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-userguide-core-text/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-core-text.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-ant/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-ant.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-userguide-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>

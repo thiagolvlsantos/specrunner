@@ -184,9 +184,15 @@ public class SourceDumperDetails extends AbstractSourceDumperFile {
                                     if (!s.isError()) {
                                         link.appendChild(name + "-" + s.getName());
                                     } else {
-                                        String msg = local.getFailure().getMessage();
-                                        if (msg == null) {
-                                            msg = "Null message.";
+                                        Throwable failure = local.getFailure();
+                                        String msg = null;
+                                        if (failure != null) {
+                                            msg = failure.getMessage();
+                                            if (msg == null) {
+                                                msg = "Null message.";
+                                            }
+                                        } else {
+                                            msg = "Failure missing.";
                                         }
                                         link.addAttribute(new Attribute("title", msg));
                                         link.appendChild(name + "-" + msg);

@@ -90,6 +90,11 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         return sources;
     }
 
+    @Override
+    public ISource getCurrentSource() {
+        return sources.peek();
+    }
+
     /**
      * Sets the sources.
      * 

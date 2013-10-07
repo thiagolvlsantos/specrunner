@@ -40,6 +40,8 @@
         <module>../specrunner-core</module>
         <module>../specrunner-core-excel</module>
         <module>../specrunner-core-text</module>
+        <!-- ANT integration -->
+        <module>../specrunner-ant</module>
         <!-- Basic database support -->
         <module>../specrunner-sql</module>
         <!-- ORM -->
