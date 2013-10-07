@@ -268,7 +268,7 @@ public class PluginInclude extends AbstractPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("HREF>" + newHref);
             }
-            ISource current = context.getSources().peek();
+            ISource current = context.getCurrentSource();
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("CURRENT>" + current);
             }

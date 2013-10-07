@@ -65,7 +65,7 @@ public abstract class AbstractPluginResourceReplaceable extends AbstractPluginRe
             try {
                 Element element = (Element) context.getNode();
 
-                ISource source = context.getSources().peek();
+                ISource source = context.getCurrentSource();
                 ISourceFactory sourceFactory = source.getFactory();
                 ISource referencedSource = sourceFactory.newSource(reference);
                 ISource relative = source.resolve(referencedSource);

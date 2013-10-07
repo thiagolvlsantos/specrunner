@@ -95,6 +95,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-ant/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-ant.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>

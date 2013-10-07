@@ -255,7 +255,7 @@ public class PluginScripts extends AbstractPluginValue {
             String value = String.valueOf(tmp);
             StringTokenizer st = new StringTokenizer(value, scriptseparator);
             List<URI> list = new LinkedList<URI>();
-            ISource source = context.getSources().peek();
+            ISource source = context.getCurrentSource();
             URI base = source.getURI();
             while (st.hasMoreTokens()) {
                 String val = st.nextToken().trim();

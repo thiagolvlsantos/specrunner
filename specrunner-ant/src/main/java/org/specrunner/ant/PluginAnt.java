@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2013  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.ant;
 
 import java.io.File;
@@ -17,11 +34,29 @@ import org.specrunner.result.status.Success;
 import org.specrunner.source.ISource;
 import org.specrunner.util.UtilLog;
 
+/**
+ * Call ant actions.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 public class PluginAnt extends AbstractPlugin {
 
-    private String dir;
+    /**
+     * Build basedir.
+     */
+    private String basedir;
+    /**
+     * Build file.
+     */
     private String file;
+    /**
+     * Build target.
+     */
     private String target;
+    /**
+     * Debug level.
+     */
     private Integer debug = Project.MSG_INFO;
 
     @Override
@@ -29,34 +64,78 @@ public class PluginAnt extends AbstractPlugin {
         return Command.INSTANCE;
     }
 
-    public String getDir() {
-        return dir;
+    /**
+     * Get Ant basedir.
+     * 
+     * @return Null, of not set, the Ant basedir otherwise.
+     */
+    public String getBasedir() {
+        return basedir;
     }
 
-    public void setDir(String dir) {
-        this.dir = dir;
+    /**
+     * Set basedir.
+     * 
+     * @param basedir
+     *            The basedir.
+     */
+    public void setBasedir(String basedir) {
+        this.basedir = basedir;
     }
 
+    /**
+     * Get build file.
+     * 
+     * @return The build file.
+     */
     public String getFile() {
         return file;
     }
 
+    /**
+     * Set build file.
+     * 
+     * @param file
+     *            The file.
+     */
     public void setFile(String file) {
         this.file = file;
     }
 
+    /**
+     * Get the build target.
+     * 
+     * @return The target.
+     */
     public String getTarget() {
         return target;
     }
 
+    /**
+     * Set build target. If none is set, the 'default' task will be selected.
+     * 
+     * @param target
+     *            The target.
+     */
     public void setTarget(String target) {
         this.target = target;
     }
 
+    /**
+     * get de debug level.
+     * 
+     * @return The debug level.
+     */
     public Integer getDebug() {
         return debug;
     }
 
+    /**
+     * Set the debug level.
+     * 
+     * @param debug
+     *            The level.
+     */
     public void setDebug(Integer debug) {
         this.debug = debug;
     }
@@ -68,12 +147,12 @@ public class PluginAnt extends AbstractPlugin {
         }
         Project project = new Project();
         File buildFile = null;
-        if (dir == null) {
+        if (basedir == null) {
             ISource current = context.getCurrentSource();
             File source = current.getFile();
             buildFile = new File(source.getParentFile(), file);
         } else {
-            File parent = new File(dir);
+            File parent = new File(basedir);
             project.setUserProperty(MagicNames.PROJECT_BASEDIR, parent.getAbsolutePath());
             buildFile = new File(parent, file);
         }
@@ -103,6 +182,11 @@ public class PluginAnt extends AbstractPlugin {
         }
     }
 
+    /**
+     * Creates the logger.
+     * 
+     * @return The logger.
+     */
     protected DefaultLogger logger() {
         DefaultLogger consoleLogger = new DefaultLogger();
         consoleLogger.setErrorPrintStream(System.err);
