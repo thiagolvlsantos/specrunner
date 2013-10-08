@@ -18,9 +18,14 @@
 package org.specrunner.ant;
 
 import java.io.File;
+import java.io.IOException;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
@@ -32,6 +37,8 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.ISource;
+import org.specrunner.source.resource.EType;
+import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -159,8 +166,11 @@ public class PluginAnt extends AbstractPlugin {
         project.setUserProperty(MagicNames.ANT_FILE, buildFile.getAbsolutePath());
         ProjectHelper helper = ProjectHelper.getProjectHelper();
         project.addReference(MagicNames.REFID_PROJECT_HELPER, helper);
-        project.addBuildListener(logger());
+        AntLogger logger = newLogger();
+        logger.setMessageOutputLevel(debug);
+        project.addBuildListener(logger);
         String msg = "base dir=" + project.getUserProperty(MagicNames.PROJECT_BASEDIR) + ", file=" + project.getUserProperty(MagicNames.ANT_FILE);
+        Throwable error = null;
         try {
             project.fireBuildStarted();
             project.init();
@@ -175,10 +185,29 @@ public class PluginAnt extends AbstractPlugin {
             result.addResult(Success.INSTANCE, context.peek(), "Ant call success: " + msg);
         } catch (BuildException e) {
             project.fireBuildFinished(e);
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Ant call error. " + msg, e);
+            error = e;
+        }
+        Node node = context.getNode();
+        if (node instanceof ParentNode) {
+            try {
+                Element ele = new Element("pre");
+                ele.addAttribute(new Attribute("class", "sr_antlog"));
+                try {
+                    context.getCurrentSource().getManager().addCss("css/sr_ant.css", true, EType.BINARY);
+                } catch (ResourceException e) {
+                    throw new PluginException(e);
+                }
+                ele.appendChild(logger.getContent());
+                ((ParentNode) node).appendChild(ele);
+            } catch (IOException e) {
+                throw new PluginException(e);
             }
-            throw new PluginException(e);
+        }
+        if (error != null) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Ant call error. " + msg, error);
+            }
+            throw new PluginException(error);
         }
     }
 
@@ -187,11 +216,7 @@ public class PluginAnt extends AbstractPlugin {
      * 
      * @return The logger.
      */
-    protected DefaultLogger logger() {
-        DefaultLogger consoleLogger = new DefaultLogger();
-        consoleLogger.setErrorPrintStream(System.err);
-        consoleLogger.setOutputPrintStream(System.out);
-        consoleLogger.setMessageOutputLevel(debug);
-        return consoleLogger;
+    protected AntLogger newLogger() {
+        return new AntLogger();
     }
 }

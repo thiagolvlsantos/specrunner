@@ -50,6 +50,9 @@ public class SourceDumperResources extends AbstractSourceDumperFile {
             IResourceManager manager = source.getManager();
             ISource target = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(outputFile.getAbsolutePath());
             for (IResource r : manager) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("RESOURCE (" + r + "):" + res.getAbsolutePath());
+                }
                 r.writeTo(target);
             }
             if (UtilLog.LOG.isInfoEnabled()) {

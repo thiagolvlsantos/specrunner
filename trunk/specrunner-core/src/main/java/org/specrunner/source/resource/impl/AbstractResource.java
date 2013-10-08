@@ -135,7 +135,9 @@ public abstract class AbstractResource implements IResource {
         } catch (IOException e) {
             throw new ResourceException(e);
         }
-
+        if (files == null || files.isEmpty()) {
+            throw new ResourceException("Resource " + this + " not found.");
+        }
         return filterExisting(files);
     }
 
