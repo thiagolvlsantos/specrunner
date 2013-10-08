@@ -172,4 +172,18 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
     public String toString() {
         return "AbstractResourceHeader [path=" + getResourcePath() + ",type=" + getType() + ", position=" + getPosition() + "]";
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof AbstractResourceHeader)) {
+            return false;
+        }
+        AbstractResourceHeader arh = (AbstractResourceHeader) obj;
+        return getResourcePath().equals(arh.getResourcePath()) && isClasspath() == arh.isClasspath() && getType() == arh.getType() && getPosition() == arh.getPosition();
+    }
 }
