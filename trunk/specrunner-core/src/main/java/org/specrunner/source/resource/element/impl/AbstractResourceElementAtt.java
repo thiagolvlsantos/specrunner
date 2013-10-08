@@ -20,7 +20,10 @@ package org.specrunner.source.resource.element.impl;
 import java.io.File;
 import java.net.URL;
 
+import nu.xom.Attribute;
+import nu.xom.Comment;
 import nu.xom.Element;
+import nu.xom.Node;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
@@ -38,6 +41,16 @@ import org.specrunner.util.UtilResources;
 public abstract class AbstractResourceElementAtt extends AbstractResourceElement {
 
     /**
+     * The attribute where resource lies.
+     */
+    private String attribute;
+
+    /**
+     * The log name.
+     */
+    private String prefix;
+
+    /**
      * Creates a resource.
      * 
      * @param parent
@@ -50,9 +63,15 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
      *            The resource nature.
      * @param element
      *            The referred element.
+     * @param reference
+     *            The reference attribute.
+     * @param prefix
+     *            The name to log.
      */
-    public AbstractResourceElementAtt(ISource parent, String path, boolean classpath, EType type, Element element) {
+    public AbstractResourceElementAtt(ISource parent, String path, boolean classpath, EType type, Element element, String reference, String prefix) {
         super(parent, path, classpath, type, element);
+        this.attribute = reference;
+        this.prefix = prefix;
     }
 
     @Override
@@ -83,5 +102,39 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
      * 
      * @return The reference. i.e. href, src, etc.
      */
-    protected abstract String getReferenceName();
+    protected String getReferenceName() {
+        return attribute;
+    }
+
+    @Override
+    public String asString() {
+        return getPrefix() + "(" + getResourcePath() + ")";
+    }
+
+    /**
+     * Get a description prefix.
+     * 
+     * @return The prefix.
+     */
+    protected String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    public Node asNode() {
+        Element e = (Element) getElement().copy();
+        e.addAttribute(new Attribute(getReferenceName(), getResourcePath()));
+        appendChild(e);
+        return e;
+    }
+
+    /**
+     * Append child elements, by default add a comment.
+     * 
+     * @param root
+     *            The root element.
+     */
+    protected void appendChild(Element root) {
+        root.appendChild(new Comment(" comment "));
+    }
 }

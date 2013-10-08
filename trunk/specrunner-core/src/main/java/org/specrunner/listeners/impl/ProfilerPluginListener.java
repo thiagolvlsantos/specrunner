@@ -66,10 +66,6 @@ public class ProfilerPluginListener implements IPluginListener {
      */
     private Long lastStart;
     /**
-     * Last end count.
-     */
-    private Long lastEnd;
-    /**
      * Total init count.
      */
     private Long totalInit;
@@ -137,7 +133,7 @@ public class ProfilerPluginListener implements IPluginListener {
 
     @Override
     public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
-        lastEnd = (System.currentTimeMillis() - timeEnd.pop());
+        Long lastEnd = (System.currentTimeMillis() - timeEnd.pop());
         if (UtilLog.LOG.isDebugEnabled() && lastEnd > TRESHOLD) {
             UtilLog.LOG.debug("  doEnd(): " + lastEnd + "mls. On " + context.getPlugin());
         }

@@ -169,7 +169,7 @@ public class WritablePage implements IWritable {
      */
     protected String getExtension(File scrFile) {
         String name = scrFile.getName();
-        name = name.substring(name.lastIndexOf("."), name.length());
+        name = name.substring(name.lastIndexOf('.'), name.length());
         return name;
     }
 

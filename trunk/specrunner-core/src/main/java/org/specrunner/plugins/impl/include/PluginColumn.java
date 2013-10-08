@@ -208,12 +208,12 @@ public class PluginColumn extends AbstractPluginTable {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
-            throw new PluginException("Could not create type instance.");
+            throw new PluginException("Could not create type instance.", e);
         } catch (IllegalAccessException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
-            throw new PluginException("Could not create access type default constructor. Class:'" + type.getName() + "'");
+            throw new PluginException("Could not create access type default constructor. Class:'" + type.getName() + "'", e);
         }
     }
 

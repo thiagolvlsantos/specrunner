@@ -197,7 +197,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 String tmp = element.asXml();
                 IBuilderFactory bf = SpecRunnerServices.get(IBuilderFactory.class);
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
-                Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
+                Element received = (Element) builder.build("<html><head></head><body>" + tmp + "</body></html>", null).query("//body").get(0);
                 if (!comparatorInstance.match(expected, received)) {
                     result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(UtilNode.getChildrenAsString(expected), UtilNode.getChildrenAsString(received)));
                 } else {

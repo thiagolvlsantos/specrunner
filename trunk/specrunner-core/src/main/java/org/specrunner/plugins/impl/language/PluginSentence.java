@@ -83,12 +83,12 @@ public class PluginSentence extends AbstractPlugin {
     /**
      * Cache of type to methods annotated with sentence.
      */
-    private static ICache<Class<?>, List<Method>> methods = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_methods");
+    private static ICache<Class<?>, List<Method>> cacheMethods = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_methods");
 
     /**
      * Cache of patterns.
      */
-    private static ICache<String, Pattern> patterns = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_patterns");
+    private static ICache<String, Pattern> cachePatterns = SpecRunnerServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_patterns");
 
     @Override
     public ActionType getActionType() {
@@ -284,23 +284,23 @@ public class PluginSentence extends AbstractPlugin {
         if (method != null) {
             return false;
         }
-        Class<?> type = target.getClass();
-        List<Method> ms = methods.get(type);
+        Class<?> clazz = target.getClass();
+        List<Method> ms = cacheMethods.get(clazz);
         if (ms == null) {
             ms = new LinkedList<Method>();
-            for (Method m : type.getMethods()) {
+            for (Method m : clazz.getMethods()) {
                 Sentence s = m.getAnnotation(Sentence.class);
                 if (s != null) {
                     ms.add(m);
                 }
             }
-            methods.put(type, ms);
+            cacheMethods.put(clazz, ms);
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Class " + type + " mapped to @Sentence annotated methods: '" + ms + "'.");
+                UtilLog.LOG.trace("Class " + clazz + " mapped to @Sentence annotated methods: '" + ms + "'.");
             }
         } else {
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Class " + type + " map to @Sentence reused.");
+                UtilLog.LOG.trace("Class " + clazz + " map to @Sentence reused.");
             }
         }
         for (Method m : ms) {
@@ -316,10 +316,10 @@ public class PluginSentence extends AbstractPlugin {
             boolean found = false;
             for (int i = 0; i < strs.size(); i++) {
                 String str = strs.get(i);
-                Pattern pattern = patterns.get(str);
+                Pattern pattern = cachePatterns.get(str);
                 if (pattern == null) {
                     pattern = Pattern.compile(str, i == 0 || sm == null ? s.options() : sm.options());
-                    patterns.put(str, pattern);
+                    cachePatterns.put(str, pattern);
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace("New pattern for '" + str + "' created.");
                     }
@@ -427,14 +427,14 @@ public class PluginSentence extends AbstractPlugin {
      * 
      */
     protected Method getMethodBefore(Object target, String method, List<Object> args) throws PluginException {
-        Class<?> type = target.getClass();
-        Method[] methods = type.getMethods();
+        Class<?> clazz = target.getClass();
+        Method[] methods = clazz.getMethods();
         for (Method m : methods) {
             if (m.getName().equals(method) && m.getParameterTypes().length == args.size()) {
                 return m;
             }
         }
-        throw new PluginException("Method named '" + method + "' with " + args.size() + " parameter(s) not found for " + type + ".\n Another reason to this error show up is when you have defined a wrong regular expression for the target method you expected to call [Check @Sentence and @Synonyms annotations].");
+        throw new PluginException("Method named '" + method + "' with " + args.size() + " parameter(s) not found for " + clazz + ".\n Another reason to this error show up is when you have defined a wrong regular expression for the target method you expected to call [Check @Sentence and @Synonyms annotations].");
     }
 
     /**

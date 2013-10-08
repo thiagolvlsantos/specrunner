@@ -32,6 +32,7 @@ import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -144,7 +145,7 @@ public class PluginScripts extends AbstractPluginValue {
      *            The scripts.
      */
     public void setScripts(URI[] scripts) {
-        this.scripts = scripts;
+        this.scripts = Arrays.copyOf(scripts, scripts.length);
     }
 
     /**

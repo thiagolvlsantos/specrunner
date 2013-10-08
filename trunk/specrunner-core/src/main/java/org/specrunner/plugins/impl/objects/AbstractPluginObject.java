@@ -19,6 +19,7 @@ package org.specrunner.plugins.impl.objects;
 
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -638,7 +639,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The names.
          */
         public void setNames(String[] names) {
-            this.names = names;
+            this.names = Arrays.copyOf(names, names.length);
         }
 
         /**
@@ -657,7 +658,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The types.
          */
         public void setTypes(Class<?>[] types) {
-            this.types = types;
+            this.types = Arrays.copyOf(types, types.length);
         }
 
         /**
@@ -695,7 +696,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The converters.
          */
         public void setConverters(String[] converters) {
-            this.converters = converters;
+            this.converters = Arrays.copyOf(converters, converters.length);
         }
 
         /**
@@ -714,7 +715,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The arguments.
          */
         public void setArgs(String[] args) {
-            this.args = args;
+            this.args = Arrays.copyOf(args, args.length);
         }
 
         /**

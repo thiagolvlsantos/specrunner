@@ -200,7 +200,8 @@ public class LineReport implements IPresentation {
             for (Column c : tableReport.getTable().getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
                 if (index != null) {
-                    sb.append(String.valueOf(receivedObjects.get(index)) + "|");
+                    sb.append(receivedObjects.get(index));
+                    sb.append('|');
                 }
             }
             break;
@@ -208,7 +209,8 @@ public class LineReport implements IPresentation {
             for (Column c : tableReport.getTable().getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
                 if (index != null) {
-                    sb.append(String.valueOf(expectedObjects.get(index)) + "|");
+                    sb.append(expectedObjects.get(index));
+                    sb.append('|');
                 }
             }
             break;
@@ -218,9 +220,10 @@ public class LineReport implements IPresentation {
                     for (Column c : tableReport.getTable().getColumns()) {
                         Integer index = columnsToIndexes.get(c.getName());
                         if (index != null) {
-                            sb.append(String.valueOf(receivedObjects.get(index)) + "|");
+                            sb.append(receivedObjects.get(index));
+                            sb.append('|');
                         } else {
-                            sb.append("|");
+                            sb.append('|');
                         }
                     }
                 } else {
@@ -230,7 +233,7 @@ public class LineReport implements IPresentation {
                             DefaultAlignmentException def = new DefaultAlignmentException(String.valueOf(expectedObjects.get(i)), String.valueOf(receivedObjects.get(i)));
                             sb.append(def.asString() + "|");
                         } else {
-                            sb.append("|");
+                            sb.append('|');
                         }
                     }
                 }
