@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -133,7 +134,7 @@ public class PluginDatabase extends AbstractPluginValue {
      *            The instance.
      */
     public void setProviderInstance(IDatabase[] providerInstance) {
-        this.providerInstance = providerInstance;
+        this.providerInstance = Arrays.copyOf(providerInstance, providerInstance.length);
     }
 
     /**

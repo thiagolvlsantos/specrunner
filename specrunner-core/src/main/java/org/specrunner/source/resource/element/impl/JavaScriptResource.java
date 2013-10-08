@@ -17,10 +17,7 @@
  */
 package org.specrunner.source.resource.element.impl;
 
-import nu.xom.Attribute;
-import nu.xom.Comment;
 import nu.xom.Element;
-import nu.xom.Node;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
@@ -48,24 +45,6 @@ public class JavaScriptResource extends AbstractResourceElementAtt {
      *            The referred element.
      */
     public JavaScriptResource(ISource parent, String path, boolean classpath, EType type, Element element) {
-        super(parent, path, classpath, type, element);
-    }
-
-    @Override
-    protected String getReferenceName() {
-        return "src";
-    }
-
-    @Override
-    public String asString() {
-        return "SCRIPT(" + getResourcePath() + ")";
-    }
-
-    @Override
-    public Node asNode() {
-        Element e = (Element) getElement().copy();
-        e.addAttribute(new Attribute("src", getResourcePath()));
-        e.appendChild(new Comment(" comment "));
-        return e;
+        super(parent, path, classpath, type, element, "src", "SCRIPT");
     }
 }

@@ -37,7 +37,6 @@ public class CacheableMime implements ICacheable {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Mime type (" + mime + "): " + request.getUrl());
         }
-        boolean result = !"".equals(mime) && !"text/html".equals(mime);
-        return result;
+        return !"".equals(mime) && !"text/html".equals(mime);
     }
 }

@@ -12,7 +12,6 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
@@ -30,31 +29,7 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class PluginExecuteRows extends AbstractPluginScoped {
-
-    /**
-     * Iterator variable name.
-     */
-    private String var = "item";
-
-    /**
-     * The object variable name.
-     * 
-     * @return The variable name.
-     */
-    public String getVar() {
-        return var;
-    }
-
-    /**
-     * Set the variable name.
-     * 
-     * @param var
-     *            The name.
-     */
-    public void setVar(String var) {
-        this.var = var;
-    }
+public class PluginExecuteRows extends PluginIterable {
 
     @Override
     public ActionType getActionType() {

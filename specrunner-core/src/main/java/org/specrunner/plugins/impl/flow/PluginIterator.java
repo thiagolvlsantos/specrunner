@@ -26,7 +26,6 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.plugins.type.Command;
@@ -85,31 +84,7 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class PluginIterator extends AbstractPluginNamed {
-
-    /**
-     * Iterator variable name.
-     */
-    private String var = "item";
-
-    /**
-     * The object variable name.
-     * 
-     * @return The variable name.
-     */
-    public String getVar() {
-        return var;
-    }
-
-    /**
-     * Set the variable name.
-     * 
-     * @param var
-     *            The name.
-     */
-    public void setVar(String var) {
-        this.var = var;
-    }
+public class PluginIterator extends PluginIterable {
 
     @Override
     public ActionType getActionType() {
@@ -128,7 +103,7 @@ public class PluginIterator extends AbstractPluginNamed {
         }
         node.detach();
 
-        String local = var;
+        String local = getVar();
         String pos = "${index}";
         if (list instanceof IDataMap<?>) {
             local = "item_map";

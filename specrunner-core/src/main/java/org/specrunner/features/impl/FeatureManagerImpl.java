@@ -106,7 +106,8 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
                 Class<?>[] types = access.expected(target, name, value);
                 StringBuilder sb = new StringBuilder();
                 for (Class<?> c : types) {
-                    sb.append(String.valueOf(c) + ", ");
+                    sb.append(String.valueOf(c));
+                    sb.append(", ");
                 }
                 throw new FeatureManagerException("Object associated to " + feature + " is not a " + sb + ", current feature value '" + value + "' is " + value.getClass() + ".");
             }
