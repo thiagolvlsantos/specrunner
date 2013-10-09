@@ -40,6 +40,7 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Call ant actions.
@@ -48,6 +49,15 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class PluginAnt extends AbstractPlugin {
+
+    /**
+     * Serial for executions.
+     */
+    private static ThreadLocal<Integer> serial = new ThreadLocal<Integer>() {
+        protected Integer initialValue() {
+            return 0;
+        }
+    };
 
     /**
      * Build basedir.
@@ -187,21 +197,36 @@ public class PluginAnt extends AbstractPlugin {
             project.fireBuildFinished(e);
             error = e;
         }
+        Integer n = serial.get() + 1;
+        serial.set(n);
         Node node = context.getNode();
-        if (node instanceof ParentNode) {
+        UtilNode.appendCss(node, "sr_antcall");
+        ParentNode parent = node.getParent();
+        int index = parent.indexOf(node);
+        if (node instanceof Element) {
+            ((Element) node).addAttribute(new Attribute("antcall", "" + n));
+        }
+        try {
+            Element ele = new Element("pre");
+            UtilNode.appendCss(ele, "sr_antlog");
+            if (error == null) {
+                ele.addAttribute(new Attribute("style", "display:none;"));
+            }
+            ele.addAttribute(new Attribute("antlog", "" + n));
             try {
-                Element ele = new Element("pre");
-                ele.addAttribute(new Attribute("class", "sr_antlog"));
-                try {
-                    context.getCurrentSource().getManager().addCss("css/sr_ant.css", true, EType.BINARY);
-                } catch (ResourceException e) {
-                    throw new PluginException(e);
-                }
-                ele.appendChild(logger.getContent());
-                ((ParentNode) node).appendChild(ele);
-            } catch (IOException e) {
+                context.getCurrentSource().getManager().addCss("css/sr_ant.css", true, EType.BINARY);
+            } catch (ResourceException e) {
                 throw new PluginException(e);
             }
+            try {
+                context.getCurrentSource().getManager().addJs("js/sr_ant.js", true, EType.BINARY);
+            } catch (ResourceException e) {
+                throw new PluginException(e);
+            }
+            ele.appendChild(logger.getContent());
+            parent.insertChild(ele, index + 1);
+        } catch (IOException e) {
+            throw new PluginException(e);
         }
         if (error != null) {
             if (UtilLog.LOG.isDebugEnabled()) {
