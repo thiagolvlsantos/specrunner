@@ -197,14 +197,15 @@ public class PluginAnt extends AbstractPlugin {
             project.fireBuildFinished(e);
             error = e;
         }
-        Integer n = serial.get() + 1;
-        serial.set(n);
         Node node = context.getNode();
         UtilNode.appendCss(node, "sr_antcall");
         ParentNode parent = node.getParent();
         int index = parent.indexOf(node);
+
+        Integer n = serial.get() + 1;
+        serial.set(n);
         if (node instanceof Element) {
-            ((Element) node).addAttribute(new Attribute("antcall", "" + n));
+            ((Element) node).addAttribute(new Attribute("antcall", String.valueOf(n)));
         }
         try {
             Element ele = new Element("pre");
@@ -212,7 +213,7 @@ public class PluginAnt extends AbstractPlugin {
             if (error == null) {
                 ele.addAttribute(new Attribute("style", "display:none;"));
             }
-            ele.addAttribute(new Attribute("antlog", "" + n));
+            ele.addAttribute(new Attribute("antlog", String.valueOf(n)));
             try {
                 context.getCurrentSource().getManager().addCss("css/sr_ant.css", true, EType.BINARY);
             } catch (ResourceException e) {
