@@ -19,7 +19,7 @@ public class TestAnnotation {
         System.out.println("VALUE:" + value);
     }
 
-    @Sentence("call $boolean on calc, and $string\\.")
+    @Sentence("call $short on calc, and $string\\.")
     public void otherCall(int value, String arg) {
         System.out.println("OTHER_VALUE:" + value);
         System.out.println("OTHER_ARG:" + arg);
