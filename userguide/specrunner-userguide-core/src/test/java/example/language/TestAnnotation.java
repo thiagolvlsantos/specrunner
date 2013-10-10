@@ -14,12 +14,12 @@ public class TestAnnotation {
         System.out.println("Empty");
     }
 
-    @Sentence("press (\\d+) on calc")
+    @Sentence("press $int on calc")
     public void call(int value) {
         System.out.println("VALUE:" + value);
     }
 
-    @Sentence("call (\\d+) on calc, and (.+)\\.")
+    @Sentence("call $boolean on calc, and $string\\.")
     public void otherCall(int value, String arg) {
         System.out.println("OTHER_VALUE:" + value);
         System.out.println("OTHER_ARG:" + arg);

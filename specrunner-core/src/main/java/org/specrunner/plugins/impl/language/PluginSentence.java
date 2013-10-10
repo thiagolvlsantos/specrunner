@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -316,6 +317,7 @@ public class PluginSentence extends AbstractPlugin {
             boolean found = false;
             for (int i = 0; i < strs.size(); i++) {
                 String str = strs.get(i);
+                str = removePlaceholders(m, str);
                 Pattern pattern = cachePatterns.get(str);
                 if (pattern == null) {
                     pattern = Pattern.compile(str, i == 0 || sm == null ? s.options() : sm.options());
@@ -343,6 +345,23 @@ public class PluginSentence extends AbstractPlugin {
             }
         }
         return text.length() != 0;
+    }
+
+    /**
+     * Remove place holders registered in <code>Placeholders</code>. i.e. $int
+     * will be replaced to '(\\d+)'.
+     * 
+     * @param method
+     *            The method.
+     * @param str
+     *            The string to be replaced.
+     * @return The replaced string.
+     */
+    protected String removePlaceholders(Method method, String str) {
+        for (Entry<String, String> ph : Placeholders.get().entrySet()) {
+            str = str.replace(ph.getKey(), ph.getValue());
+        }
+        return str;
     }
 
     /**
