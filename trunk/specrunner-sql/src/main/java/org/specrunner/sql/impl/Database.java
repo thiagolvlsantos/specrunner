@@ -506,6 +506,7 @@ public class Database implements IDatabase {
 
     @Override
     public void release() throws PluginException {
+        StringBuilder sb = new StringBuilder();
         for (PreparedStatement ps : inputs.values()) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Release: " + ps);
@@ -515,8 +516,14 @@ public class Database implements IDatabase {
                     ps.close();
                 }
             } catch (SQLException e) {
-                throw new PluginException(e);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                sb.append(e.getMessage());
             }
+        }
+        if (sb.length() != 0) {
+            throw new PluginException(sb.toString());
         }
     }
 }
