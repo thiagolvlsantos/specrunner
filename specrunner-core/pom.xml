@@ -26,12 +26,12 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.5</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.2</version>
+      <version>1.7.5</version>
     </dependency>
 
     <!-- Testing -->
@@ -43,7 +43,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>3.2.0.RELEASE</version>
+      <version>3.2.4.RELEASE</version>
     </dependency>
 
     <!-- XML reader -->
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>net.sourceforge.nekohtml</groupId>
       <artifactId>nekohtml</artifactId>
-      <version>1.9.18</version>
+      <version>1.9.19</version>
     </dependency>
 
     <!-- BeanUtils -->
@@ -83,14 +83,14 @@
     <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.1</version>
+      <version>2.3</version>
     </dependency>
 
     <!-- Injection -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>3.2.0.RELEASE</version>
+      <version>3.2.4.RELEASE</version>
     </dependency>
 
   </dependencies>
