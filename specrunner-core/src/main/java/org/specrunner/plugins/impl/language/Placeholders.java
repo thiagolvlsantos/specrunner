@@ -42,14 +42,14 @@ public final class Placeholders extends HashMap<String, String> {
 
         put("$char", "(.)");
 
-        put("$byte", "(\\d+)");
-        put("$short", "(\\d+)");
-        put("$int", "(\\d+)");
-        put("$long", "(\\d+)");
-        put("$number", "(\\d+)");
+        put("$byte", "(-?\\d+)");
+        put("$short", "(-?\\d+)");
+        put("$int", "(-?\\d+)");
+        put("$long", "(-?\\d+)");
+        put("$number", "(-?\\d+)");
 
-        put("$float", "(\\d+\\.?\\d?)");
-        put("$double", "(\\d+\\.?\\d?)");
+        put("$float", "(-?\\d+\\.?\\d?)");
+        put("$double", "(-?\\d+\\.?\\d?)");
 
         put("$string", "(.+)");
         put("$quote", "\"(.+)\"");
