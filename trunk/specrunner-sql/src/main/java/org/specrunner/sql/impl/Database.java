@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -507,7 +508,23 @@ public class Database implements IDatabase {
     @Override
     public void release() throws PluginException {
         StringBuilder sb = new StringBuilder();
-        for (PreparedStatement ps : inputs.values()) {
+        release(sb, inputs.values());
+        release(sb, outputs.values());
+        if (sb.length() != 0) {
+            throw new PluginException(sb.toString());
+        }
+    }
+
+    /**
+     * Close a set of prepared statements.
+     * 
+     * @param sb
+     *            The error log.
+     * @param pstms
+     *            The collection of prepared statements.
+     */
+    protected void release(StringBuilder sb, Collection<PreparedStatement> pstms) {
+        for (PreparedStatement ps : pstms) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Release: " + ps);
             }
@@ -521,9 +538,6 @@ public class Database implements IDatabase {
                 }
                 sb.append(e.getMessage());
             }
-        }
-        if (sb.length() != 0) {
-            throw new PluginException(sb.toString());
         }
     }
 }
