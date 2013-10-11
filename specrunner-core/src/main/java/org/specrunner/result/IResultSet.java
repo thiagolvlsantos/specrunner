@@ -64,14 +64,14 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      *            true, if expected messages must obey the specification order,
      *            false, otherwise. Default might be false.
      */
-    void setSorted(boolean sorted);
+    void setSorted(Boolean sorted);
 
     /**
      * Get the sort flag.
      * 
      * @return true, of order required, false, otherwise.
      */
-    boolean isSorted();
+    Boolean getSorted();
 
     /**
      * Consolidate expectations and received errors.

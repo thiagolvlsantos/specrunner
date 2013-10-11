@@ -77,12 +77,12 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
-    public void setSorted(boolean sorted) {
+    public void setSorted(Boolean sorted) {
         this.sorted = sorted;
     }
 
     @Override
-    public boolean isSorted() {
+    public Boolean getSorted() {
         return sorted;
     }
 
