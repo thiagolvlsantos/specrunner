@@ -25,12 +25,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.IResource;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilResources;
+import org.specrunner.util.resources.ResourceFinder;
 
 /**
  * Partial resource implementation.
@@ -127,7 +128,7 @@ public abstract class AbstractResource implements IResource {
         List<URL> files;
         try {
             if (isClasspath()) {
-                files = UtilResources.getFileList(getResourcePath());
+                files = SpecRunnerServices.get(ResourceFinder.class).getAllResources(getResourcePath());
                 Collections.reverse(files);
             } else {
                 files = Arrays.asList(new URL(getResourcePath()));
