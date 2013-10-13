@@ -18,6 +18,8 @@
 package org.specrunner.util;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,6 +31,8 @@ import java.util.List;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.source.resource.ResourceException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * IO utilities.
@@ -37,6 +41,11 @@ import org.specrunner.source.resource.ResourceException;
  * 
  */
 public final class UtilIO {
+
+    /**
+     * Cache of resources. Avoid unnecessary file/network/jar accesses.
+     */
+    private static ICache<URL, byte[]> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(UtilIO.class.getName());
 
     /**
      * Reading buffer size.
@@ -112,7 +121,7 @@ public final class UtilIO {
         int i = 0;
         try {
             for (URL url : files) {
-                result[i++] = url.openStream();
+                result[i++] = getStream(url);
             }
         } catch (IOException e) {
             for (int j = 0; j < i; j++) {
@@ -133,6 +142,59 @@ public final class UtilIO {
             throw new ResourceException(e);
         }
         return result;
+    }
+
+    /**
+     * Get stream for a given URL.
+     * 
+     * @param url
+     *            The url.
+     * @return The stream.
+     * @throws IOException
+     *             On load errors.
+     */
+    public static InputStream getStream(URL url) throws IOException {
+        byte[] data = cache.get(url);
+        if (data != null) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Stream reused for: " + url);
+            }
+            return new ByteArrayInputStream(data);
+        }
+        InputStream in = null;
+        ByteArrayOutputStream out = null;
+        try {
+            in = url.openStream();
+            out = new ByteArrayOutputStream(in.available());
+            writeTo(in, out);
+            data = out.toByteArray();
+            cache.put(url, data);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Stream with '" + data.length + "' bytes cached for: " + url);
+            }
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Closing " + in, e);
+                    }
+                    throw e;
+                }
+            }
+            if (out != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Closing " + in, e);
+                    }
+                    throw e;
+                }
+            }
+        }
+        return new ByteArrayInputStream(data);
     }
 
     /**
@@ -169,7 +231,7 @@ public final class UtilIO {
         FileOutputStream fout = null;
         BufferedOutputStream bout = null;
         try {
-            in = url.openStream();
+            in = getStream(url);
             fout = new FileOutputStream(file);
             bout = new BufferedOutputStream(fout);
             writeTo(in, bout);

@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
+import org.specrunner.util.UtilLog;
 
 /**
  * Default reusable manager implementation.
@@ -35,6 +36,9 @@ public class ReusableManagerImpl extends HashMap<String, IReusable<?>> implement
     public IReusable<?> put(String name, IReusable<?> resource) {
         IReusable<?> ir = get(name);
         if (ir != null && ir.getObject() != resource.getObject()) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Release old reference:" + ir.getName() + " -> " + ir.getObject());
+            }
             ir.release();
         }
         return super.put(name, resource);
@@ -44,6 +48,9 @@ public class ReusableManagerImpl extends HashMap<String, IReusable<?>> implement
     public void remove(String name) {
         IReusable<?> ir = get(name);
         if (ir != null) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Release:" + ir.getName() + " -> " + ir.getObject());
+            }
             ir.release();
             remove(ir);
         }
