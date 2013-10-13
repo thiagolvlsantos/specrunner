@@ -29,6 +29,7 @@ import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.log.Log;
+import org.eclipse.jetty.util.preventers.AppContextLeakPreventer;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
 import org.specrunner.SpecRunnerServices;
@@ -304,6 +305,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
         XmlConfiguration configuration = new XmlConfiguration(config);
         config.close();
         final Server server = (Server) configuration.configure();
+        server.addBean(new AppContextLeakPreventer());
         setShutdownManager(server);
         getPortFromServer(server);
         setClassloader(server);
@@ -317,6 +319,8 @@ public class PluginStartJetty extends AbstractPluginScoped {
      *            The server
      */
     protected void setShutdownManager(final Server server) {
+        // if shutdown is request die
+        server.setStopAtShutdown(true);
         // cannot shutdown JVM, leave it to test programmer.
         ShutdownHandler sdh = server.getChildHandlerByClass(ShutdownHandler.class);
         if (sdh != null) {
