@@ -32,7 +32,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Detail;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.PluginBrowser;
@@ -84,7 +83,7 @@ public class PageListener extends AbstractPluginListener {
             String tmp = (String) p.getParameters().getParameter("name");
             String browserName = tmp != null ? tmp : PluginBrowser.BROWSER_NAME;
             if (name.equals(browserName)) {
-                WebDriver client = (WebDriver) context.getByName(UtilEvaluator.asVariable(browserName));
+                WebDriver client = (WebDriver) context.getByName(browserName);
                 if (client == null) {
                     result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + browserName + "' not created. See PluginBrowser."));
                     return;

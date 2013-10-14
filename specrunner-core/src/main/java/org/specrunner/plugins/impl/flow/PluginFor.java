@@ -208,8 +208,7 @@ public class PluginFor extends AbstractPlugin {
                 Node child = dn.getChild(0);
                 child.detach();
                 ((ParentNode) current).appendChild(child);
-                String varName = "${" + var + "}";
-                context.saveLocal(varName, i);
+                context.saveLocal(var, i);
                 try {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("CHILD(" + i + ")>" + child.toXML());
@@ -223,7 +222,7 @@ public class PluginFor extends AbstractPlugin {
                         result.addResult(Failure.INSTANCE, context.newBlock(current, this), e);
                     }
                 } finally {
-                    context.clearLocal(varName);
+                    context.clearLocal(var);
                 }
             }
             if (UtilLog.LOG.isDebugEnabled()) {

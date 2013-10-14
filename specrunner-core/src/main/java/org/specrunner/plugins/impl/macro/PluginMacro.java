@@ -28,7 +28,6 @@ import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Warning;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -101,7 +100,7 @@ public class PluginMacro extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        String macroName = UtilEvaluator.asVariable(getName());
+        String macroName = getName();
         Object macro = context.getByName(macroName);
         if (macro != null) {
             result.addResult(Warning.INSTANCE, context.peek(), "Macro name already used in '" + (macro instanceof Node ? ((Node) macro).toXML() : macro) + "'.");

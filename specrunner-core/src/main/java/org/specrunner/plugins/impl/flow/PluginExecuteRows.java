@@ -19,7 +19,6 @@ import org.specrunner.runner.IFilter;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.runner.impl.FilterDefault;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
 
@@ -56,7 +55,7 @@ public class PluginExecuteRows extends PluginIterable {
             throw new PluginException("Missing header information.");
         }
         UtilNode.setIgnore(head);
-        String pos = UtilEvaluator.asVariable("index");
+        String pos = "index";
         int i = 1;
         for (; i < ns.size(); i++) {
             Element row = (Element) ns.get(i);

@@ -42,6 +42,14 @@ import org.specrunner.util.xom.UtilNode;
  */
 public class SchemaLoaderXOM implements ISchemaLoader {
     /**
+     * Attribute 'name' mark.
+     */
+    private static final String ATTR_NAME = "name";
+    /**
+     * Attribute 'alias' mark.
+     */
+    private static final String ATTR_ALIAS = "alias";
+    /**
      * XML parser.
      */
     private Builder builder = new Builder();
@@ -57,16 +65,16 @@ public class SchemaLoaderXOM implements ISchemaLoader {
             }
             Document d = builder.build(in);
             INodeHolder nSchema = UtilNode.newNodeHolder(d.getRootElement());
-            s = new Schema().setName(nSchema.getAttribute("name")).setAlias(nSchema.getAttribute("alias"));
+            s = new Schema().setName(nSchema.getAttribute(ATTR_NAME)).setAlias(nSchema.hasAttribute(ATTR_ALIAS) ? nSchema.getAttribute(ATTR_ALIAS) : nSchema.getAttribute(ATTR_NAME));
             Nodes nTables = nSchema.getNode().query("child::table");
             for (int i = 0; i < nTables.size(); i++) {
                 INodeHolder nTable = UtilNode.newNodeHolder(nTables.get(i));
-                Table t = new Table().setName(nTable.getAttribute("name")).setAlias(nTable.getAttribute("alias"));
+                Table t = new Table().setName(nTable.getAttribute(ATTR_NAME)).setAlias(nTable.hasAttribute(ATTR_ALIAS) ? nTable.getAttribute(ATTR_ALIAS) : nTable.getAttribute(ATTR_NAME));
                 s.add(t);
                 Nodes nColumns = nTable.getNode().query("child::column");
                 for (int j = 0; j < nColumns.size(); j++) {
                     INodeHolder nColumn = UtilNode.newNodeHolder(nColumns.get(j));
-                    Column c = new Column().setName(nColumn.getAttribute("name")).setAlias(nColumn.getAttribute("alias"));
+                    Column c = new Column().setName(nColumn.getAttribute(ATTR_NAME)).setAlias(nColumn.hasAttribute(ATTR_ALIAS) ? nColumn.getAttribute(ATTR_ALIAS) : nColumn.getAttribute(ATTR_NAME));
                     t.add(c);
                     String key = nColumn.getAttribute("key");
                     c.setKey(key != null && Boolean.parseBoolean(key));

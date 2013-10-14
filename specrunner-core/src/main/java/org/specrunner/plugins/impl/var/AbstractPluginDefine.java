@@ -26,7 +26,6 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginDual;
 import org.specrunner.plugins.type.Command;
-import org.specrunner.util.UtilEvaluator;
 
 /**
  * Defines variables.
@@ -44,11 +43,6 @@ public abstract class AbstractPluginDefine extends AbstractPluginDual {
     @Override
     public boolean isEval() {
         return true;
-    }
-
-    @Override
-    public String getName() {
-        return UtilEvaluator.asVariable(super.getName());
     }
 
     @Override

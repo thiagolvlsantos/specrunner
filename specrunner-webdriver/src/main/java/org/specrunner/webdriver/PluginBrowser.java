@@ -37,7 +37,6 @@ import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.impl.AbstractReusable;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.listeners.PageListener;
 
@@ -357,7 +356,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     protected void save(IContext context, WebDriver driver) {
         String str = getName() != null ? getName() : BROWSER_NAME;
         String type = str + "_" + BROWSER_TYPE;
-        saveGlobal(context, UtilEvaluator.asVariable(str), driver);
-        saveGlobal(context, UtilEvaluator.asVariable(type), driver.getClass().getSimpleName());
+        saveGlobal(context, str, driver);
+        saveGlobal(context, type, driver.getClass().getSimpleName());
     }
 }

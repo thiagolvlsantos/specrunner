@@ -30,7 +30,6 @@ import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.impl.data.IDataMap;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -97,18 +96,17 @@ public class PluginIterator extends PluginIterable {
         ParentNode parent = node.getParent();
         int index = parent.indexOf(node);
 
-        Object list = context.getByName(UtilEvaluator.asVariable(getName()));
+        Object list = context.getByName(getName());
         if (list == null) {
             throw new PluginException("Collection named '" + getName() + "' not found.");
         }
         node.detach();
 
         String local = getVar();
-        String pos = "${index}";
+        String pos = "index";
         if (list instanceof IDataMap<?>) {
             local = "item_map";
         }
-        String tmp = UtilEvaluator.asVariable(local);
 
         Element external = (Element) node.copy();
         external.removeChildren();
@@ -116,7 +114,7 @@ public class PluginIterator extends PluginIterable {
 
         int i = 0;
         for (Object map : (Iterable<?>) list) {
-            context.saveLocal(tmp, map);
+            context.saveLocal(local, map);
             context.saveLocal(pos, i);
             try {
                 Node c = node.copy();
@@ -129,7 +127,7 @@ public class PluginIterator extends PluginIterable {
                 }
             } finally {
                 context.clearLocal(pos);
-                context.clearLocal(tmp);
+                context.clearLocal(local);
             }
             i++;
         }

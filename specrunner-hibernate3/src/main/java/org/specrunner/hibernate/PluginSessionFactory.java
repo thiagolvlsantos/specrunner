@@ -24,6 +24,7 @@ import org.hibernate.cfg.Configuration;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
@@ -91,6 +92,7 @@ public class PluginSessionFactory extends AbstractPluginFactory {
      * @param configuration
      *            The configuration.
      */
+    @DontEval
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }

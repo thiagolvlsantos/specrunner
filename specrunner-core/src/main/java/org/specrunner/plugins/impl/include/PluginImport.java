@@ -30,7 +30,6 @@ import org.specrunner.plugins.impl.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
@@ -91,7 +90,7 @@ public class PluginImport extends AbstractPluginValue {
     /**
      * The import list name.
      */
-    public static final String PACKAGES_NAME = UtilEvaluator.asVariable("$PACKAGES");
+    public static final String PACKAGES_NAME = "$PACKAGES";
 
     /**
      * Set a import package names separated by ';'.

@@ -25,7 +25,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilEvaluator;
 
 /**
  * Html tag scope.
@@ -47,7 +46,7 @@ public class PluginHtml extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        context.saveStrict(UtilEvaluator.asVariable(BEAN_NAME), getTestInstance());
+        context.saveStrict(BEAN_NAME, getTestInstance());
         return ENext.DEEP;
     }
 

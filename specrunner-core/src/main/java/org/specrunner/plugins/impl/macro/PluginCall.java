@@ -30,7 +30,6 @@ import org.specrunner.plugins.impl.AbstractPluginNamed;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilEvaluator;
 
 /**
  * A plugin which calls a macro by its name.
@@ -65,13 +64,13 @@ public class PluginCall extends AbstractPluginNamed {
         if (name == null) {
             setName(node.getValue());
         }
-        String macroName = UtilEvaluator.asVariable(getName());
+        String macroName = getName();
         Object obj = context.getByName(macroName);
         if (obj == null) {
-            throw new PluginException("Macro named '" + getName() + "' not found.");
+            throw new PluginException("Macro named '" + macroName + "' not found.");
         }
         if (!(obj instanceof Node)) {
-            throw new PluginException("Object with name '" + getName() + "' is not a macro.");
+            throw new PluginException("Object with name '" + macroName + "' is not a macro.");
         }
         ParentNode parent = node.getParent();
         int index = parent.indexOf(node);
@@ -81,7 +80,7 @@ public class PluginCall extends AbstractPluginNamed {
         }
 
         Element ele = (Element) node;
-        ele.addAttribute(new Attribute("name", getName()));
+        ele.addAttribute(new Attribute("name", macroName));
         ele.addAttribute(new Attribute("class", ele.getAttributeValue("class") + " " + CSS_CALLED));
         return ENext.DEEP;
     }

@@ -85,8 +85,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
         UtilNode.setIgnore(head);
 
         IBlock block = context.peek();
-        String pos = UtilEvaluator.asVariable("index");
-        String item = UtilEvaluator.asVariable(var);
+        String pos = "index";
         int i = 1;
         boolean first = true;
         for (; i < ns.size(); i++) {
@@ -107,7 +106,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
             try {
                 context.saveLocal(pos, String.valueOf(i - 1));
                 if (ite.hasNext()) {
-                    context.saveLocal(item, ite.next());
+                    context.saveLocal(var, ite.next());
                     UtilPlugin.performChildren(row, context, result);
                 } else {
                     if (first) {
@@ -116,7 +115,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
                     }
                 }
             } finally {
-                context.clearLocal(item);
+                context.clearLocal(var);
                 context.clearLocal(pos);
                 context.pop();
             }
@@ -131,17 +130,17 @@ public class PluginVerifyRows extends AbstractPluginValue {
             Element tr = new Element("tr");
             for (int j = 0; j < hs.size(); j++) {
                 Element td = new Element("td");
-                td.appendChild("${" + ((Element) hs.get(j)).getAttributeValue("value") + "}");
+                td.appendChild(UtilEvaluator.asExpression(((Element) hs.get(j)).getAttributeValue("value")));
                 tr.appendChild(td);
             }
             ele.appendChild(tr);
             try {
                 context.push(context.newBlock(tr, this));
                 context.saveLocal(pos, String.valueOf(i - 1));
-                context.saveLocal(item, ite.next());
+                context.saveLocal(var, ite.next());
                 UtilPlugin.performChildren(tr, context, result);
             } finally {
-                context.clearLocal(item);
+                context.clearLocal(var);
                 context.clearLocal(pos);
                 context.pop();
             }

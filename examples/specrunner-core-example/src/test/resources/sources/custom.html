@@ -12,7 +12,7 @@
     <p>
     <span custom="org.specrunner.source.PluginEcho" condition="${t % 2 == 0}" times="${t}">
         <span custom="out" prefix="[" suffix="]">
-            My echo... ${input} - Memory: ${((Long)model.get("total"))/1024/1024} Mb.
+            My echo... ${input} - Memory: ${((Long)$MODEL.get("total"))/1024/1024} Mb.
         </span>
     </span>
 
@@ -23,7 +23,7 @@
         <span custom="out" prefix="[" suffix="]">
             My echo... ${input}
         </span>
-        <p> Memory: ${((Long)model.get("total"))/1024/1024} Mb.
+        <p> Memory: ${((Long)$MODEL.get("total"))/1024/1024} Mb.
     </span>
 </body>
 </html>

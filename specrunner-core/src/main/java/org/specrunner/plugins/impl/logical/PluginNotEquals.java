@@ -19,6 +19,7 @@ package org.specrunner.plugins.impl.logical;
 
 import org.specrunner.SpecRunnerException;
 import org.specrunner.comparators.IComparator;
+import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 
 /**
@@ -30,8 +31,8 @@ import org.specrunner.plugins.PluginException;
 public class PluginNotEquals extends PluginEquals {
 
     @Override
-    protected boolean verify(IComparator comparator, Object reference, Object value) throws SpecRunnerException {
-        boolean result = !super.verify(comparator, reference, value);
+    protected boolean verify(IContext context, IComparator comparator, Object reference, Object value) throws SpecRunnerException {
+        boolean result = !super.verify(context, comparator, reference, value);
         if (!result) {
             error = new PluginException("Values are equals.");
         }
