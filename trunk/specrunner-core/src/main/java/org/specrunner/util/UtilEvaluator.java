@@ -56,32 +56,14 @@ public final class UtilEvaluator {
     }
 
     /**
-     * Given a name, returns its equivalent as variables inside
-     * <code>IContext</code> object.
+     * Given a content, surround it with the expression mark.
      * 
-     * @param name
-     *            The source name.
-     * @return The corresponding variable. Null if name is null.
+     * @param content
+     *            The content to become an expression.
+     * @return The corresponding expression block.
      */
-    public static String asVariable(String name) {
-        if (name == null) {
-            return null;
-        }
-        return START_CODE + name + END;
-    }
-
-    /**
-     * Remove variable mask.
-     * 
-     * @param name
-     *            The masked name.
-     * @return Name cleaned.
-     */
-    public static String removeVariable(String name) {
-        if (name == null) {
-            return null;
-        }
-        return name.substring(START_CODE.length(), name.length() - END.length());
+    public static String asExpression(String content) {
+        return START_CODE + content + END;
     }
 
     /**
@@ -176,7 +158,7 @@ public final class UtilEvaluator {
                     result = replace(result, name, local);
                 }
             } catch (SpecRunnerException e) {
-                throw new PluginException(e);
+                throw new PluginException("Error evaluating expression: " + content, e);
             }
             pos1 = text.indexOf(START_CODE, pos2 + 1);
             pos2 = text.indexOf(END, pos1 + 2);

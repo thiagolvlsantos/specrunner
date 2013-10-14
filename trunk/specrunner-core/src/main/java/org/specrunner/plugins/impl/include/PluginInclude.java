@@ -479,7 +479,7 @@ public class PluginInclude extends AbstractPlugin {
                     String key = URLDecoder.decode(st.nextToken(), "UTF-8");
                     String value = URLDecoder.decode(st.nextToken(), "UTF-8");
                     try {
-                        String var = UtilEvaluator.asVariable(key);
+                        String var = key;
                         Object obj = UtilEvaluator.evaluate(value, context, true);
                         context.saveLocal(var, obj);
                         Element tr = new Element("tr");

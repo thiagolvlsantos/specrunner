@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.AbstractPluginTable;
@@ -110,6 +111,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
      * @param datasource
      *            A new datasource name.
      */
+    @DontEval
     public void setDatasource(String datasource) {
         this.datasource = datasource;
     }
@@ -129,6 +131,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
      * @param schema
      *            A new schema name.
      */
+    @DontEval
     public void setSchema(String schema) {
         this.schema = schema;
     }
@@ -148,6 +151,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
      * @param database
      *            The database.
      */
+    @DontEval
     public void setDatabase(String database) {
         this.database = database;
     }

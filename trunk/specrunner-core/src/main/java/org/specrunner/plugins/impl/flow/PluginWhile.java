@@ -121,7 +121,7 @@ public class PluginWhile extends AbstractPluginValue {
         Element ele = (Element) current;
         String test = ele.getAttributeValue("test");
         if (test == null) {
-            test = (String) context.getByName(UtilEvaluator.asVariable(ele.getAttributeValue("name")));
+            test = (String) context.getByName(ele.getAttributeValue("name"));
         }
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("WHILE(" + test + ")");

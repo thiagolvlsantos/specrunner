@@ -264,7 +264,7 @@ public class RunnerImpl implements IRunner {
         // ----------- METAVARIABLES --------------
         // created before to enable plugin use them in values.
         // meta variable 'node'
-        context.saveStrict(UtilEvaluator.asVariable("$NODE"), new IModel<Node>() {
+        context.saveStrict("$NODE", new IModel<Node>() {
             @Override
             public Node getObject(IContext context) throws SpecRunnerException {
                 return block.getNode();
@@ -272,7 +272,7 @@ public class RunnerImpl implements IRunner {
         });
 
         // meta variable 'plugin'
-        context.saveStrict(UtilEvaluator.asVariable("$PLUGIN"), new IModel<IPlugin>() {
+        context.saveStrict("$PLUGIN", new IModel<IPlugin>() {
             @Override
             public IPlugin getObject(IContext context) throws SpecRunnerException {
                 return block.getPlugin();
@@ -280,10 +280,10 @@ public class RunnerImpl implements IRunner {
         });
 
         // meta variable 'block'
-        context.saveStrict(UtilEvaluator.asVariable("$BLOCK"), block);
+        context.saveStrict("$BLOCK", block);
 
         // meta variable 'text'
-        context.saveStrict(UtilEvaluator.asVariable("$TEXT"), new IModel<String>() {
+        context.saveStrict("$TEXT", new IModel<String>() {
             @Override
             public String getObject(IContext context) throws SpecRunnerException {
                 return block.getNode().getValue();
@@ -291,7 +291,7 @@ public class RunnerImpl implements IRunner {
         });
 
         // meta variable 'XML'
-        context.saveStrict(UtilEvaluator.asVariable("$XML"), new IModel<String>() {
+        context.saveStrict("$XML", new IModel<String>() {
             @Override
             public String getObject(IContext context) throws SpecRunnerException {
                 return block.getNode().toXML();
@@ -299,7 +299,7 @@ public class RunnerImpl implements IRunner {
         });
 
         // meta variable 'content evaluated silently'
-        context.saveStrict(UtilEvaluator.asVariable("$CONTENT"), new IModel<Object>() {
+        context.saveStrict("$CONTENT", new IModel<Object>() {
             @Override
             public Object getObject(IContext context) throws SpecRunnerException {
                 try {
@@ -311,7 +311,7 @@ public class RunnerImpl implements IRunner {
         });
 
         // meta variable 'content evaluated'
-        context.saveStrict(UtilEvaluator.asVariable("$CONTENT_UNSILENT"), new IModel<Object>() {
+        context.saveStrict("$CONTENT_UNSILENT", new IModel<Object>() {
             @Override
             public Object getObject(IContext context) throws SpecRunnerException {
                 try {

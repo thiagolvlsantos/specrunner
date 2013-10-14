@@ -24,6 +24,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -83,6 +84,7 @@ public class PluginSchemaExport extends AbstractPlugin {
      * @param configuration
      *            A configuration.
      */
+    @DontEval
     public void setConfiguration(String configuration) {
         this.configuration = configuration;
     }
@@ -122,6 +124,7 @@ public class PluginSchemaExport extends AbstractPlugin {
      * @param schema
      *            The schema.
      */
+    @DontEval
     public void setSchema(String schema) {
         this.schema = schema;
     }

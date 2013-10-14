@@ -39,7 +39,6 @@ import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.CellAdapter;
@@ -62,7 +61,7 @@ public class PluginColumn extends AbstractPluginTable {
     @Override
     public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         Object instance = getObjectInstance(context, tableAdapter);
-        context.saveStrict(UtilEvaluator.asVariable(PluginBean.BEAN_NAME), instance);
+        context.saveStrict(PluginBean.BEAN_NAME, instance);
 
         List<RowAdapter> rows = tableAdapter.getRows();
         if (rows.isEmpty()) {

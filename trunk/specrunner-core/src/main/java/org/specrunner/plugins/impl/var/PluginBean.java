@@ -29,7 +29,6 @@ import org.specrunner.plugins.impl.include.PluginImport;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -94,7 +93,7 @@ public class PluginBean extends AbstractPluginNamed {
             }
         }
         if (bean != null) {
-            context.saveStrict(UtilEvaluator.asVariable(BEAN_NAME), bean);
+            context.saveStrict(BEAN_NAME, bean);
         }
         return ENext.DEEP;
     }
@@ -139,6 +138,6 @@ public class PluginBean extends AbstractPluginNamed {
      * @return The bean object, if found, null, otherwise.
      */
     public static Object getBean(IContext context) {
-        return context.getByName(UtilEvaluator.asVariable(BEAN_NAME));
+        return context.getByName(BEAN_NAME);
     }
 }

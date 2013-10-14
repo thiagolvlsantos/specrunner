@@ -24,7 +24,6 @@ import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -44,7 +43,7 @@ public class PipeMetavariables implements IPipe {
     public IChannel process(IChannel channel) throws PipelineException {
         IContext context = PipeContext.lookup(channel);
         for (Entry<String, Object> e : channel.entrySet()) {
-            String name = UtilEvaluator.asVariable("$" + e.getKey().toUpperCase());
+            String name = "$" + e.getKey().toUpperCase();
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Metavariable(" + name + ")=" + e.getValue());
             }

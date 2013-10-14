@@ -30,7 +30,6 @@ import org.specrunner.parameters.IParameterDecorator;
 import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.PluginNop;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -92,7 +91,7 @@ public final class UtilParametrized {
                     if (onStart || onEnd) {
                         Object newValue = p.setParameter(name, n.getValue(), context);
                         // every local attribute became a local variable
-                        context.saveLocal(UtilEvaluator.asVariable(p.clear(name)), newValue);
+                        context.saveLocal(p.clear(name), newValue);
                     }
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
@@ -131,7 +130,7 @@ public final class UtilParametrized {
                     }
                     p.setParameter(e.getKey(), e.getValue(), context);
                     // every local attribute became a local variable
-                    context.saveLocal(UtilEvaluator.asVariable(e.getKey()), e.getValue());
+                    context.saveLocal(e.getKey(), e.getValue());
                 } catch (Exception ex) {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(ex.getMessage(), ex);

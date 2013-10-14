@@ -50,7 +50,7 @@ public class PluginReplacerMap extends AbstractPlugin {
     @Override
     @SuppressWarnings("unchecked")
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        Object map = context.getByName(UtilEvaluator.asVariable("item_map"));
+        Object map = context.getByName("item_map");
         if (map == null) {
             return ENext.DEEP;
         }

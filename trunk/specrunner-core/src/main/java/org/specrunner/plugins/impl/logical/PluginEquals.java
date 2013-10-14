@@ -86,7 +86,7 @@ public class PluginEquals extends AbstractPluginDual {
             }
         }
         try {
-            return verify(parent.getComparator(), objExpected, objReceived);
+            return verify(context, parent.getComparator(), objExpected, objReceived);
         } catch (SpecRunnerException e) {
             throw new PluginException(e);
         }
@@ -95,6 +95,8 @@ public class PluginEquals extends AbstractPluginDual {
     /**
      * Verify the condition.
      * 
+     * @param context
+     *            The context.
      * @param comparator
      *            Comparator.
      * @param expected
@@ -105,13 +107,13 @@ public class PluginEquals extends AbstractPluginDual {
      * @throws SpecRunnerException
      *             On condition errors.
      */
-    protected boolean verify(IComparator comparator, Object expected, Object received) throws SpecRunnerException {
+    protected boolean verify(IContext context, IComparator comparator, Object expected, Object received) throws SpecRunnerException {
         boolean result = comparator.match(expected, received);
         if (!result) {
             if (expected instanceof String && received instanceof String) {
                 error = new DefaultAlignmentException(expected.toString(), received.toString());
             } else {
-                error = new PluginException("Values are different. Expected: '" + expected + "', Received: '" + received + "'.");
+                error = new PluginException("Values are different. Expected: '" + expected + "', Received: '" + received + "'. \n" + (context.hasNode() ? "Node:" + context.getNode().toXML() : "Plugin:" + context.getPlugin()));
             }
         }
         return result;

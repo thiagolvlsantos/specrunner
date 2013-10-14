@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import org.specrunner.context.IContext;
 import org.specrunner.context.IContextPopulator;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -38,7 +37,7 @@ public class ContextPopulatorImpl implements IContextPopulator {
     public IContext populate(IContext context) {
         Properties p = System.getProperties();
         for (Entry<Object, Object> e : p.entrySet()) {
-            String key = UtilEvaluator.asVariable(String.valueOf(e.getKey()).replace(".", "_"));
+            String key = String.valueOf(e.getKey()).replace(".", "_");
             String value = String.valueOf(e.getValue());
             context.saveGlobal(key, value);
             if (UtilLog.LOG.isTraceEnabled()) {

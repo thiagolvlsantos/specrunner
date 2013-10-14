@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -108,6 +109,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @param schema
      *            The name.
      */
+    @DontEval
     public void setSchema(String schema) {
         this.schema = schema;
     }
@@ -127,6 +129,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @param system
      *            The database name.
      */
+    @DontEval
     public void setSystem(String system) {
         this.system = system;
     }
@@ -146,6 +149,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @param reference
      *            The reference.
      */
+    @DontEval
     public void setReference(String reference) {
         this.reference = reference;
     }
@@ -165,6 +169,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @param filter
      *            Name.
      */
+    @DontEval
     public void setFilter(String filter) {
         this.filter = filter;
     }
