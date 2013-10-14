@@ -156,7 +156,7 @@ public class SpecRunnerStatement extends Statement {
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
         ExpectedMessages expected = getMessages();
         if (expected != null) {
-            cfg.add(IResultSet.FEATURE_EXPECTED_MESSAGES, expected.messages());
+            cfg.add(IResultSet.FEATURE_EXPECTED_MESSAGES, expected.value());
             cfg.add(IResultSet.FEATURE_EXPECTED_SORTED, expected.sorted());
         }
         Method[] ms = instance.getClass().getMethods();

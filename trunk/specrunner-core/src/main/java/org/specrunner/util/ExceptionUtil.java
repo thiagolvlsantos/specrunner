@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.specrunner.SpecRunnerException;
+
 /**
  * Exception utilities.
  * 
@@ -52,5 +54,24 @@ public final class ExceptionUtil {
         String result = sw.toString();
         sw.close();
         return result;
+    }
+
+    /**
+     * Unwrap SpecRunner subclasses exception to find root cause. If none is
+     * found, the most specific exception is returned.
+     * 
+     * @param error
+     *            The error.
+     * @return The unwrapped exception.
+     */
+    public static Throwable unwrapException(Throwable error) {
+        while (error instanceof SpecRunnerException) {
+            if (error.getCause() != null) {
+                error = error.getCause();
+            } else {
+                break;
+            }
+        }
+        return error;
     }
 }

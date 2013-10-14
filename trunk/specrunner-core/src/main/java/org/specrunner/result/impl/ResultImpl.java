@@ -153,7 +153,7 @@ public class ResultImpl implements IResult {
         }
 
         String msg2 = hasFailure() ? getFailure().getMessage() : getMessage();
-        if (UtilLog.LOG.isDebugEnabled() && hasFailure()) {
+        if (hasFailure()) {
             try {
                 msg2 += "\n" + ExceptionUtil.toString(getFailure());
             } catch (IOException e) {

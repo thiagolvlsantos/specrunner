@@ -20,7 +20,7 @@ public @interface ExpectedMessages {
     /**
      * List of messages.
      */
-    String[] messages() default {};
+    String[] value() default {};
 
     /**
      * ExpectedMessages messages should be sorted as specified? The sort flag.

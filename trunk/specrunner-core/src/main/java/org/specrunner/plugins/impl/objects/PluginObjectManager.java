@@ -109,7 +109,11 @@ public class PluginObjectManager {
      *             On lookup errors.
      */
     public Object lookup(Class<?> clazz, String key) throws PluginException {
-        return entities.get(clazz).getObject(key);
+        AbstractPluginObject map = entities.get(clazz);
+        if (map == null) {
+            throw new PluginException("Object mapping for type " + clazz.getName() + " not found.");
+        }
+        return map.getObject(key);
     }
 
     /**

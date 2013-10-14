@@ -150,11 +150,11 @@ public class TestJetty {
         TestJetty tj = new TestJetty();
         tj.prepareTest();
         IFeatureManager fm = SpecRunnerServices.getFeatureManager();
-        fm.put(PluginBrowser.FEATURE_RECORDING, false);
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
-        for (int j = 0; j < 5; j++) {
+        fm.add(PluginBrowser.FEATURE_RECORDING, false);
+        fm.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
+        for (int j = 0; j < 10000; j++) {
             try {
-                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
+                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run.html");
                 tj.runJettyWithRecording();
             } catch (Exception e) {
                 e.printStackTrace();

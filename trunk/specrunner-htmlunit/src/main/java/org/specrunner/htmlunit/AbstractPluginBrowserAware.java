@@ -193,7 +193,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         String tmp = getBrowserName();
         WebClient client = (WebClient) context.getByName(tmp);
         if (client == null) {
-            result.addResult(Failure.INSTANCE, context.peek(), "Browser instance named '" + tmp + "' not created. See PluginBrowser.");
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
         if (isWaitForClient()) {
