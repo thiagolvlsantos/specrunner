@@ -357,7 +357,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     protected void save(IContext context, WebDriver driver) {
         String str = getName() != null ? getName() : BROWSER_NAME;
         String type = str + "_" + BROWSER_TYPE;
-        saveGlobal(context, str, driver);
+        saveGlobal(context, UtilEvaluator.asVariable(str), driver);
         saveGlobal(context, UtilEvaluator.asVariable(type), driver.getClass().getSimpleName());
     }
 }

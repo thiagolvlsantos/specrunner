@@ -5,6 +5,6 @@ import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-@ExpectedMessages(messages = { "Target \"copyK\" does not exist in the project \"testproject\". It is used from target \"test\"." })
+@ExpectedMessages({ "Target \"copyK\" does not exist in the project \"testproject\". It is used from target \"test\"." })
 public class TestAnt {
 }

@@ -11,7 +11,7 @@ import org.specrunner.plugins.impl.language.Sentence;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
-@ExpectedMessages(messages = { "Instance 'tlvls' of 'example.objects.User' not found." })
+@ExpectedMessages({ "Instance 'cama|admin' of 'example.objects.Authorization' not found.", "Instance 'tlvls' of 'example.objects.User' not found." })
 public class TestObjects {
 
     @Before

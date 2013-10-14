@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.impl.objects.PluginObjectManager;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -57,6 +58,18 @@ public final class UtilConverter {
         PRIMITIVES.put(long.class, Long.class);
         PRIMITIVES.put(float.class, Float.class);
         PRIMITIVES.put(double.class, Double.class);
+    }
+
+    /**
+     * Get errors.
+     * 
+     * @param clazz
+     *            O errors.
+     * @return The class.
+     */
+    public static Class<?> getWrapper(Class<?> clazz) {
+        Class<?> primitive = PRIMITIVES.get(clazz);
+        return primitive == null ? clazz : primitive;
     }
 
     /**
@@ -136,7 +149,7 @@ public final class UtilConverter {
                 converter = cm.get(simpleName);
                 converterArguments = new Object[] {};
             }
-            if (converter == null) {
+            if (converter == null && PluginObjectManager.get().isBound(type)) {
                 // special converter for objects, lookup object in memory
                 converter = cm.get("object");
                 converterArguments = new Object[] { type };

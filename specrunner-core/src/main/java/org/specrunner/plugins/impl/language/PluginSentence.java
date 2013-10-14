@@ -46,6 +46,7 @@ import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.util.ExceptionUtil;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
@@ -176,6 +177,18 @@ public class PluginSentence extends AbstractPlugin {
                     UtilLog.LOG.debug("\t ARGS(" + i + "):" + tmp + " of type '" + (tmp != null ? tmp.getClass() : "null") + "'.");
                 }
             }
+            StringBuilder sb = new StringBuilder();
+            Class<?>[] expectedTypes = m.getParameterTypes();
+            for (int i = 0; i < expectedTypes.length; i++) {
+                Object arg = arguments.get(i);
+                if (!UtilConverter.getWrapper(expectedTypes[i]).isInstance(arg)) {
+                    sb.append("Method '" + m + "' expected argument[" + i + "] of type '" + expectedTypes[i].getName() + "' received '" + arg + "' of type '" + (arg == null ? "null" : arg.getClass().getName()) + "'.\n");
+                }
+            }
+            if (sb.length() != 0) {
+                sb.setLength(sb.length() - 1);
+                throw new PluginException(sb.toString());
+            }
             Object tmp = m.invoke(target, arguments.toArray());
             if (type == Assertion.INSTANCE) {
                 if (tmp instanceof Boolean && !((Boolean) tmp)) {
@@ -195,7 +208,9 @@ public class PluginSentence extends AbstractPlugin {
         ExpectedMessage em = m.getAnnotation(ExpectedMessage.class);
         if (error != null) {
             if (em == null) {
-                throw new PluginException(error);
+                error = ExceptionUtil.unwrapException(error);
+                result.addResult(Failure.INSTANCE, context.peek(), error);
+                return;
             }
             String received = error.getMessage();
             String expectation = em.value();

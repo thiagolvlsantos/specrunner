@@ -20,6 +20,7 @@ package org.specrunner.util.resources;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,9 +40,38 @@ import org.specrunner.util.cache.ICacheFactory;
 public class ResourceFinder {
 
     /**
+     * Comparator feature.
+     */
+    public static final String FEATURE_COMPARATOR = ResourceFinder.class.getName() + ".comparator";
+
+    /**
      * Cache of resources.
      */
     private static ICache<String, List<URL>> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
+
+    /**
+     * Comparator element.
+     */
+    private Comparator<URL> comparator;
+
+    /**
+     * Get the resources comparator.
+     * 
+     * @return The comparator.
+     */
+    public Comparator<URL> getComparator() {
+        return comparator;
+    }
+
+    /**
+     * Set the comparator.
+     * 
+     * @param comparator
+     *            Comparator.
+     */
+    public void setComparator(Comparator<URL> comparator) {
+        this.comparator = comparator;
+    }
 
     /**
      * Get default name for resource files.
@@ -83,12 +113,18 @@ public class ResourceFinder {
      *             On lookup error.
      */
     public List<URL> getAllResources(String resource) throws IOException {
+        // update comparator
+        comparator = null;
+        SpecRunnerServices.getFeatureManager().set(FEATURE_COMPARATOR, this);
+
         List<URL> files = cache.get(resource);
         if (files != null) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Resource reused '" + resource + "' :" + files);
             }
-            return files;
+            // get a copy, filtered and sorted. TODO: if the filter is changes
+            // the files here can be only a subset of expected ones.
+            return filter(sort(new LinkedList<URL>(files)));
         }
         files = new LinkedList<URL>();
         String standard = getDefault(resource);
@@ -163,7 +199,11 @@ public class ResourceFinder {
      *         order.
      */
     public List<URL> sort(List<URL> resources) {
-        Collections.reverse(resources);
+        if (comparator == null) {
+            Collections.reverse(resources);
+        } else {
+            Collections.sort(resources, comparator);
+        }
         return resources;
     }
 }

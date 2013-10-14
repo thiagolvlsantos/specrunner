@@ -30,6 +30,7 @@ import org.specrunner.htmlunit.PluginBrowser;
 import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.listeners.impl.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Detail;
 import org.specrunner.result.status.Failure;
@@ -85,7 +86,7 @@ public class PageListener extends AbstractPluginListener {
             if (name.equals(browserName)) {
                 WebClient client = (WebClient) context.getByName(browserName);
                 if (client == null) {
-                    result.addResult(Failure.INSTANCE, context.peek(), "Browser instance named '" + browserName + "' not created. See PluginBrowser.");
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + browserName + "' not created. See PluginBrowser."));
                     return;
                 }
                 if (context.getNode() != null) {
