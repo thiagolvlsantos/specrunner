@@ -17,9 +17,9 @@
  */
 package org.specrunner.webdriver.actions.input.mouse;
 
-import org.openqa.selenium.HasInputDevices;
-import org.openqa.selenium.Mouse;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Mouse;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;

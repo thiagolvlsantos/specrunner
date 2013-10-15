@@ -17,8 +17,8 @@
  */
 package org.specrunner.webdriver;
 
-import org.openqa.selenium.HasInputDevices;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.HasInputDevices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;

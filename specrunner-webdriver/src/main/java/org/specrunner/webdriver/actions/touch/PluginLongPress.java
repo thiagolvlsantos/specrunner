@@ -17,8 +17,8 @@
  */
 package org.specrunner.webdriver.actions.touch;
 
-import org.openqa.selenium.TouchScreen;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.TouchScreen;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
