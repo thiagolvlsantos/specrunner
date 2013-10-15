@@ -265,8 +265,8 @@ public class WritablePage implements IWritable {
         File to = new File(target + getExtension(from));
         String name = from.getName();
 
-        File fromFiles = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
-        File toFiles = new File(target);
+        File fromFile = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
+        File toFile = new File(target);
 
         if (to.exists()) {
             if (!to.delete()) {
@@ -278,12 +278,12 @@ public class WritablePage implements IWritable {
             UtilLog.LOG.debug("Moving " + from + " to " + to + ".");
         }
 
-        if (toFiles.exists()) {
-            if (!toFiles.delete()) {
-                throw new ResultException("Could not remove screen scrap resources '" + toFiles + "'.");
+        if (toFile.exists()) {
+            if (!toFile.delete()) {
+                throw new ResultException("Could not remove screen scrap resources '" + toFile + "'.");
             }
         }
-        fromFiles.renameTo(toFiles);
+        fromFile.renameTo(toFile);
         map.put(label, to.toURI().toString());
     }
 }

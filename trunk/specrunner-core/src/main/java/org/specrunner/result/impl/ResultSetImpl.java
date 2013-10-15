@@ -112,10 +112,14 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 }
             }
             if (max < expected.size()) {
-                errors.append("Expected messages missing:" + expected.subList(max, expected.size()));
+                errors.append("Expected messages missing:\n");
+                append(errors, expected.subList(max, expected.size()));
+                errors.append('\n');
             }
             if (max < received.size()) {
-                errors.append("Unexpected messages received:" + received.subList(max, received.size()));
+                errors.append("Unexpected messages received:\n");
+                append(errors, received.subList(max, received.size()));
+                errors.append('\n');
             }
         } else {
             List<String> extraReceived = new LinkedList<String>(received);
@@ -123,10 +127,14 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             extraReceived.removeAll(expected);
             extraExpected.removeAll(received);
             if (extraExpected.size() > 0) {
-                errors.append("Expected messages missing:" + extraExpected + ".\n");
+                errors.append("Expected messages missing:\n");
+                append(errors, extraExpected);
+                errors.append('\n');
             }
             if (extraReceived.size() > 0) {
-                errors.append("Unexpected messages received:" + extraReceived + ".\n");
+                errors.append("Unexpected messages received:\n");
+                append(errors, extraReceived);
+                errors.append('\n');
             }
         }
         if (errors.length() == 0) {
@@ -144,6 +152,21 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             } catch (SourceException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    /**
+     * Append messages to error list.
+     * 
+     * @param errors
+     *            A error string.
+     * @param list
+     *            A error list.
+     */
+    protected void append(StringBuilder errors, List<String> list) {
+        for (String s : list) {
+            errors.append('\t');
+            errors.append(s);
         }
     }
 

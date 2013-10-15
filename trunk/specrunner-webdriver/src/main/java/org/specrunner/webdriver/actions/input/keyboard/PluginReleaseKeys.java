@@ -17,12 +17,12 @@
  */
 package org.specrunner.webdriver.actions.input.keyboard;
 
-import org.openqa.selenium.HasInputDevices;
-import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Keyboard;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;

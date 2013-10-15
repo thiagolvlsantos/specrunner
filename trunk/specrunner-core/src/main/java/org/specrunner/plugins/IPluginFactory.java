@@ -39,8 +39,9 @@ public interface IPluginFactory {
      * @return The alias, if type is mapped, null, otherwise. Null does not
      *         means a invalid plugin, but the plugin is either not mapped in
      *         the usual way, or the factory of plugins is not based on alias
-     *         premisses.
+     *         premises.
      * @throws PluginException
+     *             On alias lookup name failure.
      */
     String getAlias(Class<? extends IPlugin> type) throws PluginException;
 

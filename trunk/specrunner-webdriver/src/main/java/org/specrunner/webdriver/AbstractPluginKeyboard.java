@@ -19,10 +19,10 @@ package org.specrunner.webdriver;
 
 import java.util.Arrays;
 
-import org.openqa.selenium.HasInputDevices;
-import org.openqa.selenium.Keyboard;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.HasInputDevices;
+import org.openqa.selenium.interactions.Keyboard;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
