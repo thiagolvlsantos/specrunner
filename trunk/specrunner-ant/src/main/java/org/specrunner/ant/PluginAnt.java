@@ -38,6 +38,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
+import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
@@ -214,18 +215,10 @@ public class PluginAnt extends AbstractPlugin {
                 ele.addAttribute(new Attribute("style", "display:none;"));
             }
             ele.addAttribute(new Attribute("antlog", String.valueOf(n)));
-            try {
-                context.getCurrentSource().getManager().addCss("css/sr_ant.css", true, EType.BINARY);
-            } catch (ResourceException e) {
-                throw new PluginException(e);
-            }
-            try {
-                context.getCurrentSource().getManager().addJs("js/sr_ant.js", true, EType.BINARY);
-            } catch (ResourceException e) {
-                throw new PluginException(e);
-            }
             ele.appendChild(logger.getContent());
             parent.insertChild(ele, index + 1);
+            // add style and script resources
+            addResources(context);
         } catch (IOException e) {
             throw new PluginException(e);
         }
@@ -244,5 +237,27 @@ public class PluginAnt extends AbstractPlugin {
      */
     protected AntLogger newLogger() {
         return new AntLogger();
+    }
+
+    /**
+     * Add complementary resources.
+     * 
+     * @param context
+     *            The context.
+     * @throws PluginException
+     *             On adding errors.
+     */
+    protected void addResources(IContext context) throws PluginException {
+        IResourceManager manager = context.getCurrentSource().getManager();
+        try {
+            manager.addCss("css/sr_ant.css", true, EType.BINARY);
+        } catch (ResourceException e) {
+            throw new PluginException(e);
+        }
+        try {
+            manager.addJs("js/sr_ant.js", true, EType.BINARY);
+        } catch (ResourceException e) {
+            throw new PluginException(e);
+        }
     }
 }
