@@ -73,7 +73,7 @@ public class FeaturePresenter implements IPresenter {
      */
     protected Node dumpFeature(Element root, Keywords words, Feature feature) {
         dumpDescription(root, words.getFeature(), feature, "h1");
-        dumpList(root, feature.getDescription());
+        dumpList(root, feature.getSentences());
         List<Scenario> scenarios = feature.getScenarios();
         if (!scenarios.isEmpty()) {
             for (Scenario s : scenarios) {
@@ -95,7 +95,7 @@ public class FeaturePresenter implements IPresenter {
      * @param tag
      *            The tag to be added.
      */
-    protected void dumpDescription(Element root, String keyword, NamedSentence description, String tag) {
+    protected void dumpDescription(Element root, String keyword, NamedSentences description, String tag) {
         Element e = new Element(tag);
         root.appendChild(e);
         e.appendChild(keyword + (description != null ? description.getName() : ""));
@@ -109,12 +109,12 @@ public class FeaturePresenter implements IPresenter {
      * @param list
      *            The list to dump.
      */
-    protected void dumpList(Element root, List<String> list) {
+    protected void dumpList(Element root, List<Sentence> list) {
         if (list != null && !list.isEmpty()) {
             Element quote = new Element("blockquote");
             root.appendChild(quote);
-            for (String s : list) {
-                quote.appendChild(s);
+            for (Sentence s : list) {
+                quote.appendChild(s.getText());
                 quote.appendChild(new Element("br"));
             }
         }
@@ -180,7 +180,7 @@ public class FeaturePresenter implements IPresenter {
         {
             dumpDescription(macro, words.getScenarioOutline(), scenario, "h2");
             dumpExecutableList(macro, scenario.getParent().getBackground(), true);
-            dumpExecutableList(macro, scenario.getDescription(), true);
+            dumpExecutableList(macro, scenario.getSentences(), true);
             dumpExecutableList(macro, scenario.getParent().getFinallys(), true);
         }
         return name;
@@ -196,7 +196,7 @@ public class FeaturePresenter implements IPresenter {
      * @param replace
      *            Flga to replace &gt; and &lt; by their corresponding in SR.
      */
-    protected void dumpExecutableList(Element root, List<String> list, boolean replace) {
+    protected void dumpExecutableList(Element root, List<Sentence> list, boolean replace) {
         Element quote = new Element("blockquote");
         String alias;
         try {
@@ -204,14 +204,35 @@ public class FeaturePresenter implements IPresenter {
         } catch (PluginException e) {
             alias = "sentence";
         }
-        for (String s : list) {
+        for (Sentence s : list) {
             Element sentence = new Element("span");
-            sentence.appendChild(replace ? s.replace("<", "#{").replace(">", "}") : s);
+            sentence.appendChild(replace ? normalize(s.getText()) : s.getText());
             sentence.addAttribute(new Attribute("class", alias));
             quote.appendChild(sentence);
             quote.appendChild(new Element("br"));
+            if (s.hasData()) {
+                dumpTable(quote, s.getData());
+            }
+            if (s.hasMessage()) {
+                Element message = new Element("arg");
+                message.appendChild(replace ? normalize(s.getMessage()) : s.getMessage());
+                sentence.appendChild(message);
+            }
         }
-        root.appendChild(quote);
+        if (quote.getChildCount() > 0) {
+            root.appendChild(quote);
+        }
+    }
+
+    /**
+     * Prepare placeholders.
+     * 
+     * @param text
+     *            The text to adjust.
+     * @return The placeholder adjusted.
+     */
+    protected String normalize(String text) {
+        return text.replace("<", "#{").replace(">", "}");
     }
 
     /**
@@ -248,35 +269,46 @@ public class FeaturePresenter implements IPresenter {
         Element quote = new Element("blockquote");
         root.appendChild(quote);
         {
-            Element table = new Element("table");
-            String alias;
-            try {
-                alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMap.class);
-            } catch (PluginException e1) {
-                alias = "map";
+            dumpTable(quote, outline.getTable());
+        }
+    }
+
+    /**
+     * Dump table information.
+     * 
+     * @param root
+     *            The root node.
+     * @param data
+     *            The table.
+     */
+    protected void dumpTable(Element root, DataTable data) {
+        Element table = new Element("table");
+        String alias;
+        try {
+            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMap.class);
+        } catch (PluginException e1) {
+            alias = "map";
+        }
+        table.addAttribute(new Attribute("class", alias));
+        table.addAttribute(new Attribute("name", "examples"));
+        table.addAttribute(new Attribute("scope", "div"));
+        root.appendChild(table);
+        {
+            Element tr = new Element("tr");
+            table.appendChild(tr);
+            for (String str : data.getNames()) {
+                Element td = new Element("td");
+                td.appendChild(str);
+                tr.appendChild(td);
             }
-            table.addAttribute(new Attribute("class", alias));
-            table.addAttribute(new Attribute("name", "examples"));
-            table.addAttribute(new Attribute("scope", "div"));
-            quote.appendChild(table);
-            {
-                Element tr = new Element("tr");
-                table.appendChild(tr);
-                DataTable examples = outline.getTable();
-                for (String str : examples.getNames()) {
+            for (List<String> e : data.getExamples()) {
+                tr = new Element("tr");
+                for (String str : e) {
                     Element td = new Element("td");
                     td.appendChild(str);
                     tr.appendChild(td);
                 }
-                for (List<String> e : examples.getExamples()) {
-                    tr = new Element("tr");
-                    for (String str : e) {
-                        Element td = new Element("td");
-                        td.appendChild(str);
-                        tr.appendChild(td);
-                    }
-                    table.appendChild(tr);
-                }
+                table.appendChild(tr);
             }
         }
     }
@@ -348,7 +380,7 @@ public class FeaturePresenter implements IPresenter {
     public void dumpSingleScenario(Element root, Keywords words, Scenario scenario) {
         dumpDescription(root, words.getScenario(), scenario, "h2");
         dumpExecutableList(root, scenario.getParent().getBackground(), false);
-        dumpExecutableList(root, scenario.getDescription(), false);
+        dumpExecutableList(root, scenario.getSentences(), false);
         dumpExecutableList(root, scenario.getParent().getFinallys(), false);
     }
 

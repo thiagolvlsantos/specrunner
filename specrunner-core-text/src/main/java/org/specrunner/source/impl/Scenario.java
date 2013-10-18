@@ -23,7 +23,7 @@ package org.specrunner.source.impl;
  * @author Thiago Santos
  * 
  */
-public class Scenario extends NamedSentence {
+public class Scenario extends NamedSentences {
 
     /**
      * The parent feature.

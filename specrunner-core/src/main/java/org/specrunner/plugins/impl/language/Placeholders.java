@@ -50,9 +50,11 @@ public final class Placeholders extends HashMap<String, String> {
 
         put("$float", "(-?\\d+\\.?\\d?)");
         put("$double", "(-?\\d+\\.?\\d?)");
+        put("$bigdecimal", "(-?\\d+\\.?\\d?)");
 
         put("$string", "(.+)");
         put("$quote", "\"(.+)\"");
+        put("$singlequote", "'(.+)'");
     }
 
     /**
