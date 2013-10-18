@@ -25,9 +25,11 @@ import java.net.URI;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
+import nu.xom.Serializer;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.source.SourceException;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresenter;
 import org.specrunner.util.xom.IPresenterManager;
 
@@ -66,6 +68,11 @@ public class SourceFactoryText extends AbstractSourceFactory {
                 IPresenter presenter = SpecRunnerServices.get(IPresenterManager.class).get(feature.getClass().getName());
                 Node node = presenter.asNode(feature);
                 body.appendChild(node);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    Serializer dumper = new Serializer(System.out);
+                    dumper.setIndent(4);
+                    dumper.write(doc);
+                }
             } catch (Exception e) {
                 throw new SourceException(e);
             } finally {

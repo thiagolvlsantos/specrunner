@@ -26,7 +26,7 @@ import java.util.List;
  * @author Thiago Santos
  * 
  */
-public class Feature extends NamedSentence {
+public class Feature extends NamedSentences {
 
     /**
      * Keyword set.
@@ -35,11 +35,11 @@ public class Feature extends NamedSentence {
     /**
      * List of background sentences.
      */
-    private List<String> background = new LinkedList<String>();
+    private List<Sentence> background = new LinkedList<Sentence>();
     /**
      * List of ending sentences.
      */
-    private List<String> finallys = new LinkedList<String>();
+    private List<Sentence> finallys = new LinkedList<Sentence>();
     /**
      * List of scenarios.
      */
@@ -79,7 +79,7 @@ public class Feature extends NamedSentence {
      * 
      * @return The list.
      */
-    public List<String> getBackground() {
+    public List<Sentence> getBackground() {
         return background;
     }
 
@@ -89,7 +89,7 @@ public class Feature extends NamedSentence {
      * @param background
      *            The list.
      */
-    public void setBackground(List<String> background) {
+    public void setBackground(List<Sentence> background) {
         this.background = background;
     }
 
@@ -100,7 +100,7 @@ public class Feature extends NamedSentence {
      *            A sentence.
      * @return The feature itself.
      */
-    public Feature addBackground(String background) {
+    public Feature addBackground(Sentence background) {
         this.background.add(background);
         return this;
     }
@@ -110,7 +110,7 @@ public class Feature extends NamedSentence {
      * 
      * @return The list.
      */
-    public List<String> getFinallys() {
+    public List<Sentence> getFinallys() {
         return finallys;
     }
 
@@ -120,7 +120,7 @@ public class Feature extends NamedSentence {
      * @param finallys
      *            The list.
      */
-    public void setFinallys(List<String> finallys) {
+    public void setFinallys(List<Sentence> finallys) {
         this.finallys = finallys;
     }
 
@@ -131,7 +131,7 @@ public class Feature extends NamedSentence {
      *            A sentence.
      * @return The feature itself.
      */
-    public Feature addFinallys(String finallys) {
+    public Feature addFinallys(Sentence finallys) {
         this.finallys.add(finallys);
         return this;
     }

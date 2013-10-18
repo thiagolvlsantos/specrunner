@@ -21,12 +21,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Any object with a name as a group os sentences.
+ * Any object with a name as a group of sentences.
  * 
  * @author Thiago Santos
  * 
  */
-public abstract class NamedSentence {
+public abstract class NamedSentences implements IValidable {
 
     /**
      * Group name.
@@ -35,7 +35,7 @@ public abstract class NamedSentence {
     /**
      * Sentences set.
      */
-    protected List<String> description = new LinkedList<String>();
+    protected List<Sentence> sentences = new LinkedList<Sentence>();
 
     /**
      * The object name.
@@ -43,7 +43,7 @@ public abstract class NamedSentence {
      * @param name
      *            The name.
      */
-    public NamedSentence(String name) {
+    public NamedSentences(String name) {
         this.name = name;
     }
 
@@ -63,7 +63,7 @@ public abstract class NamedSentence {
      *            The name.
      * @return The object itself.
      */
-    public NamedSentence setName(String name) {
+    public NamedSentences setName(String name) {
         this.name = name;
         return this;
     }
@@ -73,38 +73,31 @@ public abstract class NamedSentence {
      * 
      * @return The list.
      */
-    public List<String> getDescription() {
-        return description;
+    public List<Sentence> getSentences() {
+        return sentences;
     }
 
     /**
      * Set the sentences list.
      * 
-     * @param description
-     *            The descriptions.
+     * @param sentences
+     *            The sentences.
      * @return The object itself.
      */
-    public NamedSentence setDescription(List<String> description) {
-        this.description = description;
+    public NamedSentences setSentences(List<Sentence> sentences) {
+        this.sentences = sentences;
         return this;
     }
 
     /**
      * Add a description.
      * 
-     * @param description
-     *            A description.
+     * @param sentence
+     *            A sentence.
      * @return The object itself.
      */
-    public NamedSentence addDescription(String description) {
-        this.description.add(description);
+    public NamedSentences addSentence(Sentence sentence) {
+        this.sentences.add(sentence);
         return this;
     }
-
-    /**
-     * Perform object validation.
-     * 
-     * @return The description of errors, if any, empty string otherwise.
-     */
-    public abstract String validate();
 }

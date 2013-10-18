@@ -113,7 +113,7 @@ public class FeatureReaderImpl implements IFeatureReader {
      * @throws IOException
      *             On reading error.
      */
-    protected void readKeyword(BufferedReader reader, String line, String keyword, NamedSentence named) throws IOException {
+    protected void readKeyword(BufferedReader reader, String line, String keyword, NamedSentences named) throws IOException {
         while (line != null) {
             line = line.trim();
             if (line.startsWith(keyword)) {
@@ -141,7 +141,7 @@ public class FeatureReaderImpl implements IFeatureReader {
      *             On reading error.
      */
     protected void readFeatureDescription(BufferedReader reader, String line, Keywords words, Feature feature) throws IOException {
-        line = readNextGroup(reader, line, feature.getDescription());
+        line = readNextGroup(reader, line, feature.getSentences());
         while (line != null) {
             line = line.trim();
             if (line.startsWith(words.getBackground())) {
@@ -151,12 +151,12 @@ public class FeatureReaderImpl implements IFeatureReader {
             } else if (line.startsWith(words.getScenario())) {
                 Scenario sc = new Scenario("");
                 readKeyword(reader, line, words.getScenario(), sc);
-                line = readNextGroup(reader, reader.readLine(), sc.getDescription());
+                line = readNextGroup(reader, reader.readLine(), sc.getSentences());
                 feature.add(sc);
             } else if (line.startsWith(words.getScenarioOutline())) {
                 ScenarioOutline sc = new ScenarioOutline("");
                 readKeyword(reader, line, words.getScenarioOutline(), sc);
-                line = readNextGroup(reader, reader.readLine(), sc.getDescription());
+                line = readNextGroup(reader, reader.readLine(), sc.getSentences());
                 feature.add(sc);
                 if (line != null) {
                     line = line.trim();
@@ -183,21 +183,64 @@ public class FeatureReaderImpl implements IFeatureReader {
      * @throws IOException
      *             On reading errors.
      */
-    protected String readNextGroup(BufferedReader reader, String line, List<String> group) throws IOException {
+    protected String readNextGroup(BufferedReader reader, String line, List<Sentence> group) throws IOException {
+        boolean extra = false;
         while (line != null) {
             line = line.trim();
             if (line.isEmpty()) {
                 break;
             }
-            group.add(line);
+            Sentence tmp = new Sentence(line);
+            group.add(tmp);
             line = reader.readLine();
+            if (tmp.getText().endsWith(":")) {
+                line = readTableOrMessage(reader, line, tmp);
+                extra = true;
+            }
         }
-        while (line != null) {
+        while (!extra && line != null) {
             line = line.trim();
             if (!line.isEmpty()) {
                 break;
             }
             line = reader.readLine();
+        }
+        return line;
+    }
+
+    /**
+     * Reads a table or a message after a sentence.
+     * 
+     * @param reader
+     *            A reader.
+     * @param line
+     *            The current line.
+     * @param sentence
+     *            The sentence to fill.
+     * @return The next line.
+     * @throws IOException
+     *             On reading errors.
+     */
+    private String readTableOrMessage(BufferedReader reader, String line, Sentence sentence) throws IOException {
+        if (line != null) {
+            line = line.trim();
+        }
+        String lineMark = "\"\"\"";
+        if (line.startsWith("|")) {
+            DataTable table = new DataTable();
+            line = readTable(reader, line, table);
+            sentence.setData(table);
+        } else if (line.equals(lineMark)) {
+            StringBuilder msg = new StringBuilder();
+            line = reader.readLine();
+            while (line != null && !lineMark.equals(line.trim())) {
+                msg.append(line + "\n");
+                line = reader.readLine();
+            }
+            line = reader.readLine();
+            sentence.setMessage(msg.toString());
+        } else {
+            throw new IOException("After sentences ending with ':' data tables or messages are expected.");
         }
         return line;
     }
@@ -216,24 +259,42 @@ public class FeatureReaderImpl implements IFeatureReader {
      */
     protected void readExamples(BufferedReader reader, String line, ScenarioOutline outline) throws IOException {
         if (line != null) {
-            StringTokenizer st = new StringTokenizer(line.trim(), "|");
-            while (st.hasMoreTokens()) {
-                outline.getTable().add(st.nextToken());
-            }
-            line = reader.readLine();
-            while (line != null) {
-                line = line.trim();
-                if (line.isEmpty()) {
-                    break;
-                }
-                List<String> args = new LinkedList<String>();
-                st = new StringTokenizer(line, "|");
-                while (st.hasMoreTokens()) {
-                    args.add(st.nextToken().trim());
-                }
-                outline.getTable().add(args);
-                line = reader.readLine();
-            }
+            readTable(reader, line, outline.getTable());
         }
+    }
+
+    /**
+     * Read a data table.
+     * 
+     * @param reader
+     *            The reader.
+     * @param line
+     *            The current line.
+     * @param table
+     *            The target table.
+     * @return The line just after the table.
+     * @throws IOException
+     *             On reading errors.
+     */
+    protected String readTable(BufferedReader reader, String line, DataTable table) throws IOException {
+        StringTokenizer st = new StringTokenizer(line.trim(), "|");
+        while (st.hasMoreTokens()) {
+            table.add(st.nextToken());
+        }
+        line = reader.readLine();
+        while (line != null) {
+            line = line.trim();
+            if (line.isEmpty() || !line.startsWith("|")) {
+                break;
+            }
+            List<String> args = new LinkedList<String>();
+            st = new StringTokenizer(line, "|");
+            while (st.hasMoreTokens()) {
+                args.add(st.nextToken().trim());
+            }
+            table.add(args);
+            line = reader.readLine();
+        }
+        return line;
     }
 }
