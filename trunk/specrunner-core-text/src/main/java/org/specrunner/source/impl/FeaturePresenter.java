@@ -212,7 +212,7 @@ public class FeaturePresenter implements IPresenter {
             quote.appendChild(new Element("br"));
             if (s.hasData()) {
                 Element arg = new Element("arg");
-                arg.addAttribute(new Attribute("value", "$XML"));
+                arg.addAttribute(new Attribute("value", "$INNER_XML"));
                 dumpTable(arg, s.getData());
                 sentence.appendChild(arg);
             }
