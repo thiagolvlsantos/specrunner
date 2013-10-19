@@ -280,7 +280,7 @@ table.included_file_args td {
     font-family: verdana;
     /* always visible */
     position: fixed; 
-    bottom: 10px; 
+    top: 10px; 
     right: 20px;
 }
 
