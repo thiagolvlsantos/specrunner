@@ -115,4 +115,9 @@ public class DataTable {
         }
         return sb.toString();
     }
+
+    @Override
+    public String toString() {
+        return "DataTable [names=" + names + ", examples=" + examples + "]";
+    }
 }

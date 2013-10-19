@@ -294,7 +294,7 @@ public class FeatureReaderImpl implements IFeatureReader {
     protected String readTable(BufferedReader reader, String line, DataTable table) throws IOException {
         StringTokenizer st = new StringTokenizer(line.trim(), "|");
         while (st.hasMoreTokens()) {
-            table.add(st.nextToken());
+            table.add(st.nextToken().trim());
         }
         line = reader.readLine();
         while (line != null) {

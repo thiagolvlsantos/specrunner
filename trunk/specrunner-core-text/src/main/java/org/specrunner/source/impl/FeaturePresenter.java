@@ -212,8 +212,8 @@ public class FeaturePresenter implements IPresenter {
             quote.appendChild(new Element("br"));
             if (s.hasData()) {
                 Element arg = new Element("arg");
-                arg.addAttribute(new Attribute("value", "$INNER_XML"));
-                dumpTable(arg, s.getData());
+                arg.addAttribute(new Attribute("value", "$NODE"));
+                dumpTable(arg, s.getData(), false);
                 sentence.appendChild(arg);
             }
             if (s.hasMessage()) {
@@ -272,7 +272,7 @@ public class FeaturePresenter implements IPresenter {
         Element quote = new Element("blockquote");
         root.appendChild(quote);
         {
-            dumpTable(quote, outline.getTable());
+            dumpTable(quote, outline.getTable(), true);
         }
     }
 
@@ -283,16 +283,21 @@ public class FeaturePresenter implements IPresenter {
      *            The root node.
      * @param data
      *            The table.
+     * @param example
+     *            Indicate if table is a example mapping or outline or not.
      */
-    protected void dumpTable(Element root, DataTable data) {
+    protected void dumpTable(Element root, DataTable data, boolean example) {
         Element table = new Element("table");
-        String alias;
-        try {
-            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMap.class);
-        } catch (PluginException e1) {
-            alias = "map";
+        if (example) {
+            String alias;
+            try {
+                alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMap.class);
+            } catch (PluginException e1) {
+                alias = "map";
+            }
+            table.addAttribute(new Attribute("class", alias));
         }
-        table.addAttribute(new Attribute("class", alias));
+
         table.addAttribute(new Attribute("name", "examples"));
         table.addAttribute(new Attribute("scope", "div"));
         root.appendChild(table);
@@ -300,7 +305,7 @@ public class FeaturePresenter implements IPresenter {
             Element tr = new Element("tr");
             table.appendChild(tr);
             for (String str : data.getNames()) {
-                Element td = new Element("td");
+                Element td = new Element("th");
                 td.appendChild(str);
                 tr.appendChild(td);
             }
