@@ -5,6 +5,7 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.impl.language.Sentence;
+import org.specrunner.source.impl.DataTable;
 
 @RunWith(SRRunner.class)
 @Ignore
@@ -12,10 +13,9 @@ public class Sum {
 
     private int sum;
 
-    @Sentence("make $string of")
-    public void add(String op) {
-        System.out.println("OPERATION:" + op);
-        // Assert.assertEquals(dt.getNames().get(0), "Values");
+    public void whenIMakeASumOf(DataTable dt) {
+        // System.out.println("OPERATION:" + op);
+        Assert.assertEquals(dt.getNames().get(0), "Values");
     }
 
     @Sentence("type")

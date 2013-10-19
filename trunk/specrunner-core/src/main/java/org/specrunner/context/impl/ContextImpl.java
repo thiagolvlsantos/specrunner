@@ -38,7 +38,9 @@ import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Default context implementation.
@@ -391,5 +393,69 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
     @Override
     public IBlock newBlock(Node node, IPlugin plugin, Map<String, Object> map) {
         return SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin, map);
+    }
+
+    @Override
+    public void addMetadata() {
+        final IBlock block = peek();
+        // ----------- METAVARIABLES --------------
+        // meta variable 'block'
+        saveStrict("$BLOCK", block);
+
+        // meta variable 'node'
+        saveStrict("$NODE", new IModel<Node>() {
+            @Override
+            public Node getObject(IContext context) throws SpecRunnerException {
+                return block.getNode();
+            }
+        });
+
+        // meta variable 'plugin'
+        saveStrict("$PLUGIN", new IModel<IPlugin>() {
+            @Override
+            public IPlugin getObject(IContext context) throws SpecRunnerException {
+                return block.getPlugin();
+            }
+        });
+
+        // meta variable 'text'
+        saveStrict("$TEXT", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return block.getNode().getValue();
+            }
+        });
+
+        // meta variable 'XML'
+        saveStrict("$XML", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return UtilNode.getChildrenAsString(block.getNode());
+            }
+        });
+
+        // meta variable 'content evaluated silently'
+        saveStrict("$CONTENT", new IModel<Object>() {
+            @Override
+            public Object getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
+                } catch (Exception e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        });
+
+        // meta variable 'content evaluated'
+        saveStrict("$CONTENT_UNSILENT", new IModel<Object>() {
+            @Override
+            public Object getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
+                } catch (Exception e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        });
     }
 }

@@ -50,7 +50,6 @@ import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
 
@@ -166,7 +165,7 @@ public class RunnerImpl implements IRunner {
                 }
             }
 
-            addMetavariable(context, block);
+            context.addMetadata();
 
             List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
 
@@ -250,77 +249,6 @@ public class RunnerImpl implements IRunner {
             doNode = doNode.max(nl.onBefore(node, context, result));
         }
         return doNode;
-    }
-
-    /**
-     * Add a set of metavariables to test environment.
-     * 
-     * @param context
-     *            The context.
-     * @param block
-     *            The block.
-     */
-    protected void addMetavariable(IContext context, final IBlock block) {
-        // ----------- METAVARIABLES --------------
-        // created before to enable plugin use them in values.
-        // meta variable 'node'
-        context.saveStrict("$NODE", new IModel<Node>() {
-            @Override
-            public Node getObject(IContext context) throws SpecRunnerException {
-                return block.getNode();
-            }
-        });
-
-        // meta variable 'plugin'
-        context.saveStrict("$PLUGIN", new IModel<IPlugin>() {
-            @Override
-            public IPlugin getObject(IContext context) throws SpecRunnerException {
-                return block.getPlugin();
-            }
-        });
-
-        // meta variable 'block'
-        context.saveStrict("$BLOCK", block);
-
-        // meta variable 'text'
-        context.saveStrict("$TEXT", new IModel<String>() {
-            @Override
-            public String getObject(IContext context) throws SpecRunnerException {
-                return block.getNode().getValue();
-            }
-        });
-
-        // meta variable 'XML'
-        context.saveStrict("$XML", new IModel<String>() {
-            @Override
-            public String getObject(IContext context) throws SpecRunnerException {
-                return block.getNode().toXML();
-            }
-        });
-
-        // meta variable 'content evaluated silently'
-        context.saveStrict("$CONTENT", new IModel<Object>() {
-            @Override
-            public Object getObject(IContext context) throws SpecRunnerException {
-                try {
-                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
-                } catch (Exception e) {
-                    throw new SpecRunnerException(e);
-                }
-            }
-        });
-
-        // meta variable 'content evaluated'
-        context.saveStrict("$CONTENT_UNSILENT", new IModel<Object>() {
-            @Override
-            public Object getObject(IContext context) throws SpecRunnerException {
-                try {
-                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
-                } catch (Exception e) {
-                    throw new SpecRunnerException(e);
-                }
-            }
-        });
     }
 
     /**

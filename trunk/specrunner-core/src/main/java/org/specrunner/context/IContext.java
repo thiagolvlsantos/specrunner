@@ -207,4 +207,9 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
      * @return The naming mapping for this context.
      */
     Map<String, Object> getObjects();
+
+    /**
+     * Add metadata from block context.
+     */
+    void addMetadata();
 }

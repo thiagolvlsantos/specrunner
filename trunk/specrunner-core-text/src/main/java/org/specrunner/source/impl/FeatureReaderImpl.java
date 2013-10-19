@@ -29,6 +29,7 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import org.specrunner.SpecRunnerServices;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 
@@ -61,11 +62,25 @@ public class FeatureReaderImpl implements IFeatureReader {
             isr = new InputStreamReader(in, Charset.forName(encoding));
             bin = new BufferedReader(isr);
 
-            String lang = bin.readLine();
-            if (lang != null) {
-                lang = lang.substring(lang.lastIndexOf(':') + 1, lang.length()).trim();
-            } else {
+            String input = bin.readLine();
+            while (input != null) {
+                input = input.trim();
+                if (!input.isEmpty()) {
+                    break;
+                }
+                input = bin.readLine();
+            }
+            String lang = null;
+            boolean found = false;
+            if (input != null && input.toLowerCase().contains("language:")) {
+                lang = input.substring(input.lastIndexOf(':') + 1, input.length()).trim();
+                found = true;
+            }
+            if (!found) {
                 lang = "en";
+            }
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Language " + (found ? "not found" : "found") + " setting to " + lang);
             }
             Keywords keywords = cacheKeywords.get(lang);
             if (keywords == null) {
@@ -75,7 +90,7 @@ public class FeatureReaderImpl implements IFeatureReader {
             Feature feature = new Feature("");
             feature.setKeywords(keywords);
             if (lang != null) {
-                readKeyword(bin, lang, keywords.getFeature(), feature);
+                readKeyword(bin, found ? lang : input, keywords.getFeature(), feature);
                 readFeatureDescription(bin, bin.readLine(), keywords, feature);
             }
             return feature;
