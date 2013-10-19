@@ -259,6 +259,7 @@ public class PluginInclude extends AbstractPlugin {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
+        UtilNode.appendCss(node, "include");
         ParentNode parent = node.getParent();
         try {
             String path = getPath(context);
@@ -342,7 +343,6 @@ public class PluginInclude extends AbstractPlugin {
             // content
             Element trContent = new Element("tr");
             table.appendChild(trContent);
-
             int failCount = result.countStatus(Failure.INSTANCE);
 
             Element tdContent = new Element("td");

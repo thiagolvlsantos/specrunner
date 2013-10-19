@@ -49,7 +49,7 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
     /**
      * Number of extra spaces at the end.
      */
-    private static final int TAIL = 5;
+    private static final int TAIL = 2;
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
@@ -88,6 +88,11 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
             nodes.append(document.getRootElement());
         }
         Element body = (Element) nodes.get(0);
+        int size = result.actionTypes().size() + TAIL;
+        for (int i = 0; i < size; i++) {
+            body.insertChild(new Element("br"), 0);
+        }
+
         Element div = new Element("div");
         div.addAttribute(new Attribute("class", "sr_frame_link_div"));
         body.insertChild(div, 0);
@@ -111,8 +116,5 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         span.appendChild(" at " + model.get("date") + " ");
         span.appendChild(new Element("br"));
         span.appendChild(result.asNode());
-        for (int i = 0; i < result.actionTypes().size() + TAIL; i++) {
-            body.appendChild(new Element("br"));
-        }
     }
 }

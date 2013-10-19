@@ -18,16 +18,19 @@ public class TestInclude {
 
     @Before
     public void adjust() throws PluginException {
+        // plugin factory or factories
+        IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
+
         // create a CSS type for increase.
         PluginInclude increase = new PluginInclude();
         increase.setDir("src/test/java/example/include");
         increase.setHref("increase.html");
-        SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryCSS.KIND, "incr", increase);
+        factory.bind(PluginFactoryCSS.KIND, "incr", increase);
 
         // create a element type for decrease.
         PluginInclude decrease = new PluginInclude();
         decrease.setHref("decrease.html");
-        SpecRunnerServices.get(IPluginFactory.class).bind(PluginFactoryElement.KIND, "decr", decrease);
+        factory.bind(PluginFactoryElement.KIND, "decr", decrease);
     }
 
     public void inc() {
