@@ -14,13 +14,13 @@ public class Sum {
     private int sum;
 
     public void whenIMakeASumOf(DataTable dt) {
-        // System.out.println("OPERATION:" + op);
+        System.out.println(dt);
         Assert.assertEquals(dt.getNames().get(0), "Values");
     }
 
     @Sentence("type")
-    public void type(String msg) {
-        Assert.assertEquals(msg, "SUM ENTER");
+    public void andType(String msg) {
+        Assert.assertEquals(msg.trim(), "SUM ENTER");
     }
 
     @Sentence("result is $int")
