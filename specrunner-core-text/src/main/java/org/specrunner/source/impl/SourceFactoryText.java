@@ -41,6 +41,10 @@ import org.specrunner.util.xom.IPresenterManager;
  */
 @SuppressWarnings("serial")
 public class SourceFactoryText extends AbstractSourceFactory {
+    /**
+     * Log gap.
+     */
+    private static final int GAP = 4;
 
     @Override
     protected Document fromTarget(URI uri, String target, String encoding) throws SourceException {
@@ -70,7 +74,7 @@ public class SourceFactoryText extends AbstractSourceFactory {
                 body.appendChild(node);
                 if (UtilLog.LOG.isTraceEnabled()) {
                     Serializer dumper = new Serializer(System.out);
-                    dumper.setIndent(4);
+                    dumper.setIndent(GAP);
                     dumper.write(doc);
                 }
             } catch (Exception e) {

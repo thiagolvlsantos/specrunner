@@ -224,71 +224,77 @@ public class NodeHolder implements INodeHolder {
 
     @Override
     public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException {
-        converter = getConverter(converter);
-        arguments = getArguments(arguments);
-        Object value = null;
-        if (attributeEquals(ATTRIBUTE_EVALUATION, Boolean.FALSE.toString())) {
-            value = getValue();
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Evaluation ignored, value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
-            }
-        } else {
-            if (hasAttribute(ATTRIBUTE_PROPERTY)) {
-                String str = getAttribute(ATTRIBUTE_PROPERTY);
-                int pos = str.indexOf('.');
-                if (pos <= 0) {
-                    throw new PluginException("Bean name or property missing in property='" + str + "'.");
-                }
-                Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
-                try {
-                    value = PropertyUtils.getProperty(bean, str.substring(pos + 1));
-                } catch (IllegalAccessException e) {
-                    throw new PluginException(e);
-                } catch (InvocationTargetException e) {
-                    throw new PluginException(e);
-                } catch (NoSuchMethodException e) {
-                    throw new PluginException(e);
-                }
+        context.push(context.newBlock(node, null));
+        context.addMetadata();
+        try {
+            converter = getConverter(converter);
+            arguments = getArguments(arguments);
+            Object value = null;
+            if (attributeEquals(ATTRIBUTE_EVALUATION, Boolean.FALSE.toString())) {
+                value = getValue();
                 if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("Bean property (" + str + ") value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
+                    UtilLog.LOG.trace("Evaluation ignored, value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
                 }
             } else {
-                String tmp;
-                if (hasAttribute(ATTRIBUTE_VALUE)) {
-                    tmp = getAttribute(ATTRIBUTE_VALUE);
+                if (hasAttribute(ATTRIBUTE_PROPERTY)) {
+                    String str = getAttribute(ATTRIBUTE_PROPERTY);
+                    int pos = str.indexOf('.');
+                    if (pos <= 0) {
+                        throw new PluginException("Bean name or property missing in property='" + str + "'.");
+                    }
+                    Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
+                    try {
+                        value = PropertyUtils.getProperty(bean, str.substring(pos + 1));
+                    } catch (IllegalAccessException e) {
+                        throw new PluginException(e);
+                    } catch (InvocationTargetException e) {
+                        throw new PluginException(e);
+                    } catch (NoSuchMethodException e) {
+                        throw new PluginException(e);
+                    }
                     if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Attribute value present, value is '" + tmp + "'.");
+                        UtilLog.LOG.trace("Bean property (" + str + ") value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
                     }
                 } else {
-                    tmp = getValue();
+                    String tmp;
+                    if (hasAttribute(ATTRIBUTE_VALUE)) {
+                        tmp = getAttribute(ATTRIBUTE_VALUE);
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Attribute value present, value is '" + tmp + "'.");
+                        }
+                    } else {
+                        tmp = getValue();
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Content value is '" + tmp + "'.");
+                        }
+                    }
+                    value = UtilEvaluator.evaluate(tmp, context, silent);
                     if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Content value is '" + tmp + "'.");
+                        UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
                     }
                 }
-                value = UtilEvaluator.evaluate(tmp, context, silent);
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
+                Object[] args = new Object[arguments.size()];
+                for (int i = 0; i < arguments.size(); i++) {
+                    args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
                 }
-            }
-            Object[] args = new Object[arguments.size()];
-            for (int i = 0; i < arguments.size(); i++) {
-                args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
-            }
-            Object convert;
-            try {
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + Arrays.toString(args));
+                Object convert;
+                try {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + Arrays.toString(args));
+                    }
+                    convert = converter.convert(value, arguments.toArray());
+                } catch (Exception e) {
+                    throw new PluginException(e);
                 }
-                convert = converter.convert(value, arguments.toArray());
-            } catch (Exception e) {
-                throw new PluginException(e);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Converted value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
+                }
+                return convert;
             }
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Converted value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
-            }
-            return convert;
+            return value;
+        } finally {
+            context.pop();
         }
-        return value;
     }
 
     @Override
