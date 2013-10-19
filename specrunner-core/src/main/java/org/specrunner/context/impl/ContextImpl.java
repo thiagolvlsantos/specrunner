@@ -430,6 +430,13 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         saveStrict("$XML", new IModel<String>() {
             @Override
             public String getObject(IContext context) throws SpecRunnerException {
+                return block.getNode().toXML();
+            }
+        });
+        // inner XML
+        saveStrict("$INNER_XML", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
                 return UtilNode.getChildrenAsString(block.getNode());
             }
         });

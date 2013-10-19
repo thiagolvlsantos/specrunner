@@ -224,8 +224,11 @@ public class NodeHolder implements INodeHolder {
 
     @Override
     public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException {
-        context.push(context.newBlock(node, null));
-        context.addMetadata();
+        boolean extend = context.getNode() != node;
+        if (extend) {
+            context.push(context.newBlock(node, null));
+            context.addMetadata();
+        }
         try {
             converter = getConverter(converter);
             arguments = getArguments(arguments);
@@ -293,7 +296,9 @@ public class NodeHolder implements INodeHolder {
             }
             return value;
         } finally {
-            context.pop();
+            if (extend) {
+                context.pop();
+            }
         }
     }
 
