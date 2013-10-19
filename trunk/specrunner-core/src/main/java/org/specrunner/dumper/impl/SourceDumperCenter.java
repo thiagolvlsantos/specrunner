@@ -106,7 +106,7 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         span.appendChild(link);
         link.addAttribute(new Attribute("href", detailReport()));
         link.addAttribute(new Attribute("title", "This is a detailed report."));
-        link.appendChild("Detailed report");
+        link.appendChild("SpecRunner details");
         span.appendChild(" [");
         Status s = result.getStatus();
         span.appendChild(s.asNode());
