@@ -1,6 +1,9 @@
 # language: en
 Feature: Sum
 
+  Background:
+  	Clean status
+
   Scenario: Add a table of values
     When I make a sum of:
 	    | Values  |
@@ -18,7 +21,7 @@ Feature: Sum
 	    | Values  |
 	    | 6       |
 	    | 10      |
-    and type:
+    and call:
 	    """
 	    ENTER
 	    """
