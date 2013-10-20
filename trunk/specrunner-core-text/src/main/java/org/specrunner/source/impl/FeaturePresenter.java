@@ -269,11 +269,7 @@ public class FeaturePresenter implements IPresenter {
      *            The scenario outline.
      */
     protected void dumpMap(Element root, ScenarioOutline outline) {
-        Element quote = new Element("blockquote");
-        root.appendChild(quote);
-        {
-            dumpTable(quote, outline.getTable(), true);
-        }
+        dumpTable(root, outline.getTable(), true);
     }
 
     /**
@@ -287,6 +283,9 @@ public class FeaturePresenter implements IPresenter {
      *            Indicate if table is a example mapping or outline or not.
      */
     protected void dumpTable(Element root, DataTable data, boolean example) {
+        Element quote = new Element("blockquote");
+        root.appendChild(quote);
+
         Element table = new Element("table");
         if (example) {
             String alias;
@@ -300,7 +299,7 @@ public class FeaturePresenter implements IPresenter {
 
         table.addAttribute(new Attribute("name", "examples"));
         table.addAttribute(new Attribute("scope", "div"));
-        root.appendChild(table);
+        quote.appendChild(table);
         {
             Element tr = new Element("tr");
             table.appendChild(tr);

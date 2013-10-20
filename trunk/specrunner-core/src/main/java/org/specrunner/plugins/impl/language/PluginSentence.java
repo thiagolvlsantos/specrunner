@@ -256,25 +256,28 @@ public class PluginSentence extends AbstractPlugin {
      *             On errors.
      */
     protected void extractMethodNameArguments(IContext context, Object target, StringBuilder methodName, List<Object> arguments) throws PluginException {
-        boolean camel = true;
         Node node = context.getNode();
-        boolean text = true;
-        for (int i = 0; text && i < node.getChildCount(); i++) {
-            text = node.getChild(i) instanceof Text;
-        }
-        if (text) {
-            INodeHolder holder = UtilNode.newNodeHolder(node);
-            String value = String.valueOf(holder.getObject(context, true));
-            boolean annotation = fromAnnotations(value, target, methodName, arguments);
-            if (annotation) {
-                camel = false;
-            } else {
-                onlyText(value, methodName, arguments);
+        boolean onlyText = true;
+        StringBuilder startText = null;
+        for (int i = 0; onlyText && i < node.getChildCount(); i++) {
+            Node child = node.getChild(i);
+            onlyText = child instanceof Text;
+            if (onlyText) {
+                if (startText == null) {
+                    startText = new StringBuilder();
+                }
+                startText.append(child.getValue());
             }
-        } else {
-            onlyArgs(context, node, methodName, arguments);
         }
-        if (camel) {
+        INodeHolder holder = UtilNode.newNodeHolder(onlyText ? node : new Text(startText.toString()));
+        String value = String.valueOf(holder.getObject(context, true));
+        boolean annotation = fromAnnotations(value, target, methodName, arguments);
+        if (!onlyText || annotation) {
+            onlyArgs(context, node, annotation ? new StringBuilder() : methodName, arguments);
+        } else {
+            onlyText(value, methodName, arguments);
+        }
+        if (!annotation) {
             String tmp = UtilString.camelCase(methodName.toString());
             methodName.setLength(0);
             methodName.append(tmp);

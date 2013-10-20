@@ -1,31 +1,50 @@
 package example.text;
 
+import java.util.List;
+
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.impl.language.Sentence;
 import org.specrunner.source.impl.DataTable;
 
 @RunWith(SRRunner.class)
-@Ignore
+// @Ignore
 public class Sum {
 
-    private int sum;
+    private int data;
 
-    public void whenIMakeASumOf(DataTable dt) {
-        System.out.println(dt);
+    public void cleanStatus() {
+        data = 0;
+    }
+
+    @Sentence("make a $string of")
+    public void op(String op, DataTable dt) {
         Assert.assertEquals(dt.getNames().get(0), "Values");
+        if ("sum".equals(op)) {
+            for (List<String> e : dt.getExamples()) {
+                data += Integer.parseInt(e.get(0));
+            }
+        } else if ("multiplication".equals(op)) {
+            data = 1;
+            for (List<String> e : dt.getExamples()) {
+                data *= Integer.parseInt(e.get(0));
+            }
+        }
     }
 
     @Sentence("type")
-    public void andType(String msg) {
+    public void message(String msg) {
         Assert.assertEquals(msg.trim(), "SUM ENTER");
+    }
+
+    public void andCall(String msg) {
+        Assert.assertEquals(msg.trim(), "ENTER");
     }
 
     @Sentence("result is $int")
     public boolean result(int value) {
-        Assert.assertEquals(value, sum);
+        Assert.assertEquals(value, data);
         return true;
     }
 }
