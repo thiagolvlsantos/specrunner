@@ -73,8 +73,8 @@ public class ExpressionKey {
     public ExpressionKey(String expression, Class<Object> returnType, String[] arrayArgs, Class<?>[] arrayTypes) {
         this.expression = expression;
         this.returnType = returnType;
-        this.arrayArgs = Arrays.copyOf(arrayArgs, arrayArgs.length);
-        this.arrayTypes = Arrays.copyOf(arrayTypes, arrayTypes.length);
+        this.arrayArgs = arrayArgs == null ? null : Arrays.copyOf(arrayArgs, arrayArgs.length);
+        this.arrayTypes = arrayTypes == null ? null : Arrays.copyOf(arrayTypes, arrayTypes.length);
     }
 
     /**

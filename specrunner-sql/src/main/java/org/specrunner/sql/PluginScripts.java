@@ -145,7 +145,7 @@ public class PluginScripts extends AbstractPluginValue {
      *            The scripts.
      */
     public void setScripts(URI[] scripts) {
-        this.scripts = Arrays.copyOf(scripts, scripts.length);
+        this.scripts = scripts == null ? null : Arrays.copyOf(scripts, scripts.length);
     }
 
     /**

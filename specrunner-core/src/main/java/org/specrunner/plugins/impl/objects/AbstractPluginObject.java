@@ -639,7 +639,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The names.
          */
         public void setNames(String[] names) {
-            this.names = Arrays.copyOf(names, names.length);
+            this.names = names == null ? null : Arrays.copyOf(names, names.length);
         }
 
         /**
@@ -658,7 +658,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The types.
          */
         public void setTypes(Class<?>[] types) {
-            this.types = Arrays.copyOf(types, types.length);
+            this.types = types == null ? null : Arrays.copyOf(types, types.length);
         }
 
         /**
@@ -696,7 +696,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The converters.
          */
         public void setConverters(String[] converters) {
-            this.converters = Arrays.copyOf(converters, converters.length);
+            this.converters = converters == null ? null : Arrays.copyOf(converters, converters.length);
         }
 
         /**
@@ -715,7 +715,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          *            The arguments.
          */
         public void setArgs(String[] args) {
-            this.args = Arrays.copyOf(args, args.length);
+            this.args = args == null ? null : Arrays.copyOf(args, args.length);
         }
 
         /**

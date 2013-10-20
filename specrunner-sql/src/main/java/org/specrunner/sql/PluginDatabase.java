@@ -134,7 +134,7 @@ public class PluginDatabase extends AbstractPluginValue {
      *            The instance.
      */
     public void setProviderInstance(IDatabase[] providerInstance) {
-        this.providerInstance = Arrays.copyOf(providerInstance, providerInstance.length);
+        this.providerInstance = providerInstance == null ? null : Arrays.copyOf(providerInstance, providerInstance.length);
     }
 
     /**
