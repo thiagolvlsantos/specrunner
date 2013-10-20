@@ -18,6 +18,7 @@
 package org.specrunner.sql;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
@@ -233,7 +234,8 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
             try {
                 connection = ds.getConnection();
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(getClass().getSimpleName() + " connection:(" + connection.getMetaData().getURL() + ")" + connection);
+                    DatabaseMetaData metaData = connection.getMetaData();
+                    UtilLog.LOG.debug(getClass().getSimpleName() + " connection:(" + metaData.getURL() + ")" + connection);
                 }
                 database.perform(context, result, tableAdapter, connection, schema, mode);
             } catch (SQLException e) {
