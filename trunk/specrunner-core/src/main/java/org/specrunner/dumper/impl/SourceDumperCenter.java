@@ -49,7 +49,7 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
     /**
      * Number of extra spaces at the end.
      */
-    private static final int TAIL = 2;
+    private static final int TAIL = 4;
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
