@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.specrunner.SpecRunnerServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
@@ -64,6 +65,11 @@ import org.specrunner.util.xom.TableAdapter;
 public class Database implements IDatabase {
 
     /**
+     * Feature for database error dump limit.
+     */
+    public static final String FEATURE_LIMIT = Database.class.getName() + ".limit";
+
+    /**
      * Prepared statements for input actions.
      */
     protected Map<String, PreparedStatement> inputs = new HashMap<String, PreparedStatement>();
@@ -79,8 +85,38 @@ public class Database implements IDatabase {
      */
     protected Map<String, PreparedStatement> outputs = new HashMap<String, PreparedStatement>();
 
+    /**
+     * Feature for dump size.
+     */
+    private static final Integer DEFAULT_LIMIT = 100;
+
+    /**
+     * Max size of errors dump.
+     */
+    private Integer limit = DEFAULT_LIMIT;
+
+    /**
+     * Get the error dump limit.
+     * 
+     * @return The limit.
+     */
+    public Integer getLimit() {
+        return limit;
+    }
+
+    /**
+     * Set error limit.
+     * 
+     * @param limit
+     *            The limit.
+     */
+    public void setLimit(Integer limit) {
+        this.limit = limit;
+    }
+
     @Override
     public void initialize() {
+        SpecRunnerServices.getFeatureManager().set(FEATURE_LIMIT, this);
         // every use of plugin database clear mappings to avoid memory overload
         // and test interference
         if (UtilLog.LOG.isDebugEnabled()) {
@@ -357,6 +393,14 @@ public class Database implements IDatabase {
                 sbPla.append(v.getColumn().getName() + " = ?" + and);
             }
         }
+        // if keys are not present
+        if (sbPla.length() == 0) {
+            i = 1;
+            for (Value v : values) {
+                indexes.put(v.getColumn().getName(), i++);
+                sbPla.append(v.getColumn().getName() + " = ?" + and);
+            }
+        }
         if (sbPla.length() > and.length()) {
             sbPla.setLength(sbPla.length() - and.length());
         }
@@ -612,11 +656,11 @@ public class Database implements IDatabase {
                     }
                 }
                 if (rs.next()) {
-                    throw new PluginException("More than one register satisfy the condition: " + sql + "[" + values + "]");
+                    throw new PluginException("More than one register satisfy the condition: " + sql + "[" + values + "]\n" + dumpRs("Extra itens:", rs));
                 }
             } else {
                 if (rs.next()) {
-                    throw new PluginException("A result for " + sql + "[" + values + "] was not expected.");
+                    throw new PluginException("A result for " + sql + "[" + values + "] was not expected.\n" + dumpRs("Unxepected itens:", rs));
                 }
             }
         } finally {
@@ -624,6 +668,32 @@ public class Database implements IDatabase {
                 rs.close();
             }
         }
+    }
+
+    /**
+     * Dump result set.
+     * 
+     * @param prefix
+     *            The message prefix.
+     * @param rs
+     *            The result set.
+     * @return A string for result set.
+     * @throws SQLException
+     *             On reading errors.
+     */
+    protected String dumpRs(String prefix, ResultSet rs) throws SQLException {
+        StringBuilder sb = new StringBuilder(prefix);
+        ResultSetMetaData meta = rs.getMetaData();
+        int count = meta.getColumnCount();
+        int index = 0;
+        do {
+            sb.append("\n");
+            for (int i = 1; i <= count; i++) {
+                sb.append((i == 1 ? "\t" : ", ") + meta.getColumnName(i) + ":" + rs.getObject(i));
+            }
+            index++;
+        } while (index < limit && rs.next());
+        return sb.toString();
     }
 
     @Override
