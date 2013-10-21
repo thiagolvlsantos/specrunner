@@ -26,8 +26,8 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginGroupImpl;
-import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
 import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginCompareBase;
 import org.specrunner.sql.PluginConnection;
@@ -95,6 +95,7 @@ public class TestDbmsNegativeFeature {
         IPluginFactory pf = SpecRunnerServices.get(IPluginFactory.class);
 
         IPluginGroup group = new PluginGroupImpl();
+
         PluginConnection conA = new PluginConnection();
         conA.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_INICIAL|sa|");
         conA.setName("conA");
@@ -103,29 +104,29 @@ public class TestDbmsNegativeFeature {
         conB.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|");
         conB.setName("conB");
         group.add(conB);
-        String type = PluginFactoryCSS.KIND;
-        pf.bind(type, "connections", group);
+        PluginKind kind = PluginKind.CSS;
+        pf.bind(kind, "connections", group);
 
         PluginScripts drop = new PluginScripts();
         drop.setValue("drop.sql");
         drop.setFailsafe(true);
         drop.setName("conA;conB");
-        pf.bind(type, "scriptsDrop", drop);
+        pf.bind(kind, "scriptsDrop", drop);
 
         PluginScripts schema = new PluginScripts();
         schema.setValue("schema.sql");
         schema.setName("conA;conB");
-        pf.bind(type, "scriptsSchema", schema);
+        pf.bind(kind, "scriptsSchema", schema);
 
         PluginScripts constraints = new PluginScripts();
         constraints.setValue("constraints.sql");
         constraints.setName("conA;conB");
-        pf.bind(type, "scriptsConstraints", constraints);
+        pf.bind(kind, "scriptsConstraints", constraints);
 
         PluginPrepare prepareB = new PluginPrepare();
         prepareB.setDatasource("conB");
         prepareB.setDatabase("dataB");
-        pf.bind(type, "prepareB", prepareB);
+        pf.bind(kind, "prepareB", prepareB);
     }
 
     @Test

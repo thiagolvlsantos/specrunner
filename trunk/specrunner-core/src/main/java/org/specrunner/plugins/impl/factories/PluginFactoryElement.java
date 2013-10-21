@@ -23,6 +23,7 @@ import nu.xom.Node;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.UtilPlugin;
 
@@ -39,15 +40,10 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryElement extends PluginFactoryImpl {
 
     /**
-     * Kind of 'ELEMENT'.
-     */
-    public static final String KIND = "element";
-
-    /**
-     * Creates a factory loading file 'plugin_element.properties'.
+     * Creates a factory loading file 'sr_plugins_element.properties'.
      */
     public PluginFactoryElement() {
-        super("sr_plugins_element.properties", KIND);
+        super("sr_plugins_element.properties", PluginKind.ELEMENT);
     }
 
     @Override

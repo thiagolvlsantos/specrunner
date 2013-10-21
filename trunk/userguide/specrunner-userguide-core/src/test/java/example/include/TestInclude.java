@@ -7,8 +7,7 @@ import org.specrunner.SpecRunnerServices;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.factories.PluginFactoryCSS;
-import org.specrunner.plugins.impl.factories.PluginFactoryElement;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.include.PluginInclude;
 
 @RunWith(SRRunner.class)
@@ -25,12 +24,12 @@ public class TestInclude {
         PluginInclude increase = new PluginInclude();
         increase.setDir("src/test/java/example/include");
         increase.setHref("increase.html");
-        factory.bind(PluginFactoryCSS.KIND, "incr", increase);
+        factory.bind(PluginKind.CSS, "incr", increase);
 
         // create a element type for decrease.
         PluginInclude decrease = new PluginInclude();
         decrease.setHref("decrease.html");
-        factory.bind(PluginFactoryElement.KIND, "decr", decrease);
+        factory.bind(PluginKind.ELEMENT, "decr", decrease);
     }
 
     public void inc() {

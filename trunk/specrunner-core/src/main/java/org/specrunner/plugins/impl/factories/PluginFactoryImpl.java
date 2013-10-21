@@ -30,6 +30,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.UtilPlugin;
 import org.specrunner.properties.IPropertyLoader;
@@ -46,7 +47,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     /**
      * Kind of factory.
      */
-    private String kind;
+    private PluginKind kind;
     /**
      * Types of plugins available by name.
      */
@@ -76,7 +77,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      * @param kind
      *            The factory kind.
      */
-    protected PluginFactoryImpl(String file, String kind) {
+    protected PluginFactoryImpl(String file, PluginKind kind) {
         if (file != null) {
             this.file = file;
         }
@@ -86,9 +87,9 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     /**
      * Get the kind to factory.
      * 
-     * @return The factory.
+     * @return The factory kind.
      */
-    public String getKind() {
+    public PluginKind getKind() {
         return kind;
     }
 
@@ -139,11 +140,11 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     }
 
     @Override
-    public IPluginFactory bind(String type, String alias, IPlugin plugin) throws PluginException {
-        if (type == null || alias == null || plugin == null) {
-            throw new PluginException("Ivalid bind, all arguments must be not null. Current bind (" + type + "," + alias + "," + plugin + ")");
+    public IPluginFactory bind(PluginKind kind, String alias, IPlugin plugin) throws PluginException {
+        if (kind == null || alias == null || plugin == null) {
+            throw new PluginException("Ivalid bind, all arguments must be not null. Current bind (" + kind + "," + alias + "," + plugin + ")");
         }
-        if (test(type)) {
+        if (test(kind)) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("put(" + alias + "," + plugin + ")");
             }
@@ -160,8 +161,8 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      * @return <code>true</code>, if accept the <code>type</code>, false,
      *         otherwise.
      */
-    protected boolean test(String type) {
-        return kind.equalsIgnoreCase(type);
+    protected boolean test(PluginKind type) {
+        return kind.equals(type);
     }
 
     @Override
