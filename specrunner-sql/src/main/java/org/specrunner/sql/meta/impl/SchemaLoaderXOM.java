@@ -19,16 +19,13 @@ package org.specrunner.sql.meta.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Nodes;
 
-import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.ISchemaLoader;
+import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.xom.INodeHolder;
@@ -40,15 +37,7 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class SchemaLoaderXOM implements ISchemaLoader {
-    /**
-     * Attribute 'name' mark.
-     */
-    private static final String ATTR_NAME = "name";
-    /**
-     * Attribute 'alias' mark.
-     */
-    private static final String ATTR_ALIAS = "alias";
+public class SchemaLoaderXOM implements ISchemaLoaderXML {
     /**
      * XML parser.
      */
@@ -56,7 +45,7 @@ public class SchemaLoaderXOM implements ISchemaLoader {
 
     @Override
     public Schema load(Object source) {
-        Schema s = null;
+        Schema schema = null;
         InputStream in = null;
         try {
             in = getClass().getResourceAsStream(String.valueOf(source));
@@ -64,40 +53,24 @@ public class SchemaLoaderXOM implements ISchemaLoader {
                 throw new RuntimeException("Resource '" + source + "' not found.");
             }
             Document d = builder.build(in);
+
             INodeHolder nSchema = UtilNode.newNodeHolder(d.getRootElement());
-            s = new Schema().setName(nSchema.getAttribute(ATTR_NAME)).setAlias(nSchema.hasAttribute(ATTR_ALIAS) ? nSchema.getAttribute(ATTR_ALIAS) : nSchema.getAttribute(ATTR_NAME));
+            schema = new Schema();
+            schema.setName(nSchema.getAttribute(ATTR_NAME)).setAlias(nSchema.getAttribute(ATTR_ALIAS, schema.getName()));
+
             Nodes nTables = nSchema.getNode().query("child::table");
             for (int i = 0; i < nTables.size(); i++) {
                 INodeHolder nTable = UtilNode.newNodeHolder(nTables.get(i));
-                Table t = new Table().setName(nTable.getAttribute(ATTR_NAME)).setAlias(nTable.hasAttribute(ATTR_ALIAS) ? nTable.getAttribute(ATTR_ALIAS) : nTable.getAttribute(ATTR_NAME));
-                s.add(t);
+                Table table = new Table();
+                table.setName(nTable.getAttribute(ATTR_NAME)).setAlias(nTable.getAttribute(ATTR_ALIAS, table.getName()));
+                schema.add(table);
+
                 Nodes nColumns = nTable.getNode().query("child::column");
                 for (int j = 0; j < nColumns.size(); j++) {
                     INodeHolder nColumn = UtilNode.newNodeHolder(nColumns.get(j));
-                    Column c = new Column().setName(nColumn.getAttribute(ATTR_NAME)).setAlias(nColumn.hasAttribute(ATTR_ALIAS) ? nColumn.getAttribute(ATTR_ALIAS) : nColumn.getAttribute(ATTR_NAME));
-                    t.add(c);
-                    String key = nColumn.getAttribute("key");
-                    c.setKey(key != null && Boolean.parseBoolean(key));
-                    if (nColumn.hasAttribute("converter")) {
-                        c.setConverter(nColumn.getConverter());
-                    }
-                    if (nColumn.hasAttribute("comparator")) {
-                        c.setComparator(nColumn.getComparator());
-                    }
-                    String defaultValue = nColumn.getAttribute("default");
-                    IConverter conv = c.getConverter();
-                    if (conv.accept(defaultValue)) {
-                        List<String> args = nColumn.getArguments();
-                        Object obj;
-                        try {
-                            obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());
-                        } catch (ConverterException e) {
-                            throw new RuntimeException("Convertion error at table: " + t.getName() + ", column: " + c.getName() + ". Attempt to convert default value '" + defaultValue + "' using a '" + conv + "'.", e);
-                        }
-                        c.setDefaultValue(obj);
-                    } else {
-                        c.setDefaultValue(conv.convert(defaultValue, null));
-                    }
+                    Column column = new Column();
+                    UtilSchema.setupColumn(column, nColumn);
+                    table.add(column);
                 }
             }
         } catch (Exception e) {
@@ -111,6 +84,6 @@ public class SchemaLoaderXOM implements ISchemaLoader {
                 throw new RuntimeException(e);
             }
         }
-        return s;
+        return schema;
     }
 }

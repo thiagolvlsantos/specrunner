@@ -111,6 +111,17 @@ public interface INodeHolder {
     String getAttribute(String name);
 
     /**
+     * Get attribute value by type.
+     * 
+     * @param name
+     *            The name.
+     * @param defaultValue
+     *            The defaul value.
+     * @return The value, if exists, null, otherwise.
+     */
+    String getAttribute(String name, String defaultValue);
+
+    /**
      * Set attribute value.
      * 
      * @param name

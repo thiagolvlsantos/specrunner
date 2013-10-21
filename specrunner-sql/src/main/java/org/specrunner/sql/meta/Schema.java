@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Thiago Santos.
  * 
  */
-public class Schema {
+public class Schema implements IReplicable<Schema> {
 
     /**
      * Schema alias.
@@ -187,6 +187,15 @@ public class Schema {
      */
     public void setNamesToTables(Map<String, Table> namesToTables) {
         this.namesToTables = namesToTables;
+    }
+
+    @Override
+    public Schema copy() {
+        Schema copy = new Schema().setName(name).setAlias(alias);
+        for (Table t : tables) {
+            copy.add(t.copy());
+        }
+        return copy;
     }
 
 }
