@@ -23,6 +23,7 @@ import nu.xom.Node;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.UtilPlugin;
 
@@ -41,19 +42,15 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryCustom extends PluginFactoryImpl {
 
     /**
-     * Kind of 'ELEMENT'.
-     */
-    public static final String KIND = "custom";
-    /**
      * Attribute with custom plugin information.
      */
     public static final String ATTRIBUTE = "custom";
 
     /**
-     * Creates the factory loading file 'plugin_custom.properties'.
+     * Creates the factory loading file 'sr_plugins_custom.properties'.
      */
     public PluginFactoryCustom() {
-        super("sr_plugins_custom.properties", KIND);
+        super("sr_plugins_custom.properties", PluginKind.CUSTOM);
     }
 
     @Override

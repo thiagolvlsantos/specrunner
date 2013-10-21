@@ -25,6 +25,7 @@ import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.text.PluginReplacer;
@@ -37,11 +38,6 @@ import org.specrunner.plugins.impl.text.PluginReplacerMap;
  * 
  */
 public class PluginFactoryText implements IPluginFactory {
-
-    /**
-     * Plugin factory type.
-     */
-    public static final String KIND = "text";
 
     /**
      * Concurrent instance of plugin.
@@ -71,8 +67,8 @@ public class PluginFactoryText implements IPluginFactory {
     }
 
     @Override
-    public IPluginFactory bind(String type, String alias, IPlugin plugin) {
-        if (KIND.equals(type)) {
+    public IPluginFactory bind(PluginKind type, String alias, IPlugin plugin) {
+        if (PluginKind.TEXT.equals(type)) {
             ((IPluginGroup) instance.get()).add(plugin);
         }
         return this;

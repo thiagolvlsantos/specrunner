@@ -27,6 +27,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.UtilPlugin;
@@ -45,15 +46,10 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryAttribute extends PluginFactoryImpl {
 
     /**
-     * Kind of 'attribute'.
-     */
-    public static final String KIND = "attribute";
-
-    /**
-     * Creates the factory loading file 'plugin_css.properties'.
+     * Creates the factory loading file 'sr_plugins_attribute.properties'.
      */
     public PluginFactoryAttribute() {
-        super("sr_plugins_attribute.properties", KIND);
+        super("sr_plugins_attribute.properties", PluginKind.ATTRIBUTE);
     }
 
     @Override

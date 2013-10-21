@@ -24,6 +24,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.plugins.impl.PluginNop;
 import org.specrunner.plugins.impl.UtilPlugin;
@@ -42,19 +43,15 @@ import org.specrunner.plugins.impl.UtilPlugin;
 public class PluginFactoryCSS extends PluginFactoryImpl {
 
     /**
-     * Kind of 'CSS'.
-     */
-    public static final String KIND = "css";
-    /**
      * Attribute with CSS information.
      */
     public static final String ATTRIBUTE = "class";
 
     /**
-     * Creates the factory loading file 'plugin_css.properties'.
+     * Creates the factory loading file 'sr_plugins_css.properties'.
      */
     public PluginFactoryCSS() {
-        super("sr_plugins_css.properties", KIND);
+        super("sr_plugins_css.properties", PluginKind.CSS);
     }
 
     @Override

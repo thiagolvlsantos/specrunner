@@ -25,6 +25,7 @@ import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginFactoryGroup;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.impl.PluginGroupImpl;
 import org.specrunner.util.composite.CompositeImpl;
 
@@ -61,9 +62,9 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
     }
 
     @Override
-    public IPluginFactory bind(String type, String alias, IPlugin plugin) throws PluginException {
+    public IPluginFactory bind(PluginKind kind, String alias, IPlugin plugin) throws PluginException {
         for (IPluginFactory pf : getChildren()) {
-            pf.bind(type, alias, plugin);
+            pf.bind(kind, alias, plugin);
         }
         return this;
     }

@@ -58,7 +58,7 @@ public interface IPluginFactory {
      * @throws PluginException
      *             On bind errors.
      */
-    IPluginFactory bind(String kind, String alias, IPlugin plugin) throws PluginException;
+    IPluginFactory bind(PluginKind kind, String alias, IPlugin plugin) throws PluginException;
 
     /**
      * Creates a new plugin.
