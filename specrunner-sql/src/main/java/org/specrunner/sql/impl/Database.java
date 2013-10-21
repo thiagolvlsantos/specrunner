@@ -18,9 +18,12 @@
 package org.specrunner.sql.impl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
@@ -35,6 +39,7 @@ import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Success;
 import org.specrunner.sql.CommandType;
 import org.specrunner.sql.EMode;
 import org.specrunner.sql.IDatabase;
@@ -42,6 +47,7 @@ import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
+import org.specrunner.sql.meta.impl.UtilSchema;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.xom.CellAdapter;
@@ -54,16 +60,34 @@ import org.specrunner.util.xom.TableAdapter;
  * @author Thiago Santos
  * 
  */
+@SuppressWarnings("serial")
 public class Database implements IDatabase {
 
     /**
      * Prepared statements for input actions.
      */
     protected Map<String, PreparedStatement> inputs = new HashMap<String, PreparedStatement>();
+
+    /**
+     * Map of named registers in database. When a resource is included it can
+     * generate keys, this mapping holds this information.
+     */
+    protected Map<String, Object> namesToKeys = new HashMap<String, Object>();
+
     /**
      * Prepared statements for output actions.
      */
     protected Map<String, PreparedStatement> outputs = new HashMap<String, PreparedStatement>();
+
+    @Override
+    public void initialize() {
+        // every use of plugin database clear mappings to avoid memory overload
+        // and test interference
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("Cleanning map of virtual IDs. Size before clean: " + (namesToKeys.size()));
+        }
+        namesToKeys.clear();
+    }
 
     @Override
     public void perform(IContext context, IResultSet result, TableAdapter tableAdapter, Connection con, Schema schema, EMode mode) throws PluginException {
@@ -72,20 +96,34 @@ public class Database implements IDatabase {
             throw new PluginException("Tables must have a caption.");
         }
         String tAlias = captions.get(0).getValue();
+        // creates a copy only of defined tables
         Table table = schema.getAlias(tAlias);
         if (table == null) {
             throw new PluginException("Table with alias '" + tAlias + "' not found in:" + schema.getAliasToTables().keySet());
         }
+        table = table.copy();
         List<RowAdapter> rows = tableAdapter.getRows();
         // headers are in the first row.
         RowAdapter header = rows.get(0);
         List<CellAdapter> headers = header.getCells();
         Column[] columns = new Column[headers.size()];
         for (int i = 0; i < headers.size(); i++) {
-            String cAlias = headers.get(i).getValue();
+            CellAdapter cell = headers.get(i);
+            String cAlias = cell.getValue();
             columns[i] = table.getAlias(cAlias);
-            if (i > 0 && columns[i] == null) {
+            Column column = columns[i];
+            if (i > 0 && column == null) {
                 throw new PluginException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
+            }
+            // update to specific header adjusts
+            if (column != null) {
+                try {
+                    UtilSchema.setupColumn(column, cell);
+                } catch (ConverterException e) {
+                    throw new PluginException(e);
+                } catch (ComparatorException e) {
+                    throw new PluginException(e);
+                }
             }
         }
         for (int i = 1; i < rows.size(); i++) {
@@ -102,36 +140,41 @@ public class Database implements IDatabase {
             Map<String, Value> filled = new HashMap<String, Value>();
             Set<Value> values = new TreeSet<Value>();
             for (int j = 1; j < tds.size(); j++) {
-                Column c = columns[j];
+                Column c = columns[j].copy();
                 CellAdapter td = tds.get(j);
-                String att = td.getAttribute("title");
-                String value = att != null ? att : td.getValue();
+                try {
+                    UtilSchema.setupColumn(c, td);
+                } catch (ConverterException e) {
+                    throw new PluginException(e);
+                } catch (ComparatorException e) {
+                    throw new PluginException(e);
+                }
+                String value = td.getValue();
 
-                IConverter converter = td.getConverter(c.getConverter());
-                if (converter.accept(value)) {
-                    List<String> args = td.getArguments();
-                    Object obj;
-                    try {
-                        obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
-                    } catch (ConverterException e) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), "Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'.");
-                        continue;
+                IConverter converter = c.getConverter();
+                if (converter.accept(value) || c.isForeign()) {
+                    Object obj = null;
+                    if (c.isVirtual()) {
+                        obj = value;
+                    } else {
+                        List<String> args = td.getArguments();
+                        try {
+                            obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
+                        } catch (ConverterException e) {
+                            result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), new PluginException("Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'."));
+                            continue;
+                        }
                     }
                     if (obj == null && ct == CommandType.INSERT) {
                         obj = c.getDefaultValue();
                     }
-                    IComparator comparator = null;
-                    try {
-                        comparator = td.getComparator(c.getComparator());
-                    } catch (Exception e) {
-                        throw new PluginException(e);
-                    }
-                    Value v = new Value(c, td, obj, comparator);
+                    Value v = new Value(c, td, obj, c.getComparator());
                     values.add(v);
                     filled.put(c.getName(), v);
                 }
             }
             try {
+                boolean error = false;
                 switch (ct) {
                 case INSERT:
                     if (mode == EMode.INPUT) {
@@ -155,7 +198,11 @@ public class Database implements IDatabase {
                     }
                     break;
                 default:
-                    throw new PluginException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)");
+                    result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()), new PluginException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)"));
+                    error = true;
+                }
+                if (!error) {
+                    result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()));
                 }
             } catch (SQLException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -343,9 +390,15 @@ public class Database implements IDatabase {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
         }
+        DatabaseMetaData meta = con.getMetaData();
+        boolean generatedKeys = meta.supportsGetGeneratedKeys();
         PreparedStatement pstmt = inputs.get(sql);
         if (pstmt == null) {
-            pstmt = con.prepareStatement(sql);
+            if (generatedKeys) {
+                pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            } else {
+                pstmt = con.prepareStatement(sql);
+            }
             inputs.put(sql, pstmt);
         } else {
             pstmt.clearParameters();
@@ -353,18 +406,54 @@ public class Database implements IDatabase {
                 UtilLog.LOG.debug("REUSE:" + pstmt);
             }
         }
+        String name = null;
         for (Value v : values) {
-            Integer index = indexes.get(v.getColumn().getName());
+            Column column = v.getColumn();
+            Integer index = indexes.get(column.getName());
             if (index != null) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
+                Object obj = v.getValue();
+                if (column.isVirtual()) {
+                    Object old = obj;
+                    obj = namesToKeys.get(column.getAlias() + "." + obj);
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Virtual value '" + old + "' replaced by " + obj);
+                    }
                 }
-                pstmt.setObject(index, v.getValue());
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("SET(" + index + ")=" + obj);
+                }
+                pstmt.setObject(index, obj);
+                if (column.isReference()) {
+                    name = String.valueOf(column.getTable().getAlias() + "." + obj);
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Column reference '" + name + "'.");
+                    }
+                }
             }
         }
         int count = pstmt.executeUpdate();
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("[" + count + "]=" + sql);
+        }
+        if (generatedKeys && name != null) {
+            ResultSet rs = null;
+            try {
+                rs = pstmt.getGeneratedKeys();
+                ResultSetMetaData metaData = rs.getMetaData();
+                while (rs.next()) {
+                    for (int j = 1; j < metaData.getColumnCount() + 1; j++) {
+                        Object generated = rs.getObject(j);
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("Save item (" + name + " -> " + generated + ")");
+                        }
+                        namesToKeys.put(name, generated);
+                    }
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+            }
         }
         if (expectedCount != count) {
             throw new PluginException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".");
@@ -397,17 +486,40 @@ public class Database implements IDatabase {
         StringBuilder sbVal = new StringBuilder();
         StringBuilder sbPla = new StringBuilder();
         Map<String, Integer> indexes = new HashMap<String, Integer>();
-        int i = 1;
+        boolean hasKeys = false;
         for (Value v : values) {
-            if (!v.getColumn().isKey()) {
-                sbVal.append(v.getColumn().getName() + ",");
+            if (v.getColumn().isKey()) {
+                hasKeys = true;
+                break;
             }
         }
         String and = " AND ";
-        for (Value v : values) {
-            if (v.getColumn().isKey()) {
+        int i = 1;
+        if (hasKeys) {
+            for (Value v : values) {
+                if (!v.getColumn().isKey()) {
+                    sbVal.append(v.getColumn().getName() + ",");
+                }
+            }
+            for (Value v : values) {
+                if (v.getColumn().isKey()) {
+                    indexes.put(v.getColumn().getName(), i++);
+                    sbPla.append(v.getColumn().getName() + " = ?" + and);
+                }
+            }
+        } else {
+            for (Value v : values) {
+                sbVal.append(v.getColumn().getName() + ",");
+            }
+            for (Value v : values) {
                 indexes.put(v.getColumn().getName(), i++);
                 sbPla.append(v.getColumn().getName() + " = ?" + and);
+            }
+        }
+        if (sbVal.length() == 0) {
+            // when only keys are provided
+            for (Value v : values) {
+                sbVal.append(v.getColumn().getName() + ",");
             }
         }
         if (sbVal.length() > 1) {
@@ -462,12 +574,21 @@ public class Database implements IDatabase {
             }
         }
         for (Value v : values) {
-            Integer index = indexes.get(v.getColumn().getName());
+            Column column = v.getColumn();
+            Integer index = indexes.get(column.getName());
             if (index != null) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("SET(" + index + ")=" + v.getValue());
+                Object value = v.getValue();
+                if (column.isVirtual()) {
+                    String key = column.getAlias() + "." + value;
+                    value = namesToKeys.get(key);
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Virtual key (" + key + ") replaced by '" + value + "'");
+                    }
                 }
-                pstmt.setObject(index, v.getValue());
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("SET(" + index + ")=" + value);
+                }
+                pstmt.setObject(index, value);
             }
         }
         ResultSet rs = null;
@@ -475,7 +596,7 @@ public class Database implements IDatabase {
             rs = pstmt.executeQuery();
             if (expectedCount == 1) {
                 if (!rs.next()) {
-                    throw new PluginException("None register found with the given conditions: " + sql + "[" + values + "]");
+                    throw new PluginException("None register found with the given conditions: " + sql + " and values: [" + values + "]");
                 }
                 for (Value v : values) {
                     Integer index = indexes.get(v.getColumn().getName());
