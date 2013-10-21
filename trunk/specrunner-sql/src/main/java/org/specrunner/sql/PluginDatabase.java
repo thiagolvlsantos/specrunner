@@ -243,6 +243,7 @@ public class PluginDatabase extends AbstractPluginValue {
                 rm.put(currentName, new AbstractReusable<IDatabase>(currentName, providerInstance[index]) {
                     @Override
                     public void reset() {
+                        providerInstance[indexInner].initialize();
                     }
 
                     @Override

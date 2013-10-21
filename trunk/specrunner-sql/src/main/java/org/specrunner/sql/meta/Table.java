@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Thiago Santos
  * 
  */
-public class Table {
+public class Table implements IReplicable<Table> {
 
     /**
      * The parent schema.
@@ -227,5 +227,14 @@ public class Table {
             }
         }
         return result;
+    }
+
+    @Override
+    public Table copy() {
+        Table copy = new Table().setSchema(schema).setName(name).setAlias(alias);
+        for (Column c : columns) {
+            copy.add(c.copy());
+        }
+        return copy;
     }
 }

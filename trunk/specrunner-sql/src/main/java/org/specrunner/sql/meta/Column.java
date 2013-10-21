@@ -27,7 +27,7 @@ import org.specrunner.converters.IConverter;
  * @author Thiago Santos.
  * 
  */
-public class Column {
+public class Column implements IReplicable<Column> {
 
     /**
      * Column table.
@@ -65,6 +65,19 @@ public class Column {
      * Column default value.
      */
     private Object defaultValue;
+
+    /**
+     * Column foreign indicator.
+     */
+    private boolean foreign;
+    /**
+     * Column reference indicator.
+     */
+    private boolean reference;
+    /**
+     * Virtual column indicator.
+     */
+    private boolean virtual;
 
     /**
      * Get the column table.
@@ -215,5 +228,77 @@ public class Column {
     public Column setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
         return this;
+    }
+
+    /**
+     * Check if a given column is a foreign key.
+     * 
+     * @return true, if foreign, false, otherwise.
+     */
+    public boolean isForeign() {
+        return foreign;
+    }
+
+    /**
+     * Set foreign key mark.
+     * 
+     * @param foreign
+     *            The flag.
+     * @return The column itself.
+     */
+    public Column setForeign(boolean foreign) {
+        this.foreign = foreign;
+        return this;
+    }
+
+    /**
+     * Check if a given column values can be used as a reference for foreign
+     * references.
+     * 
+     * @return true, if reference column, false, otherwise.
+     */
+    public boolean isReference() {
+        return reference;
+    }
+
+    /**
+     * The reference flag.
+     * 
+     * @param reference
+     *            The flag.
+     * @return The column itself.
+     */
+    public Column setReference(boolean reference) {
+        this.reference = reference;
+        return this;
+    }
+
+    /**
+     * Check if a given column must be resolved using virtual keys produced on
+     * demand by <code>getGenerateKeys()</code>. When this flag is on, in the
+     * specification there must be a previous table with naming matching this
+     * column name and the value must match that column reference field.
+     * 
+     * @return The virtual flag.
+     */
+    public boolean isVirtual() {
+        return virtual;
+    }
+
+    /**
+     * Set virtual flag.
+     * 
+     * @param virtual
+     *            The virtual flag.
+     * @return The column itself.
+     */
+    public Column setVirtual(boolean virtual) {
+        this.virtual = virtual;
+        return this;
+    }
+
+    @Override
+    public Column copy() {
+        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setConverter(converter).setComparator(comparator).setDefaultValue(defaultValue).setForeign(foreign).setReference(reference).setVirtual(virtual);
     }
 }

@@ -151,4 +151,10 @@ public class Value implements Comparable<Value> {
         // sort names is required by prepared statements cache. Remember.
         return column.getName().compareTo(v.column.getName());
     }
+
+    @Override
+    public String toString() {
+        return column.getName() + "=" + String.valueOf(value);
+    }
+
 }

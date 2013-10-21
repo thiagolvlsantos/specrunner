@@ -1,0 +1,221 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+</head>
+<body>
+	Com uma
+	<span class="connection">conexão</span> deve-se
+	<a class="scripts" href="drop.sql" value="drop.sql" failsafe="true">re</a>
+	<a class="scripts" href="schema.sql" value="schema.sql">criar</a> o
+	esquema. Com um
+	<span class="schemaloader">leitor</span> de esquemas se carrega o
+	<span class="schema">esquema</span> esperado, prepara-se
+	<span class="database">o executor de comandos</span>. Por fim
+	prepara-se o banco de dados preenchendo com:
+	</span>
+	<table class="prepare">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Nome A</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Misturando virtuais e reais.
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 1 do Projeto 1</td>
+				<td>Descr 1</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 2 do Projeto 1</td>
+				<td></td>
+				<td virtual="true">Nome A</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 1 do Projeto 2</td>
+				<td></td>
+				<td virtual="true">Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Apenas virtuais.
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th virtual="true">Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 3 do Projeto 1</td>
+				<td>Descr 3</td>
+				<td>Nome A</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 2 do Projeto 2</td>
+				<td></td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Verifica o projeto com base no ID
+	<table class="verify">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Verifica o projeto usando apenas os atributos.
+	<table class="verify">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Verifica a tarefa usando os campos com valor real.
+	<table class="verify">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 3 do Projeto 1</td>
+				<td>1</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Verifica a tarefa usando os campos com valor virtual.
+	<table class="verify">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th virtual="true">Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 3 do Projeto 1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+
+	Deletando tarefa pelo ID
+	<table>
+		<tr>
+			<td>Delete</td>
+			<td>Confere</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="prepare">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	TODO: deletar tarefa pelo apelido. TODO: deletar projeto pelo apelido.
+
+	TODO: atualizar projeto de uma tarefa (pelo nome da tarefa) usando o ID
+	do projeto TODO: atualizar projeto de uma tarefa (pelo nome da tarefa)
+	usando o nome do projeto
+
+</body>
+</html>

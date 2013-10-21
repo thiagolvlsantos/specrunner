@@ -96,6 +96,11 @@ public class NodeHolder implements INodeHolder {
     }
 
     @Override
+    public String getAttribute(String name, String defaultValue) {
+        return hasAttribute(name) ? ((Element) node).getAttribute(name).getValue() : defaultValue;
+    }
+
+    @Override
     public void setAttribute(String name, String value) {
         if (hasAttribute(name)) {
             ((Element) node).getAttribute(name).setValue(value);

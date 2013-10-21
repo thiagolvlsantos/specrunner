@@ -23,6 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.sql.meta.Schema;
+import org.specrunner.util.mapping.IResetable;
 import org.specrunner.util.xom.TableAdapter;
 
 /**
@@ -31,7 +32,7 @@ import org.specrunner.util.xom.TableAdapter;
  * @author Thiago Santos.
  * 
  */
-public interface IDatabase {
+public interface IDatabase extends IResetable {
 
     /**
      * Perform some actions in a database.
