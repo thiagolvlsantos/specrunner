@@ -56,5 +56,11 @@
 			<directory>${basedir}/bin</directory>
 			<outputDirectory>bin</outputDirectory>
 		</fileSet>
+
+		<!-- build files -->
+		<fileSet>
+			<directory>${basedir}/build</directory>
+			<outputDirectory>build</outputDirectory>
+		</fileSet>
 	</fileSets>
 </assembly>
