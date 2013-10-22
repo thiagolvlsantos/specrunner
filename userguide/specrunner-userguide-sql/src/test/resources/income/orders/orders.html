@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+</head>
+<body>
+	<p>
+		With a <span class="connection">connection</span> <a class="scripts"
+			href="orders_drop.sql" value="orders_drop.sql" failsafe="true">re</a>
+		<a class="scripts" href="orders.sql" value="orders.sql">build</a>
+		schema.
+	</p>
+
+	<p>
+		With <span class="schemaloader">a schema loader</span> load <span
+			class="schema">schema</span>, and set up <span class="database">commands
+			executor</span>.
+	</p>
+
+	<h1>Base customer</h1>
+	The target named customer ${user} is <global name="user">John Doe</global>.
+
+	<h1>Add Customers</h1>
+	<table class="prepare">
+		<caption>Customer</caption>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>${user}</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Ringo Star</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Add Orders</h1>
+	<table class="prepare">
+		<caption>Order</caption>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Customer</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>${user}</td>
+				<td>01/01/2013</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>${user}</td>
+				<td converter="date" arg0="MM-dd-yyyy">07-07-2014</td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>
