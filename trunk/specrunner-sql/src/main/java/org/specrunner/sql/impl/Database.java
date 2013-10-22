@@ -49,6 +49,7 @@ import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.sql.meta.impl.UtilSchema;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
 import org.specrunner.util.xom.CellAdapter;
@@ -188,7 +189,7 @@ public class Database implements IDatabase {
                 } catch (ComparatorException e) {
                     throw new PluginException(e);
                 }
-                String value = td.getValue();
+                String value = UtilEvaluator.replace(td.getValue(), context, true);
 
                 IConverter converter = c.getConverter();
                 if (converter.accept(value) || c.isForeign()) {
@@ -258,6 +259,11 @@ public class Database implements IDatabase {
                     }
                     throw new PluginException("Could not log error:" + e1.getMessage(), e1);
                 }
+            } catch (PluginException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()), e);
             }
         }
         try {
@@ -474,10 +480,12 @@ public class Database implements IDatabase {
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
+                    CellAdapter cell = v.getCell();
+                    String str = UtilEvaluator.replace(cell.getValue(), context, true);
                     if (name == null) {
-                        name = column.getTable().getAlias() + "." + v.getCell().getValue();
+                        name = column.getTable().getAlias() + "." + str;
                     } else {
-                        name += ";" + v.getCell().getValue();
+                        name += ";" + str;
                     }
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Column reference '" + name + "'.");

@@ -41,7 +41,13 @@ public class TestOrders {
     }
 
     @Test
-    public void pluginsExample() {
+    public void runOrders() {
         run("orders.html");
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i < 1000; i++) {
+            new TestOrders().runOrders();
+        }
     }
 }

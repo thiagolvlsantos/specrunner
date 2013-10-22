@@ -40,6 +40,27 @@
 		</tbody>
 	</table>
 
+	Verify insertion.
+	<table class="Verify">
+		<caption>Customer</caption>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Name</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>John Doe</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Ringo Star</td>
+			</tr>
+		</tbody>
+	</table>
+
 	<h1>Add Orders</h1>
 	<table class="prepare">
 		<caption>Order</caption>
@@ -60,6 +81,68 @@
 				<td>I</td>
 				<td>${user}</td>
 				<td converter="date" arg0="MM-dd-yyyy">07-07-2014</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Add Product</h1>
+	<table class="prepare">
+		<caption>Product</caption>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Serial</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Book</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Table</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Paper</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Add itens to orders</h1>
+	<table class="prepare">
+		<caption>Items</caption>
+		<thead>
+			<tr>
+				<th>Action</th>
+				<th>Order</th>
+				<th>Number</th>
+				<th>Product</th>
+				<th>Quantity</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>${user};01/01/2013</td>
+				<td>1</td>
+				<td>Table</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>${user};01/01/2013</td>
+				<td>2</td>
+				<td>Book</td>
+				<td>15</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>${user};07-07-2014</td>
+				<td>1</td>
+				<td>Paper</td>
+				<td>1000</td>
 			</tr>
 		</tbody>
 	</table>
