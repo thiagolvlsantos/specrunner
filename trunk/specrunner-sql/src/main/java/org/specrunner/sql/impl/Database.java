@@ -457,10 +457,10 @@ public class Database implements IDatabase {
             if (index != null) {
                 Object obj = v.getValue();
                 if (column.isVirtual()) {
-                    Object old = obj;
-                    obj = namesToKeys.get(column.getAlias() + "." + obj);
+                    String key = column.getAlias() + "." + obj;
+                    obj = namesToKeys.get(key);
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Virtual value '" + old + "' replaced by " + obj);
+                        UtilLog.LOG.debug("Virtual value '" + key + "' replaced by " + obj);
                     }
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -468,7 +468,7 @@ public class Database implements IDatabase {
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
-                    name = String.valueOf(column.getTable().getAlias() + "." + obj);
+                    name = column.getTable().getAlias() + "." + String.valueOf(obj);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Column reference '" + name + "'.");
                     }
@@ -493,6 +493,12 @@ public class Database implements IDatabase {
                         namesToKeys.put(name, generated);
                     }
                 }
+                if (sql.startsWith("delete")) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Removed item (" + name + " -> " + namesToKeys.get(name) + ")");
+                    }
+                    namesToKeys.remove(name);
+                }
             } finally {
                 if (rs != null) {
                     rs.close();
@@ -500,7 +506,7 @@ public class Database implements IDatabase {
             }
         }
         if (expectedCount != count) {
-            throw new PluginException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".");
+            throw new PluginException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".\n\tSQL: " + sql + "\n\tARGS: " + values);
         }
     }
 
