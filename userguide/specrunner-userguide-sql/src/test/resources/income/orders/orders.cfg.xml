@@ -22,4 +22,15 @@ alter table ORD.line_items add constraint line_itemsFK1 foreign key (order_id) r
     <column name="date" alias="Date" converter="date" arg0="MM/dd/yyyy" reference="true"/>
   </table>
 
+  <table name="line_items" alias="Items">
+    <column name="line_number" alias="Number" key="true" converter="long" />
+    <column name="order_id" alias="Order" foreign="true" virtual="true"/>
+    <column name="product_id" alias="Product" foreign="true" virtual="true"/>
+    <column name="quantity" alias="Quantity" converter="int"/>
+  </table>
+
+  <table name="products" alias="Product">
+    <column name="id" alias="ID" key="true" converter="long" />
+    <column name="serialNumber" alias="Serial" reference="true"/>
+  </table>
 </schema>
