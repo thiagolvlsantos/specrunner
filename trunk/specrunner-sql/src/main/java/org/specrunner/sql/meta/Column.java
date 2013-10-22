@@ -17,6 +17,9 @@
  */
 package org.specrunner.sql.meta;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.converters.IConverter;
@@ -53,6 +56,14 @@ public class Column implements IReplicable<Column> {
      * Column converter.
      */
     private IConverter converter = CONVERTER_DEFAULT;
+    /**
+     * Default list of arguments.
+     */
+    private static final List<String> ARGUMENTS_DEFAULT = new LinkedList<String>();
+    /**
+     * List of arguments.
+     */
+    private List<String> arguments = ARGUMENTS_DEFAULT;
     /**
      * Column default comparator.
      */
@@ -187,6 +198,27 @@ public class Column implements IReplicable<Column> {
     }
 
     /**
+     * Get the list of arguments.
+     * 
+     * @return Arguments.
+     */
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Set the list of arguments.
+     * 
+     * @param arguments
+     *            List of arguments.
+     * @return The column itself.
+     */
+    public Column setArguments(List<String> arguments) {
+        this.arguments = arguments;
+        return this;
+    }
+
+    /**
      * Get the column comparator.
      * 
      * @return The comparator.
@@ -299,6 +331,6 @@ public class Column implements IReplicable<Column> {
 
     @Override
     public Column copy() {
-        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setConverter(converter).setComparator(comparator).setDefaultValue(defaultValue).setForeign(foreign).setReference(reference).setVirtual(virtual);
+        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setForeign(foreign).setReference(reference).setVirtual(virtual);
     }
 }

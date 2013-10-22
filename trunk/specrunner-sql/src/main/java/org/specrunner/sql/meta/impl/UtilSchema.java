@@ -58,6 +58,7 @@ public final class UtilSchema {
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
         column.setKey(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_KEY, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setConverter(holder.getConverter(column.getConverter()));
+        column.setArguments(holder.getArguments(column.getArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));
         String defaultValue = holder.getAttribute(ISchemaLoaderXML.ATT_DEFAULT);
         IConverter conv = column.getConverter();

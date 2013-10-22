@@ -171,10 +171,13 @@ public class Database implements IDatabase {
             String type = tds.get(0).getValue();
             CommandType ct = CommandType.get(type);
             if (ct == null) {
-                throw new PluginException("Invalid command type. '" + type + "' at (row:" + i + ", cell:0)");
+                throw new PluginException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0)");
             }
             Map<String, Value> filled = new HashMap<String, Value>();
             Set<Value> values = new TreeSet<Value>();
+            if (tds.size() != columns.length) {
+                throw new PluginException("Invalid number of cells at row: " + i + ". Expected " + (columns.length + 1) + " columns, received " + tds.size() + ".\n\t ROW:" + row);
+            }
             for (int j = 1; j < tds.size(); j++) {
                 Column c = columns[j].copy();
                 CellAdapter td = tds.get(j);
@@ -194,6 +197,9 @@ public class Database implements IDatabase {
                         obj = value;
                     } else {
                         List<String> args = td.getArguments();
+                        if (args.isEmpty()) {
+                            args = c.getArguments();
+                        }
                         try {
                             obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
                         } catch (ConverterException e) {
@@ -468,7 +474,11 @@ public class Database implements IDatabase {
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
-                    name = column.getTable().getAlias() + "." + String.valueOf(obj);
+                    if (name == null) {
+                        name = column.getTable().getAlias() + "." + v.getCell().getValue();
+                    } else {
+                        name += ";" + v.getCell().getValue();
+                    }
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Column reference '" + name + "'.");
                     }
