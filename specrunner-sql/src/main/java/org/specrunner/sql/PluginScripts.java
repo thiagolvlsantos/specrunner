@@ -412,13 +412,13 @@ public class PluginScripts extends AbstractPluginValue {
                     }
                     command = UtilEvaluator.replace(command, context, true);
                     if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info(" Command after: " + command);
+                        UtilLog.LOG.info("Command  after: " + command);
                     }
                     try {
                         stmt.executeUpdate(command);
                     } catch (SQLException e) {
                         if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info(" Command error: " + e.getMessage());
+                            UtilLog.LOG.info("Command  error: " + e.getMessage());
                         }
                         if (!failsafe) {
                             failures++;

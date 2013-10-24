@@ -165,7 +165,7 @@ public class PluginSchemaLoader extends AbstractPluginValue {
                 if (ir.canReuse(cfg)) {
                     ir.reset();
                     if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Reusing DataSource " + ir.getObject());
+                        UtilLog.LOG.info("Reusing ISchemaLoader " + ir.getObject());
                     }
                     context.saveGlobal(currentName, ir.getObject());
                     result.addResult(Success.INSTANCE, context.peek());

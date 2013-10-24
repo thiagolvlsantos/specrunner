@@ -49,6 +49,10 @@ public class Column implements IReplicable<Column> {
      */
     private boolean key;
     /**
+     * Indicates a date column.
+     */
+    private boolean date;
+    /**
      * Column default converter.
      */
     private static final IConverter CONVERTER_DEFAULT = SpecRunnerServices.getConverterManager().getDefault();
@@ -76,11 +80,6 @@ public class Column implements IReplicable<Column> {
      * Column default value.
      */
     private Object defaultValue;
-
-    /**
-     * Column foreign indicator.
-     */
-    private boolean foreign;
     /**
      * Column reference indicator.
      */
@@ -128,7 +127,7 @@ public class Column implements IReplicable<Column> {
      * @return The table itself.
      */
     public Column setAlias(String alias) {
-        this.alias = alias;
+        this.alias = alias == null ? null : alias.toLowerCase();
         return this;
     }
 
@@ -149,7 +148,7 @@ public class Column implements IReplicable<Column> {
      * @return The column itself.
      */
     public Column setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.toUpperCase();
         return this;
     }
 
@@ -171,6 +170,27 @@ public class Column implements IReplicable<Column> {
      */
     public Column setKey(boolean key) {
         this.key = key;
+        return this;
+    }
+
+    /**
+     * Get if the column is a date.
+     * 
+     * @return true, if date column, false, otherwise.
+     */
+    public boolean isDate() {
+        return date;
+    }
+
+    /**
+     * Set date flag.
+     * 
+     * @param date
+     *            The flag.
+     * @return The column itself.
+     */
+    public Column setDate(boolean date) {
+        this.date = date;
         return this;
     }
 
@@ -263,27 +283,6 @@ public class Column implements IReplicable<Column> {
     }
 
     /**
-     * Check if a given column is a foreign key.
-     * 
-     * @return true, if foreign, false, otherwise.
-     */
-    public boolean isForeign() {
-        return foreign;
-    }
-
-    /**
-     * Set foreign key mark.
-     * 
-     * @param foreign
-     *            The flag.
-     * @return The column itself.
-     */
-    public Column setForeign(boolean foreign) {
-        this.foreign = foreign;
-        return this;
-    }
-
-    /**
      * Check if a given column values can be used as a reference for foreign
      * references.
      * 
@@ -331,6 +330,6 @@ public class Column implements IReplicable<Column> {
 
     @Override
     public Column copy() {
-        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setForeign(foreign).setReference(reference).setVirtual(virtual);
+        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setDate(date).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual);
     }
 }

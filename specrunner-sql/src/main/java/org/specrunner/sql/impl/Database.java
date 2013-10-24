@@ -25,15 +25,18 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
+import org.specrunner.comparators.impl.ComparatorDate;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
@@ -76,15 +79,35 @@ public class Database implements IDatabase {
     protected Map<String, PreparedStatement> inputs = new HashMap<String, PreparedStatement>();
 
     /**
-     * Map of named registers in database. When a resource is included it can
-     * generate keys, this mapping holds this information.
+     * Map of named registers in database. When a resource is included and
+     * generate keys, these keys are hold in the format:
+     * 
+     * <pre>
+     * &lt;Table alias&gt;.&ltreference fields separated by ';'&gt; -> generated ID
+     * </pre>
+     * 
+     * in this table.
      */
     protected Map<String, Object> namesToKeys = new HashMap<String, Object>();
+    /**
+     * Record the opposite side of generated IDs mappings. This is used to
+     * provide better error messages in comparison failures. Its format is:
+     * 
+     * <pre>
+     * &lt;Table alias&gt;.&ltgenerated ID&gt; -> reference fields separated by ';'
+     * </pre>
+     */
+    protected Map<String, Object> keysToNames = new HashMap<String, Object>();
 
     /**
      * Prepared statements for output actions.
      */
     protected Map<String, PreparedStatement> outputs = new HashMap<String, PreparedStatement>();
+
+    /**
+     * Separator of virtual keys.
+     */
+    private static final String VIRTUAL_SEPARATOR = ";";
 
     /**
      * Feature for dump size.
@@ -120,10 +143,14 @@ public class Database implements IDatabase {
         SpecRunnerServices.getFeatureManager().set(FEATURE_LIMIT, this);
         // every use of plugin database clear mappings to avoid memory overload
         // and test interference
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Cleanning map of virtual IDs. Size before clean: " + (namesToKeys.size()));
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Cleanning map of virtual names to IDs. Size before clean: " + (namesToKeys.size()));
         }
         namesToKeys.clear();
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Cleanning map of IDs to virtual names. Size before clean: " + (keysToNames.size()));
+        }
+        keysToNames.clear();
     }
 
     @Override
@@ -169,6 +196,9 @@ public class Database implements IDatabase {
             if (tds.isEmpty()) {
                 throw new PluginException("Empty lines are useless. " + row.getValue());
             }
+            if (tds.size() != headers.size()) {
+                throw new PluginException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
+            }
             String type = tds.get(0).getValue();
             CommandType ct = CommandType.get(type);
             if (ct == null) {
@@ -176,30 +206,26 @@ public class Database implements IDatabase {
             }
             Map<String, Value> filled = new HashMap<String, Value>();
             Set<Value> values = new TreeSet<Value>();
-            if (tds.size() != columns.length) {
-                throw new PluginException("Invalid number of cells at row: " + i + ". Expected " + (columns.length + 1) + " columns, received " + tds.size() + ".\n\t ROW:" + row);
-            }
             for (int j = 1; j < tds.size(); j++) {
-                Column c = columns[j].copy();
+                Column column = columns[j].copy();
                 CellAdapter td = tds.get(j);
                 try {
-                    UtilSchema.setupColumn(c, td);
+                    UtilSchema.setupColumn(column, td);
                 } catch (ConverterException e) {
                     throw new PluginException(e);
                 } catch (ComparatorException e) {
                     throw new PluginException(e);
                 }
                 String value = UtilEvaluator.replace(td.getValue(), context, true);
-
-                IConverter converter = c.getConverter();
-                if (converter.accept(value) || c.isForeign()) {
+                IConverter converter = column.getConverter();
+                if (column.isVirtual() || converter.accept(value)) {
                     Object obj = null;
-                    if (c.isVirtual()) {
+                    if (column.isVirtual()) {
                         obj = value;
                     } else {
                         List<String> args = td.getArguments();
                         if (args.isEmpty()) {
-                            args = c.getArguments();
+                            args = column.getArguments();
                         }
                         try {
                             obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
@@ -209,11 +235,11 @@ public class Database implements IDatabase {
                         }
                     }
                     if (obj == null && ct == CommandType.INSERT) {
-                        obj = c.getDefaultValue();
+                        obj = column.getDefaultValue();
                     }
-                    Value v = new Value(c, td, obj, c.getComparator());
+                    Value v = new Value(column, td, obj, column.getComparator());
                     values.add(v);
-                    filled.put(c.getName(), v);
+                    filled.put(column.getName(), v);
                 }
             }
             try {
@@ -463,6 +489,7 @@ public class Database implements IDatabase {
             }
         }
         String name = null;
+        String map = null;
         for (Value v : values) {
             Column column = v.getColumn();
             Integer index = indexes.get(column.getName());
@@ -484,8 +511,9 @@ public class Database implements IDatabase {
                     String str = UtilEvaluator.replace(cell.getValue(), context, true);
                     if (name == null) {
                         name = column.getTable().getAlias() + "." + str;
+                        map = column.getTable().getAlias() + ".{key}";
                     } else {
-                        name += ";" + str;
+                        name += VIRTUAL_SEPARATOR + str;
                     }
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Column reference '" + name + "'.");
@@ -509,12 +537,15 @@ public class Database implements IDatabase {
                             UtilLog.LOG.debug("Save item (" + name + " -> " + generated + ")");
                         }
                         namesToKeys.put(name, generated);
+                        keysToNames.put(map.replace("{key}", String.valueOf(generated)), name.substring(name.indexOf('.') + 1));
                     }
                 }
                 if (sql.startsWith("delete")) {
+                    Object object = namesToKeys.get(name);
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Removed item (" + name + " -> " + namesToKeys.get(name) + ")");
+                        UtilLog.LOG.debug("Removed item (" + name + " -> " + object + ")");
                     }
+                    keysToNames.remove(map.replace("{key}", String.valueOf(object)));
                     namesToKeys.remove(name);
                 }
             } finally {
@@ -647,16 +678,13 @@ public class Database implements IDatabase {
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
-                    String key = column.getAlias() + "." + value;
-                    value = namesToKeys.get(key);
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Virtual key (" + key + ") replaced by '" + value + "'");
-                    }
+                    value = findValue(con, column, value);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("SET(" + index + ")=" + value);
                 }
                 pstmt.setObject(index, value);
+                v.setValue(value);
             }
         }
         ResultSet rs = null;
@@ -667,15 +695,25 @@ public class Database implements IDatabase {
                     throw new PluginException("None register found with the given conditions: " + sql + " and values: [" + values + "]");
                 }
                 for (Value v : values) {
-                    Integer index = indexes.get(v.getColumn().getName());
+                    Column column = v.getColumn();
+                    Integer index = indexes.get(column.getName());
                     if (index == null) {
                         IComparator comparator = v.getComparator();
-                        Object received = rs.getObject(v.getColumn().getName());
+                        Object received = rs.getObject(column.getName());
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                         }
-                        if (!comparator.match(v.getValue(), received)) {
-                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(v.getValue()), String.valueOf(received)));
+                        Object value = v.getValue();
+                        if (column.isVirtual()) {
+                            value = findValue(con, column, value);
+                        }
+                        comparator.initialize();
+                        if (!comparator.match(value, received)) {
+                            Object expected = v.getValue();
+                            if (column.isVirtual()) {
+                                received = keysToNames.get(column.getAlias() + "." + received);
+                            }
+                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
                         }
                     }
                 }
@@ -692,6 +730,151 @@ public class Database implements IDatabase {
                 rs.close();
             }
         }
+    }
+
+    /**
+     * Find a value by its virtual reference.
+     * 
+     * @param con
+     *            The connection.
+     * @param column
+     *            The value column.
+     * @param value
+     *            The current value.
+     * @return The object to set in outer select.
+     * @throws SQLException
+     *             On SQL errors.
+     * @throws PluginException
+     *             On execution errors.
+     */
+    protected Object findValue(Connection con, Column column, Object value) throws SQLException, PluginException {
+        String key = column.getAlias() + "." + value;
+        Object result = namesToKeys.get(key);
+        if (result == null) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Recover virtual key for (" + key + ")");
+            }
+            Schema schema = column.getTable().getSchema();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Lookup in schema " + schema.getName());
+            }
+            Table table = schema.getAlias(column.getAlias());
+            if (table == null) {
+                throw new PluginException("Virtual column '" + column.getAlias() + "' not found in schema " + schema.getName() + ". It must be a name in domain set of: " + schema.getAliasToTables());
+            }
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Lookup in table " + table.getName());
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append("select ");
+            List<Column> keys = table.getKeys();
+            int i = 0;
+            for (Column c : keys) {
+                sb.append((i++ == 0 ? "" : ",") + c.getName());
+            }
+            List<Column> references = table.getReferences();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                for (Column c : references) {
+                    sb.append((i++ == 0 ? "" : ",") + c.getName());
+                }
+            }
+            sb.append(" from ");
+            sb.append(schema.getName() + "." + table.getName());
+            sb.append(" where ");
+            i = 0;
+            for (Column c : references) {
+                sb.append((i++ == 0 ? "" : " AND ") + c.getName() + (c.isDate() ? " between ? and ?" : " = ?"));
+            }
+            String sql = sb.toString();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Query for (" + value + "):" + sql);
+            }
+            PreparedStatement inPstmt = outputs.get(sql);
+            if (inPstmt == null) {
+                inPstmt = con.prepareStatement(sql);
+                outputs.put(sql, inPstmt);
+            } else {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("From cache:" + inPstmt);
+                }
+            }
+
+            StringTokenizer st = new StringTokenizer(String.valueOf(value), VIRTUAL_SEPARATOR);
+            i = 1;
+            while (st.hasMoreTokens()) {
+                Column reference = references.get(i - 1);
+                String token = st.nextToken();
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Convert(" + reference.getAlias() + "." + token + ")");
+                }
+                Object tmp = null;
+                if (reference.isVirtual()) {
+                    tmp = findValue(con, reference, token);
+                } else {
+                    try {
+                        tmp = reference.getConverter().convert(token, reference.getArguments().toArray());
+                    } catch (ConverterException e) {
+                        throw new PluginException(e);
+                    }
+                }
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Converted to:" + tmp + " ." + (tmp != null ? tmp.getClass() : "null"));
+                }
+                if (reference.isDate()) {
+                    IComparator comp = reference.getComparator();
+                    if (!(comp instanceof ComparatorDate)) {
+                        throw new PluginException("Date columns must have comparators of type 'date'. Current type:" + comp.getClass());
+                    }
+                    ComparatorDate comparator = (ComparatorDate) comp;
+                    comparator.initialize();
+                    Date dateBefore = new Date(((Date) tmp).getTime() - comparator.getTolerance());
+                    Date dateAfter = new Date(((Date) tmp).getTime() + comparator.getTolerance());
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Date range in virtual lookup [" + dateBefore + " to " + dateAfter + "]");
+                    }
+                    inPstmt.setObject(i++, dateBefore);
+                    inPstmt.setObject(i++, dateAfter);
+                } else {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("SET(" + i + ")=" + tmp);
+                    }
+                    inPstmt.setObject(i++, tmp);
+                }
+            }
+            ResultSet rs = null;
+            try {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Query: " + inPstmt);
+                }
+                rs = inPstmt.executeQuery();
+                while (rs.next()) {
+                    for (Column c : keys) {
+                        result = rs.getObject(c.getName());
+                        namesToKeys.put(key, result);
+                        String inverse = c.getTable().getAlias() + "." + result;
+                        keysToNames.put(inverse, value);
+
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Add name -> id: " + key + " -> " + result);
+                            UtilLog.LOG.info("Add id -> name: " + inverse + " -> " + value);
+                        }
+                    }
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        for (Column c : references) {
+                            UtilLog.LOG.debug("Value for " + c.getName() + ": " + rs.getObject(c.getName()));
+                        }
+                    }
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
+                }
+            }
+        }
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Virtual key (" + key + ") replaced by '" + result + "'");
+        }
+        return result;
     }
 
     /**

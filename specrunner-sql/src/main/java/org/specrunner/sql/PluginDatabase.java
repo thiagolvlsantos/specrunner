@@ -215,8 +215,8 @@ public class PluginDatabase extends AbstractPluginValue {
                     cfg.put("providerInstance" + index, providerInstance[index]);
                     if (ir.canReuse(cfg)) {
                         ir.reset();
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("Reusing IDatabase(" + currentName + ") " + ir.getObject());
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Reusing IDatabase(" + currentName + ") " + ir.getObject());
                         }
                         context.saveGlobal(currentName, ir.getObject());
                         result.addResult(Success.INSTANCE, context.peek());
@@ -250,8 +250,8 @@ public class PluginDatabase extends AbstractPluginValue {
                     public void release() {
                         try {
                             providerInstance[indexInner].release();
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("Provider " + providerInstance[indexInner] + " released.");
+                            if (UtilLog.LOG.isInfoEnabled()) {
+                                UtilLog.LOG.info("Provider " + providerInstance[indexInner] + " released.");
                             }
                         } catch (PluginException e) {
                             if (UtilLog.LOG.isDebugEnabled()) {
@@ -264,7 +264,7 @@ public class PluginDatabase extends AbstractPluginValue {
                     public boolean canReuse(Map<String, Object> cfg) {
                         boolean sameProvider = provider != null && provider.equals(cfg.get("provider"));
                         boolean sameInstance = providerInstance[indexInner] == cfg.get("providerInstance" + indexInner);
-                        return sameProvider && sameInstance;
+                        return sameProvider || sameInstance;
                     }
                 });
             }

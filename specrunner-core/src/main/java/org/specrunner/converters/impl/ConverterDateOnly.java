@@ -17,19 +17,29 @@
  */
 package org.specrunner.converters.impl;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
- * Create current date.
+ * Create current date without without hour information.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateCurrent extends ConverterDateCurrentTemplate {
+public class ConverterDateOnly extends ConverterDateCurrentTemplate {
 
     /**
      * Basic data converter.
      */
-    public ConverterDateCurrent() {
-        super(new String[] { "hora atual", "data hora atual", "current time", "current timestamp" });
+    public ConverterDateOnly() {
+        super(new String[] { "data", "data atual", "current date" });
+    }
+
+    @Override
+    protected Date instance() {
+        Calendar c = Calendar.getInstance();
+        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        return c.getTime();
     }
 }
