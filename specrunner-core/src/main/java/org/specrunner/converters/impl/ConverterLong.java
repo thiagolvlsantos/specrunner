@@ -26,7 +26,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLong extends ConverterDefault {
+public class ConverterLong extends ConverterNotNullNotEmpty {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {

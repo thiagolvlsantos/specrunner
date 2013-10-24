@@ -32,7 +32,7 @@ import org.specrunner.util.cache.ICacheFactory;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDatePatternArgs extends ConverterDefault {
+public class ConverterDatePatternArgs extends ConverterNotNullNotEmpty {
 
     /**
      * Cache of formatters.

@@ -17,6 +17,7 @@
  */
 package org.specrunner.converters.impl;
 
+import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
 
 /**
@@ -46,7 +47,7 @@ public class ConverterNotNullNotEmpty implements IConverter {
     }
 
     @Override
-    public Object convert(Object obj, Object[] args) {
+    public Object convert(Object obj, Object[] args) throws ConverterException {
         String str = String.valueOf(obj);
         if (str == null) {
             return null;
