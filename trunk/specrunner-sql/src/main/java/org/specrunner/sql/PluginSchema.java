@@ -138,7 +138,7 @@ public class PluginSchema extends AbstractPluginValue {
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         ISchemaLoader provider = PluginSchemaLoader.getLoader(context, getName());
         if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("PluginSchema provider:" + provider);
+            UtilLog.LOG.info("PluginSchema loader:" + provider);
         }
         final String currentName = getName() != null ? getName() : DEFAULT_SCHEMA_NAME;
         IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);

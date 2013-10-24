@@ -57,6 +57,7 @@ public final class UtilSchema {
         column.setName(holder.getAttribute(ISchemaLoaderXML.ATTR_NAME, column.getName()));
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
         column.setKey(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_KEY, ISchemaLoaderXML.DEFAULT_FALSE)));
+        column.setDate(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_DATE, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setConverter(holder.getConverter(column.getConverter()));
         column.setArguments(holder.getArguments(column.getArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));
@@ -74,7 +75,6 @@ public final class UtilSchema {
         } else {
             column.setDefaultValue(conv.convert(defaultValue, null));
         }
-        column.setForeign(column.isForeign() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_FOREIGN, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setVirtual(column.isVirtual() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_VIRTUAL, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setReference(column.isReference() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_REFERENCE, ISchemaLoaderXML.DEFAULT_FALSE)));
     }

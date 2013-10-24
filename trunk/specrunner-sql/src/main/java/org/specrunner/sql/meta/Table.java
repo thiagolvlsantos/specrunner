@@ -93,7 +93,7 @@ public class Table implements IReplicable<Table> {
      * @return The table itself.
      */
     public Table setAlias(String alias) {
-        this.alias = alias;
+        this.alias = alias == null ? null : alias.toLowerCase();
         return this;
     }
 
@@ -114,7 +114,7 @@ public class Table implements IReplicable<Table> {
      * @return The table itself.
      */
     public Table setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.toUpperCase();
         return this;
     }
 
@@ -162,7 +162,7 @@ public class Table implements IReplicable<Table> {
      * @return The column.
      */
     public Column getAlias(String alias) {
-        return aliasToColumns.get(alias);
+        return aliasToColumns.get(alias == null ? null : alias.toLowerCase());
     }
 
     /**
@@ -173,7 +173,7 @@ public class Table implements IReplicable<Table> {
      * @return The column name.
      */
     public Column getName(String name) {
-        return namesToColumns.get(name);
+        return namesToColumns.get(name == null ? null : name.toUpperCase());
     }
 
     /**
@@ -223,6 +223,36 @@ public class Table implements IReplicable<Table> {
         List<Column> result = new LinkedList<Column>();
         for (Column c : columns) {
             if (c.isKey()) {
+                result.add(c);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get the columns which are references.
+     * 
+     * @return The table references.
+     */
+    public List<Column> getReferences() {
+        List<Column> result = new LinkedList<Column>();
+        for (Column c : columns) {
+            if (c.isReference()) {
+                result.add(c);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Get the columns which are references.
+     * 
+     * @return The table references.
+     */
+    public List<Column> getVirtual() {
+        List<Column> result = new LinkedList<Column>();
+        for (Column c : columns) {
+            if (c.isVirtual()) {
                 result.add(c);
             }
         }

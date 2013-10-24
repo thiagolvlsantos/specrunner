@@ -38,13 +38,13 @@ public interface ISchemaLoaderXML extends ISchemaLoader {
      */
     String ATT_KEY = "key";
     /**
+     * Attribute 'date' mark.
+     */
+    String ATT_DATE = "date";
+    /**
      * Attribute 'default' mark.
      */
     String ATT_DEFAULT = "default";
-    /**
-     * Attribute 'foreign' mark.
-     */
-    String ATT_FOREIGN = "foreign";
     /**
      * Attribute 'virtual' mark.
      */

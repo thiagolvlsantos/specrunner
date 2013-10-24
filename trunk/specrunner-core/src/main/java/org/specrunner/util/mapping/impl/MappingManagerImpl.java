@@ -61,12 +61,12 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
                         @SuppressWarnings("unchecked")
                         Class<? extends T> c = (Class<? extends T>) Class.forName(property);
                         instance = c.newInstance();
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("put(" + keyNormalized + "," + instance + "[of type " + c + "])");
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("put(" + keyNormalized + "," + instance + "[of type " + c + "])");
                         }
                     } else {
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("reuse.put(" + keyNormalized + "," + instance + ")");
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("reuse.put(" + keyNormalized + "," + instance + ")");
                         }
                     }
                     put(keyNormalized, instance);

@@ -17,19 +17,28 @@
  */
 package org.specrunner.converters.impl;
 
+import org.specrunner.converters.IConverter;
+
 /**
- * Create current date.
+ * Turn everything to null.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateCurrent extends ConverterDateCurrentTemplate {
+public class ConverterNull implements IConverter {
 
-    /**
-     * Basic data converter.
-     */
-    public ConverterDateCurrent() {
-        super(new String[] { "hora atual", "data hora atual", "current time", "current timestamp" });
+    @Override
+    public void initialize() {
+    }
+
+    @Override
+    public boolean accept(Object obj) {
+        return true;
+    }
+
+    @Override
+    public Object convert(Object obj, Object[] args) {
+        return null;
     }
 }

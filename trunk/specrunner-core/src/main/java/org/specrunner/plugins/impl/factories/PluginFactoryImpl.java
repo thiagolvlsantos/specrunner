@@ -113,8 +113,8 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
                     if (types.get(key) != null && UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("replace(" + key + "," + c + ")");
                     } else {
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("put(" + key + "," + c + ")");
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("put(" + key + "," + c + ")");
                         }
                     }
                     types.put(key, c);
