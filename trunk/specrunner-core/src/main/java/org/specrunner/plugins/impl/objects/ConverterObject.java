@@ -1,7 +1,7 @@
 package org.specrunner.plugins.impl.objects;
 
 import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
+import org.specrunner.converters.impl.ConverterNotNullNotEmpty;
 import org.specrunner.plugins.PluginException;
 
 /**
@@ -11,16 +11,7 @@ import org.specrunner.plugins.PluginException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterObject implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object value) {
-        return true;
-    }
+public class ConverterObject extends ConverterNotNullNotEmpty {
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {

@@ -28,7 +28,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterBigDecimal extends ConverterDefault {
+public class ConverterBigDecimal extends ConverterNotNullNotEmpty {
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {

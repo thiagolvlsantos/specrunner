@@ -29,7 +29,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDatePatternTemplate extends ConverterDefault {
+public class ConverterDatePatternTemplate extends ConverterNotNullNotEmpty {
 
     /**
      * Parser instance.

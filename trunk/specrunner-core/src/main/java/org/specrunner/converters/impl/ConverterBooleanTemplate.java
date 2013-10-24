@@ -26,7 +26,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterBooleanTemplate extends ConverterDefault {
+public class ConverterBooleanTemplate extends ConverterNotNullNotEmpty {
 
     /**
      * String for '<code>TRUE</code>'.
