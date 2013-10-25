@@ -23,15 +23,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+
+import nu.xom.Element;
 
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.comparators.ComparatorException;
@@ -325,6 +327,12 @@ public class Database implements IDatabase {
             if (filled.get(c.getName()) == null && c.getDefaultValue() != null) {
                 values.add(new Value(c, null, c.getDefaultValue(), c.getComparator()));
             }
+            if (filled.get(c.getName()) == null && c.getSequence() != null) {
+                String sql = ("NEXT VALUE FOR {0}").replace("{0}", c.getSequence());
+                Element td = new Element("td");
+                td.appendChild(String.valueOf(sql));
+                values.add(new Value(c, new CellAdapter(td), sql, c.getComparator()));
+            }
         }
         StringBuilder sb = new StringBuilder();
         sb.append("insert into " + table.getSchema().getName() + "." + table.getName() + " (");
@@ -333,9 +341,13 @@ public class Database implements IDatabase {
         Map<String, Integer> indexes = new HashMap<String, Integer>();
         int i = 1;
         for (Value e : values) {
-            indexes.put(e.getColumn().getName(), i++);
             sbVal.append(e.getColumn().getName() + ",");
-            sbPla.append("?,");
+            if (e.getColumn().getSequence() != null) {
+                sbPla.append(e.getValue() + ",");
+            } else {
+                sbPla.append("?,");
+                indexes.put(e.getColumn().getName(), i++);
+            }
         }
         if (sbVal.length() > 1) {
             sbVal.setLength(sbVal.length() - 1);
@@ -347,7 +359,7 @@ public class Database implements IDatabase {
         sb.append(") values (");
         sb.append(sbPla);
         sb.append(")");
-        performIn(context, result, con, sb.toString(), indexes, values, 1);
+        performIn(context, result, con, sb.toString(), table, indexes, values, 1);
     }
 
     /**
@@ -398,7 +410,7 @@ public class Database implements IDatabase {
         sb.append(" where (");
         sb.append(sbPla);
         sb.append(")");
-        performIn(context, result, con, sb.toString(), indexes, values, 1);
+        performIn(context, result, con, sb.toString(), table, indexes, values, 1);
     }
 
     /**
@@ -444,7 +456,7 @@ public class Database implements IDatabase {
             sbPla.setLength(sbPla.length() - and.length());
         }
         sb.append(sbPla);
-        performIn(context, result, con, sb.toString(), indexes, values, 1);
+        performIn(context, result, con, sb.toString(), table, indexes, values, 1);
     }
 
     /**
@@ -458,6 +470,7 @@ public class Database implements IDatabase {
      *            The connection.
      * @param sql
      *            The SQL.
+     * @param table
      * @param indexes
      *            The column indexes.
      * @param values
@@ -469,7 +482,7 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performIn(IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
+    protected void performIn(IContext context, IResultSet result, Connection con, String sql, Table table, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
         }
@@ -478,7 +491,13 @@ public class Database implements IDatabase {
         PreparedStatement pstmt = inputs.get(sql);
         if (pstmt == null) {
             if (generatedKeys) {
-                pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                List<String> lista = new LinkedList<String>();
+                for (Column c : table.getColumns()) {
+                    if (c.isKey()) {
+                        lista.add(c.getName());
+                    }
+                }
+                pstmt = con.prepareStatement(sql, lista.toArray(new String[lista.size()]));
             } else {
                 pstmt = con.prepareStatement(sql);
             }
@@ -531,7 +550,9 @@ public class Database implements IDatabase {
             try {
                 rs = pstmt.getGeneratedKeys();
                 ResultSetMetaData metaData = rs.getMetaData();
+                boolean fromGenerated = false;
                 while (rs.next()) {
+                    fromGenerated = true;
                     for (int j = 1; j < metaData.getColumnCount() + 1; j++) {
                         Object generated = rs.getObject(j);
                         if (UtilLog.LOG.isDebugEnabled()) {
@@ -539,6 +560,16 @@ public class Database implements IDatabase {
                         }
                         namesToKeys.put(name, generated);
                         keysToNames.put(map.replace("{key}", String.valueOf(generated)), name.substring(name.indexOf('.') + 1));
+                    }
+                }
+                if (!fromGenerated) {
+                    for (Value v : values) {
+                        if (v.getColumn().getSequence() != null) {
+                            Object generated = v.getValue();
+                            namesToKeys.put(name, generated);
+                            keysToNames.put(map.replace("{key}", String.valueOf(generated)), name.substring(name.indexOf('.') + 1));
+                            break;
+                        }
                     }
                 }
                 if (sql.startsWith("delete")) {
