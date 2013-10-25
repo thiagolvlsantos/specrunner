@@ -93,7 +93,7 @@ public class Table implements IReplicable<Table> {
      * @return The table itself.
      */
     public Table setAlias(String alias) {
-        this.alias = alias == null ? null : alias.toLowerCase();
+        this.alias = alias == null ? null : UtilNames.normalize(alias.toLowerCase());
         return this;
     }
 
@@ -162,7 +162,7 @@ public class Table implements IReplicable<Table> {
      * @return The column.
      */
     public Column getAlias(String alias) {
-        return aliasToColumns.get(alias == null ? null : alias.toLowerCase());
+        return aliasToColumns.get(alias == null ? null : UtilNames.normalize(alias));
     }
 
     /**

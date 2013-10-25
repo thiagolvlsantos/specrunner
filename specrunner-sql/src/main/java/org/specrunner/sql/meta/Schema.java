@@ -68,7 +68,7 @@ public class Schema implements IReplicable<Schema> {
      * @return The schema itself.
      */
     public Schema setAlias(String alias) {
-        this.alias = alias == null ? null : alias.toLowerCase();
+        this.alias = alias == null ? null : UtilNames.normalize(alias);
         return this;
     }
 
@@ -137,7 +137,7 @@ public class Schema implements IReplicable<Schema> {
      * @return A table, or null, if not found.
      */
     public Table getAlias(String alias) {
-        return aliasToTables.get(alias == null ? null : alias.toLowerCase());
+        return aliasToTables.get(alias == null ? null : UtilNames.normalize(alias));
     }
 
     /**
