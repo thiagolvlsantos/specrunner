@@ -226,10 +226,11 @@ public class PluginCompareBase extends AbstractPluginValue {
             connectionReceived = dsReceived.getConnection();
             stmtReceived = connectionReceived.createStatement();
             if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(getClass().getSimpleName() + " connection expected:" + connectionExpected);
-                UtilLog.LOG.debug(getClass().getSimpleName() + " connection received:" + connectionReceived);
-                UtilLog.LOG.debug(getClass().getSimpleName() + "  statement expected:" + stmtExpected);
-                UtilLog.LOG.debug(getClass().getSimpleName() + "  statement received:" + stmtReceived);
+                String simpleName = getClass().getSimpleName();
+                UtilLog.LOG.debug(simpleName + " connection expected:" + connectionExpected);
+                UtilLog.LOG.debug(simpleName + " connection received:" + connectionReceived);
+                UtilLog.LOG.debug(simpleName + "  statement expected:" + stmtExpected);
+                UtilLog.LOG.debug(simpleName + "  statement received:" + stmtReceived);
             }
             for (Table table : schema.getTables()) {
                 if (!currentFilter.accept(table)) {

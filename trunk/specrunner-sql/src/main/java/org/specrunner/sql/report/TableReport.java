@@ -119,13 +119,13 @@ public class TableReport implements IPresentation {
         int index = 0;
         for (LineReport lr : lines) {
             if (index++ == 0) {
-                sb.append("\tDetail");
+                sb.append("\tDetails:\n\t");
                 for (Column c : table.getColumns()) {
-                    sb.append(c.getAlias() + "(" + c.getName() + ")|");
+                    sb.append("\t" + c.getAlias() + "(" + c.getName() + ")|");
                 }
                 sb.append("\n");
             }
-            sb.append("\t" + lr.asString() + "\n");
+            sb.append("\t\t" + lr.asString() + "\n");
         }
         return sb.toString();
     }
