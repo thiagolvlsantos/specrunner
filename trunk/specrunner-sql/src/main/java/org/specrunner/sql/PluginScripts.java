@@ -400,7 +400,7 @@ public class PluginScripts extends AbstractPluginValue {
                 br = new BufferedReader(script);
                 String command;
                 while ((command = br.readLine()) != null) {
-                    if (command.isEmpty()) {
+                    if (command.isEmpty() || command.startsWith("--")) {
                         continue;
                     }
                     if (!fromCache) {

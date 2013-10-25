@@ -38,6 +38,10 @@ public interface ISchemaLoaderXML extends ISchemaLoader {
      */
     String ATT_KEY = "key";
     /**
+     * Attribute 'sequence' mark.
+     */
+    String ATT_SEQUENCE = "sequence";
+    /**
      * Attribute 'date' mark.
      */
     String ATT_DATE = "date";

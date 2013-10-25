@@ -49,6 +49,10 @@ public class Column implements IReplicable<Column> {
      */
     private boolean key;
     /**
+     * Column flag as a sequence, the attribute value is the sequence name.
+     */
+    private String sequence;
+    /**
      * Indicates a date column.
      */
     private boolean date;
@@ -170,6 +174,15 @@ public class Column implements IReplicable<Column> {
      */
     public Column setKey(boolean key) {
         this.key = key;
+        return this;
+    }
+
+    public String getSequence() {
+        return sequence;
+    }
+
+    public Column setSequence(String sequence) {
+        this.sequence = sequence;
         return this;
     }
 
@@ -330,6 +343,6 @@ public class Column implements IReplicable<Column> {
 
     @Override
     public Column copy() {
-        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setDate(date).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual);
+        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setSequence(sequence).setDate(date).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual);
     }
 }
