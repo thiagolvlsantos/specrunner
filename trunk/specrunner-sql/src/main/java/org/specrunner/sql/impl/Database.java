@@ -50,6 +50,7 @@ import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.sql.meta.UtilNames;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.sql.meta.impl.UtilSchema;
 import org.specrunner.util.UtilEvaluator;
@@ -160,11 +161,11 @@ public class Database implements IDatabase {
             throw new PluginException("Tables must have a caption.");
         }
         String tAlias = captions.get(0).getValue();
-        // creates a copy only of defined tables
         Table table = schema.getAlias(tAlias);
         if (table == null) {
-            throw new PluginException("Table with alias '" + tAlias + "' not found in:" + schema.getAliasToTables().keySet());
+            throw new PluginException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), avaliable tables alias: " + schema.getAliasToTables().keySet());
         }
+        // creates a copy only of defined tables
         table = table.copy();
         List<RowAdapter> rows = tableAdapter.getRows();
         // headers are in the first row.

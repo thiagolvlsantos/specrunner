@@ -243,13 +243,13 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 erros++;
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ". Error:" + e.getMessage(), e));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ", and schema " + getSchema() + ". Error:" + e.getMessage(), e));
             } catch (PluginException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 erros++;
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ". Error:" + e.getMessage(), e));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ", and schema " + getSchema() + ". Error:" + e.getMessage(), e));
             } finally {
                 try {
                     if (connection != null) {
@@ -260,7 +260,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
                     erros++;
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ". Error:" + e.getMessage(), e));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource:" + source + ", and database:" + base + ", and schema " + getSchema() + ". Error:" + e.getMessage(), e));
                 }
             }
         }

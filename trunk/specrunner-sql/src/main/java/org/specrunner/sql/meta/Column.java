@@ -127,7 +127,7 @@ public class Column implements IReplicable<Column> {
      * @return The table itself.
      */
     public Column setAlias(String alias) {
-        this.alias = alias == null ? null : alias.toLowerCase();
+        this.alias = alias == null ? null : UtilNames.normalize(alias);
         return this;
     }
 
