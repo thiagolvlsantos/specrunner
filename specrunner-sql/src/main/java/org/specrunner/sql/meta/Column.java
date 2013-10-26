@@ -177,13 +177,34 @@ public class Column implements IReplicable<Column> {
         return this;
     }
 
+    /**
+     * Get sequence name, is column is a sequence.
+     * 
+     * @return Sequence name.
+     */
     public String getSequence() {
         return sequence;
     }
 
+    /**
+     * Set sequence name.
+     * 
+     * @param sequence
+     *            The sequence.
+     * @return The column itself.
+     */
     public Column setSequence(String sequence) {
         this.sequence = sequence;
         return this;
+    }
+
+    /**
+     * Check if the column is a sequence.
+     * 
+     * @return true, if column is a sequence, false, otherwise.
+     */
+    public boolean isSequence() {
+        return sequence != null;
     }
 
     /**

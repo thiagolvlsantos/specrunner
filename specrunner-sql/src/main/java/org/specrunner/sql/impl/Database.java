@@ -327,7 +327,7 @@ public class Database implements IDatabase {
             if (filled.get(c.getName()) == null && c.getDefaultValue() != null) {
                 values.add(new Value(c, null, c.getDefaultValue(), c.getComparator()));
             }
-            if (filled.get(c.getName()) == null && c.getSequence() != null) {
+            if (filled.get(c.getName()) == null && c.isSequence()) {
                 String sql = ("NEXT VALUE FOR {0}").replace("{0}", c.getSequence());
                 Element td = new Element("td");
                 td.appendChild(String.valueOf(sql));
@@ -359,7 +359,18 @@ public class Database implements IDatabase {
         sb.append(") values (");
         sb.append(sbPla);
         sb.append(")");
-        performIn(context, result, con, sb.toString(), table, indexes, values, 1);
+        performIn(context, result, con, insertWrapper(sb), table, indexes, values);
+    }
+
+    /**
+     * Creates an insert wrapper.
+     * 
+     * @param sb
+     *            The command.
+     * @return A wrapper.
+     */
+    protected SqlWrapper insertWrapper(StringBuilder sb) {
+        return SqlWrapper.insert(sb.toString(), 1);
     }
 
     /**
@@ -410,7 +421,18 @@ public class Database implements IDatabase {
         sb.append(" where (");
         sb.append(sbPla);
         sb.append(")");
-        performIn(context, result, con, sb.toString(), table, indexes, values, 1);
+        performIn(context, result, con, updateWrapper(sb), table, indexes, values);
+    }
+
+    /**
+     * Creates an update wrapper.
+     * 
+     * @param sb
+     *            The command.
+     * @return A wrapper.
+     */
+    protected SqlWrapper updateWrapper(StringBuilder sb) {
+        return SqlWrapper.update(sb.toString(), 1);
     }
 
     /**
@@ -456,7 +478,18 @@ public class Database implements IDatabase {
             sbPla.setLength(sbPla.length() - and.length());
         }
         sb.append(sbPla);
-        performIn(context, result, con, sb.toString(), table, indexes, values, 1);
+        performIn(context, result, con, SqlWrapper.delete(sb.toString(), 1), table, indexes, values);
+    }
+
+    /**
+     * Creates an delete wrapper.
+     * 
+     * @param sb
+     *            The command.
+     * @return A wrapper.
+     */
+    protected SqlWrapper deleteWrapper(StringBuilder sb) {
+        return SqlWrapper.delete(sb.toString(), 1);
     }
 
     /**
@@ -468,48 +501,45 @@ public class Database implements IDatabase {
      *            The result set.
      * @param con
      *            The connection.
-     * @param sql
-     *            The SQL.
+     * @param sqlWrapper
+     *            The SQL wrapper.
      * @param table
+     *            The target table.
      * @param indexes
      *            The column indexes.
      * @param values
      *            The values.
-     * @param expectedCount
-     *            Expected count to the operation.
      * @throws PluginException
      *             On plugin errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performIn(IContext context, IResultSet result, Connection con, String sql, Table table, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
+    protected void performIn(IContext context, IResultSet result, Connection con, SqlWrapper sqlWrapper, Table table, Map<String, Integer> indexes, Set<Value> values) throws PluginException, SQLException {
         if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values);
+            UtilLog.LOG.debug(sqlWrapper.getSql() + ". MAP:" + indexes + ". values = " + values);
         }
         DatabaseMetaData meta = con.getMetaData();
         boolean generatedKeys = meta.supportsGetGeneratedKeys();
-        PreparedStatement pstmt = inputs.get(sql);
+        PreparedStatement pstmt = inputs.get(sqlWrapper.getSql());
         if (pstmt == null) {
             if (generatedKeys) {
                 List<String> lista = new LinkedList<String>();
-                for (Column c : table.getColumns()) {
-                    if (c.isKey()) {
-                        lista.add(c.getName());
-                    }
+                for (Column c : table.getKeys()) {
+                    lista.add(c.getName());
                 }
-                pstmt = con.prepareStatement(sql, lista.toArray(new String[lista.size()]));
+                pstmt = con.prepareStatement(sqlWrapper.getSql(), lista.toArray(new String[lista.size()]));
             } else {
-                pstmt = con.prepareStatement(sql);
+                pstmt = con.prepareStatement(sqlWrapper.getSql());
             }
-            inputs.put(sql, pstmt);
+            inputs.put(sqlWrapper.getSql(), pstmt);
         } else {
             pstmt.clearParameters();
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("REUSE:" + pstmt);
             }
         }
-        String name = null;
-        String map = null;
+        String keyToName = null;
+        String nameToKey = null;
         for (Value v : values) {
             Column column = v.getColumn();
             Integer index = indexes.get(column.getName());
@@ -529,23 +559,24 @@ public class Database implements IDatabase {
                 if (column.isReference()) {
                     CellAdapter cell = v.getCell();
                     String str = UtilEvaluator.replace(cell.getValue(), context, true);
-                    if (name == null) {
-                        name = column.getTable().getAlias() + "." + str;
-                        map = column.getTable().getAlias() + ".{key}";
+                    if (keyToName == null) {
+                        String alias = column.getTable().getAlias();
+                        keyToName = alias + "." + str;
+                        nameToKey = alias + ".{key}";
                     } else {
-                        name += VIRTUAL_SEPARATOR + str;
+                        keyToName += VIRTUAL_SEPARATOR + str;
                     }
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Column reference '" + name + "'.");
+                        UtilLog.LOG.debug("Column reference '" + keyToName + "'.");
                     }
                 }
             }
         }
         int count = pstmt.executeUpdate();
         if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("[" + count + "]=" + sql);
+            UtilLog.LOG.debug("[" + count + "]=" + sqlWrapper.getSql());
         }
-        if (generatedKeys && name != null) {
+        if (generatedKeys && keyToName != null) {
             ResultSet rs = null;
             try {
                 rs = pstmt.getGeneratedKeys();
@@ -554,31 +585,25 @@ public class Database implements IDatabase {
                 while (rs.next()) {
                     fromGenerated = true;
                     for (int j = 1; j < metaData.getColumnCount() + 1; j++) {
-                        Object generated = rs.getObject(j);
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("Save item (" + name + " -> " + generated + ")");
-                        }
-                        namesToKeys.put(name, generated);
-                        keysToNames.put(map.replace("{key}", String.valueOf(generated)), name.substring(name.indexOf('.') + 1));
+                        bind(keyToName, nameToKey, rs.getObject(j));
                     }
                 }
                 if (!fromGenerated) {
+                    // it came from a sequence
                     for (Value v : values) {
-                        if (v.getColumn().getSequence() != null) {
-                            Object generated = v.getValue();
-                            namesToKeys.put(name, generated);
-                            keysToNames.put(map.replace("{key}", String.valueOf(generated)), name.substring(name.indexOf('.') + 1));
+                        if (v.getColumn().isSequence()) {
+                            bind(keyToName, nameToKey, v.getValue());
                             break;
                         }
                     }
                 }
-                if (sql.startsWith("delete")) {
-                    Object object = namesToKeys.get(name);
+                if (sqlWrapper.getType() == CommandType.DELETE) {
+                    Object object = namesToKeys.get(keyToName);
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Removed item (" + name + " -> " + object + ")");
+                        UtilLog.LOG.debug("Removed item (" + keyToName + " -> " + object + ")");
                     }
-                    keysToNames.remove(map.replace("{key}", String.valueOf(object)));
-                    namesToKeys.remove(name);
+                    namesToKeys.remove(keyToName);
+                    keysToNames.remove(nameToKey.replace("{key}", String.valueOf(object)));
                 }
             } finally {
                 if (rs != null) {
@@ -586,9 +611,27 @@ public class Database implements IDatabase {
                 }
             }
         }
-        if (expectedCount != count) {
-            throw new PluginException("The expected update count (" + expectedCount + ") does not match, received = " + count + ".\n\tSQL: " + sql + "\n\tARGS: " + values);
+        if (sqlWrapper.getExpectedCount() != count) {
+            throw new PluginException("The expected update count (" + sqlWrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + sqlWrapper.getSql() + "\n\tARGS: " + values);
         }
+    }
+
+    /**
+     * Bind names to values and values to names.
+     * 
+     * @param nameToKey
+     *            The object name key.
+     * @param keyToName
+     *            The object value key.
+     * @param generated
+     *            The object to map.
+     */
+    protected void bind(String nameToKey, String keyToName, Object generated) {
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("Save item (" + nameToKey + " -> " + generated + ")");
+        }
+        namesToKeys.put(nameToKey, generated);
+        keysToNames.put(keyToName.replace("{key}", String.valueOf(generated)), nameToKey.substring(nameToKey.indexOf('.') + 1));
     }
 
     /**
@@ -830,7 +873,6 @@ public class Database implements IDatabase {
                     UtilLog.LOG.debug("From cache:" + inPstmt);
                 }
             }
-
             StringTokenizer st = new StringTokenizer(String.valueOf(value), VIRTUAL_SEPARATOR);
             i = 1;
             while (st.hasMoreTokens()) {
