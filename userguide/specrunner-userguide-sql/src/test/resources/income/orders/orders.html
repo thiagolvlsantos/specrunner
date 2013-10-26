@@ -115,7 +115,7 @@
 
     <h1>Add itens to orders</h1>
     <table class="prepare">
-        <caption> Items list </caption>
+        <caption>Items list</caption>
         <thead>
             <tr>
                 <th>Action</th>
@@ -154,7 +154,7 @@
 
     <a class="scripts" href="suv.sql" value="href">build</a>
 
-    <h1>Look up for SUV insertions</h1>
+    <h1>Look up for SUV insertions or old registers removal</h1>
 
     <table class="Verify">
         <caption>Customer</caption>
@@ -168,6 +168,10 @@
             <tr>
                 <td>I</td>
                 <td>Thiago</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Ringo Star</td>
             </tr>
         </tbody>
     </table>
@@ -222,6 +226,109 @@
                 <td>3</td>
                 <td>Pencil</td>
                 <td>10</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Remove items</h1>
+    <table class="prepare">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Check items removal</h1>
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Remove all items</h1>
+    <table class="prepare">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- count='2' indicates in this case command update can act over 2 registers, when not specified default is only 1 item -->
+            <tr count="2">
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h1>Check all items removal (one-by-one)</h1>
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
+                <td>3</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Check all items removal (all in one shot)</h1>
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/26/2013</td>
             </tr>
         </tbody>
     </table>

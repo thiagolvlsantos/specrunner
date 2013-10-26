@@ -202,6 +202,7 @@ public class Database implements IDatabase {
             if (tds.size() != headers.size()) {
                 throw new PluginException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
             }
+            int expectedCount = Integer.parseInt(row.getAttribute("count", "1"));
             String type = tds.get(0).getValue();
             CommandType ct = CommandType.get(type);
             if (ct == null) {
@@ -257,14 +258,14 @@ public class Database implements IDatabase {
                     break;
                 case UPDATE:
                     if (mode == EMode.INPUT) {
-                        performUpdate(context, result, con, table, values);
+                        performUpdate(context, result, con, table, values, expectedCount);
                     } else {
                         performSelect(context, result, con, table, values, filled, 1);
                     }
                     break;
                 case DELETE:
                     if (mode == EMode.INPUT) {
-                        performDelete(context, result, con, table, values);
+                        performDelete(context, result, con, table, values, expectedCount);
                     } else {
                         performSelect(context, result, con, table, values, filled, 0);
                     }
@@ -386,12 +387,14 @@ public class Database implements IDatabase {
      *            The specification.
      * @param values
      *            The values.
+     * @param expectedCount
+     *            The expected action counter.
      * @throws PluginException
      *             On plugin errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performUpdate(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException, SQLException {
+    protected void performUpdate(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("update " + table.getSchema().getName() + "." + table.getName() + " set ");
         StringBuilder sbVal = new StringBuilder();
@@ -421,7 +424,7 @@ public class Database implements IDatabase {
         sb.append(" where (");
         sb.append(sbPla);
         sb.append(")");
-        performIn(context, result, con, updateWrapper(sb), table, indexes, values);
+        performIn(context, result, con, updateWrapper(sb, expectedCount), table, indexes, values);
     }
 
     /**
@@ -429,10 +432,12 @@ public class Database implements IDatabase {
      * 
      * @param sb
      *            The command.
+     * @param expectedCount
+     *            The command expected counter.
      * @return A wrapper.
      */
-    protected SqlWrapper updateWrapper(StringBuilder sb) {
-        return SqlWrapper.update(sb.toString(), 1);
+    protected SqlWrapper updateWrapper(StringBuilder sb, int expectedCount) {
+        return SqlWrapper.update(sb.toString(), expectedCount);
     }
 
     /**
@@ -448,12 +453,14 @@ public class Database implements IDatabase {
      *            The specification.
      * @param values
      *            The values.
+     * @param expectedCount
+     *            The delete expected count.
      * @throws PluginException
      *             On plugin errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performDelete(IContext context, IResultSet result, Connection con, Table table, Set<Value> values) throws PluginException, SQLException {
+    protected void performDelete(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, int expectedCount) throws PluginException, SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("delete from " + table.getSchema().getName() + "." + table.getName() + " where ");
         StringBuilder sbPla = new StringBuilder();
@@ -478,18 +485,20 @@ public class Database implements IDatabase {
             sbPla.setLength(sbPla.length() - and.length());
         }
         sb.append(sbPla);
-        performIn(context, result, con, SqlWrapper.delete(sb.toString(), 1), table, indexes, values);
+        performIn(context, result, con, SqlWrapper.delete(sb.toString(), expectedCount), table, indexes, values);
     }
 
     /**
-     * Creates an delete wrapper.
+     * Creates a delete wrapper.
      * 
      * @param sb
      *            The command.
+     * @param expectedCount
+     *            The command expected counter.
      * @return A wrapper.
      */
-    protected SqlWrapper deleteWrapper(StringBuilder sb) {
-        return SqlWrapper.delete(sb.toString(), 1);
+    protected SqlWrapper deleteWrapper(StringBuilder sb, int expectedCount) {
+        return SqlWrapper.delete(sb.toString(), expectedCount);
     }
 
     /**
