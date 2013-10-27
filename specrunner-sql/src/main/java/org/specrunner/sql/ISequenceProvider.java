@@ -17,40 +17,22 @@
  */
 package org.specrunner.sql;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
- * Given two result sets provides an enumeration of both. The default
- * enumeration provide both items (expected and received) when the primary keys.
+ * Provider for sequence next value calling.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IResultEnumerator {
+public interface ISequenceProvider {
 
     /**
-     * Check if there are more elements.
+     * Given a sequence name, returns the best SQL sentence to provide the
+     * sequence next value.
      * 
-     * @return true, if there are more elements.
-     * @throws SQLException
-     *             On errors.
+     * @param sequence
+     *            The sequence name.
+     * @return The SQL for next value.
      */
-    boolean next() throws SQLException;
+    String nextValue(String sequence);
 
-    /**
-     * Get the reference result set.
-     * 
-     * @return null, if the corresponding reference value does not exist, the
-     *         reference result set, otherwise.
-     */
-    ResultSet getExpected();
-
-    /**
-     * Get the system result set.
-     * 
-     * @return null, if the corresponding system value does not exist, the
-     *         system result set, otherwise.
-     */
-    ResultSet getReceived();
 }

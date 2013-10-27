@@ -49,7 +49,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos.
  * 
  */
-public class ObjectManager {
+public class IdManager {
 
     /**
      * Separator of virtual keys.
@@ -370,9 +370,18 @@ public class ObjectManager {
      *             On reading errors.
      */
     public void prepareUpdate(Connection con, Table table, Set<Value> values) throws SQLException {
-        // TODO: verificar se realmente precisa este método.
         DatabaseMetaData meta = con.getMetaData();
-        if (meta.supportsGetGeneratedKeys() && key != null) {
+        if (meta.supportsGetGeneratedKeys() && hasKey()) {
+            // TODO: ou fazer apenas as exclusões mínimas ou
+            // deixar limpar tudo como abaixo.
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Mapping cleanup required on update.");
+            }
+            clear();
+
+            // TODO: com a limpeza da tabela completa esse código não seria mais
+            // necessário, a menos que seja feito um algoritmo onde se remova
+            // pontualmente. (Vale a pena?)
             String alias = null;
             StringBuilder sb = new StringBuilder();
             sb.append("select ");
@@ -427,6 +436,15 @@ public class ObjectManager {
     }
 
     /**
+     * Check if local keys is present.
+     * 
+     * @return true, if local key is not null, false, o otherwise.
+     */
+    protected boolean hasKey() {
+        return key != null;
+    }
+
+    /**
      * Read generated keys.
      * 
      * @param con
@@ -444,7 +462,7 @@ public class ObjectManager {
      */
     public void readKeys(Connection con, PreparedStatement pstmt, SqlWrapper wrapper, Table table, Set<Value> values) throws SQLException {
         DatabaseMetaData meta = con.getMetaData();
-        if (meta.supportsGetGeneratedKeys() && key != null) {
+        if (meta.supportsGetGeneratedKeys() && hasKey()) {
             ResultSet rs = null;
             try {
                 rs = pstmt.getGeneratedKeys();
@@ -464,11 +482,6 @@ public class ObjectManager {
                             break;
                         }
                     }
-                }
-                if (wrapper.getType() == CommandType.UPDATE) {
-                    // old mapped keys should be removed, since composite keys
-                    // can have up to dated information
-                    clear();
                 }
                 if (wrapper.getType() == CommandType.DELETE) {
                     removeLocal();
