@@ -37,6 +37,7 @@ import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -44,7 +45,7 @@ import org.specrunner.result.status.Success;
 import org.specrunner.sql.CommandType;
 import org.specrunner.sql.EMode;
 import org.specrunner.sql.IDatabase;
-import org.specrunner.sql.ISequenceCaller;
+import org.specrunner.sql.ISequenceProvider;
 import org.specrunner.sql.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
@@ -60,7 +61,9 @@ import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 
 /**
- * Basic implementation of <code>IDatabase</code> using prepared statements.
+ * Basic implementation of <code>IDatabase</code> using cached prepared
+ * statements, an ID manager to work with generated keys, and a sequence
+ * provider to enable sequence interactions.
  * 
  * @author Thiago Santos
  * 
@@ -72,6 +75,16 @@ public class Database implements IDatabase {
      * Feature for database error dump limit.
      */
     public static final String FEATURE_LIMIT = Database.class.getName() + ".limit";
+
+    /**
+     * Feature for object manager instance.
+     */
+    public static final String FEATURE_ID_MANAGER = Database.class.getName() + ".idManager";
+
+    /**
+     * Feature for sequence provider instance.
+     */
+    public static final String FEATURE_SEQUENCE_PROVIDER = Database.class.getName() + ".sequenceProvider";
 
     /**
      * Prepared statements for input actions.
@@ -86,12 +99,12 @@ public class Database implements IDatabase {
     /**
      * Manage object lookup and reuse.
      */
-    protected ObjectManager manager = new ObjectManager();
+    protected IdManager idManager = new IdManager();
 
     /**
      * Sequence next value generator.
      */
-    protected ISequenceCaller caller = new SequenceCallerImpl();
+    protected ISequenceProvider sequenceProvider = new SequenceProviderImpl();
 
     /**
      * Feature for dump size.
@@ -122,12 +135,53 @@ public class Database implements IDatabase {
         this.limit = limit;
     }
 
+    /**
+     * Get the id manager.
+     * 
+     * @return The manager.
+     */
+    public IdManager getIdManager() {
+        return idManager;
+    }
+
+    /**
+     * Set the manager.
+     * 
+     * @param idManager
+     *            The manager.
+     */
+    public void setIdManager(IdManager idManager) {
+        this.idManager = idManager;
+    }
+
+    /**
+     * Get the sequence values provider.
+     * 
+     * @return The provider.
+     */
+    public ISequenceProvider getSequenceProvider() {
+        return sequenceProvider;
+    }
+
+    /**
+     * Set the sequence provider.
+     * 
+     * @param sequenceProvider
+     *            The provider.
+     */
+    public void setSequenceProvider(ISequenceProvider sequenceProvider) {
+        this.sequenceProvider = sequenceProvider;
+    }
+
     @Override
     public void initialize() {
-        SpecRunnerServices.getFeatureManager().set(FEATURE_LIMIT, this);
+        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        fm.set(FEATURE_LIMIT, this);
+        fm.set(FEATURE_ID_MANAGER, this);
+        fm.set(FEATURE_SEQUENCE_PROVIDER, this);
         // every use of database clear mappings to avoid memory overload and
         // test interference
-        manager.clear();
+        idManager.clear();
     }
 
     @Override
@@ -352,7 +406,7 @@ public class Database implements IDatabase {
                     values.add(new Value(column, null, column.getDefaultValue(), column.getComparator()));
                 } else if (column.isSequence()) {
                     // or if it is a sequence: add their next value command.
-                    values.add(new Value(column, null, caller.nextValue(column.getSequence()), column.getComparator()));
+                    values.add(new Value(column, null, sequenceProvider.nextValue(column.getSequence()), column.getComparator()));
                 }
             }
         }
@@ -544,7 +598,7 @@ public class Database implements IDatabase {
             }
         }
 
-        manager.clearLocal();
+        idManager.clearLocal();
         for (Value v : values) {
             Column column = v.getColumn();
             Integer index = indexes.get(column.getName());
@@ -552,20 +606,20 @@ public class Database implements IDatabase {
                 Object obj = v.getValue();
                 if (column.isVirtual()) {
                     // the target table is the column header
-                    obj = manager.lookup(column.getAlias(), obj);
+                    obj = idManager.lookup(column.getAlias(), obj);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("SET(" + index + ")=" + obj);
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
-                    manager.addLocal(table.getAlias(), UtilEvaluator.replace(v.getCell().getValue(), context, true));
+                    idManager.addLocal(table.getAlias(), UtilEvaluator.replace(v.getCell().getValue(), context, true));
                 }
             }
         }
 
         if (wrapper.getType() == CommandType.UPDATE) {
-            manager.prepareUpdate(con, table, values);
+            idManager.prepareUpdate(con, table, values);
         }
 
         int count = pstmt.executeUpdate();
@@ -573,7 +627,7 @@ public class Database implements IDatabase {
             UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
         }
 
-        manager.readKeys(con, pstmt, wrapper, table, values);
+        idManager.readKeys(con, pstmt, wrapper, table, values);
 
         if (wrapper.getExpectedCount() != count) {
             throw new PluginException("The expected update count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + values);
@@ -604,20 +658,6 @@ public class Database implements IDatabase {
         } else {
             return con.prepareStatement(sqlWrapper.getSql());
         }
-    }
-
-    /**
-     * Bind names to values and values to names.
-     * 
-     * @param nameToKey
-     *            The object name key.
-     * @param keyToName
-     *            The object value key.
-     * @param generated
-     *            The object to map.
-     */
-    protected void bind(String nameToKey, String keyToName, Object generated) {
-        manager.bind(nameToKey, keyToName, generated);
     }
 
     /**
@@ -737,7 +777,7 @@ public class Database implements IDatabase {
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
-                    value = manager.findValue(con, column, value, outputs);
+                    value = idManager.findValue(con, column, value, outputs);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("SET(" + index + ")=" + value);
@@ -764,13 +804,13 @@ public class Database implements IDatabase {
                         }
                         Object value = v.getValue();
                         if (column.isVirtual()) {
-                            value = manager.findValue(con, column, value, outputs);
+                            value = idManager.findValue(con, column, value, outputs);
                         }
                         comparator.initialize();
                         if (!comparator.match(value, received)) {
                             Object expected = v.getValue();
                             if (column.isVirtual()) {
-                                received = manager.lookup(column.getAlias(), received);
+                                received = idManager.lookup(column.getAlias(), received);
                             }
                             result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
                         }

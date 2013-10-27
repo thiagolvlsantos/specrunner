@@ -36,6 +36,10 @@
                 <td>I</td>
                 <td>Ringo Star</td>
             </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+            </tr>
         </tbody>
     </table>
 
@@ -56,6 +60,10 @@
             <tr>
                 <td>I</td>
                 <td>Ringo Star</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
             </tr>
         </tbody>
     </table>
@@ -80,6 +88,11 @@
                 <td>I</td>
                 <td>${user}</td>
                 <td converter="date" arg0="MM-dd-yyyy">07-07-2014</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+                <td>07/07/2013</td>
             </tr>
         </tbody>
     </table>
@@ -208,21 +221,21 @@
         <tbody>
             <tr>
                 <td>I</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>1</td>
                 <td>Book</td>
                 <td>500</td>
             </tr>
             <tr>
                 <td>I</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>2</td>
                 <td>Table</td>
                 <td>40</td>
             </tr>
             <tr>
                 <td>I</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>3</td>
                 <td>Pencil</td>
                 <td>10</td>
@@ -243,7 +256,7 @@
         <tbody>
             <tr>
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>1</td>
             </tr>
         </tbody>
@@ -262,7 +275,7 @@
         <tbody>
             <tr>
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>1</td>
             </tr>
         </tbody>
@@ -281,7 +294,7 @@
             <!-- count='2' indicates in this case command update can act over 2 registers, when not specified default is only 1 item -->
             <tr count="2">
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
             </tr>
         </tbody>
     </table>
@@ -300,17 +313,17 @@
         <tbody>
             <tr>
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>1</td>
             </tr>
             <tr>
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>2</td>
             </tr>
             <tr>
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
                 <td>3</td>
             </tr>
         </tbody>
@@ -328,9 +341,85 @@
         <tbody>
             <tr>
                 <td>D</td>
-                <td>Thiago;10/26/2013</td>
+                <td>Thiago;10/27/2013</td>
             </tr>
         </tbody>
     </table>
+    
+    <h1>Add orders to the 'Any User'</h1>
+    <table class="prepare">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Any User;07/07/2013</td>
+                <td>1</td>
+                <td>Book</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h1>Update customer 'Any User'</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>2</td>
+                <td>David</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Verify orders of 'David'</h1>
+    Orders of "Any User" should not be longer available.
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- should not find -->
+            <tr>
+                <td>D</td>
+                <td>Any User;07/07/2013</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <!-- should find -->
+            <tr>
+                <td>I</td>
+                <td>David;07/07/2013</td>
+                <td>1</td>
+                <td>Book</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+
 </body>
 </html>
