@@ -350,5 +350,4 @@ public class ExpressionJanino extends AbstractExpression {
             return Double.valueOf(original);
         }
     }
-
 }
