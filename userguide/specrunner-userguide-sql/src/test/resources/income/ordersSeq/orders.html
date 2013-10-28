@@ -1,0 +1,425 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="orders_drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="orders.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <h1>Base customer</h1>
+    A customer named ${user} is
+    <global name="user">John Doe</global>
+    .
+
+    <h1>Add Customers</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>${user}</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Ringo Star</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+            </tr>
+        </tbody>
+    </table>
+
+    Verify insertion.
+    <table class="Verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>John Doe</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Ringo Star</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Add Orders</h1>
+    <table class="prepare">
+        <caption>Order</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Customer</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>${user}</td>
+                <td>01/01/2013</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>${user}</td>
+                <td converter="date" arg0="MM-dd-yyyy">07-07-2014</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+                <td>07/07/2013</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Add Product</h1>
+    <table class="prepare">
+        <caption>Product</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Serial</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Book</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Table</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Paper</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Pencil</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Add itens to orders</h1>
+    <table class="prepare">
+        <caption>Items list</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>${user};01/01/2013</td>
+                <td>1</td>
+                <td>Table</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>${user};01/01/2013</td>
+                <td>2</td>
+                <td>Book</td>
+                <td>15</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>${user};07-07-2014</td>
+                <td>1</td>
+                <td>Paper</td>
+                <td>1000</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Insert using SQL (simulate system actions)</h1>
+
+    <a class="scripts" href="suv.sql" value="href">build</a>
+
+    <h1>Look up for SUV insertions or old registers removal</h1>
+
+    <table class="Verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Thiago</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Ringo Star</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="verify">
+        <caption>Order</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th key="true">Customer</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Thiago</td>
+                <td converter="dateOnly">current date</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Thiago;10/27/2013</td>
+                <td>1</td>
+                <td>Book</td>
+                <td>500</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Thiago;10/27/2013</td>
+                <td>2</td>
+                <td>Table</td>
+                <td>40</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Thiago;10/27/2013</td>
+                <td>3</td>
+                <td>Pencil</td>
+                <td>10</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Remove items</h1>
+    <table class="prepare">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Check items removal</h1>
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Remove all items</h1>
+    <table class="prepare">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- count='2' indicates in this case command update can act over 2 registers, when not specified default is only 1 item -->
+            <tr count="2">
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h1>Check all items removal (one-by-one)</h1>
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+                <td>3</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Check all items removal (all in one shot)</h1>
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>Thiago;10/27/2013</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h1>Add orders to the 'Any User'</h1>
+    <table class="prepare">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Any User;07/07/2013</td>
+                <td>1</td>
+                <td>Book</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h1>Update customer 'Any User'</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>2</td>
+                <td>David</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Verify orders of 'David'</h1>
+    Orders of "Any User" should not be longer available.
+    <table class="verify">
+        <caption>Items List</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Number</th>
+                <th>Product</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- should not find -->
+            <tr>
+                <td>D</td>
+                <td>Any User;07/07/2013</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <!-- should find -->
+            <tr>
+                <td>I</td>
+                <td>David;07/07/2013</td>
+                <td>1</td>
+                <td>Book</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
