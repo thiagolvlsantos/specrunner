@@ -609,7 +609,7 @@ public class Database implements IDatabase {
                     obj = idManager.lookup(column.getAlias(), obj);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("SET(" + index + ")=" + obj);
+                    UtilLog.LOG.debug("performIn.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + obj);
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
@@ -780,7 +780,7 @@ public class Database implements IDatabase {
                     value = idManager.findValue(con, column, value, outputs);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("SET(" + index + ")=" + value);
+                    UtilLog.LOG.debug("performOut.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + value);
                 }
                 pstmt.setObject(index, value);
                 v.setValue(value);

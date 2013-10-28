@@ -1,10 +1,13 @@
 package example.sql;
 
 import org.joda.time.LocalDate;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.SpecRunnerServices;
 import org.specrunner.comparators.impl.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.context.IContext;
+import org.specrunner.context.IModel;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.IDatabase;
@@ -29,7 +32,12 @@ public abstract class AbstractTestOrders {
         // time comparators tolerance of 1000 milliseconds.
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 1000L);
         // expressions
-        SpecRunnerServices.get(IExpressionFactory.class).bindValue("d", new LocalDate().toString("MM/dd/yyyy"));
+        SpecRunnerServices.get(IExpressionFactory.class).bindModel("d", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return new LocalDate().toString("MM/dd/yyyy");
+            }
+        });
     }
 
     public abstract String getIncome();

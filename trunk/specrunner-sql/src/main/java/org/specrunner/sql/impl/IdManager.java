@@ -322,7 +322,7 @@ public class IdManager {
                     inPstmt.setObject(i++, dateAfter);
                 } else {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("SET(" + i + ")=" + tmp);
+                        UtilLog.LOG.debug("findValue.SET(" + i + "," + reference.getAlias() + "," + reference.getName() + ") = " + tmp);
                     }
                     inPstmt.setObject(i++, tmp);
                 }
