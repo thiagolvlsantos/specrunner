@@ -471,7 +471,7 @@ public class Database implements IDatabase {
             Column column = v.getColumn();
             if (column.isKey()) {
                 indexes.put(column.getName(), i++);
-                sbConditions.append(column.getName() + " = ?," + and);
+                sbConditions.append(column.getName() + " = ? " + and);
             }
         }
         if (sbConditions.length() > (1 + and.length())) {
@@ -619,7 +619,7 @@ public class Database implements IDatabase {
         }
 
         if (wrapper.getType() == CommandType.UPDATE) {
-            idManager.prepareUpdate(con, table, values);
+            idManager.prepareUpdate(con, table, values, outputs);
         }
 
         int count = pstmt.executeUpdate();

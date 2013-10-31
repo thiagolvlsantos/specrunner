@@ -366,10 +366,14 @@ public class IdManager {
      *            The table.
      * @param values
      *            The values.
+     * @param outputs
+     *            The output map.
      * @throws SQLException
      *             On reading errors.
+     * @throws PluginException
+     *             On errors.
      */
-    public void prepareUpdate(Connection con, Table table, Set<Value> values) throws SQLException {
+    public void prepareUpdate(Connection con, Table table, Set<Value> values, Map<String, PreparedStatement> outputs) throws SQLException, PluginException {
         DatabaseMetaData meta = con.getMetaData();
         if (meta.supportsGetGeneratedKeys() && hasKey()) {
             // TODO: ou fazer apenas as exclusões mínimas ou
@@ -398,7 +402,8 @@ public class IdManager {
             for (Value v : values) {
                 Column column = v.getColumn();
                 if (column.isKey()) {
-                    sb.append((i++ == 0 ? "" : ",") + column.getName() + " = '" + v.getValue() + "'");
+                    Object find = column.isVirtual() ? findValue(con, column, v.getValue(), outputs) : v.getValue();
+                    sb.append((i++ == 0 ? "" : " AND ") + column.getName() + " = '" + find + "'");
                     if (alias == null) {
                         alias = table.getAlias() + "." + v.getValue();
                     }
@@ -410,6 +415,7 @@ public class IdManager {
                 stmt = con.createStatement();
                 ResultSet rs = null;
                 try {
+                    System.out.println("SQL:" + sb);
                     rs = stmt.executeQuery(sb.toString());
                     String key = null;
                     if (rs.next()) {
@@ -427,10 +433,14 @@ public class IdManager {
                     }
                     remove(alias, key);
                 } finally {
-                    rs.close();
+                    if (rs != null) {
+                        rs.close();
+                    }
                 }
             } finally {
-                stmt.close();
+                if (stmt != null) {
+                    stmt.close();
+                }
             }
         }
     }
