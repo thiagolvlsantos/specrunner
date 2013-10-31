@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2013  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.util.cache.impl;
 
 import java.util.HashMap;
@@ -9,6 +26,7 @@ import java.util.TreeSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.CacheEntry;
 import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheCleaner;
 
 /**
  * LRU implementation of a cache.
@@ -44,13 +62,21 @@ public class CacheLRU<K, T> implements ICache<K, T> {
     private Map<K, CacheEntry<K, T>> items = new HashMap<K, CacheEntry<K, T>>();
 
     /**
+     * Object cleaner.
+     */
+    private ICacheCleaner<T> cleaner;
+
+    /**
      * Basic constructor.
      * 
      * @param name
      *            The cache name.
+     * @param cleaner
+     *            A cleaner.
      */
-    public CacheLRU(String name) {
+    public CacheLRU(String name, ICacheCleaner<T> cleaner) {
         this.name = name;
+        this.cleaner = cleaner;
     }
 
     @Override
@@ -61,6 +87,17 @@ public class CacheLRU<K, T> implements ICache<K, T> {
     @Override
     public ICache<K, T> setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    @Override
+    public ICacheCleaner<T> getCleaner() {
+        return cleaner;
+    }
+
+    @Override
+    public ICache<K, T> setCleaner(ICacheCleaner<T> cleaner) {
+        this.cleaner = cleaner;
         return this;
     }
 
@@ -101,7 +138,7 @@ public class CacheLRU<K, T> implements ICache<K, T> {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Cache '" + name + "' expired: " + key);
                 }
-                items.remove(item.getKey());
+                cleaner.destroy(items.remove(item.getKey()).getValue());
             }
         }
         return null;
@@ -118,10 +155,26 @@ public class CacheLRU<K, T> implements ICache<K, T> {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Cache '" + name + "' clean: " + next.getKey());
                 }
-                items.remove(next.getKey());
+                remove(next.getKey());
             }
         }
         items.put(key, new CacheEntry<K, T>(key, value));
         return this;
+    }
+
+    @Override
+    public void remove(K key) {
+        CacheEntry<K, T> entry = items.remove(key);
+        if (entry != null) {
+            cleaner.destroy(entry.getValue());
+        }
+    }
+
+    @Override
+    public void release() {
+        for (CacheEntry<K, T> entry : items.values()) {
+            cleaner.destroy(entry.getValue());
+        }
+        items.clear();
     }
 }
