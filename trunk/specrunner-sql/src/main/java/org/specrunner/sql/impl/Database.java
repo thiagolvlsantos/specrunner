@@ -23,7 +23,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -56,6 +55,8 @@ import org.specrunner.sql.meta.impl.UtilSchema;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
@@ -89,12 +90,12 @@ public class Database implements IDatabase {
     /**
      * Prepared statements for input actions.
      */
-    protected Map<String, PreparedStatement> inputs = new HashMap<String, PreparedStatement>();
+    protected ICache<String, PreparedStatement> inputs = SpecRunnerServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
 
     /**
      * Prepared statements for output actions.
      */
-    protected Map<String, PreparedStatement> outputs = new HashMap<String, PreparedStatement>();
+    protected ICache<String, PreparedStatement> outputs = SpecRunnerServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
 
     /**
      * Manage object lookup and reuse.
@@ -859,37 +860,7 @@ public class Database implements IDatabase {
 
     @Override
     public void release() throws PluginException {
-        StringBuilder sb = new StringBuilder();
-        release(sb, inputs.values());
-        release(sb, outputs.values());
-        if (sb.length() != 0) {
-            throw new PluginException(sb.toString());
-        }
-    }
-
-    /**
-     * Close a set of prepared statements.
-     * 
-     * @param sb
-     *            The error log.
-     * @param pstms
-     *            The collection of prepared statements.
-     */
-    protected void release(StringBuilder sb, Collection<PreparedStatement> pstms) {
-        for (PreparedStatement ps : pstms) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Release: " + ps);
-            }
-            try {
-                if (!ps.isClosed()) {
-                    ps.close();
-                }
-            } catch (SQLException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                sb.append(e.getMessage());
-            }
-        }
+        inputs.release();
+        outputs.release();
     }
 }

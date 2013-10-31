@@ -15,20 +15,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.cache.impl;
-
-import org.specrunner.util.cache.ICacheCleaner;
+package org.specrunner.util.cache;
 
 /**
- * Default implementation.
+ * An object cleaner.
  * 
  * @author Thiago Santos
  * 
+ * @param <T>
+ *            The object type.
  */
-public class CacheFactoryDefault extends AbstractCacheFactory {
+public interface ICacheCleaner<T> {
 
-    @Override
-    protected <K, T> CacheLRU<K, T> create(String name, ICacheCleaner<T> cleaner) {
-        return new CacheLRU<K, T>(name, cleaner);
-    }
+    /**
+     * Destroy the object in cache.
+     * 
+     * @param obj
+     *            An object.
+     */
+    void destroy(T obj);
 }

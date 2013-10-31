@@ -42,6 +42,7 @@ import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.cache.ICache;
 
 /**
  * Manage tables and columns key fields.
@@ -234,7 +235,7 @@ public class IdManager {
      * @throws PluginException
      *             On execution errors.
      */
-    protected Object findValue(Connection con, Column column, Object value, Map<String, PreparedStatement> outputs) throws SQLException, PluginException {
+    protected Object findValue(Connection con, Column column, Object value, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
         String key = column.getAlias() + "." + value;
         Object result = lookup(column.getAlias(), value);
         if (result == null) {
@@ -373,7 +374,7 @@ public class IdManager {
      * @throws PluginException
      *             On errors.
      */
-    public void prepareUpdate(Connection con, Table table, Set<Value> values, Map<String, PreparedStatement> outputs) throws SQLException, PluginException {
+    public void prepareUpdate(Connection con, Table table, Set<Value> values, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
         DatabaseMetaData meta = con.getMetaData();
         if (meta.supportsGetGeneratedKeys() && hasKey()) {
             // TODO: ou fazer apenas as exclusões mínimas ou
