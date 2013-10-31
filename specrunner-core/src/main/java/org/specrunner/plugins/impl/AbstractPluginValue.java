@@ -94,7 +94,7 @@ public abstract class AbstractPluginValue extends AbstractPluginScoped {
         Object obj = null;
         Object val = value != null ? value : str;
         if (val instanceof String) {
-            if (evaluate) {
+            if (eval && evaluate) {
                 obj = UtilEvaluator.evaluate((String) val, context, true);
             } else {
                 obj = UtilEvaluator.replace((String) val, context, true);
