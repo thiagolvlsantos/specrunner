@@ -52,7 +52,6 @@ public class SourceDumperDetails extends AbstractSourceDumperFile {
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
         set(source, result);
         File output = new File(outputDirectory, detailReport());
-        model.put("output", String.valueOf(output));
         Document doc = new Document(new Element("html"));
         body(result, model, doc.getRootElement());
         saveTo(doc, output);
