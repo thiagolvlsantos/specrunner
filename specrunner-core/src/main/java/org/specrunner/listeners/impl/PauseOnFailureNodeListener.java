@@ -20,9 +20,6 @@ package org.specrunner.listeners.impl;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
 import nu.xom.Node;
 
 import org.specrunner.SpecRunnerServices;
@@ -41,12 +38,12 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos.
  * 
  */
-public class FailurePausePluginListener extends AbstractNodeListener {
+public class PauseOnFailureNodeListener extends AbstractNodeListener implements ErrorFrameListener {
 
     /**
      * Enable pause on errors.
      */
-    public static final String FEATURE_PAUSE_ON_FAILURE = FailurePausePluginListener.class.getName() + ".pauseOnFailure";
+    public static final String FEATURE_PAUSE_ON_FAILURE = PauseOnFailureNodeListener.class.getName() + ".pauseOnFailure";
     /**
      * Set true, to pause on errors.
      */
@@ -55,7 +52,7 @@ public class FailurePausePluginListener extends AbstractNodeListener {
     /**
      * Enable error dialog on failures.
      */
-    public static final String FEATURE_SHOW_DIALOG = FailurePausePluginListener.class.getName() + ".showDialog";
+    public static final String FEATURE_SHOW_DIALOG = PauseOnFailureNodeListener.class.getName() + ".showDialog";
     /**
      * Set true, to show a dialog.
      */
@@ -64,7 +61,12 @@ public class FailurePausePluginListener extends AbstractNodeListener {
     /**
      * Auxiliary frame.
      */
-    private JFrame frame;
+    private ErrorFrame frame;
+
+    /**
+     * Flag to skip all dialog messages.
+     */
+    private Boolean okToAll;
 
     /**
      * Count to check if errors have been added.
@@ -118,6 +120,7 @@ public class FailurePausePluginListener extends AbstractNodeListener {
     public void reset() {
         pauseOnFailure = false;
         showDialog = false;
+        okToAll = false;
     }
 
     @Override
@@ -131,7 +134,7 @@ public class FailurePausePluginListener extends AbstractNodeListener {
 
     @Override
     public void onAfter(Node node, IContext context, IResultSet result) {
-        if (pauseOnFailure) {
+        if (pauseOnFailure && !okToAll) {
             List<Status> status = result.errorStatus();
             Status[] array = status.toArray(new Status[status.size()]);
             List<IResult> errors = result.filterByStatus(start, result.size(), array);
@@ -168,14 +171,27 @@ public class FailurePausePluginListener extends AbstractNodeListener {
      *            The message.
      */
     protected void showDialog(StringBuilder sb) {
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("Click OK on dialog.");
-        }
         if (frame == null) {
-            frame = new JFrame("Error report");
+            frame = new ErrorFrame(this);
         }
-        frame.setVisible(true);
-        JOptionPane.showMessageDialog(frame, sb);
-        frame.setVisible(false);
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Click one of the dialog buttons to move on.");
+        }
+        frame.setVisible(sb);
+    }
+
+    @Override
+    public void ok() {
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("'Ok' pressed.");
+        }
+    }
+
+    @Override
+    public void okToAll() {
+        okToAll = true;
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("'Ok to All' pressed.");
+        }
     }
 }
