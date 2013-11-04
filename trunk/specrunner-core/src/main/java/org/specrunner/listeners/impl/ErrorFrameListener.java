@@ -18,21 +18,20 @@
 package org.specrunner.listeners.impl;
 
 /**
- * Default listener manager.
+ * Abstraction for error panel listener.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public interface ErrorFrameListener {
 
     /**
-     * Default constructor.
+     * On 'ok' button pressed.
      */
-    public ListenerManagerDefault() {
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
-    }
+    void ok();
+
+    /**
+     * On 'ok to all' button pressed.
+     */
+    void okToAll();
 }

@@ -14,7 +14,7 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunnerConcurrent;
-import org.specrunner.listeners.impl.FailurePausePluginListener;
+import org.specrunner.listeners.impl.PauseOnFailureNodeListener;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
@@ -23,7 +23,7 @@ public class TestSentence {
     @Before
     public void before() {
         SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", DateTime.class);
-        SpecRunnerServices.getFeatureManager().add(FailurePausePluginListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(FailurePausePluginListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
+        SpecRunnerServices.getFeatureManager().add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
     }
 
     @ExpectedMessage("Falhou!")
