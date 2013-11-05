@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Text field and text area examples</title>
+</head>
+<body>
+    <p>
+        Open <a class="include" href="../open.html?url=text">browser</a>.
+    </p>
+
+    <ul>
+    	<li>Check if text field is <span class="compareText" by="name:txtName" value='""'>empty</span>;</li>
+    	<li>Type <span class="type" by="name:txtName" value='dt.toString(pattern)'>current date in format 'HH:mm:ss'</span>;</li>
+    	<li>Check if the text field value is the <span class="compareDate" by="name:txtName" format="HH:mm:ss" value='dt.toString("HH:mm:ss")'>current date</span>;</li>
+    	<li>Check if text area is '<span class="compareText" by="name:areaName">type here</span>';</li>
+    	<li>Type <span class="type" by="name:areaName">new value</span> in text area;</li>
+    	<li>Check if the text area value is <span class="compareText" by="name:areaName">new value</span>;</li>
+    	<li>Append text area value with '<span class="type" by="name:areaName" append="true"> twice</span>';</li>
+    	<li>Check if the text area value is <span class="local" scope="ul" name="txtContent"><span class="compareText" by="name:areaName">new value twice</span></span>;</li>
+    	<li>Add '<span class="type" by="name:areaName" position='${txtContent.indexOf("value")}'>inside </span>' between 'new' and 'value';</li>
+    	<li>Check if the text area value is <span class="compareText" by="name:areaName">new inside value twice</span>;</li>
+    </ul>
+</body>
+</html>
