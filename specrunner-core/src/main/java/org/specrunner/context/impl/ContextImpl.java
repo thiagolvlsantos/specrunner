@@ -325,6 +325,11 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
     }
 
     @Override
+    public boolean isValid() {
+        return hasNode() || hasPlugin();
+    }
+
+    @Override
     public boolean hasChildren() {
         return peek().hasChildren();
     }

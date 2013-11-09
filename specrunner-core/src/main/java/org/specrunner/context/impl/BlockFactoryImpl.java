@@ -25,7 +25,6 @@ import nu.xom.Node;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.plugins.IPlugin;
-import org.specrunner.util.UtilLog;
 
 /**
  * Default block factory implementation.
@@ -37,31 +36,11 @@ public class BlockFactoryImpl implements IBlockFactory {
 
     @Override
     public IBlock newBlock(Node element, IPlugin plugin) {
-        check(element, plugin);
         return newBlock(element, plugin, new HashMap<String, Object>());
-    }
-
-    /**
-     * Check block items.
-     * 
-     * @param element
-     *            The element.
-     * @param plugin
-     *            The plugin.
-     */
-    protected void check(Node element, IPlugin plugin) {
-        if (element == null && plugin == null) {
-            RuntimeException re = new IllegalArgumentException();
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(re.getMessage(), re);
-            }
-            throw re;
-        }
     }
 
     @Override
     public IBlock newBlock(Node element, IPlugin plugin, Map<String, Object> map) {
-        check(element, plugin);
         return new BlockImpl(element, plugin, map);
     }
 }

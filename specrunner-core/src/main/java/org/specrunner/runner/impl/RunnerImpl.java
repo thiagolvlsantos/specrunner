@@ -151,6 +151,10 @@ public class RunnerImpl implements IRunner {
             IPlugin plugin = previous == null ? factory.newPlugin(node, context) : previous;
             block.setPlugin(plugin);
 
+            if (!block.isValid()) {
+                return;
+            }
+
             IFilter local = filter;
             if (local == null) {
                 local = FilterDefault.INSTANCE.get();

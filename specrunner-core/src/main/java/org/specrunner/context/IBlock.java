@@ -32,7 +32,15 @@ import org.specrunner.plugins.IPlugin;
 public interface IBlock {
 
     /**
-     * Indicates if the bloc node has children.
+     * A valid block has node (<code>hasNode</code>) or plugin (
+     * <code>hasPlugin</code>). They cannot be both 'null'.
+     * 
+     * @return true, if valid, false otherwise.
+     */
+    boolean isValid();
+
+    /**
+     * Indicates if the block node has children.
      * 
      * @return true, if is not terminal in the specification, false, otherwise.
      */
