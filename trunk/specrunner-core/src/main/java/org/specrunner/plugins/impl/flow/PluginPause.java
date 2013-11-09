@@ -37,7 +37,7 @@ import org.specrunner.util.UtilLog;
 
 /**
  * Allows a pause in execution, waiting for an 'OK' in dialog, or 'Enter' when
- * 'enter'attribute is set to true..
+ * 'enter'attribute is set to true.
  * 
  * @author Thiago Santos
  * 
