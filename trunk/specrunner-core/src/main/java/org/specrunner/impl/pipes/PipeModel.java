@@ -85,8 +85,8 @@ public class PipeModel implements IPipe {
         try {
             model.put(PipeInput.INPUT, PipeInput.lookup(channel));
         } catch (Exception e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
             }
         }
         model.put(TIME, System.currentTimeMillis());

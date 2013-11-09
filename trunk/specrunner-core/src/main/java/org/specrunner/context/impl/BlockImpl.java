@@ -67,6 +67,11 @@ public class BlockImpl implements IBlock {
     }
 
     @Override
+    public boolean isValid() {
+        return hasNode() || hasPlugin();
+    }
+
+    @Override
     public boolean hasChildren() {
         return hasNode() && getNode().getChildCount() > 0;
     }
