@@ -1,8 +1,10 @@
 package org.specrunner;
 
 import org.junit.runner.RunWith;
+import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ConcurrentRunner;
 
 @RunWith(ConcurrentRunner.class)
-public class TestAllConcurrent extends TestAllSequential {
+@Concurrent(threads = 2)
+public class TestAllConcurrent2 extends TestAllSequential {
 }
