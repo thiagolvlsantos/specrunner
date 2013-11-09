@@ -5,6 +5,7 @@
 <title>Node example</title>
 </head>
 <body>
+    <h1>Node</h1>
 
 Node example is:
 <span id="idNode">My<b>formated</b> <span style="background-color:gray;font-family:verdana;">node</span><span style="display:none;">hidden</span></span>

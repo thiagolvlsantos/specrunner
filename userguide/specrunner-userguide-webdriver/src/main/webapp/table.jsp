@@ -5,6 +5,7 @@
 <title>Table example</title>
 </head>
 <body>
+    <h1>Table</h1>
     <table id="tableId" border=1>
         <caption>Dynamic dates</caption>
         <tr>

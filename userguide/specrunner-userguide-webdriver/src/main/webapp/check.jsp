@@ -5,6 +5,7 @@
 <title>Checkbox and radios example</title>
 </head>
 <body>
+    <h1>Checks</h1>
     <form>
         <fieldset>
             <legend>Checkboxes and Radios</legend>

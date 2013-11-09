@@ -5,6 +5,7 @@
 <title name="nameTitle">Wicket Quickstart Archetype Homepage</title>
 </head>
 <body>
+    <h1>Basic</h1>
     <strong>Wicket Quickstart Archetype Homepage</strong>
 
 
