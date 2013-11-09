@@ -14,6 +14,7 @@ public class AbstractTest {
 
     @Configuration
     public void onConfigure(IConfiguration cfg) {
+        System.out.println("Running with SRRunner.class");
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
     }
 
