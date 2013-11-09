@@ -6,6 +6,7 @@
 <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
+    <h1>Select</h1>
     <form>
         <legend>Selections</legend>
         Disable single:<input type="checkbox" id="idDisableSingle" onchange="toogle(document.forms[0].sel1);" /> <br>
