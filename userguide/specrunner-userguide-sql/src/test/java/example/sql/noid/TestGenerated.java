@@ -46,20 +46,4 @@ public class TestGenerated {
     public void pluginsExample() {
         run("generated.html");
     }
-
-    @Test
-    public void pluginsExample2() {
-        run("generated.html", "generated2.html");
-    }
-
-    @Test
-    public void pluginsExample3() {
-        run("generated.html", "generated3.html");
-    }
-
-    public static void main(String[] args) {
-        for (int i = 0; i < 10000; i++) {
-            new TestGenerated().pluginsExample();
-        }
-    }
 }

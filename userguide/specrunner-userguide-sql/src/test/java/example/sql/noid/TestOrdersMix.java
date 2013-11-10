@@ -25,9 +25,4 @@ public class TestOrdersMix extends AbstractTestOrders {
     public void runOrdersMix() {
         run("orders.html");
     }
-
-    @Test
-    public void runOrdersMix2() {
-        run("orders.html", "orders2.html");
-    }
 }
