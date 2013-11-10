@@ -1,4 +1,4 @@
-package example.sql;
+package example.sql.noid;
 
 import org.junit.Test;
 import org.specrunner.SpecRunnerServices;
@@ -12,6 +12,8 @@ import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.impl.Database;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
+
+import example.sql.DataSourceProviderImpl;
 
 public class TestGenerated {
 

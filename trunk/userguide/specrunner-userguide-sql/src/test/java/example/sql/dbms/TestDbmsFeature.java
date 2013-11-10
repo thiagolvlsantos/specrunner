@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package example.sql;
+package example.sql.dbms;
 
 import org.junit.Test;
 import org.specrunner.SpecRunnerServices;
@@ -29,6 +29,8 @@ import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.impl.Database;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
+
+import example.sql.DataSourceProviderImpl;
 
 //CHECKSTYLE:OFF
 //@RunWith(ConcurrentRunner.class)
@@ -62,11 +64,6 @@ public class TestDbmsFeature {
     @Test
     public void pluginsExampleFeature() {
         run("dbmsFeature.html");
-    }
-
-    @Test
-    public void pluginsExampleFeature2() {
-        run("dbmsFeature.html", "dbmsFeature2.html");
     }
 }
 // CHECKSTYLE:ON

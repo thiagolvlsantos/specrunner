@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package example.sql;
+package example.sql.dbms;
 
 import org.junit.Test;
 
