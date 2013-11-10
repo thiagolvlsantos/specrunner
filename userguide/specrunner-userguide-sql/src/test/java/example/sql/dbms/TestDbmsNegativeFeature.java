@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package example.sql;
+package example.sql.dbms;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -100,10 +100,12 @@ public class TestDbmsNegativeFeature {
         conA.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_INICIAL|sa|");
         conA.setName("conA");
         group.add(conA);
+
         PluginConnection conB = new PluginConnection();
         conB.setConnection("org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|");
         conB.setName("conB");
         group.add(conB);
+
         PluginKind kind = PluginKind.CSS;
         pf.bind(kind, "connections", group);
 
@@ -132,21 +134,6 @@ public class TestDbmsNegativeFeature {
     @Test
     public void pluginsNegativeFeature() {
         run("dbmsNegativeFeature.html");
-    }
-
-    @Test
-    public void pluginsNegativeFeature2() {
-        run("dbmsNegativeFeature.html", "dbmsNegativeFeature2.html");
-    }
-
-    @Test
-    public void pluginsNegativeFeature3() {
-        run("dbmsNegativeFeature.html", "dbmsNegativeFeature3.html");
-    }
-
-    @Test
-    public void pluginsNegativeFeature4() {
-        run("dbmsNegativeFeature.html", "dbmsNegativeFeature4.html");
     }
 }
 // CHECKSTYLE:ON

@@ -1,4 +1,4 @@
-package example.sql;
+package example.sql.noid;
 
 import org.joda.time.LocalDate;
 import org.specrunner.SpecRunnerException;
@@ -16,6 +16,8 @@ import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.impl.Database;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
+
+import example.sql.DataSourceProviderImpl;
 
 public abstract class AbstractTestOrders {
 

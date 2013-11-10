@@ -1,4 +1,4 @@
-package example.sql;
+package example.sql.noid;
 
 import org.junit.Test;
 import org.specrunner.sql.PluginSchema;

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package example.sql;
+package example.sql.basic;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -30,6 +30,8 @@ import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginScripts;
+
+import example.sql.DataSourceProviderImpl;
 
 // CHECKSTYLE:OFF
 @RunWith(ConcurrentRunner.class)
