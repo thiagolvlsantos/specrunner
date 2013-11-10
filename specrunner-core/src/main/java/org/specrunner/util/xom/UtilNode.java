@@ -254,4 +254,20 @@ public final class UtilNode {
         }
         return expected;
     }
+
+    /**
+     * Check if a node is of a given tag type.
+     * 
+     * @param node
+     *            The node.
+     * @param tag
+     *            The tag.
+     * @return true, if is element of given tag name, false, otherwise.
+     */
+    public static boolean isElement(Node node, String tag) {
+        if (node instanceof Element) {
+            return (((Element) node).getQualifiedName().equals(tag));
+        }
+        return false;
+    }
 }
