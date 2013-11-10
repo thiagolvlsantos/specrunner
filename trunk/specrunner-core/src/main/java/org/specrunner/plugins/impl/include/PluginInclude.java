@@ -261,6 +261,10 @@ public class PluginInclude extends AbstractPlugin {
         Node node = context.getNode();
         UtilNode.appendCss(node, "include");
         ParentNode parent = node.getParent();
+        boolean isTd = UtilNode.isElement(node, "td");
+        if (isTd) {
+            parent = (ParentNode) node;
+        }
         try {
             String path = getPath(context);
             Node args = bindParameters(context);
@@ -281,28 +285,12 @@ public class PluginInclude extends AbstractPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("URI_RESOLVED>" + newHref);
             }
-            ISource newSource = null;
-            try {
-                newSource = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(newHref.toString());
-            } catch (SourceException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                throw new PluginException(e);
-            }
+            ISource newSource = getSource(newHref);
             newSource = transform(newSource);
+            Document document = getDocument(newSource);
 
-            Document document = null;
-            try {
-                document = newSource.getDocument();
-            } catch (SourceException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                throw new PluginException(e);
-            }
             // index to insert table
-            int nodeIndex = parent.indexOf(node) + 1;
+            int nodeIndex = isTd ? parent.getChildCount() : parent.indexOf(node) + 1;
 
             // perform link content
             UtilPlugin.performChildren(node, context, result);
@@ -406,6 +394,50 @@ public class PluginInclude extends AbstractPlugin {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), e);
         }
         return ENext.SKIP;
+    }
+
+    /**
+     * Get source from a URI.
+     * 
+     * @param newHref
+     *            The URI.
+     * @return The corresponding source.
+     * @throws PluginException
+     *             On reading errors.
+     */
+    protected ISource getSource(URI newHref) throws PluginException {
+        ISource newSource = null;
+        try {
+            newSource = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(newHref.toString());
+        } catch (SourceException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException(e);
+        }
+        return newSource;
+    }
+
+    /**
+     * Get document from source.
+     * 
+     * @param newSource
+     *            The source.
+     * @return The corresponding document.
+     * @throws PluginException
+     *             On load errors.
+     */
+    protected Document getDocument(ISource newSource) throws PluginException {
+        Document document = null;
+        try {
+            document = newSource.getDocument();
+        } catch (SourceException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException(e);
+        }
+        return document;
     }
 
     /**
