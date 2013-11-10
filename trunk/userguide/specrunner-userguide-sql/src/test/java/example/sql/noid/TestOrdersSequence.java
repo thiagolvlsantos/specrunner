@@ -25,9 +25,4 @@ public class TestOrdersSequence extends AbstractTestOrders {
     public void runOrdersSequence() {
         run("orders.html");
     }
-
-    @Test
-    public void runOrdersSequence2() {
-        run("orders.html", "orders2.html");
-    }
 }

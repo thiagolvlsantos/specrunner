@@ -25,9 +25,4 @@ public class TestOrdersIdentity extends AbstractTestOrders {
     public void runOrdersIdentity() {
         run("orders.html");
     }
-
-    @Test
-    public void runOrdersIdentity2() {
-        run("orders.html", "orders2.html");
-    }
 }
