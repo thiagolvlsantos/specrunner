@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2012  Thiago Santos
+    Copyright (C) 2011-2013  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,14 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.impl;
+package org.specrunner.context.core;
 
 import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.specrunner.context.IContext;
 import org.specrunner.context.IContextPopulator;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -38,11 +37,11 @@ public class ContextPopulatorImpl implements IContextPopulator {
     public IContext populate(IContext context) {
         Properties p = System.getProperties();
         for (Entry<Object, Object> e : p.entrySet()) {
-            String key = UtilEvaluator.asVariable(String.valueOf(e.getKey()).replace(".", "_"));
+            String key = String.valueOf(e.getKey()).replace(".", "_");
             String value = String.valueOf(e.getValue());
             context.saveGlobal(key, value);
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(key + " mapped to '" + value + "'(String).");
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(key + " mapped to '" + value + "'(String).");
             }
         }
         return context;
