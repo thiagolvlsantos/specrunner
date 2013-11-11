@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.impl;
+package org.specrunner.comparators.core;
 
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.mapping.impl.MappingManagerImpl;
+import org.specrunner.util.mapping.core.MappingManagerImpl;
 
 /**
  * Default comparator manager implementation.

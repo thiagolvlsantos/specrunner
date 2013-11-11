@@ -15,22 +15,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.impl;
+package org.specrunner.comparators.core;
+
+import nu.xom.Node;
 
 import org.specrunner.comparators.IComparator;
+import org.specrunner.util.xom.UtilNode;
 
 /**
- * Useful comparator to ignore a given cell or row.
+ * A default node comparator. Compare each node: text-by-text and attribute by
+ * attribute.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorTrue implements IComparator {
+public class ComparatorNode implements IComparator {
 
     @Override
     public Class<?> getType() {
-        return Object.class;
+        return Node.class;
     }
 
     @Override
@@ -39,11 +43,17 @@ public class ComparatorTrue implements IComparator {
 
     @Override
     public boolean match(Object expected, Object received) {
-        return true;
+        return UtilNode.getChildrenAsString((Node) expected).equals(UtilNode.getChildrenAsString((Node) received));
     }
 
     @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public int compare(Object o1, Object o2) {
+        if (o1 instanceof Comparable<?> && o2 instanceof Comparable<?>) {
+            Comparable left = (Comparable) o1;
+            Comparable right = (Comparable) o2;
+            return left.compareTo(right);
+        }
         return 0;
     }
 }

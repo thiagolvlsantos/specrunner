@@ -15,44 +15,40 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.impl;
+package org.specrunner.comparators.core;
 
-import nu.xom.Node;
-
-import org.specrunner.comparators.IComparator;
-import org.specrunner.util.xom.UtilNode;
+import org.joda.time.ReadableInstant;
 
 /**
- * A default node comparator. Compare each node: text-by-text and attribute by
- * attribute.
+ * Comparator of <code>ReadableInstant</code>s.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorNode implements IComparator {
+public class ComparatorJodatime extends AbstractComparatorTime {
 
     @Override
     public Class<?> getType() {
-        return Node.class;
-    }
-
-    @Override
-    public void initialize() {
+        return ReadableInstant.class;
     }
 
     @Override
     public boolean match(Object expected, Object received) {
-        return UtilNode.getChildrenAsString((Node) expected).equals(UtilNode.getChildrenAsString((Node) received));
+        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
+            ReadableInstant left = (ReadableInstant) expected;
+            ReadableInstant right = (ReadableInstant) received;
+            return compare(left.getMillis(), right.getMillis());
+        }
+        return false;
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public int compare(Object o1, Object o2) {
-        if (o1 instanceof Comparable<?> && o2 instanceof Comparable<?>) {
-            Comparable left = (Comparable) o1;
-            Comparable right = (Comparable) o2;
-            return left.compareTo(right);
+    public int compare(Object expected, Object received) {
+        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
+            ReadableInstant left = (ReadableInstant) expected;
+            ReadableInstant right = (ReadableInstant) received;
+            return (int) (left.getMillis() - right.getMillis());
         }
         return 0;
     }
