@@ -461,7 +461,7 @@ public class PluginConnection extends AbstractPluginValue {
      * @throws PluginException
      *             On lookup errors.
      */
-    public static IDataSourceProvider getProvider(IContext context, String name) throws PluginException {
+    public static synchronized IDataSourceProvider getProvider(IContext context, String name) throws PluginException {
         if (name == null) {
             name = DEFAULT_CONNECTION_NAME;
         }

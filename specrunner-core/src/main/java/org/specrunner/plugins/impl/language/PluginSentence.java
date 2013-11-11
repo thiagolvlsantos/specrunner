@@ -304,22 +304,25 @@ public class PluginSentence extends AbstractPlugin {
             return false;
         }
         Class<?> clazz = target.getClass();
-        List<Method> ms = cacheMethods.get(clazz);
-        if (ms == null) {
-            ms = new LinkedList<Method>();
-            for (Method m : clazz.getMethods()) {
-                Sentence s = m.getAnnotation(Sentence.class);
-                if (s != null) {
-                    ms.add(m);
+        List<Method> ms = null;
+        synchronized (cacheMethods) {
+            ms = cacheMethods.get(clazz);
+            if (ms == null) {
+                ms = new LinkedList<Method>();
+                for (Method m : clazz.getMethods()) {
+                    Sentence s = m.getAnnotation(Sentence.class);
+                    if (s != null) {
+                        ms.add(m);
+                    }
                 }
-            }
-            cacheMethods.put(clazz, ms);
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Class " + clazz + " mapped to @Sentence annotated methods: '" + ms + "'.");
-            }
-        } else {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Class " + clazz + " map to @Sentence reused.");
+                cacheMethods.put(clazz, ms);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Class " + clazz + " mapped to @Sentence annotated methods: '" + ms + "'.");
+                }
+            } else {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Class " + clazz + " map to @Sentence reused.");
+                }
             }
         }
         for (Method m : ms) {
@@ -336,16 +339,19 @@ public class PluginSentence extends AbstractPlugin {
             for (int i = 0; i < strs.size(); i++) {
                 String str = strs.get(i);
                 str = removePlaceholders(m, str);
-                Pattern pattern = cachePatterns.get(str);
-                if (pattern == null) {
-                    pattern = Pattern.compile(str, i == 0 || sm == null ? s.options() : sm.options());
-                    cachePatterns.put(str, pattern);
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("New pattern for '" + str + "' created.");
-                    }
-                } else {
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
+                Pattern pattern = null;
+                synchronized (cachePatterns) {
+                    pattern = cachePatterns.get(str);
+                    if (pattern == null) {
+                        pattern = Pattern.compile(str, i == 0 || sm == null ? s.options() : sm.options());
+                        cachePatterns.put(str, pattern);
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("New pattern for '" + str + "' created.");
+                        }
+                    } else {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Reused pattern for '" + str + "'.");
+                        }
                     }
                 }
                 Matcher matcher = pattern.matcher(value);

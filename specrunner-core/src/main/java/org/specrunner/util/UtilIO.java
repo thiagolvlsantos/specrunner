@@ -154,47 +154,49 @@ public final class UtilIO {
      *             On load errors.
      */
     public static InputStream getStream(URL url) throws IOException {
-        byte[] data = cache.get(url);
-        if (data != null) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Stream reused for: " + url);
+        synchronized (cache) {
+            byte[] data = cache.get(url);
+            if (data != null) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream reused for: " + url);
+                }
+                return new ByteArrayInputStream(data);
+            }
+            InputStream in = null;
+            ByteArrayOutputStream out = null;
+            try {
+                in = url.openStream();
+                out = new ByteArrayOutputStream(in.available());
+                writeTo(in, out);
+                data = out.toByteArray();
+                cache.put(url, data);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream with '" + data.length + "' bytes cached for: " + url);
+                }
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("Closing " + in, e);
+                        }
+                        throw e;
+                    }
+                }
+                if (out != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("Closing " + in, e);
+                        }
+                        throw e;
+                    }
+                }
             }
             return new ByteArrayInputStream(data);
         }
-        InputStream in = null;
-        ByteArrayOutputStream out = null;
-        try {
-            in = url.openStream();
-            out = new ByteArrayOutputStream(in.available());
-            writeTo(in, out);
-            data = out.toByteArray();
-            cache.put(url, data);
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Stream with '" + data.length + "' bytes cached for: " + url);
-            }
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + in, e);
-                    }
-                    throw e;
-                }
-            }
-            if (out != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + in, e);
-                    }
-                    throw e;
-                }
-            }
-        }
-        return new ByteArrayInputStream(data);
     }
 
     /**

@@ -8,16 +8,16 @@
 <p>
 	Dado que a configuração do sistema é: <span class="global"
 		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
-		class="hbmcfg" type="configuracao" name="cfg">configuração
-		Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span>
-	e recrie o <span class="hbmsch" schema="CTI" script="true" configuration="cfg">esquema</span>.
+		class="hbncfg" type="configuracao" name="cfg">configuração
+		Hibernate</span> do <span class="hbnsf" configuration="cfg">sistema</span>
+	e recrie o <span class="hbnsch" schema="CTI" script="true" configuration="cfg">esquema</span>.
 
 <p>
 Sem IObjectCreator.
 <table>
 	<tr>
 		<td valign="top">Lista de pessoas:
-			<table class="dados hbmins" type="th.example.Person"
+			<table class="dados hbnins" type="th.example.Person"
 				reference="id" separator="/">
 				<caption>Pessoa</caption>
 				<tr>
@@ -53,7 +53,7 @@ Com IObjectCreator.
 <table>
 	<tr>
 		<td valign="top">Lista de pessoas:
-			<table class="dados hbmins" type="th.example.Person"
+			<table class="dados hbnins" type="th.example.Person"
 				reference="id" separator="/" creator="th.example.CriadorExemplo">
 				<caption>Pessoa</caption>
 				<tr>
@@ -86,7 +86,7 @@ Herança em Employee.
 <table>
 	<tr>
 		<td valign="top">Lista de empregados:
-			<table class="dados hbmins" type="th.example.Employee"
+			<table class="dados hbnins" type="th.example.Employee"
 				reference="id" separator="/" >
 				<caption>Empregado</caption>
 				<tr>

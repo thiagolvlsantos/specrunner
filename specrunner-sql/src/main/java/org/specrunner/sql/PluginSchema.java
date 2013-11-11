@@ -210,7 +210,7 @@ public class PluginSchema extends AbstractPluginValue {
      * @throws PluginException
      *             On lookup errors.
      */
-    public static Schema getSchema(IContext context, String name) throws PluginException {
+    public static synchronized Schema getSchema(IContext context, String name) throws PluginException {
         if (name == null) {
             name = DEFAULT_SCHEMA_NAME;
         }

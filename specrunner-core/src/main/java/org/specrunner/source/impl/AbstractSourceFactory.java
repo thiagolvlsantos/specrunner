@@ -44,12 +44,7 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
     /**
      * Cache of files.
      */
-    private static ThreadLocal<ICache<String, Document>> cache = new ThreadLocal<ICache<String, Document>>() {
-        @Override
-        protected ICache<String, Document> initialValue() {
-            return SpecRunnerServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName());
-        };
-    };
+    private static ICache<String, Document> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName());
 
     @Override
     public void initialize() {
@@ -74,11 +69,14 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
             @Override
             public Document load() throws SourceException {
                 long time = System.currentTimeMillis();
-                Document result = cache.get().get(target);
-                if (result == null) {
-                    result = fromTarget(uri, cleanTarget(target), getEncoding());
-                    addDoctype(result);
-                    cache.get().put(target, result);
+                Document result = null;
+                synchronized (cache) {
+                    result = cache.get(target);
+                    if (result == null) {
+                        result = fromTarget(uri, cleanTarget(target), getEncoding());
+                        addDoctype(result);
+                        cache.put(target, result);
+                    }
                 }
                 result = (Document) result.copy();
                 if (UtilLog.LOG.isInfoEnabled()) {

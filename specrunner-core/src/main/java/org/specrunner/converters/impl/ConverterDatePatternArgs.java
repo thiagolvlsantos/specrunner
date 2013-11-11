@@ -46,12 +46,14 @@ public class ConverterDatePatternArgs extends ConverterNotNullNotEmpty {
         }
         try {
             String pattern = String.valueOf(args[0]);
-            SimpleDateFormat formatter = cache.get(pattern);
-            if (formatter == null) {
-                formatter = new SimpleDateFormat(pattern);
-                cache.put(pattern, formatter);
+            synchronized (cache) {
+                SimpleDateFormat formatter = cache.get(pattern);
+                if (formatter == null) {
+                    formatter = new SimpleDateFormat(pattern);
+                    cache.put(pattern, formatter);
+                }
+                return formatter.parse(String.valueOf(value));
             }
-            return formatter.parse(String.valueOf(value));
         } catch (ParseException e) {
             throw new ConverterException(e);
         }

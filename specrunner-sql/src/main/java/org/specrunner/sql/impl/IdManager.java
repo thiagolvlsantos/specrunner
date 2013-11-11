@@ -416,7 +416,6 @@ public class IdManager {
                 stmt = con.createStatement();
                 ResultSet rs = null;
                 try {
-                    System.out.println("SQL:" + sb);
                     rs = stmt.executeQuery(sb.toString());
                     String key = null;
                     if (rs.next()) {

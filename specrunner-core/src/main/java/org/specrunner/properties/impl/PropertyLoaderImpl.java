@@ -46,24 +46,25 @@ public class PropertyLoaderImpl implements IPropertyLoader {
 
     @Override
     public Properties load(String file) throws PropertyLoaderException {
-        Properties result = cache.get(file);
-        if (result != null) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Property reuse:" + result);
+        synchronized (cache) {
+            Properties result = cache.get(file);
+            if (result != null) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Property reuse:" + result);
+                }
+                return result;
             }
+            result = new Properties();
+            List<URL> files;
+            try {
+                files = SpecRunnerServices.get(ResourceFinder.class).getAllResources(file);
+            } catch (IOException e) {
+                throw new PropertyLoaderException(e);
+            }
+            loadUrls(files, result);
+            cache.put(file, result);
             return result;
         }
-
-        result = new Properties();
-        List<URL> files;
-        try {
-            files = SpecRunnerServices.get(ResourceFinder.class).getAllResources(file);
-        } catch (IOException e) {
-            throw new PropertyLoaderException(e);
-        }
-        loadUrls(files, result);
-        cache.put(file, result);
-        return result;
     }
 
     /**

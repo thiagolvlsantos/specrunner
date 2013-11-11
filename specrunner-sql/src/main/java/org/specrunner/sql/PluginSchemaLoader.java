@@ -224,7 +224,7 @@ public class PluginSchemaLoader extends AbstractPluginValue {
      * @throws PluginException
      *             On lookup errors.
      */
-    public static ISchemaLoader getLoader(IContext context, String name) throws PluginException {
+    public static synchronized ISchemaLoader getLoader(IContext context, String name) throws PluginException {
         if (name == null) {
             name = DEFAULT_SCHEMALOADER_NAME;
         }

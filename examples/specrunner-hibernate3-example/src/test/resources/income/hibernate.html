@@ -8,9 +8,9 @@
 <p>
 	Dado que a configuração do sistema é: <span class="global"
 		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
-		class="hbmcfg" type="${configuracao}" name="cfg">configuração
-		Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span> e
-	recrie o <span class="hbmsch" schema="CTI" configuration="cfg">esquema</span>.
+		class="hbncfg" type="${configuracao}" name="cfg">configuração
+		Hibernate</span> do <span class="hbnsf" configuration="cfg">sistema</span> e
+	recrie o <span class="hbnsch" schema="CTI" configuration="cfg">esquema</span>.
 </p>
 
 <p>
@@ -23,7 +23,7 @@
 <table>
 	<tr>
 		<td valign="top">Lista de cidades:
-			<table class="dados hbmins" type="th.example.City" reference="id"
+			<table class="dados hbnins" type="th.example.City" reference="id"
 				separator="/">
 				<caption>Cidades</caption>
 				<tr>
@@ -108,7 +108,7 @@
 	</tr>
 </table>
 Atualizar os valores:
-<table class="hbmupd" type="th.example.City" reference="name">
+<table class="hbnupd" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 		<th field="name">Nome</th>
@@ -121,7 +121,7 @@ Atualizar os valores:
 </table>
 
 Remove o valor:
-<table class="hbmdel" type="th.example.City" reference="name">
+<table class="hbndel" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 		<th field="name">Nome</th>
@@ -132,7 +132,7 @@ Remove o valor:
 </table>
 
 Conferir que a base contém:
-<table class="hbmon" type="th.example.City" reference="name">
+<table class="hbnon" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 
@@ -167,7 +167,7 @@ Conferir que a base contém:
 </table>
 
 Conferir que a base NÃO contém:
-<table class="hbmoff" type="th.example.City" reference="name">
+<table class="hbnoff" type="th.example.City" reference="name">
 	<caption>Cidades</caption>
 	<tr>
 		<th field="name">Nome</th>
