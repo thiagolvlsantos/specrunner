@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.impl;
+package org.specrunner.comparators.core;
 
 import org.specrunner.comparators.IComparator;
 
@@ -27,11 +27,11 @@ import org.specrunner.comparators.IComparator;
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorString implements IComparator {
+public class ComparatorDefault implements IComparator {
 
     @Override
     public Class<?> getType() {
-        return String.class;
+        return Object.class;
     }
 
     @Override
@@ -40,16 +40,16 @@ public class ComparatorString implements IComparator {
 
     @Override
     public boolean match(Object expected, Object received) {
-        return expected == null ? received == null : String.valueOf(expected).equals(String.valueOf(received));
+        return expected == null ? received == null : expected.equals(received);
     }
 
     @Override
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public int compare(Object o1, Object o2) {
         if (o1 instanceof Comparable<?> && o2 instanceof Comparable<?>) {
             Comparable left = (Comparable) o1;
             Comparable right = (Comparable) o2;
-            return String.valueOf(left).compareTo(String.valueOf(right));
+            return left.compareTo(right);
         }
         return 0;
     }

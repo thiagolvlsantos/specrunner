@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.impl;
+package org.specrunner.comparators.core;
 
 import java.util.Date;
 

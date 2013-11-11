@@ -15,41 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.impl;
+package org.specrunner.comparators.core;
 
-import org.joda.time.ReadableInstant;
+import org.specrunner.comparators.IComparator;
 
 /**
- * Comparator of <code>ReadableInstant</code>s.
+ * Useful comparator to ignore a given cell or row.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorJodatime extends AbstractComparatorTime {
+public class ComparatorTrue implements IComparator {
 
     @Override
     public Class<?> getType() {
-        return ReadableInstant.class;
+        return Object.class;
+    }
+
+    @Override
+    public void initialize() {
     }
 
     @Override
     public boolean match(Object expected, Object received) {
-        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
-            ReadableInstant left = (ReadableInstant) expected;
-            ReadableInstant right = (ReadableInstant) received;
-            return compare(left.getMillis(), right.getMillis());
-        }
-        return false;
+        return true;
     }
 
     @Override
-    public int compare(Object expected, Object received) {
-        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
-            ReadableInstant left = (ReadableInstant) expected;
-            ReadableInstant right = (ReadableInstant) received;
-            return (int) (left.getMillis() - right.getMillis());
-        }
+    public int compare(Object o1, Object o2) {
         return 0;
     }
 }
