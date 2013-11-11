@@ -15,25 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
-import org.specrunner.converters.IConverter;
-import org.specrunner.converters.IConverterManager;
-import org.specrunner.util.mapping.impl.MappingManagerImpl;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
- * Default converter manager implementation.
+ * Create current date without without hour information.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterManagerImpl extends MappingManagerImpl<IConverter> implements IConverterManager {
+public class ConverterDateOnly extends ConverterDateCurrentTemplate {
 
     /**
-     * Default constructor.
+     * Basic data converter.
      */
-    public ConverterManagerImpl() {
-        super("sr_converters.properties");
+    public ConverterDateOnly() {
+        super(new String[] { "data", "data atual", "current date" });
+    }
+
+    @Override
+    protected Date instance() {
+        Calendar c = Calendar.getInstance();
+        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        return c.getTime();
     }
 }

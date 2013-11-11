@@ -15,41 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
-import java.util.Date;
+import org.specrunner.converters.ConverterException;
 
 /**
- * Create current date.
+ * Basic long converter.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<Date> {
-
-    /**
-     * See superclass.
-     * 
-     * @param regexp
-     *            Regexp.
-     */
-    public ConverterDateCurrentTemplate(String regexp) {
-        super(regexp);
-    }
-
-    /**
-     * See superclass.
-     * 
-     * @param values
-     *            Value.
-     */
-    public ConverterDateCurrentTemplate(String[] values) {
-        super(values);
-    }
+public class ConverterLong extends ConverterNotNullNotEmpty {
 
     @Override
-    protected Date instance() {
-        return new Date();
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return Long.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
+        }
     }
 }

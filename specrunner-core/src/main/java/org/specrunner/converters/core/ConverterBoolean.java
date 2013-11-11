@@ -15,28 +15,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
-
-import org.specrunner.converters.ConverterException;
+package org.specrunner.converters.core;
 
 /**
- * Basic long converter.
+ * A tipical boolean converter.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLong extends ConverterNotNullNotEmpty {
+public class ConverterBoolean extends ConverterBooleanTemplate {
 
-    @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        if (obj == null) {
-            return null;
-        }
-        try {
-            return Long.valueOf(String.valueOf(obj));
-        } catch (NumberFormatException e) {
-            throw new ConverterException(e);
-        }
+    /**
+     * Constructor using 'true' and 'false'.
+     */
+    public ConverterBoolean() {
+        super(Boolean.TRUE.toString(), Boolean.FALSE.toString());
     }
 }

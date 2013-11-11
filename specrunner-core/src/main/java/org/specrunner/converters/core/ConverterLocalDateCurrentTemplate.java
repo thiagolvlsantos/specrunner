@@ -15,31 +15,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 /**
- * Create current date without without hour information.
+ * Create current date.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateOnly extends ConverterDateCurrentTemplate {
+public class ConverterLocalDateCurrentTemplate extends AbstractConverterTimeTemplate<LocalDate> {
 
     /**
-     * Basic data converter.
+     * See superclass.
+     * 
+     * @param regexp
+     *            Regexp.
      */
-    public ConverterDateOnly() {
-        super(new String[] { "data", "data atual", "current date" });
+    public ConverterLocalDateCurrentTemplate(String regexp) {
+        super(regexp);
+    }
+
+    /**
+     * See superclass.
+     * 
+     * @param values
+     *            Value.
+     */
+    public ConverterLocalDateCurrentTemplate(String[] values) {
+        super(values);
     }
 
     @Override
-    protected Date instance() {
-        Calendar c = Calendar.getInstance();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return c.getTime();
+    protected LocalDate instance() {
+        return new LocalDate();
     }
 }

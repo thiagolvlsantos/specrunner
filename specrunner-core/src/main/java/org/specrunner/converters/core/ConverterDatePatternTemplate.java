@@ -15,26 +15,45 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import org.specrunner.converters.ConverterException;
 
 /**
- * Basic integer converter.
+ * General date converter.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterInteger extends ConverterNotNullNotEmpty {
+public class ConverterDatePatternTemplate extends ConverterNotNullNotEmpty {
+
+    /**
+     * Parser instance.
+     */
+    private SimpleDateFormat pattern;
+
+    /**
+     * Create a SimpleDateFormat using the given pattern.
+     * 
+     * @param pattern
+     *            Pattern.
+     */
+    public ConverterDatePatternTemplate(String pattern) {
+        this.pattern = new SimpleDateFormat(pattern);
+    }
+
     @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        if (obj == null) {
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value == null) {
             return null;
         }
         try {
-            return Integer.valueOf(String.valueOf(obj));
-        } catch (NumberFormatException e) {
+            return pattern.parse(String.valueOf(value));
+        } catch (ParseException e) {
             throw new ConverterException(e);
         }
     }

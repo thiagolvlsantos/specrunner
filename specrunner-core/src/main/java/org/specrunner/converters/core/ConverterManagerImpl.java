@@ -15,27 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
-import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverter;
+import org.specrunner.converters.IConverterManager;
+import org.specrunner.util.mapping.core.MappingManagerImpl;
 
 /**
- * Basic byte converter.
+ * Default converter manager implementation.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterByte extends ConverterNotNullNotEmpty {
-    @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        if (obj == null) {
-            return null;
-        }
-        try {
-            return Byte.valueOf(String.valueOf(obj));
-        } catch (NumberFormatException e) {
-            throw new ConverterException(e);
-        }
+public class ConverterManagerImpl extends MappingManagerImpl<IConverter> implements IConverterManager {
+
+    /**
+     * Default constructor.
+     */
+    public ConverterManagerImpl() {
+        super("sr_converters.properties");
     }
 }

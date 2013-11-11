@@ -15,21 +15,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
+
+import org.joda.time.DateTime;
 
 /**
- * A tipical boolean converter.
+ * Create current date.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterBoolean extends ConverterBooleanTemplate {
+public class ConverterDateTimeCurrentTemplate extends AbstractConverterTimeTemplate<DateTime> {
 
     /**
-     * Constructor using 'true' and 'false'.
+     * See superclass.
+     * 
+     * @param regexp
+     *            Regexp.
      */
-    public ConverterBoolean() {
-        super(Boolean.TRUE.toString(), Boolean.FALSE.toString());
+    public ConverterDateTimeCurrentTemplate(String regexp) {
+        super(regexp);
+    }
+
+    /**
+     * See superclass.
+     * 
+     * @param values
+     *            Value.
+     */
+    public ConverterDateTimeCurrentTemplate(String[] values) {
+        super(values);
+    }
+
+    @Override
+    protected DateTime instance() {
+        return new DateTime();
     }
 }

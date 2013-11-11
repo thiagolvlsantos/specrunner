@@ -15,21 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
+
+import org.specrunner.converters.ConverterException;
 
 /**
- * Create current date.
+ * Basic integer converter.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateTimeCurrent extends ConverterDateTimeCurrentTemplate {
-
-    /**
-     * Basic data converter.
-     */
-    public ConverterDateTimeCurrent() {
-        super(new String[] { "atual", "data atual", "data hora atual", "current", "current date", "current timestamp" });
+public class ConverterInteger extends ConverterNotNullNotEmpty {
+    @Override
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return Integer.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
+        }
     }
 }
