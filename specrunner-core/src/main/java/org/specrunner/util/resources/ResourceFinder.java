@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.specrunner.SRServices;
-import org.specrunner.properties.impl.PropertyLoaderImpl;
+import org.specrunner.properties.core.PropertyLoaderImpl;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
