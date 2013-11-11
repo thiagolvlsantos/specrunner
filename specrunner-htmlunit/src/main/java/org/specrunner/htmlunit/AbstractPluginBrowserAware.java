@@ -30,10 +30,10 @@ import nu.xom.Node;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.dumper.impl.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilIO;

@@ -19,7 +19,7 @@ package org.specrunner.hibernate;
 
 import org.hibernate.SessionFactory;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.impl.objects.AbstractPluginObject;
+import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.RowAdapter;
 

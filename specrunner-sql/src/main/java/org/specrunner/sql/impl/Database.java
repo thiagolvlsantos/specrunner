@@ -54,7 +54,7 @@ import org.specrunner.sql.meta.Value;
 import org.specrunner.sql.meta.impl.UtilSchema;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.xom.CellAdapter;

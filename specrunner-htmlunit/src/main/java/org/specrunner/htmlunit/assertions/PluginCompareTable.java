@@ -30,7 +30,7 @@ import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;

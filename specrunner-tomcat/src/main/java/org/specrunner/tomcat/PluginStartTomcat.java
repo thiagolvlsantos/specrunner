@@ -31,13 +31,13 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginScoped;
+import org.specrunner.plugins.core.AbstractPluginScoped;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
-import org.specrunner.reuse.impl.AbstractReusable;
+import org.specrunner.reuse.core.AbstractReusable;
 import org.specrunner.util.UtilLog;
 
 /**

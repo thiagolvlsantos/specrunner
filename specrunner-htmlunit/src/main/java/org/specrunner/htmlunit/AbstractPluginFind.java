@@ -23,7 +23,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.impl.FinderXPath;
-import org.specrunner.parameters.impl.UtilParametrized;
+import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;

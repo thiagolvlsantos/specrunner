@@ -27,7 +27,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.sql.meta.Column;
-import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
 
 /**

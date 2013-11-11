@@ -18,7 +18,7 @@
 package org.specrunner.sql.report;
 
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.impl.ParameterHolder;
+import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;

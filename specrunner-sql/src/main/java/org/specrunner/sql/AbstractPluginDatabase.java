@@ -29,7 +29,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.AbstractPluginTable;
+import org.specrunner.plugins.core.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
