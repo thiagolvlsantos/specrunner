@@ -20,7 +20,7 @@ package org.specrunner.dumper.impl;
 import java.io.File;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
@@ -48,7 +48,7 @@ public class SourceDumperResources extends AbstractSourceDumperFile {
                 throw new SourceDumperException("Output file could not be created.");
             }
             IResourceManager manager = source.getManager();
-            ISource target = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(outputFile.getAbsolutePath());
+            ISource target = SRServices.get(ISourceFactoryManager.class).newSource(outputFile.getAbsolutePath());
             for (IResource r : manager) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("RESOURCE (" + r + "):" + res.getAbsolutePath());

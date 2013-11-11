@@ -11,7 +11,7 @@ import java.util.Set;
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 import org.specrunner.ISpecRunner;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
@@ -85,7 +85,7 @@ public class SpecRunnerStatement extends Statement {
         }
         // exact match
         String prefix = str + pkg.getName().replace(".", File.separator) + File.separator + clazz.getSimpleName();
-        Set<String> extensions = SpecRunnerServices.get(ISourceFactoryManager.class).keySet();
+        Set<String> extensions = SRServices.get(ISourceFactoryManager.class).keySet();
         for (String s : extensions) {
             File tmp = new File(prefix + "." + s);
             if (tmp.exists()) {
@@ -118,8 +118,8 @@ public class SpecRunnerStatement extends Statement {
 
     @Override
     public void evaluate() throws Throwable {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
-        ISpecRunner srunner = SpecRunnerServices.getSpecRunner();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
+        ISpecRunner srunner = SRServices.getSpecRunner();
         IResultSet result = srunner.run(input.getPath(), configure(cfg));
         if (result.getStatus().isError()) {
             throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());

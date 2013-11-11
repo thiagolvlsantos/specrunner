@@ -1,6 +1,6 @@
 package org.specrunner.jdbcproxy;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.jdbcproxy.impl.WrapperFactoryExample;
 
 public class Main {
@@ -9,7 +9,7 @@ public class Main {
         try {
             System.out.println("org.specrunner.jdbcproxy loading.");
             // DriverManager.setLogWriter(new PrintWriter(System.err));
-            SpecRunnerServices.get().bind(IWrapperFactory.class, new WrapperFactoryExample());
+            SRServices.get().bind(IWrapperFactory.class, new WrapperFactoryExample());
             Class.forName(FactoryJdbcBuilder.class.getName());
             System.out.println("org.specrunner.jdbcproxy loaded.");
         } catch (Exception e) {

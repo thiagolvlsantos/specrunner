@@ -38,7 +38,7 @@ public class TestJetty {
     @Before
     public void prepareTest() throws SpecRunnerException {
 
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
         // add predefined objRects that can be used in expressions, and add
         // predefined classes that can be used in expressions, default
         // constructor is invoked.
@@ -54,7 +54,7 @@ public class TestJetty {
         }).bindModel("host", Model.of("localhost"));
 
         // longer tolerance
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
@@ -65,14 +65,14 @@ public class TestJetty {
 
     @Test
     public void runJettyChrome() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jetty-crome.html", cfg);
     }
 
     @Test
     public void runJettyIe() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false);
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryIe.class.getName());
         cfg.add(WebDriverFactoryIe.FEATURE_DRIVER, "C:\\Users\\Thiago\\Downloads\\IEDriverServer.exe");
@@ -81,7 +81,7 @@ public class TestJetty {
 
     @Test
     public void runJettyFire() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, FirefoxDriver.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jetty-fire.html", cfg);
     }
@@ -97,7 +97,7 @@ public class TestJetty {
 
     @Test
     public void runWithoutScreenCapture() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
@@ -107,7 +107,7 @@ public class TestJetty {
 
     // @Test
     public void runAndroid() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, AndroidDriver.class.getName()).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-android.html");
         // same as before.
         runJetty(cfg);
@@ -115,7 +115,7 @@ public class TestJetty {
 
     @Test
     public void runWithoutScreenCapture2() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
@@ -125,7 +125,7 @@ public class TestJetty {
 
     @Test
     public void runWithoutScreenCapture3() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
@@ -136,12 +136,12 @@ public class TestJetty {
     @Test
     public void runTwice() throws Exception {
         // run again to check time performance after classes are loaded.
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
         runJetty(cfg);
 
         // run again to check time performance after classes are loaded.
-        cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
         runJetty(cfg);
     }
@@ -149,7 +149,7 @@ public class TestJetty {
     public static void main(String[] args) throws Exception {
         TestJetty tj = new TestJetty();
         tj.prepareTest();
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.add(PluginBrowser.FEATURE_RECORDING, false);
         fm.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 10000; j++) {

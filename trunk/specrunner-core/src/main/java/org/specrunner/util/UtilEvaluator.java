@@ -17,11 +17,10 @@
  */
 package org.specrunner.util;
 
+import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.IExpression;
-import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.plugins.PluginException;
 
 /**
@@ -89,7 +88,7 @@ public final class UtilEvaluator {
         int pos2 = text.indexOf(END, pos1 + 2);
         if (pos1 < 0 && pos2 < 0) {
             try {
-                expression = SpecRunnerServices.get(IExpressionFactory.class).create(text, context);
+                expression = SRServices.getExpressionFactory().create(text, context);
                 result = expression.evaluate(context, silent);
             } catch (SpecRunnerException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -108,7 +107,7 @@ public final class UtilEvaluator {
             String content = text.substring(pos1 + 2, pos2);
             String name = START_CODE + content + END;
             try {
-                expression = SpecRunnerServices.get(IExpressionFactory.class).create(content, context);
+                expression = SRServices.getExpressionFactory().create(content, context);
                 Object local = expression.evaluate(context);
                 if (local != null) {
                     result = replace(String.valueOf(result), name, local);
@@ -151,7 +150,7 @@ public final class UtilEvaluator {
             }
             String content = text.substring(pos1 + 2, pos2);
             try {
-                IExpression expression = SpecRunnerServices.get(IExpressionFactory.class).create(content, context);
+                IExpression expression = SRServices.getExpressionFactory().create(content, context);
                 Object local = expression.evaluate(context, silent);
                 if (local != null) {
                     String name = START_CODE + content + END;

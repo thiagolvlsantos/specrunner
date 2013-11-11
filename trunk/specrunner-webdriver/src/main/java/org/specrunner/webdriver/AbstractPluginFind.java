@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.impl.UtilParametrized;
@@ -119,7 +119,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (finder == null) {
             fm.set(FEATURE_FINDER_TYPE, this);
         }

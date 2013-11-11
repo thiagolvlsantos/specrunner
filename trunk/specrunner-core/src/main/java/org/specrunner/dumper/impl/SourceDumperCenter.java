@@ -25,7 +25,7 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
@@ -60,8 +60,8 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
             Document document = source.getDocument();
             addLinkToFrame(document, result, model);
             saveTo(document, output);
-            IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
-            out.println("Output (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + "): " + output);
+            IOutput out = SRServices.get(IOutputFactory.class).currentOutput();
+            out.println("Output (" + SRServices.get(IConcurrentMapping.class).getThread() + "): " + output);
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("DEFAULT   SAVED TO " + output.getAbsolutePath());
             }

@@ -23,7 +23,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.data.PluginMap;
@@ -170,7 +170,7 @@ public class FeaturePresenter implements IPresenter {
         root.appendChild(macro);
         String alias;
         try {
-            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMacro.class);
+            alias = SRServices.get(IPluginFactory.class).getAlias(PluginMacro.class);
         } catch (PluginException e) {
             alias = "macro";
         }
@@ -200,7 +200,7 @@ public class FeaturePresenter implements IPresenter {
         Element quote = new Element("blockquote");
         String alias;
         try {
-            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginSentence.class);
+            alias = SRServices.get(IPluginFactory.class).getAlias(PluginSentence.class);
         } catch (PluginException e) {
             alias = "sentence";
         }
@@ -290,7 +290,7 @@ public class FeaturePresenter implements IPresenter {
         if (example) {
             String alias;
             try {
-                alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginMap.class);
+                alias = SRServices.get(IPluginFactory.class).getAlias(PluginMap.class);
             } catch (PluginException e1) {
                 alias = "map";
             }
@@ -332,7 +332,7 @@ public class FeaturePresenter implements IPresenter {
         Element iterator = new Element("span");
         String alias;
         try {
-            alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginIterator.class);
+            alias = SRServices.get(IPluginFactory.class).getAlias(PluginIterator.class);
         } catch (PluginException e) {
             alias = "iterator";
         }
@@ -363,7 +363,7 @@ public class FeaturePresenter implements IPresenter {
                 Element call = new Element("p");
                 String alias;
                 try {
-                    alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginCall.class);
+                    alias = SRServices.get(IPluginFactory.class).getAlias(PluginCall.class);
                 } catch (PluginException e) {
                     alias = "call";
                 }

@@ -28,7 +28,7 @@ import nu.xom.Document;
 import nu.xom.Serializer;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.dumper.ISourceDumper;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.features.FeatureManagerException;
@@ -169,7 +169,7 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
      *             On dumper error.
      */
     protected void outputDirectory() throws SourceDumperException {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         try {
             fm.setStrict(FEATURE_OUTPUT_DIRECTORY, this);
         } catch (FeatureManagerException e) {
@@ -205,7 +205,7 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
         if (asFile != null) {
             outputName = asFile.getName();
         }
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         try {
             fm.setStrict(FEATURE_OUTPUT_NAME, this);
         } catch (SpecRunnerException e) {
@@ -332,7 +332,7 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
         File res = new File(output.getAbsoluteFile() + "_res");
         try {
             clean(res);
-            ISource ref = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(output.getAbsolutePath());
+            ISource ref = SRServices.get(ISourceFactoryManager.class).newSource(output.getAbsolutePath());
             IResourceManager manager = ref.getManager();
             manager.addDefaultCss();
             manager.addDefaultJs();

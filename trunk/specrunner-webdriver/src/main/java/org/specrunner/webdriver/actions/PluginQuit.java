@@ -18,7 +18,7 @@
 package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
@@ -44,7 +44,7 @@ public class PluginQuit extends AbstractPluginUrlAware {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         // only not reusable browser can be quit.
-        if (SpecRunnerServices.get(IReuseManager.class).get(getBrowserName()) == null) {
+        if (SRServices.get(IReuseManager.class).get(getBrowserName()) == null) {
             client.quit();
         }
         result.addResult(Success.INSTANCE, context.peek());

@@ -21,7 +21,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -86,7 +86,7 @@ public abstract class PluginIfBranch extends AbstractPluginNamed {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         if (hide == null) {
-            IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+            IFeatureManager fm = SRServices.getFeatureManager();
             fm.set(FEATURE_HIDE, this);
         }
     }

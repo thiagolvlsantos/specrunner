@@ -10,7 +10,7 @@ public class TestDownload {
 
     @BeforeClass
     public static void antes() {
-        // SpecRunnerServices.getFeatureManager().add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
+        // SRServices.getFeatureManager().add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
         // WebDriverFactoryChrome.class.getName());
     }
 

@@ -17,7 +17,7 @@
  */
 package org.specrunner.plugins.impl.elements;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -56,6 +56,6 @@ public class PluginHtml extends AbstractPluginScoped {
      * @return The test instance.
      */
     public static Object getTestInstance() {
-        return SpecRunnerServices.getFeatureManager().get(BEAN_NAME);
+        return SRServices.getFeatureManager().get(BEAN_NAME);
     }
 }

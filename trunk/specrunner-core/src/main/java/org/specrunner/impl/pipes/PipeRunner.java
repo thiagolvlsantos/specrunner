@@ -18,7 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
@@ -70,7 +70,7 @@ public class PipeRunner implements IPipe {
      *             On creation errors.
      */
     protected IRunner createRunner(ISource source) throws RunnerException {
-        return SpecRunnerServices.get(IRunnerFactory.class).newRunner(source);
+        return SRServices.get(IRunnerFactory.class).newRunner(source);
     }
 
     /**

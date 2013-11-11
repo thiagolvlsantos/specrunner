@@ -18,7 +18,7 @@ public class TstngJetty {
 
     @BeforeMethod
     public void prepareTest() throws SpecRunnerException {
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
         // add predefined objects that can be used in expressions
         ef.bindValue("pattern", "HH:mm:ss");
         // add predefined classes that can be used in expressions, default
@@ -26,7 +26,7 @@ public class TstngJetty {
         ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginCompareDate.FEATURE_TOLERANCE, 5000L);
 
         // XPATH search strategy example
@@ -38,7 +38,7 @@ public class TstngJetty {
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runJetty() throws Exception {
         try {
-            ISpecRunner dr = SpecRunnerServices.getSpecRunner();
+            ISpecRunner dr = SRServices.getSpecRunner();
             IResultSet res = dr.run("src/test/resources/income/example-jetty.html");
             Assert.assertTrue(res.asString(), !res.getStatus().isError());
         } catch (Exception e) {
@@ -49,7 +49,7 @@ public class TstngJetty {
 
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runWithoutScreenCapture() throws Exception {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         // disable recording browser information.
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
@@ -61,7 +61,7 @@ public class TstngJetty {
 
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runWithoutScreenCapture2() throws Exception {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         // disable recording browser information.
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
@@ -73,7 +73,7 @@ public class TstngJetty {
 
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runWithoutScreenCapture3() throws Exception {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         // disable recording browser information.
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
@@ -86,13 +86,13 @@ public class TstngJetty {
     @Test(threadPoolSize = 1, invocationCount = 1)
     public void runTwice() throws Exception {
         // run again to check time performance after classes are loaded.
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, true);
         fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
         runJetty();
 
         // run again to check time performance after classes are loaded.
-        fm = SpecRunnerServices.getFeatureManager();
+        fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
         runJetty();
@@ -101,7 +101,7 @@ public class TstngJetty {
     public static void main(String[] args) throws Exception {
         TstngJetty tj = new TstngJetty();
         tj.prepareTest();
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 5; j++) {

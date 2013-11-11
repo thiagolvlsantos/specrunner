@@ -32,7 +32,7 @@ import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.preventers.AppContextLeakPreventer;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -218,7 +218,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (file == null) {
             fm.set(FEATURE_FILE, this);
         }
@@ -242,7 +242,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                     UtilLog.LOG.info("Jetty version -> " + Server.getVersion() + ".");
                 }
 
-                IReuseManager reusables = SpecRunnerServices.get(IReuseManager.class);
+                IReuseManager reusables = SRServices.get(IReuseManager.class);
                 if (reuse) {
                     Map<String, Object> cfg = new HashMap<String, Object>();
                     cfg.put(getFileForJettyName(getName()), file);

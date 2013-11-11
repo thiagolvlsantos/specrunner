@@ -17,7 +17,7 @@
  */
 package org.specrunner.sql;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -85,7 +85,7 @@ public class PluginRelease extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (getName() == null) {
             fm.set(FEATURE_NAME, this);
         }
@@ -104,7 +104,7 @@ public class PluginRelease extends AbstractPluginValue {
             try {
                 // only not reusable instances can be released this way,
                 // otherwise reuse manager will release in the right time.
-                if (SpecRunnerServices.get(IReuseManager.class).get(base) == null) {
+                if (SRServices.get(IReuseManager.class).get(base) == null) {
                     database.release();
                 } else {
                     if (UtilLog.LOG.isDebugEnabled()) {

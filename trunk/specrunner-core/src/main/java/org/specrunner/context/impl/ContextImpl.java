@@ -27,7 +27,7 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
@@ -392,12 +392,12 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
 
     @Override
     public IBlock newBlock(Node node, IPlugin plugin) {
-        return SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin);
+        return SRServices.get(IBlockFactory.class).newBlock(node, plugin);
     }
 
     @Override
     public IBlock newBlock(Node node, IPlugin plugin, Map<String, Object> map) {
-        return SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin, map);
+        return SRServices.get(IBlockFactory.class).newBlock(node, plugin, map);
     }
 
     @Override

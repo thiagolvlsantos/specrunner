@@ -25,7 +25,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.properties.impl.PropertyLoaderImpl;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
@@ -47,7 +47,7 @@ public class ResourceFinder {
     /**
      * Cache of resources.
      */
-    private static ICache<String, List<URL>> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
+    private static ICache<String, List<URL>> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
 
     /**
      * Comparator element.
@@ -115,7 +115,7 @@ public class ResourceFinder {
     public List<URL> getAllResources(String resource) throws IOException {
         // update comparator
         comparator = null;
-        SpecRunnerServices.getFeatureManager().set(FEATURE_COMPARATOR, this);
+        SRServices.getFeatureManager().set(FEATURE_COMPARATOR, this);
         synchronized (cache) {
             List<URL> files = cache.get(resource);
             if (files != null) {

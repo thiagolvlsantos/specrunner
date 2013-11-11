@@ -17,14 +17,14 @@ public class TestGoogle {
 
     @Test
     public void bddGoogle() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryIe.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/bdd-google.html", cfg);
     }
 
     @Test
     public void bddGoogleChrome() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         System.setProperty("webdriver.chrome.driver", "C:/Program Files (x86)/Google/Chrome/Application/chromedriver.exe");
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, ChromeDriver.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/bdd-google.html", cfg);

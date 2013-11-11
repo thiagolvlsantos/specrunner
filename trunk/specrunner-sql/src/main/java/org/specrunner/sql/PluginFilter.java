@@ -20,7 +20,7 @@ package org.specrunner.sql;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -143,7 +143,7 @@ public class PluginFilter extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (provider == null) {
             fm.set(FEATURE_FILTER, this);
         }
@@ -154,7 +154,7 @@ public class PluginFilter extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         final String currentName = getName() != null ? getName() : DEFAULT_FILTER_NAME;
-        IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
+        IReuseManager rm = SRServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
             if (ir != null) {

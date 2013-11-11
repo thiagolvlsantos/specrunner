@@ -25,7 +25,7 @@ import java.util.Properties;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
@@ -103,7 +103,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     public void initialize() throws PluginException {
         if (!initialized) {
             try {
-                Properties p = SpecRunnerServices.get(IPropertyLoader.class).load(file);
+                Properties p = SRServices.get(IPropertyLoader.class).load(file);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("properties=" + p);
                 }

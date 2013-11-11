@@ -23,7 +23,7 @@ import java.util.Map.Entry;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.IParameterDecorator;
@@ -81,7 +81,7 @@ public final class UtilParametrized {
     public static void setProperties(IContext context, IParameterHolder holder, Element element, boolean onCreate) throws PluginException {
         if (holder != null) {
             IParameterDecorator p = holder.getParameters();
-            context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
+            context.push(SRServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (int i = 0; i < element.getAttributeCount(); i++) {
                 Attribute n = element.getAttribute(i);
                 String name = n.getQualifiedName();
@@ -122,7 +122,7 @@ public final class UtilParametrized {
     public static void setProperties(IContext context, IParameterHolder holder, Map<String, Object> parameters) throws PluginException {
         if (holder != null) {
             IParameterDecorator p = holder.getParameters();
-            context.push(SpecRunnerServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
+            context.push(SRServices.get(IBlockFactory.class).newBlock(null, PluginNop.emptyPlugin()));
             for (Entry<String, Object> e : parameters.entrySet()) {
                 try {
                     if (UtilLog.LOG.isDebugEnabled()) {

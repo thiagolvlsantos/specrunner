@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -347,7 +347,7 @@ public class PluginConnection extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (connection == null) {
             fm.set(FEATURE_CONNECTION, this);
         }
@@ -373,7 +373,7 @@ public class PluginConnection extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         final String currentName = getName() != null ? getName() : DEFAULT_CONNECTION_NAME;
-        IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
+        IReuseManager rm = SRServices.get(IReuseManager.class);
         if (reuse) {
             IReusable<?> ir = rm.get(currentName);
             if (ir != null) {
@@ -480,7 +480,7 @@ public class PluginConnection extends AbstractPluginValue {
     public IDataSourceProvider createProvider() {
         String newUrl = url;
         if (getThreadsafe()) {
-            IConcurrentMapping rm = SpecRunnerServices.get(IConcurrentMapping.class);
+            IConcurrentMapping rm = SRServices.get(IConcurrentMapping.class);
             newUrl = String.valueOf(rm.get("url", newUrl));
         }
         return new SimpleDataSource(driver, newUrl, user, password);

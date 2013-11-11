@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.mapping.IMappingManager;
@@ -47,7 +47,7 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
     public void initialize() {
         if (!initialized) {
             try {
-                Properties p = SpecRunnerServices.get(IPropertyLoader.class).load(file);
+                Properties p = SRServices.get(IPropertyLoader.class).load(file);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("properties=" + p);
                 }

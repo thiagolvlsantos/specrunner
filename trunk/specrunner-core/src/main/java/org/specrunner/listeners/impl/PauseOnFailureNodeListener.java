@@ -22,7 +22,7 @@ import java.util.List;
 
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
@@ -125,7 +125,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
 
     @Override
     public ENext onBefore(Node node, IContext context, IResultSet result) {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_PAUSE_ON_FAILURE, this);
         fm.set(FEATURE_SHOW_DIALOG, this);
         start = result.size();

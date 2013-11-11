@@ -32,7 +32,7 @@ public class TestMultiplo {
 
     @Test
     public void runMultiplo() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         SpecRunnerJUnit.defaultRun("src/test/resources/sources/core.html", "src/test/resources/outcome/example-jetty-" + numero + ".html", cfg);
     }
 }

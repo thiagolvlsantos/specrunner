@@ -17,7 +17,7 @@ public class TestAllSequential extends AbstractTest {
     }
 
     protected void run(String name, String out) {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out, cfg);
     }

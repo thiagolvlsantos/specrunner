@@ -20,7 +20,7 @@ package org.specrunner.sql.meta;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.converters.IConverter;
 
@@ -59,7 +59,7 @@ public class Column implements IReplicable<Column> {
     /**
      * Column default converter.
      */
-    private static final IConverter CONVERTER_DEFAULT = SpecRunnerServices.getConverterManager().getDefault();
+    private static final IConverter CONVERTER_DEFAULT = SRServices.getConverterManager().getDefault();
     /**
      * Column converter.
      */
@@ -75,7 +75,7 @@ public class Column implements IReplicable<Column> {
     /**
      * Column default comparator.
      */
-    private static final IComparator COMPARATOR_DEFAULT = SpecRunnerServices.getComparatorManager().getDefault();
+    private static final IComparator COMPARATOR_DEFAULT = SRServices.getComparatorManager().getDefault();
     /**
      * Column comparator.
      */

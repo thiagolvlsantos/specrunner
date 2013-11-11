@@ -27,7 +27,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.ICacheable;
 import org.specrunner.htmlunit.IWebConnection;
@@ -93,7 +93,7 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
      */
     public WebConnectionFile(WebClient webClient) {
         super(webClient);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_DIRECTORY, this);
         if (cacheClean == null) {
             fm.set(FEATURE_CLEAN, this);

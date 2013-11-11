@@ -27,7 +27,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Serializer;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresenter;
@@ -69,7 +69,7 @@ public class SourceFactoryText extends AbstractSourceFactory {
                     throw new SourceException("Invalid feature file(" + target + "):" + error);
                 }
 
-                IPresenter presenter = SpecRunnerServices.get(IPresenterManager.class).get(feature.getClass().getName());
+                IPresenter presenter = SRServices.get(IPresenterManager.class).get(feature.getClass().getName());
                 Node node = presenter.asNode(feature);
                 body.appendChild(node);
                 if (UtilLog.LOG.isTraceEnabled()) {

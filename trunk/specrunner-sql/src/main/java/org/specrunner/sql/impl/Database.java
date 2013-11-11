@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
@@ -90,12 +90,12 @@ public class Database implements IDatabase {
     /**
      * Prepared statements for input actions.
      */
-    protected ICache<String, PreparedStatement> inputs = SpecRunnerServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
+    protected ICache<String, PreparedStatement> inputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
 
     /**
      * Prepared statements for output actions.
      */
-    protected ICache<String, PreparedStatement> outputs = SpecRunnerServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
+    protected ICache<String, PreparedStatement> outputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
 
     /**
      * Manage object lookup and reuse.
@@ -176,7 +176,7 @@ public class Database implements IDatabase {
 
     @Override
     public void initialize() {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_LIMIT, this);
         fm.set(FEATURE_ID_MANAGER, this);
         fm.set(FEATURE_SEQUENCE_PROVIDER, this);

@@ -7,10 +7,9 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.converters.Converter;
 import org.specrunner.converters.impl.ConverterDatePatternArgs;
-import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunnerConcurrent;
@@ -22,8 +21,8 @@ public class TestSentence {
 
     @Before
     public void before() {
-        SpecRunnerServices.get(IExpressionFactory.class).bindClass("dt", DateTime.class);
-        SpecRunnerServices.getFeatureManager().add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
+        SRServices.getExpressionFactory().bindClass("dt", DateTime.class);
+        SRServices.getFeatureManager().add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
     }
 
     @ExpectedMessage("Falhou!")

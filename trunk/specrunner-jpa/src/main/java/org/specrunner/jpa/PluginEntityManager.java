@@ -25,7 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
@@ -74,14 +74,14 @@ public class PluginEntityManager extends AbstractPluginObject {
         EntityManagerFactory emf = null;
         EntityManager em = null;
 
-        IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
+        IReuseManager rm = SRServices.get(IReuseManager.class);
         Map<String, Object> cfg = new HashMap<String, Object>();
         cfg.put("unit", unit);
 
         Map<String, Object> properties = new HashMap<String, Object>();
         if (getThreadsafe() && url != null) {
             String key = "javax.persistence.jdbc.url";
-            IConcurrentMapping cm = SpecRunnerServices.get(IConcurrentMapping.class);
+            IConcurrentMapping cm = SRServices.get(IConcurrentMapping.class);
             String newUrl = String.valueOf(cm.get("url", url));
             properties.put(key, newUrl);
         }

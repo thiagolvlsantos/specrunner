@@ -20,13 +20,13 @@ public class AbstractTest {
 
     @Before
     public void onBefore() {
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
 
         // date expression elements
         ef.bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class);
 
         // longer tolerance
-        SpecRunnerServices.getFeatureManager().add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        SRServices.getFeatureManager().add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";

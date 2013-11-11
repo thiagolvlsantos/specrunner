@@ -19,7 +19,7 @@ package example.sql.dbms;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -53,7 +53,7 @@ public class TestDbmsNegativeFeature {
     private IConfiguration cfg;
 
     public TestDbmsNegativeFeature() {
-        cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
         cfg.add(PluginSchemaLoader.FEATURE_REUSE, true);
 
@@ -92,7 +92,7 @@ public class TestDbmsNegativeFeature {
 
     @Before
     public void before() throws PluginException {
-        IPluginFactory pf = SpecRunnerServices.get(IPluginFactory.class);
+        IPluginFactory pf = SRServices.get(IPluginFactory.class);
 
         IPluginGroup group = new PluginGroupImpl();
 

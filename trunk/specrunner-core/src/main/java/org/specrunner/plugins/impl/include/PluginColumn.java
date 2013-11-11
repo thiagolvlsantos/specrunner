@@ -20,7 +20,7 @@ package org.specrunner.plugins.impl.include;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
@@ -77,7 +77,7 @@ public class PluginColumn extends AbstractPluginTable {
             result.addResult(Failure.INSTANCE, context.peek(), e);
             return ENext.DEEP;
         }
-        IAccessFactory accessFactory = SpecRunnerServices.get(IAccessFactory.class);
+        IAccessFactory accessFactory = SRServices.get(IAccessFactory.class);
         List<IAccess> accesses = new LinkedList<IAccess>();
         for (String f : features) {
             accesses.add(accessFactory.newAccess(instance, f.replace("?", "")));
@@ -127,7 +127,7 @@ public class PluginColumn extends AbstractPluginTable {
                         }
                     }
                     try {
-                        UtilPlugin.compare(c.getNode(), PluginAssertion.INSTANCE, result, c.getComparator(SpecRunnerServices.getComparatorManager().get("string")), value, received);
+                        UtilPlugin.compare(c.getNode(), PluginAssertion.INSTANCE, result, c.getComparator(SRServices.getComparatorManager().get("string")), value, received);
                     } catch (ComparatorException e) {
                         result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new PluginException("Could not find comparator in " + c.toString() + ".", e));
                     }

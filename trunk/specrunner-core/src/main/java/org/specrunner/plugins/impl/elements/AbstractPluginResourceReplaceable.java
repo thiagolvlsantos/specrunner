@@ -22,7 +22,7 @@ import java.io.File;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.plugins.ActionType;
@@ -78,8 +78,8 @@ public abstract class AbstractPluginResourceReplaceable extends AbstractPluginRe
                 }
 
                 File file = null;
-                File outDir = (File) SpecRunnerServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
-                String outFile = (String) SpecRunnerServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
+                File outDir = (File) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
+                String outFile = (String) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
                 if (outDir != null || outFile != null) {
                     file = new File(outDir, outFile);
                 } else {

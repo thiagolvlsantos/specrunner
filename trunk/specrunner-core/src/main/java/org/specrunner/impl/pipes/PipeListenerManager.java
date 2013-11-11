@@ -17,7 +17,7 @@
  */
 package org.specrunner.impl.pipes;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
@@ -58,7 +58,7 @@ public class PipeListenerManager implements IPipe {
      * @return A manager.
      */
     protected IListenerManager createListenerManager() {
-        return SpecRunnerServices.get(IListenerManager.class);
+        return SRServices.get(IListenerManager.class);
     }
 
     /**

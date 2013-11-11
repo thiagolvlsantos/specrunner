@@ -27,7 +27,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.IComparatorManager;
@@ -142,7 +142,7 @@ public class NodeHolder implements INodeHolder {
 
     @Override
     public IConverter getConverter() {
-        return getConverter(SpecRunnerServices.getConverterManager().getDefault());
+        return getConverter(SRServices.getConverterManager().getDefault());
     }
 
     @Override
@@ -150,7 +150,7 @@ public class NodeHolder implements INodeHolder {
         IConverter converter = null;
         if (hasAttribute(ATTRIBUTE_CONVERTER)) {
             String str = getAttribute(ATTRIBUTE_CONVERTER);
-            IConverterManager cm = SpecRunnerServices.getConverterManager();
+            IConverterManager cm = SRServices.getConverterManager();
             converter = cm.get(str);
             if (converter == null) {
                 try {
@@ -192,7 +192,7 @@ public class NodeHolder implements INodeHolder {
 
     @Override
     public IComparator getComparator() throws ComparatorException {
-        return getComparator(SpecRunnerServices.getComparatorManager().getDefault());
+        return getComparator(SRServices.getComparatorManager().getDefault());
     }
 
     @Override
@@ -200,7 +200,7 @@ public class NodeHolder implements INodeHolder {
         IComparator comparator = null;
         if (hasAttribute(ATTRIBUTE_COMPARATOR)) {
             String str = getAttribute(ATTRIBUTE_COMPARATOR);
-            IComparatorManager cm = SpecRunnerServices.getComparatorManager();
+            IComparatorManager cm = SRServices.getComparatorManager();
             comparator = cm.get(str);
             if (comparator == null) {
                 try {

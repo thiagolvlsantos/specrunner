@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.converters.IConverterManager;
+import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
@@ -36,7 +37,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * Centralizes the services provided by the SpecRunner framework. To get full
  * list of available services list use method <code>getServices()</code>. For
  * specific services, i.e. if you need an instance of IStringAlignerFactory, use
- * <code>SpecRunnerServices.get(IStringAlignerFactory.class)</code>.
+ * <code>SRServices.get(IStringAlignerFactory.class)</code>.
  * 
  * <p>
  * <b>This is thread-safe!</b>
@@ -44,12 +45,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @author Thiago Santos
  * 
  */
-public final class SpecRunnerServices {
+public final class SRServices {
 
     /**
      * Instance by thread.
      */
-    private static ThreadLocal<SpecRunnerServices> instance = new ThreadLocal<SpecRunnerServices>();
+    private static ThreadLocal<SRServices> instance = new ThreadLocal<SRServices>();
 
     /**
      * Map of services by type.
@@ -64,7 +65,7 @@ public final class SpecRunnerServices {
     /**
      * Create a group of services provided by SpecRunner.
      */
-    private SpecRunnerServices() {
+    private SRServices() {
     }
 
     /**
@@ -78,7 +79,7 @@ public final class SpecRunnerServices {
      */
     private <T> T getDefault(Class<T> type) {
         Object result = null;
-        if (type == SpecRunnerServices.class) {
+        if (type == SRServices.class) {
             result = this;
         } else {
             if (context == null) {
@@ -157,13 +158,13 @@ public final class SpecRunnerServices {
     }
 
     /**
-     * Gets the instance of {@link SpecRunnerServices}.
+     * Gets the instance of {@link SRServices}.
      * 
      * @return The services instance.
      */
-    public static SpecRunnerServices get() {
+    public static SRServices get() {
         if (instance.get() == null) {
-            SpecRunnerServices service = new SpecRunnerServices();
+            SRServices service = new SRServices();
             Runtime.getRuntime().addShutdownHook(new ShutDown(service));
             instance.set(service);
         }
@@ -195,6 +196,15 @@ public final class SpecRunnerServices {
      */
     public static IComparatorManager getComparatorManager() {
         return get(IComparatorManager.class);
+    }
+
+    /**
+     * Shortcut method to expression factory.
+     * 
+     * @return The expression factory.
+     */
+    public static IExpressionFactory getExpressionFactory() {
+        return get(IExpressionFactory.class);
     }
 
     /**
@@ -235,7 +245,7 @@ public final class SpecRunnerServices {
      * @param service
      *            The service.
      */
-    private static void release(SpecRunnerServices service) {
+    private static void release(SRServices service) {
         try {
             IChannel channel = service.lookup(IChannelFactory.class).newChannel();
             channel.add(ShutDown.SHUTDOWN, service);
@@ -262,7 +272,7 @@ public final class SpecRunnerServices {
         /**
          * The services instance to be shutdown.
          */
-        private final SpecRunnerServices shutdown;
+        private final SRServices shutdown;
 
         /**
          * The services instance to shutdown on <code>System.exit(...)</code>.
@@ -270,7 +280,7 @@ public final class SpecRunnerServices {
          * @param shutdown
          *            The instance.
          */
-        public ShutDown(SpecRunnerServices shutdown) {
+        public ShutDown(SRServices shutdown) {
             this.shutdown = shutdown;
         }
 
@@ -279,7 +289,7 @@ public final class SpecRunnerServices {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Release shutdown call.");
             }
-            SpecRunnerServices.release(shutdown);
+            SRServices.release(shutdown);
         }
 
         /**
@@ -291,8 +301,8 @@ public final class SpecRunnerServices {
          * @throws PipelineException
          *             On lookup errors.
          */
-        public static SpecRunnerServices recover(IChannel channel) throws PipelineException {
-            return channel.get(SHUTDOWN, SpecRunnerServices.class);
+        public static SRServices recover(IChannel channel) throws PipelineException {
+            return channel.get(SHUTDOWN, SRServices.class);
         }
     }
 }

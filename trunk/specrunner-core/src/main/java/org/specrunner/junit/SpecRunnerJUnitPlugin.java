@@ -1,7 +1,7 @@
 package org.specrunner.junit;
 
 import org.junit.Assert;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.plugins.IPlugin;
@@ -29,7 +29,7 @@ public final class SpecRunnerJUnitPlugin {
      *            The plugin to be performed.
      */
     public static void defaultRun(IPlugin input) {
-        defaultRun(input, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+        defaultRun(input, SRServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     /**
@@ -42,7 +42,7 @@ public final class SpecRunnerJUnitPlugin {
      */
     public static void defaultRun(IPlugin input, IConfiguration cfg) {
         try {
-            IResultSet result = SpecRunnerServices.getSpecRunnerPlugin().run(input, cfg);
+            IResultSet result = SRServices.getSpecRunnerPlugin().run(input, cfg);
             Assert.assertTrue(result.asString(), !result.getStatus().isError());
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

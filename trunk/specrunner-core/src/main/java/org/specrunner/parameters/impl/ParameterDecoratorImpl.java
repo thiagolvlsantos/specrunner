@@ -21,7 +21,7 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.Late;
 import org.specrunner.expressions.Unsilent;
@@ -207,7 +207,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     public boolean hasParameter(String name) {
         IAccess access = checked.get(name);
         if (access == null) {
-            access = SpecRunnerServices.get(IAccessFactory.class).newAccess(decorated, name);
+            access = SRServices.get(IAccessFactory.class).newAccess(decorated, name);
             checked.put(name, access);
         }
         return access != null;

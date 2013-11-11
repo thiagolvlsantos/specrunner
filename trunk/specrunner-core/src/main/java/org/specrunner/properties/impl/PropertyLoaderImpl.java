@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.properties.PropertyLoaderException;
 import org.specrunner.util.UtilLog;
@@ -42,7 +42,7 @@ public class PropertyLoaderImpl implements IPropertyLoader {
     /**
      * Cache of properties.
      */
-    private static ICache<String, Properties> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
+    private static ICache<String, Properties> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
 
     @Override
     public Properties load(String file) throws PropertyLoaderException {
@@ -57,7 +57,7 @@ public class PropertyLoaderImpl implements IPropertyLoader {
             result = new Properties();
             List<URL> files;
             try {
-                files = SpecRunnerServices.get(ResourceFinder.class).getAllResources(file);
+                files = SRServices.get(ResourceFinder.class).getAllResources(file);
             } catch (IOException e) {
                 throw new PropertyLoaderException(e);
             }

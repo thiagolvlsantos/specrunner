@@ -2,8 +2,7 @@ package example.objects;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
-import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.SRServices;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunnerConcurrent;
@@ -16,8 +15,8 @@ public class TestObjects {
 
     @Before
     public void mapping() {
-        SpecRunnerServices.get(IExpressionFactory.class).bindValue("users", "/example/objects/user.html");
-        SpecRunnerServices.get(IExpressionFactory.class).bindValue("roles", "/example/objects/role.html");
+        SRServices.getExpressionFactory().bindValue("users", "/example/objects/user.html");
+        SRServices.getExpressionFactory().bindValue("roles", "/example/objects/role.html");
     }
 
     public void perform(Authorization aut) {

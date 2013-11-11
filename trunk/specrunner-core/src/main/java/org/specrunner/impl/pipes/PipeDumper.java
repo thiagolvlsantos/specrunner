@@ -18,7 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.dumper.ISourceDumper;
 import org.specrunner.dumper.ISourceDumperFactory;
 import org.specrunner.dumper.SourceDumperException;
@@ -65,7 +65,7 @@ public class PipeDumper implements IPipe {
      *             On creation error.
      */
     protected ISourceDumper createDumper() throws SourceDumperException {
-        return SpecRunnerServices.get(ISourceDumperFactory.class).newDumper();
+        return SRServices.get(ISourceDumperFactory.class).newDumper();
     }
 
     /**

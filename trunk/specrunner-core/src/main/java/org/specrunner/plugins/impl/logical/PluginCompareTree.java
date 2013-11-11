@@ -23,7 +23,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Text;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
@@ -60,7 +60,7 @@ public class PluginCompareTree extends AbstractPlugin {
         Node node = context.getNode();
         Node received = UtilNode.getLeft(node);
         Node expected = UtilNode.getRight(node);
-        String alias = SpecRunnerServices.get(IPluginFactory.class).getAlias(PluginInclude.class);
+        String alias = SRServices.get(IPluginFactory.class).getAlias(PluginInclude.class);
         if (received instanceof Element && UtilNode.newNodeHolder(received).attributeContains("class", alias)) {
             received = received.getParent().getChild(received.getParent().indexOf(received) + 1);
         }
@@ -111,7 +111,7 @@ public class PluginCompareTree extends AbstractPlugin {
             } else {
                 objReceived = received.getValue();
                 objExpected = expected.getValue();
-                comparator = SpecRunnerServices.getComparatorManager().getDefault();
+                comparator = SRServices.getComparatorManager().getDefault();
             }
             try {
                 UtilPlugin.compare(expected, PluginAssertion.INSTANCE, result, comparator, objExpected, objReceived);

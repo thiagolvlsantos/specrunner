@@ -25,7 +25,7 @@ import nu.xom.Element;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.impl.ComparatorNode;
 import org.specrunner.context.IContext;
@@ -137,7 +137,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         try {
             INodeHolder holder = UtilNode.newNodeHolder(context.getNode());
-            IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+            IExpressionFactory ef = SRServices.getExpressionFactory();
             IExpression e = ef.create("$NODE", context);
             Element expected = (Element) e.evaluate(context);
             if (!strict) {
@@ -146,7 +146,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 }
             } else {
                 Object tmp = ((JavascriptExecutor) client).executeScript("return arguments[0].innerHTML", element);
-                IBuilderFactory bf = SpecRunnerServices.get(IBuilderFactory.class);
+                IBuilderFactory bf = SRServices.get(IBuilderFactory.class);
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
                 if (!holder.getComparator(comparator.get()).match(expected, received)) {

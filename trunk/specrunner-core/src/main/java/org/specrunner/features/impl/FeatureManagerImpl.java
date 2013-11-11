@@ -20,7 +20,7 @@ package org.specrunner.features.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
@@ -92,7 +92,7 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
         Object value = get(feature);
         if (value != null) {
             String name = getField(feature);
-            IAccess access = SpecRunnerServices.get(IAccessFactory.class).newAccess(target, name);
+            IAccess access = SRServices.get(IAccessFactory.class).newAccess(target, name);
             if (access == null) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Feature(" + target + "." + name + ") not found: ignoring attempt.");

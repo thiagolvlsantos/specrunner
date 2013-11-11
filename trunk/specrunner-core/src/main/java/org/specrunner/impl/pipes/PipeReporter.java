@@ -18,7 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
@@ -65,7 +65,7 @@ public class PipeReporter implements IPipe {
      *             On creation error.
      */
     protected IReporter createReporter() throws SourceDumperException {
-        return SpecRunnerServices.get(IReporterFactory.class).newReporter();
+        return SRServices.get(IReporterFactory.class).newReporter();
     }
 
     /**

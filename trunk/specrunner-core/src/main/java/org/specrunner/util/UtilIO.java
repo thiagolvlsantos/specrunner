@@ -28,7 +28,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.List;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.cache.ICache;
@@ -45,7 +45,7 @@ public final class UtilIO {
     /**
      * Cache of resources. Avoid unnecessary file/network/jar accesses.
      */
-    private static ICache<URL, byte[]> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(UtilIO.class.getName());
+    private static ICache<URL, byte[]> cache = SRServices.get(ICacheFactory.class).newCache(UtilIO.class.getName());
 
     /**
      * Reading buffer size.
@@ -275,7 +275,7 @@ public final class UtilIO {
      *             On errors.
      */
     public static void pressKey() throws IOException {
-        IConcurrentMapping cm = SpecRunnerServices.get(IConcurrentMapping.class);
+        IConcurrentMapping cm = SRServices.get(IConcurrentMapping.class);
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("(" + cm.getThread() + ") read keybord (press 'Enter' to go on)...");
         }

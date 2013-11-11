@@ -20,7 +20,7 @@ package org.specrunner.junit;
 import java.io.File;
 
 import org.junit.Assert;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
@@ -48,7 +48,7 @@ public final class SpecRunnerJUnit {
      *            The specification file.
      */
     public static void defaultRun(String input) {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         defaultRun(input, cfg);
     }
 
@@ -62,9 +62,9 @@ public final class SpecRunnerJUnit {
      */
     public static void defaultRun(String input, IConfiguration cfg) {
         try {
-            IResultSet result = SpecRunnerServices.getSpecRunner().run(input, cfg);
-            File dir = (File) SpecRunnerServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
-            String file = (String) SpecRunnerServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
+            IResultSet result = SRServices.getSpecRunner().run(input, cfg);
+            File dir = (File) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
+            String file = (String) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
             Assert.assertTrue((dir != null && file != null ? "OUTPUT: " + new File(dir, file).getAbsolutePath() + "\n" : "") + result.asString(), !result.getStatus().isError());
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +84,7 @@ public final class SpecRunnerJUnit {
      *            The specification output file.
      */
     public static void defaultRun(String input, String output) {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         defaultRun(input, output, cfg);
     }
 

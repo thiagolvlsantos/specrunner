@@ -31,7 +31,7 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 import nu.xom.Text;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
@@ -246,7 +246,7 @@ public class PluginInclude extends AbstractPlugin {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_DEPTH, this);
         if (expanded == null) {
             fm.set(FEATURE_EXPANDED, this);
@@ -347,7 +347,7 @@ public class PluginInclude extends AbstractPlugin {
                         Node root = document.getRootElement().copy();
                         tdContent.appendChild(root);
                         context.getSources().push(newSource);
-                        List<ISourceListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(ISourceListener.class);
+                        List<ISourceListener> listeners = SRServices.get(IListenerManager.class).filterByType(ISourceListener.class);
                         // perform before listeners
                         for (ISourceListener sl : listeners) {
                             sl.onBefore(newSource, context, result);
@@ -408,7 +408,7 @@ public class PluginInclude extends AbstractPlugin {
     protected ISource getSource(URI newHref) throws PluginException {
         ISource newSource = null;
         try {
-            newSource = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(newHref.toString());
+            newSource = SRServices.get(ISourceFactoryManager.class).newSource(newHref.toString());
         } catch (SourceException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -452,7 +452,7 @@ public class PluginInclude extends AbstractPlugin {
     protected ISource transform(ISource newSource) throws PluginException {
         try {
             // common transformer
-            newSource = SpecRunnerServices.get(ITransformer.class).transform(newSource);
+            newSource = SRServices.get(ITransformer.class).transform(newSource);
         } catch (SourceException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -460,7 +460,7 @@ public class PluginInclude extends AbstractPlugin {
             throw new PluginException(e);
         }
         if (transformer != null) {
-            ITransformerManager itm = SpecRunnerServices.get(ITransformerManager.class);
+            ITransformerManager itm = SRServices.get(ITransformerManager.class);
             ITransformer t = itm.get(transformer);
             if (t == null) {
                 try {

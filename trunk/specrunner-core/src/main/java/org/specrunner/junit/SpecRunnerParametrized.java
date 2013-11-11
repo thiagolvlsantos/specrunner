@@ -26,7 +26,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.util.UtilLog;
@@ -178,7 +178,7 @@ public class SpecRunnerParametrized {
      * @return A collection of entries.
      */
     protected static Collection<Object[]> startsWith(File inDir, String prefix, File outDir) {
-        return startsWith(inDir, prefix, outDir, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+        return startsWith(inDir, prefix, outDir, SRServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     /**
@@ -210,7 +210,7 @@ public class SpecRunnerParametrized {
      * @return A collection of entries.
      */
     protected static Collection<Object[]> contains(File inDir, String suffix, File outDir) {
-        return contains(inDir, suffix, outDir, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+        return contains(inDir, suffix, outDir, SRServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     /**
@@ -242,7 +242,7 @@ public class SpecRunnerParametrized {
      * @return A collection of entries.
      */
     protected static Collection<Object[]> endsWith(File inDir, String suffix, File outDir) {
-        return endsWith(inDir, suffix, outDir, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+        return endsWith(inDir, suffix, outDir, SRServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     /**

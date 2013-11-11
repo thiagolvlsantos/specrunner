@@ -3,8 +3,7 @@ package org.specrunner.util.aligner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
-import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.SRServices;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -22,7 +21,7 @@ public class TestAligner {
 
     @Before
     public void antes() {
-        SpecRunnerServices.get(IExpressionFactory.class).bindValue("alignerFactory", SpecRunnerServices.get(IStringAlignerFactory.class));
+        SRServices.getExpressionFactory().bindValue("alignerFactory", SRServices.get(IStringAlignerFactory.class));
     }
 
     @Test

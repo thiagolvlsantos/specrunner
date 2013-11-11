@@ -17,7 +17,7 @@
  */
 package org.specrunner.impl.pipes;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.AbortException;
@@ -67,7 +67,7 @@ public class PipeFeatureManager implements IPipe {
      * @return A manager.
      */
     protected IFeatureManager createFeatureManager() {
-        return SpecRunnerServices.getFeatureManager();
+        return SRServices.getFeatureManager();
     }
 
     /**

@@ -4,7 +4,7 @@ import java.net.URI;
 import java.net.URLEncoder;
 
 import org.junit.Test;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -19,7 +19,7 @@ public class TestISO8859 extends TstPai {
 
     @Test
     public void rodarGoogle() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginInclude.FEATURE_DEPTH, 3);
         SpecRunnerJUnit.defaultRun("http://www.cin.ufpe.br/~tlvls/center.htm", cfg);
     }
