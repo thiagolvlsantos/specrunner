@@ -116,33 +116,35 @@ public class ResourceFinder {
         // update comparator
         comparator = null;
         SpecRunnerServices.getFeatureManager().set(FEATURE_COMPARATOR, this);
-
-        List<URL> files = cache.get(resource);
-        if (files != null) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Resource reused '" + resource + "' :" + files);
+        synchronized (cache) {
+            List<URL> files = cache.get(resource);
+            if (files != null) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Resource reused '" + resource + "' :" + files);
+                }
+                // get a copy, filtered and sorted. TODO: if the filter is
+                // changes
+                // the files here can be only a subset of expected ones.
+                return filter(sort(new LinkedList<URL>(files)));
             }
-            // get a copy, filtered and sorted. TODO: if the filter is changes
-            // the files here can be only a subset of expected ones.
-            return filter(sort(new LinkedList<URL>(files)));
+            files = new LinkedList<URL>();
+            String standard = getDefault(resource);
+            files.addAll(getResources(standard));
+            files.addAll(getResources(resource));
+            if (UtilLog.LOG.isDebugEnabled()) {
+                log("Resource list:", files);
+            }
+            files = filter(files);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                log("Resource list filtered:", files);
+            }
+            files = sort(files);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                log("Resource list sorted:", files);
+            }
+            cache.put(resource, files);
+            return files;
         }
-        files = new LinkedList<URL>();
-        String standard = getDefault(resource);
-        files.addAll(getResources(standard));
-        files.addAll(getResources(resource));
-        if (UtilLog.LOG.isDebugEnabled()) {
-            log("Resource list:", files);
-        }
-        files = filter(files);
-        if (UtilLog.LOG.isDebugEnabled()) {
-            log("Resource list filtered:", files);
-        }
-        files = sort(files);
-        if (UtilLog.LOG.isDebugEnabled()) {
-            log("Resource list sorted:", files);
-        }
-        cache.put(resource, files);
-        return files;
     }
 
     /**

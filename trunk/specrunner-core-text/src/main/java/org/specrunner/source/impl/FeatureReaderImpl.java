@@ -82,10 +82,13 @@ public class FeatureReaderImpl implements IFeatureReader {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Language " + (found ? "not found" : "found") + " setting to " + lang);
             }
-            Keywords keywords = cacheKeywords.get(lang);
-            if (keywords == null) {
-                keywords = new Keywords(ResourceBundle.getBundle("sr_gherkin", new Locale(lang)));
-                cacheKeywords.put(lang, keywords);
+            Keywords keywords = null;
+            synchronized (cacheKeywords) {
+                keywords = cacheKeywords.get(lang);
+                if (keywords == null) {
+                    keywords = new Keywords(ResourceBundle.getBundle("sr_gherkin", new Locale(lang)));
+                    cacheKeywords.put(lang, keywords);
+                }
             }
             Feature feature = new Feature("");
             feature.setKeywords(keywords);

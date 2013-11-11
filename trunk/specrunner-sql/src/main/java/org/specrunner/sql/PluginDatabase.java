@@ -288,7 +288,7 @@ public class PluginDatabase extends AbstractPluginValue {
      * @throws PluginException
      *             On lookup errors.
      */
-    public static IDatabase getDatabase(IContext context, String name) throws PluginException {
+    public static synchronized IDatabase getDatabase(IContext context, String name) throws PluginException {
         if (name == null) {
             name = DEFAULT_DATABASE_NAME;
         }

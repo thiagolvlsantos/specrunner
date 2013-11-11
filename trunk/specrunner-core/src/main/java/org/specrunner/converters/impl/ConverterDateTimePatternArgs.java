@@ -45,12 +45,14 @@ public class ConverterDateTimePatternArgs extends ConverterNotNullNotEmpty {
         }
         try {
             String pattern = String.valueOf(args[0]);
-            DateTimeFormatter formatter = cache.get(pattern);
-            if (formatter == null) {
-                formatter = DateTimeFormat.forPattern(pattern);
-                cache.put(pattern, formatter);
+            synchronized (cache) {
+                DateTimeFormatter formatter = cache.get(pattern);
+                if (formatter == null) {
+                    formatter = DateTimeFormat.forPattern(pattern);
+                    cache.put(pattern, formatter);
+                }
+                return formatter.parseDateTime(String.valueOf(value));
             }
-            return formatter.parseDateTime(String.valueOf(value));
         } catch (IllegalArgumentException e) {
             throw new ConverterException(e);
         }
