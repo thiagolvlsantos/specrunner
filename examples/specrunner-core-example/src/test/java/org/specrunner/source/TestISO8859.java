@@ -8,7 +8,7 @@ import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.plugins.impl.include.PluginInclude;
+import org.specrunner.plugins.core.include.PluginInclude;
 
 public class TestISO8859 extends TstPai {
 

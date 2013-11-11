@@ -11,7 +11,7 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.jetty.JettyStringProvider;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.runner.impl.FilterDefault;
+import org.specrunner.runner.core.FilterDefault;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;

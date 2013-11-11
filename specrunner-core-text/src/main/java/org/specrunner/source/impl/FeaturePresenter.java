@@ -26,11 +26,11 @@ import nu.xom.Node;
 import org.specrunner.SRServices;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.data.PluginMap;
-import org.specrunner.plugins.impl.flow.PluginIterator;
-import org.specrunner.plugins.impl.language.PluginSentence;
-import org.specrunner.plugins.impl.macro.PluginCall;
-import org.specrunner.plugins.impl.macro.PluginMacro;
+import org.specrunner.plugins.core.data.PluginMap;
+import org.specrunner.plugins.core.flow.PluginIterator;
+import org.specrunner.plugins.core.language.PluginSentence;
+import org.specrunner.plugins.core.macro.PluginCall;
+import org.specrunner.plugins.core.macro.PluginMacro;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.IPresenter;
 

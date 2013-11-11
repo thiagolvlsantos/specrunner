@@ -17,7 +17,7 @@ package org.specrunner;
 
 import java.io.File;
 
-import org.specrunner.dumper.impl.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.webdriver.PluginBrowser;
 

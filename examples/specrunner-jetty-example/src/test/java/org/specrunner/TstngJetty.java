@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.specrunner.dumper.impl.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.AbstractSourceDumperFile;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.result.IResultSet;

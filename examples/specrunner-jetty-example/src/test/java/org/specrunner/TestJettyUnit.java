@@ -1,12 +1,12 @@
 package org.specrunner;
 
 import org.junit.Test;
-import org.specrunner.context.impl.LazyExpressionModel;
+import org.specrunner.context.core.LazyExpressionModel;
 import org.specrunner.jetty.JettyStringProvider;
 import org.specrunner.jetty.PluginStartJetty;
 import org.specrunner.junit.SpecRunnerJUnitPlugin;
 import org.specrunner.plugins.IPluginGroup;
-import org.specrunner.plugins.impl.PluginGroupImpl;
+import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.actions.PluginOpen;
 import org.specrunner.webdriver.actions.PluginStartIn;

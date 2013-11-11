@@ -44,6 +44,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.specrunner.source.SourceException;
+import org.specrunner.source.core.AbstractSourceFactory;
 import org.specrunner.util.UtilLog;
 
 /**
