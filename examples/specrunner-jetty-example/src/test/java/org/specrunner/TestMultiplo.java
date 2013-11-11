@@ -38,7 +38,7 @@ public class TestMultiplo {
 
     @Before
     public void prepareTest() throws SpecRunnerException {
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
         // add predefined objects that can be used in expressions
         ef.bindValue("pattern", "HH:mm:ss");
         // add predefined classes that can be used in expressions, default
@@ -46,7 +46,7 @@ public class TestMultiplo {
         ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
@@ -57,7 +57,7 @@ public class TestMultiplo {
 
     @Test
     public void runJettyChrome() throws Exception {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
         // WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jetty-" + numero + ".html", cfg);

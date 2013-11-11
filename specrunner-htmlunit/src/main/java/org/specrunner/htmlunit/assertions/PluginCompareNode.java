@@ -22,7 +22,7 @@ import java.util.HashMap;
 import nu.xom.Builder;
 import nu.xom.Element;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.comparators.impl.ComparatorNode;
@@ -162,7 +162,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         if (comparator != null) {
-            IComparatorManager cm = SpecRunnerServices.getComparatorManager();
+            IComparatorManager cm = SRServices.getComparatorManager();
             comparatorInstance = cm.get(comparator);
             if (comparatorInstance == null) {
                 try {
@@ -186,7 +186,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         try {
-            IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+            IExpressionFactory ef = SRServices.getExpressionFactory();
             IExpression e = ef.create("$NODE", context);
             Element expected = (Element) e.evaluate(context);
             if (!strict) {
@@ -195,7 +195,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 }
             } else {
                 String tmp = element.asXml();
-                IBuilderFactory bf = SpecRunnerServices.get(IBuilderFactory.class);
+                IBuilderFactory bf = SRServices.get(IBuilderFactory.class);
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + tmp + "</body></html>", null).query("//body").get(0);
                 if (!comparatorInstance.match(expected, received)) {

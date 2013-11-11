@@ -17,7 +17,7 @@
  */
 package org.specrunner.util.cache.impl;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheCleaner;
@@ -43,7 +43,7 @@ public abstract class AbstractCacheFactory implements ICacheFactory {
 
     @Override
     public <K, T> ICache<K, T> newCache(String name, ICacheCleaner<T> cleaner) {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         ICache<K, T> cache = create(name, cleaner);
         fm.set(ICache.FEATURE_TIMEOUT, cache);
         fm.set(ICache.FEATURE_SIZE, cache);

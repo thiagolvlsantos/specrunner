@@ -3,7 +3,7 @@ package example.include;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.IPluginFactory;
@@ -20,11 +20,11 @@ public class TestMixedInclude {
     @Before
     public void adjust() throws PluginException {
         // show expanded tree
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.add(PluginInclude.FEATURE_EXPANDED, true);
 
         // plugin factory or factories
-        IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
+        IPluginFactory factory = SRServices.get(IPluginFactory.class);
 
         // create a CSS type for increase.
         PluginInclude increase = new PluginInclude();

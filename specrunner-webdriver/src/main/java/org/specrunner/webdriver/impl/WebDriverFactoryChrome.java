@@ -22,7 +22,7 @@ import java.io.File;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
@@ -72,7 +72,7 @@ public class WebDriverFactoryChrome implements IWebDriverFactory {
         chrome = path + "chrome.exe";
         driver = path + "chromedriver.exe";
 
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_CHROME, this);
         fm.set(FEATURE_DRIVER, this);
         fm.set(FEATURE_SWITCHES, this);

@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.expressions.IExpressionFactory;
@@ -50,13 +50,13 @@ public class TestSqlFeature {
 
     @Before
     public void before() {
-        IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ief = SRServices.getExpressionFactory();
         String pattern = "yyyy-MM-dd HH:mm:ss";
         ief.bindValue("pattern", pattern);
         ief.bindValue("time", "{ts '" + new DateTime().toString(pattern) + "'}");
         ief.bindClass("dt", DateTime.class);
 
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         // setting plugin connection features
         fm.add(PluginConnection.FEATURE_DRIVER, "org.hsqldb.jdbcDriver");
         fm.add(PluginConnection.FEATURE_URL, "jdbc:hsqldb:mem:TESTE");
@@ -80,14 +80,14 @@ public class TestSqlFeature {
 
     @Test
     public void createProvider1() { // associa provider por sua classe
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginConnection.FEATURE_PROVIDER, DataSourceProviderImpl.class.getName());
         run("createProvider.html", "createProviderClass.html", cfg);
     }
 
     @Test
     public void createProvider2() { // associa provider pela instancia
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginConnection.FEATURE_PROVIDER_INSTANCE, new DataSourceProviderImpl());
         run("createProvider.html", "createProviderInstance.html", cfg);
     }

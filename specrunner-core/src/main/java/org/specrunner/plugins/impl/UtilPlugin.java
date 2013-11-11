@@ -20,7 +20,7 @@ package org.specrunner.plugins.impl;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
@@ -226,7 +226,7 @@ public final class UtilPlugin {
      *             On plugin errors.
      */
     public static void compare(Node node, IResultSet result, Object expected, Object received) throws PluginException {
-        compare(node, null, result, SpecRunnerServices.getComparatorManager().getDefault(), expected, received);
+        compare(node, null, result, SRServices.getComparatorManager().getDefault(), expected, received);
     }
 
     /**
@@ -249,9 +249,9 @@ public final class UtilPlugin {
      */
     public static void compare(Node node, IPlugin plugin, IResultSet result, IComparator comparator, Object expected, Object received) throws PluginException {
         if (comparator.match(expected, received)) {
-            result.addResult(Success.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin));
+            result.addResult(Success.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin));
         } else {
-            result.addResult(Failure.INSTANCE, SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+            result.addResult(Failure.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
         }
     }
 }

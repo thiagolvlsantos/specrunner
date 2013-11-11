@@ -21,7 +21,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.util.aligner.AlignmentException;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
@@ -47,7 +47,7 @@ public class DefaultAlignmentException extends AlignmentException {
      *            The received value.
      */
     public DefaultAlignmentException(String message, String expected, String received) {
-        super(message, SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received));
+        super(message, SRServices.get(IStringAlignerFactory.class).align(expected, received));
     }
 
     /**
@@ -59,7 +59,7 @@ public class DefaultAlignmentException extends AlignmentException {
      *            The received value.
      */
     public DefaultAlignmentException(String expected, String received) {
-        super("Strings are different:", SpecRunnerServices.get(IStringAlignerFactory.class).align(expected, received));
+        super("Strings are different:", SRServices.get(IStringAlignerFactory.class).align(expected, received));
     }
 
     /**

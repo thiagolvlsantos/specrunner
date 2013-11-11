@@ -17,7 +17,7 @@
  */
 package org.specrunner.htmlunit.assertions;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
@@ -96,7 +96,7 @@ public class PluginCompareDate extends PluginCompareText {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (format == null) {
             fm.set(FEATURE_FORMAT, this);
         }

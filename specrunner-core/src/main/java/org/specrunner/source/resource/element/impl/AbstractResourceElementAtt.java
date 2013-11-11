@@ -25,7 +25,7 @@ import nu.xom.Comment;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.ResourceException;
@@ -81,7 +81,7 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
             File fout = null;
             URL url = null;
             if (isClasspath()) {
-                url = SpecRunnerServices.get(ResourceFinder.class).getSpecific(getResourcePath());
+                url = SRServices.get(ResourceFinder.class).getSpecific(getResourcePath());
                 File f = new File(getResourcePath());
                 fout = new File(target.getFile().getParentFile(), target.getFile().getName() + "_res/" + f.getName());
             } else {

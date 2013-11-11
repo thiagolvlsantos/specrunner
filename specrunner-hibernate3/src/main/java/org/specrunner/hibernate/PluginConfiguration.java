@@ -29,7 +29,7 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.event.PostInsertEventListener;
 import org.hibernate.event.PreInsertEventListener;
 import org.hibernate.mapping.PersistentClass;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -83,7 +83,7 @@ public class PluginConfiguration extends AbstractPluginFactory {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (type == null) {
             fm.set(FEATURE_TYPE, this);
         }
@@ -183,7 +183,7 @@ public class PluginConfiguration extends AbstractPluginFactory {
      *            The configuration.
      */
     protected void changeUrl(IContext context, Configuration cfg) {
-        String url = String.valueOf(SpecRunnerServices.get(IConcurrentMapping.class).get("url", cfg.getProperty(Environment.URL)));
+        String url = String.valueOf(SRServices.get(IConcurrentMapping.class).get("url", cfg.getProperty(Environment.URL)));
         cfg.setProperty(Environment.URL, url);
         Node node = context.getNode();
         if (node instanceof Element) {

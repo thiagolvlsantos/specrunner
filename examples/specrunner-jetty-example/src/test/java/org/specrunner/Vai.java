@@ -30,7 +30,7 @@ public class Vai {
     public static void main(String[] args) throws Exception {
         TestJetty tj = new TestJetty();
         tj.prepareTest();
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 1; j++) {

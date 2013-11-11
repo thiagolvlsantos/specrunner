@@ -18,7 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IContextPopulator;
@@ -61,6 +61,6 @@ public class PipePopulator implements IPipe {
      *             On populate errors.
      */
     protected IContext populate(IContext context) throws ContextException {
-        return SpecRunnerServices.get(IContextPopulator.class).populate(context);
+        return SRServices.get(IContextPopulator.class).populate(context);
     }
 }

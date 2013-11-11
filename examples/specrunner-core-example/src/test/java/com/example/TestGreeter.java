@@ -1,7 +1,7 @@
 package com.example;
 
 import org.junit.Test;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -11,14 +11,14 @@ public class TestGreeter {
 
     @Test
     public void testGreeter() {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(AbstractPluginResource.FEATURE_SAVE, false);
         SpecRunnerJUnit.defaultRun("src/test/resources/income/HelloWorld.html", cfg);
     }
 
     @Test
     public void testGreeterImages() {
-        SpecRunnerServices.getFeatureManager().put(AbstractPluginResource.FEATURE_SAVE, true);
+        SRServices.getFeatureManager().put(AbstractPluginResource.FEATURE_SAVE, true);
         SpecRunnerJUnit.defaultRun("src/test/resources/income/HelloWorld.html", "src/test/resources/outcome/HelloWorldImages.html");
     }
 }

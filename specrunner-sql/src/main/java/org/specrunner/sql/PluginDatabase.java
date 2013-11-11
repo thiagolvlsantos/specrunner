@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -184,7 +184,7 @@ public class PluginDatabase extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (provider == null) {
             fm.set(FEATURE_PROVIDER, this);
         }
@@ -206,7 +206,7 @@ public class PluginDatabase extends AbstractPluginValue {
         int index = 0;
         for (String base : bases) {
             final String currentName = base;
-            IReuseManager rm = SpecRunnerServices.get(IReuseManager.class);
+            IReuseManager rm = SRServices.get(IReuseManager.class);
             if (reuse) {
                 IReusable<?> ir = rm.get(currentName);
                 if (ir != null) {

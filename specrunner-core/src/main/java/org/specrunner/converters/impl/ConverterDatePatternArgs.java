@@ -20,7 +20,7 @@ package org.specrunner.converters.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
@@ -37,7 +37,7 @@ public class ConverterDatePatternArgs extends ConverterNotNullNotEmpty {
     /**
      * Cache of formatters.
      */
-    private static ICache<String, SimpleDateFormat> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ConverterDatePatternArgs.class.getName());
+    private static ICache<String, SimpleDateFormat> cache = SRServices.get(ICacheFactory.class).newCache(ConverterDatePatternArgs.class.getName());
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {

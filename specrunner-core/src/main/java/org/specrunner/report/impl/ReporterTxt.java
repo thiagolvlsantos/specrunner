@@ -19,7 +19,7 @@ package org.specrunner.report.impl;
 
 import java.util.List;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
 
@@ -32,13 +32,13 @@ import org.specrunner.util.output.IOutputFactory;
 public class ReporterTxt extends AbstractReport {
 
     @Override
-    protected void dumpStart(SpecRunnerServices services) {
+    protected void dumpStart(SRServices services) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print("+-------------------------------- TXT REPORT -------------------------------------+\n");
     }
 
     @Override
-    protected void dumpPart(SpecRunnerServices services, String header, List<Resume> list) {
+    protected void dumpPart(SRServices services, String header, List<Resume> list) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.printf("\t+---------------- TXT (%s)---------------------+%n", header);
         String pattern = "\t%10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s%n";
@@ -54,13 +54,13 @@ public class ReporterTxt extends AbstractReport {
     }
 
     @Override
-    protected void dumpResume(SpecRunnerServices services, String resume) {
+    protected void dumpResume(SRServices services, String resume) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print(resume);
     }
 
     @Override
-    protected void dumpEnd(SpecRunnerServices services) {
+    protected void dumpEnd(SRServices services) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print("+---------------------------------------------------------------------------------+\n");
     }

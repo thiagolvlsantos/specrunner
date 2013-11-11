@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
@@ -216,7 +216,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_RECORDING, this);
         if (webdriver == null) {
             try {
@@ -249,13 +249,13 @@ public class PluginBrowser extends AbstractPluginScoped {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        IListenerManager fac = SpecRunnerServices.get(IListenerManager.class);
+        IListenerManager fac = SRServices.get(IListenerManager.class);
         if (recording) {
             fac.add(new PageListener(getName()));
         } else {
             fac.remove(getName());
         }
-        IReuseManager reusables = SpecRunnerServices.get(IReuseManager.class);
+        IReuseManager reusables = SRServices.get(IReuseManager.class);
         if (reuse) {
             Map<String, Object> cfg = new HashMap<String, Object>();
             cfg.put("webdriver", webdriver);

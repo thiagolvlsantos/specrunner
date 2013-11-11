@@ -18,7 +18,7 @@
 package org.specrunner.plugins.impl;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.features.IFeatureManager;
@@ -141,7 +141,7 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("initialize()>" + context.peek());
         }
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (condition == null) {
             fm.set(FEATURE_CONDITION, this);
         }

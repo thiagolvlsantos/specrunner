@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.Map;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
@@ -71,7 +71,7 @@ public class PipeDump implements IPipe {
      *            The input.
      */
     protected void messageBefore(String input) {
-        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        IOutput out = SRServices.get(IOutputFactory.class).currentOutput();
         out.println("");
         out.println(" Input " + getNome() + ": " + (input != null ? input.replace('/', File.separatorChar) : "null"));
     }
@@ -82,7 +82,7 @@ public class PipeDump implements IPipe {
      * @return The normalized thread named.
      */
     protected String getNome() {
-        return "(" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ")";
+        return "(" + SRServices.get(IConcurrentMapping.class).getThread() + ")";
     }
 
     /**
@@ -94,7 +94,7 @@ public class PipeDump implements IPipe {
      *            The result set.
      */
     protected void messageAfter(Map<String, Object> info, IResultSet result) {
-        IOutput out = SpecRunnerServices.get(IOutputFactory.class).currentOutput();
+        IOutput out = SRServices.get(IOutputFactory.class).currentOutput();
         out.printf("Result " + getNome() + ": %s \n", result.asString());
         out.printf("    In " + getNome() + ": %d ms \n", info.get(PipeTime.TIME));
         out.printf("    At " + getNome() + ": %s \n", info.get(PipeTimestamp.DATE));

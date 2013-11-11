@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.impl.objects.PluginObjectManager;
 import org.specrunner.util.UtilLog;
@@ -119,7 +119,7 @@ public final class UtilConverter {
             IConverter converter = null;
             Object[] converterArguments = null;
             Converter annotation = getConverter(annotations);
-            IConverterManager cm = SpecRunnerServices.getConverterManager();
+            IConverterManager cm = SRServices.getConverterManager();
             if (annotation != null) {
                 String name = annotation.name();
                 if (!name.isEmpty()) {

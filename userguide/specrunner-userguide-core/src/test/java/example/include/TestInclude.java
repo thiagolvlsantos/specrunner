@@ -3,7 +3,7 @@ package example.include;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
@@ -18,7 +18,7 @@ public class TestInclude {
     @Before
     public void adjust() throws PluginException {
         // plugin factory or factories
-        IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
+        IPluginFactory factory = SRServices.get(IPluginFactory.class);
 
         // create a CSS type for increase.
         PluginInclude increase = new PluginInclude();

@@ -21,7 +21,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -39,7 +39,7 @@ public class TestSql {
 
     @Before
     public void before() {
-        IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ief = SRServices.getExpressionFactory();
         String pattern = "yyyy-MM-dd HH:mm:ss.SSSS";
         ief.bindValue("pattern", pattern);
         ief.bindValue("time", "{ts '${dt.toString(pattern)}'}");

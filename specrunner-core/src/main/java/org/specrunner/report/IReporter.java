@@ -19,7 +19,7 @@ package org.specrunner.report;
 
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -53,7 +53,7 @@ public interface IReporter {
      * @param services
      *            The services instance to be used. This is required, since
      *            report is made on shutdown process, where
-     *            <code>SpecRunnerServices.get()</code> is not available.
+     *            <code>SRServices.get()</code> is not available.
      */
-    void report(SpecRunnerServices services);
+    void report(SRServices services);
 }

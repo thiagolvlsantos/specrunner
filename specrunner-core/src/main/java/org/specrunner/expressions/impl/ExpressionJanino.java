@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.codehaus.commons.compiler.jdk.ExpressionEvaluator;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.expressions.ExpressionException;
@@ -51,7 +51,7 @@ public class ExpressionJanino extends AbstractExpression {
     /**
      * Cache of expressions.
      */
-    private static ICache<ExpressionKey, ExpressionEvaluator> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
+    private static ICache<ExpressionKey, ExpressionEvaluator> cache = SRServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
 
     /**
      * Basic constructor.

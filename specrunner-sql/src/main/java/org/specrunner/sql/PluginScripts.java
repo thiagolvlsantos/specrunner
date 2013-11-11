@@ -42,7 +42,7 @@ import javax.sql.DataSource;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -93,7 +93,7 @@ public class PluginScripts extends AbstractPluginValue {
     private static ThreadLocal<ICache<String, String>> cache = new ThreadLocal<ICache<String, String>>() {
         @Override
         protected ICache<String, String> initialValue() {
-            return SpecRunnerServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
+            return SRServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
         };
     };
 
@@ -233,7 +233,7 @@ public class PluginScripts extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_SCRIPT_SEPARATOR, this);
         fm.set(FEATURE_SQL_SEPARATOR, this);
         fm.set(FEATURE_SEPARATOR, this);

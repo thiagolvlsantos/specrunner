@@ -21,7 +21,7 @@ public class TestJump {
 
     @Before
     public void prepareTest() throws SpecRunnerException {
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
         // add predefined objRects that can be used in expressions
         ef.bindValue("pattern", "HH:mm:ss");
         // add predefined classes that can be used in expressions, default
@@ -29,7 +29,7 @@ public class TestJump {
         ef.bindClass("dt", DateTime.class);
 
         // longer tolerance
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
@@ -45,7 +45,7 @@ public class TestJump {
 
     @Test
     public void exampleChrome() {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("pause"));
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", cfg);
@@ -53,7 +53,7 @@ public class TestJump {
 
     @Test
     public void exampleLocal() {
-        IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         cfg.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyLocal.html", cfg);
@@ -61,7 +61,7 @@ public class TestJump {
 
     @Test
     public void exampleGlobal() {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         fm.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyGlobal.html");

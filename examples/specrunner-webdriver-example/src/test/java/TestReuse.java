@@ -1,7 +1,7 @@
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.configuration.impl.ConfigurationFactoryImpl;
@@ -21,7 +21,7 @@ public class TestReuse {
 
     @BeforeClass
     public static void prepareResources() {
-        SpecRunnerServices.get().bind(IConfigurationFactory.class, new ConfigurationFactoryImpl() {
+        SRServices.get().bind(IConfigurationFactory.class, new ConfigurationFactoryImpl() {
             @Override
             public IConfiguration newConfiguration() {
                 IConfiguration cfg = super.newConfiguration();

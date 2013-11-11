@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -111,7 +111,7 @@ public class PluginPause extends AbstractPlugin {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_ENTER, this);
         if (time == null) {
             fm.set(FEATURE_TIME, this);

@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.util.UtilLog;
@@ -51,7 +51,7 @@ public class AccessFactoryImpl implements IAccessFactory {
         Class<?> c = target.getClass();
         String key = c.getName() + "." + name;
         if (cache == null) {
-            cache = SpecRunnerServices.get(ICacheFactory.class).newCache(AccessFactoryImpl.class.getSimpleName());
+            cache = SRServices.get(ICacheFactory.class).newCache(AccessFactoryImpl.class.getSimpleName());
         }
         if (cache.contains(key)) {
             return cache.get(key);

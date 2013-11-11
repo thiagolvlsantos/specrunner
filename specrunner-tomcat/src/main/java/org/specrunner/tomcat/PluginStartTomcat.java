@@ -26,7 +26,7 @@ import java.util.Map;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
@@ -240,7 +240,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (basedir == null) {
             fm.set(FEATURE_BASEDIR, this);
         }
@@ -261,7 +261,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         synchronized (lock) {
             try {
-                IReuseManager reusables = SpecRunnerServices.get(IReuseManager.class);
+                IReuseManager reusables = SRServices.get(IReuseManager.class);
                 if (reuse) {
                     Map<String, Object> cfg = new HashMap<String, Object>();
                     cfg.put("name", getName());

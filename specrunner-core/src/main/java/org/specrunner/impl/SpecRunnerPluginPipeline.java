@@ -19,7 +19,7 @@ package org.specrunner.impl;
 
 import org.specrunner.ISpecRunnerPlugin;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.impl.pipes.PipeConfiguration;
@@ -43,7 +43,7 @@ public class SpecRunnerPluginPipeline implements ISpecRunnerPlugin {
 
     @Override
     public IResultSet run(IPlugin plugin) throws SpecRunnerException {
-        return doRun(plugin, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+        return doRun(plugin, SRServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     @Override
@@ -64,9 +64,9 @@ public class SpecRunnerPluginPipeline implements ISpecRunnerPlugin {
      */
     protected IResultSet doRun(IPlugin plugin, IConfiguration configuration) throws SpecRunnerException {
         try {
-            IChannel channel = SpecRunnerServices.get(IChannelFactory.class).newChannel();
+            IChannel channel = SRServices.get(IChannelFactory.class).newChannel();
             PipeConfiguration.bind(PipePlugin.bind(channel, plugin), configuration);
-            IPipeline pipe = SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner_plugin.xml");
+            IPipeline pipe = SRServices.get(IPipelineFactory.class).newPipeline("specrunner_plugin.xml");
             pipe.addPipelineListener(new ProfilerPipeListener());
             return PipeResult.lookup(pipe.process(channel));
         } catch (Exception e) {

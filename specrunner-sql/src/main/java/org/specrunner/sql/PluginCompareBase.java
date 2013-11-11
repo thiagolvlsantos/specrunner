@@ -24,7 +24,7 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
@@ -182,7 +182,7 @@ public class PluginCompareBase extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_SCHEMA, this);
         fm.set(FEATURE_SYSTEM, this);
         fm.set(FEATURE_REFERENCE, this);

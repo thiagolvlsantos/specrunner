@@ -31,7 +31,7 @@ import nu.xom.Element;
 import nu.xom.Nodes;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
@@ -296,7 +296,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading object mapping file>" + file);
             }
-            ISource source = SpecRunnerServices.get(ISourceFactoryManager.class).newSource(file.toString());
+            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(file.toString());
             Document doc = source.getDocument();
             Nodes ns = doc.query("//table");
             if (ns.size() == 0) {
@@ -912,7 +912,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         convs = cell.getAttribute("converter").split(",");
                     }
                     for (int j = 0; j < convs.length; j++) {
-                        IConverter con = SpecRunnerServices.getConverterManager().get(convs[j]);
+                        IConverter con = SRServices.getConverterManager().get(convs[j]);
                         if (con != null) {
                             value = con.convert(value, f.args);
                         } else {

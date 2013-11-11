@@ -18,7 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IContextFactory;
@@ -75,7 +75,7 @@ public class PipeContext implements IPipe {
      *             On context creation.
      */
     protected IContext createContext(ISource source, IRunner runner) throws ContextException {
-        return SpecRunnerServices.get(IContextFactory.class).newContext(source, runner);
+        return SRServices.get(IContextFactory.class).newContext(source, runner);
     }
 
     /**

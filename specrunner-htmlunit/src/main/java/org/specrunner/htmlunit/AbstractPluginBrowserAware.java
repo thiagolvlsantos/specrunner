@@ -28,7 +28,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
 import org.specrunner.features.IFeatureManager;
@@ -182,7 +182,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_INTERVAL, this);
         fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_TIMEOUT, this);
@@ -227,7 +227,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                     UtilLog.LOG.info("Binary file: " + response.getContentType());
                 }
                 UnexpectedPage up = (UnexpectedPage) tmp;
-                IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+                IFeatureManager fm = SRServices.getFeatureManager();
                 File outputDirectory = dir != null ? new File(dir) : (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
                 File outputFile = new File(outputDirectory, download);
                 File outputParent = outputFile.getAbsoluteFile().getParentFile();

@@ -23,7 +23,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
@@ -198,7 +198,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
     @Override
     public void initialize(IContext context, TableAdapter table) throws PluginException {
         super.initialize(context, table);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         if (schema == null) {
             fm.set(FEATURE_SCHEMA, this);
         }

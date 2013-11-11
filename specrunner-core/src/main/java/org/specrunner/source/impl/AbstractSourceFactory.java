@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
 import nu.xom.DocType;
 import nu.xom.Document;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -44,7 +44,7 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
     /**
      * Cache of files.
      */
-    private static ICache<String, Document> cache = SpecRunnerServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName());
+    private static ICache<String, Document> cache = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName());
 
     @Override
     public void initialize() {

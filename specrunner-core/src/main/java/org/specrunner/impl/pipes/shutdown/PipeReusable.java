@@ -17,7 +17,7 @@
  */
 package org.specrunner.impl.pipes.shutdown;
 
-import org.specrunner.SpecRunnerServices.ShutDown;
+import org.specrunner.SRServices.ShutDown;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;

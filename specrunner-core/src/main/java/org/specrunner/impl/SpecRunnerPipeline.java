@@ -21,7 +21,7 @@ import java.io.File;
 
 import org.specrunner.ISpecRunner;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.dumper.impl.AbstractSourceDumperFile;
@@ -44,7 +44,7 @@ public class SpecRunnerPipeline implements ISpecRunner {
 
     @Override
     public IResultSet run(String input) throws SpecRunnerException {
-        return doRun(input, SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration());
+        return doRun(input, SRServices.get(IConfigurationFactory.class).newConfiguration());
     }
 
     @Override
@@ -73,9 +73,9 @@ public class SpecRunnerPipeline implements ISpecRunner {
      */
     protected IResultSet doRun(String input, IConfiguration configuration) throws SpecRunnerException {
         try {
-            IChannel channel = SpecRunnerServices.get(IChannelFactory.class).newChannel();
+            IChannel channel = SRServices.get(IChannelFactory.class).newChannel();
             PipeConfiguration.bind(PipeInput.bind(channel, input), configuration);
-            IPipeline pipe = SpecRunnerServices.get(IPipelineFactory.class).newPipeline("specrunner.xml");
+            IPipeline pipe = SRServices.get(IPipelineFactory.class).newPipeline("specrunner.xml");
             return PipeResult.lookup(pipe.process(channel));
         } catch (Exception e) {
             throw new SpecRunnerException(e);

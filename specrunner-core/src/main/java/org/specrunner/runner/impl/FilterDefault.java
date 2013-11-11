@@ -20,7 +20,7 @@ package org.specrunner.runner.impl;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -219,7 +219,7 @@ public class FilterDefault implements IFilter {
 
     @Override
     public void initialize(IContext context) {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_DISABLED_ALIASES, this);
         fm.set(FEATURE_ENABLED_ALIASES, this);
         fm.set(FEATURE_DISABLED_TYPES, this);
@@ -228,7 +228,7 @@ public class FilterDefault implements IFilter {
 
     @Override
     public boolean accept(IBlock block) {
-        IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
+        IPluginFactory factory = SRServices.get(IPluginFactory.class);
         IPlugin plugin = block.getPlugin();
         if (plugin != PluginNop.emptyPlugin()) {
             try {

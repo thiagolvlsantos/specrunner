@@ -27,7 +27,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.impl.pipes.PipeInput;
@@ -129,7 +129,7 @@ public abstract class AbstractReport implements IReporter {
      * @param services
      *            Services.
      */
-    protected void setFeatures(SpecRunnerServices services) {
+    protected void setFeatures(SRServices services) {
         IFeatureManager fm = services.lookup(IFeatureManager.class);
         parts = null;
         fm.set(FEATURE_PARTS, this);
@@ -162,7 +162,7 @@ public abstract class AbstractReport implements IReporter {
     @Override
     public String resume() {
         String r = resume(false);
-        SpecRunnerServices.get(IOutputFactory.class).currentOutput().print(r);
+        SRServices.get(IOutputFactory.class).currentOutput().print(r);
         return r;
     }
 
@@ -185,7 +185,7 @@ public abstract class AbstractReport implements IReporter {
         sb.append(before);
         String header = null;
         if (!finalResume) {
-            header = " STATISTICS (" + SpecRunnerServices.get(IConcurrentMapping.class).getThread() + ") ";
+            header = " STATISTICS (" + SRServices.get(IConcurrentMapping.class).getThread() + ") ";
         } else {
             header = " STATISTICS ";
         }
@@ -302,7 +302,7 @@ public abstract class AbstractReport implements IReporter {
     }
 
     @Override
-    public void report(SpecRunnerServices services) {
+    public void report(SRServices services) {
         if (!resumes.isEmpty()) {
             setFeatures(services);
             synchronized (LOCK) {
@@ -322,7 +322,7 @@ public abstract class AbstractReport implements IReporter {
      * @param services
      *            Current instance.
      */
-    protected abstract void dumpStart(SpecRunnerServices services);
+    protected abstract void dumpStart(SRServices services);
 
     /**
      * Creates a copy of the resume list.
@@ -352,7 +352,7 @@ public abstract class AbstractReport implements IReporter {
      * @param list
      *            The list of resumes.
      */
-    protected abstract void dumpPart(SpecRunnerServices services, String header, List<Resume> list);
+    protected abstract void dumpPart(SRServices services, String header, List<Resume> list);
 
     /**
      * Dump resume.
@@ -362,7 +362,7 @@ public abstract class AbstractReport implements IReporter {
      * @param resume
      *            Resume information.
      */
-    protected abstract void dumpResume(SpecRunnerServices services, String resume);
+    protected abstract void dumpResume(SRServices services, String resume);
 
     /**
      * Dump report ending.
@@ -370,7 +370,7 @@ public abstract class AbstractReport implements IReporter {
      * @param services
      *            Current instance.
      */
-    protected abstract void dumpEnd(SpecRunnerServices services);
+    protected abstract void dumpEnd(SRServices services);
 
     /**
      * Returns a time as percentage.

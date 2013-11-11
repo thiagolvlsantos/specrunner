@@ -18,7 +18,7 @@
 package org.specrunner.impl.pipes;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.annotator.IAnnotatorFactory;
@@ -65,7 +65,7 @@ public class PipeAnnotator implements IPipe {
      *             On creation error.
      */
     protected IAnnotator createAnnotator() throws AnnotatorException {
-        return SpecRunnerServices.get(IAnnotatorFactory.class).newAnnotator();
+        return SRServices.get(IAnnotatorFactory.class).newAnnotator();
     }
 
     /**

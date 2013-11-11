@@ -23,7 +23,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
@@ -78,7 +78,7 @@ public class RunnerImpl implements IRunner {
 
     @Override
     public void run(ISource source, IContext context, IResultSet result) throws RunnerException {
-        List<ISourceListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(ISourceListener.class);
+        List<ISourceListener> listeners = SRServices.get(IListenerManager.class).filterByType(ISourceListener.class);
         // perform before listeners
         for (ISourceListener sl : listeners) {
             sl.onBefore(source, context, result);
@@ -131,7 +131,7 @@ public class RunnerImpl implements IRunner {
      *             On execution errors.
      */
     protected void local(final Node node, IContext context, IResultSet result, IPlugin previous) throws RunnerException {
-        List<INodeListener> nodeListeners = SpecRunnerServices.get(IListenerManager.class).filterByType(INodeListener.class);
+        List<INodeListener> nodeListeners = SRServices.get(IListenerManager.class).filterByType(INodeListener.class);
         ENext doNode = nodeStart(node, context, result, nodeListeners);
         // if listener were used and they said to skip
         if (doNode == ENext.SKIP) {
@@ -147,7 +147,7 @@ public class RunnerImpl implements IRunner {
             context.push(block);
 
             // create the plugin instance.
-            IPluginFactory factory = SpecRunnerServices.get(IPluginFactory.class);
+            IPluginFactory factory = SRServices.get(IPluginFactory.class);
             IPlugin plugin = previous == null ? factory.newPlugin(node, context) : previous;
             block.setPlugin(plugin);
 
@@ -171,7 +171,7 @@ public class RunnerImpl implements IRunner {
 
             context.addMetadata();
 
-            List<IPluginListener> listeners = SpecRunnerServices.get(IListenerManager.class).filterByType(IPluginListener.class);
+            List<IPluginListener> listeners = SRServices.get(IListenerManager.class).filterByType(IPluginListener.class);
 
             // initialization
             initialization(context, result, plugin, listeners);

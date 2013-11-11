@@ -17,7 +17,7 @@
  */
 package org.specrunner.comparators.impl;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.features.IFeatureManager;
 
@@ -42,7 +42,7 @@ public abstract class AbstractComparatorTime implements IComparator {
     @Override
     public void initialize() {
         tolerance = 0L;
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_TOLERANCE, this);
     }
 

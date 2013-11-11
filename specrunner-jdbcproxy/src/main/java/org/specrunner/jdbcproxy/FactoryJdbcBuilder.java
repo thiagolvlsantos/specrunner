@@ -11,7 +11,7 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 
 /**
  * Wrapped version of a factory.
@@ -84,7 +84,7 @@ public final class FactoryJdbcBuilder implements IFactoryJdbc {
      */
     private FactoryJdbcBuilder() {
         try {
-            wrapperFactory = SpecRunnerServices.get(IWrapperFactory.class);
+            wrapperFactory = SRServices.get(IWrapperFactory.class);
             driverWrapper = wrapperFactory.wrapperClass(Driver.class);
             dataSourceWrapper = wrapperFactory.wrapperClass(DataSource.class);
             connectionWrapper = wrapperFactory.wrapperClass(Connection.class);

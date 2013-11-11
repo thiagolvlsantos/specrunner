@@ -1,14 +1,13 @@
 package example.sql.noid;
 
 import org.joda.time.LocalDate;
+import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.SpecRunnerServices;
 import org.specrunner.comparators.impl.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
-import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginConnection;
@@ -24,7 +23,7 @@ public abstract class AbstractTestOrders {
     protected IConfiguration cfg;
 
     public AbstractTestOrders() {
-        cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginConnection.FEATURE_PROVIDER_INSTANCE, new DataSourceProviderImpl());
         cfg.add(PluginConnection.FEATURE_REUSE, true);
         cfg.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
@@ -34,7 +33,7 @@ public abstract class AbstractTestOrders {
         // time comparators tolerance of 1000 milliseconds.
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 1000L);
         // expressions
-        SpecRunnerServices.get(IExpressionFactory.class).bindModel("d", new IModel<String>() {
+        SRServices.getExpressionFactory().bindModel("d", new IModel<String>() {
             @Override
             public String getObject(IContext context) throws SpecRunnerException {
                 return new LocalDate().toString("MM/dd/yyyy");

@@ -18,7 +18,7 @@
 package org.specrunner.tomcat;
 
 import org.apache.catalina.Server;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -63,7 +63,7 @@ public class TomcatStringProvider implements IStringProvider {
 
     @Override
     public String newString(IContext context) throws ContextException {
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_URL, this);
         if (url == null) {
             Server server = (Server) context.getByName(PluginStartTomcat.SERVER_NAME);

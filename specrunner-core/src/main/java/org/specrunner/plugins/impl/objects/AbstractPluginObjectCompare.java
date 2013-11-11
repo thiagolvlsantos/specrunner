@@ -18,7 +18,7 @@
 package org.specrunner.plugins.impl.objects;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.context.IContext;
@@ -70,7 +70,7 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
             }
 
             // lookup for best match comparator
-            IComparatorManager cf = SpecRunnerServices.getComparatorManager();
+            IComparatorManager cf = SRServices.getComparatorManager();
             IComparator comparator = null;
             // specific cell comparator
             CellAdapter cell = row.getCell(f.getIndex());

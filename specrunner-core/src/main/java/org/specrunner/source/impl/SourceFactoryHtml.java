@@ -33,7 +33,7 @@ import java.util.HashMap;
 import nu.xom.Builder;
 import nu.xom.Document;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
@@ -146,7 +146,7 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
         return new SourceImpl(getEncoding(), null, this, new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
-                IBuilderFactory factory = SpecRunnerServices.get(IBuilderFactory.class);
+                IBuilderFactory factory = SRServices.get(IBuilderFactory.class);
                 Builder builder = factory.newBuilder(new HashMap<String, Object>());
                 try {
                     synchronized (builder) {

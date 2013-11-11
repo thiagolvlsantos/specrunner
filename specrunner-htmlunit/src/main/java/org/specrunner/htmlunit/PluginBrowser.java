@@ -21,7 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.listeners.PageListener;
@@ -410,7 +410,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     @SuppressWarnings("unchecked")
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_VERSION, this);
         if (host == null) {
             fm.set(FEATURE_HOST, this);
@@ -460,13 +460,13 @@ public class PluginBrowser extends AbstractPluginScoped {
     @SuppressWarnings("serial")
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         try {
-            IListenerManager fac = SpecRunnerServices.get(IListenerManager.class);
+            IListenerManager fac = SRServices.get(IListenerManager.class);
             if (recording) {
                 fac.add(new PageListener(getName()));
             } else {
                 fac.remove(getName());
             }
-            IReuseManager reusables = SpecRunnerServices.get(IReuseManager.class);
+            IReuseManager reusables = SRServices.get(IReuseManager.class);
             if (reuse) {
                 Map<String, Object> cfg = new HashMap<String, Object>();
                 cfg.put("version", version);

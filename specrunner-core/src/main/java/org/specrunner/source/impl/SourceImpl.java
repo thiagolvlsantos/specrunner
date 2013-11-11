@@ -28,7 +28,7 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
@@ -165,7 +165,7 @@ public class SourceImpl implements ISource {
     @Override
     public IResourceManager getManager() {
         if (manager == null) {
-            manager = SpecRunnerServices.get(IResourceManagerFactory.class).newManager(this);
+            manager = SRServices.get(IResourceManagerFactory.class).newManager(this);
         }
         return manager;
     }

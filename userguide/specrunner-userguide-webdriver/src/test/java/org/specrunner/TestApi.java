@@ -23,7 +23,7 @@ public class TestApi {
 
     @Test
     public void play() throws Exception {
-        IExpressionFactory ef = SpecRunnerServices.get(IExpressionFactory.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
         // date expression elements
         ef.bindValue("pat", "HH:mm").bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class);
 
@@ -71,7 +71,7 @@ public class TestApi {
         group.add(type);
 
         PluginCompareDate date = new PluginCompareDate();
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         long MINUTE_PLUS_1_SECOND = 61 * 1000L;
         fm.add(PluginCompareDate.FEATURE_TOLERANCE, MINUTE_PLUS_1_SECOND);
         date.setEval(true);

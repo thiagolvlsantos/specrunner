@@ -22,8 +22,7 @@ import org.specrunner.util.composite.IComposite;
 /**
  * A plugin group factory. A node can be associated to more than on plugin. i.e.
  * for CSS classes based plugins, if more than one plugin is specified a plugin
- * group can be created, it depends on the plugin factory bound in
- * SpecRunnerServices.
+ * group can be created, it depends on the plugin factory bound in SRServices.
  * 
  * 
  * @author Thiago Santos

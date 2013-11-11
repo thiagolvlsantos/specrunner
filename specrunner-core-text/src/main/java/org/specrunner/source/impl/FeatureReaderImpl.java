@@ -28,7 +28,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
@@ -48,7 +48,7 @@ public class FeatureReaderImpl implements IFeatureReader {
     /**
      * The keyword set.
      */
-    private static ICache<String, Keywords> cacheKeywords = SpecRunnerServices.get(ICacheFactory.class).newCache(SourceFactoryText.class.getName());
+    private static ICache<String, Keywords> cacheKeywords = SRServices.get(ICacheFactory.class).newCache(SourceFactoryText.class.getName());
 
     static {
         cacheKeywords.setSize(TEN);

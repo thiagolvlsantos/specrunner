@@ -1,7 +1,7 @@
 package example.sql.noid;
 
 import org.junit.Test;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -23,7 +23,7 @@ public class TestGenerated {
     private IConfiguration cfg;
 
     public TestGenerated() {
-        cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+        cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginConnection.FEATURE_PROVIDER_INSTANCE, new DataSourceProviderImpl());
         cfg.add(PluginConnection.FEATURE_REUSE, true);
         cfg.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());

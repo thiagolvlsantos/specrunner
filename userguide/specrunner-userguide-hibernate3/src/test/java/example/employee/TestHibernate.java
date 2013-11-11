@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.comparators.impl.AbstractComparatorTime;
 import org.specrunner.converters.IConverterManager;
 import org.specrunner.converters.impl.ConverterBooleanTemplate;
@@ -21,13 +21,13 @@ public class TestHibernate {
 
     @Before
     public void setUpConverters() {
-        IConverterManager cf = SpecRunnerServices.getConverterManager();
+        IConverterManager cf = SRServices.getConverterManager();
         cf.put("bool", new ConverterBooleanTemplate("Sim", "Não"));
 
-        IExpressionFactory ief = SpecRunnerServices.get(IExpressionFactory.class);
-        ief.bindClass("dt", DateTime.class);
+        IExpressionFactory ef = SRServices.getExpressionFactory();
+        ef.bindClass("dt", DateTime.class);
 
-        IFeatureManager fm = SpecRunnerServices.getFeatureManager();
+        IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(AbstractComparatorTime.FEATURE_TOLERANCE, 10000L);
 
         fm.put(AbstractPlugin.FEATURE_THREADSAFE, Boolean.TRUE);

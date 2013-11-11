@@ -1,7 +1,7 @@
 package example.configuration;
 
 import org.junit.runner.RunWith;
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
@@ -18,6 +18,6 @@ public class TestCfg3 extends TestCfg2 {
 
     @Override
     public boolean checkCfg(String value) {
-        return value.equals(SpecRunnerServices.getFeatureManager().get(PluginBean.BEAN_NAME));
+        return value.equals(SRServices.getFeatureManager().get(PluginBean.BEAN_NAME));
     }
 }
