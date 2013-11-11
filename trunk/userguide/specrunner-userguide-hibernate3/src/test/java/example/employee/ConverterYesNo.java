@@ -1,6 +1,6 @@
 package example.employee;
 
-import org.specrunner.converters.impl.ConverterBooleanTemplate;
+import org.specrunner.converters.core.ConverterBooleanTemplate;
 
 @SuppressWarnings("serial")
 public class ConverterYesNo extends ConverterBooleanTemplate {

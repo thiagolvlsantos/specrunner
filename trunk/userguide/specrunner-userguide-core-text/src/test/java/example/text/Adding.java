@@ -3,8 +3,8 @@ package example.text;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
-import org.specrunner.plugins.impl.language.Sentence;
-import org.specrunner.plugins.impl.language.Synonyms;
+import org.specrunner.plugins.core.language.Sentence;
+import org.specrunner.plugins.core.language.Synonyms;
 
 import example.text.suv.Calc;
 

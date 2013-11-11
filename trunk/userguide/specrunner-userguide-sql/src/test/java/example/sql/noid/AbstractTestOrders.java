@@ -3,7 +3,7 @@ package example.sql.noid;
 import org.joda.time.LocalDate;
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.comparators.impl.ComparatorDate;
+import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IContext;

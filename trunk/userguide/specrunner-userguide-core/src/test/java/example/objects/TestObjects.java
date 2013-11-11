@@ -6,7 +6,7 @@ import org.specrunner.SRServices;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunnerConcurrent;
-import org.specrunner.plugins.impl.language.Sentence;
+import org.specrunner.plugins.core.language.Sentence;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)

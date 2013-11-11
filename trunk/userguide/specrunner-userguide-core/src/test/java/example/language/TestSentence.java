@@ -9,11 +9,11 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
 import org.specrunner.converters.Converter;
-import org.specrunner.converters.impl.ConverterDatePatternArgs;
+import org.specrunner.converters.core.ConverterDatePatternArgs;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunnerConcurrent;
-import org.specrunner.listeners.impl.PauseOnFailureNodeListener;
+import org.specrunner.listeners.core.PauseOnFailureNodeListener;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
