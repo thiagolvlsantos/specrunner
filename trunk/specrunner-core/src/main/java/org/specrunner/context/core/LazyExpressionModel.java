@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2012  Thiago Santos
+    Copyright (C) 2011-2013  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.impl;
+package org.specrunner.context.core;
 
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
@@ -32,7 +32,7 @@ import org.specrunner.util.UtilLog;
  * @param <T>
  *            The return type.
  */
-public class LazyExpressionModel<T> implements IModel<Object, T> {
+public class LazyExpressionModel<T> implements IModel<T> {
 
     /**
      * The source of expression.
@@ -72,17 +72,12 @@ public class LazyExpressionModel<T> implements IModel<Object, T> {
     @Override
     public T getObject(IContext context) throws ContextException {
         try {
-            return (T) UtilEvaluator.evaluate(String.valueOf(source), context);
+            return (T) UtilEvaluator.evaluate(String.valueOf(source), context, true);
         } catch (PluginException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
             throw new ContextException(e);
         }
-    }
-
-    @Override
-    public void setObject(Object object, IContext context) throws ContextException {
-        this.source = object;
     }
 }

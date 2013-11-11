@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2012  Thiago Santos
+    Copyright (C) 2011-2013  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.impl;
+package org.specrunner.context.core;
 
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;

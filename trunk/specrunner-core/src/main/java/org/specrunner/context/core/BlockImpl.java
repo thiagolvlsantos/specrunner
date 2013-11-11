@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2012  Thiago Santos
+    Copyright (C) 2011-2013  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.impl;
+package org.specrunner.context.core;
 
 import java.util.Map;
 
@@ -23,6 +23,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IBlock;
 import org.specrunner.plugins.IPlugin;
+import org.specrunner.plugins.core.PluginNop;
 
 /**
  * Default block implementation.
@@ -66,6 +67,11 @@ public class BlockImpl implements IBlock {
     }
 
     @Override
+    public boolean isValid() {
+        return hasNode() || hasPlugin();
+    }
+
+    @Override
     public boolean hasChildren() {
         return hasNode() && getNode().getChildCount() > 0;
     }
@@ -97,7 +103,7 @@ public class BlockImpl implements IBlock {
 
     @Override
     public boolean hasPlugin() {
-        return getPlugin() != null;
+        return getPlugin() != null && getPlugin() != PluginNop.emptyPlugin();
     }
 
     @Override

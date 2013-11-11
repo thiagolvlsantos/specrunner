@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2012  Thiago Santos
+    Copyright (C) 2011-2013  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.impl;
+package org.specrunner.context.core;
 
 import java.util.Deque;
 import java.util.HashMap;
@@ -26,17 +26,21 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
 
-import org.specrunner.SpecRunnerServices;
+import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IModel;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.plugins.IPlugin;
-import org.specrunner.plugins.impl.PluginNop;
+import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Default context implementation.
@@ -86,6 +90,11 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
     @Override
     public Deque<ISource> getSources() {
         return sources;
+    }
+
+    @Override
+    public ISource getCurrentSource() {
+        return sources.peek();
     }
 
     /**
@@ -141,6 +150,16 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         } else {
             clearGlobal(local);
         }
+    }
+
+    @Override
+    public void saveStrict(String local, Object obj) {
+        getFirst().getMap().put(local, obj);
+    }
+
+    @Override
+    public void clearStrict(String name) {
+        getFirst().getMap().remove(name);
     }
 
     @Override
@@ -261,6 +280,13 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
      * @return The object.
      */
     protected Object findName(int start, String name) {
+        int count = 0;
+        int begin = name != null ? name.indexOf(UPACCESS, 0) : -1;
+        while (name != null && begin >= 0) {
+            count++;
+            begin = name.indexOf(UPACCESS, begin + UPACCESS.length());
+        }
+        name = name != null ? name.replace(UPACCESS, "") : null;
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
             if (UtilLog.LOG.isTraceEnabled()) {
@@ -269,6 +295,19 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             if (g != null) {
                 Object o = g.getMap().get(name);
                 if (o != null) {
+                    if (count > 0) {
+                        count--;
+                        continue;
+                    }
+                    if (o instanceof IModel) {
+                        try {
+                            return ((IModel<?>) o).getObject(this);
+                        } catch (SpecRunnerException e) {
+                            if (UtilLog.LOG.isTraceEnabled()) {
+                                UtilLog.LOG.trace(e.getMessage(), e);
+                            }
+                        }
+                    }
                     return o;
                 }
             }
@@ -283,6 +322,11 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             result.putAll(b.getMap());
         }
         return result;
+    }
+
+    @Override
+    public boolean isValid() {
+        return hasNode() || hasPlugin();
     }
 
     @Override
@@ -348,11 +392,82 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
 
     @Override
     public IBlock newBlock(Node node, IPlugin plugin) {
-        return SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin);
+        return SRServices.get(IBlockFactory.class).newBlock(node, plugin);
     }
 
     @Override
     public IBlock newBlock(Node node, IPlugin plugin, Map<String, Object> map) {
-        return SpecRunnerServices.get(IBlockFactory.class).newBlock(node, plugin, map);
+        return SRServices.get(IBlockFactory.class).newBlock(node, plugin, map);
+    }
+
+    @Override
+    public void addMetadata() {
+        final IBlock block = peek();
+        // ----------- METAVARIABLES --------------
+        // meta variable 'block'
+        saveStrict("$BLOCK", block);
+
+        // meta variable 'node'
+        saveStrict("$NODE", new IModel<Node>() {
+            @Override
+            public Node getObject(IContext context) throws SpecRunnerException {
+                return block.getNode();
+            }
+        });
+
+        // meta variable 'plugin'
+        saveStrict("$PLUGIN", new IModel<IPlugin>() {
+            @Override
+            public IPlugin getObject(IContext context) throws SpecRunnerException {
+                return block.getPlugin();
+            }
+        });
+
+        // meta variable 'text'
+        saveStrict("$TEXT", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return block.getNode().getValue();
+            }
+        });
+
+        // meta variable 'XML'
+        saveStrict("$XML", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return block.getNode().toXML();
+            }
+        });
+        // inner XML
+        saveStrict("$INNER_XML", new IModel<String>() {
+            @Override
+            public String getObject(IContext context) throws SpecRunnerException {
+                return UtilNode.getChildrenAsString(block.getNode());
+            }
+        });
+
+        // meta variable 'content evaluated silently'
+        saveStrict("$CONTENT", new IModel<Object>() {
+            @Override
+            public Object getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
+                } catch (Exception e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        });
+
+        // meta variable 'content evaluated'
+        saveStrict("$CONTENT_UNSILENT", new IModel<Object>() {
+            @Override
+            public Object getObject(IContext context) throws SpecRunnerException {
+                try {
+                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
+                } catch (Exception e) {
+                    throw new SpecRunnerException(e);
+                }
+            }
+        });
     }
 }

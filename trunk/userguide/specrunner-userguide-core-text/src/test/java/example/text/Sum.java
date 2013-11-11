@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.core.language.Sentence;
-import org.specrunner.source.impl.DataTable;
+import org.specrunner.source.text.DataTable;
 
 @RunWith(SRRunner.class)
 // @Ignore
