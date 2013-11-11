@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.features.impl;
+package org.specrunner.features.core;
 
 import java.util.HashMap;
 import java.util.Map;
