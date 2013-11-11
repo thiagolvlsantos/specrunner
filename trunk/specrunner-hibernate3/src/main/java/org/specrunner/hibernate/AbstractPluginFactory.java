@@ -18,7 +18,7 @@
 package org.specrunner.hibernate;
 
 import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.impl.AbstractPluginValue;
+import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 
 /**

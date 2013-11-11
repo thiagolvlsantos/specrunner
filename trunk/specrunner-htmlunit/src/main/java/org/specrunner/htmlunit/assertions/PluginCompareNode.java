@@ -25,7 +25,7 @@ import nu.xom.Element;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.IComparatorManager;
-import org.specrunner.comparators.impl.ComparatorNode;
+import org.specrunner.comparators.core.ComparatorNode;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
@@ -40,7 +40,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 

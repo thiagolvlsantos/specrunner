@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.IFinder;
-import org.specrunner.parameters.impl.ParameterHolder;
+import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 

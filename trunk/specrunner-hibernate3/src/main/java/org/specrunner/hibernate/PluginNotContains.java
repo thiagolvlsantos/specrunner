@@ -18,7 +18,7 @@
 package org.specrunner.hibernate;
 
 import org.hibernate.Session;
-import org.specrunner.plugins.impl.objects.AbstractPluginObjectSelectNone;
+import org.specrunner.plugins.core.objects.AbstractPluginObjectSelectNone;
 
 /**
  * Check if an object is not in object repository.

@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.specrunner.comparators.IComparator;
-import org.specrunner.comparators.impl.ComparatorDate;
+import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.CommandType;

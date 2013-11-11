@@ -29,12 +29,12 @@ import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.impl.objects.AbstractPluginObject;
+import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
-import org.specrunner.reuse.impl.AbstractReusable;
+import org.specrunner.reuse.core.AbstractReusable;
 import org.specrunner.util.xom.RowAdapter;
 
 public class PluginEntityManager extends AbstractPluginObject {

@@ -18,7 +18,7 @@
 package org.specrunner.hibernate;
 
 import org.hibernate.Session;
-import org.specrunner.plugins.impl.objects.AbstractPluginObjectCompare;
+import org.specrunner.plugins.core.objects.AbstractPluginObjectCompare;
 
 /**
  * Check if a given list of objects is present in database. The object output
