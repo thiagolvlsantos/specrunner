@@ -15,35 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
- * General date converter.
+ * Convert any date (DateTime form Jodatime), given a provided pattern in
+ * arg[0].
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLocalDatePatternTemplate extends ConverterNotNullNotEmpty {
-
+public class ConverterDateTimePatternArgs extends ConverterNotNullNotEmpty {
     /**
-     * Parser instance.
+     * Cache of formatters.
      */
-    private DateTimeFormatter pattern;
-
-    /**
-     * Create a SimpleDateFormat using the given pattern.
-     * 
-     * @param pattern
-     *            Pattern.
-     */
-    public ConverterLocalDatePatternTemplate(String pattern) {
-        this.pattern = DateTimeFormat.forPattern(pattern);
-    }
+    private static ICache<String, DateTimeFormatter> cache = SRServices.get(ICacheFactory.class).newCache(ConverterDateTimePatternArgs.class.getName());
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
@@ -51,7 +44,15 @@ public class ConverterLocalDatePatternTemplate extends ConverterNotNullNotEmpty 
             return null;
         }
         try {
-            return pattern.parseDateTime(String.valueOf(value)).toLocalDate();
+            String pattern = String.valueOf(args[0]);
+            synchronized (cache) {
+                DateTimeFormatter formatter = cache.get(pattern);
+                if (formatter == null) {
+                    formatter = DateTimeFormat.forPattern(pattern);
+                    cache.put(pattern, formatter);
+                }
+                return formatter.parseDateTime(String.valueOf(value));
+            }
         } catch (IllegalArgumentException e) {
             throw new ConverterException(e);
         }

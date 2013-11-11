@@ -15,31 +15,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
 import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
 
 /**
- * Default converter. Bypass converter accepts everything.
+ * Convert any object to String using <code>String.valueOf(...)</code>.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDefault implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object obj) {
-        return true;
-    }
+public class ConverterString extends ConverterDefault {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
-        return obj;
+        return String.valueOf(obj);
     }
 }

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
 /**
  * Create current date.
@@ -24,12 +24,12 @@ package org.specrunner.converters.impl;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLocalDateCurrent extends ConverterLocalDateCurrentTemplate {
+public class ConverterDateTimeCurrent extends ConverterDateTimeCurrentTemplate {
 
     /**
      * Basic data converter.
      */
-    public ConverterLocalDateCurrent() {
-        super(new String[] { "atual", "data atual", "current", "current date" });
+    public ConverterDateTimeCurrent() {
+        super(new String[] { "atual", "data atual", "data hora atual", "current", "current date", "current timestamp" });
     }
 }

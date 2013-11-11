@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -28,7 +28,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateTimePatternTemplate extends ConverterNotNullNotEmpty {
+public class ConverterLocalDatePatternTemplate extends ConverterNotNullNotEmpty {
 
     /**
      * Parser instance.
@@ -41,7 +41,7 @@ public class ConverterDateTimePatternTemplate extends ConverterNotNullNotEmpty {
      * @param pattern
      *            Pattern.
      */
-    public ConverterDateTimePatternTemplate(String pattern) {
+    public ConverterLocalDatePatternTemplate(String pattern) {
         this.pattern = DateTimeFormat.forPattern(pattern);
     }
 
@@ -51,7 +51,7 @@ public class ConverterDateTimePatternTemplate extends ConverterNotNullNotEmpty {
             return null;
         }
         try {
-            return pattern.parseDateTime(String.valueOf(value));
+            return pattern.parseDateTime(String.valueOf(value)).toLocalDate();
         } catch (IllegalArgumentException e) {
             throw new ConverterException(e);
         }

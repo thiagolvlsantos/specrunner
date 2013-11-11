@@ -15,30 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
-import org.specrunner.converters.IConverter;
+import org.specrunner.converters.ConverterException;
 
 /**
- * Turn everything to null.
+ * Basic float converter.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterNull implements IConverter {
+public class ConverterFloat extends ConverterNotNullNotEmpty {
 
     @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object obj) {
-        return true;
-    }
-
-    @Override
-    public Object convert(Object obj, Object[] args) {
-        return null;
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
+        try {
+            return Float.valueOf(String.valueOf(obj));
+        } catch (NumberFormatException e) {
+            throw new ConverterException(e);
+        }
     }
 }

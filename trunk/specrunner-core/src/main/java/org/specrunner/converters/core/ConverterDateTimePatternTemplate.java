@@ -15,26 +15,44 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.specrunner.converters.ConverterException;
 
 /**
- * Basic short converter.
+ * General date converter.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterShort extends ConverterNotNullNotEmpty {
+public class ConverterDateTimePatternTemplate extends ConverterNotNullNotEmpty {
+
+    /**
+     * Parser instance.
+     */
+    private DateTimeFormatter pattern;
+
+    /**
+     * Create a SimpleDateFormat using the given pattern.
+     * 
+     * @param pattern
+     *            Pattern.
+     */
+    public ConverterDateTimePatternTemplate(String pattern) {
+        this.pattern = DateTimeFormat.forPattern(pattern);
+    }
+
     @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        if (obj == null) {
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value == null) {
             return null;
         }
         try {
-            return Short.valueOf(String.valueOf(obj));
-        } catch (NumberFormatException e) {
+            return pattern.parseDateTime(String.valueOf(value));
+        } catch (IllegalArgumentException e) {
             throw new ConverterException(e);
         }
     }

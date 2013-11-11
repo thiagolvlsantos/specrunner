@@ -15,26 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
 import org.specrunner.converters.ConverterException;
 
 /**
- * Basic float converter.
+ * Basic double converter.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterFloat extends ConverterNotNullNotEmpty {
-
+public class ConverterDouble extends ConverterNotNullNotEmpty {
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {
             return null;
         }
         try {
-            return Float.valueOf(String.valueOf(obj));
+            return Double.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {
             throw new ConverterException(e);
         }

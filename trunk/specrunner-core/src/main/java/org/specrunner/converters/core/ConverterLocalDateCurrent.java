@@ -15,29 +15,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
-
-import java.math.BigDecimal;
-
-import org.specrunner.converters.ConverterException;
+package org.specrunner.converters.core;
 
 /**
- * Basic bigdecimal converter.
+ * Create current date.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterBigDecimal extends ConverterNotNullNotEmpty {
-    @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        if (obj == null) {
-            return null;
-        }
-        try {
-            return BigDecimal.valueOf(Double.valueOf(String.valueOf(obj)));
-        } catch (NumberFormatException e) {
-            throw new ConverterException(e);
-        }
+public class ConverterLocalDateCurrent extends ConverterLocalDateCurrentTemplate {
+
+    /**
+     * Basic data converter.
+     */
+    public ConverterLocalDateCurrent() {
+        super(new String[] { "atual", "data atual", "current", "current date" });
     }
 }

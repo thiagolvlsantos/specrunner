@@ -15,21 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.impl;
+package org.specrunner.converters.core;
 
+import org.joda.time.DateTime;
 import org.specrunner.converters.ConverterException;
 
 /**
- * Convert any object to String using <code>String.valueOf(...)</code>.
+ * Convert any date (LocalDate from Jodatime), given a provided pattern in
+ * arg[0].
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterString extends ConverterDefault {
+public class ConverterLocalDatePatternArgs extends ConverterDateTimePatternArgs {
 
     @Override
-    public Object convert(Object obj, Object[] args) throws ConverterException {
-        return String.valueOf(obj);
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        DateTime date = (DateTime) super.convert(value, args);
+        return date != null ? date.toLocalDate() : null;
     }
 }
