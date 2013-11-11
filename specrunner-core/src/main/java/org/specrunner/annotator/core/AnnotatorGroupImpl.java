@@ -15,13 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.annotator.impl;
+package org.specrunner.annotator.core;
 
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.annotator.IAnnotatorGroup;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.composite.CompositeImpl;
+import org.specrunner.util.composite.core.CompositeImpl;
 
 /**
  * Default annotator group implementation.

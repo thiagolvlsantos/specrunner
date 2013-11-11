@@ -15,56 +15,63 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.annotator.impl;
+package org.specrunner.annotator.core;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.ParentNode;
+import nu.xom.Text;
 
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.UtilNode;
 
 /**
- * Add a anchor link (relative) to errors.
+ * Add CSS style related to result status. For each result node add the
+ * corresponding CSS class to the element.
  * 
  * @author Thiago Santos
  * 
  */
-public class AnnotatorLink implements IAnnotator {
+public class AnnotatorCssStatus implements IAnnotator {
 
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
-        int stackIndex = 1;
         for (IResult r : result) {
             IBlock block = r.getBlock();
-            if (block.hasNode() && r.hasFailure()) {
-                addLinkToError(block.getNode(), stackIndex++);
+            if (block.hasNode()) {
+                Node node = block.getNode();
+                if (node instanceof Text) {
+                    node = wrapText(node);
+                }
+                UtilNode.appendCss(node, r.getStatus().getCssName());
             }
         }
     }
 
     /**
-     * Add a link to a node.
+     * Add a span surrounding the failed text.
      * 
-     * @param node
-     *            The node.
-     * @param errorIndex
-     *            The index number.
+     * @param target
+     *            The target node.
+     * @return The new node.
      */
-    protected void addLinkToError(Node node, int errorIndex) {
-        if (node instanceof ParentNode) {
-            ParentNode ele = (ParentNode) node;
-            if (ele instanceof Document) {
-                ele = ((Document) ele).getRootElement();
+    protected Node wrapText(Node target) {
+        ParentNode pn = target.getParent();
+        ParentNode wrap = new Element("span");
+        if (pn != null) {
+            for (int i = 0; i < pn.getChildCount(); i++) {
+                Node child = pn.getChild(i);
+                child.detach();
+                wrap.appendChild(child);
             }
-            Element child = new Element("a");
-            child.addAttribute(new Attribute("name", "" + errorIndex));
-            ele.insertChild(child, 0);
+            pn.appendChild(wrap);
+        } else {
+            wrap.appendChild(target);
         }
+        return wrap;
     }
 }

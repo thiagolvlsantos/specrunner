@@ -15,31 +15,56 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.annotator.impl;
+package org.specrunner.annotator.core;
+
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.xom.UtilNode;
 
 /**
- * Add CSS style related to action type. For each result node add the
- * corresponding CSS class to the element.
+ * Add a anchor link (relative) to errors.
  * 
  * @author Thiago Santos
  * 
  */
-public class AnnotatorCssActionType implements IAnnotator {
+public class AnnotatorLink implements IAnnotator {
 
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
+        int stackIndex = 1;
         for (IResult r : result) {
             IBlock block = r.getBlock();
-            if (block.hasNode()) {
-                UtilNode.appendCss(block.getNode(), r.getActionType().getCssName());
+            if (block.hasNode() && r.hasFailure()) {
+                addLinkToError(block.getNode(), stackIndex++);
             }
+        }
+    }
+
+    /**
+     * Add a link to a node.
+     * 
+     * @param node
+     *            The node.
+     * @param errorIndex
+     *            The index number.
+     */
+    protected void addLinkToError(Node node, int errorIndex) {
+        if (node instanceof ParentNode) {
+            ParentNode ele = (ParentNode) node;
+            if (ele instanceof Document) {
+                ele = ((Document) ele).getRootElement();
+            }
+            Element child = new Element("a");
+            child.addAttribute(new Attribute("name", "" + errorIndex));
+            ele.insertChild(child, 0);
         }
     }
 }
