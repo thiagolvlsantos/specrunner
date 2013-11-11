@@ -15,20 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.annotator.impl;
+package org.specrunner.annotator.core;
+
+import org.specrunner.annotator.AnnotatorException;
+import org.specrunner.annotator.IAnnotator;
+import org.specrunner.context.IBlock;
+import org.specrunner.result.IResult;
+import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.UtilNode;
 
 /**
- * Default annotator factory implementation.
+ * Add CSS style related to action type. For each result node add the
+ * corresponding CSS class to the element.
  * 
  * @author Thiago Santos
  * 
  */
-public class AnnotatorFactoryDefault extends AnnotatorFactoryImpl {
+public class AnnotatorCssActionType implements IAnnotator {
 
-    /**
-     * Default constructor.
-     */
-    public AnnotatorFactoryDefault() {
-        super(new AnnotatorGroupImpl().add(new AnnotatorCssStatus()).add(new AnnotatorCssActionType()).add(new AnnotatorTitle()).add(new AnnotatorStacktrace()).add(new AnnotatorLink()));
+    @Override
+    public void annotate(IResultSet result) throws AnnotatorException {
+        for (IResult r : result) {
+            IBlock block = r.getBlock();
+            if (block.hasNode()) {
+                UtilNode.appendCss(block.getNode(), r.getActionType().getCssName());
+            }
+        }
     }
 }

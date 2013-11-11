@@ -15,56 +15,32 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.annotator.impl;
+package org.specrunner.annotator.core;
 
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.annotator.IAnnotatorFactory;
+import org.specrunner.annotator.IAnnotatorFactoryGroup;
+import org.specrunner.annotator.IAnnotatorGroup;
+import org.specrunner.util.composite.core.CompositeImpl;
 
 /**
- * Default factory implementation.
+ * Default annotator factory group implementation.
  * 
  * @author Thiago Santos
  * 
  */
-public class AnnotatorFactoryImpl implements IAnnotatorFactory {
-
-    /**
-     * Reused annotator.
-     */
-    protected IAnnotator annotator;
-
-    /**
-     * Creates a new annotator factory.
-     * 
-     * @param annotator
-     *            The annotator.
-     */
-    public AnnotatorFactoryImpl(IAnnotator annotator) {
-        setAnnotator(annotator);
-    }
-
-    /**
-     * Gets the annotator.
-     * 
-     * @return The annotator.
-     */
-    public IAnnotator getAnnotator() {
-        return annotator;
-    }
-
-    /**
-     * Set the annotator.
-     * 
-     * @param annotator
-     *            The annotator.
-     */
-    public void setAnnotator(IAnnotator annotator) {
-        this.annotator = annotator;
-    }
+public class AnnotatorFactoryGroupImpl extends CompositeImpl<IAnnotatorFactoryGroup, IAnnotatorFactory> implements IAnnotatorFactoryGroup {
 
     @Override
     public IAnnotator newAnnotator() throws AnnotatorException {
-        return getAnnotator();
+        IAnnotatorGroup group = new AnnotatorGroupImpl();
+        for (IAnnotatorFactory af : getChildren()) {
+            IAnnotator an = af.newAnnotator();
+            if (an != null) {
+                group.add(an);
+            }
+        }
+        return group;
     }
 }
