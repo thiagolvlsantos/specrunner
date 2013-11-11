@@ -1,4 +1,4 @@
-package org.specrunner.pipeline.impl;
+package org.specrunner.pipeline.core;
 
 import java.io.File;
 import java.io.FileInputStream;
