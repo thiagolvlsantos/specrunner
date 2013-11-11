@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.parameters.impl;
+package org.specrunner.parameters.core;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -29,7 +29,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.parameters.IParameterDecorator;
 import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.PluginNop;
+import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.util.UtilLog;
 
 /**
