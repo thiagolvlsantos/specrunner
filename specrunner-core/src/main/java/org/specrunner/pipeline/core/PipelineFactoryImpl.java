@@ -15,29 +15,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.pipeline.impl;
+package org.specrunner.pipeline.core;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.specrunner.pipeline.IChannel;
-import org.specrunner.pipeline.IChannelFactory;
+import org.specrunner.pipeline.IPipe;
+import org.specrunner.pipeline.IPipeline;
+import org.specrunner.pipeline.IPipelineFactory;
+import org.specrunner.pipeline.PipelineException;
 
 /**
- * Default implementation of a channel factory.
+ * Default implementation of a pipeline factory.
  * 
  * @author Thiago Santos
- * 
  */
-public class ChannelFactoryImpl implements IChannelFactory {
+public class PipelineFactoryImpl implements IPipelineFactory {
 
     @Override
-    public IChannel newChannel() {
-        return newChannel(new HashMap<String, Object>());
+    public IPipeline newPipeline(Object source) throws PipelineException {
+        return newPipeline();
     }
 
     @Override
-    public IChannel newChannel(Map<String, Object> load) {
-        return new ChannelImpl(load);
+    public IPipeline newPipeline(IPipe... pipes) {
+        IPipeline result = new PipelineImpl();
+        if (pipes != null) {
+            for (IPipe p : pipes) {
+                result.add(p);
+            }
+        }
+        return result;
     }
 }
