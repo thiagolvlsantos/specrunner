@@ -25,8 +25,8 @@ import nu.xom.ParentNode;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.dumper.impl.SourceDumperWritables;
-import org.specrunner.listeners.impl.AbstractPluginListener;
+import org.specrunner.dumper.core.SourceDumperWritables;
+import org.specrunner.listeners.core.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
