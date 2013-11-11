@@ -8,7 +8,7 @@ import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.PluginKind;
-import org.specrunner.plugins.impl.include.PluginInclude;
+import org.specrunner.plugins.core.include.PluginInclude;
 
 @RunWith(SRRunner.class)
 public class TestInclude {

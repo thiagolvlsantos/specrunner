@@ -27,7 +27,7 @@ import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.PluginKind;
-import org.specrunner.plugins.impl.PluginGroupImpl;
+import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginCompareBase;
 import org.specrunner.sql.PluginConnection;

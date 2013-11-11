@@ -5,7 +5,7 @@ import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
-import org.specrunner.plugins.impl.var.PluginBean;
+import org.specrunner.plugins.core.var.PluginBean;
 
 @RunWith(SRRunner.class)
 public class TestCfg3 extends TestCfg2 {
