@@ -38,7 +38,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
-import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
