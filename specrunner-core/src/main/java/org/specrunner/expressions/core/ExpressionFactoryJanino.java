@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.expressions.impl;
+package org.specrunner.expressions.core;
 
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
