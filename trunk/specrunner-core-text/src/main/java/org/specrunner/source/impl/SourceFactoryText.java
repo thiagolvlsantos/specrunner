@@ -29,6 +29,7 @@ import nu.xom.Serializer;
 
 import org.specrunner.SRServices;
 import org.specrunner.source.SourceException;
+import org.specrunner.source.core.AbstractSourceFactory;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresenter;
 import org.specrunner.util.xom.IPresenterManager;

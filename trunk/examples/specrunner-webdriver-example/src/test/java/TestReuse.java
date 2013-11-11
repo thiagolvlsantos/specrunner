@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
-import org.specrunner.configuration.impl.ConfigurationFactoryImpl;
+import org.specrunner.configuration.core.ConfigurationFactoryImpl;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;

@@ -3,8 +3,8 @@ package com.example;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.impl.AbstractPlugin;
-import org.specrunner.plugins.impl.UtilPlugin;
+import org.specrunner.plugins.core.AbstractPlugin;
+import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 

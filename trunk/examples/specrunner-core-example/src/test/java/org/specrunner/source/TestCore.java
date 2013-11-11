@@ -4,8 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SRServices;
 import org.specrunner.transformer.ITransformer;
-import org.specrunner.transformer.impl.TransformerGroupImpl;
-import org.specrunner.transformer.impl.TransformerHref;
+import org.specrunner.transformer.core.TransformerGroupImpl;
+import org.specrunner.transformer.core.TransformerHref;
 
 public class TestCore extends TstPai {
 

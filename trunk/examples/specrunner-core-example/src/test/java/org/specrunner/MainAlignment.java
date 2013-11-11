@@ -1,6 +1,6 @@
 package org.specrunner;
 
-import org.specrunner.util.aligner.impl.DefaultAlignmentException;
+import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
 
 public final class MainAlignment {

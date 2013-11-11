@@ -1,7 +1,7 @@
 import org.junit.Test;
 import org.specrunner.junit.SpecRunnerJUnitPlugin;
 import org.specrunner.plugins.IPluginGroup;
-import org.specrunner.plugins.impl.PluginGroupImpl;
+import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.actions.PluginOpen;
 import org.specrunner.webdriver.actions.PluginType;

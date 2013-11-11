@@ -8,7 +8,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.source.impl.SourceFactoryHtml;
+import org.specrunner.source.core.SourceFactoryHtml;
 
 public class TestSource {
 
