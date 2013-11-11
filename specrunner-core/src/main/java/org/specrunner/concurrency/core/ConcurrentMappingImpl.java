@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.concurrency.impl;
+package org.specrunner.concurrency.core;
 
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.util.UtilLog;
