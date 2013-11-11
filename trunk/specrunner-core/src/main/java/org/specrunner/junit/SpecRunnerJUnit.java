@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
-import org.specrunner.dumper.impl.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.AbstractSourceDumperFile;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 
