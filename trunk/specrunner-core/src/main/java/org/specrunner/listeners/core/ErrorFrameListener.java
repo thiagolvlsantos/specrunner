@@ -15,35 +15,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.listeners.impl;
-
-import org.specrunner.context.IContext;
-import org.specrunner.plugins.IPlugin;
-import org.specrunner.plugins.impl.PluginNop;
-import org.specrunner.result.IResultSet;
-import org.specrunner.util.xom.UtilNode;
+package org.specrunner.listeners.core;
 
 /**
- * Tag executed plugins with ignore.
+ * Abstraction for error panel listener.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public class TagPluginListener extends AbstractPluginListener {
+public interface ErrorFrameListener {
 
-    @Override
-    public String getName() {
-        return "tagListener";
-    }
+    /**
+     * On 'ok' button pressed.
+     */
+    void ok();
 
-    @Override
-    public void reset() {
-    }
-
-    @Override
-    public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
-        if (plugin != PluginNop.emptyPlugin()) {
-            UtilNode.setIgnore(context.getNode());
-        }
-    }
+    /**
+     * On 'ok to all' button pressed.
+     */
+    void okToAll();
 }

@@ -15,24 +15,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.listeners.impl;
+package org.specrunner.listeners.core;
+
+import org.specrunner.context.IContext;
+import org.specrunner.listeners.ISourceListener;
+import org.specrunner.result.IResultSet;
+import org.specrunner.source.ISource;
+import org.specrunner.util.UtilLog;
 
 /**
- * Default listener manager.
+ * Helper for source listeners.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public abstract class AbstractSourceListener implements ISourceListener {
 
-    /**
-     * Default constructor.
-     */
-    public ListenerManagerDefault() {
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
+    @Override
+    public void onBefore(ISource source, IContext context, IResultSet result) {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("onBefore(" + context + "," + result + ")");
+        }
+    }
+
+    @Override
+    public void onAfter(ISource source, IContext context, IResultSet result) {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("onAfter(" + context + "," + result + ")");
+        }
     }
 }
