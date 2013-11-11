@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.impl.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.PluginObjectManager;
 import org.specrunner.util.UtilLog;
 
 /**
