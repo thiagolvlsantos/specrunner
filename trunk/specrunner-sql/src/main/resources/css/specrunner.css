@@ -27,11 +27,11 @@ table.sr_treport th:after {
 }
 
 tr.sr_missing {
-    background-color: red;
+    background-color: #FFFF99;
 }
 
 tr.sr_alien {
-    background-color: green;
+    background-color: #99CCCC;
 }
 
 tr.sr_different {
