@@ -172,6 +172,9 @@ public class ExpressionJanino extends AbstractExpression {
                                 values.add(value);
                                 types.add(value.getClass());
                             } catch (Exception e) {
+                                if (UtilLog.LOG.isDebugEnabled()) {
+                                    UtilLog.LOG.debug(e.getMessage(), e);
+                                }
                                 throw new ExpressionException("Unable to evaluate predefined value:" + str, e);
                             }
                         } else {
@@ -184,6 +187,9 @@ public class ExpressionJanino extends AbstractExpression {
                                     values.add(value);
                                     types.add(value.getClass());
                                 } catch (Exception e) {
+                                    if (UtilLog.LOG.isDebugEnabled()) {
+                                        UtilLog.LOG.debug(e.getMessage(), e);
+                                    }
                                     throw new ExpressionException("Unable to evaluate predefined model:" + str, e);
                                 }
                             }

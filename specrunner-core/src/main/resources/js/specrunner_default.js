@@ -30,9 +30,9 @@ $(document).ready(function() {
         }
         $(this).attr("value", comando);
         var button = $(this);
-        button.addClass("sr_border");
+        //button.addClass("sr_border");
         $(trace).toggle(250, function(){
-                button.removeClass("sr_border");
+                //button.removeClass("sr_border");
             }
         );
     });
