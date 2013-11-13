@@ -23,12 +23,12 @@ Adicione a dependência ao seu projeto:
 = Quais são os plugins disponíveis? =
 
 O arquivo
-[http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/resources/plugin_css.properties plugin_css.properties] contém a lista de plugins disponíveis, e [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/resources/plugin_css.properties plugin_element.properties] lista os nomes das tags HTML/XML que também podem ser usadas no lugar das classes CSS.
+[http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/resources/sr_plugins_css.properties sr_plugins_css.properties] contém a lista de plugins disponíveis, e [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/resources/sr_plugins_element.properties sr_plugins_element.properties] lista os nomes das tags HTML/XML que também podem ser usadas no lugar das classes CSS.
 
 
 = Se eu não gostar dos nomes que vocês escolheram? =
 
-Simples, crie uma cópia de `plugin_css.properties` e/ou `plugin_element.properties` no seu projeto, remova aqueles plugins cujo nome você não que mudar, e mude o demais para o que você quiser. Ele vai ser automaticamente incluído no ambiente de testes.
+Simples, crie uma cópia de `sr_plugins_css.properties` e/ou `sr_plugins_element.properties` no seu projeto, remova aqueles plugins cujo nome você não que mudar, e mude o demais para o que você quiser. Ele vai ser automaticamente incluído no ambiente de testes.
 
 
 = Projeto exemplo =
@@ -174,7 +174,7 @@ Desde que na chamada para execução haja o ajuste das features conforme mostrad
 {{{
 @Test
 public void create() {
-    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    IFeatureManager fm = SpecRunnerServices.getFeatureManager();
     fm.add(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
     fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
     fm.add(PluginConnection.FEATURE_USER,"sa");
@@ -190,7 +190,7 @@ Neste caso, se o teste `create` for executado antes do `all`, o ajuste será fei
 {{{
 @Before
 public void before() {
-    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    IFeatureManager fm = SpecRunnerServices.getFeatureManager();
     fm.addFeature(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
     fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
     fm.add(PluginConnection.FEATURE_USER,"sa");
@@ -216,7 +216,7 @@ Isso é feito através de configurações ([http://code.google.com/p/specrunner/
 @BeforeClass
 public static void before() {
     // ESSE É O AJUSTE PADRÃO
-    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    IFeatureManager fm = SpecRunnerServices.getFeatureManager();
     fm.addFeature(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
     fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
     fm.add(PluginConnection.FEATURE_USER,"sa");
@@ -243,7 +243,7 @@ O SpecRunner já possui um mecanismo integrado de reutilização de objetos, iss
 {{{
 @Before
 public void before() {
-    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    IFeatureManager fm = SpecRunnerServices.getFeatureManager();
     fm.add(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
     fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
     fm.add(PluginConnection.FEATURE_USER,"sa");
