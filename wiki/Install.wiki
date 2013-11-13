@@ -1,5 +1,5 @@
 #summary Como instalar
-#labels Featured,Phase-Deploy
+#labels Featured,Phase-Deploy,Phase-Implementation
 
 = Requisitos =
 Uma versão do Maven >= 3 disponível no PATH do seu ambiente.
