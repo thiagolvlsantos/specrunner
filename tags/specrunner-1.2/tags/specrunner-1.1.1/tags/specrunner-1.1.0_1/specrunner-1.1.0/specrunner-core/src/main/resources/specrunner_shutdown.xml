@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<pipeline>
+    <pipe>org.specrunner.impl.pipes.shutdown.PipeReusable</pipe>
+    <pipe>org.specrunner.impl.pipes.shutdown.PipeResume</pipe>
+</pipeline>

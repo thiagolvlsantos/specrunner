@@ -1,0 +1,67 @@
+<ul>
+    <li class="browser">Abrir um navegador;</li>
+    <li>Acessar a página '<span class="open">http://localhost:8080</span>';</li>
+    <li>Visualiza a <span class="view">tela</span>.</li>
+    <li>
+    	Conferir que a tabela é:
+    	<table class="compareTable" border=1 by="id:idTabela">
+    		<tr>
+    			<td>
+    				<img alt="qualquer"> Controle corpo
+    			</td>
+    		</tr>
+    	</table>
+    </li>
+    <li>Clicar no <span class="click" by="id:linkGrupoCorpo">expandir</span> do 'Controle corpo'</li>
+    <li>
+    	Conferir que a tabela é:
+    	<table class="compareTable" border=1 by="id:idTabela">
+    		<tr>
+    			<td colspan=2>
+    				<img alt="qualquer"> Controle corpo
+    			</td>
+    		</tr>
+    		<tr>
+    			<td>
+    				Ajuda
+    			</td>
+    			<td>
+    				<img alt="qualquer">
+    			</td>
+    		</tr>
+    	</table>
+    </li>
+
+    <li>Clicar no <span class="click" by="id:linkGrupoItem">expandir</span> da 'Ajuda'</li>
+    <li>
+    	Conferir que a tabela é:
+    	<table class="compareTable" border=1 by="id:idTabela">
+    		<tr>
+    			<td colspan=2>
+    				<img alt="qualquer"> Controle corpo
+    			</td>
+    		</tr>
+    		<tr>
+    			<td>
+    				Ajuda
+    			</td>
+    			<td>
+    				<img alt="qualquer">
+    			</td>
+    		</tr>
+    		<tr>
+    			<td colspan=2>
+    				Descrição da ajuda.
+    			</td>
+    		</tr>
+    	</table>
+    </li>
+
+    <li>Clicar no <span class="click" by="id:linkGrupoTabela">contrair</span> do controle externo</li>
+    <li>
+    	Conferir que a tabela não está mais visível.
+    	<table class="compareTable" border=1 by="id:idTabela">
+    	</table>
+    </li>
+</ul>
+    

@@ -1,0 +1,32 @@
+
+<html
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<wicket:extend>
+
+	<wicket:head>
+		<title>Person detail</title>
+	</wicket:head>
+
+	<body>
+		<div align=center>
+			<strong>Person detail</strong>
+
+			<form wicket:id="detailPerson">
+				<table class="form">
+					<tr wicket:id="commom">
+						<td colspan="4">detail commom</td>
+					</tr>
+					<tr wicket:id="detail">
+						<td colspan="4">detail person</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td colspan=3><wicket:child/><input class="submit" type="submit"
+							wicket:id="back" value="Back" /></td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</body>
+</wicket:extend>
+</html>

@@ -1,0 +1,68 @@
+#summary Diferentes estilos de escrita.
+#labels Featured
+
+= Exemplos =
+
+Aqui podemos ver que o problema a ser resolvido é único mas pode ser descrito de diferentes formas.
+
+*Problema*: Eu quero verificar que o primeiro link de resposta do Google para cada consulta abaixo:
+|| Consulta || Primeiro resultado ||
+|| google || http://www.google.com ||
+|| microsoft || http://www.microsoft.com ||
+|| oracle || http://www.oracle.com ||
+----
+
+== Usando linguagem natural (exemplo 1) ==
+Usando o site do Google, verifique que há um correspondência entre as consultas e seus respectivos resultados:
+|| Consulta || Resultado ||
+|| google || http://www.google.com ||
+|| microsoft || http://www.microsoft.com ||
+|| oracle || http://www.oracle.com ||
+
+== Usando linguagem natural (exemplo 2) ==
+Considerando que realizar uma consulta no Google é:
+|| abrir o navegador ||
+|| digitar a ${Consulta} ||
+|| clicar no botão de busca ||
+|| conferir que o primeiro  resultado é ${Resultado} ||
+
+E a lista de interesse é:
+|| Consulta || Resultado ||
+|| google || http://www.google.com ||
+|| microsoft || http://www.microsoft.com ||
+|| oracle || http://www.oracle.com ||
+Realize a consulta para cada uma dos elementos na lista.
+
+
+== Usando linguagem de script ==
+|| abrir || http://www.google.com ||
+|| digitar || 'google ||
+|| clique || 'Search' ||
+|| verifique || que primeiro link é 'http://www.google.com' ||
+|| abrir || http://www.google.com ||
+|| digitar || 'microsoft' ||
+|| clique || 'Search' ||
+|| verifique ||que primeiro link é 'http://www.microsoft' ||
+|| abrir || http://www.google.com ||
+|| digite || 'oracle' ||
+|| clique || 'Search' ||
+|| verifique || que primeiro link é 'http://www.oracle.com' ||
+
+== Usando BDD ("baseado em comportamento") ==
+|| Cenário 1 ||
+|| DADO QUE || O browser está na página do Google ||
+|| QUANDO || Eu digito 'google' ||
+||      ||E clico em 'Search' ||
+|| ENTÃO || o primeiro resultado é 'http://www.google.com'. ||
+
+|| Cenário 2 ||
+|| DADO QUE || O browser está na página do Google ||
+|| QUANDO || Eu digito 'microsoft' ||
+||      ||E clico em 'Search' ||
+|| ENTÃO || o primeiro resultado é 'http://www.microsoft.com'. ||
+
+|| Cenário 3 ||
+|| DADO QUE || O browser está na página do Google ||
+|| QUANDO || Eu digito 'oracle' ||
+||      ||E clico em 'Search' ||
+|| ENTÃO || o primeiro resultado é 'http://www.oracle.com'. ||

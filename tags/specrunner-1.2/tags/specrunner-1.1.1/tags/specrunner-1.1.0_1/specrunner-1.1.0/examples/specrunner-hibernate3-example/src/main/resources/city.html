@@ -1,0 +1,10 @@
+<table type="th.example.City" reference="id" separator="/">
+    <caption>Cidades</caption>
+    <tr>
+        <th>ID</th>
+        <th field="name">Nome</th>
+        <th field="foundation" default='new java.util.Date()' converter="datePattern" arg0="dd/MM/yyyy">Data de fundação</th>
+        <th field="status" converter="bool">Ativa</th>
+        <th field="lastUpdate" converter="dateText">Última atualização</th>
+    </tr>
+</table>
