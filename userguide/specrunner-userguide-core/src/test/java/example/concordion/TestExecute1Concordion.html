@@ -1,0 +1,11 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+    <body>
+        <p>
+            If the time is
+            <span concordion:set="#time">09:00AM</span>
+            <span concordion:execute="setCurrentTime(#time)" />
+            then the greeting will say:
+            <span concordion:assertEquals="getGreeting()">Good Morning World!</span>
+        </p>
+    </body>
+</html>

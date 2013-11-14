@@ -1,0 +1,46 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+
+    <head>
+        <link href="../concordion.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+
+        <h1>Splitting Names</h1>
+
+        <p>
+            To help personalise our mailshots we want to have the first name
+            and last name of the customer. Unfortunately the customer data
+            that we are supplied only contains full names.
+        </p>
+
+        <p>
+            The system therefore attempts to break a supplied full name into
+            its constituents by splitting around whitespace.
+        </p>
+
+        <div class="example">
+
+            <h3>Examples</h3>
+
+            <table concordion:execute="#result = split(#fullName)">
+                <tr>
+                    <th concordion:set="#fullName">Full Name</th>
+                    <th concordion:assertEquals="#result.firstName">First Name</th>
+                    <th concordion:assertEquals="#result.lastName">Last Name</th>
+                </tr>
+                <tr>
+                    <td>John Smith</td>
+                    <td>John</td>
+                    <td>Smith</td>
+                </tr>
+                <tr>
+                    <td>David Peterson</td>
+                    <td>David</td>
+                    <td>Peterson</td>
+                </tr>
+            </table>
+
+        </div>
+    </body>
+</html>
