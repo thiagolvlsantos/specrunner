@@ -1,7 +1,7 @@
 package example.concordion;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -9,9 +9,9 @@ import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-public class TestVerifyRows {
+public class TestVerifyRowsConcordion extends Concordion {
 
-    private List<String> usernamesInSystem = new LinkedList<String>();
+    private Set<String> usernamesInSystem = new HashSet<String>();
 
     public void setUpUser(String username) {
         usernamesInSystem.add(username);

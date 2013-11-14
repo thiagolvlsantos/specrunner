@@ -98,7 +98,7 @@ public final class UtilParametrized {
                         UtilLog.LOG.trace(e.getMessage(), e);
                     }
                     if (!p.isSilent(name)) {
-                        throw new PluginException(e);
+                        throw new PluginException("On property: " + name + "=\"" + n.getValue() + "\".", e);
                     }
                 }
             }

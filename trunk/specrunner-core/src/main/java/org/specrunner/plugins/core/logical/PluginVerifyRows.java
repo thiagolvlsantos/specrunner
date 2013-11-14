@@ -30,27 +30,10 @@ import org.specrunner.util.xom.UtilNode;
 public class PluginVerifyRows extends AbstractPluginValue {
 
     /**
-     * Iterator variable name.
+     * Default constructor.
      */
-    private String var = "item";
-
-    /**
-     * The object variable name.
-     * 
-     * @return The variable name.
-     */
-    public String getVar() {
-        return var;
-    }
-
-    /**
-     * Set the variable name.
-     * 
-     * @param var
-     *            The name.
-     */
-    public void setVar(String var) {
-        this.var = var;
+    public PluginVerifyRows() {
+        setName("item");
     }
 
     @Override
@@ -106,7 +89,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
             try {
                 context.saveLocal(pos, String.valueOf(i - 1));
                 if (ite.hasNext()) {
-                    context.saveLocal(var, ite.next());
+                    context.saveLocal(getName(), ite.next());
                     UtilPlugin.performChildren(row, context, result);
                 } else {
                     if (first) {
@@ -115,7 +98,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
                     }
                 }
             } finally {
-                context.clearLocal(var);
+                context.clearLocal(getName());
                 context.clearLocal(pos);
                 context.pop();
             }
@@ -137,10 +120,10 @@ public class PluginVerifyRows extends AbstractPluginValue {
             try {
                 context.push(context.newBlock(tr, this));
                 context.saveLocal(pos, String.valueOf(i - 1));
-                context.saveLocal(var, ite.next());
+                context.saveLocal(getName(), ite.next());
                 UtilPlugin.performChildren(tr, context, result);
             } finally {
-                context.clearLocal(var);
+                context.clearLocal(getName());
                 context.clearLocal(pos);
                 context.pop();
             }

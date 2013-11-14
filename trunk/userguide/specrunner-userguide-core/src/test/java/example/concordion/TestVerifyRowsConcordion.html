@@ -1,8 +1,4 @@
-<html>
-    <head>
-        <link href="concordion.css" rel="stylesheet" type="text/css" />
-    </head>
-
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
 <body>
 
 <h1>Partial Matches</h1>
@@ -18,18 +14,18 @@
 
     <p>Given these users:</p>
 
-    <table class="executeRows" value="$THIS.setUpUser(username)">
-        <tr><th class="set" name="username">Username</th></tr>
+    <table concordion:execute="setUpUser(#username)">
+        <tr><th concordion:set="#username">Username</th></tr>
         <tr><td>john.lennon</td></tr>
         <tr><td>ringo.starr</td></tr>
         <tr><td>george.harrison</td></tr>
         <tr><td>paul.mccartney</td></tr>
     </table>
 
-    <p>Searching for "<b class="set" scope="div" name="searchString">arr</b>" will return:</p>
+    <p>Searching for "<b concordion:set="#searchString">arr</b>" will return:</p>
 
-    <table class="verifyRows" name="username" value="$THIS.getSearchResultsFor(searchString)">
-        <tr><th class="eq" value="username">Matching Usernames</th></tr>
+    <table concordion:verifyRows="#username : getSearchResultsFor(#searchString)">
+        <tr><th concordion:assertEquals="#username">Matching Usernames</th></tr>
         <tr><td>george.harrison</td></tr>
         <tr><td>ringo.starr</td></tr>
     </table>
