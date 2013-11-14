@@ -89,13 +89,28 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      */
     protected ENext perform(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
-        Object obj = isEval() ? UtilNode.newNodeHolder(node).getObject(context, true) : node.getValue();
+        Object obj = getObjectValue(context, node);
         if (operation(obj, context)) {
             result.addResult(Success.INSTANCE, context.newBlock(node, this));
         } else {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), getError());
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Default behavior.
+     * 
+     * @param context
+     *            The context.
+     * @param node
+     *            The node.
+     * @return The value object.
+     * @throws PluginException
+     *             On evaluation errors.
+     */
+    protected Object getObjectValue(IContext context, Node node) throws PluginException {
+        return isEval() ? UtilNode.newNodeHolder(node).getObject(context, true) : node.getValue();
     }
 
     /**
