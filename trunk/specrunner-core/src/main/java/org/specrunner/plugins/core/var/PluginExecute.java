@@ -17,8 +17,11 @@
  */
 package org.specrunner.plugins.core.var;
 
+import nu.xom.Node;
+
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.Unsilent;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -34,6 +37,11 @@ public class PluginExecute extends AbstractPluginDefine {
     @Unsilent
     public void setValue(Object value) {
         super.setValue(value);
+    }
+
+    @Override
+    protected Object getObjectValue(IContext context, Node node) throws PluginException {
+        return getValue();
     }
 
     @Override
