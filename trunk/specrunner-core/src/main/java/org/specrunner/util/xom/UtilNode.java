@@ -107,6 +107,24 @@ public final class UtilNode {
     }
 
     /**
+     * Remove a CSS from node.
+     * 
+     * @param node
+     *            Node object.
+     * @param css
+     *            The node.
+     */
+    public static void removeCss(Node node, String css) {
+        if (node instanceof Element) {
+            Element ele = (Element) node;
+            Attribute att = ele.getAttribute(ATT_CSS);
+            if (att != null) {
+                att.setValue(att.getValue().toLowerCase().replace(css, ""));
+            }
+        }
+    }
+
+    /**
      * Get child elements as a String.
      * 
      * @param parent

@@ -31,9 +31,10 @@ public class ConcordionProcessorGroup extends NamespaceProcessorGroupDefault {
      * Default constructor.
      */
     public ConcordionProcessorGroup() {
+        // execute transform before set, it depends on it.
+        add(new ConcordionExecute());
         add(new ConcordionSet());
         add(new ConcordionAssertEquals());
-        add(new ConcordionExecute());
         add(new ConcordionVerifyRows());
         add(new ConcordionRun());
     }

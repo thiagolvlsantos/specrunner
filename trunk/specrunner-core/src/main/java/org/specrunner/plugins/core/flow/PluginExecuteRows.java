@@ -1,8 +1,5 @@
 package org.specrunner.plugins.core.flow;
 
-import java.util.Arrays;
-import java.util.List;
-
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
@@ -15,11 +12,6 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.runner.IFilter;
-import org.specrunner.runner.IRunner;
-import org.specrunner.runner.RunnerException;
-import org.specrunner.runner.core.FilterDefault;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -63,9 +55,6 @@ public class PluginExecuteRows extends PluginIterable {
                 Attribute att = (Attribute) table.getAttribute(k).copy();
                 row.addAttribute(att);
             }
-            row.addAttribute(new Attribute("class", "execute"));
-            row.addAttribute(new Attribute("onstart", "true"));
-
             Nodes cs = row.query("descendant::td");
             if (hs.size() != cs.size()) {
                 throw new PluginException("Number of headers (" + hs.size() + ") is different of columns (" + cs.size() + ").");
@@ -78,33 +67,19 @@ public class PluginExecuteRows extends PluginIterable {
                     c.addAttribute((Attribute) att.copy());
                 }
             }
+            row.addAttribute(new Attribute("class", "execute"));
+            row.addAttribute(new Attribute("onstart", "true"));
+
             context.push(context.newBlock(row, this));
-            IRunner runner = context.getRunner();
-            IFilter filter = runner.getFilter();
-            FilterDefault tmp = FilterDefault.INSTANCE.get();
-            List<? extends ActionType> types = tmp.getDisabledTypes();
-            boolean show = tmp.isShowMessage();
             try {
                 context.saveLocal(pos, String.valueOf(i - 1));
-                tmp.setEnabledTypes(Arrays.asList(Command.INSTANCE));
-                tmp.setShowMessage(false);
-                runner.setFilter(tmp);
-                UtilPlugin.performChildren(row, context, result);
-                tmp.setEnabledTypes(null);
-                runner.run(row, context, result);
-            } catch (RunnerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                throw new PluginException(e.getMessage(), e);
+                UtilPlugin.performComandsFirst(context, result, row);
             } finally {
-                tmp.setDisabledTypes(types);
-                tmp.setShowMessage(show);
-                runner.setFilter(filter);
                 context.clearLocal(pos);
                 context.pop();
             }
         }
         return ENext.SKIP;
     }
+
 }

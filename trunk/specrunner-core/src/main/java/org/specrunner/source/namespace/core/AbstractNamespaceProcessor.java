@@ -18,6 +18,7 @@
 package org.specrunner.source.namespace.core;
 
 import nu.xom.Document;
+import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.XPathContext;
 
@@ -44,6 +45,10 @@ public abstract class AbstractNamespaceProcessor implements INamespaceProcessor 
      * Tag to process.
      */
     private String tag;
+    /**
+     * The XPath context.
+     */
+    private XPathContext context;
 
     /**
      * Default.
@@ -118,16 +123,41 @@ public abstract class AbstractNamespaceProcessor implements INamespaceProcessor 
         this.tag = tag;
     }
 
+    /**
+     * Get the current context.
+     * 
+     * @return The context.
+     */
+    public XPathContext getContext() {
+        return context;
+    }
+
+    /**
+     * Set the context.
+     * 
+     * @param context
+     *            A context.
+     */
+    public void setContext(XPathContext context) {
+        this.context = context;
+    }
+
     @Override
     public void process(INamespaceInfo info, Document document) {
-        XPathContext context = info.getByURI(prefix);
+        if (prefix != null && uri == null) {
+            uri = info.getURI(prefix);
+        }
+        if (prefix == null && uri != null) {
+            prefix = info.getPrefix(uri);
+        }
+        context = info.getByURI(prefix);
         if (context == null) {
             context = info.getByURI(uri);
         }
         if (context == null) {
             return;
         }
-        process(info, document, prefix == null ? info.getPrefix(uri) : prefix, context);
+        process(info, document, prefix == null ? info.getPrefix(uri) : prefix);
     }
 
     /**
@@ -138,12 +168,25 @@ public abstract class AbstractNamespaceProcessor implements INamespaceProcessor 
      * @param document
      *            A document.
      * @param prefix
-     *            The prefix tag.
-     * @param context
-     *            The context.
+     *            The namespace prefix.
      */
-    protected void process(INamespaceInfo info, Document document, String prefix, XPathContext context) {
-        process(info, document.query("//*[@" + prefix + ":" + tag + "]", context));
+    protected void process(INamespaceInfo info, Document document, String prefix) {
+        process(info, document, lookup(document, prefix, tag));
+    }
+
+    /**
+     * Find nodes.
+     * 
+     * @param node
+     *            A node.
+     * @param prefix
+     *            The prefix.
+     * @param tag
+     *            Tag name.
+     * @return Nodes satisfying query.
+     */
+    protected Nodes lookup(Node node, String prefix, String tag) {
+        return node.query("//*[@" + prefix + ":" + tag + "]", context);
     }
 
     /**
@@ -151,8 +194,10 @@ public abstract class AbstractNamespaceProcessor implements INamespaceProcessor 
      * 
      * @param info
      *            Information.
+     * @param document
+     *            Document.
      * @param nodes
      *            Nodes.
      */
-    protected abstract void process(INamespaceInfo info, Nodes nodes);
+    protected abstract void process(INamespaceInfo info, Document document, Nodes nodes);
 }

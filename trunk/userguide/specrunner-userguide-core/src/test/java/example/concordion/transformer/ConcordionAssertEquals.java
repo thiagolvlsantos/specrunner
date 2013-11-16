@@ -18,6 +18,7 @@
 package example.concordion.transformer;
 
 import nu.xom.Attribute;
+import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
@@ -39,7 +40,7 @@ public class ConcordionAssertEquals extends ConcordionProcessor {
     }
 
     @Override
-    protected void process(INamespaceInfo info, Nodes ns) {
+    protected void process(INamespaceInfo info, Document document, Nodes ns) {
         for (int i = 0; i < ns.size(); i++) {
             Element e = (Element) ns.get(i);
             Attribute att = e.getAttribute(getTag(), getUri());

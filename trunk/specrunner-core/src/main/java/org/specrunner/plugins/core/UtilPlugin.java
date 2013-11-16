@@ -17,6 +17,9 @@
  */
 package org.specrunner.plugins.core;
 
+import java.util.Arrays;
+import java.util.List;
+
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -25,12 +28,17 @@ import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.core.UtilParametrized;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.runner.IFilter;
+import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
+import org.specrunner.runner.core.FilterDefault;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 
@@ -208,6 +216,43 @@ public final class UtilPlugin {
                 }
                 throw new PluginException(e);
             }
+        }
+    }
+
+    /**
+     * Perform children using commands before asserts.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result.
+     * @param element
+     *            The base element.
+     * @throws PluginException
+     *             On execution errors.
+     */
+    public static void performComandsFirst(IContext context, IResultSet result, Node element) throws PluginException {
+        IRunner runner = context.getRunner();
+        IFilter filter = runner.getFilter();
+        FilterDefault tmp = FilterDefault.INSTANCE.get();
+        List<? extends ActionType> types = tmp.getDisabledTypes();
+        boolean show = tmp.isShowMessage();
+        try {
+            tmp.setEnabledTypes(Arrays.asList(Command.INSTANCE));
+            tmp.setShowMessage(false);
+            runner.setFilter(tmp);
+            UtilPlugin.performChildren(element, context, result);
+            tmp.setEnabledTypes(null);
+            runner.run(element, context, result);
+        } catch (RunnerException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new PluginException(e.getMessage(), e);
+        } finally {
+            tmp.setDisabledTypes(types);
+            tmp.setShowMessage(show);
+            runner.setFilter(filter);
         }
     }
 
