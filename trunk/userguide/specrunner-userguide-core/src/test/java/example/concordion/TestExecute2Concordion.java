@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-public class TestExecute2Concordion extends Concordion {
+public class TestExecute2Concordion extends TestConcordion {
 
     public Result split(String fullName) {
         Result result = new Result();

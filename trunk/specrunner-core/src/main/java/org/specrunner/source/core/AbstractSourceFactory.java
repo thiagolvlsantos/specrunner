@@ -19,15 +19,22 @@ package org.specrunner.source.core;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 import nu.xom.DocType;
 import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.XPathContext;
 
 import org.specrunner.SRServices;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
+import org.specrunner.source.namespace.INamespaceInfo;
+import org.specrunner.source.namespace.INamespaceLoader;
+import org.specrunner.source.namespace.core.NamespaceInfoDefault;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
@@ -44,7 +51,11 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
     /**
      * Cache of files.
      */
-    private static ICache<String, Document> cache = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName());
+    private static ICache<String, Document> cache = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName() + ".document");
+    /**
+     * Cache of namespace information.
+     */
+    private static ICache<String, INamespaceInfo> namespace = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName() + ".namespace");
 
     @Override
     public void initialize() {
@@ -65,7 +76,7 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
         }
         final URI uri = uriTmp;
         final String target = strTmp;
-        return new SourceImpl(getEncoding(), strTmp, this, new IDocumentLoader() {
+        IDocumentLoader loader = new IDocumentLoader() {
             @Override
             public Document load() throws SourceException {
                 long time = System.currentTimeMillis();
@@ -85,7 +96,48 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
                 return result;
             }
 
-        });
+        };
+        INamespaceLoader nsloader = new INamespaceLoader() {
+
+            @Override
+            public INamespaceInfo load(Document doc) {
+                long time = System.currentTimeMillis();
+                INamespaceInfo result = null;
+                synchronized (namespace) {
+                    result = namespace.get(target);
+                    if (result == null) {
+                        result = loadDoc(doc);
+                        namespace.put(target, result);
+                    }
+                }
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Namespace load time " + (System.currentTimeMillis() - time) + " ms for: " + target);
+                }
+                return result;
+            }
+
+            protected INamespaceInfo loadDoc(Document doc) {
+                Map<String, String> prefixToUri = new HashMap<String, String>();
+                Map<String, String> uriToPrefix = new HashMap<String, String>();
+                Map<String, XPathContext> uriToContext = new HashMap<String, XPathContext>();
+                Map<String, XPathContext> prefixToContext = new HashMap<String, XPathContext>();
+                Element root = doc.getRootElement();
+                for (int i = 0; i < root.getNamespaceDeclarationCount(); i++) {
+                    String prefix = root.getNamespacePrefix(i);
+                    if (prefix.isEmpty()) {
+                        continue;
+                    }
+                    String uri = root.getNamespaceURI(prefix);
+                    prefixToUri.put(prefix, uri);
+                    uriToPrefix.put(uri, prefix);
+                    XPathContext context = new XPathContext(prefix, uri);
+                    uriToContext.put(uri, context);
+                    prefixToContext.put(prefix, context);
+                }
+                return new NamespaceInfoDefault(prefixToUri, uriToPrefix, prefixToContext, uriToContext);
+            }
+        };
+        return new SourceImpl(getEncoding(), strTmp, this, loader, nsloader);
     }
 
     /**

@@ -18,7 +18,6 @@
 package org.specrunner.source.core;
 
 import java.io.BufferedInputStream;
-import java.io.Closeable;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,8 +34,6 @@ import nu.xom.Document;
 
 import org.specrunner.SRServices;
 import org.specrunner.source.IBuilderFactory;
-import org.specrunner.source.IDocumentLoader;
-import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
 
@@ -69,8 +66,7 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
                 fin = uri.toURL().openStream();
             }
             bin = new BufferedInputStream(fin);
-            ISource fromReader = load(null, new InputStreamReader(bin, encoding));
-            document = fromReader.getDocument();
+            document = load(new InputStreamReader(bin, encoding));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -135,41 +131,35 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
     /**
      * Load a source from either an InputStream or a Reader.
      * 
-     * @param stream
-     *            InputStream.
      * @param reader
-     *            Reader.
+     *            InputStream.
      * @return The source.
+     * @throws SourceException
+     *             On load error.
      */
-    private ISource load(final InputStream stream, final Reader reader) {
-        final Closeable obj = stream != null ? stream : reader;
-        return new SourceImpl(getEncoding(), null, this, new IDocumentLoader() {
-            @Override
-            public Document load() throws SourceException {
-                IBuilderFactory factory = SRServices.get(IBuilderFactory.class);
-                Builder builder = factory.newBuilder(new HashMap<String, Object>());
+    protected Document load(final Reader reader) throws SourceException {
+        IBuilderFactory factory = SRServices.get(IBuilderFactory.class);
+        Builder builder = factory.newBuilder(new HashMap<String, Object>());
+        try {
+            synchronized (builder) {
+                Document build = builder.build(reader);
+                return addDoctype(build);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (reader != null) {
                 try {
-                    synchronized (builder) {
-                        Document build = stream != null ? builder.build(stream) : builder.build(reader);
-                        return addDoctype(build);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (obj != null) {
-                        try {
-                            obj.close();
-                        } catch (IOException e1) {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug(e1.getMessage(), e1);
-                            }
-                        }
-                    }
+                    reader.close();
+                } catch (IOException e1) {
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
+                        UtilLog.LOG.debug(e1.getMessage(), e1);
                     }
-                    throw new SourceException("Could not load the '" + (obj != null ? obj.getClass() : null) + "' source '" + obj + "'.", e);
                 }
             }
-        });
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new SourceException("Could not load the '" + (reader != null ? reader.getClass() : null) + "' source '" + reader + "'.", e);
+        }
     }
 }

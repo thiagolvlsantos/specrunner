@@ -5,7 +5,7 @@ import org.specrunner.junit.SRRunner;
 
 @SuppressWarnings("serial")
 @RunWith(SRRunner.class)
-public class TestSetConcordion extends Concordion {
+public class TestSetConcordion extends TestConcordion {
 
     public String greetingFor(String firstName) {
         return "Hello " + firstName + "!";

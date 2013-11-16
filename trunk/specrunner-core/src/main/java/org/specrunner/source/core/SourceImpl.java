@@ -33,6 +33,8 @@ import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
+import org.specrunner.source.namespace.INamespaceInfo;
+import org.specrunner.source.namespace.INamespaceLoader;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.source.resource.IResourceManagerFactory;
 import org.specrunner.util.UtilLog;
@@ -77,6 +79,14 @@ public class SourceImpl implements ISource {
      * The document.
      */
     protected Document document;
+    /**
+     * A namespace loader.
+     */
+    protected INamespaceLoader nsloader;
+    /**
+     * The namespace info.
+     */
+    protected INamespaceInfo namespaceInfo;
 
     /**
      * Creates a source instance.
@@ -89,8 +99,10 @@ public class SourceImpl implements ISource {
      *            The factory.
      * @param loader
      *            The document loader.
+     * @param nsloader
+     *            The namespace information loader.
      */
-    public SourceImpl(String encoding, String string, ISourceFactory factory, IDocumentLoader loader) {
+    public SourceImpl(String encoding, String string, ISourceFactory factory, IDocumentLoader loader, INamespaceLoader nsloader) {
         this.encoding = encoding;
         this.string = string;
         if (this.string != null) {
@@ -114,6 +126,7 @@ public class SourceImpl implements ISource {
         }
         this.factory = factory;
         this.loader = loader;
+        this.nsloader = nsloader;
     }
 
     @Override
@@ -176,6 +189,14 @@ public class SourceImpl implements ISource {
             document = loader.load();
         }
         return document;
+    }
+
+    @Override
+    public INamespaceInfo getNamespaceInfo() throws SourceException {
+        if (namespaceInfo == null) {
+            namespaceInfo = nsloader.load(getDocument());
+        }
+        return namespaceInfo;
     }
 
     @Override
