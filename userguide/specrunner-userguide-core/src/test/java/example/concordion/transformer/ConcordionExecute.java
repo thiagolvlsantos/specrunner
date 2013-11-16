@@ -18,6 +18,7 @@
 package example.concordion.transformer;
 
 import nu.xom.Attribute;
+import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
 
@@ -39,7 +40,7 @@ public class ConcordionExecute extends ConcordionProcessor {
     }
 
     @Override
-    protected void process(INamespaceInfo info, Nodes ns) {
+    protected void process(INamespaceInfo info, Document document, Nodes ns) {
         for (int i = 0; i < ns.size(); i++) {
             Element e = (Element) ns.get(i);
             Attribute att = e.getAttribute(getTag(), getUri());
@@ -49,12 +50,18 @@ public class ConcordionExecute extends ConcordionProcessor {
                 String[] split = value.split("=");
                 e.addAttribute(new Attribute("name", cleanVar(split[0])));
                 value = split[1];
+
             }
-            if (!"table".equals(e.getLocalName())) {
-                e.addAttribute(new Attribute("class", "execute"));
+            String css = "execute";
+            if ("table".equals(e.getLocalName())) {
+                css = "executeRows";
             } else {
-                e.addAttribute(new Attribute("class", "executeRows"));
+                Nodes sets = lookup(document, getPrefix(), "set");
+                if (sets.size() > 0) {
+                    css = "executeLatter";
+                }
             }
+            e.addAttribute(new Attribute("class", css));
             e.addAttribute(new Attribute("value", "$THIS." + cleanVar(value)));
             e.removeAttribute(att);
         }
