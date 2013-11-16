@@ -31,10 +31,10 @@ public class ConcordionProcessorGroup extends NamespaceProcessorGroupDefault {
      * Default constructor.
      */
     public ConcordionProcessorGroup() {
-        add(new NamespaceProcessorSet());
-        add(new NamespaceProcessorAssertEquals());
-        add(new NamespaceProcessorExecute());
-        add(new NamespaceProcessorVerifyRows());
-        add(new NamespaceProcessorRun());
+        add(new ConcordionSet());
+        add(new ConcordionAssertEquals());
+        add(new ConcordionExecute());
+        add(new ConcordionVerifyRows());
+        add(new ConcordionRun());
     }
 }
