@@ -64,6 +64,6 @@ public abstract class ConcordionProcessor extends AbstractNamespaceProcessor {
      * @return The replaced variable.
      */
     protected String replaceMeta(String value) {
-        return value.replace("#TEXT", "$TEXT");
+        return value.replace("#TEXT", "$TEXT").replace("#HREF", "href");
     }
 }
