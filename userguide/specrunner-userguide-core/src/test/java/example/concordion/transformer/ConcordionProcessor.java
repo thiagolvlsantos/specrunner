@@ -25,7 +25,7 @@ import org.specrunner.source.namespace.core.AbstractNamespaceProcessor;
  * @author Thiago Santos
  * 
  */
-public abstract class ConcordionNamespaceProcessor extends AbstractNamespaceProcessor {
+public abstract class ConcordionProcessor extends AbstractNamespaceProcessor {
 
     /**
      * Default constructor of Concordion analyzers.
@@ -33,7 +33,7 @@ public abstract class ConcordionNamespaceProcessor extends AbstractNamespaceProc
      * @param tag
      *            A tag.
      */
-    protected ConcordionNamespaceProcessor(String tag) {
+    protected ConcordionProcessor(String tag) {
         super(null, "http://www.concordion.org/2007/concordion", tag);
     }
 

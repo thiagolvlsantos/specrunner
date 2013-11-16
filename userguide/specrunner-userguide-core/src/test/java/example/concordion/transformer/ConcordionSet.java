@@ -24,18 +24,18 @@ import nu.xom.Nodes;
 import org.specrunner.source.namespace.INamespaceInfo;
 
 /**
- * 'run' replacer.
+ * 'set' replacer.
  * 
  * @author Thiago Santos.
  * 
  */
-public class NamespaceProcessorRun extends ConcordionNamespaceProcessor {
+public class ConcordionSet extends ConcordionProcessor {
 
     /**
      * Default constructor.
      */
-    public NamespaceProcessorRun() {
-        super("run");
+    public ConcordionSet() {
+        super("set");
     }
 
     @Override
@@ -43,9 +43,11 @@ public class NamespaceProcessorRun extends ConcordionNamespaceProcessor {
         for (int i = 0; i < ns.size(); i++) {
             Element e = (Element) ns.get(i);
             Attribute att = e.getAttribute(getTag(), getUri());
-            e.addAttribute(new Attribute("class", "include"));
+            String value = att.getValue();
             e.removeAttribute(att);
+            e.addAttribute(new Attribute("class", "set"));
+            String var = cleanVar(value);
+            e.addAttribute(new Attribute("name", var));
         }
     }
-
 }

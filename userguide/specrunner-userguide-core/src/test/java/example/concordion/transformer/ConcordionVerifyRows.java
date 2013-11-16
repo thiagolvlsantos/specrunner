@@ -24,18 +24,18 @@ import nu.xom.Nodes;
 import org.specrunner.source.namespace.INamespaceInfo;
 
 /**
- * 'execute' replacer.
+ * 'verifyRows' replacer.
  * 
  * @author Thiago Santos.
  * 
  */
-public class NamespaceProcessorExecute extends ConcordionNamespaceProcessor {
+public class ConcordionVerifyRows extends ConcordionProcessor {
 
     /**
      * Default constructor.
      */
-    public NamespaceProcessorExecute() {
-        super("execute");
+    public ConcordionVerifyRows() {
+        super("verifyrows");
     }
 
     @Override
@@ -43,21 +43,13 @@ public class NamespaceProcessorExecute extends ConcordionNamespaceProcessor {
         for (int i = 0; i < ns.size(); i++) {
             Element e = (Element) ns.get(i);
             Attribute att = e.getAttribute(getTag(), getUri());
+            e.addAttribute(new Attribute("class", "verifyRows"));
             String value = att.getValue();
-            // assignments
-            if (value.contains("=")) {
-                String[] split = value.split("=");
-                e.addAttribute(new Attribute("name", cleanVar(split[0])));
-                value = split[1];
-            }
-            if (!"table".equals(e.getLocalName())) {
-                e.addAttribute(new Attribute("class", "execute"));
-            } else {
-                e.addAttribute(new Attribute("class", "executeRows"));
-            }
+            String[] split = value.split(":");
+            e.addAttribute(new Attribute("name", cleanVar(split[0])));
+            value = split[1];
             e.addAttribute(new Attribute("value", "$THIS." + cleanVar(value)));
             e.removeAttribute(att);
         }
     }
-
 }

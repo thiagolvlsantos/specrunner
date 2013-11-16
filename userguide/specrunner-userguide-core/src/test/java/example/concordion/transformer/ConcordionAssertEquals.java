@@ -24,18 +24,18 @@ import nu.xom.Nodes;
 import org.specrunner.source.namespace.INamespaceInfo;
 
 /**
- * 'verifyRows' replacer.
+ * 'assertEquals' replacer.
  * 
  * @author Thiago Santos.
  * 
  */
-public class NamespaceProcessorVerifyRows extends ConcordionNamespaceProcessor {
+public class ConcordionAssertEquals extends ConcordionProcessor {
 
     /**
      * Default constructor.
      */
-    public NamespaceProcessorVerifyRows() {
-        super("verifyrows");
+    public ConcordionAssertEquals() {
+        super("assertequals");
     }
 
     @Override
@@ -43,14 +43,12 @@ public class NamespaceProcessorVerifyRows extends ConcordionNamespaceProcessor {
         for (int i = 0; i < ns.size(); i++) {
             Element e = (Element) ns.get(i);
             Attribute att = e.getAttribute(getTag(), getUri());
-            e.addAttribute(new Attribute("class", "verifyRows"));
-            String value = att.getValue();
-            String[] split = value.split(":");
-            e.addAttribute(new Attribute("name", cleanVar(split[0])));
-            value = split[1];
-            e.addAttribute(new Attribute("value", "$THIS." + cleanVar(value)));
+            String value = att.getValue().trim();
             e.removeAttribute(att);
+            e.addAttribute(new Attribute("class", "eq"));
+            // variables start with '#', in this case $THIS should not be
+            // prefixed
+            e.addAttribute(new Attribute("value", (value.startsWith("#") ? "" : "$THIS.") + cleanVar(value)));
         }
     }
-
 }
