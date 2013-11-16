@@ -24,6 +24,7 @@ import java.util.List;
 import nu.xom.Document;
 import nu.xom.Element;
 
+import org.specrunner.source.namespace.INamespaceInfo;
 import org.specrunner.source.resource.IResourceManager;
 
 /**
@@ -100,6 +101,15 @@ public interface ISource extends IEncoded {
      *             On creation error.
      */
     Document getDocument() throws SourceException;
+
+    /**
+     * Get meta-information associated to namespace.
+     * 
+     * @return The info object.
+     * @throws SourceException
+     *             On namespace info reading.
+     */
+    INamespaceInfo getNamespaceInfo() throws SourceException;
 
     /**
      * The specification scenarios.
