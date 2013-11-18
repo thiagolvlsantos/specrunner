@@ -17,6 +17,8 @@
         <module>../specrunner-userguide-core-excel</module>
         <module>../specrunner-userguide-core-text</module>
 
+        <module>../specrunner-userguide-concordion-emulator</module>
+
         <module>../specrunner-userguide-ant</module>
 
         <module>../specrunner-userguide-sql</module>
