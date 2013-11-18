@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-public class TestExecute1Concordion extends TestConcordion {
+public class TestExecute1Concordion {
 
     private Date date;
 

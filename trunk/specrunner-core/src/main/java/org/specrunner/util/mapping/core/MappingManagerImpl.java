@@ -1,6 +1,7 @@
 package org.specrunner.util.mapping.core;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -47,30 +48,32 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
     public void initialize() {
         if (!initialized) {
             try {
-                Properties p = SRServices.get(IPropertyLoader.class).load(file);
+                List<Properties> list = SRServices.get(IPropertyLoader.class).load(file);
                 if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("properties=" + p);
+                    UtilLog.LOG.info("properties list=" + list);
                 }
-                Map<String, T> instances = new HashMap<String, T>();
-                for (Entry<Object, Object> e : p.entrySet()) {
-                    String key = String.valueOf(e.getKey());
-                    String property = p.getProperty(key);
-                    String keyNormalized = normalizeKey(key);
-                    T instance = instances.get(property);
-                    if (instance == null) {
-                        @SuppressWarnings("unchecked")
-                        Class<? extends T> c = (Class<? extends T>) Class.forName(property);
-                        instance = c.newInstance();
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("put(" + keyNormalized + "," + instance + "[of type " + c + "])");
+                for (Properties p : list) {
+                    Map<String, T> instances = new HashMap<String, T>();
+                    for (Entry<Object, Object> e : p.entrySet()) {
+                        String key = String.valueOf(e.getKey());
+                        String property = p.getProperty(key);
+                        String keyNormalized = normalizeKey(key);
+                        T instance = instances.get(property);
+                        if (instance == null) {
+                            @SuppressWarnings("unchecked")
+                            Class<? extends T> c = (Class<? extends T>) Class.forName(property);
+                            instance = c.newInstance();
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("put(" + keyNormalized + "," + instance + "[of type " + c + "])");
+                            }
+                        } else {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("reuse.put(" + keyNormalized + "," + instance + ")");
+                            }
                         }
-                    } else {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("reuse.put(" + keyNormalized + "," + instance + ")");
-                        }
+                        put(keyNormalized, instance);
+                        instances.put(property, instance);
                     }
-                    put(keyNormalized, instance);
-                    instances.put(property, instance);
                 }
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
@@ -113,5 +116,10 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
     @Override
     public T getDefault() {
         return get(DEFAULT_NAME);
+    }
+
+    @Override
+    public void setDefault(T obj) {
+        bind(DEFAULT_NAME, obj);
     }
 }

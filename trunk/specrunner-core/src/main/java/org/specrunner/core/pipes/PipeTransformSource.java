@@ -24,7 +24,7 @@ import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
-import org.specrunner.transformer.ITransformer;
+import org.specrunner.transformer.ITransformerManager;
 
 /**
  * Pipe perform a transformation into sources.
@@ -61,6 +61,7 @@ public class PipeTransformSource implements IPipe {
      *             On transformation errors.
      */
     protected ISource transformSource(ISource source) throws SourceException {
-        return SRServices.get(ITransformer.class).transform(source);
+        ITransformerManager tm = SRServices.get(ITransformerManager.class);
+        return tm.getDefault().transform(source);
     }
 }

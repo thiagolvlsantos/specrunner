@@ -23,6 +23,7 @@ import org.specrunner.source.SourceException;
 import org.specrunner.source.namespace.INamespaceProcessor;
 import org.specrunner.transformer.ITransformer;
 import org.specrunner.transformer.ITransformerGroup;
+import org.specrunner.transformer.ITransformerManager;
 import org.specrunner.transformer.core.TransformerGroupImpl;
 
 /**
@@ -43,11 +44,11 @@ import org.specrunner.transformer.core.TransformerGroupImpl;
 public class TransformerConcordion implements ITransformer {
 
     static {
-        ITransformer old = SRServices.get(ITransformer.class);
+        ITransformer old = SRServices.get(ITransformerManager.class).getDefault();
         ITransformerGroup group = new TransformerGroupImpl();
         group.add(old);
         group.add(new TransformerConcordion());
-        SRServices.get().bind(ITransformer.class, group);
+        SRServices.get(ITransformerManager.class).setDefault(group);
     }
 
     @Override

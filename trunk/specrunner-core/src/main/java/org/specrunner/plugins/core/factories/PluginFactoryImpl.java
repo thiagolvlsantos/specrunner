@@ -18,6 +18,7 @@
 package org.specrunner.plugins.core.factories;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -103,22 +104,24 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     public void initialize() throws PluginException {
         if (!initialized) {
             try {
-                Properties p = SRServices.get(IPropertyLoader.class).load(file);
+                List<Properties> list = SRServices.get(IPropertyLoader.class).load(file);
                 if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("properties=" + p);
+                    UtilLog.LOG.info("properties list=" + list);
                 }
-                for (Entry<Object, Object> e : p.entrySet()) {
-                    Class<? extends IPlugin> c = (Class<? extends IPlugin>) Class.forName(String.valueOf(e.getValue()));
-                    String key = String.valueOf(e.getKey()).toLowerCase();
-                    if (types.get(key) != null && UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("replace(" + key + "," + c + ")");
-                    } else {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("put(" + key + "," + c + ")");
+                for (Properties p : list) {
+                    for (Entry<Object, Object> e : p.entrySet()) {
+                        Class<? extends IPlugin> c = (Class<? extends IPlugin>) Class.forName(String.valueOf(e.getValue()));
+                        String key = String.valueOf(e.getKey()).toLowerCase();
+                        if (types.get(key) != null && UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("replace(" + key + "," + c + ")");
+                        } else {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("put(" + key + "," + c + ")");
+                            }
                         }
+                        types.put(key, c);
+                        aliases.put(c, key);
                     }
-                    types.put(key, c);
-                    aliases.put(c, key);
                 }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {

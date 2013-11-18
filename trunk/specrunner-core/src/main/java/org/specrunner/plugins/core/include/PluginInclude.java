@@ -452,7 +452,7 @@ public class PluginInclude extends AbstractPlugin {
     protected ISource transform(ISource newSource) throws PluginException {
         try {
             // common transformer
-            newSource = SRServices.get(ITransformer.class).transform(newSource);
+            newSource = SRServices.get(ITransformerManager.class).getDefault().transform(newSource);
         } catch (SourceException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
