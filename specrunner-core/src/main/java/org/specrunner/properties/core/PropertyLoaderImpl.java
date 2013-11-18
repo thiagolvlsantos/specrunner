@@ -20,6 +20,9 @@ package org.specrunner.properties.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
@@ -42,26 +45,33 @@ public class PropertyLoaderImpl implements IPropertyLoader {
     /**
      * Cache of properties.
      */
-    private static ICache<String, Properties> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
+    private static ICache<String, List<Properties>> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
 
     @Override
-    public Properties load(String file) throws PropertyLoaderException {
+    public List<Properties> load(String file) throws PropertyLoaderException {
         synchronized (cache) {
-            Properties result = cache.get(file);
+            List<Properties> result = cache.get(file);
             if (result != null) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Property reuse:" + result);
                 }
                 return result;
             }
-            result = new Properties();
             List<URL> files;
             try {
                 files = SRServices.get(ResourceFinder.class).getAllResources(file);
             } catch (IOException e) {
                 throw new PropertyLoaderException(e);
             }
-            loadUrls(files, result);
+            result = loadUrls(files);
+            sort(result);
+            int index = 0;
+            for (Properties p : result) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Property order (" + (index++) + ")=" + p);
+                }
+                p.remove("index");
+            }
             cache.put(file, result);
             return result;
         }
@@ -72,13 +82,13 @@ public class PropertyLoaderImpl implements IPropertyLoader {
      * 
      * @param files
      *            A list of file by URLs.
-     * @param result
-     *            The properties.
+     * @return The properties list.
      * 
      * @throws PropertyLoaderException
      *             On loading erros.
      */
-    protected void loadUrls(List<URL> files, Properties result) throws PropertyLoaderException {
+    protected List<Properties> loadUrls(List<URL> files) throws PropertyLoaderException {
+        List<Properties> properties = new LinkedList<Properties>();
         for (URL url : files) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading properties:" + url);
@@ -87,7 +97,9 @@ public class PropertyLoaderImpl implements IPropertyLoader {
             try {
                 in = url.openStream();
                 if (in != null) {
-                    result.load(in);
+                    Properties p = new Properties();
+                    p.load(in);
+                    properties.add(p);
                 } else {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Not found:" + url);
@@ -110,5 +122,24 @@ public class PropertyLoaderImpl implements IPropertyLoader {
                 }
             }
         }
+        return properties;
+    }
+
+    /**
+     * Sort property files using attribute index to order.
+     * 
+     * @param props
+     *            The property files list.
+     */
+    protected void sort(List<Properties> props) {
+        Collections.sort(props, new Comparator<Properties>() {
+            @Override
+            public int compare(Properties o1, Properties o2) {
+                String key = "index";
+                double index1 = o1.containsKey(key) ? Double.valueOf((String) o1.get(key)) : 0.0;
+                double index2 = o2.containsKey(key) ? Double.valueOf((String) o2.get(key)) : 0.0;
+                return index1 < index2 ? -1 : (index2 < index1 ? 1 : 0);
+            }
+        });
     }
 }

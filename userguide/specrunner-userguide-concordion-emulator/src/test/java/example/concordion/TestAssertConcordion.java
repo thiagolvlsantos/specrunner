@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-public class TestAssertConcordion extends TestConcordion {
+public class TestAssertConcordion {
 
     public String getGreeting() {
         return "Hello World!";

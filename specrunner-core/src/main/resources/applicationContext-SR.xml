@@ -13,7 +13,6 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.source.core.SourceFactoryManagerImpl" />
   <bean class="org.specrunner.source.core.BuilderFactoryImpl" />
   <bean class="org.specrunner.transformer.core.TransformerManagerImpl" />
-  <bean class="org.specrunner.transformer.core.TransformerDefault" />
   <bean class="org.specrunner.plugins.core.factories.PluginFactoryGroupDefault" />
   <bean class="org.specrunner.context.core.BlockFactoryImpl" />
   <bean class="org.specrunner.expressions.core.ExpressionFactoryJanino" />

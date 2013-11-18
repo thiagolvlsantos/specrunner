@@ -17,6 +17,7 @@
  */
 package org.specrunner.properties;
 
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -38,5 +39,5 @@ public interface IPropertyLoader {
      * @throws PropertyLoaderException
      *             On reading properties errors.
      */
-    Properties load(String file) throws PropertyLoaderException;
+    List<Properties> load(String file) throws PropertyLoaderException;
 }

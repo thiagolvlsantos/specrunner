@@ -33,4 +33,12 @@ public interface IMappingManager<T extends IResetable> extends Map<String, T> {
      * @return The default.
      */
     T getDefault();
+
+    /**
+     * Set default object.
+     * 
+     * @param obj
+     *            Default object.
+     */
+    void setDefault(T obj);
 }

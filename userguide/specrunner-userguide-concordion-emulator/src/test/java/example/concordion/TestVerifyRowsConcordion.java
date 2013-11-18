@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)
-public class TestVerifyRowsConcordion extends TestConcordion {
+public class TestVerifyRowsConcordion {
 
     private Set<String> usernamesInSystem = new HashSet<String>();
 
