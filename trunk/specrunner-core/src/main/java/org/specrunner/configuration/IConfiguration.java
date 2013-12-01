@@ -40,4 +40,15 @@ public interface IConfiguration extends Map<String, Object> {
      * @return The configuration itself.
      */
     IConfiguration add(String feature, Object value);
+
+    /**
+     * Get a value from map, if not found, result is 'defaultValue'.
+     * 
+     * @param key
+     *            A name.
+     * @param defaultValue
+     *            The default value.
+     * @return The key value, or defaultValue, if not found.
+     */
+    Object get(String key, Object defaultValue);
 }

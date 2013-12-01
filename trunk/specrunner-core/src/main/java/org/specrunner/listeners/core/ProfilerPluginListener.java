@@ -68,15 +68,15 @@ public class ProfilerPluginListener implements IPluginListener {
     /**
      * Total init count.
      */
-    private Long totalInit;
+    private Long totalInit = 0L;
     /**
      * Total start count.
      */
-    private Long totalStart;
+    private Long totalStart = 0L;
     /**
      * Total end count.
      */
-    private Long totalEnd;
+    private Long totalEnd = 0L;
     /**
      * Mapping of time by action types.
      */
