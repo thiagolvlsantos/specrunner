@@ -24,7 +24,7 @@ import org.specrunner.source.IEncoded;
 import org.specrunner.source.ISource;
 
 /**
- * Dumps source and results to files.
+ * Dumps source and results to somewhere.
  * 
  * @author Thiago Santos
  * 

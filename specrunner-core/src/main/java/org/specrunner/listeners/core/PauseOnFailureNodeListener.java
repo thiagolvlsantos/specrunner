@@ -47,7 +47,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     /**
      * Set true, to pause on errors.
      */
-    private Boolean pauseOnFailure;
+    private Boolean pauseOnFailure = Boolean.FALSE;
 
     /**
      * Enable error dialog on failures.
@@ -56,7 +56,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     /**
      * Set true, to show a dialog.
      */
-    private Boolean showDialog;
+    private Boolean showDialog = Boolean.FALSE;
 
     /**
      * Auxiliary frame.

@@ -22,12 +22,12 @@ import java.util.Map;
 
 import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.converters.IConverterManager;
+import org.specrunner.core.SpecRunnerPipelineUtils;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
-import org.specrunner.pipeline.IPipelineFactory;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.util.UtilLog;
 import org.springframework.context.ApplicationContext;
@@ -249,7 +249,7 @@ public final class SRServices {
         try {
             IChannel channel = service.lookup(IChannelFactory.class).newChannel();
             channel.add(ShutDown.SHUTDOWN, service);
-            IPipeline pipeline = service.lookup(IPipelineFactory.class).newPipeline("specrunner_shutdown.xml");
+            IPipeline pipeline = SpecRunnerPipelineUtils.getPipeline(service, "specrunner_shutdown.xml");
             pipeline.process(channel);
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

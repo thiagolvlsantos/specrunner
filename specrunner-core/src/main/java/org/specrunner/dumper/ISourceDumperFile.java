@@ -15,30 +15,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.configuration.core;
+package org.specrunner.dumper;
 
-import java.util.HashMap;
-
-import org.specrunner.configuration.IConfiguration;
+import java.io.File;
 
 /**
- * Default implementation.
+ * Dumps source and results to files.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ConfigurationImpl extends HashMap<String, Object> implements IConfiguration {
+public interface ISourceDumperFile extends ISourceDumper {
 
-    @Override
-    public IConfiguration add(String feature, Object value) {
-        put(feature, value);
-        return this;
-    }
+    /**
+     * The output directory. The default value is 'src/test/resources/outcome'.
+     */
+    String FEATURE_OUTPUT_DIRECTORY = ISourceDumperFile.class.getName() + ".outputDirectory";
 
-    @Override
-    public Object get(String feature, Object defaultValue) {
-        Object obj = get(feature);
-        return obj == null ? defaultValue : obj;
-    }
+    /**
+     * Default output directory.
+     */
+    File DEFAULT_OUTPUT_DIRECTORY = new File("src/test/resources/outcome");
+
+    /**
+     * The output file name. The default name is the same of the input file.
+     */
+    String FEATURE_OUTPUT_NAME = ISourceDumperFile.class.getName() + ".outputName";
 }

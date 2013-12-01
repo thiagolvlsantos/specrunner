@@ -27,9 +27,9 @@ import java.io.UnsupportedEncodingException;
 import nu.xom.Document;
 import nu.xom.Serializer;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
-import org.specrunner.dumper.ISourceDumper;
+import org.specrunner.SpecRunnerException;
+import org.specrunner.dumper.ISourceDumperFile;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
@@ -48,7 +48,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractSourceDumperFile extends EncodedImpl implements ISourceDumper {
+public abstract class AbstractSourceDumperFile extends EncodedImpl implements ISourceDumperFile {
 
     /**
      * Gap used to dump sources.
@@ -56,18 +56,9 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
     public static final int GAP = 4;
 
     /**
-     * The output directory. The default value is 'src/test/resources/outcome'.
-     */
-    public static final String FEATURE_OUTPUT_DIRECTORY = AbstractSourceDumperFile.class.getName() + ".outputDirectory";
-    /**
      * Default output directory.
      */
-    protected File outputDirectory = new File("src/test/resources/outcome");
-
-    /**
-     * The output file name. The default name is the same of the input file.
-     */
-    public static final String FEATURE_OUTPUT_NAME = AbstractSourceDumperFile.class.getName() + ".outputName";
+    protected File outputDirectory = DEFAULT_OUTPUT_DIRECTORY;
     /**
      * Output file name.
      */
