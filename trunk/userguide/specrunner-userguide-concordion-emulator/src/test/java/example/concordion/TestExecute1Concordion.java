@@ -4,11 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.junit.runner.RunWith;
-import org.specrunner.junit.SRRunner;
-
-@RunWith(SRRunner.class)
-public class TestExecute1Concordion {
+public class TestExecute1Concordion extends TestConcordion {
 
     private Date date;
 
