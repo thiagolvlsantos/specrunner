@@ -15,7 +15,7 @@ public abstract class TestConcordion {
 
     @Configuration
     public void prepare(IConfiguration cfg) {
-        cfg.add(AbstractPluginResource.FEATURE_SAVE, Boolean.FALSE);
+        cfg.add(AbstractPluginResource.FEATURE_SAVE, UtilLog.LOG.isDebugEnabled());
         cfg.add(IResourceManager.FEATURE_ADD_RESOURCES, UtilLog.LOG.isDebugEnabled());
     }
 }

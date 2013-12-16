@@ -5,11 +5,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.junit.runner.RunWith;
-import org.specrunner.junit.SRRunner;
-
-@RunWith(SRRunner.class)
-public class TestVerifyRowsConcordion {
+public class TestVerifyRowsConcordion extends TestConcordion {
 
     private Set<String> usernamesInSystem = new HashSet<String>();
 
