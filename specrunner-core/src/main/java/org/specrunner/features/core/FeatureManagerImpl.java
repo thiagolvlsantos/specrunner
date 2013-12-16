@@ -186,4 +186,10 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     public void setConfiguration(IConfiguration configuration) {
         this.configuration = configuration;
     }
+
+    @Override
+    public Object get(String key, Object defaultValue) {
+        Object result = get(key);
+        return result == null ? defaultValue : result;
+    }
 }

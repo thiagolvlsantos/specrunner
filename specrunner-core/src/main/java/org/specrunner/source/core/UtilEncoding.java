@@ -21,6 +21,7 @@ import org.specrunner.SRServices;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.IEncoded;
+import org.specrunner.util.UtilLog;
 
 /**
  * Useful encoding services.
@@ -43,8 +44,15 @@ public final class UtilEncoding {
      * @return The set encoding.
      */
     public static String getEncoding() {
-        IFeatureManager fm = SRServices.getFeatureManager();
-        String charset = (String) fm.get(IBuilderFactory.FEATURE_ENCODING);
+        String charset = null;
+        try {
+            IFeatureManager fm = SRServices.getFeatureManager();
+            charset = (String) fm.get(IBuilderFactory.FEATURE_ENCODING);
+        } catch (Exception e) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace(e.getMessage(), e);
+            }
+        }
         if (charset == null) {
             charset = IEncoded.DEFAULT_ENCODING;
         }

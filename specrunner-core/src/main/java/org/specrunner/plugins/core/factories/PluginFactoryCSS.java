@@ -70,7 +70,7 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
                     if (template != null) {
                         create = UtilPlugin.create(context, template, ele);
                     } else {
-                        Class<? extends IPlugin> c = types.get(p);
+                        Class<? extends IPlugin> c = getClass(p);
                         if (c != null) {
                             create = UtilPlugin.create(context, c, ele);
                         }

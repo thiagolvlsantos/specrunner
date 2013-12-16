@@ -19,6 +19,7 @@ package org.specrunner.source.resource.core;
 
 import java.util.LinkedList;
 
+import org.specrunner.SRServices;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.IResource;
@@ -110,7 +111,7 @@ public class ResourceManagerImpl extends LinkedList<IResource> implements IResou
      * @return The resource itself, if added, false, otherwise.
      */
     private IResource check(IResource result) {
-        if (add(result)) {
+        if ((Boolean) SRServices.getFeatureManager().get(FEATURE_ADD_RESOURCES, DEFAULT_ADD_RESOURCES) && add(result)) {
             return result;
         }
         return null;

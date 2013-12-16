@@ -50,6 +50,18 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
     }
 
     @Override
+    public Class<? extends IPlugin> getClass(String alias) throws PluginException {
+        Class<? extends IPlugin> result = null;
+        for (IPluginFactory pf : getChildren()) {
+            result = pf.getClass(alias);
+            if (result != null) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public String getAlias(Class<? extends IPlugin> type) throws PluginException {
         String result = null;
         for (IPluginFactory pf : getChildren()) {

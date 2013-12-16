@@ -14,6 +14,7 @@ import org.specrunner.ISpecRunner;
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.core.SpecRunnerPipelineUtils;
 import org.specrunner.dumper.core.AbstractSourceDumperFile;
 import org.specrunner.plugins.core.elements.PluginHtml;
 import org.specrunner.result.IResultSet;
@@ -151,6 +152,13 @@ public class SpecRunnerStatement extends Statement {
      *             On configuration errors.
      */
     protected IConfiguration configure(IConfiguration cfg) throws Throwable {
+        Annotation[] ans = instance.getClass().getAnnotations();
+        for (Annotation a : ans) {
+            if (a instanceof SRRunnerOptions) {
+                SRRunnerOptions options = (SRRunnerOptions) a;
+                cfg.add(SpecRunnerPipelineUtils.PIPELINE_FILENAME, options.pipeline());
+            }
+        }
         cfg.add(PluginHtml.BEAN_NAME, instance);
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
         cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));

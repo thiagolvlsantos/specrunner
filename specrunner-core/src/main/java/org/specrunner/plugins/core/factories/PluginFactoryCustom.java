@@ -68,7 +68,7 @@ public class PluginFactoryCustom extends PluginFactoryImpl {
                     create.setParent(this);
                     return create;
                 } else {
-                    Class<? extends IPlugin> c = types.get(clazz);
+                    Class<? extends IPlugin> c = getClass(clazz);
                     try {
                         if (c == null) {
                             c = (Class<? extends IPlugin>) Class.forName(clazz);

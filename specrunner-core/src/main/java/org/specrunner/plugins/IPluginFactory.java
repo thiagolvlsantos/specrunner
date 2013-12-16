@@ -30,6 +30,19 @@ import org.specrunner.context.IContext;
 public interface IPluginFactory {
 
     /**
+     * Given a name, return the corresponding plugin class associated. i.e. For
+     * 'include' the class PluginInclude of core plugins package is returned or
+     * if 'bean' is requested the PluginBean is returned.
+     * 
+     * @param alias
+     *            The plugin alias.
+     * @return The class, if type is mapped, null, otherwise.
+     * @throws PluginException
+     *             On reference lookup failure.
+     */
+    Class<? extends IPlugin> getClass(String alias) throws PluginException;
+
+    /**
      * Given a class, for example, return the corresponding alias for the
      * plugin.
      * 

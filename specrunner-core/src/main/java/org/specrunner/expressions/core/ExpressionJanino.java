@@ -23,12 +23,13 @@ import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.codehaus.commons.compiler.jdk.ExpressionEvaluator;
+import org.codehaus.commons.compiler.IExpressionEvaluator;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -44,6 +45,12 @@ import org.specrunner.util.cache.ICacheFactory;
 public class ExpressionJanino extends AbstractExpression {
 
     /**
+     * Feature to enable Janino work with JDK expressions (
+     * <code>org.codehaus.commons.compiler.jdk.ExpressionEvaluator</code>).
+     */
+    public static final String FEATURE_JDK_COMPILER = ExpressionJanino.class.getName() + ".jdk";
+
+    /**
      * The expression source.
      */
     private Object source;
@@ -51,7 +58,7 @@ public class ExpressionJanino extends AbstractExpression {
     /**
      * Cache of expressions.
      */
-    private static ICache<ExpressionKey, ExpressionEvaluator> cache = SRServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
+    private static ICache<ExpressionKey, IExpressionEvaluator> cache = SRServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
 
     /**
      * Basic constructor.
@@ -285,9 +292,16 @@ public class ExpressionJanino extends AbstractExpression {
                 UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
             }
             try {
+                long time = System.currentTimeMillis();
                 try {
                     r = tryObject(Object.class, expression, arrayArgs, arrayValues, arrayTypes);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("tryObject (Object.class...) succeed: " + (System.currentTimeMillis() - time));
+                    }
                 } catch (Exception e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("tryObject (Object.class...) failed: " + (System.currentTimeMillis() - time));
+                    }
                     r = tryObject(void.class, expression, arrayArgs, arrayValues, arrayTypes);
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace(e.getMessage(), e);
@@ -328,18 +342,32 @@ public class ExpressionJanino extends AbstractExpression {
      *             On processing errors.
      */
     protected Object tryObject(Class<?> returnType, String expression, String[] arrayArgs, Object[] arrayValues, Class<?>[] arrayTypes) throws Exception {
-        ExpressionEvaluator ee = null;
+        IExpressionEvaluator ee = null;
         synchronized (cache) {
             ee = cache.get(ExpressionKey.unique(expression, returnType, arrayArgs, arrayTypes));
             if (ee == null) {
-                ee = new ExpressionEvaluator(expression, returnType, arrayArgs, arrayTypes);
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("NEW EXPRESSION(" + expression + "):" + ee);
+                    UtilLog.LOG.debug("NEW EXPRESSION(" + expression + ") before.");
+                }
+                IFeatureManager fm = SRServices.getFeatureManager();
+                Boolean jdk = (Boolean) fm.get(FEATURE_JDK_COMPILER);
+                if (jdk != null && jdk) {
+                    ee = new org.codehaus.commons.compiler.jdk.ExpressionEvaluator(expression, returnType, arrayArgs, arrayTypes);
+                } else {
+                    ee = new org.codehaus.janino.ExpressionEvaluator(expression, returnType, arrayArgs, arrayTypes);
+                }
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("NEW EXPRESSION(" + expression + ") after new: " + ee);
                 }
                 cache.put(new ExpressionKey(expression, Object.class, arrayArgs, arrayTypes), ee);
             }
         }
-        return ee.evaluate(arrayValues);
+        long time = System.currentTimeMillis();
+        Object obj = ee.evaluate(arrayValues);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("Time: " + (System.currentTimeMillis() - time));
+        }
+        return obj;
     }
 
     /**

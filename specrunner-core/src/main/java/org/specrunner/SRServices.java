@@ -30,8 +30,6 @@ import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.util.UtilLog;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * Centralizes the services provided by the SpecRunner framework. To get full
@@ -60,12 +58,22 @@ public final class SRServices {
     /**
      * Configuration.
      */
-    private ApplicationContext context;
+    private ISRMapping mapping;
 
     /**
      * Create a group of services provided by SpecRunner.
      */
     private SRServices() {
+        String str = System.getProperty("srmapping", "org.specrunner.core.SRMappingDefault");
+        try {
+            mapping = (ISRMapping) Class.forName(str).newInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -82,10 +90,7 @@ public final class SRServices {
         if (type == SRServices.class) {
             result = this;
         } else {
-            if (context == null) {
-                context = new ClassPathXmlApplicationContext("applicationContext-SR.xml");
-            }
-            result = context.getBean(type);
+            result = mapping.getDefault(type);
         }
         return type.cast(result);
     }

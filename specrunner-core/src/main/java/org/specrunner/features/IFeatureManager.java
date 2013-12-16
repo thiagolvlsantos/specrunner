@@ -96,4 +96,15 @@ public interface IFeatureManager extends Map<String, Object> {
      *            Set configuration features.
      */
     void setConfiguration(IConfiguration cfg);
+
+    /**
+     * Get a value from map, if not found, result is 'defaultValue'.
+     * 
+     * @param key
+     *            A name.
+     * @param defaultValue
+     *            The default value.
+     * @return The key value, or defaultValue, if not found.
+     */
+    Object get(String key, Object defaultValue);
 }

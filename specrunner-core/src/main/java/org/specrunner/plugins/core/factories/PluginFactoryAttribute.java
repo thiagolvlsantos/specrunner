@@ -59,7 +59,7 @@ public class PluginFactoryAttribute extends PluginFactoryImpl {
             IPluginGroup result = new PluginGroupImpl();
             Element ele = (Element) node;
             // lookup using smaller set.
-            if ((aliases.size() + templates.size()) < ele.getAttributeCount()) {
+            if ((typeNamesToAlias.size() + templates.size()) < ele.getAttributeCount()) {
                 byMapping(context, result, ele);
             } else {
                 byAttribute(context, result, ele);
@@ -90,10 +90,10 @@ public class PluginFactoryAttribute extends PluginFactoryImpl {
                 result.add(create);
             }
         }
-        for (Entry<String, Class<? extends IPlugin>> e : types.entrySet()) {
+        for (Entry<String, Class<? extends IPlugin>> e : aliasToTypes.entrySet()) {
             Attribute att = ele.getAttribute(e.getKey());
             if (att != null) {
-                Class<? extends IPlugin> c = types.get(e.getKey());
+                Class<? extends IPlugin> c = aliasToTypes.get(e.getKey());
                 if (c != null) {
                     IPlugin create = UtilPlugin.create(context, c, ele);
                     create.setParent(this);
@@ -124,7 +124,7 @@ public class PluginFactoryAttribute extends PluginFactoryImpl {
             if (template != null) {
                 create = UtilPlugin.create(context, template, ele);
             } else {
-                Class<? extends IPlugin> c = types.get(name);
+                Class<? extends IPlugin> c = getClass(name);
                 if (c != null) {
                     create = UtilPlugin.create(context, c, ele);
                 }

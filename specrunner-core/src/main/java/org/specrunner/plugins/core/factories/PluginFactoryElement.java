@@ -58,7 +58,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
                 create.setParent(this);
                 return create;
             } else {
-                Class<? extends IPlugin> c = types.get(name);
+                Class<? extends IPlugin> c = getClass(name);
                 if (c != null) {
                     IPlugin create = UtilPlugin.create(context, c, ele);
                     create.setParent(this);
