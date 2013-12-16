@@ -165,7 +165,13 @@ public final class UtilIO {
             InputStream in = null;
             ByteArrayOutputStream out = null;
             try {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream open: " + url);
+                }
                 in = url.openStream();
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream loaded: " + in);
+                }
                 out = new ByteArrayOutputStream(in.available());
                 writeTo(in, out);
                 data = out.toByteArray();
@@ -219,7 +225,7 @@ public final class UtilIO {
     }
 
     /**
-     * Write the url input to the file output.
+     * Write the URL input to the file output.
      * 
      * @param url
      *            The input.
@@ -229,6 +235,7 @@ public final class UtilIO {
      *             On writing errors.
      */
     public static void writeToClose(URL url, File file) throws IOException {
+        long time = System.currentTimeMillis();
         InputStream in = null;
         FileOutputStream fout = null;
         BufferedOutputStream bout = null;
@@ -265,6 +272,10 @@ public final class UtilIO {
                     }
                 }
             }
+        }
+        if (UtilLog.LOG.isDebugEnabled()) {
+            time = System.currentTimeMillis() - time;
+            UtilLog.LOG.debug("After writeToClose time:" + time + ".");
         }
     }
 

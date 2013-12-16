@@ -21,6 +21,7 @@ import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.annotator.IAnnotatorGroup;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.composite.core.CompositeImpl;
 
 /**
@@ -33,8 +34,13 @@ public class AnnotatorGroupImpl extends CompositeImpl<IAnnotatorGroup, IAnnotato
 
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
+        long time;
         for (IAnnotator pa : getChildren()) {
+            time = System.currentTimeMillis();
             pa.annotate(result);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Time: " + (System.currentTimeMillis() - time) + " on " + pa.getClass());
+            }
         }
     }
 }

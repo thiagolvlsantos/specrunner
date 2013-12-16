@@ -62,6 +62,11 @@ public class PluginFactoryText implements IPluginFactory {
     }
 
     @Override
+    public Class<? extends IPlugin> getClass(String alias) throws PluginException {
+        return null;
+    }
+
+    @Override
     public String getAlias(Class<? extends IPlugin> type) {
         return null;
     }

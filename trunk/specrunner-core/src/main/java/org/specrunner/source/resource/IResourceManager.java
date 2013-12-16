@@ -31,6 +31,16 @@ import org.specrunner.source.resource.positional.Position;
 public interface IResourceManager extends List<IResource> {
 
     /**
+     * Add resources (i.e. specrunner.js and specrunner.css) to final result.
+     */
+    String FEATURE_ADD_RESOURCES = IResourceManager.class + ".save";
+
+    /**
+     * Add resources status.
+     */
+    Boolean DEFAULT_ADD_RESOURCES = true;
+
+    /**
      * The resource manager parent source.
      * 
      * @return The parent.

@@ -30,6 +30,7 @@ import nu.xom.Nodes;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
+import org.specrunner.source.core.UtilEncoding;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.source.resource.positional.EPlace;
@@ -89,9 +90,9 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                     Element tag = getHeaderTag();
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     UtilIO.writeAllTo(urls, out);
-                    String content = out.toString("UTF-8");
+                    String content = out.toString(UtilEncoding.getEncoding());
                     out.close();
-                    tag.appendChild(content);
+                    tag.appendChild(content.replace("\r\n", "\n"));
                     if (getPosition().getPlace() == EPlace.START) {
                         target.insertChild(tag, 0);
                     } else {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import org.specrunner.SRServices;
 import org.specrunner.properties.IPropertyLoader;
@@ -48,6 +49,7 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
     public void initialize() {
         if (!initialized) {
             try {
+                long time = System.currentTimeMillis();
                 List<Properties> list = SRServices.get(IPropertyLoader.class).load(file);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("properties list=" + list);
@@ -75,6 +77,9 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
                         instances.put(property, instance);
                     }
                 }
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("LOAD TIME(" + file + "):" + (System.currentTimeMillis() - time));
+                }
             } catch (Exception e) {
                 throw new ExceptionInInitializerError(e);
             }
@@ -98,6 +103,12 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
         initialize();
         put(name, obj);
         return this;
+    }
+
+    @Override
+    public Set<String> keySet() {
+        initialize();
+        return super.keySet();
     }
 
     @Override

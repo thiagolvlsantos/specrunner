@@ -50,17 +50,21 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      */
     private PluginKind kind;
     /**
-     * Types of plugins available by name.
+     * Map from alias to class name.
      */
-    protected Map<String, Class<? extends IPlugin>> types = new HashMap<String, Class<? extends IPlugin>>();
+    protected Map<String, String> aliasToTypeNames = new HashMap<String, String>();
     /**
-     * Types of plugins available by name.
+     * Map from alias to types.
+     */
+    protected Map<String, Class<? extends IPlugin>> aliasToTypes = new HashMap<String, Class<? extends IPlugin>>();
+    /**
+     * Map from alias to templates.
      */
     protected Map<String, IPlugin> templates = new HashMap<String, IPlugin>();
     /**
-     * Alias of plugins.
+     * Map from alias to names.
      */
-    protected Map<Class<? extends IPlugin>, String> aliases = new HashMap<Class<? extends IPlugin>, String>();
+    protected Map<String, String> typeNamesToAlias = new HashMap<String, String>();
     /**
      * File to be loaded.
      */
@@ -100,7 +104,6 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
      * @throws PluginException
      *             On initialization errors.
      */
-    @SuppressWarnings("unchecked")
     public void initialize() throws PluginException {
         if (!initialized) {
             try {
@@ -110,18 +113,14 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
                 }
                 for (Properties p : list) {
                     for (Entry<Object, Object> e : p.entrySet()) {
-                        Class<? extends IPlugin> c = (Class<? extends IPlugin>) Class.forName(String.valueOf(e.getValue()));
                         String key = String.valueOf(e.getKey()).toLowerCase();
-                        if (types.get(key) != null && UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("replace(" + key + "," + c + ")");
-                        } else {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("put(" + key + "," + c + ")");
-                            }
-                        }
-                        types.put(key, c);
-                        aliases.put(c, key);
+                        String value = String.valueOf(e.getValue());
+                        aliasToTypeNames.put(key, value);
+                        typeNamesToAlias.put(value, key);
                     }
+                }
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("properties loaded: " + file);
                 }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -133,13 +132,38 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<? extends IPlugin> getClass(String alias) throws PluginException {
+        String type = aliasToTypeNames.get(alias); 
+        if (type == null) {
+            return null;
+        }
+        Class<? extends IPlugin> c = aliasToTypes.get(alias);
+        if (c == null) {
+            try {
+                c = (Class<? extends IPlugin>) Class.forName(type);
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+                throw new PluginException(e);
+            }
+            aliasToTypes.put(alias, c);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("put(" + alias + "," + c + ")");
+            }
+        }
+        return c;
+    }
+
     @Override
     public String getAlias(Class<? extends IPlugin> type) throws PluginException {
         initialize();
         if (type == null) {
             return null;
         }
-        return aliases.get(type);
+        return typeNamesToAlias.get(type.getName());
     }
 
     @Override

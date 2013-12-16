@@ -83,16 +83,17 @@ public final class SpecRunnerPipelineUtils {
         IPipeline pipe = null;
         String name = String.valueOf(configuration == null ? defaultFile : configuration.get(PIPELINE_FILENAME, defaultFile));
         synchronized (pipelines) {
+            long time = System.currentTimeMillis();
             pipe = pipelines.get(name);
             if (pipe == null) {
                 pipe = services.lookup(IPipelineFactory.class).newPipeline(name);
                 pipelines.put(name, pipe);
                 if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Pipe of '" + name + "' loaded.");
+                    UtilLog.LOG.info("Pipe of '" + name + "' loaded in " + (System.currentTimeMillis() - time) + ".");
                 }
             } else {
                 if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Pipe of '" + name + "' reused.");
+                    UtilLog.LOG.info("Pipe of '" + name + "' reused in " + (System.currentTimeMillis() - time) + ".");
                 }
             }
         }

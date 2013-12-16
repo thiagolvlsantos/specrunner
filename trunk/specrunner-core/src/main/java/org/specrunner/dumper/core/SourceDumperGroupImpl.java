@@ -25,6 +25,7 @@ import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.core.UtilEncoding;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.composite.core.CompositeImpl;
 
 /**
@@ -42,8 +43,13 @@ public class SourceDumperGroupImpl extends CompositeImpl<ISourceDumperGroup, ISo
 
     @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
+        long time;
         for (ISourceDumper d : getChildren()) {
+            time = System.currentTimeMillis();
             d.dump(source, result, model);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Time: " + (System.currentTimeMillis() - time) + " on " + d.getClass());
+            }
         }
     }
 }
