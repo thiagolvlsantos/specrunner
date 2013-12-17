@@ -25,7 +25,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.listeners.core.ListenerManagerDefault" />
   <bean class="org.specrunner.reuse.core.ReusableManagerImpl" />
   <bean class="org.specrunner.pipeline.core.ChannelFactoryImpl" />
-  <bean class="org.specrunner.pipeline.core.PipelineFactoryXOM" />
+  <bean class="org.specrunner.pipeline.core.PipelineFactoryCustom" />
   <bean class="org.specrunner.util.aligner.core.StringAlignerFactoryImpl" />
   <bean class="org.specrunner.util.cache.core.CacheFactoryDefault" />
   <bean class="org.specrunner.report.core.ReporterFactoryDefault" />
