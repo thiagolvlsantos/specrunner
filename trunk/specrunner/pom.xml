@@ -40,8 +40,12 @@
         <module>../specrunner-core</module>
         <module>../specrunner-core-excel</module>
         <module>../specrunner-core-text</module>
+        <!-- Spring integration -->
+        <module>../specrunner-core-spring</module>
         <!-- Concordion integration -->
         <module>../specrunner-concordion-emulator</module>
+        <!-- Concordion extension -->
+        <!--module>../specrunner-concordion-extension</module-->
         <!-- ANT integration -->
         <module>../specrunner-ant</module>
         <!-- Basic database support -->
