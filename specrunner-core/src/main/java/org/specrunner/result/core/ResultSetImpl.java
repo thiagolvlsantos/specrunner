@@ -52,6 +52,10 @@ import org.specrunner.source.SourceException;
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     /**
+     * Record success flag.
+     */
+    private boolean recordSuccess = true;
+    /**
      * List of expected messages.
      */
     private List<String> messages;
@@ -60,6 +64,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      * Ordered flag.
      */
     private boolean sorted;
+
+    @Override
+    public Boolean getRecordSuccess() {
+        return recordSuccess;
+    }
+
+    @Override
+    public void setRecordSuccess(Boolean recordSuccess) {
+        this.recordSuccess = recordSuccess;
+    }
 
     @Override
     public void setMessages(String[] messages) {
@@ -344,6 +358,9 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      */
     protected IResult addResult(Status status, IBlock source, String message, Throwable failure, IWritable writable) {
         status = analyzeStatus(status, message, failure);
+        if (!recordSuccess && !status.isError()) {
+            return null;
+        }
         IResult result = new ResultImpl(status, source, message, failure, writable);
         if (add(result)) {
             return result;

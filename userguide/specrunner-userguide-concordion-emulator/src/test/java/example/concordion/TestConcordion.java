@@ -6,6 +6,7 @@ import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.junit.SRRunnerOptions;
 import org.specrunner.plugins.core.elements.AbstractPluginResource;
+import org.specrunner.result.IResultSet;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
 
@@ -17,5 +18,6 @@ public abstract class TestConcordion {
     public void prepare(IConfiguration cfg) {
         cfg.add(AbstractPluginResource.FEATURE_SAVE, UtilLog.LOG.isDebugEnabled());
         cfg.add(IResourceManager.FEATURE_ADD_RESOURCES, UtilLog.LOG.isDebugEnabled());
+        cfg.add(IResultSet.FEATURE_RECORD_SUCCESS, UtilLog.LOG.isDebugEnabled());
     }
 }
