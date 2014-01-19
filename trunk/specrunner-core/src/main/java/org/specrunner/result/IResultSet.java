@@ -33,6 +33,11 @@ import org.specrunner.util.xom.IPresentation;
 public interface IResultSet extends List<IResult>, IStatus, IPresentation {
 
     /**
+     * Feature for disable success recording.
+     */
+    String FEATURE_RECORD_SUCCESS = IResultSet.class.getName() + ".recordSuccess";
+
+    /**
      * Feature for expected messages.
      */
     String FEATURE_EXPECTED_MESSAGES = IResultSet.class.getName() + ".messages";
@@ -41,6 +46,23 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * Feature for messages expectation order.
      */
     String FEATURE_EXPECTED_SORTED = IResultSet.class.getName() + ".sorted";
+
+    /**
+     * Setting to record success action in result set.
+     * 
+     * @param recordSuccess
+     *            The record success.
+     */
+    void setRecordSuccess(Boolean recordSuccess);
+
+    /**
+     * Flag to record status which <code>isError</code> returns true. Default is
+     * <code>true</code>.
+     * 
+     * @return true, if record success flag is enabled, false, to record only
+     *         error status.
+     */
+    Boolean getRecordSuccess();
 
     /**
      * Set expected messages.
