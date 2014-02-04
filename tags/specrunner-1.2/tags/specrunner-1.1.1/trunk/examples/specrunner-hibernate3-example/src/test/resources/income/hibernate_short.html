@@ -1,0 +1,113 @@
+<style type="text/css">
+.dados {
+	background-color: #DDDDDD;
+	border: 1px solid black;
+}
+</style>
+
+<p>
+	Dado que a configuração do sistema é: <span class="global"
+		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
+		class="hbmcfg" type="${configuracao}" >configuração
+		Hibernate</span> do <span class="hbmsf" >sistema</span>
+	e recrie o <span class="hbmsch" schema="CTI" script="true" >esquema</span>.
+
+<p>
+Sem IObjectCreator.
+<table>
+	<tr>
+		<td valign="top">Lista de pessoas:
+			<table class="dados objins" type="th.example.Person"
+				reference="id" separator="/">
+				<caption>Pessoa</caption>
+				<tr>
+					<th default="-1">ID</th>
+					<th field="contact.number">Número</th>
+					<th field="contact.email">E-mail</th>
+					<th field="contact.phone.number">Fone</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td>1234</td>
+					<td>email1@gmail.com</td>
+					<td>999999</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>5678</td>
+					<td>email1@gmail.com</td>
+					<td>888888</td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td>9012</td>
+					<td>email1@gmail.com</td>
+					<td>777777</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+Com IObjectCreator.
+<table>
+	<tr>
+		<td valign="top">Lista de pessoas:
+			<table class="dados objins" type="th.example.Person"
+				reference="id" separator="/" creator="th.example.CriadorExemplo">
+				<caption>Pessoa</caption>
+				<tr>
+					<th default="-10">ID</th>
+					<th field="contact.number">Número</th>
+					<th field="contact.phone.number">Fone</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td>1234</td>
+					<td>999999</td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>5678</td>
+					<td>888888</td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>9012</td>
+					<td>777777</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+
+Herança em Employee.
+<table>
+	<tr>
+		<td valign="top">Lista de empregados:
+			<table class="dados objins" type="th.example.Employee"
+				reference="id" separator="/" >
+				<caption>Empregado</caption>
+				<tr>
+					<th default="-1">ID</th>
+					<th field="contact.number">Número</th>
+					<th field="contact.phone.number">Fone</th>
+					<th field="salary" converter="sal">Salário</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td>1234</td>
+					<td>999999</td>
+					<td>R$ 8.045,89</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>5678</td>
+					<td>888888</td>
+					<td>R$ 45,76</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

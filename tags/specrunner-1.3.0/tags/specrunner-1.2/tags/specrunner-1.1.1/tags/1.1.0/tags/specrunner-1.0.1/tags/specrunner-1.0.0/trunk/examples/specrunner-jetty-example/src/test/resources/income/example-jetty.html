@@ -1,0 +1,171 @@
+Browser default.
+<p>
+Start <span class="jetty_start" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> then
+<!-- connection="org.specrunner.browser.impl.WebConnectionLogging" --> 
+<!-- connection="org.specrunner.browser.impl.WebConnectionFile" --> 
+<span class="browser" version="FIREFOX_3_6" reuse="false" connection="org.specrunner.browser.impl.WebConnectionFile">
+<span class="size" condition='!browser_type.equals("HtmlUnitDriverLocal")' width="500" height="500">open</span> ${browser_type} 
+</span> 
+browser in <span class="browser_in" provider="org.specrunner.jetty.JettyStringProvider">default location</span>.
+
+<ul>
+    <li>Access '<span class="open">/application</span>';</li>
+    <li>The word <span class="contains">Quickstart</span> is present;</li>
+    <li>The word <span class="not_contains">Blueprint</span> is not present;</li>
+    <li><span class="present" by="xpath://title">Title</span> is present;</li>
+    <li>None <span class="not_present" by="xpath://table">table</span> is not present;</li>
+    <li>There is only <span class="present" by="xpath://title" count="1">one</span> title;</li>
+    <li>Check title that might be '<span class="compare" by="xpath://title">Wicket Quickstart Archetype Homepage</span>';</li>
+    <li>Access '<span class="open">/application/date.jsp</span>';</li>
+    <li>Date information might be '<span class="compare_date" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>';</li>
+	<li>The page contains <span class="contains">Dynamic dates</span>;</li>
+	<li>The page does not contain <span class="not_contains">Static dates</span>;</li>
+    <li>Table information might be :<span class="compare_table" by="xpath://table[@id='tableId']" >
+			<table border=1>
+				<caption>Dynamic dates</caption>
+				<tr>
+					<th>ID</th>
+					<th>Creation</th>
+					<th>Name</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td type="date" format="HH:mm" value='${dt.toString("HH:mm")}'>current date</td>
+					<td>A&aacute;</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td type="date" format="HH:mm:ss" value='${dt.toString("HH:mm:ss")}'>current date</td>
+					<td>B</td>
+				</tr>
+				<tr>
+					<td colspan=3 type="table">
+						<table border=1>
+							<caption>Inner table</caption>
+							<tr>
+								<th>Name</th>
+								<th>Date</th>
+							</tr>
+							<tr>
+								<td>Thiago</td>
+								<td type="date" format="HH:mm:ss" value='${dt.toString("HH:mm:ss")}'>current date</td>
+							</tr>
+							<tr>
+								<td colspan=2 type="table">
+									<table border=1>
+										<caption>Super Inner table</caption>
+										<tr>
+											<th>Name</th>
+											<th>Month</th>
+										</tr>
+										<tr>
+											<td>Santos</td>
+											<td>January</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</span>
+	</li>
+</ul>
+Checkbox examples:
+<ul>
+	<li>Select all checkboxes <span class="check_all" by="starts:input;@id;check">C1,C2 and C3</span>;</li>
+	<li>Unselect all checkboxes <span class="check_all" by="starts:*;@id;check" status="false">C1,C2 and C3</span>;</li>
+	<li>Select all checkboxes <span class="check_all" by="starts:*;@id;check">C1,C2 and C3</span>;</li>
+	<li>Check if all checks are <span class="checked" by="xpath://input[starts-with(@id,'check')]" checked="true">on</span>;</li>
+	<li>Check if all checks and radio 2 are <span class="checked" title="Set by custom strategy!" by="starts_new:check;rad2" checked="true">on</span>;</li>
+	
+	<li>Click on checkbox <span class="clickon" by="id:check3">C3</span>;</li>
+	<li>Click on checkbox <span class="clickon" by="id:check3">C3</span>;</li>
+	<li>Check if chechbox <span class="enabled" by="id:check1" enabled="true">C1</span> is enabled, <span class="enabled" by="id:check2" enabled="false">C2</span> is disabled, and <span class="enabled" by="id:check3" enabled="true">C3</span> is enabled;</li>
+	<li>Check if <span class="checked" by="id:check1" checked="true">C1</span>, <span class="checked" by="id:check2" checked="true">C2</span> and <span class="checked" by="id:check3" checked="true">C3</span> are checked;</li>
+	<li>Try click on checkbox <span class="clickon" by="id:check2">C2</span>;</li>
+	<li>Check if <span class="checked" by="id:check1" checked="true">C1</span>, <span class="checked" by="id:check2" checked="true">C2</span> and <span class="checked" by="id:check3" checked="true">C3</span> are checked;</li>
+	<li>Click on check <span class="clickon" by="id:check1">C1</span>;</li>
+	<li>Check if <span class="checked" by="id:check1" checked="false">C1</span> is unchecked, and <span class="checked" by="id:check2" checked="true">C2</span> and <span class="checked" by="id:check3" checked="true">C3</span> are checked;</li>
+</ul>
+Select examples:
+<ul>
+	<li>Check if Single selection content is 
+		<ul class="selection" by="id:sel1" content="true">
+			<li>Option 1</li>
+			<li>Option 2</li>
+			<li>Option 3</li>
+		</ul>
+		;
+	</li>
+	<li>Check if Single selection is 
+		<span class="selection" by="id:sel1" selection="true">Option 2</span>;
+	</li>
+	<li>Click on checkbox 
+		<span class="clickon clicknext" by="id:idDisableSingle">Disable single</span>;
+	</li>
+	<li>Check if Single selection is  
+		<span class="enabled" by="id:sel1" enabled="false">disabled</span>;
+	</li>
+	<li>Check if Single selection after disabling is 
+		<span class="selection" by="id:sel1" selection="true">Option 2</span>;
+	</li>
+	<li>Check if Multiple selection content is 
+		<ul class="selection" by="id:sel2" content="true">
+			<li>Option 1</li>
+			<li>Option 2</li>
+			<li>Option 3</li>
+			<li>Option 4</li>
+		</ul>
+		;
+	</li>
+	<li>Check if Multiple selection is 
+		<ul class="selection" by="id:sel2" selection="true">
+			<li>Option 2</li>
+			<li>Option 4</li>
+		</ul>
+		;
+	</li>
+	<li>Select Option 3 in Multiple selection 
+		<span class="select" by="id:sel2" >Option 3</span>;
+	</li>
+	<li>Check if Multiple selection now is 
+		<ul class="selection" by="id:sel2" selection="true">
+			<li>Option 2</li>
+			<li>Option 3</li>
+			<li>Option 4</li>
+		</ul>
+		;
+	</li>
+	<li>Unselect options 2 and 4 in Multiple selection 
+		<ul class="select" by="id:sel2" unselect="true">
+			<li>Option 4</li>
+			<li>Option 2</li>
+		</ul>
+		;
+	</li>
+	<li>Check if Multiple selection now contains only 
+		<span class="selection" by="id:sel2" selection="true">Option 3</span>;
+	</li>
+</ul>
+Text field and area examples:
+<ul>
+	<li>Check if text field is <span class="compare" by="name:txtName" value='""'>empty</span>;</li>
+	<li>Type <span class="type" by="name:txtName" value='dt.toString(pattern)'>current date in format 'HH:mm:ss'</span>;</li>
+	<li>Check if the text field value is the <span class="compare_date" by="name:txtName" format="HH:mm:ss" value='dt.toString("HH:mm:ss")'>current date</span>;</li>
+
+	<li>Check if text area is '<span class="compare" by="name:areaName">type here</span>';</li>
+	<li>Type <span class="type" by="name:areaName">new value</span> in text area;</li>
+	<li>Check if the text area value is <span class="compare" by="name:areaName">new value</span>;</li>
+	<li>Append text area value with '<span class="type" by="name:areaName" append="true"> twice</span>';</li>
+	<li>Check if the text area value is <span class="local" scope="ul" name="txtContent"><span class="compare" by="name:areaName">new value twice</span></span>;</li>
+	<li>Add '<span class="type" by="name:areaName" position='${txtContent.indexOf("value")}'>inside </span>' between 'new' and 'value';</li>
+	<li>Check if the text area value is <span class="compare" by="name:areaName">new inside value twice</span>;</li>
+</ul>
+
+<span class="quit">Fechar navegador.</span>
+
+<!-- Perform the same using <a href="other.html" class="include">another strategy</a>. -->
+
+<!--p class="jetty_stop">Stop Jetty</p-->

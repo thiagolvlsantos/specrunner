@@ -1,0 +1,32 @@
+Assume login is:
+<p class="macro" name="screenTest">
+    Access
+    <open url="baseUrl">application</open>
+    , type
+    <type by="name:user">#{User}</type>
+    and
+    <type by="name:password">#{Password}</type>
+    then click on
+    <clickon by="value:">Enter</clickon>
+    . <br /> Check user <a class="include" href="Screen.html">screen</a>.
+</p>
+
+Check for each user in:
+<table class="map" name="examples">
+    <tr>
+        <th>User</th>
+        <th>Password</th>
+    </tr>
+    <tr>
+        <td>any</td>
+        <td>any</td>
+    </tr>
+    <tr>
+        <td>admin</td>
+        <td>admin</td>
+    </tr>
+</table>
+
+<p class="iterator" name="examples">
+    <call name="screenTest" /><br/>
+</p>

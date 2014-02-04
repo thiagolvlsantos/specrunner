@@ -1,0 +1,28 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<link href="concordion.css" rel="stylesheet" type="text/css" />
+<body>
+
+    <h1>Hello World!</h1>
+
+    <p>
+    	After a user logs into the system, a greeting is
+    	displayed saying "Hello [user's first name]!"
+    </p>
+
+    <div class="example">
+
+		<h3>Example</h3>
+		
+        <p>
+            When user <b class="local" name="first" scope="div">World</b>
+            logs in, the greeting will be:
+            <b custom="com.example.CheckName" name="${first}">Hello World!</b>
+        </p>
+        
+		<b custom="com.example.CheckName" name="${first}">Hello TESTE!</b>
+    </div>
+
+	<img src="image.png" alt="Image 2"/>
+	<a href="other/string.html" class="include">other</a>
+</body>
+</html>

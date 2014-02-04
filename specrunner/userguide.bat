@@ -1,1 +1,0 @@
-cd ..\userguide\specrunner-userguide & deploy.bat

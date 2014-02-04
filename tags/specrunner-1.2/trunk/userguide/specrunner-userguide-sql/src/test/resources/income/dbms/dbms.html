@@ -1,0 +1,122 @@
+<html>
+<head>
+<meta charset="UTF-8" />
+</head>
+<body>
+	Com uma <span class="connection" provider="example.sql.DataSourceProviderImpl">conexão</span>
+	deve-se <a class="scripts" href="drop.sql" value="drop.sql" failsafe="true">re</a>
+	<a class="scripts" href="schema.sql" value="schema.sql">criar</a> o esquema. Com um 
+	<span class="schemaloader" provider="org.specrunner.sql.meta.impl.SchemaLoaderXOM" reuse="true">leitor</span> de esquemas se carrega o
+	<span class="schema" source="/income/dbms/schema.cfg.xml" reuse="true">esquema</span> esperado, prepara-se 
+	<span class="database" provider="org.specrunner.sql.impl.Database" reuse="true">o executor de comandos</span>.
+	Por fim	prepara-se o banco de dados preenchendo com:</span>
+	<table class="prepare">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Tarefa 1</td>
+				<td>Descr 1</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>2</td>
+				<td>Tarefa 2</td>
+				<td></td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>U</td>
+				<td>1</td>
+				<td>Tarefa 3</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>D</td>
+				<td>2</td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>3</td>
+				<td>Tarefa 4</td>
+				<td></td>
+				<td>2</td>
+			</tr>
+		</tbody>
+	</table>
+	Depois dos dados preenchidos, adiciona-se as 
+	<a class="scripts" href="constraints.sql" value="constraints.sql">constraints</a>.
+
+	<p>No final deve-se verificar se os valores abaixo estão lá na base de dados:</p>
+	<table class="verify">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="verify">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>D</td>
+				<td>2</td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	
+	<!--table class="release">Liberando JDBC.</table-->
+</body>
+</html>

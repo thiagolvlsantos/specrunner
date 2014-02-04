@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2012  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+ -->
+
+<assembly>
+	<id>${project.version}-clean</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<fileSets>
+		<!-- root files: README.txt, LICENSE.TXT, etc.-->
+		<fileSet>
+			<directory>${basedir}</directory>
+			<outputDirectory>specrunner</outputDirectory>
+			<includes>
+                <include>*.txt</include>
+                <include>*.xml</include>
+			</includes>
+		</fileSet>
+
+        <!-- source file -->		
+        <fileSet>
+            <directory>${basedir}/src</directory>
+            <outputDirectory>specrunner/src</outputDirectory>
+        </fileSet>
+
+        <!-- documentation -->
+        <fileSet>
+            <directory>${basedir}/docs</directory>
+            <outputDirectory>specrunner/docs</outputDirectory>
+        </fileSet>
+
+		<!-- bin files -->
+		<fileSet>
+			<directory>${basedir}/bin</directory>
+			<outputDirectory>specrunner/bin</outputDirectory>
+		</fileSet>
+		
+        <!-- children packages -->
+        <fileSet>
+            <directory>${basedir}/../specrunner-core/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-core-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-sql/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-sql-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-objects/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-objects-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-hibernate3/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-hibernate3-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-jpa/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-jpa-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-jetty/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-jetty-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-tomcat/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-tomcat-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-htmlunit/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-htmlunit-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-webdriver/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-webdriver-clean.zip</include>
+            </includes>
+        </fileSet>
+	</fileSets>
+</assembly>

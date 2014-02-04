@@ -1,0 +1,292 @@
+#summary Perfil para conexões com bancos de dados e scripts SQL.
+#labels Featured
+
+<wiki:toc max_depth="3" />
+
+= Para quê serve? =
+
+Para selecionar/criar um `java.sql.DataSource` e executar script SQL sobre esse provedor de conexões.
+
+
+= Como utilizar? =
+
+Adicione a dependência ao seu projeto:
+{{{
+<dependency>
+    <groupId>org.specrunner</groupId>
+    <artifactId>specrunner-sql</artifactId>
+    <version>VERSAO</version>
+</dependency>
+}}}
+
+
+= Quais são os plugins disponíveis? =
+
+O arquivo
+[http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/resources/plugin_css.properties plugin_css.properties] contém a lista de plugins disponíveis, e [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/resources/plugin_css.properties plugin_element.properties] lista os nomes das tags HTML/XML que também podem ser usadas no lugar das classes CSS.
+
+
+= Se eu não gostar dos nomes que vocês escolheram? =
+
+Simples, crie uma cópia de `plugin_css.properties` e/ou `plugin_element.properties` no seu projeto, remova aqueles plugins cujo nome você não que mudar, e mude o demais para o que você quiser. Ele vai ser automaticamente incluído no ambiente de testes.
+
+
+= Projeto exemplo =
+
+No repositório de fontes existe um projeto chamado [http://code.google.com/p/specrunner/source/browse/trunk/userguide/specrunner-userguide-sql specrunner-userguide-sql] que exercita os conceitos aqui apresentados.
+
+== Usando o [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/PluginConnection.java PluginConnection] ==
+
+=== Conexão direta ===
+
+Para criar uma conexão com um banco de dados, em *QUALQUER TAG* coloque o estilo `connection`, com os demais atributos da conexão:
+  # Usando atributos separados
+{{{
+<span class="connection" 
+      driver="org.hsqldb.jdbcDriver" 
+      url="jdbc:hsqldb:mem:TESTE" 
+      user="sa" 
+      password="">texto qualquer</span>
+}}}
+  # Usando atributo único
+{{{
+<span class="connection" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
+}}}
+  # Atributo único com separador distinto
+{{{
+<span class="connection" 
+      separator=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;">texto qualquer</span>
+}}}
+Caso deseje dar um nome para a conexão, por exemplo `con1`, de forma que diferentes conexões sejam usadas na mesma especificação para realizar scripts em diferentes bases:
+{{{
+<span name="con1" 
+      class="connection" 
+      driver="org.hsqldb.jdbcDriver" 
+      url="jdbc:hsqldb:mem:TESTE" 
+      user="sa" 
+      password="">texto qualquer</span>
+}}}
+ou,
+{{{
+<span name="con1" 
+      class="connection" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer</span>
+}}}
+ou,
+{{{
+<span class="connection" 
+      separator=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;">texto qualquer</span>
+}}}
+
+Outra forma de introduzir a conexão é usando a tag definida no arquivo `plugin_element.properties`, sem necessidade de texto interno:
+  # Usando tag vazia
+{{{
+<connection driver="org.hsqldb.jdbcDriver" 
+            url="jdbc:hsqldb:mem:TESTE" 
+            user="sa" 
+            password=""/>
+}}}
+  # Usando tag com atributo único
+{{{
+<connection
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|"/>
+}}}
+  # Usando tag com atrinbuto único e separador escolhido
+{{{
+<connection
+      separador=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;"/>
+}}}
+
+Se tiver nome e texto interno:
+{{{
+<connection name="con1" 
+            driver="org.hsqldb.jdbcDriver" 
+            url="jdbc:hsqldb:mem:TESTE" 
+            user="sa" 
+            password="">texto qualquer</connection>
+}}}
+ou,
+{{{
+<connection name="con1" 
+      connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE|sa|">texto qualquer </connection>
+}}}
+ou,
+{{{
+<connection name="con1" 
+      separador=";"
+      connection="org.hsqldb.jdbcDriver;jdbc:hsqldb:mem:TESTE;sa;"/>
+}}}
+
+Ou seja, diferentes formas de fazer a mesma coisa você escolhe qual prefere.
+
+=== Conexão com [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/IDataSourceProvider.java IDataSourceProvider] ===
+
+Para especificar um provedor de `java.sql.DataSource` use o atributo *provider* na tag desejada. A classe [http://code.google.com/p/specrunner/source/browse/trunk/userguide/specrunner-userguide-sql/src/test/java/example/sql/DataSourceProviderImpl.java example.sql.DataSourceProviderImpl] disponível em *specrunner-userguide-sql* é um exemplo de implementação desta interface.
+{{{
+<span class="connection" 
+      provider="example.sql.DataSourceProviderImpl">texto qualquer</span>
+}}}
+Se quiser associar o data source a um nome:
+{{{
+<span name="con2" 
+      class="connection" provider="example.sql.DataSourceProviderImpl">texto qualquer</span>
+}}}
+Ou as outras forma possíveis usando tags:
+{{{
+<connection provider="example.sql.DataSourceProviderImpl"/>
+}}}
+Se quiser associar o data source a um nome:
+{{{
+<connection name="con2" 
+            provider="example.sql.DataSourceProviderImpl">texto qualquer</connection>
+}}}
+
+Nestes casos acima a instancia do provider é criada dinamicamente, mas se você já possui um provider criado, você pode passá-lo para o plugin usando uma configuração, ou ajustando uma feature, que veremos nas próximas seções.
+
+Por enquanto tenha em mente que podemos fazer:
+{{{
+    IDataSourceProvider dsp = new ...;
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.add(PluginConnection.FEATURE_PROVIDER_INSTANCE,dsp);
+}}}
+.
+=== Usando as FEATURES ===
+OK, interessante?!: posso configurar conexões na especificação, e também usar uma classe utilitária para recuperar a conexão, mas parece que a especificação ficou com mais informação do que o necessário. Como resolver isso?
+
+Para isso o SpecRunner conta com um mecanismo de ajuste global ou local de cada teste, é o que chamamos de [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-core/src/main/java/org/specrunner/features/IFeatureManager.java IFeatureManager]. Desta forma as especificações poderiam ter conexões criadas apenas com trechos assim:
+{{{
+<span class="connection">texto qualquer</span>
+}}}
+{{{
+<span class="connection" name="con1"/>
+}}}
+{{{
+<connection/>
+}}}
+{{{
+<connection name="con1"/>
+}}}
+Desde que na chamada para execução haja o ajuste das features conforme mostrado abaixo.
+{{{
+@Test
+public void create() {
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.add(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
+    fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
+    fm.add(PluginConnection.FEATURE_USER,"sa");
+    fm.add(PluginConnection.FEATURE_PASSWORD,"");
+    SpecRunnerJUnit.defaultRun("create.html");
+}
+@Test
+public void all() {
+    SpecRunnerJUnit.defaultRun("all.html");
+}
+}}}
+Neste caso, se o teste `create` for executado antes do `all`, o ajuste será feito de forma global e o `all.html` poderá ter a conexão escrita da forma resumida, porém se o `all.html` está usando a forma resumida e ele é executado antes do `create.html` ele irá falhar. Vejamos como resolver isso no próximo código.
+{{{
+@Before
+public void before() {
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.addFeature(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
+    fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
+    fm.add(PluginConnection.FEATURE_USER,"sa");
+    fm.add(PluginConnection.FEATURE_PASSWORD,"");
+}
+
+@Test
+public void create() {
+    SpecRunnerJUnit.defaultRun("create.html");
+}
+@Test
+public void all() {
+    SpecRunnerJUnit.defaultRun("all.html");
+}
+}}}
+Desta forma, tanto faz a ordem de execução dos testes. O ajuste global será feito de qualquer forma pelo próprio JUnit ou qualquer outra ferramenta de teste que você use.
+
+Entretanto, poderíamos querer que cada teste tivesse seu ajuste de conexão específico. Desta forma, podemos também:
+  # definir os parâmetros globais como sendo os já vistos;
+  # definir parâmetros locais ao teste desejado.
+Isso é feito através de configurações ([http://code.google.com/p/specrunner/source/browse/trunk/specrunner-core/src/main/java/org/specrunner/configuration/IConfiguration.java IConfiguration]). Como veremos abaixo:
+{{{
+@BeforeClass
+public static void before() {
+    // ESSE É O AJUSTE PADRÃO
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.addFeature(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
+    fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
+    fm.add(PluginConnection.FEATURE_USER,"sa");
+    fm.add(PluginConnection.FEATURE_PASSWORD,"");
+}
+
+@Test
+public void create() { // usa o padrão
+    SpecRunnerJUnit.defaultRun("create.html");
+}
+@Test
+public void all() { // usa os demais parâmetros padrão + troca a URL
+    IConfiguration cfg = SpecRunnerServices.get(IConfigurationFactory.class).newConfiguration();
+    cfg.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE_all");
+    SpecRunnerJUnit.defaultRun("all.html",cfg);
+}
+}}}
+Desta forma, a especificação `create.html` irá criar conexões para a base padrão, e o `all.html` irá criar conexões para a base com todos os demais atributos já ajustados, mas com a URL do banco tendo terminação `TESTE_all`.
+
+Também é possível passar programaticamente o *provider* de conexões, mas esse fica como exercício. :)
+
+=== Reusando DataSources ===
+O SpecRunner já possui um mecanismo integrado de reutilização de objetos, isso quer dizer que se na mesma execução deste código:
+{{{
+@Before
+public void before() {
+    IFeatureManager fm = SpecRunnerServices.get(IFeatureManager.class);
+    fm.add(PluginConnection.FEATURE_DRIVER,"org.hsqldb.jdbcDriver");
+    fm.add(PluginConnection.FEATURE_URL,"jdbc:hsqldb:mem:TESTE");
+    fm.add(PluginConnection.FEATURE_USER,"sa");
+    fm.add(PluginConnection.FEATURE_PASSWORD,"");
+}
+
+@Test
+public void create() {
+    SpecRunnerJUnit.defaultRun("create.html");
+}
+@Test
+public void all() {
+    SpecRunnerJUnit.defaultRun("all.html");
+}
+}}}
+Ao invés de cada teste que tem a instrumentação CSS ou tags `connection` recriar o DataSource para uso, ele (o DataSource) poderia ser simplesmente reutilizado caso as informações de configuração como nome e dados de conexão fossem iguais. Isso acelera a velocidade de execução dos testes, para habilitar o reuso da fonte de dados:
+{{{
+<span class="connection" reuse="true"...>...</span>
+}}}
+{{{
+<connection reuse="true"...>...</connection>
+}}}
+Isso mesmo, é só colocar *`reuse="true"`* que o SpecRunner resolve isso para você.
+
+== Usando o [http://code.google.com/p/specrunner/source/browse/trunk/specrunner-sql/src/main/java/org/specrunner/sql/PluginScript.java PluginScript] ==
+
+Uma vez que há uma fonte de dados disponível, agora é possível solicitar a execução de scripts SQL sobre essa conexão. Uma forma bem simples de fazer isso é:
+{{{
+<table class="script">
+        <tr><td>dir/insert1.sql;</td></tr>
+        <tr><td>dir/sub/insert2.sql</td></tr>
+</table>
+}}}
+Desta forma, os arquivos `insert1.sql`, e `insert2.sql` serão automaticamente buscados de forma relativa ao arquivo que contém a especificação e serão executados sobre a conexão. Para executar scripts sobre uma conexão que foi previamente nomeada, é só informar o nome da conexão destino, por exemplo:
+{{{
+<table name="con2" class="script">
+        <tr><td>dir/insert1.sql;</td></tr>
+        <tr><td>dir/sub/insert2.sql</td></tr>
+</table>
+}}}
+Convém observar que a mesma lógica aplicada ao PluginConnection também se aplica aqui, existem features, e ajustes que podem ser feitos para simplificar ou modificar a execução dos scripts. Um exemplo de controle possível é informar que na execução dos scripts erros relacionados a execução dos comandos não deve gerar erros e sim advertências. Isso é possível ajustando-se manualmente o atributo `failsafe` para `true` ou ajustando em bloco através do IFeatureManager. Na especificação podemos ter, por exemplo:
+{{{
+Pede-se criar o 
+<a href="dir/create.sql" class="script" failsafe="true" separator="|" value="dir/drop.sql|dir/create.sql">esquema</a>
+}}}
+Neste exemplo, usamos tags diferentes, informamos que o separador de scripts é '|'(o default era ';'), e escondemos a listagem de nomes usando o atributo 'value', lembrando que além disso para o leitor da especificação o texto continua simples.

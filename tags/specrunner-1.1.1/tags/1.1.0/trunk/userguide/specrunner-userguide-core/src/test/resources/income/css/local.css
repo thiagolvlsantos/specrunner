@@ -1,0 +1,12 @@
+body {
+  font-family: verdana;
+  font-size: 10pt;
+}
+
+td {
+    border: solid 1px gray;
+}
+
+.any {
+    background-color: lime;
+}
