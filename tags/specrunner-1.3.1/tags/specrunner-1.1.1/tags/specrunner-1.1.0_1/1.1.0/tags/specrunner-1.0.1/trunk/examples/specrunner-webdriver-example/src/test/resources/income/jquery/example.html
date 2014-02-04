@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  <style type="text/css">
+    #draggable { width: 75px; height: 25px; background: silver; padding: 10px; }
+    #droppable { position: absolute; left: 250px; top: 0; width: 125px; height: 75px; background: gray; color: white; padding: 10px; }
+  </style>
+  <script>
+  $(document).ready(function() {
+    $("#draggable").draggable();
+    $("#droppable").droppable({
+      drop: function() { alert('dropped'); }
+    });
+  });
+  </script>
+</head>
+<body style="font-size:62.5%;">
+  
+<div id="droppable">Drop here</div>
+<div id="draggable">Drag me</div>
+
+</body>
+</html>

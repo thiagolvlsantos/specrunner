@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<link href="specrunner_default.css" rel="stylesheet" type="text/css"/>
+<link href="specrunner_debug_default.css" rel="stylesheet" type="text/css"/>
+
+<h1>Body</h1>
+<style>
+body {
+	font-family: Verdana;
+	font-size: 10pt;
+}
+</style>
+Default body is Verdana/10pt.
+<p>
+To disable default formating set feature in XXX to false.
+
+
+<h1>Boxes</h1>
+<p>
+    Text <span class="sr_raised">raised</span>
+<p>
+    Text <span class="sr_lowered">lowered</span> Status
+<h1></h1>
+<table class="sr_raised">
+    <caption class="sr_lowered sr_gray">Status</caption>
+    <tr>
+        <th>sr_failure<br>sr_success<br>sr_warning</th>
+        <th>sr_XXX_b (before)</th>
+        <th>sr_XXX_a (after)</th>
+        <th>All together</th>
+    </tr>
+    <tr>
+        <td>start <span class="sr_failure">failure</span> end.
+            <p>
+                start <span class="sr_success">success</span> end.
+            <p>
+                start <span class="sr_warning">warning</span> end.
+            <p>
+                start <span class="sr_info">info</span> end.
+        </td>
+        <td>start <span class="sr_failure_b">failure</span> end.
+            <p>
+                start <span class="sr_success_b">success</span> end.
+            <p>
+                start <span class="sr_warning_b">warning</span> end.
+            <p>
+                start <span class="sr_info_b">warning</span> end.
+        </td>
+        <td>start <span class="sr_failure_a">failure</span> end.
+            <p>
+                start <span class="sr_success_a">success</span> end.
+            <p>
+                start <span class="sr_warning_a">success</span> end.
+            <p>
+                start <span class="sr_info_a">success</span> end.
+        </td>
+        <td>start <span class="sr_failure_b sr_failure sr_failure_a">failure</span> end.
+            <p>
+                start <span class="sr_success_b sr_success sr_success_a">success</span> end.
+            <p>
+                start <span class="sr_warning_b sr_warning sr_warning_a">warning</span> end.
+            <p>
+                start <span class="sr_info_b sr_info sr_info_a">warning</span> end.
+        </td>
+    </tr>
+</table>
+
+<h1>Label</h1>
+
+The label color depends on test result.
+
+<fieldset class="sr_fieldset">
+    <legend class="sr_legend" style="border-bottom-width: 0">
+        <span class="sr_name">SpecRunner</span> <span class="sr_on">on 17/06/2011 00:49:07</span>
+    </legend>
+
+    <table class="sr_table sr_failure">
+        <tr>
+            <td class="sr_resume" colspan="2">failure(count:52)-&gt;<span class="sr_failure" style="padding-top: 0">failure(13)</span>,<span class="sr_success" style="padding-top: 0">success(27)</span>,<span class="sr_warning" style="padding-top: 0">warning(12)</span></td>
+            <td rowspan="2"><span class="sr_processors">Processors:4</span> | <span class="sr_max_memory"> Max memory:872000 Kb.</span>
+                <table class="sr_memory">
+                    <tr>
+                        <th>Memory</th>
+                        <th>Before(Kb)</th>
+                        <th>After(Kb)</th>
+                        <th>Diff(Kb)</th>
+                    </tr>
+                    <tr>
+                        <td>Free</td>
+                        <td>54121 (6,21%)</td>
+                        <td>48257 (5,53%)</td>
+                        <td>-5864</td>
+                    </tr>
+                    <tr>
+                        <td>Total</td>
+                        <td>58752 (6,74%)</td>
+                        <td>59136 (6,78%)</td>
+                        <td>384</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td class="sr_time">Time:6433mls</td>
+            <td nowrap="nowrap"><a href="">Expand All </a>|<a href="">Collapse All</a></td>
+        </tr>
+    </table>
+</fieldset>
+
+<h1>Flow</h1>
+
+
+<span class="if"> If <span class="sr_condition">something(true)</span> happens <span class="then selected">then do A, B, C...</span> <span class="else relegated">else do X, Y, Z...</span> </span>
+
+<p>
+    Perfom a loop of: <span class="for" var="n" min="0" max="10" step="2">
+        <ul>
+            <li>type number ${n}</li>
+            <li>click 'OK'</li>
+        </ul> </span> .
+<p>
+    Perfom a iteration of: <span class="iterator" name="itens">
+        <ul>
+            <li>show number ${index}</li>
+            <li>item #{item}</li>
+        </ul> </span>.
+<h1>Declarations</h1>
+
+<p>
+    A local, variable is <span class="local sr_success" name="vx">X</span>.
+<p>
+    A local scoped, variable is <span class="local sr_failure" name="vy" scope="scope">Y</span>.
+<p>
+    A global variable is <span class="global" name="vz">Z</span>.
+<h1>Equality</h1>
+
+<p>
+    The is a equality test: <span class="eq sr_success">x = y</span>
+<p>
+    The is a inequality test: <span class="neq sr_failure">x != y</span>
+
+<h1>Macro definition/usage</h1>
+<p>The is a macro definition:
+<div class="macro sr_success" name="login" run="true">
+    <ul>
+        <li>do a1;</li>
+        <li>do a2;</li>
+        <li>...</li>
+    </ul>
+</div>
+<p>
+    The is a macro call: <span class="call" name="login">user login</span>.
+
+<h1>Data enumeration</h1>
+
+<table border="1">
+    <tr>
+        <td valign="top">This is a data list:
+            <ul class="list" name="lname">
+                <li>item 1</li>
+                <li>...</li>
+                <li>item N</li>
+            </ul>
+            <p>This is a scoped data list:
+            <ul class="list" name="lname" scope="sname">
+                <li>item 1</li>
+                <li>...</li>
+                <li>item N</li>
+            </ul>
+        </td>
+        <td valign="top">This is a data map:
+            <table class="map" name="mname">
+                <tr>
+                    <th>header 1</th>
+                    <th>header ...</th>
+                    <th>header N</th>
+                </tr>
+                <tr>
+                    <td>a1</td>
+                    <td>...</td>
+                    <td>aN</td>
+                </tr>
+                <tr>
+                    <td>b1</td>
+                    <td>...</td>
+                    <td>bN</td>
+                </tr>
+            </table>
+            <p>This is a scoped data map:
+            <table class="map" name="mname" scope="sname">
+                <tr>
+                    <th>header 1</th>
+                    <th>header ...</th>
+                    <th>header N</th>
+                </tr>
+                <tr>
+                    <td>a1</td>
+                    <td>...</td>
+                    <td>aN</td>
+                </tr>
+                <tr>
+                    <td>b1</td>
+                    <td>...</td>
+                    <td>bN</td>
+                </tr>
+            </table></td>
+    </tr>
+</table>
+
+<h1>Include</h1>
+
+
+Example of link to include file
+<a href="source.html" class="include" onclick="toogle('include_1307912189128_2906476628879');return false;">source.html</a>
+<span id="include_1307912189128_2906476628879">
+    <table class="included">
+        <tr>
+            <th class="included_file">source.html</th>
+        </tr>
+        <tr>
+            <td class="included_content">content area.
+                <p>
+                    try self reference: <a href="core.html" onclick="toogle('include_1307912189169_2906518039720'); return false;" class="include sr_warning" title="Cyclic dependency">parent</a> <span id="include_1307912189169_2906518039720">
+                        <table class="included">
+                            <tr>
+                                <th class="included_file">core.html</th>
+                            </tr>
+                            <tr>
+                                <td class="included_content sr_warning">Cyclic dependency.</td>
+                            </tr>
+                        </table> </span>.
+                </p></td>
+        </tr>
+    </table> </span>
+.
+
+<h1>Stacktrace</h1>
+
+
+Example of trace:
+<span class="sr_failure"> <a name="12" /> <input id="button_1308282547855_10047478955212" class="sr_stackbutton" type="button" value=" + 12" onclick="toogleButton('item_1308282547855_10047479010726','button_1308282547855_10047478955212',' + 12',' - 12'); return false;" /> <pre id="item_1308282547855_10047479010726" class="sr_stacktrace" style="visibility: hidden; display: none;">org.specrunner.plugins.PluginException: Instance '14' of 'th.example.City' not found.
+at org.specrunner.hibernate.PluginInput.getObject(PluginInput.java:149)
+at org.specrunner.hibernate.PluginManager.lookup(PluginManager.java:30)
+at org.specrunner.hibernate.PluginInput.setEntity(PluginInput.java:274)
+at org.specrunner.hibernate.PluginInput.setValue(PluginInput.java:236)
+...</pre>14 </span>

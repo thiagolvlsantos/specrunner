@@ -1,0 +1,1 @@
+update CTI.CIT_CITY set CIT_NM = 'Primeira alterada' where CIT_ID = 1

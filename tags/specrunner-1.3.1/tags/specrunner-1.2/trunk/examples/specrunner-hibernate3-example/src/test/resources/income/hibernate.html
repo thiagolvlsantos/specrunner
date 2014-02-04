@@ -1,0 +1,179 @@
+<html>
+<style type="text/css">
+.dados {
+    background-color: #DDDDDD;
+    border: 1px solid black;
+}
+</style>
+<p>
+	Dado que a configuração do sistema é: <span class="global"
+		name="configuracao">th.example.CityConfiguration</span>, ajuste a <span
+		class="hbmcfg" type="${configuracao}" name="cfg">configuração
+		Hibernate</span> do <span class="hbmsf" configuration="cfg">sistema</span> e
+	recrie o <span class="hbmsch" schema="CTI" configuration="cfg">esquema</span>.
+</p>
+
+<p>
+	Considerando que o número de registro mínimo em cada tabela é de <span
+		class="global" name="quantidade">10</span> itens. Considerando também
+	o campo de identificador do endereço como <span class="local" name="id">ID</span>,
+	preencha a base de dados com:
+</p>	
+
+<table>
+	<tr>
+		<td valign="top">Lista de cidades:
+			<table class="dados objins" type="th.example.City" reference="id"
+				separator="/">
+				<caption>Cidades</caption>
+				<tr>
+					<th default="-1">ID</th>
+					<th field="name">Nome</th>
+					<th field="foundation" converter="datePatternArgs"
+						arg0="dd/MM/yyyy">Data de fundação</th>
+					<th field="status" converter="bool">Ativa</th>
+					<th field="lastUpdate" converter="dateCurrent">Última
+						atualização</th>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Recife</td>
+					<td>12/03/1656</td>
+					<td>Sim</td>
+					<td>a data atual</td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td>Salvador</td>
+					<td>30/10/1790</td>
+					<td>Sim</td>
+					<td>a data atual menos 2 dias</td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td>João Pessoa</td>
+					<td>30/10/1897</td>
+					<td>Não</td>
+					<td converter="dateAny">qualquer</td>
+				</tr>
+				<tbody class="for" min="${quantidade}" max="${3 * quantidade}"
+					replace="true">
+					<tr>
+						<td>${index}</td>
+						<td>Cidade ${index}</td>
+						<td>30/10/${index}</td>
+						<td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+						<td converter="dateAny">qualquer</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+		<td valign="top">Lista de endereços:
+
+			<table class="input map" after="true" type="th.example.Address"
+				reference="id" separator="/" name="enderecos" scope="html">
+				<caption>Endereço</caption>
+				<tr>
+					<th default="-1" field="id">${id} do endereço</th>
+					<th field="street">Rua</th>
+					<th field="city" default="-1">Cidade</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>Residencial</td>
+					<td>4</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td>Trabalho</td>
+					<td></td>
+				</tr>
+				<tbody class="for" min="${quantidade}" max="${2 * quantidade}"
+					replace="true">
+					<tr>
+						<td>${index}</td>
+						<td>Trabalho ${System.currentTimeMillis()}</td>
+						<td>${index}</td>
+					</tr>
+				</tbody>
+			</table>
+		</td>
+		<td valign="top">
+			<p>Usar os endereços:
+			<ul class="iterator" name="enderecos">
+				<li>#{Rua}->#{Cidade}</li>
+			</ul>
+			</p>
+		</td>
+	</tr>
+</table>
+Atualizar os valores:
+<table class="objupd" type="th.example.City" reference="name">
+	<caption>Cidades</caption>
+	<tr>
+		<th field="name">Nome</th>
+		<th field="status" converter="bool">Ativa</th>
+	</tr>
+	<tr>
+		<td>Recife</td>
+		<td>Não</td>
+	</tr>
+</table>
+
+Remove o valor:
+<table class="objdel" type="th.example.City" reference="name">
+	<caption>Cidades</caption>
+	<tr>
+		<th field="name">Nome</th>
+	</tr>
+	<tr>
+		<td>Salvador</td>
+	</tr>
+</table>
+
+Conferir que a base contém:
+<table class="objon" type="th.example.City" reference="name">
+	<caption>Cidades</caption>
+	<tr>
+
+		<th field="name">Nome</th>
+		<th field="foundation" converter="datePatternArgs" arg0="dd/MM/yyyy">Data
+			de fundação</th>
+		<th field="status" converter="bool">Ativa</th>
+		<th field="lastUpdate" converter="dateCurrent" comparator="true">Última
+			atualização</th>
+	</tr>
+	<tr>
+		<td>Recife</td>
+		<td>12/03/1656</td>
+		<td>Não</td>
+		<td comparator="date">a data atual</td>
+	</tr>
+	<tbody class="for" min="${quantidade}"
+		max="${quantidade + (quantidade/2)}" replace="true">
+		<tr>
+			<td>Cidade ${index}</td>
+			<td>30/10/${index}</td>
+			<td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+			<td converter="dateAny">qualquer</td>
+		</tr>
+	</tbody>
+	<tr>
+		<td>Recife</td>
+		<td>12/03/1656</td>
+		<td>Não</td>
+		<td comparator="date">a data atual</td>
+	</tr>
+</table>
+
+Conferir que a base NÃO contém:
+<table class="objoff" type="th.example.City" reference="name">
+	<caption>Cidades</caption>
+	<tr>
+		<th field="name">Nome</th>
+	</tr>
+	<tr>
+		<td>Salvador</td>
+	</tr>
+</table>
+</html>

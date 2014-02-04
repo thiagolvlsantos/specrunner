@@ -1,0 +1,283 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2012  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+/* STATUS DECLARATION */
+.sr_raised,.sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_failure_a:after,.sr_success_a:after,.sr_warning_a:after,.sr_info_a:after
+	{
+	border-top: 1px solid #EDEDED;
+	border-left: 1px solid #EDEDED;
+	border-right: 1px solid #969696;
+	border-bottom: 1px solid #969696;
+}
+
+.sr_lowered {
+	border-right: 1px solid #EDEDED;
+	border-bottom: 1px solid #EDEDED;
+	border-left: 1px solid #969696;
+	border-top: 1px solid #969696;
+}
+
+.sr_gray {
+	background: #E7ECF0;
+}
+
+.sr_failure_b:before,.sr_success_b:before,.sr_warning_b:before,.sr_info_b:before,.sr_failure_a:after,.sr_success_a:after,.sr_warning_a:after,.sr_info_a:after
+	{
+	padding: 2px;
+	font-size: x-small;
+	vertical-align: top;
+	background-color: white;
+}
+
+.sr_failure,.sr_success,.sr_warning,.sr_info {
+	color: #333333;
+}
+
+.sr_failure {
+	background: #ffd9d9;
+}
+
+.sr_success {
+	background: #d9ffd9;
+}
+
+.sr_warning {
+	background: #FFFF66;
+}
+
+.sr_info {
+	background: #E0E0E0;
+}
+
+.sr_failure_b:before {
+	content: "E<";
+}
+
+.sr_success_b:before {
+	content: "S<";
+}
+
+.sr_warning_b:before {
+	content: "W<";
+}
+
+.sr_info_b:before {
+	content: "I<";
+}
+
+.sr_failure_a:after {
+	content: ">E";
+}
+
+.sr_success_a:after {
+	content: ">S";
+}
+
+.sr_warning_a:after {
+	content: ">W";
+}
+
+.sr_info_a:after {
+	content: ">I";
+}
+
+/* STACK TRACE */
+.sr_border {
+	border-color: red;
+	/*
+	border-style: inset;
+	border-width: 5px;
+	*/
+}
+
+.sr_stackbutton {
+	
+}
+
+.sr_stacktrace {
+	background: #ffd9d9;
+}
+
+.sr_details,.sr_screen,.sr_source {
+	font-family: verdana;
+	font-size: x-small;
+	vertical-align: top;
+}
+
+/* INCLUDE FILES */
+a.include {
+	padding: 1px;
+	border: 1px dotted black;
+}
+
+table.included {
+	border: 1pt solid black;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	-moz-box-shadow: 3px 3px 3px #888888; /* Firefox */
+	-webkit-box-shadow: 3px 3px 3px #888888; /* Safari and Chrome */
+	box-shadow: 3px 3px 3px #888888;
+	/*behavior: url(ie-css3.htc);*/
+}
+
+th.included_file,td.included_content {
+	text-align: left;
+	border: 1px dotted black;
+}
+
+th.included_file {
+	font-family: Verdana;
+	font-size: 8pt;
+	background-color: #E7ECF0;
+	padding: 2px;
+}
+
+/* SPECRUNNER LABEL */
+.sr_fieldset {
+    font-family: verdana;
+    font-size: 10pt;
+}
+
+.sr_legend {
+    font-weight: bold;
+    padding: 4px 14px 4px 14px;
+    margin-left: 10px;
+}
+
+.sr_name {
+    font-size: 18pt;
+    font-style: italic;
+}
+
+.sr_on {
+    font-size: 8pt;
+    vertical-align: bottom;
+}
+
+.sr_table {
+    width: 100%;
+    font-family: verdana;
+    font-size: 10pt;
+}
+
+.sr_table td,.sr_table th {
+    border: 1px dotted black;
+    padding: 2px;
+}
+
+.sr_resume,.sr_time {
+    font-weight: bold;
+    width: 100%;
+}
+
+.sr_resume {
+    vertical-align: middle;
+}
+
+.sr_time {
+    vertical-align: middle;
+}
+
+.sr_processors,.sr_max_memory,.sr_memory {
+    font-size: 8pt;
+}
+
+.sr_memory th,.sr_memory td {
+    white-space: nowrap;
+}
+
+.sr_memory th {
+    background: #E7ECF0;
+}
+
+/* LINK frame */
+.sr_frame_link_div {
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	font-family: verdana;
+	/* always visible */
+	position: fixed; 
+	top: 10px; 
+	right: 20px;
+}
+
+.sr_frame_link_span {
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+	padding: 4px;
+}
+
+/* RESUME */
+.sr_status,.sr_status_list {
+	font-family: verdana;
+	white-space: nowrap;
+}
+
+.sr_status {
+	font-size: 10pt;
+	font-weight: bold;
+}
+
+.sr_status_list {
+	list-style-type:square;
+	font-size: 8pt;
+}
+
+/* ALIGN */
+.alignment {
+    font-size: 10pt;
+    font-family: monospace;
+}
+
+.alignment .small_received,.alignment .small_expected {
+    font-size: x-small;
+    vertical-align: bottom;
+}
+
+.alignment .small_expected {
+    color: green;
+}
+
+.alignment .small_received {
+    color: red;
+}
+
+.alignment table.comparator {
+    border-collapse: collapse;
+    padding: 0;
+}
+
+.alignment table.comparator td.equals, .alignment table.comparator td.notequals, .alignment td.expected, .alignment td.received {
+ 	white-space: nowrap;
+}
+
+.alignment table.comparator td.equals { /*background-color: #d9ffd9;*/
+    
+}
+
+.alignment table.comparator td.notequals {
+    background-color: yellow;
+    border: 1px dotted black;
+}
+
+.alignment table.comparator td.notequals span.code {
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+}
