@@ -1,1 +1,1 @@
-mvn clean source:jar package -DskipTests=true
+mvn clean source:jar package -DskipTests=true & copy /Y target\*clean.zip ..\downloads

@@ -101,7 +101,8 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                 } else {
                     for (URL url : urls) {
                         // if its is an absolute URL copy is not required
-                        if (url.getProtocol().equalsIgnoreCase("file")) {
+                        String protocol = url.getProtocol();
+                        if (protocol != null && !protocol.toLowerCase().startsWith("http")) {
                             String file = url.toString();
                             String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + serialNumber.get();
                             serialNumber.set(serialNumber.get() + 1);
