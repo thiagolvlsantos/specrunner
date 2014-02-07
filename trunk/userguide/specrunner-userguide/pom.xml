@@ -40,6 +40,7 @@
 				<directory>src/test/java</directory>
 				<includes>
 					<include>**/*.txt</include>
+					<include>**/*.feature</include>
 					<include>**/*.htm</include>
 					<include>**/*.html</include>
 					<include>**/*.xhtml</include>
