@@ -164,6 +164,7 @@
                                 </manifest>
                             </archive>
                             <descriptors>
+                                <descriptor>package.xml</descriptor>
                                 <descriptor>package_clean.xml</descriptor>
                             </descriptors>
                         </configuration>

@@ -95,6 +95,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-core-spring/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-core-spring.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-ant/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
