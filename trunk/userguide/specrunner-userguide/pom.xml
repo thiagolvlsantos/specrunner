@@ -45,6 +45,7 @@
 					<include>**/*.htm</include>
 					<include>**/*.html</include>
 					<include>**/*.xhtml</include>
+					<include>**/*.xml</include>
 					<include>**/*.xls</include>
 					<include>**/*.xlsx</include>
 				</includes>

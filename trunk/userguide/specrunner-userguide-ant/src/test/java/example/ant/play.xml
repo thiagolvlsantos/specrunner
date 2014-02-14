@@ -1,9 +1,9 @@
-<project name="testproject" default="test" basedir=".">
-	<target name="test" depends="copy">
+<project name="playproject" default="test" basedir=".">
+	<target name="test" depends="message">
 		<echo message="Example play" /> 
 	</target>
 
-	<target name="copy">
+	<target name="message">
 		<echo message="Current base: ${basedir}"/>
 	</target>
 </project>
