@@ -17,6 +17,7 @@
 		<module>../specrunner-userguide-core</module>
 		<module>../specrunner-userguide-core-excel</module>
 		<module>../specrunner-userguide-core-text</module>
+		<module>../specrunner-userguide-core-spring</module>
 
 		<module>../specrunner-userguide-concordion-emulator</module>
 
@@ -48,10 +49,10 @@
 					<include>**/*.xlsx</include>
 				</includes>
 			</testResource>
-      <testResource>
+			<testResource>
 				<directory>src/test/resources</directory>
 			</testResource>
-    </testResources>
+		</testResources>
 	</build>
 
 </project>
