@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -297,8 +296,10 @@ public class PluginSentence extends AbstractPlugin {
      *            The arguments.
      * @return true, if some method annotation matches the value, false,
      *         otherwise.
+     * @throws PluginException
+     *             On invalid placeholder replacement.
      */
-    protected boolean fromAnnotations(String value, Object target, StringBuilder text, List<Object> args) {
+    protected boolean fromAnnotations(String value, Object target, StringBuilder text, List<Object> args) throws PluginException {
         // when a method is specified regular expressions are useless.
         if (method != null) {
             return false;
@@ -380,12 +381,34 @@ public class PluginSentence extends AbstractPlugin {
      * @param str
      *            The string to be replaced.
      * @return The replaced string.
+     * @throws PluginException
+     *             On invalid placeholder replacement.
      */
-    protected String removePlaceholders(Method method, String str) {
-        for (Entry<String, String> ph : Placeholders.get().entrySet()) {
-            str = str.replace(ph.getKey(), ph.getValue());
+    protected String removePlaceholders(Method method, String str) throws PluginException {
+        Class<?>[] types = method.getParameterTypes();
+        int index = 0;
+        String result = str;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '$') {
+                StringBuilder tmp = new StringBuilder("$");
+                while (++i < str.length() && str.charAt(i) != ' ') {
+                    tmp.append(str.charAt(i));
+                }
+                String key = tmp.toString();
+                String placeholder = Placeholders.get().get(key);
+                if (placeholder == null) {
+                    String replacement = "$" + types[index].getSimpleName().toLowerCase();
+                    placeholder = Placeholders.get().get(replacement);
+                    if (placeholder == null) {
+                        throw new PluginException("On placeholder '" + key + "' resolution, none pattern found for '" + replacement + "'.");
+                    }
+                    result = result.replace(key, placeholder);
+                }
+                result = result.replace(key, placeholder);
+                index++;
+            }
         }
-        return str;
+        return result;
     }
 
     /**
