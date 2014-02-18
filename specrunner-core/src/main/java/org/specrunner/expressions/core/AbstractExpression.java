@@ -34,7 +34,7 @@ public abstract class AbstractExpression implements IExpression {
     /**
      * The default precedence order.
      */
-    public static IExpressionItem[] DEFAULT_PRECEDENCE = { ExpressionItemVar.get(), ExpressionItemValue.get(), ExpressionItemClass.get(), ExpressionItemModel.get() };
+    public static final IExpressionItem[] DEFAULT_PRECEDENCE = { ExpressionItemVar.get(), ExpressionItemValue.get(), ExpressionItemClass.get(), ExpressionItemModel.get() };
 
     /**
      * The parent factory.
