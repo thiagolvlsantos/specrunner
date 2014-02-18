@@ -19,6 +19,7 @@ package org.specrunner.expressions.core;
 
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
+import org.specrunner.expressions.ExpressionOrder;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
 
@@ -36,6 +37,11 @@ public abstract class AbstractExpression implements IExpression {
     private IExpressionFactory parent;
 
     /**
+     * The enumeration order.
+     */
+    private ExpressionOrder[] precedence = DEFAULT_PRECEDENCE;
+
+    /**
      * Basic constructor.
      * 
      * @param parent
@@ -48,6 +54,16 @@ public abstract class AbstractExpression implements IExpression {
     @Override
     public IExpressionFactory getParent() {
         return parent;
+    }
+
+    @Override
+    public ExpressionOrder[] getPrecedence() {
+        return precedence;
+    }
+
+    @Override
+    public void setPrecedence(ExpressionOrder[] precedence) {
+        this.precedence = precedence;
     }
 
     @Override
