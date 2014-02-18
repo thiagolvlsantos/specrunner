@@ -27,9 +27,9 @@ import org.codehaus.commons.compiler.IExpressionEvaluator;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
-import org.specrunner.expressions.ExpressionOrder;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.expressions.IExpressionItem;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
@@ -221,7 +221,7 @@ public class ExpressionJanino extends AbstractExpression {
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(IExpression.FEATURE_PRECEDENCE, this);
         // get current order
-        ExpressionOrder[] order = getPrecedence();
+        IExpressionItem[] order = getPrecedence();
         for (int i = 0; i < order.length; i++) {
             value = order[i].eval(getParent(), text, context, silent);
             if (value != null) {

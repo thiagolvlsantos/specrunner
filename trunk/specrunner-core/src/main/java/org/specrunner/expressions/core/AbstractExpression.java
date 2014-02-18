@@ -19,9 +19,9 @@ package org.specrunner.expressions.core;
 
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
-import org.specrunner.expressions.ExpressionOrder;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.expressions.IExpressionItem;
 
 /**
  * The expression factory.
@@ -32,6 +32,11 @@ import org.specrunner.expressions.IExpressionFactory;
 public abstract class AbstractExpression implements IExpression {
 
     /**
+     * The default precedence order.
+     */
+    public static IExpressionItem[] DEFAULT_PRECEDENCE = { ExpressionItemVar.get(), ExpressionItemValue.get(), ExpressionItemClass.get(), ExpressionItemModel.get() };
+
+    /**
      * The parent factory.
      */
     private IExpressionFactory parent;
@@ -39,7 +44,7 @@ public abstract class AbstractExpression implements IExpression {
     /**
      * The enumeration order.
      */
-    private ExpressionOrder[] precedence = DEFAULT_PRECEDENCE;
+    private IExpressionItem[] precedence = DEFAULT_PRECEDENCE;
 
     /**
      * Basic constructor.
@@ -57,12 +62,12 @@ public abstract class AbstractExpression implements IExpression {
     }
 
     @Override
-    public ExpressionOrder[] getPrecedence() {
+    public IExpressionItem[] getPrecedence() {
         return precedence;
     }
 
     @Override
-    public void setPrecedence(ExpressionOrder[] precedence) {
+    public void setPrecedence(IExpressionItem[] precedence) {
         this.precedence = precedence;
     }
 
