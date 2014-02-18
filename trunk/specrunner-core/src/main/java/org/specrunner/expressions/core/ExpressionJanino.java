@@ -26,12 +26,12 @@ import java.util.List;
 import org.codehaus.commons.compiler.IExpressionEvaluator;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.context.IModel;
 import org.specrunner.expressions.ExpressionException;
+import org.specrunner.expressions.ExpressionOrder;
+import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
@@ -143,65 +143,11 @@ public class ExpressionJanino extends AbstractExpression {
                 return expression;
             }
             for (String str : vars) {
-                ExpressionVariable var = new ExpressionVariable(getParent(), str);
-                Object result = var.evaluate(context, silent);
-                if (result != null) {
+                Object value = getValue(context, str, silent);
+                if (value != null) {
                     args.add(str);
-                    values.add(result);
-                    types.add(result.getClass());
-                } else {
-                    // check predefined values
-                    Object value = getParent().getValues().get(str);
-                    // if value is itself an expression should be evaluated
-                    if (value instanceof String) {
-                        try {
-                            value = UtilEvaluator.evaluate((String) value, context, silent);
-                        } catch (Exception e) {
-                            if (UtilLog.LOG.isTraceEnabled()) {
-                                UtilLog.LOG.trace(e.getMessage(), e);
-                            }
-                            if (!silent) {
-                                throw new PluginException(e);
-                            }
-                        }
-                    }
-                    if (value != null) {
-                        args.add(str);
-                        values.add(value);
-                        types.add(value.getClass());
-                    } else {
-                        // check predefined classes
-                        Class<?> clazz = getParent().getClasses().get(str);
-                        if (clazz != null) {
-                            try {
-                                args.add(str);
-                                value = clazz.newInstance();
-                                values.add(value);
-                                types.add(value.getClass());
-                            } catch (Exception e) {
-                                if (UtilLog.LOG.isDebugEnabled()) {
-                                    UtilLog.LOG.debug(e.getMessage(), e);
-                                }
-                                throw new ExpressionException("Unable to evaluate predefined value:" + str, e);
-                            }
-                        } else {
-                            // check predefined models.
-                            IModel<?> model = getParent().getModels().get(str);
-                            if (model != null) {
-                                try {
-                                    value = model.getObject(context);
-                                    args.add(str);
-                                    values.add(value);
-                                    types.add(value.getClass());
-                                } catch (Exception e) {
-                                    if (UtilLog.LOG.isDebugEnabled()) {
-                                        UtilLog.LOG.debug(e.getMessage(), e);
-                                    }
-                                    throw new ExpressionException("Unable to evaluate predefined model:" + str, e);
-                                }
-                            }
-                        }
-                    }
+                    values.add(value);
+                    types.add(value.getClass());
                 }
                 // if the expression is itself a var, it has already been
                 // evaluated.
@@ -254,6 +200,36 @@ public class ExpressionJanino extends AbstractExpression {
         }
         // if the heuristic fails, the expression has to be evaluated.
         return null;
+    }
+
+    /**
+     * Get the value for a expression.
+     * 
+     * @param context
+     *            The context.
+     * @param text
+     *            The expression.
+     * @param silent
+     *            The silent mode.
+     * @return An object.
+     * @throws ExpressionException
+     *             On expression errors.
+     */
+    protected Object getValue(IContext context, String text, boolean silent) throws ExpressionException {
+        Object value = null;
+        // set precedence according to the environment
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(IExpression.FEATURE_PRECEDENCE, this);
+        // get current order
+        ExpressionOrder[] order = getPrecedence();
+        for (int i = 0; i < order.length; i++) {
+            value = order[i].eval(getParent(), text, context, silent);
+            if (value != null) {
+                // on first value evaluation return
+                return value;
+            }
+        }
+        return value;
     }
 
     /**

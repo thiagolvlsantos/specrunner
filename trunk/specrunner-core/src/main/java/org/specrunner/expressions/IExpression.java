@@ -35,6 +35,31 @@ public interface IExpression {
     IExpressionFactory getParent();
 
     /**
+     * Feature to set expression evaluation order.
+     */
+    String FEATURE_PRECEDENCE = IExpressionFactory.class.getName() + ".precedence";
+
+    /**
+     * The default precedence order.
+     */
+    ExpressionOrder[] DEFAULT_PRECEDENCE = { ExpressionOrder.VAR, ExpressionOrder.VALUE, ExpressionOrder.CLASS, ExpressionOrder.MODEL };
+
+    /**
+     * Set evaluation precedence order.
+     * 
+     * @param precedence
+     *            The precedence.
+     */
+    void setPrecedence(ExpressionOrder[] precedence);
+
+    /**
+     * Get evaluation precedence order.
+     * 
+     * @return The current precedence.
+     */
+    ExpressionOrder[] getPrecedence();
+
+    /**
      * Given a context, evaluates an expression silently.
      * 
      * @param context
