@@ -186,7 +186,7 @@ public abstract class AbstractNamespaceProcessor implements INamespaceProcessor 
      * @return Nodes satisfying query.
      */
     protected Nodes lookup(Node node, String prefix, String tag) {
-        return node.query("//*[@" + prefix + ":" + tag + "]", context);
+        return node.query("descendant::*[@" + prefix + ":" + tag + "]", context);
     }
 
     /**

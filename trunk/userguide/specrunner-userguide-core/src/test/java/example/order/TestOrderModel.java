@@ -7,9 +7,11 @@ import org.specrunner.SpecRunnerException;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
-import org.specrunner.expressions.ExpressionOrder;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
+import org.specrunner.expressions.IExpressionItem;
+import org.specrunner.expressions.core.ExpressionItemModel;
+import org.specrunner.expressions.core.ExpressionItemVar;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 
@@ -18,7 +20,7 @@ public class TestOrderModel {
 
     @Configuration
     public void configure(IConfiguration cfg) {
-        cfg.add(IExpression.FEATURE_PRECEDENCE, new ExpressionOrder[] { ExpressionOrder.MODEL, ExpressionOrder.VAR });
+        cfg.add(IExpression.FEATURE_PRECEDENCE, new IExpressionItem[] { ExpressionItemModel.get(), ExpressionItemVar.get() });
     }
 
     @Before

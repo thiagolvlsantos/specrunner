@@ -265,6 +265,12 @@ public final class UtilNode {
      *             If child with css does not exist.
      */
     public static Node getCssNode(Node root, String css) throws PluginException {
+        if (root instanceof Element) {
+            Node n = ((Element) root).getAttribute(css);
+            if (n != null) {
+                return n;
+            }
+        }
         Nodes exps = root.query("descendant::*[contains(@class,'" + css + "')]");
         Node expected = UtilNode.getHighest(exps);
         if (expected == null) {

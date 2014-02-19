@@ -17,27 +17,19 @@
  */
 package org.specrunner.concordion;
 
-import org.specrunner.source.namespace.core.NamespaceProcessorGroupDefault;
 
 /**
- * Concordion processor group.
+ * 'assertFalse' replacer.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class ConcordionProcessorGroup extends NamespaceProcessorGroupDefault {
+public class ConcordionAssertFalse extends ConcordionAssertBoolean {
 
     /**
      * Default constructor.
      */
-    public ConcordionProcessorGroup() {
-        // execute transform before set, it depends on it.
-        add(new ConcordionExecute());
-        add(new ConcordionAssertTrue());
-        add(new ConcordionAssertFalse());
-        add(new ConcordionSet());
-        add(new ConcordionAssertEquals());
-        add(new ConcordionVerifyRows());
-        add(new ConcordionRun());
+    public ConcordionAssertFalse() {
+        super("assertfalse", "false");
     }
 }
