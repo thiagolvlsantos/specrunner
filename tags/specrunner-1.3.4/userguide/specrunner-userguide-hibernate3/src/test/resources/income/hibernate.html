@@ -1,0 +1,161 @@
+<html>
+<head>
+<link href="hibernate.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <p>
+        Dado que a configuração do sistema é: <span class="global" name="configuracao">example.employee.CityConfiguration</span>,
+        ajuste a <span class="hbncfg" type="${configuracao}" name="cfg">configuração Hibernate</span> do <span
+            class="hbnsf" configuration="cfg">sistema</span> e recrie o <span class="hbnsch" schema="CTI"
+            configuration="cfg">esquema</span>.
+    </p>
+
+    <p>
+        Considerando que o número de registro mínimo em cada tabela é de <span class="global" name="quantidade">10</span>
+        itens. Considerando também o campo de identificador do endereço como <span class="local" name="id">ID</span>,
+        preencha a base de dados com:
+    </p>
+
+    <h1>Lista de cidades:</h1>
+    <table class="dados hbnins" type="example.employee.City" reference="id" separator="/">
+        <caption>Cidades</caption>
+        <tr>
+            <th default="-1">ID</th>
+            <th field="name">Nome</th>
+            <th field="foundation" converter="date" arg0="dd/MM/yyyy">Data de fundação</th>
+            <th field="status" converter="bool">Ativa</th>
+            <th field="lastUpdate" converter="dateCurrent">Última atualização</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Recife</td>
+            <td>12/03/1656</td>
+            <td>Sim</td>
+            <td>data hora atual</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Salvador</td>
+            <td>30/10/1790</td>
+            <td>Sim</td>
+            <td>data hora atual</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>João Pessoa</td>
+            <td>30/10/1897</td>
+            <td>Não</td>
+            <td converter="dateAny">qualquer</td>
+        </tr>
+        <tbody class="for" min="${quantidade}" max="${3 * quantidade}" replace="true">
+            <tr>
+                <td>${index}</td>
+                <td>Cidade ${index}</td>
+                <td>30/10/${index}</td>
+                <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+                <td converter="dateAny">qualquer</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Lista de endereços</h1>
+    <table class="input map" after="true" type="example.employee.Address" reference="id" separator="/" name="enderecos"
+        scope="html">
+        <caption>Endereço</caption>
+        <tr>
+            <th default="-1" field="id">${id} do endereço</th>
+            <th field="street">Rua</th>
+            <th field="city" default="-1">Cidade</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Residencial</td>
+            <td>4</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Trabalho</td>
+            <td></td>
+        </tr>
+        <tbody class="for" min="${quantidade}" max="${2 * quantidade}" replace="true">
+            <tr>
+                <td>${index}</td>
+                <td>Trabalho ${System.currentTimeMillis()}</td>
+                <td>${index}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h1>Iteração sobre os endereços</h1>
+    <ul class="iterator" name="enderecos">
+        <li>#{Rua} -> #{Cidade}</li>
+    </ul>
+
+    <h1>Atualizar os valores:</h1>
+    <table class="hbnupd" type="example.employee.City" reference="name">
+        <caption>Cidades</caption>
+        <tr>
+            <th field="name">Nome</th>
+            <th field="status" converter="bool">Ativa</th>
+        </tr>
+        <tr>
+            <td>Recife</td>
+            <td>Não</td>
+        </tr>
+    </table>
+
+    <h1>Remove a cidade Salvador</h1>
+    <table class="hbndel" type="example.employee.City" reference="name">
+        <caption>Cidades</caption>
+        <tr>
+            <th field="name">Nome</th>
+        </tr>
+        <tr>
+            <td>Salvador</td>
+        </tr>
+    </table>
+
+    <h1>Confere que a base contém:</h1>
+    <table class="hbnin" type="example.employee.City" reference="name">
+        <caption>Cidades</caption>
+        <tr>
+            <th field="name">Nome</th>
+            <th field="foundation" converter="date" arg0="dd/MM/yyyy">Data de fundação</th>
+            <th field="status" converter="bool">Ativa</th>
+            <th field="lastUpdate" converter="dateCurrent" comparator="true">Última atualização</th>
+        </tr>
+        <tr>
+            <td>Recife</td>
+            <td>12/03/1656</td>
+            <td>Não</td>
+            <td comparator="date">data hora atual</td>
+        </tr>
+        <tbody class="for" min="${quantidade}" max="${quantidade + (quantidade/2)}" replace="true">
+            <tr>
+                <td>Cidade ${index}</td>
+                <td>30/10/${index}</td>
+                <td>${ index % 2 == 0 ? "Não" : "Sim"}</td>
+                <td converter="dateAny">qualquer</td>
+            </tr>
+        </tbody>
+        <tr>
+            <td>Recife</td>
+            <td>12/03/1656</td>
+            <td>Não</td>
+            <td comparator="date">data hora atual</td>
+        </tr>
+    </table>
+
+    <h1>Confere que a base NÃO contém</h1>
+    <table class="hbnout" type="example.employee.City" reference="name">
+        <caption>Cidades</caption>
+        <tr>
+            <th field="name">Nome</th>
+        </tr>
+        <tr>
+            <td>Salvador</td>
+        </tr>
+    </table>
+</body>
+</html>
