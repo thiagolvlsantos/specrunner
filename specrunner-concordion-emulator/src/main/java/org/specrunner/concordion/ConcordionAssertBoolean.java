@@ -25,18 +25,29 @@ import nu.xom.Nodes;
 import org.specrunner.source.namespace.INamespaceInfo;
 
 /**
- * 'execute' replacer.
+ * 'assertXXX' replacer.
  * 
  * @author Thiago Santos.
  * 
  */
-public class ConcordionExecute extends ConcordionProcessor {
+public class ConcordionAssertBoolean extends ConcordionProcessor {
+
+    /**
+     * Left expected value.
+     */
+    private String left;
 
     /**
      * Default constructor.
+     * 
+     * @param tag
+     *            The tag replacer.
+     * @param left
+     *            The left expected value.
      */
-    public ConcordionExecute() {
-        super("execute");
+    protected ConcordionAssertBoolean(String tag, String left) {
+        super(tag);
+        this.left = left;
     }
 
     @Override
@@ -44,26 +55,13 @@ public class ConcordionExecute extends ConcordionProcessor {
         for (int i = 0; i < ns.size(); i++) {
             Element e = (Element) ns.get(i);
             Attribute att = e.getAttribute(getTag(), getUri());
-            String value = att.getValue();
-            // assignments
-            if (value.contains("=")) {
-                String[] split = value.split("=");
-                e.addAttribute(new Attribute("name", cleanVar(split[0])));
-                value = split[1];
-
-            }
-            String css = "execute";
-            if ("table".equals(e.getLocalName())) {
-                css = "executeRows";
-            } else {
-                Nodes sets = lookup(e, getPrefix(), "set");
-                if (sets.size() > 0) {
-                    css = "executeLatter";
-                }
-            }
-            e.addAttribute(new Attribute("class", css));
-            e.addAttribute(new Attribute("value", "$THIS." + cleanVar(value)));
+            String value = att.getValue().trim();
             e.removeAttribute(att);
+            e.addAttribute(new Attribute("class", "eq"));
+            // variables start with '#', in this case $THIS should not be
+            // prefixed
+            e.addAttribute(new Attribute("left", left));
+            e.addAttribute(new Attribute("right", (value.startsWith("#") ? "" : "$THIS.") + cleanVar(value)));
         }
     }
 }
