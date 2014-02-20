@@ -36,6 +36,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginScoped;
 import org.specrunner.plugins.type.Command;
@@ -230,7 +231,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
     }
 
     @Override
-    public void doEnd(IContext context, IResultSet result) throws PluginException {
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         synchronized (lock) {
             try {
                 Log.getRootLogger().setDebugEnabled(true);
@@ -254,7 +255,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Jetty (" + getName() + "/" + Server.getVersion() + ") with " + file + " reused.");
                         }
-                        return;
+                        return ENext.DEEP;
                     }
                 }
 
@@ -288,6 +289,7 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 throw new PluginException(e);
             }
         }
+        return ENext.DEEP;
     }
 
     /**

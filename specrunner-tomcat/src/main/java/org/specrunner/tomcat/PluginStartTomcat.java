@@ -30,6 +30,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginScoped;
 import org.specrunner.plugins.type.Assertion;
@@ -258,7 +259,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
     }
 
     @Override
-    public void doEnd(IContext context, IResultSet result) throws PluginException {
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         synchronized (lock) {
             try {
                 IReuseManager reusables = SRServices.get(IReuseManager.class);
@@ -277,7 +278,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Tomcat (" + getName() + "/" + reusable.getObject() + ") reused.");
                         }
-                        return;
+                        return ENext.DEEP;
                     }
                 }
                 final Tomcat server = createServer();
@@ -337,6 +338,7 @@ public class PluginStartTomcat extends AbstractPluginScoped {
                 throw new PluginException(e);
             }
         }
+        return ENext.DEEP;
     }
 
     /**
