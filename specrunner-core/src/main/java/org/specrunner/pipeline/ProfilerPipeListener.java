@@ -26,10 +26,10 @@ public class ProfilerPipeListener implements IPipeListener {
 
     @Override
     public void onAfterCheck(IChannel channel, IPipe source) {
-        if (UtilLog.LOG.isInfoEnabled()) {
+        if (UtilLog.LOG.isDebugEnabled()) {
             long t = System.currentTimeMillis() - time;
             total += t;
-            UtilLog.LOG.info("Channel (" + total + ") on Pipe (" + source.getClass().getSimpleName() + ") check: " + t + " ms");
+            UtilLog.LOG.debug("Channel (" + total + ") on Pipe (" + source.getClass().getSimpleName() + ") check: " + t + " ms");
         }
     }
 
@@ -40,10 +40,10 @@ public class ProfilerPipeListener implements IPipeListener {
 
     @Override
     public void onAfterProcess(IChannel channel, IPipe source) {
-        if (UtilLog.LOG.isInfoEnabled()) {
+        if (UtilLog.LOG.isDebugEnabled()) {
             long t = System.currentTimeMillis() - time;
             total += t;
-            UtilLog.LOG.info("Channel (" + total + ") on Pipe (" + source.getClass().getSimpleName() + ") process: " + t + " ms");
+            UtilLog.LOG.debug("Channel (" + total + ") on Pipe (" + source.getClass().getSimpleName() + ") process: " + t + " ms");
         }
     }
 }
