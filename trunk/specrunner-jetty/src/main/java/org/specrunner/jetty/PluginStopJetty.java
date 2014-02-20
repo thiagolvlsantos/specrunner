@@ -20,6 +20,7 @@ package org.specrunner.jetty;
 import org.eclipse.jetty.server.Server;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginNamed;
 import org.specrunner.plugins.type.Command;
@@ -42,12 +43,12 @@ public class PluginStopJetty extends AbstractPluginNamed {
     }
 
     @Override
-    public void doEnd(IContext context, IResultSet result) throws PluginException {
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         String tmp = getName() != null ? getName() : PluginStartJetty.SERVER_NAME;
         Server server = (Server) context.getByName(tmp);
         if (server == null) {
             result.addResult(Failure.INSTANCE, context.peek(), "Server instance named '" + tmp + "' not found. See PluginStartJetty.");
-            return;
+            return ENext.DEEP;
         }
         try {
             server.stop();
@@ -58,5 +59,6 @@ public class PluginStopJetty extends AbstractPluginNamed {
         } catch (Exception e) {
             throw new PluginException(e);
         }
+        return ENext.DEEP;
     }
 }
