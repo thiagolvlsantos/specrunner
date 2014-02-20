@@ -52,6 +52,7 @@
         <module>../specrunner-sql</module>
         <!-- ORM -->
         <module>../specrunner-hibernate3</module>
+        <module>../specrunner-hibernate4</module>
         <module>../specrunner-jpa</module>
         <!-- WebServer support -->
         <module>../specrunner-jetty</module>

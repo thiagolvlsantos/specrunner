@@ -123,6 +123,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-hibernate4/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-hibernate4.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-jpa/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>

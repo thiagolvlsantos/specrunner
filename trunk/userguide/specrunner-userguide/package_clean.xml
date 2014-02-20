@@ -112,6 +112,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-userguide-hibernate4/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-hibernate4-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-userguide-jpa/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
