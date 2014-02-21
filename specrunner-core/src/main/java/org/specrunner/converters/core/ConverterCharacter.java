@@ -32,6 +32,9 @@ public class ConverterCharacter extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Character) {
+            return obj;
+        }
         try {
             return Character.valueOf(String.valueOf(obj).charAt(0));
         } catch (NumberFormatException e) {

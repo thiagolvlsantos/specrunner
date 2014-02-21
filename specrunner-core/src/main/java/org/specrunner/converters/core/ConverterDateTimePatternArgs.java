@@ -17,6 +17,7 @@
  */
 package org.specrunner.converters.core;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.specrunner.SRServices;
@@ -42,6 +43,9 @@ public class ConverterDateTimePatternArgs extends ConverterNotNullNotEmpty {
     public Object convert(Object value, Object[] args) throws ConverterException {
         if (value == null) {
             return null;
+        }
+        if (value instanceof DateTime) {
+            return value;
         }
         try {
             String pattern = String.valueOf(args[0]);

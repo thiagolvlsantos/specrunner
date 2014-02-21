@@ -34,6 +34,9 @@ public class ConverterBigDecimal extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof BigDecimal) {
+            return obj;
+        }
         try {
             return BigDecimal.valueOf(Double.valueOf(String.valueOf(obj)));
         } catch (NumberFormatException e) {

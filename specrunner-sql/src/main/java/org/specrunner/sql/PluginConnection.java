@@ -156,7 +156,7 @@ public class PluginConnection extends AbstractPluginValue {
      */
     public void setConnection(String connection) {
         this.connection = connection;
-        if(connection == null) {
+        if (connection == null) {
             return;
         }
         List<Integer> indexes = new LinkedList<Integer>();

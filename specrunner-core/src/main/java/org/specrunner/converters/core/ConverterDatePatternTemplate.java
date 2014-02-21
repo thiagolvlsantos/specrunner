@@ -19,6 +19,7 @@ package org.specrunner.converters.core;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.specrunner.converters.ConverterException;
 
@@ -50,6 +51,9 @@ public class ConverterDatePatternTemplate extends ConverterNotNullNotEmpty {
     public Object convert(Object value, Object[] args) throws ConverterException {
         if (value == null) {
             return null;
+        }
+        if (value instanceof Date) {
+            return value;
         }
         try {
             return pattern.parse(String.valueOf(value));

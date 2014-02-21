@@ -32,6 +32,9 @@ public class ConverterShort extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Short) {
+            return obj;
+        }
         try {
             return Short.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {

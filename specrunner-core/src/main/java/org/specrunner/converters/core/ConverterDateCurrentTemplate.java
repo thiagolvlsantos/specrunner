@@ -19,6 +19,8 @@ package org.specrunner.converters.core;
 
 import java.util.Date;
 
+import org.specrunner.converters.ConverterException;
+
 /**
  * Create current date.
  * 
@@ -51,5 +53,13 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
     @Override
     protected Date instance() {
         return new Date();
+    }
+
+    @Override
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value instanceof Date) {
+            return value;
+        }
+        return super.convert(value, args);
     }
 }

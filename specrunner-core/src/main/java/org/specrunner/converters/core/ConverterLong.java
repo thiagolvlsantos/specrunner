@@ -33,6 +33,9 @@ public class ConverterLong extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Long) {
+            return obj;
+        }
         try {
             return Long.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {

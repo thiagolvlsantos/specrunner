@@ -186,14 +186,14 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             try {
                 return element.getTagName() + "." + getText(element);
             } catch (Exception e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace(e.getMessage(), e);
                 }
                 try {
                     return element.getText();
                 } catch (Exception e1) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e1.getMessage(), e1);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e1.getMessage(), e1);
                     }
                 }
             }

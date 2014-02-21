@@ -18,6 +18,7 @@
 package org.specrunner.converters.core;
 
 import org.joda.time.DateTime;
+import org.specrunner.converters.ConverterException;
 
 /**
  * Create current date.
@@ -51,5 +52,13 @@ public class ConverterDateTimeCurrentTemplate extends AbstractConverterTimeTempl
     @Override
     protected DateTime instance() {
         return new DateTime();
+    }
+
+    @Override
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value instanceof DateTime) {
+            return value;
+        }
+        return super.convert(value, args);
     }
 }

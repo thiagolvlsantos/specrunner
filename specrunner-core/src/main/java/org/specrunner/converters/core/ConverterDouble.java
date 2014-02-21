@@ -32,6 +32,9 @@ public class ConverterDouble extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Double) {
+            return obj;
+        }
         try {
             return Double.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {
