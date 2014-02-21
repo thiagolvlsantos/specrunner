@@ -58,6 +58,7 @@ import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 
@@ -249,7 +250,7 @@ public class Database implements IDatabase {
                 } catch (ComparatorException e) {
                     throw new PluginException(e);
                 }
-                String value = UtilEvaluator.replace(td.getValue(), context, true);
+                String value = getAdjustValue(context, td);
                 IConverter converter = column.getConverter();
                 if (column.isVirtual() || converter.accept(value)) {
                     Object obj = null;
@@ -332,6 +333,27 @@ public class Database implements IDatabase {
         } catch (SQLException e) {
             throw new PluginException(e);
         }
+    }
+
+    /**
+     * Get the string value of a node holder, and adjust text if required.
+     * 
+     * @param context
+     *            The context.
+     * @param nh
+     *            A node holder.
+     * @return The interpreted string value.
+     * @throws PluginException
+     *             On evaluation errors.
+     */
+    protected String getAdjustValue(IContext context, INodeHolder nh) throws PluginException {
+        String previous = nh.getValue();
+        String value = UtilEvaluator.replace(nh.hasAttribute(INodeHolder.ATTRIBUTE_VALUE) ? nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE) : previous, context, true);
+        // if text has changed... adjust on screen.
+        if (previous != null && !previous.equals(value)) {
+            nh.setValue(value);
+        }
+        return value;
     }
 
     /**
@@ -614,7 +636,7 @@ public class Database implements IDatabase {
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
-                    idManager.addLocal(table.getAlias(), UtilEvaluator.replace(v.getCell().getValue(), context, true));
+                    idManager.addLocal(table.getAlias(), v.getCell().getValue());
                 }
             }
         }

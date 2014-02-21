@@ -32,6 +32,9 @@ public class ConverterInteger extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Integer) {
+            return obj;
+        }
         try {
             return Integer.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {

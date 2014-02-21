@@ -32,6 +32,9 @@ public class ConverterByte extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Byte) {
+            return obj;
+        }
         try {
             return Byte.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {

@@ -18,6 +18,7 @@
 package org.specrunner.converters.core;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.specrunner.converters.ConverterException;
 
 /**
@@ -32,6 +33,9 @@ public class ConverterLocalDatePatternArgs extends ConverterDateTimePatternArgs 
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value instanceof LocalDate) {
+            return value;
+        }
         DateTime date = (DateTime) super.convert(value, args);
         return date != null ? date.toLocalDate() : null;
     }

@@ -18,6 +18,7 @@
 package org.specrunner.converters.core;
 
 import org.joda.time.LocalDate;
+import org.specrunner.converters.ConverterException;
 
 /**
  * Create current date.
@@ -51,5 +52,13 @@ public class ConverterLocalDateCurrentTemplate extends AbstractConverterTimeTemp
     @Override
     protected LocalDate instance() {
         return new LocalDate();
+    }
+
+    @Override
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        if (value instanceof LocalDate) {
+            return value;
+        }
+        return super.convert(value, args);
     }
 }

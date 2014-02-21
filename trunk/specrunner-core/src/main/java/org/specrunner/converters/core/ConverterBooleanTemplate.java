@@ -55,6 +55,9 @@ public class ConverterBooleanTemplate extends ConverterNotNullNotEmpty {
         if (value == null) {
             return null;
         }
+        if (value instanceof Boolean) {
+            return value;
+        }
         String tmp = String.valueOf(value).toLowerCase().trim();
         if (yes.equals(tmp)) {
             return Boolean.TRUE;

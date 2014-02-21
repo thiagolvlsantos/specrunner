@@ -173,6 +173,14 @@ public interface INodeHolder {
     String getValue();
 
     /**
+     * Set text to a node removing all children elements.
+     * 
+     * @param text
+     *            The expected text.
+     */
+    void setValue(String text);
+
+    /**
      * Get the converter.
      * 
      * @return A converter.

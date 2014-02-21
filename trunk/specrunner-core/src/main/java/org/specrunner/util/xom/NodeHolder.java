@@ -25,6 +25,8 @@ import java.util.List;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
@@ -138,6 +140,21 @@ public class NodeHolder implements INodeHolder {
     @Override
     public String getValue() {
         return node.getValue();
+    }
+
+    @Override
+    public void setValue(String text) {
+        if (node instanceof Text) {
+            ParentNode parent = node.getParent();
+            int index = parent.indexOf(node);
+            parent.removeChild(index);
+            parent.insertChild(new Text(text), index);
+        } else if (node instanceof Element) {
+            for (int i = node.getChildCount() - 1; i >= 0; i--) {
+                node.getChild(i).detach();
+            }
+            ((Element) node).appendChild(text);
+        }
     }
 
     @Override

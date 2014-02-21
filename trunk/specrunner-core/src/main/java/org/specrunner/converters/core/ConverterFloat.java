@@ -33,6 +33,9 @@ public class ConverterFloat extends ConverterNotNullNotEmpty {
         if (obj == null) {
             return null;
         }
+        if (obj instanceof Float) {
+            return obj;
+        }
         try {
             return Float.valueOf(String.valueOf(obj));
         } catch (NumberFormatException e) {
