@@ -1,21 +1,24 @@
 <html>
 
 <body>
-    <span class="macro" name="sum"> <span class="sentence"> #{a} plus #{b} is #{a+b} </span>
+    <span class="macro" name="sum"> #{Index}: <span class="sentence"> #{a} plus #{b} is #{a+b} </span>
     </span>
 
     <table class="map" name="examples">
         <tr>
+            <th>Index</th>
             <th>a</th>
             <th>b</th>
             <th>a+b</th>
         </tr>
         <tr>
+            <td><b>${index}</b></td>
             <td>1</td>
             <td>2</td>
             <td>3</td>
         </tr>
         <tr>
+            <td><b>${index}</b></td>
             <td>2</td>
             <td>3</td>
             <td>5</td>
