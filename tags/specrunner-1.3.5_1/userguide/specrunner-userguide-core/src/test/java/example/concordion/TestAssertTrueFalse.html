@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <link href="concordion.css" rel="stylesheet" type="text/css" />
+    </head>
+
+<body>
+    <p>
+        When user <b class="set" name="firstName">Bob</b> logs in, the greeting will be: <b
+            class="eq" value="$THIS.greetingFor(firstName)">Hello Bob!</b>
+    </p>
+
+    <p>
+        The first name <span class="eq" left="true" right="firstName.startsWith(letter)">starts with <b
+            class="set" name="letter">B</b></span>.
+    </p>
+
+    <p>
+        The first name not <span class="eq" left="false" right="firstName.startsWith(letter)">starts with <b
+            class="set" name="letter">C</b></span>.
+    </p>
+</body>
+</html>

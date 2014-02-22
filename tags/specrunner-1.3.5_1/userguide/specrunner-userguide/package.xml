@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2013  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+ -->
+
+<assembly>
+	<id>${project.version}</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<includeBaseDirectory>true</includeBaseDirectory>
+	<fileSets>
+		<!-- root files: README.txt, LICENSE.TXT, etc.-->
+		<fileSet>
+			<directory>${basedir}</directory>
+			<outputDirectory>specrunner-userguide</outputDirectory>
+			<includes>
+                <include>*.txt</include>
+                <include>*.xml</include>
+			</includes>
+		</fileSet>
+
+        <!-- source file -->		
+        <fileSet>
+            <directory>${basedir}/src</directory>
+            <outputDirectory>specrunner-userguide/src</outputDirectory>
+        </fileSet>
+
+        <!-- documentation -->
+        <fileSet>
+            <directory>${basedir}/docs</directory>
+            <outputDirectory>specrunner-userguide/docs</outputDirectory>
+        </fileSet>
+
+		<!-- bin files -->
+		<fileSet>
+			<directory>${basedir}/bin</directory>
+			<outputDirectory>specrunner-userguide/bin</outputDirectory>
+		</fileSet>
+		
+		<!-- the compiled version -->
+		<fileSet>
+			<directory>${basedir}/target</directory>
+			<outputDirectory>build</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+                <include>*.war</include>
+			</includes>
+		</fileSet>
+		
+		<!-- the required libraries -->
+		<fileSet>
+			<directory>${basedir}/target/lib</directory>
+			<outputDirectory>build/lib</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+        <!-- children packages -->
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-core/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-core.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-core-excel/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-core-excel.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-core-text/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-core-text.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-core-spring/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-core-spring.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-ant/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-ant.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-sql/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-sql.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-objects/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-objects.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-hibernate3/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-hibernate3.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-hibernate4/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-hibernate4.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-jpa/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-jpa.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-jetty/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-jetty.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-tomcat/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-tomcat.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-htmlunit/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-htmlunit.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-webdriver/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-webdriver.zip</include>
+            </includes>
+        </fileSet>
+	</fileSets>
+</assembly>
