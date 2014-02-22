@@ -27,6 +27,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Connection;
@@ -63,16 +64,32 @@ import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 
 /**
- * Plugin which specifies the scripts to be performed. Scripts are specification
+ * This plugin specifies the scripts to be performed. Scripts are specification
  * relative, and multiple scripts can be added using multiple call or by giving
- * name ';' separated. If you prefer different separators for scripts or
- * commands you can set 'scriptseparator' and/or 'separator', or set
- * FEATURE_SCRIPT_SEPARATOR and FEATURE_SQL_SEPARATOR.
+ * names separated by ';'. If you prefer different separators for scripts or
+ * commands you can set 'scriptseparator', 'sqlseparator', and/or
+ * 'nameseparator', or set FEATURE_SCRIPT_SEPARATOR, FEATURE_SQL_SEPARATOR or
+ * FEATURE_NAME_SEPARATOR.
+ * 
+ * <p>
+ * If scripts are expected to be relative to classpath, set 'classpathrelative'
+ * attribute to true, or add the 'FEATURE_CLASSPATH_RELATIVE' to true.
+ * </p>
  * 
  * @author Thiago Santos
  * 
  */
 public class PluginScripts extends AbstractPluginValue {
+
+    /**
+     * Cache of scripts.
+     */
+    private static ThreadLocal<ICache<String, String>> cache = new ThreadLocal<ICache<String, String>>() {
+        @Override
+        protected ICache<String, String> initialValue() {
+            return SRServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
+        };
+    };
 
     /**
      * Sets the script separator on specification. Default is ";".
@@ -88,16 +105,6 @@ public class PluginScripts extends AbstractPluginValue {
     private URI[] scripts;
 
     /**
-     * Cache of scripts.
-     */
-    private static ThreadLocal<ICache<String, String>> cache = new ThreadLocal<ICache<String, String>>() {
-        @Override
-        protected ICache<String, String> initialValue() {
-            return SRServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
-        };
-    };
-
-    /**
      * Sets the SQL command separator. Default is ";".
      */
     public static final String FEATURE_SQL_SEPARATOR = PluginScripts.class.getName() + ".sqlseparator";
@@ -109,15 +116,28 @@ public class PluginScripts extends AbstractPluginValue {
     /**
      * Feature for names separators.
      */
-    public static final String FEATURE_SEPARATOR = PluginScripts.class.getName() + ".separator";
+    public static final String FEATURE_NAME_SEPARATOR = PluginScripts.class.getName() + ".separator";
     /**
-     * Default separator.
+     * Default name separator.
      */
-    public static final String DEFAULT_SEPARATOR = ";";
+    public static final String DEFAULT_NAME_SEPARATOR = ";";
     /**
-     * The separator, default is ";".
+     * The name separator, default is ";".
      */
-    private String separator = DEFAULT_SEPARATOR;
+    private String nameseparator = DEFAULT_NAME_SEPARATOR;
+
+    /**
+     * Feature for classpath relative scripts.
+     */
+    public static final String FEATURE_CLASSPATH_RELATIVE = PluginScripts.class.getName() + ".classpath";
+    /**
+     * Default classpath relative.
+     */
+    public static final boolean DEFAULT_CLASSPATH_RELATIVE = false;
+    /**
+     * The name separator, default is ";".
+     */
+    private boolean classpathrelative = DEFAULT_CLASSPATH_RELATIVE;
 
     /**
      * Fail safe feature means that on command execution command errors will not
@@ -191,18 +211,37 @@ public class PluginScripts extends AbstractPluginValue {
      * 
      * @return The separator.
      */
-    public String getSeparator() {
-        return separator;
+    public String getNameseparator() {
+        return nameseparator;
     }
 
     /**
      * Set the name separator.
      * 
-     * @param separator
+     * @param nameseparator
      *            The separator.
      */
-    public void setSeparator(String separator) {
-        this.separator = separator;
+    public void setNameseparator(String nameseparator) {
+        this.nameseparator = nameseparator;
+    }
+
+    /**
+     * Get if script is classpath relative or not.
+     * 
+     * @return false, if not classpath relative, true, otherwise.
+     */
+    public boolean isClasspathrelative() {
+        return classpathrelative;
+    }
+
+    /**
+     * Set classpath relative script flag.
+     * 
+     * @param classpathrelative
+     *            true, to set classpath relative, false, otherwise.
+     */
+    public void setClasspathrelative(boolean classpathrelative) {
+        this.classpathrelative = classpathrelative;
     }
 
     /**
@@ -236,7 +275,8 @@ public class PluginScripts extends AbstractPluginValue {
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_SCRIPT_SEPARATOR, this);
         fm.set(FEATURE_SQL_SEPARATOR, this);
-        fm.set(FEATURE_SEPARATOR, this);
+        fm.set(FEATURE_NAME_SEPARATOR, this);
+        fm.set(FEATURE_CLASSPATH_RELATIVE, this);
         fm.set(FEATURE_FAILSAFE, this);
         setScripts(context);
     }
@@ -261,7 +301,24 @@ public class PluginScripts extends AbstractPluginValue {
             while (st.hasMoreTokens()) {
                 String val = st.nextToken().trim();
                 if (!val.isEmpty()) {
-                    URI f = base.resolve(val);
+                    URI f = null;
+                    if (classpathrelative) {
+                        try {
+                            URL resource = PluginScripts.class.getResource(val);
+                            if (resource == null) {
+                                throw new PluginException("Resource '" + val + "' not found on classpath.");
+                            }
+                            f = resource.toURI();
+                        } catch (URISyntaxException e) {
+                            String msg = "Could not find: " + val;
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug(msg);
+                            }
+                            throw new PluginException(msg, e);
+                        }
+                    } else {
+                        f = base.resolve(val);
+                    }
                     list.add(f);
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("PluginScript scheduled:" + f);
@@ -274,7 +331,7 @@ public class PluginScripts extends AbstractPluginValue {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        String[] sources = StringUtil.tokenize(getName() != null ? getName() : PluginConnection.DEFAULT_CONNECTION_NAME, separator);
+        String[] sources = StringUtil.tokenize(getName() != null ? getName() : PluginConnection.DEFAULT_CONNECTION_NAME, nameseparator);
         int failure = 0;
         for (String source : sources) {
             IDataSourceProvider provider = PluginConnection.getProvider(context, source);
@@ -396,40 +453,48 @@ public class PluginScripts extends AbstractPluginValue {
         try {
             stmt = connection.createStatement();
             try {
-                StringBuilder content = new StringBuilder();
+                StringBuilder command = new StringBuilder();
+                StringBuilder full = new StringBuilder();
                 br = new BufferedReader(script);
-                String command;
-                while ((command = br.readLine()) != null) {
-                    if (command.isEmpty() || command.startsWith("--")) {
+                String line = null;
+                while ((line = br.readLine()) != null) {
+                    line = line.trim();
+                    if (line.endsWith(sqlseparator)) {
+                        command.append(" ");
+                        command.append(line.substring(0, line.length() - 1));
+                        line = "";
+                    }
+                    if (line.isEmpty() || line.startsWith("--")) {
+                        if (command.length() > 0) {
+                            String sql = command.toString();
+                            failures += execute(stmt, sql, context, result);
+                            if (!fromCache) {
+                                full.append(sql);
+                                full.append("\n\n");
+                            }
+                            command.setLength(0);
+                        }
                         continue;
                     }
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Command  before: " + line);
+                    }
+                    line = UtilEvaluator.replace(line, context, true);
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Command   after: " + line);
+                    }
+                    command.append(line);
+                }
+                if (command.length() > 0) {
+                    String sql = command.toString();
+                    failures += execute(stmt, sql, context, result);
                     if (!fromCache) {
-                        content.append(command);
-                        content.append('\n');
-                    }
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Command before: " + command);
-                    }
-                    command = UtilEvaluator.replace(command, context, true);
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Command  after: " + command);
-                    }
-                    try {
-                        stmt.executeUpdate(command);
-                    } catch (SQLException e) {
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Command  error: " + e.getMessage());
-                        }
-                        if (!failsafe) {
-                            failures++;
-                            result.addResult(Failure.INSTANCE, context.peek(), e);
-                        } else {
-                            result.addResult(Warning.INSTANCE, context.peek(), e);
-                        }
+                        full.append(sql);
+                        full.append("\n\n");
                     }
                 }
                 if (!fromCache) {
-                    cache.get().put(reference, content.toString());
+                    cache.get().put(reference, full.toString());
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Script '" + reference + "' added to cache '" + cache.get().getName() + "'.");
@@ -466,5 +531,39 @@ public class PluginScripts extends AbstractPluginValue {
             }
         }
         return failures;
+    }
+
+    /**
+     * Perform a command, and return the number of errors in execution.
+     * 
+     * @param stmt
+     *            A statement.
+     * @param sql
+     *            A command.
+     * @param context
+     *            A text context.
+     * @param result
+     *            A result set.
+     * @return The number of errors in execution.
+     */
+    protected int execute(Statement stmt, String sql, IContext context, IResultSet result) {
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Command execute: " + sql);
+        }
+        try {
+            stmt.executeUpdate(sql);
+            return 0;
+        } catch (SQLException e) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Command   error: " + e.getMessage());
+            }
+            if (!failsafe) {
+                result.addResult(Failure.INSTANCE, context.peek(), e);
+                return 1;
+            } else {
+                result.addResult(Warning.INSTANCE, context.peek(), e);
+                return 0;
+            }
+        }
     }
 }
