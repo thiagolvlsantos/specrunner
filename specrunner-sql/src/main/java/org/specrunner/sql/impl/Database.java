@@ -830,12 +830,16 @@ public class Database implements IDatabase {
                             value = idManager.findValue(con, column, value, outputs);
                         }
                         comparator.initialize();
+                        CellAdapter cell = v.getCell();
                         if (!comparator.match(value, received)) {
                             Object expected = v.getValue();
                             if (column.isVirtual()) {
                                 received = idManager.lookup(column.getAlias(), received);
                             }
-                            result.addResult(Failure.INSTANCE, context.newBlock(v.getCell().getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+                            cell.setValue(String.valueOf(expected));
+                            result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+                        } else {
+                            cell.setValue(String.valueOf(value));
                         }
                     }
                 }
