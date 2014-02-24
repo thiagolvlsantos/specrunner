@@ -158,6 +158,28 @@ public class NodeHolder implements INodeHolder {
     }
 
     @Override
+    public void prepend(String text) {
+        if (node instanceof Text) {
+            ParentNode parent = node.getParent();
+            int index = parent.indexOf(node);
+            parent.insertChild(new Text(text), Math.max(0, index - 1));
+        } else if (node instanceof Element) {
+            ((Element) node).insertChild(text, 0);
+        }
+    }
+
+    @Override
+    public void append(String text) {
+        if (node instanceof Text) {
+            ParentNode parent = node.getParent();
+            int index = parent.indexOf(node);
+            parent.insertChild(new Text(text), index + 1);
+        } else if (node instanceof Element) {
+            ((Element) node).appendChild(text);
+        }
+    }
+
+    @Override
     public IConverter getConverter() {
         return getConverter(SRServices.getConverterManager().getDefault());
     }
