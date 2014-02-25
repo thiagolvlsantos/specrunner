@@ -102,6 +102,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-userguide-concordion-emulator/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-concordion-emulator.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-userguide-ant/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
@@ -113,13 +120,6 @@
             <outputDirectory></outputDirectory>
             <includes>
                 <include>specrunner-userguide-sql.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-objects/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-objects.zip</include>
             </includes>
         </fileSet>
         <fileSet>
