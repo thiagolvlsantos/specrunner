@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.specrunner</groupId>
 		<artifactId>specrunner-userguide</artifactId>
-		<version>1.3.5</version>
+		<version>1.3.6</version>
 		<relativePath>../specrunner-userguide</relativePath>
 	</parent>
 	<artifactId>specrunner-userguide-concordion-emulator</artifactId>
