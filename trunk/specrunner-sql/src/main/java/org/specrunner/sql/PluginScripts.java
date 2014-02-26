@@ -84,7 +84,7 @@ public class PluginScripts extends AbstractPluginValue {
     /**
      * Cache of scripts.
      */
-    private static ThreadLocal<ICache<String, String>> cache = new ThreadLocal<ICache<String, String>>() {
+    protected static ThreadLocal<ICache<String, String>> cache = new ThreadLocal<ICache<String, String>>() {
         @Override
         protected ICache<String, String> initialValue() {
             return SRServices.get(ICacheFactory.class).newCache(PluginScripts.class.getName());
@@ -483,7 +483,7 @@ public class PluginScripts extends AbstractPluginValue {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Command   after: " + line);
                     }
-                    command.append(line);
+                    command.append(" "+line);
                 }
                 if (command.length() > 0) {
                     String sql = command.toString();
