@@ -27,16 +27,16 @@ table.sr_treport th:after {
 }
 
 tr.sr_missing {
-    background-color: #DA2C43;
+    background-color: LightSalmon ;
 }
 
 tr.sr_alien {
-    background-color: #679267;
+    background-color: LightGreen ;
 }
 
 tr.sr_missing , tr.sr_alien {
-    color: white;
-    font-weight: bold;
+    color: black;
+    /*font-weight: bold;*/
 }
 
 tr.sr_different {
