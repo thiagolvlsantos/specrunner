@@ -62,19 +62,21 @@ public final class UtilSchema {
         column.setConverter(holder.getConverter(column.getConverter()));
         column.setArguments(holder.getArguments(column.getArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));
-        String defaultValue = holder.getAttribute(ISchemaLoaderXML.ATT_DEFAULT);
-        IConverter conv = column.getConverter();
-        if (conv.accept(defaultValue)) {
-            List<String> args = holder.getArguments();
-            Object obj;
-            try {
-                obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());
-            } catch (ConverterException e) {
-                throw new ConverterException("Convertion error at table: " + column.getTable().getName() + ", column: " + column.getName() + ". Attempt to convert default value '" + defaultValue + "' using a '" + conv + "'.", e);
+        if (holder.hasAttribute(ISchemaLoaderXML.ATT_DEFAULT)) {
+            String defaultValue = holder.getAttribute(ISchemaLoaderXML.ATT_DEFAULT);
+            IConverter conv = column.getConverter();
+            if (conv.accept(defaultValue)) {
+                List<String> args = holder.getArguments();
+                Object obj = null;
+                try {
+                    obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());
+                } catch (ConverterException e) {
+                    throw new ConverterException("Convertion error at table: " + column.getTable().getName() + ", column: " + column.getName() + ". Attempt to convert default value '" + defaultValue + "' using '" + conv + "'.", e);
+                }
+                column.setDefaultValue(obj);
+            } else {
+                column.setDefaultValue(conv.convert(defaultValue, null));
             }
-            column.setDefaultValue(obj);
-        } else {
-            column.setDefaultValue(conv.convert(defaultValue, null));
         }
         column.setVirtual(column.isVirtual() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_VIRTUAL, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setReference(column.isReference() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_REFERENCE, ISchemaLoaderXML.DEFAULT_FALSE)));
