@@ -344,14 +344,17 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
                     }
                     for (int k = 0; k < columns; k++) {
                         Cell cell = row.getCell(k);
+                        String key = null;
                         if (cell != null) {
-                            String key = cell.getRowIndex() + "," + cell.getColumnIndex();
+                            key = cell.getRowIndex() + "," + cell.getColumnIndex();
                             if (ignore.contains(key)) {
                                 continue;
                             }
-                            Element td = new Element("td");
-                            tr.appendChild(td);
-                            td.appendChild(String.valueOf(extractVal(cell)));
+                        }
+                        Element td = new Element("td");
+                        tr.appendChild(td);
+                        td.appendChild(String.valueOf(extractVal(cell)));
+                        if (cell != null) {
                             addAttributes(table, caption, tr, td, cell, spanMap.get(key));
                         }
                     }
