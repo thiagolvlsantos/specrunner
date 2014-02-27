@@ -483,7 +483,7 @@ public class PluginScripts extends AbstractPluginValue {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Command   after: " + line);
                     }
-                    command.append(" "+line);
+                    command.append(" " + line);
                 }
                 if (command.length() > 0) {
                     String sql = command.toString();
