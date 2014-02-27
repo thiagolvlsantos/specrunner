@@ -38,7 +38,7 @@ public class ConverterDatePatternArgs extends ConverterNotNullNotEmpty {
     /**
      * Cache of formatters.
      */
-    private static ICache<String, SimpleDateFormat> cache = SRServices.get(ICacheFactory.class).newCache(ConverterDatePatternArgs.class.getName());
+    protected static ICache<String, SimpleDateFormat> cache = SRServices.get(ICacheFactory.class).newCache(ConverterDatePatternArgs.class.getName());
 
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {

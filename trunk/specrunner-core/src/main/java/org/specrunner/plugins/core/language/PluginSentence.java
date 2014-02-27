@@ -84,12 +84,12 @@ public class PluginSentence extends AbstractPlugin {
     /**
      * Cache of type to methods annotated with sentence.
      */
-    private static ICache<Class<?>, List<Method>> cacheMethods = SRServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_methods");
+    protected static ICache<Class<?>, List<Method>> cacheMethods = SRServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_methods");
 
     /**
      * Cache of patterns.
      */
-    private static ICache<String, Pattern> cachePatterns = SRServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_patterns");
+    protected static ICache<String, Pattern> cachePatterns = SRServices.get(ICacheFactory.class).newCache(PluginSentence.class.getName() + "_patterns");
 
     @Override
     public ActionType getActionType() {

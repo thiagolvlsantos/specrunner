@@ -45,7 +45,7 @@ public final class UtilIO {
     /**
      * Cache of resources. Avoid unnecessary file/network/jar accesses.
      */
-    private static ICache<URL, byte[]> cache = SRServices.get(ICacheFactory.class).newCache(UtilIO.class.getName());
+    protected static ICache<URL, byte[]> cache = SRServices.get(ICacheFactory.class).newCache(UtilIO.class.getName());
 
     /**
      * Reading buffer size.

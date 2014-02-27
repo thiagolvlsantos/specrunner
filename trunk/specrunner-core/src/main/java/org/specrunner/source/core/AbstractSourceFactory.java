@@ -51,11 +51,11 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
     /**
      * Cache of files.
      */
-    private static ICache<String, Document> cache = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName() + ".document");
+    protected static ICache<String, Document> cache = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName() + ".document");
     /**
      * Cache of namespace information.
      */
-    private static ICache<String, INamespaceInfo> namespace = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName() + ".namespace");
+    protected static ICache<String, INamespaceInfo> namespace = SRServices.get(ICacheFactory.class).newCache(AbstractSourceFactory.class.getName() + ".namespace");
 
     @Override
     public void initialize() {
