@@ -48,7 +48,7 @@ public class FeatureReaderImpl implements IFeatureReader {
     /**
      * The keyword set.
      */
-    private static ICache<String, Keywords> cacheKeywords = SRServices.get(ICacheFactory.class).newCache(SourceFactoryText.class.getName());
+    protected static ICache<String, Keywords> cacheKeywords = SRServices.get(ICacheFactory.class).newCache(SourceFactoryText.class.getName());
 
     static {
         cacheKeywords.setSize(TEN);

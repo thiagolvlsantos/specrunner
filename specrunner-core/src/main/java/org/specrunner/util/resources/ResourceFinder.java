@@ -47,7 +47,7 @@ public class ResourceFinder {
     /**
      * Cache of resources.
      */
-    private static ICache<String, List<URL>> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
+    protected static ICache<String, List<URL>> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
 
     /**
      * Comparator element.
@@ -131,15 +131,15 @@ public class ResourceFinder {
             String standard = getDefault(resource);
             files.addAll(getResources(standard));
             files.addAll(getResources(resource));
-            if (UtilLog.LOG.isDebugEnabled()) {
+            if (UtilLog.LOG.isTraceEnabled()) {
                 log("Resource list:", files);
             }
             files = filter(files);
-            if (UtilLog.LOG.isDebugEnabled()) {
+            if (UtilLog.LOG.isTraceEnabled()) {
                 log("Resource list filtered:", files);
             }
             files = sort(files);
-            if (UtilLog.LOG.isDebugEnabled()) {
+            if (UtilLog.LOG.isTraceEnabled()) {
                 log("Resource list sorted:", files);
             }
             cache.put(resource, files);
@@ -156,9 +156,9 @@ public class ResourceFinder {
      *            The resource list.
      */
     protected void log(String msg, List<URL> files) {
-        UtilLog.LOG.debug(msg);
+        UtilLog.LOG.trace(msg);
         for (URL url : files) {
-            UtilLog.LOG.debug("\t" + url);
+            UtilLog.LOG.trace("\t" + url);
         }
     }
 

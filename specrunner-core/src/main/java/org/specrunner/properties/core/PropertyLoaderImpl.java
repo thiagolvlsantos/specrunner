@@ -45,7 +45,7 @@ public class PropertyLoaderImpl implements IPropertyLoader {
     /**
      * Cache of properties.
      */
-    private static ICache<String, List<Properties>> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
+    protected static ICache<String, List<Properties>> cache = SRServices.get(ICacheFactory.class).newCache(PropertyLoaderImpl.class.getName());
 
     @Override
     public List<Properties> load(String file) throws PropertyLoaderException {
@@ -67,8 +67,8 @@ public class PropertyLoaderImpl implements IPropertyLoader {
             sort(result);
             int index = 0;
             for (Properties p : result) {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Property order (" + (index++) + ")=" + p);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Property order (" + (index++) + ")=" + p);
                 }
                 p.remove("index");
             }
@@ -90,8 +90,8 @@ public class PropertyLoaderImpl implements IPropertyLoader {
     protected List<Properties> loadUrls(List<URL> files) throws PropertyLoaderException {
         List<Properties> properties = new LinkedList<Properties>();
         for (URL url : files) {
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Loading properties:" + url);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Loading properties:" + url);
             }
             InputStream in = null;
             try {

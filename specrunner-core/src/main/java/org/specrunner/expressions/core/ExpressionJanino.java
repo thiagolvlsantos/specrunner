@@ -58,7 +58,7 @@ public class ExpressionJanino extends AbstractExpression {
     /**
      * Cache of expressions.
      */
-    private static ICache<ExpressionKey, IExpressionEvaluator> cache = SRServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
+    protected static ICache<ExpressionKey, IExpressionEvaluator> cache = SRServices.get(ICacheFactory.class).newCache(ExpressionJanino.class.getName());
 
     /**
      * Basic constructor.
