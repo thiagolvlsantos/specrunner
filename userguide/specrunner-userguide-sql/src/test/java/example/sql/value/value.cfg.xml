@@ -7,6 +7,8 @@
     <column name="name" alias="name" reference="true"/>
 
     <column name="time" alias="Date" default="current time" date="true" converter="dateCurrent" arg0="MM/dd/yyyy" comparator="date"/>
+
+    <column name="status" alias="State" default="Inative" converter="enumValue" arg0="example.sql.value.ItemStatus" arg1="getDescription" arg2="getCode" />
   </table>
 
 </schema>
