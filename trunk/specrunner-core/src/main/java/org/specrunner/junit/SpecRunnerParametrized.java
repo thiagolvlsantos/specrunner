@@ -57,7 +57,7 @@ import org.specrunner.util.UtilLog;
  * 
  */
 @RunWith(Parameterized.class)
-public class SpecRunnerParametrized {
+public abstract class SpecRunnerParametrized {
 
     /**
      * File entry.
