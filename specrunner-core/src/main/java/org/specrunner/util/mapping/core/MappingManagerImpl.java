@@ -51,8 +51,8 @@ public abstract class MappingManagerImpl<T extends IResetable> extends HashMap<S
             try {
                 long time = System.currentTimeMillis();
                 List<Properties> list = SRServices.get(IPropertyLoader.class).load(file);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("properties list=" + list);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("properties list=" + list);
                 }
                 for (Properties p : list) {
                     Map<String, T> instances = new HashMap<String, T>();

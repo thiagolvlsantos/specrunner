@@ -108,8 +108,8 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
         if (!initialized) {
             try {
                 List<Properties> list = SRServices.get(IPropertyLoader.class).load(file);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("properties list=" + list);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("properties list=" + list);
                 }
                 for (Properties p : list) {
                     for (Entry<Object, Object> e : p.entrySet()) {
@@ -119,8 +119,8 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
                         typeNamesToAlias.put(value, key);
                     }
                 }
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("properties loaded: " + file);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("properties loaded: " + file);
                 }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -135,7 +135,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     @SuppressWarnings("unchecked")
     @Override
     public Class<? extends IPlugin> getClass(String alias) throws PluginException {
-        String type = aliasToTypeNames.get(alias); 
+        String type = aliasToTypeNames.get(alias);
         if (type == null) {
             return null;
         }
