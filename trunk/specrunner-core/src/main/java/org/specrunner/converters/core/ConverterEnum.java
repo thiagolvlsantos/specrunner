@@ -36,13 +36,18 @@ import org.specrunner.converters.ConverterException;
 @SuppressWarnings("serial")
 public class ConverterEnum extends ConverterNotNullNotEmpty {
 
+    /**
+     * Expected arguments size.
+     */
+    private static final int ARG_SIZE = 2;
+
     @SuppressWarnings("unchecked")
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {
             return null;
         }
-        if (args == null || args.length < 2) {
+        if (args == null || args.length < ARG_SIZE) {
             throw new ConverterException("Converter requires two arguments: 0) the enum class type (class object or name); 1) enum method name passed to compare values.");
         }
         Object result = null;
