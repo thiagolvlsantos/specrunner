@@ -28,6 +28,7 @@ import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
@@ -74,6 +75,9 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
                 }
             }
         } catch (Exception e) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info(e.getMessage(), e);
+            }
             throw new RuntimeException(e);
         } finally {
             try {
@@ -81,6 +85,9 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
                     in.close();
                 }
             } catch (IOException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
                 throw new RuntimeException(e);
             }
         }
