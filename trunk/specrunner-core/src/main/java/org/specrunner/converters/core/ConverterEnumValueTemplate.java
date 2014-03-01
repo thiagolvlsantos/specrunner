@@ -26,7 +26,7 @@ import org.specrunner.converters.ConverterException;
  * @author Thiago Santos.
  */
 @SuppressWarnings("serial")
-public class ConverterEnumValueTemplate extends ConverterNotNullNotEmpty {
+public abstract class ConverterEnumValueTemplate extends ConverterEnumValue {
 
     /**
      * Template parameters.
