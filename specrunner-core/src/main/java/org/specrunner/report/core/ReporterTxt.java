@@ -35,6 +35,8 @@ public class ReporterTxt extends AbstractReport {
     protected void dumpStart(SRServices services) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print("+-------------------------------- TXT REPORT -------------------------------------+\n");
+        out.print("+  THREAD: " + services.getThreadName() + "\n");
+        out.print("+--------------------------------\n");
     }
 
     @Override

@@ -19,6 +19,7 @@ package org.specrunner.core.pipes;
 
 import java.util.Map;
 
+import org.specrunner.SRServices;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
@@ -45,7 +46,7 @@ public class PipeReport implements IPipe {
         IResultSet result = PipeResult.lookup(channel);
         Map<String, Object> model = PipeModel.recover(channel);
         reporter.analyse(result, model);
-        reporter.resume();
+        reporter.resume(SRServices.get());
         return channel;
     }
 }
