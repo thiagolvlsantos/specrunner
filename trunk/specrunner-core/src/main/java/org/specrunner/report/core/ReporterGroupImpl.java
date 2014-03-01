@@ -41,10 +41,10 @@ public class ReporterGroupImpl extends CompositeImpl<IReporterGroup, IReporter> 
     }
 
     @Override
-    public String resume() {
+    public String resume(SRServices services) {
         StringBuilder sb = new StringBuilder();
         for (IReporter r : getChildren()) {
-            sb.append(r.resume());
+            sb.append(r.resume(services));
         }
         return sb.toString();
     }

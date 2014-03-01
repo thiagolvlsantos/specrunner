@@ -43,9 +43,13 @@ public interface IReporter {
     /**
      * Short information about report.
      * 
+     * @param services
+     *            The services instance to be used. This is required, since
+     *            report is made on shutdown process, where
+     *            <code>SRServices.get()</code> is not available.
      * @return A partial version of resume.
      */
-    String resume();
+    String resume(SRServices services);
 
     /**
      * Dump report information.

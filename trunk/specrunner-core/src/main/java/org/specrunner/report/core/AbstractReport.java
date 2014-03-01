@@ -28,7 +28,6 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
 import org.specrunner.SRServices;
-import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.core.pipes.PipeInput;
 import org.specrunner.core.pipes.PipeTime;
 import org.specrunner.core.pipes.PipeTimestamp;
@@ -160,8 +159,8 @@ public abstract class AbstractReport implements IReporter {
     }
 
     @Override
-    public String resume() {
-        String r = resume(false);
+    public String resume(SRServices services) {
+        String r = resume(services, false);
         SRServices.get(IOutputFactory.class).currentOutput().print(r);
         return r;
     }
@@ -169,11 +168,13 @@ public abstract class AbstractReport implements IReporter {
     /**
      * Partial resume.
      * 
+     * @param services
+     *            The services instance.
      * @param finalResume
      *            If it is the final resume.
      * @return The resume.
      */
-    protected String resume(boolean finalResume) {
+    protected String resume(SRServices services, boolean finalResume) {
         StringBuilder sb = new StringBuilder();
         String gap = "";
         String before = "+------";
@@ -184,11 +185,7 @@ public abstract class AbstractReport implements IReporter {
         sb.append(gap);
         sb.append(before);
         String header = null;
-        if (!finalResume) {
-            header = " STATISTICS (" + SRServices.get(IConcurrentMapping.class).getThread() + ") ";
-        } else {
-            header = " STATISTICS ";
-        }
+        header = " STATISTICS (" + services.getThreadName() + ") ";
         sb.append(header);
         sb.append(after);
         sb.append("\n");
@@ -310,7 +307,7 @@ public abstract class AbstractReport implements IReporter {
                 for (ReportPart rp : parts) {
                     dumpPart(services, rp.getHeader(), orderedList(resumes, rp.getComparator()));
                 }
-                dumpResume(services, resume(true));
+                dumpResume(services, resume(services, true));
                 dumpEnd(services);
             }
         }

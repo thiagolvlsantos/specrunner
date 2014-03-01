@@ -61,6 +61,11 @@ public final class SRServices {
     private ISRMapping mapping;
 
     /**
+     * Thread name.
+     */
+    private String threadName;
+
+    /**
      * Create a group of services provided by SpecRunner.
      */
     private SRServices() {
@@ -150,6 +155,15 @@ public final class SRServices {
     }
 
     /**
+     * Get the thread associated to this service..
+     * 
+     * @return A thread name.
+     */
+    public String getThreadName() {
+        return threadName;
+    }
+
+    /**
      * Shortcut static method to recover a service (thread-safe).
      * 
      * @param <T>
@@ -170,6 +184,7 @@ public final class SRServices {
     public static SRServices get() {
         if (instance.get() == null) {
             SRServices service = new SRServices();
+            service.threadName = Thread.currentThread().getName();
             Runtime.getRuntime().addShutdownHook(new ShutDown(service));
             instance.set(service);
         }
