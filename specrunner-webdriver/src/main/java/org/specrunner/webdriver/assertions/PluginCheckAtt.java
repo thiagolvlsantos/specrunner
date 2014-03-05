@@ -20,8 +20,8 @@ package org.specrunner.webdriver.assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -87,7 +87,7 @@ public class PluginCheckAtt extends AbstractPluginFindSingle {
      * @return true, is attValue contains value.
      */
     protected boolean test(Object attValue, Object value) {
-        return (value == null && attValue == null) || String.valueOf(attValue).contains(String.valueOf(value));
+        return (value == null && attValue == null) || getNormalized(String.valueOf(attValue)).contains(getNormalized(String.valueOf(value)));
     }
 
     /**
