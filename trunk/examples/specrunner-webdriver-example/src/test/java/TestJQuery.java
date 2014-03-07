@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.android.AndroidDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -58,16 +57,8 @@ public class TestJQuery {
     }
 
     @Test
-    public void rodarDragDropAndroid() throws Exception {
-        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        // cfg.addFeature(PluginBrowser.FEATURE_RECORDING, false);
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, AndroidDriver.class.getName());
-        SpecRunnerJUnit.defaultRun(DRAGDROP, cfg);
-    }
-
-    @Test
     public void testGoogle() throws Exception {
-        WebDriver driver = new AndroidDriver();
+        WebDriver driver = new ChromeDriver();
         // And now use this to visit Google
         driver.get("http://www.google.com");
         // Find the text input element by its name
@@ -86,7 +77,6 @@ public class TestJQuery {
     public void testBusca() throws Exception {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false);
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, AndroidDriver.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/busca.html", cfg);
     }
 
@@ -94,7 +84,6 @@ public class TestJQuery {
     public void testMobile() throws Exception {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false);
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, AndroidDriver.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/mobile.html", cfg);
     }
 }

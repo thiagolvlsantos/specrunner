@@ -40,12 +40,14 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
 /**
@@ -194,12 +196,16 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                     result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), new WritablePage(page));
                 }
             } else {
-                String tmp = element.asXml();
+                StringBuilder sb = new StringBuilder();
+                for (DomNode dn : element.getChildren()) {
+                    sb.append(dn.asXml());
+                }
+                String tmp = sb.toString();
                 IBuilderFactory bf = SRServices.get(IBuilderFactory.class);
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + tmp + "</body></html>", null).query("//body").get(0);
                 if (!comparatorInstance.match(expected, received)) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(UtilNode.getChildrenAsString(expected), UtilNode.getChildrenAsString(received)));
+                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(UtilString.normalize(UtilNode.getChildrenAsString(expected)), UtilString.normalize(UtilNode.getChildrenAsString(received))));
                 } else {
                     result.addResult(Success.INSTANCE, context.peek());
                 }

@@ -7,7 +7,6 @@ import java.net.UnknownHostException;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.android.AndroidDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
@@ -101,14 +100,6 @@ public class TestJetty {
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
         cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
-        // same as before.
-        runJetty(cfg);
-    }
-
-    // @Test
-    public void runAndroid() throws Exception {
-        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, AndroidDriver.class.getName()).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-android.html");
         // same as before.
         runJetty(cfg);
     }
