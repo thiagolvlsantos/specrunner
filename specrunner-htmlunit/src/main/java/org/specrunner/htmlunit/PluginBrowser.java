@@ -72,7 +72,7 @@ public class PluginBrowser extends AbstractPluginScoped {
     /**
      * The browser version.
      */
-    private String version = "FIREFOX_3_6";
+    private String version = "FIREFOX_24";
 
     /**
      * Feature to set host (for proxies).
@@ -181,7 +181,7 @@ public class PluginBrowser extends AbstractPluginScoped {
 
     /**
      * The browser version. Valid values are those in BrowserVersion class.
-     * Default is "FIREFOX_3_6".
+     * Default is "FIREFOX_24".
      * 
      * @return The HtmlUnit browser version.
      */
