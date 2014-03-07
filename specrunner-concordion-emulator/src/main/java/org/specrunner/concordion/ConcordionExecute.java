@@ -58,7 +58,7 @@ public class ConcordionExecute extends ConcordionProcessor {
             } else {
                 Nodes sets = lookup(e, getPrefix(), "set");
                 if (sets.size() > 0) {
-                    css = "executeLatter";
+                    css = "latter";
                 }
             }
             e.addAttribute(new Attribute("class", css));

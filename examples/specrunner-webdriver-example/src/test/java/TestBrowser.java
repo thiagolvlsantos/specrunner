@@ -26,13 +26,6 @@ public class TestBrowser {
     }
 
     @Test
-    public void rodarBrowserAndroid() throws Exception {
-        IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_TYPE, AndroidDriver.class.getName());
-        SpecRunnerJUnit.defaultRun(getNome(), "src/test/resources/outcome/browser_android.html", cfg);
-    }
-
-    @Test
     public void rodarBrowserIe() throws Exception {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         cfg.add(PluginBrowser.FEATURE_RECORDING, false);

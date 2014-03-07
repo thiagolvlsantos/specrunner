@@ -20,6 +20,7 @@ package org.specrunner.comparators.core;
 import nu.xom.Node;
 
 import org.specrunner.comparators.IComparator;
+import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -43,7 +44,9 @@ public class ComparatorNode implements IComparator {
 
     @Override
     public boolean match(Object expected, Object received) {
-        return UtilNode.getChildrenAsString((Node) expected).equals(UtilNode.getChildrenAsString((Node) received));
+        String strExpected = UtilString.normalize(UtilNode.getChildrenAsString((Node) expected));
+        String strReceived = UtilString.normalize(UtilNode.getChildrenAsString((Node) received));
+        return strExpected.equals(strReceived);
     }
 
     @Override
