@@ -161,7 +161,7 @@ public final class UtilConverter {
                     }
                     Object tmp = converter.convert(arg, converterArguments);
                     if (!type.isInstance(tmp)) {
-                        throw new PluginException("Invalid parameter value [" + arg + "] in " + message + ". Expected " + type + ", received: " + tmp + " of type " + tmp.getClass());
+                        throw new PluginException("Invalid parameter value [" + arg + "] in " + message + ". Expected " + type + ", received: " + tmp + " of type " + (tmp != null ? tmp.getClass() : "null"));
                     }
                     return tmp;
                 } catch (ConverterException e) {
