@@ -1,5 +1,4 @@
 import org.junit.Test;
-import org.openqa.selenium.android.AndroidDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
