@@ -3,9 +3,9 @@ package example.slim;
 import java.util.Date;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.SRRunner;
+import org.specrunner.junit.SRRunnerScenario;
 
-@RunWith(SRRunner.class)
+@RunWith(SRRunnerScenario.class)
 public class TestColumn {
 
     public int a;

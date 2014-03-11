@@ -11,7 +11,8 @@ td {
 </head>
 
 <body>
-    Essa tabela sem caption usa diretamente a classe de teste como referência.
+    <div class="scenario">
+    Essa tabela <span class="title">sem caption usa diretamente a classe de teste como referência</span>.
     <table class="column">
         <tr>
             <th>A</th>
@@ -38,9 +39,10 @@ td {
             <td converter="dateCurrent">Data hora atual</td>
         </tr>
     </table>
+    </div>
 
-
-    Essa tabela usa diretamente o bean declarado na própria tabela (pelo nome da classe). 
+    <div class="scenario">
+    <span class="title">Essa tabela usa diretamente o bean declarado na própria tabela (pelo nome da classe)</span>. 
     <table class="column" bean="example.slim.pacote1.ClasseQualquer" >
         <tr>
             <th>A</th>
@@ -59,7 +61,8 @@ td {
         </tr>
     </table>
 
-    Essa tabela usa diretamente o bean criando uma instância diretamente. 
+    <div class="scenario">
+    <span class="title">Essa tabela usa diretamente o bean criando uma instância diretamente</span>. 
     <table class="column" bean="new example.slim.pacote1.ClasseQualquer()" >
         <tr>
             <th>A</th>
@@ -77,8 +80,10 @@ td {
             <td>rs</td>
         </tr>
     </table>
+    </div>
 
-    Essa tabela usa o bean mais próximo no contexto usando um bean criado no contexto externo.
+    <div class="scenario">
+    <span class="title">Essa tabela usa o bean mais próximo no contexto usando um bean criado no contexto externo</span>.
     <div bean="new example.slim.pacote1.ClasseQualquer()"> 
         <table class="column">
             <tr>
@@ -98,8 +103,10 @@ td {
             </tr>
         </table>
     </div>
+    </div>
 
-     Essa tabela cria um bean usando os pacotes importados anteriormente (<imports>example.slim.pacote1</imports>). 
+    <div class="scenario">
+     <span class="title">Essa tabela cria um bean usando os pacotes importados anteriormente (<imports>example.slim.pacote1</imports>)</span>. 
         <table class="column" bean="ClasseQualquer">
             <tr>
                 <th>A</th>
@@ -118,8 +125,10 @@ td {
             </tr>
         </table>
     </div>
+    </div>
 
-     Essa tabela cria um bean usando os pacotes importados anteriormente, e com base no caption 
+    <div class="scenario">
+     <span class="title">Essa tabela cria um bean usando os pacotes importados anteriormente</span>, e com base no caption 
      (removendo os brancos e acentos, e normalizando em camel case para gerar o nome da classe corretamente). A remoção
      de caracteres estranhos é feita para captions e para os headers dos campos.
         <table class="column">
