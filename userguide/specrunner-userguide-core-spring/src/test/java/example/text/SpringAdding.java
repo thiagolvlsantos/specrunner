@@ -2,7 +2,7 @@ package example.text;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.specrunner.junit.SRRunnerSpring;
+import org.specrunner.junit.SRRunnerSpringScenario;
 import org.specrunner.plugins.core.language.Sentence;
 import org.specrunner.plugins.core.language.Synonyms;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import example.text.suv.Calc;
 
-@RunWith(SRRunnerSpring.class)
+@RunWith(SRRunnerSpringScenario.class)
 @ContextConfiguration(locations = { "/applicationContext-Calc.xml" })
 public class SpringAdding {
 
