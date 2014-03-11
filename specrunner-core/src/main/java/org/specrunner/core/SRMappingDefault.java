@@ -125,7 +125,8 @@ public class SRMappingDefault implements ISRMapping {
         Object result = map.get(type);
         if (result == null) {
             try {
-                Class<T> c = (Class<T>) Class.forName(types.get(type));
+                String className = types.get(type);
+                Class<T> c = (Class<T>) Class.forName(className);
                 result = c.newInstance();
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
