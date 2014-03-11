@@ -65,6 +65,9 @@ public class SpecRunnerStatement extends Statement {
      */
     private File output;
 
+    /**
+     * Listener to activate.
+     */
     private List<INodeListener> listeners;
 
     /**
@@ -75,6 +78,7 @@ public class SpecRunnerStatement extends Statement {
      * @param instance
      *            The test instance.
      * @param listeners
+     *            The listeners to activate.
      */
     public SpecRunnerStatement(TestClass test, Object instance, List<INodeListener> listeners) {
         this.test = test;
@@ -110,14 +114,18 @@ public class SpecRunnerStatement extends Statement {
     @Override
     public void evaluate() throws Throwable {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        ISpecRunner srunner = SRServices.getSpecRunner();
         IListenerManager lm = SRServices.get(IListenerManager.class);
         for (ISpecRunnerListener s : listeners) {
             lm.add(s);
         }
-        IResultSet result = srunner.run(input.getPath(), configure(cfg));
-        for (ISpecRunnerListener s : listeners) {
-            lm.remove(s);
+        IResultSet result;
+        try {
+            ISpecRunner srunner = SRServices.getSpecRunner();
+            result = srunner.run(input.getPath(), configure(cfg));
+        } finally {
+            for (ISpecRunnerListener s : listeners) {
+                lm.remove(s);
+            }
         }
         if (result.getStatus().isError()) {
             throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
