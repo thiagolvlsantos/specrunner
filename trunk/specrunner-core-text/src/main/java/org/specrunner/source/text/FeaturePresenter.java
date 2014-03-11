@@ -24,6 +24,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.SRServices;
+import org.specrunner.listeners.core.ScenarioListener;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.data.PluginMap;
@@ -33,6 +34,7 @@ import org.specrunner.plugins.core.macro.PluginCall;
 import org.specrunner.plugins.core.macro.PluginMacro;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.IPresenter;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Perform conversion of an object <code>Feature</code> to a <code>Node</code>.
@@ -97,6 +99,7 @@ public class FeaturePresenter implements IPresenter {
      */
     protected void dumpDescription(Element root, String keyword, NamedSentences description, String tag) {
         Element e = new Element(tag);
+        UtilNode.appendCss(e, ScenarioListener.CSS_TITLE);
         root.appendChild(e);
         e.appendChild(keyword + (description != null ? description.getName() : ""));
     }
@@ -132,6 +135,7 @@ public class FeaturePresenter implements IPresenter {
      */
     protected void dumpScenario(Element root, Keywords words, Scenario scenario) {
         Element divScenario = new Element("div");
+        UtilNode.appendCss(divScenario, ScenarioListener.CSS_SCENARIO);
         root.appendChild(divScenario);
         if (scenario instanceof ScenarioOutline) {
             dumpMultiScenario(divScenario, words, (ScenarioOutline) scenario);
