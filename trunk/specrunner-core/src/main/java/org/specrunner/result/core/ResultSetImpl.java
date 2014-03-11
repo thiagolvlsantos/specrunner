@@ -398,6 +398,13 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
+    public IResultSet subSet(int start, int end) {
+        ResultSetImpl subset = new ResultSetImpl();
+        subset.addAll(this.subList(start, end));
+        return subset;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getName(getStatus()) + "(total:" + size() + details(this) + ")\n");

@@ -1,12 +1,27 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2013  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.junit;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
@@ -16,9 +31,11 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.core.SpecRunnerPipelineUtils;
 import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.listeners.IListenerManager;
+import org.specrunner.listeners.INodeListener;
+import org.specrunner.listeners.ISpecRunnerListener;
 import org.specrunner.plugins.core.elements.PluginHtml;
 import org.specrunner.result.IResultSet;
-import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -28,10 +45,6 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class SpecRunnerStatement extends Statement {
-    /**
-     * Output path.
-     */
-    public static final String PATH = System.getProperty("sr.output", "target/output/");
 
     /**
      * The test class.
@@ -52,6 +65,8 @@ public class SpecRunnerStatement extends Statement {
      */
     private File output;
 
+    private List<INodeListener> listeners;
+
     /**
      * The testing object.
      * 
@@ -59,69 +74,51 @@ public class SpecRunnerStatement extends Statement {
      *            The test meta-data.
      * @param instance
      *            The test instance.
+     * @param listeners
      */
-    public SpecRunnerStatement(TestClass test, Object instance) {
+    public SpecRunnerStatement(TestClass test, Object instance, List<INodeListener> listeners) {
         this.test = test;
         this.instance = instance;
+        this.listeners = listeners;
         Class<?> clazz = test.getJavaClass();
-        input = getFile(clazz);
-        output = getOutput(clazz, input);
+        input = getInput(clazz);
+        output = getOutput(clazz);
     }
 
     /**
-     * Get the HTML file corresponding to the Java.
+     * Get input file name.
      * 
      * @param clazz
-     *            The test class.
-     * 
-     * @return The input HTML file.
+     *            The class.
+     * @return The corresponding file name.
      */
-    protected File getFile(Class<?> clazz) {
-        URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
-        String str = location.toString();
-        str = str.replace("file:\\\\", "").replace("file:///", "").replace("file:\\", "").replace("file:/", "");
-        Package pkg = clazz.getPackage();
-        if (pkg == null) {
-            throw new RuntimeException("Test classe must be in a package.");
-        }
-        // exact match
-        String prefix = str + pkg.getName().replace(".", File.separator) + File.separator + clazz.getSimpleName();
-        Set<String> extensions = SRServices.get(ISourceFactoryManager.class).keySet();
-        for (String s : extensions) {
-            File tmp = new File(prefix + "." + s);
-            if (tmp.exists()) {
-                return tmp;
-            }
-        }
-        // remove 'Test' part.
-        prefix = str + pkg.getName().replace(".", File.separator) + File.separator + clazz.getSimpleName().replace("Test", "");
-        for (String s : extensions) {
-            File tmp = new File(prefix + "." + s);
-            if (tmp.exists()) {
-                return tmp;
-            }
-        }
-        throw new RuntimeException("File with one of extensions '" + extensions + "' to " + prefix + " not found!");
+    protected File getInput(Class<?> clazz) {
+        return JUnitUtils.getFile(clazz);
     }
 
     /**
-     * Get the output file.
+     * Get output file name.
      * 
      * @param clazz
-     *            The test class.
-     * @param input
-     *            The input file.
-     * @return The output file.
+     *            The class.
+     * @return The corresponding file name.
      */
-    public File getOutput(Class<?> clazz, File input) {
-        return new File(new File(PATH + clazz.getPackage().getName().replace('.', File.separatorChar)).getAbsoluteFile(), input.getName());
+    protected File getOutput(Class<?> clazz) {
+        return JUnitUtils.getOutput(clazz, input);
     }
 
     @Override
     public void evaluate() throws Throwable {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         ISpecRunner srunner = SRServices.getSpecRunner();
+        IListenerManager lm = SRServices.get(IListenerManager.class);
+        for (ISpecRunnerListener s : listeners) {
+            lm.add(s);
+        }
         IResultSet result = srunner.run(input.getPath(), configure(cfg));
+        for (ISpecRunnerListener s : listeners) {
+            lm.remove(s);
+        }
         if (result.getStatus().isError()) {
             throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
         }
@@ -179,6 +176,9 @@ public class SpecRunnerStatement extends Statement {
             Class<?>[] types = m.getParameterTypes();
             if (types.length == 1 && types[0] == IConfiguration.class) {
                 m.invoke(instance, new Object[] { cfg });
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Configuration method '" + m + "' invoked.");
+                }
             } else {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Invalid @Configuration method '" + m + "'");
@@ -196,11 +196,7 @@ public class SpecRunnerStatement extends Statement {
      * @return The adjusted name. ie. Excel (.xls,.xlsx) test files are
      *         transformed to HTML (.html).
      */
-    public String getOutputName(String name) {
-        if (name != null && name.contains(".") && !name.endsWith(".html")) {
-            return name.substring(0, name.lastIndexOf('.')) + ".html";
-        } else {
-            return name;
-        }
+    public static String getOutputName(String name) {
+        return JUnitUtils.getOutputName(name);
     }
 }

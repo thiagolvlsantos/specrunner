@@ -308,4 +308,15 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * @return The result.
      */
     IResult addResult(Status status, IBlock source, Throwable failure, IWritable writable);
+
+    /**
+     * Get a subset of result as a result set itself.
+     * 
+     * @param start
+     *            The start index.
+     * @param end
+     *            The end index.
+     * @return The corresponding subset.
+     */
+    IResultSet subSet(int start, int end);
 }
