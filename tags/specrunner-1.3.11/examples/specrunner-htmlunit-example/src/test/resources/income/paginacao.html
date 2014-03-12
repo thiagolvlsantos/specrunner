@@ -1,0 +1,137 @@
+<p>
+	Abrir o <span class="browser" version="FIREFOX_24">browser</span>.
+<p>
+	Abrir o link <span class="open">http://localhost:8080/</span>.
+<p>
+<div class="compareTable" by="id:idResultado">
+	<table border="1">
+		<tr>
+			<td>Nome</td>
+			<td>Pai</td>
+			<td>Descrição</td>
+			<td>Ações</td>
+		</tr>
+		<tr>
+			<td>item_0</td>
+			<td>&lt;sem pai&gt;</td>
+			<td>descrição 0</td>
+			<td>Atualizar Remover</td>
+		</tr>
+		<tr>
+			<td>item_1</td>
+			<td>item_0</td>
+			<td>descrição 1</td>
+			<td>Atualizar Remover</td>
+		</tr>
+		<tr>
+			<td>item_10</td>
+			<td>item_9</td>
+			<td>descrição 0</td>
+			<td>Atualizar Remover</td>
+		</tr>
+	</table>
+</div>
+<p>
+	Clicar o link <span class="click" by="contains:a;">Última</span>.
+
+<p> Verifica a tabela:
+<div class="compareTable" by="id:idResultado">
+	<table border="1">
+		<tr>
+			<td>Nome</td>
+			<td>Pai</td>
+			<td>Descrição</td>
+			<td>Ações</td>
+		</tr>
+		<tr>
+			<td>item_8</td>
+			<td>item_7</td>
+			<td>descrição 3</td>
+			<td>Atualizar Remover</td>
+		</tr>
+		<tr>
+			<td>item_9</td>
+			<td>item_8</td>
+			<td>descrição 4</td>
+			<td>Atualizar Remover</td>
+		</tr>
+	</table>
+</div>
+	
+<p>
+	Clicar o link <span class="click" by="value" index="0">Remover</span> do primeiro item.
+
+<p> Verifica a tabela:
+<div class="compareTable" by="id:idResultado">
+	<table border="1">
+		<tr>
+			<td>Nome</td>
+			<td>Pai</td>
+			<td>Descrição</td>
+			<td>Ações</td>
+		</tr>
+		<tr>
+			<td>item_9</td>
+			<td>item_8</td>
+			<td>descrição 4</td>
+			<td>Atualizar Remover</td>
+		</tr>
+	</table>
+</div>
+
+<p>
+	Clicar no link <span class="click" by="id:idPaginaPrimeira">Primeira</span>.
+
+<p>
+<div class="compareTable" by="id:idResultado">
+	<table border="1">
+		<tr>
+			<td>Nome</td>
+			<td>Pai</td>
+			<td>Descrição</td>
+			<td>Ações</td>
+		</tr>
+		<tr>
+			<td>item_0</td>
+			<td>&lt;sem pai&gt;</td>
+			<td>descrição 0</td>
+			<td>Atualizar Remover</td>
+		</tr>
+	</table>
+</div>
+
+<p>
+	Clicar para reordenar em <span class="click" by="contains:span;">Descrição</span>.
+
+<p>
+	Clicar novamente para reordenar em <span class="click" by="contains:span;">Descrição</span>.
+
+<p>
+<div class="compareTable" by="id:idResultado">
+	<table border="1">
+		<tr>
+			<td>Nome</td>
+			<td>Pai</td>
+			<td>Descrição</td>
+			<td>Ações</td>
+		</tr>
+		<tr>
+			<td>item_4</td>
+			<td>item_3</td>
+			<td>descrição 4</td>
+			<td>Atualizar Remover</td>
+		</tr>
+		<tr>
+			<td>item_9</td>
+			<td>item_8</td>
+			<td>descrição 4</td>
+			<td>Atualizar Remover</td>
+		</tr>
+		<tr>
+			<td>item_14</td>
+			<td>item_13</td>
+			<td>descrição 4</td>
+			<td>Atualizar Remover</td>
+		</tr>
+	</table>
+</div>

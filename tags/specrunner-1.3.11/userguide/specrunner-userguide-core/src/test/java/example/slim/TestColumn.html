@@ -1,0 +1,158 @@
+<html>
+<head>
+<style type="text/css">
+table {
+    border: 1px solid black;
+}
+td {
+    border: 1px dotted black;
+}
+</style>
+</head>
+
+<body>
+    <div class="scenario">
+    Essa tabela <span class="title">sem caption usa diretamente a classe de teste como referência</span>.
+    <table class="column">
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th feature="action">Ação</th>
+            <th feature="result" >Resultado?</th>
+            <th feature="parameter" content="true">Resultado?</th>
+            <th feature="time">Data hora</th>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>3</td>
+            <td>+</td>
+            <td>5.0</td>
+            <td>Qualquer</td>
+            <td converter="date" arg0="dd/MM/yyyy">20/08/2013</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>3.0</td>
+            <td>*</td>
+            <td>6.0</td>
+            <td>Qualquer</td>
+            <td converter="dateCurrent">Data hora atual</td>
+        </tr>
+    </table>
+    </div>
+
+    <div class="scenario">
+    <span class="title">Essa tabela usa diretamente o bean declarado na própria tabela (pelo nome da classe)</span>. 
+    <table class="column" bean="example.slim.pacote1.ClasseQualquer" >
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th feature="c" >Resultado?</th>
+        </tr>
+        <tr>
+            <td>a</td>
+            <td>b</td>
+            <td>ab</td>
+        </tr>
+        <tr>
+            <td>c</td>
+            <td>d</td>
+            <td>cd</td>
+        </tr>
+    </table>
+
+    <div class="scenario">
+    <span class="title">Essa tabela usa diretamente o bean criando uma instância diretamente</span>. 
+    <table class="column" bean="new example.slim.pacote1.ClasseQualquer()" >
+        <tr>
+            <th>A</th>
+            <th>B</th>
+            <th feature="c" >Resultado?</th>
+        </tr>
+        <tr>
+            <td>p</td>
+            <td>q</td>
+            <td>pq</td>
+        </tr>
+        <tr>
+            <td>r</td>
+            <td>s</td>
+            <td>rs</td>
+        </tr>
+    </table>
+    </div>
+
+    <div class="scenario">
+    <span class="title">Essa tabela usa o bean mais próximo no contexto usando um bean criado no contexto externo</span>.
+    <div bean="new example.slim.pacote1.ClasseQualquer()"> 
+        <table class="column">
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th feature="c">Resultado?</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>12</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>3</td>
+                <td>23</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+
+    <div class="scenario">
+     <span class="title">Essa tabela cria um bean usando os pacotes importados anteriormente (<imports>example.slim.pacote1</imports>)</span>. 
+        <table class="column" bean="ClasseQualquer">
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th feature="c" >Resultado?</th>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>a</td>
+                <td>9a</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>b</td>
+                <td>8b</td>
+            </tr>
+        </table>
+    </div>
+    </div>
+
+    <div class="scenario">
+     <span class="title">Essa tabela cria um bean usando os pacotes importados anteriormente</span>, e com base no caption 
+     (removendo os brancos e acentos, e normalizando em camel case para gerar o nome da classe corretamente). A remoção
+     de caracteres estranhos é feita para captions e para os headers dos campos.
+        <table class="column">
+            <caption>classe quálQuer?</caption>
+            <tr>
+                <th>@A...</th>
+                <th>B</th>
+                <th feature="c" >Resultado?</th>
+                <th>Result?</th>
+            </tr>
+            <tr>
+                <td>100</td>
+                <td>a</td>
+                <td>100a</td>
+                <td>100a</td>
+            </tr>
+            <tr>
+                <td>200</td>
+                <td>b</td>
+                <td>200b</td>
+                <td>200b</td>
+            </tr>
+        </table>
+    </div>
+
+</body>
+</html>
