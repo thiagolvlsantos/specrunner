@@ -24,8 +24,7 @@ import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.ISpecRunnerListener;
 
 /**
- * Default listener manager. By default adds a
- * <code>ProfilerPluginListener</code> and <code>ProfilerSourceListener</code>.
+ * Default listener manager.
  * 
  * @author Thiago Santos
  * 
