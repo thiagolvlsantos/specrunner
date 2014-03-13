@@ -24,6 +24,7 @@ import org.specrunner.listeners.INodeListener;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
@@ -133,10 +134,19 @@ public class ScenarioListener implements INodeListener {
         if (this.scenario == node) {
             this.subset = result.subSet(checkpoint, result.size());
             if (UtilNode.isPending(node)) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Scenario PENDING:" + name);
+                }
                 UtilNode.appendCss(node, CSS_SCENARIO_PENDING);
             } else if (subset.getStatus().isError()) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Scenario FAILURE:" + name);
+                }
                 UtilNode.appendCss(node, CSS_SCENARIO_FAILURE);
             } else {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Scenario SUCCESS:" + name);
+                }
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
             }
         }
