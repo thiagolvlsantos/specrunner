@@ -43,6 +43,6 @@ public enum ENext {
      * @return The most important, for execution.
      */
     public ENext max(ENext e) {
-        return this == DEEP ? this : e;
+        return this == SKIP ? this : e;
     }
 }

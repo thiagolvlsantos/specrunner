@@ -357,7 +357,15 @@ public class PluginScripts extends AbstractPluginValue {
                         }
                     } else {
                         if (str != null && str.startsWith("file:")) {
-                            File f = new File(str.replace("file:/", ""));
+                            try {
+                                URI uri = new URI(str);
+                                str = new File(uri).toString();
+                            } catch (URISyntaxException e) {
+                                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Invalid script reference:" + str + "."));
+                                failure++;
+                                continue;
+                            }
+                            File f = new File(str);
                             if (!f.exists()) {
                                 result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Script:" + f + " not found."));
                                 failure++;

@@ -18,11 +18,13 @@
 package org.specrunner.junit;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
 
 import org.specrunner.SRServices;
 import org.specrunner.source.ISourceFactoryManager;
+import org.specrunner.util.UtilLog;
 
 /**
  * JUnit useful functions.
@@ -53,30 +55,41 @@ public final class JUnitUtils {
      */
     public static File getFile(Class<?> clazz) {
         URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
-        String str = location.toString();
-        str = str.replace("file:\\\\", "").replace("file:///", "").replace("file:\\", "").replace("file:/", "");
+        String str;
+        try {
+            str = new File(location.toURI()).toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         Package pkg = clazz.getPackage();
         if (pkg == null) {
-            throw new RuntimeException("Test classe must be in a package.");
+            throw new RuntimeException("Test class must be in a package.");
         }
         // exact match
-        String prefix = str + pkg.getName().replace(".", File.separator) + File.separator + clazz.getSimpleName();
+        String path = str + File.separator + pkg.getName().replace(".", File.separator) + File.separator;
+        String exact = path + clazz.getSimpleName();
         Set<String> extensions = SRServices.get(ISourceFactoryManager.class).keySet();
         for (String s : extensions) {
-            File tmp = new File(prefix + "." + s);
+            File tmp = new File(exact + "." + s);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Looking for " + tmp);
+            }
             if (tmp.exists()) {
                 return tmp;
             }
         }
         // remove 'Test' part.
-        prefix = str + pkg.getName().replace(".", File.separator) + File.separator + clazz.getSimpleName().replace("Test", "");
+        String clean = path + clazz.getSimpleName().replace("Test", "");
         for (String s : extensions) {
-            File tmp = new File(prefix + "." + s);
+            File tmp = new File(clean + "." + s);
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Looking for " + tmp);
+            }
             if (tmp.exists()) {
                 return tmp;
             }
         }
-        throw new RuntimeException("File with one of extensions '" + extensions + "' to " + prefix + " not found!");
+        throw new RuntimeException("File with one of extensions '" + extensions + "' to " + exact + " not found!");
     }
 
     /**

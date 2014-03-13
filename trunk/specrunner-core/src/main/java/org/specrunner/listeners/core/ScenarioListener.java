@@ -41,6 +41,18 @@ public class ScenarioListener implements INodeListener {
      */
     public static final String CSS_SCENARIO = "scenario";
     /**
+     * Expected style for success scenarios.
+     */
+    public static final String CSS_SCENARIO_SUCCESS = "scenarioSuccess";
+    /**
+     * Expected style for failure scenarios.
+     */
+    public static final String CSS_SCENARIO_FAILURE = "scenarioFailure";
+    /**
+     * Expected style for pending scenarios.
+     */
+    public static final String CSS_SCENARIO_PENDING = "scenarioPending";
+    /**
      * Expected style for scenario titles.
      */
     public static final String CSS_TITLE = "title";
@@ -48,23 +60,27 @@ public class ScenarioListener implements INodeListener {
     /**
      * The listener name.
      */
-    private String name;
+    protected String name;
     /**
      * An auxiliary node holder.
      */
-    private INodeHolder holder;
+    protected INodeHolder holder;
     /**
      * The node which holds the scenario.
      */
-    private Node scenario;
+    protected Node scenario;
     /**
      * A checkpoint where in the general result the scenario starts.
      */
-    private int checkpoint;
+    protected int checkpoint;
+    /**
+     * Indicate if scenario is pending.
+     */
+    protected boolean pending = true;
     /**
      * The subset of general result for this scenario.
      */
-    private IResultSet subset;
+    protected IResultSet subset;
 
     /**
      * Creates a names scenario listener. The scenario name must be the same of
@@ -88,6 +104,7 @@ public class ScenarioListener implements INodeListener {
 
     @Override
     public ENext onBefore(Node node, IContext context, IResultSet result) {
+        ENext next = ENext.DEEP;
         if (holder == null) {
             holder = UtilNode.newNodeHolder(node);
         } else {
@@ -99,19 +116,39 @@ public class ScenarioListener implements INodeListener {
                 if (name.equals(title)) {
                     this.scenario = node;
                     checkpoint = result.size();
+                    pending = UtilNode.isPending(node);
+                    if (pending) {
+                        next = ENext.SKIP;
+                    }
                 }
             } catch (PluginException e) {
                 throw new RuntimeException(e);
             }
         }
-        return ENext.DEEP;
+        return next;
     }
 
     @Override
     public void onAfter(Node node, IContext context, IResultSet result) {
         if (this.scenario == node) {
             this.subset = result.subSet(checkpoint, result.size());
+            if (UtilNode.isPending(node)) {
+                UtilNode.appendCss(node, CSS_SCENARIO_PENDING);
+            } else if (subset.getStatus().isError()) {
+                UtilNode.appendCss(node, CSS_SCENARIO_FAILURE);
+            } else {
+                UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
+            }
         }
+    }
+
+    /**
+     * Answer if the scenario is pending.
+     * 
+     * @return true, if pending, false, otherwise.
+     */
+    public boolean isPending() {
+        return pending;
     }
 
     /**

@@ -59,8 +59,9 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
         try {
             clean(dir);
             int index = 0;
+            String prefixToRemove = outputDirectory.toURI().toString();
             for (IResult r : result) {
-                addWritable(dir, index, r);
+                addWritable(dir, index, prefixToRemove, r);
                 index++;
             }
             if (dir.exists() && UtilLog.LOG.isInfoEnabled()) {
@@ -81,12 +82,14 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
      *            The snapshot file.
      * @param index
      *            The index.
+     * @param prefixToRemove
+     *            The text prefix to remove on relative links.
      * @param r
      *            The result set.
      * @throws ResultException
      *             On result exception.
      */
-    protected void addWritable(File dir, int index, IResult r) throws ResultException {
+    protected void addWritable(File dir, int index, String prefixToRemove, IResult r) throws ResultException {
         if (r.hasWritable()) {
             IWritable w = r.getWritable();
             if (!dir.exists() && !dir.mkdirs()) {
@@ -97,7 +100,7 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
                 Map<String, String> references = w.writeTo(file.getAbsolutePath());
                 IBlock block = r.getBlock();
                 if (block.hasNode()) {
-                    addElement(index, w, references, block);
+                    addElement(index, prefixToRemove, w, references, block);
                 }
             } catch (Exception e) {
                 // best effort, do not abort on errors
@@ -113,6 +116,8 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
      * 
      * @param index
      *            The index.
+     * @param prefixToRemove
+     *            The prefix to remove in case o relative references.
      * @param w
      *            The writable.
      * @param references
@@ -120,14 +125,14 @@ public class SourceDumperWritables extends AbstractSourceDumperFile {
      * @param block
      *            The block.
      */
-    protected void addElement(int index, IWritable w, Map<String, String> references, IBlock block) {
+    protected void addElement(int index, String prefixToRemove, IWritable w, Map<String, String> references, IBlock block) {
         Node node = block.getNode();
         ParentNode parent = node instanceof ParentNode ? (ParentNode) node : node.getParent();
         for (Entry<String, String> e : references.entrySet()) {
             parent.appendChild(new Text(" "));
             Element link = new Element("a");
             link.addAttribute(new Attribute("class", "sr_" + e.getKey()));
-            link.addAttribute(new Attribute("href", e.getValue()));
+            link.addAttribute(new Attribute("href", e.getValue().substring(prefixToRemove.length())));
             link.addAttribute(new Attribute("target", e.getKey() + "_" + index));
             String text = (w.hasInformation() ? (String) w.getInformation().get(LABEL_FIELD) : null);
             if (text != null) {

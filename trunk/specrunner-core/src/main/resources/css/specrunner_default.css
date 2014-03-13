@@ -123,6 +123,19 @@
     content: ">IG";
 }
 
+/* SCENARIO */
+.scenarioSuccess {
+    background-color: #EEFFFF;
+}
+
+.scenarioFailure {
+    background-color: #FFEEFF; 
+}
+
+.scenarioPending {
+    background-color: #FFFFEE; 
+}
+
 /* STACK TRACE */
 .sr_border {
     border-color: red;
