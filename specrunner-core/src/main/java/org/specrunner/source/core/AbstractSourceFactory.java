@@ -17,6 +17,7 @@
  */
 package org.specrunner.source.core;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -161,9 +162,19 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
      * @param target
      *            The target.
      * @return The target normalized.
+     * @throws SourceException
+     *             On cleanup errors.
      */
-    protected String cleanTarget(String target) {
-        return target == null ? target : target.replace("file:///", "").replace("file://", "").replace("file:/", "");
+    protected String cleanTarget(String target) throws SourceException {
+        if (target != null && target.startsWith("file:")) {
+            try {
+                URI uri = new URI(target);
+                target = new File(uri).toString();
+            } catch (URISyntaxException e) {
+                throw new SourceException(e);
+            }
+        }
+        return target;
     }
 
     /**

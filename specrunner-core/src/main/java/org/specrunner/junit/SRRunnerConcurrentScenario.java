@@ -118,9 +118,11 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
             super.runChild(method, notifier);
         } else {
             Description description = Description.createTestDescription(getTestClass().getJavaClass(), ((ScenarioFrameworkMethod) method).getName());
-            ScenarioListener meu = (ScenarioListener) listeners.get(index - 2);
-            IResultSet result = meu.getResult();
-            if (result == null || !result.getStatus().isError()) {
+            ScenarioListener scenario = (ScenarioListener) listeners.get(index - 2);
+            IResultSet result = scenario.getResult();
+            if (scenario.isPending()) {
+                notifier.fireTestIgnored(description);
+            } else if (result == null || !result.getStatus().isError()) {
                 notifier.fireTestStarted(description);
                 notifier.fireTestFinished(description);
             } else {

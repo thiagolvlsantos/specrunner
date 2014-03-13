@@ -39,6 +39,11 @@ public final class UtilNode {
      */
     public static final String IGNORE = "ignore";
     /**
+     * Any node in specification with attribute "pending=true" will be
+     * considered a pending item.
+     */
+    public static final String PENDING = "pending";
+    /**
      * The CSS attribute name.
      */
     public static final String ATT_CSS = "class";
@@ -67,6 +72,17 @@ public final class UtilNode {
      */
     public static boolean isIgnore(Node node) {
         return node instanceof Element && ((Element) node).getAttribute(IGNORE) != null;
+    }
+
+    /**
+     * Check is a node is marked as pending.
+     * 
+     * @param node
+     *            The node to be checked.
+     * @return true, if node is pending, false, otherwise.
+     */
+    public static boolean isPending(Node node) {
+        return node instanceof Element && ((Element) node).getAttribute(PENDING) != null;
     }
 
     /**

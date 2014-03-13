@@ -22,8 +22,8 @@ import java.util.List;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
@@ -138,6 +138,9 @@ public class RunnerImpl implements IRunner {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Node listener returned '" + doNode + "'.");
             }
+            for (INodeListener nl : nodeListeners) {
+                nl.onAfter(node, context, result);
+            }
             return;
         }
         // new block for node
@@ -247,7 +250,7 @@ public class RunnerImpl implements IRunner {
     protected ENext nodeStart(Node node, IContext context, IResultSet result, List<INodeListener> listeners) {
         // if there are listeners they can guide if runner should go deeper or
         // not
-        ENext doNode = listeners.isEmpty() ? ENext.DEEP : ENext.SKIP;
+        ENext doNode = ENext.DEEP;
         // perform before listeners
         for (INodeListener nl : listeners) {
             doNode = doNode.max(nl.onBefore(node, context, result));
