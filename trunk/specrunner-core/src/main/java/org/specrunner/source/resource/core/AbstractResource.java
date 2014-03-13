@@ -19,6 +19,7 @@ package org.specrunner.source.resource.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -148,13 +149,22 @@ public abstract class AbstractResource implements IResource {
      * @param urls
      *            List of resource URLs.
      * @return The filtered version.
+     * @throws ResourceException
+     *             On file loca
      */
-    protected List<URL> filterExisting(List<URL> urls) {
+    protected List<URL> filterExisting(List<URL> urls) throws ResourceException {
         List<URL> existing = new LinkedList<URL>();
         for (URL url : urls) {
             if ("file".equals(url.getProtocol())) {
-                String str = url.getFile().substring(1);
-                if (new File(str).exists()) {
+                File local = null;
+                try {
+                    local = new File(url.toURI());
+                } catch (URISyntaxException e) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Invalid URI for file " + local + ".");
+                    }
+                }
+                if (local != null && local.exists()) {
                     existing.add(url);
                 } else {
                     if (UtilLog.LOG.isDebugEnabled()) {
