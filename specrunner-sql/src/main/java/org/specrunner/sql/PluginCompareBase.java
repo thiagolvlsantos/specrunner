@@ -93,6 +93,16 @@ public class PluginCompareBase extends AbstractPluginValue {
      * Pattern name to be used.
      */
     private String filter;
+    /**
+     * Feature for virtual keys usage.
+     */
+    public static final String FEATURE_VIRTUAL = PluginCompareBase.class.getName() + ".virtual";
+    /**
+     * Enable use of virtual keys for comparison table select. If enabled,
+     * tables with 'reference' field will be compared by these fields, the
+     * others will remain using 'key' fields;
+     */
+    private Boolean virtual;
 
     /**
      * Get the schema name.
@@ -174,6 +184,25 @@ public class PluginCompareBase extends AbstractPluginValue {
         this.filter = filter;
     }
 
+    /**
+     * Indicate if reference fields can be used for select construction.
+     * 
+     * @return true, if the answer is yes, false, otherwise.
+     */
+    public Boolean getVirtual() {
+        return virtual;
+    }
+
+    /**
+     * Set the virtual flag.
+     * 
+     * @param virtual
+     *            The flag.
+     */
+    public void setVirtual(Boolean virtual) {
+        this.virtual = virtual;
+    }
+
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
@@ -187,6 +216,7 @@ public class PluginCompareBase extends AbstractPluginValue {
         fm.set(FEATURE_SYSTEM, this);
         fm.set(FEATURE_REFERENCE, this);
         fm.set(FEATURE_FILTER, this);
+        fm.set(FEATURE_VIRTUAL, this);
     }
 
     @Override
@@ -322,14 +352,23 @@ public class PluginCompareBase extends AbstractPluginValue {
      */
     public String createTableSelect(Schema schema, Table table) {
         StringBuilder fields = new StringBuilder();
-        StringBuilder order = new StringBuilder();
+        StringBuilder keys = new StringBuilder();
+        StringBuilder references = new StringBuilder();
         int indexFields = 0;
-        int indexOrder = 0;
+        int indexKeys = 0;
+        int indexReferences = 0;
         for (Column c : table.getColumns()) {
             fields.append((indexFields++ > 0 ? "," : "") + c.getName());
             if (c.isKey()) {
-                order.append((indexOrder++ > 0 ? "," : "") + c.getName() + " asc");
+                keys.append((indexKeys++ > 0 ? "," : "") + c.getName() + " asc");
             }
+            if (c.isReference()) {
+                references.append((indexReferences++ > 0 ? "," : "") + c.getName() + " asc");
+            }
+        }
+        StringBuilder order = keys;
+        if (virtual && references.length() > 0) {
+            order = references;
         }
         return "select " + fields + " from " + schema.getName() + "." + table.getName() + " order by " + order;
     }
