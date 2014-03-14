@@ -42,7 +42,7 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
     /**
      * XML parser.
      */
-    private Builder builder = new Builder();
+    protected Builder builder;
 
     @Override
     public Schema load(Object source) {
@@ -53,7 +53,7 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
             if (in == null) {
                 throw new RuntimeException("Resource '" + source + "' not found.");
             }
-            Document d = builder.build(in);
+            Document d = getBuilder().build(in);
 
             INodeHolder nSchema = UtilNode.newNodeHolder(d.getRootElement());
             schema = new Schema();
@@ -92,5 +92,17 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
             }
         }
         return schema;
+    }
+
+    /**
+     * Create a builder to read schema information.
+     * 
+     * @return A builder.
+     */
+    protected Builder getBuilder() {
+        if (builder == null) {
+            builder = new Builder();
+        }
+        return builder;
     }
 }
