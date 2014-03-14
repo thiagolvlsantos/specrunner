@@ -263,27 +263,45 @@ public class WritablePage implements IWritable {
      */
     protected void dump(File from, String target, Map<String, String> map, String label) throws ResultException {
         File to = new File(target + getExtension(from));
+        try {
+            move(from, to);
+        } catch (IOException e) {
+            throw new ResultException(e);
+        }
         String name = from.getName();
+        try {
+            move(new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.'))), new File(target));
+        } catch (IOException e) {
+            throw new ResultException(e);
+        }
+        map.put(label, to.toURI().toString());
+    }
 
-        File fromFile = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
-        File toFile = new File(target);
-
+    /**
+     * Move files/directory.
+     * 
+     * @param from
+     *            The original file/directory.
+     * @param to
+     *            The target file/directory.
+     * @throws IOException
+     *             On move errors.
+     * @throws ResultException
+     *             On action errors.
+     */
+    protected void move(File from, File to) throws IOException, ResultException {
         if (to.exists()) {
             if (!to.delete()) {
-                throw new ResultException("Could not remove garbage '" + to + "'.");
+                throw new ResultException("Could not remove resources '" + to + "'.");
             }
         }
-        from.renameTo(to);
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("Moving " + from + " to " + to + ".");
         }
-
-        if (toFile.exists()) {
-            if (!toFile.delete()) {
-                throw new ResultException("Could not remove screen scrap resources '" + toFile + "'.");
-            }
+        if (from.isDirectory()) {
+            FileUtils.moveDirectory(from, to);
+        } else {
+            FileUtils.moveFile(from, to);
         }
-        fromFile.renameTo(toFile);
-        map.put(label, to.toURI().toString());
     }
 }

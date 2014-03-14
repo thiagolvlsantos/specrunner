@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.ResultException;
 import org.specrunner.util.UtilLog;
@@ -124,30 +125,87 @@ public class WritablePage implements IWritable {
 
     @Override
     public Map<String, String> writeTo(String target) throws ResultException {
-        Map<String, String> result = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<String, String>();
         if (tmp != null) {
-            File from = tmp;
-            File to = new File(target + ".html");
-            String name = from.getName();
-
-            File fromFiles = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
-            File toFiles = new File(target);
-
-            if (to.exists() && !to.delete()) {
-                throw new ResultException("Could not remove screen scrap '" + to + "'.");
-            }
-            from.renameTo(to);
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Moving " + from + " to " + to + ".");
-            }
-
-            if (toFiles.exists() && !toFiles.delete()) {
-                throw new ResultException("Could not remove screen scrap resources '" + toFiles + "'.");
-            }
-            fromFiles.renameTo(toFiles);
-
-            result.put("details", to.toURI().toString());
+            dump(tmp, target, map, "source");
         }
-        return result;
+        return map;
+    }
+
+    /**
+     * Dump the file from temporary to target.
+     * 
+     * @param from
+     *            The temporary file.
+     * @param target
+     *            The target.
+     * @param map
+     *            The map of informations.
+     * @param label
+     *            The label to be used.
+     * @throws ResultException
+     *             On dump errors.
+     */
+    protected void dump(File from, String target, Map<String, String> map, String label) throws ResultException {
+        File to = new File(target + getExtension(from));
+        try {
+            move(from, to);
+        } catch (IOException e) {
+            throw new ResultException(e);
+        }
+        String name = from.getName();
+        try {
+            move(new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.'))), new File(target));
+        } catch (IOException e) {
+            throw new ResultException(e);
+        }
+        map.put(label, to.toURI().toString());
+    }
+
+    /**
+     * Gets the file extension.
+     * 
+     * @param scrFile
+     *            The source.
+     * @return The corresponding file extension.
+     */
+    protected String getExtension(File scrFile) {
+        String name = scrFile.getName();
+        name = name.substring(name.lastIndexOf('.'), name.length());
+        return name;
+    }
+
+    /**
+     * Move files/directory.
+     * 
+     * @param from
+     *            The original file/directory.
+     * @param to
+     *            The target file/directory.
+     * @throws IOException
+     *             On move errors.
+     * @throws ResultException
+     *             On action errors.
+     */
+    protected void move(File from, File to) throws IOException, ResultException {
+        if (!from.exists()) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.debug("File/Dir " + from + " not exists.");
+            }
+            return;
+        }
+        if (to.exists()) {
+            if (!to.delete()) {
+                throw new ResultException("Could not remove resources '" + to + "'.");
+            }
+        }
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("Moving " + from + " to " + to + ".");
+        }
+        if (from.isDirectory()) {
+            FileUtils.moveDirectory(from, to);
+        } else {
+            FileUtils.moveFile(from, to);
+        }
     }
 }
