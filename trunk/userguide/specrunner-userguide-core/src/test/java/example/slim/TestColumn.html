@@ -12,12 +12,12 @@ td {
 
 <body>
     <div class="scenario">
-    Essa tabela <span class="title">sem caption usa diretamente a classe de teste como referência</span>.
+    Essa tabela <span class="title">sem caption usa diretamente a classe de teste como referÃªncia</span>.
     <table class="column">
         <tr>
             <th>A</th>
             <th>B</th>
-            <th feature="action">Ação</th>
+            <th feature="action">AÃ§Ã£o</th>
             <th feature="result" >Resultado?</th>
             <th feature="parameter" content="true">Resultado?</th>
             <th feature="time">Data hora</th>
@@ -42,7 +42,7 @@ td {
     </div>
 
     <div class="scenario">
-        <span class="title">Essa tabela usa diretamente o bean declarado na própria tabela (pelo nome da classe)</span>. 
+        <span class="title">Essa tabela usa diretamente o bean declarado na prÃ³pria tabela (pelo nome da classe)</span>. 
         <table class="column" bean="example.slim.pacote1.ClasseQualquer" >
             <tr>
                 <th>A</th>
@@ -63,7 +63,7 @@ td {
     </div>
 
     <div class="scenario">
-    <span class="title">Essa tabela usa diretamente o bean criando uma instância diretamente</span>. 
+    <span class="title">Essa tabela usa diretamente o bean criando uma instÃ¢ncia diretamente</span>. 
     <table class="column" bean="new example.slim.pacote1.ClasseQualquer()" >
         <tr>
             <th>A</th>
@@ -84,7 +84,7 @@ td {
     </div>
 
     <div class="scenario">
-    <span class="title">Essa tabela usa o bean mais próximo no contexto usando um bean criado no contexto externo</span>.
+    <span class="title">Essa tabela usa o bean mais prÃ³ximo no contexto usando um bean criado no contexto externo</span>.
     <div bean="new example.slim.pacote1.ClasseQualquer()"> 
         <table class="column">
             <tr>
@@ -130,10 +130,10 @@ td {
 
     <div class="scenario">
      <span class="title">Essa tabela cria um bean usando os pacotes importados anteriormente</span>, e com base no caption 
-     (removendo os brancos e acentos, e normalizando em camel case para gerar o nome da classe corretamente). A remoção
-     de caracteres estranhos é feita para captions e para os headers dos campos.
+     (removendo os brancos e acentos, e normalizando em camel case para gerar o nome da classe corretamente). A remoÃ§Ã£o
+     de caracteres estranhos Ã© feita para captions e para os headers dos campos.
         <table class="column">
-            <caption>classe quálQuer?</caption>
+            <caption>classe quÃ¡lQuer?</caption>
             <tr>
                 <th>@A...</th>
                 <th>B</th>
