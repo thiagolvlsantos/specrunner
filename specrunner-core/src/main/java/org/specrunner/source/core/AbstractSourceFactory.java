@@ -157,6 +157,19 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
     protected abstract Document fromTarget(URI uri, String target, String encoding) throws SourceException;
 
     /**
+     * Check if a target is file.
+     * 
+     * @param uri
+     *            A URI.
+     * @param target
+     *            The target.
+     * @return true, if is file, false, otherwise.
+     */
+    protected boolean isFile(URI uri, String target) {
+        return uri == null || new File(target).exists();
+    }
+
+    /**
      * Clean the target name.
      * 
      * @param target

@@ -60,7 +60,7 @@ public class SourceFactoryHtml extends AbstractSourceFactory {
         InputStream fin = null;
         InputStream bin = null;
         try {
-            if (uri == null || !target.startsWith("http")) {
+            if (isFile(uri, target)) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Source from file:" + target);
                 }

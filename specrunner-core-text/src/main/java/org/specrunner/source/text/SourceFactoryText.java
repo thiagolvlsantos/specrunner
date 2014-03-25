@@ -20,6 +20,7 @@ package org.specrunner.source.text;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 
 import nu.xom.Document;
@@ -59,12 +60,21 @@ public class SourceFactoryText extends AbstractSourceFactory {
             Element body = new Element("body");
             root.appendChild(body);
 
-            FileInputStream fin = null;
+            InputStream in = null;
             try {
-                fin = new FileInputStream(new File(target));
-
+                if (isFile(uri, target)) {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Source from file:" + target);
+                    }
+                    in = new FileInputStream(new File(target));
+                } else {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("Source from URI:" + uri);
+                    }
+                    in = uri.toURL().openStream();
+                }
                 IFeatureReader sr = new FeatureReaderImpl();
-                Feature feature = sr.load(fin, encoding);
+                Feature feature = sr.load(in, encoding);
                 String error = feature.validate();
                 if (!error.isEmpty()) {
                     throw new SourceException("Invalid feature file(" + target + "):" + error);
@@ -81,9 +91,9 @@ public class SourceFactoryText extends AbstractSourceFactory {
             } catch (Exception e) {
                 throw new SourceException(e);
             } finally {
-                if (fin != null) {
+                if (in != null) {
                     try {
-                        fin.close();
+                        in.close();
                     } catch (IOException e) {
                         throw new SourceException(e);
                     }
