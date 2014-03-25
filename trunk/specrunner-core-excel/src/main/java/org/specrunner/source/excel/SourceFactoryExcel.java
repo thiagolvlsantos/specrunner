@@ -17,6 +17,7 @@
  */
 package org.specrunner.source.excel;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,11 +107,21 @@ public class SourceFactoryExcel extends AbstractSourceFactory {
         POIFSFileSystem fsys = null;
         try {
             Workbook wb = null;
+            if (isFile(uri, target)) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Source from file:" + target);
+                }
+                in = new FileInputStream(new File(target));
+            } else {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Source from URI:" + uri);
+                }
+                in = uri.toURL().openStream();
+            }
             if (target.trim().toLowerCase().endsWith(XLSX)) {
-                pkg = OPCPackage.open(target);
+                pkg = OPCPackage.open(in);
                 wb = new XSSFWorkbook(pkg);
             } else {
-                in = new FileInputStream(target);
                 fsys = new POIFSFileSystem(in);
                 wb = new HSSFWorkbook(fsys);
             }
