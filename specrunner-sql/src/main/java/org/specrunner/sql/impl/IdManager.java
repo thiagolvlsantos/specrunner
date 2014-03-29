@@ -235,7 +235,7 @@ public class IdManager {
      * @throws PluginException
      *             On execution errors.
      */
-    protected Object findValue(Connection con, Column column, Object value, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
+    public Object findValue(Connection con, Column column, Object value, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
         String key = column.getAlias() + "." + value;
         Object result = lookup(column.getAlias(), value);
         if (result == null) {
@@ -450,7 +450,7 @@ public class IdManager {
      * 
      * @return true, if local key is not null, false, o otherwise.
      */
-    protected boolean hasKey() {
+    public boolean hasKey() {
         return key != null;
     }
 

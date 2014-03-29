@@ -184,8 +184,8 @@ public final class UtilIO {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("Closing " + in, e);
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Closing " + in, e);
                         }
                         throw e;
                     }
@@ -194,8 +194,8 @@ public final class UtilIO {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("Closing " + in, e);
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Closing " + in, e);
                         }
                         throw e;
                     }
@@ -249,8 +249,8 @@ public final class UtilIO {
                 try {
                     in.close();
                 } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + in, e);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Closing " + in, e);
                     }
                 }
             }
@@ -258,8 +258,8 @@ public final class UtilIO {
                 try {
                     fout.close();
                 } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + fout, e);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Closing " + fout, e);
                     }
                 }
             }
@@ -267,8 +267,8 @@ public final class UtilIO {
                 try {
                     bout.close();
                 } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Closing " + bout, e);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Closing " + bout, e);
                     }
                 }
             }
