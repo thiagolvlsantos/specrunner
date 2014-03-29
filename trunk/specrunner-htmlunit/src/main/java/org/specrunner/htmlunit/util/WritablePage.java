@@ -155,7 +155,10 @@ public class WritablePage implements IWritable {
         }
         String name = from.getName();
         try {
-            move(new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.'))), new File(target));
+            File dir = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
+            if (dir.exists()) {
+                move(dir, new File(target));
+            }
         } catch (IOException e) {
             throw new ResultException(e);
         }
