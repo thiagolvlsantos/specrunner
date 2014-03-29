@@ -34,6 +34,8 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 
 /**
  * Plugin to replace resources.
@@ -44,9 +46,14 @@ import org.specrunner.util.UtilLog;
 public abstract class AbstractPluginResourceReplaceable extends AbstractPluginResource {
 
     /**
+     * Cache of resources per output file.
+     */
+    protected static ICache<String, String> pathToFile = SRServices.get(ICacheFactory.class).newCache(AbstractPluginResourceReplaceable.class.getName());
+
+    /**
      * Static sequential number.
      */
-    private static ThreadLocal<Integer> serialNumber = new ThreadLocal<Integer>() {
+    protected static ThreadLocal<Integer> serialNumber = new ThreadLocal<Integer>() {
         @Override
         protected Integer initialValue() {
             return 0;
@@ -71,12 +78,6 @@ public abstract class AbstractPluginResourceReplaceable extends AbstractPluginRe
                 ISource relative = source.resolve(referencedSource);
                 String path = String.valueOf(relative.getURI());
 
-                addResource(source, path, element);
-
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Resource " + reference + " from source " + source.getString() + " added.");
-                }
-
                 File file = null;
                 File outDir = (File) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
                 String outFile = (String) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
@@ -86,14 +87,26 @@ public abstract class AbstractPluginResourceReplaceable extends AbstractPluginRe
                     ISource first = context.getSources().getLast();
                     file = first.getFile();
                 }
-                String newName = file.getName() + "_res/" + serialNumber.get() + "_" + path.substring(path.lastIndexOf('/') + 1);
-                serialNumber.set(serialNumber.get() + 1);
 
-                replaceName(element, newName);
-
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Added to " + file + " as " + newName + ".");
+                String key = file + path;
+                String newName = pathToFile.get(key);
+                if (newName == null) {
+                    addResource(source, path, element);
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Resource " + reference + " from source " + source.getString() + " added.");
+                    }
+                    newName = file.getName() + "_res/" + serialNumber.get() + "_" + path.substring(path.lastIndexOf('/') + 1);
+                    serialNumber.set(serialNumber.get() + 1);
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Adding to " + file + " as " + newName + ".");
+                    }
+                    pathToFile.put(key, newName);
+                } else {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Reuse of " + newName + ".");
+                    }
                 }
+                replaceName(element, newName);
             } catch (SourceException e) {
                 throw new PluginException(e);
             }
