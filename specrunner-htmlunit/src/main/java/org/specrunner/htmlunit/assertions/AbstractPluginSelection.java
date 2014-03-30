@@ -21,13 +21,14 @@ import java.util.List;
 
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
@@ -58,7 +59,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
                 result.addResult(Success.INSTANCE, context.peek());
             }
         } else {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
         }
     }
 
@@ -121,7 +122,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
             receiveds[i] = options.get(i).asText();
         }
         if (expecteds.length != receiveds.length) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Number of itens (" + receiveds.length + ") in " + (content != null && content ? "content" : "selected") + " is different from expected ones (" + expecteds.length + ")."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Number of itens (" + receiveds.length + ") in " + (content != null && content ? "content" : "selected") + " is different from expected ones (" + expecteds.length + ")."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
             error = 1;
         } else {
             for (int i = 0; i < expecteds.length; i++) {
@@ -136,7 +137,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
                 }
             }
             if (error > 0) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The element(s) expected and received do(es) not match."), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("The element(s) expected and received do(es) not match."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
             }
         }
         return error;

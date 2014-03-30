@@ -19,16 +19,18 @@ package org.specrunner.htmlunit.assertions;
 
 import java.util.List;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -52,7 +54,7 @@ public class PluginNotPresent extends AbstractPluginFind {
         if (list == null || list.isEmpty()) {
             result.addResult(Success.INSTANCE, context.peek());
         } else {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinderInstance().resume(context) + "."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
         }
     }
 

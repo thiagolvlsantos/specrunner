@@ -30,12 +30,12 @@ import org.specrunner.context.IContext;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.IBuilderFactory;
@@ -45,6 +45,7 @@ import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomNode;
@@ -193,7 +194,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
             Element expected = (Element) e.evaluate(context);
             if (!strict) {
                 if (!PluginCompareUtils.compareNode(this, expected, element, context.peek(), context, result)) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
                 }
             } else {
                 StringBuilder sb = new StringBuilder();

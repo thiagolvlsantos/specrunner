@@ -24,15 +24,16 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.CellAdapter;
@@ -41,6 +42,7 @@ import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -64,7 +66,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         Node node = context.getNode();
         boolean success = compareTable(context, result, page, element, node);
         if (!success) {
-            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Tables do not match."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Tables do not match."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
         }
     }
 
@@ -91,14 +93,14 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         Nodes tables = node.query("descendant-or-self::table");
         Node table = UtilNode.getHighest(tables);
         if (table == null) {
-            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
             return false;
         }
         TableAdapter tableExpected = UtilNode.newTableAdapter(table);
 
         List<?> tablesReceived = element.getByXPath("descendant-or-self::table");
         if (tablesReceived.isEmpty()) {
-            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
             return false;
         }
         HtmlTable tableReceived = (HtmlTable) tablesReceived.get(0);
