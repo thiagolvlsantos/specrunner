@@ -46,7 +46,7 @@ import org.specrunner.webdriver.AbstractPluginFindSingle;
 import org.specrunner.webdriver.util.WritablePage;
 
 /**
- * Compare strings.
+ * Compare nodes.
  * 
  * @author Thiago Santos
  * 
