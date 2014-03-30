@@ -107,11 +107,11 @@ public class SourceDumperCenter extends AbstractSourceDumperFile {
         link.addAttribute(new Attribute("href", detailReport()));
         link.addAttribute(new Attribute("title", "This is a detailed report."));
         link.appendChild("SpecRunner details");
-        span.appendChild(" [");
+        span.appendChild(" { ");
         Status s = result.getStatus();
         span.appendChild(s.asNode());
-        span.appendChild("(" + result.countStatus(s) + ")");
-        span.appendChild(" in " + model.get("time") + " ms]: ");
+        span.appendChild("[" + result.countStatus(s) + "]");
+        span.appendChild(" in " + model.get("time") + " ms }: ");
         span.appendChild(new Element("br"));
         span.appendChild(" on " + model.get("date") + " ");
         span.appendChild(new Element("br"));
