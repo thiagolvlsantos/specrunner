@@ -42,6 +42,7 @@ import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.report.IReporterFactory;
 import org.specrunner.result.IResultFactory;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.runner.IRunnerFactory;
 import org.specrunner.source.IBuilderFactory;
@@ -96,6 +97,7 @@ public class SRMappingDefault implements ISRMapping {
         types.put(IContextPopulator.class, "org.specrunner.context.core.ContextPopulatorImpl");
         types.put(IRunnerFactory.class, "org.specrunner.runner.core.RunnerFactoryDefault");
         types.put(IResultFactory.class, "org.specrunner.result.core.ResultFactoryImpl");
+        types.put(IWritableFactoryManager.class, "org.specrunner.result.core.WritableFactoryManagerImpl");
         types.put(IAnnotatorFactory.class, "org.specrunner.annotator.core.AnnotatorFactoryDefault");
         types.put(ISourceDumperFactory.class, "org.specrunner.dumper.core.SourceDumperFactoryDefault");
         types.put(IListenerManager.class, "org.specrunner.listeners.core.ListenerManagerDefault");
