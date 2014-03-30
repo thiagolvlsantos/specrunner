@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.core.ConverterEnumValue;
-import org.specrunner.util.ExceptionUtil;
+import org.specrunner.util.UtilException;
 
 public class TestConverterEnumValue {
 
@@ -79,7 +79,7 @@ public class TestConverterEnumValue {
             ce.convert("any value", new Object[] { TestConverterEnumValue.class, "name", "ordinal" });
             Assert.fail("Should not convert.");
         } catch (Exception e) {
-            Assert.assertEquals("Class '" + TestConverterEnumValue.class.getName() + "' is not an enumeration.", ExceptionUtil.unwrapException(e).getMessage());
+            Assert.assertEquals("Class '" + TestConverterEnumValue.class.getName() + "' is not an enumeration.", UtilException.unwrapException(e).getMessage());
         }
     }
 }

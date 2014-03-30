@@ -29,12 +29,12 @@ import org.specrunner.SpecRunnerException;
  * @author Thiago Santos
  * 
  */
-public final class ExceptionUtil {
+public final class UtilException {
 
     /**
      * Hidden constructor.
      */
-    private ExceptionUtil() {
+    private UtilException() {
     }
 
     /**
