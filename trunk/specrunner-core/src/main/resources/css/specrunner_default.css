@@ -237,6 +237,7 @@ table.included_file_args td {
 .sr_resume {
     font-weight: bold;
     width: 100%;
+    vertical-align: middle;
 }
 
 .sr_resultset {
@@ -252,8 +253,20 @@ table.included_file_args td {
     padding: 2px; 
 }
 
+.sr_resultset th.sr_nop {
+    border: none;
+}
+
+.sr_resultset th.sr_small {
+    font-size: 8pt;
+}
+
 .sr_resultset td {
     font-size: 8pt;
+}
+
+.sr_resultsett {
+    text-align: left;
 }
 
 .sr_resultsetn {
@@ -268,9 +281,6 @@ table.included_file_args td {
 
 }
 
-.sr_resume {
-    vertical-align: middle;
-}
 
 .sr_milis {
     vertical-align: middle;

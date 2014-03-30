@@ -514,14 +514,25 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         Element td;
 
         td = new Element("th");
+        td.addAttribute(new Attribute("class", "sr_nop"));
         tr.appendChild(td);
         td.appendChild("");
+
+        td = new Element("th");
+        td.addAttribute(new Attribute("class", "sr_nop"));
+        tr.appendChild(td);
+        td.appendChild("");
+
         List<Status> available = availableStatus();
         for (Status s : available) {
             td = new Element("th");
             tr.appendChild(td);
             td.addAttribute(new Attribute("class", s.getCssName()));
             td.appendChild(s.asNode());
+
+            td = new Element("th");
+            tr.appendChild(td);
+            td.addAttribute(new Attribute("class", "sr_small"));
             td.appendChild("[" + countStatus(s) + "]");
         }
         int index = 0;
@@ -533,11 +544,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             td = new Element("td");
             tr.appendChild(td);
             td.appendChild(t.asNode());
+
+            td = new Element("td");
+            tr.appendChild(td);
+            td.addAttribute(new Attribute("class", "sr_resultsetn"));
             td.appendChild("[" + countType(t) + "]");
 
             List<IResult> filter = filterByType(t);
             for (Status s : available) {
                 td = new Element("td");
+                td.addAttribute(new Attribute("colspan", "2"));
                 td.addAttribute(new Attribute("class", "sr_resultsetn"));
                 tr.appendChild(td);
                 td.appendChild(String.valueOf(countStatus(filter, s)));
