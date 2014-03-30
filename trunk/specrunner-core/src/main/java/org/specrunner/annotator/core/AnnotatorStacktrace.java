@@ -30,7 +30,7 @@ import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.ExceptionUtil;
+import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresentation;
 
@@ -94,7 +94,7 @@ public class AnnotatorStacktrace implements IAnnotator {
             // otherwise print default stack trace
             stack = new Element("pre");
             try {
-                stack.appendChild(ExceptionUtil.toString(failure));
+                stack.appendChild(UtilException.toString(failure));
             } catch (IOException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

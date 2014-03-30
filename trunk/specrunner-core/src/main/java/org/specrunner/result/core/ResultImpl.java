@@ -29,7 +29,7 @@ import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
-import org.specrunner.util.ExceptionUtil;
+import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -155,7 +155,7 @@ public class ResultImpl implements IResult {
         String msg2 = hasFailure() ? getFailure().getMessage() : getMessage();
         if (hasFailure()) {
             try {
-                msg2 += "\n" + ExceptionUtil.toString(getFailure());
+                msg2 += "\n" + UtilException.toString(getFailure());
             } catch (IOException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

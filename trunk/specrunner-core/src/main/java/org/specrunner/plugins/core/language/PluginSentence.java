@@ -45,7 +45,7 @@ import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.ExceptionUtil;
+import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
@@ -207,7 +207,7 @@ public class PluginSentence extends AbstractPlugin {
         ExpectedMessage em = m.getAnnotation(ExpectedMessage.class);
         if (error != null) {
             if (em == null) {
-                error = ExceptionUtil.unwrapException(error);
+                error = UtilException.unwrapException(error);
                 result.addResult(Failure.INSTANCE, context.peek(), error);
                 return;
             }
