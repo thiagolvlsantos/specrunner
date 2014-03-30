@@ -72,9 +72,6 @@ $(document).ready(function() {
         if(!$(this).data("done")){
             window.moveTo(0,0);
             window.resizeTo(width,height);
-            $(".sr_frame_link_span").hide();
-            $(".sr_resultset").hide();
-            $(".sr_frame_link_span").show();
             $(this).data("done",true);
         }
         var href = $(this).attr("href");

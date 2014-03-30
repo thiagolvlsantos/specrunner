@@ -208,7 +208,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Status> Iterable<T> availableStatus() {
+    public <T extends Status> List<T> availableStatus() {
         List<T> result = new LinkedList<T>();
         for (IResult s : this) {
             if (!result.contains(s.getStatus())) {
@@ -240,13 +240,17 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     @Override
     public <T extends Status> List<IResult> filterByStatus(int start, int end, T... status) {
+        return filterByStatus(subList(start, end), status);
+    }
+
+    @Override
+    public <T extends Status> List<IResult> filterByStatus(List<IResult> subset, T... status) {
         List<IResult> result = new LinkedList<IResult>();
         Set<Status> valid = new HashSet<Status>();
         for (int i = 0; i < status.length; i++) {
             valid.add(status[i]);
         }
-        for (int i = start; i < end; i++) {
-            IResult t = get(i);
+        for (IResult t : subset) {
             if (valid.contains(t.getStatus())) {
                 result.add(t);
             }
@@ -262,6 +266,11 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     @Override
     public <T extends Status> int countStatus(int start, int end, T... status) {
         return filterByStatus(start, end, status).size();
+    }
+
+    @Override
+    public <T extends Status> int countStatus(List<IResult> subset, T... status) {
+        return filterByStatus(subset, status).size();
     }
 
     @Override
@@ -503,35 +512,35 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         Element tr = new Element("tr");
         table.appendChild(tr);
         Element td;
-        for (Status s : availableStatus()) {
+
+        td = new Element("th");
+        tr.appendChild(td);
+        td.appendChild("");
+        List<Status> available = availableStatus();
+        for (Status s : available) {
             td = new Element("th");
             tr.appendChild(td);
             td.addAttribute(new Attribute("class", s.getCssName()));
             td.appendChild(s.asNode());
-            td.appendChild("(" + countStatus(s) + ")");
+            td.appendChild("[" + countStatus(s) + "]");
         }
-        tr = new Element("tr");
-        table.appendChild(tr);
-        for (Status s : availableStatus()) {
+        int index = 0;
+        for (ActionType t : actionTypes()) {
+            tr = new Element("tr");
+            tr.addAttribute(new Attribute("class", (index++ % 2 == 0 ? "sr_even" : "sr_odd")));
+            table.appendChild(tr);
+
             td = new Element("td");
             tr.appendChild(td);
+            td.appendChild(t.asNode());
+            td.appendChild("[" + countType(t) + "]");
 
-            Element sub = new Element("table");
-            sub.addAttribute(new Attribute("class", "sr_actiontypes"));
-            td.appendChild(sub);
-            List<IResult> filter = filterByStatus(s);
-            List<ActionType> acs = actionTypes(this);
-            for (ActionType at : acs) {
-                Element subtr = new Element("tr");
-                sub.appendChild(subtr);
-                Element subtd = new Element("td");
-                subtr.appendChild(subtd);
-                subtd.appendChild(at.asNode());
-                td.addAttribute(new Attribute("class", at.getCssName()));
-                subtd = new Element("td");
-                subtr.appendChild(subtd);
-                subtd.addAttribute(new Attribute("style", "text-align:right;"));
-                subtd.appendChild("" + countType(filter, at));
+            List<IResult> filter = filterByType(t);
+            for (Status s : available) {
+                td = new Element("td");
+                td.addAttribute(new Attribute("class", "sr_resultsetn"));
+                tr.appendChild(td);
+                td.appendChild(String.valueOf(countStatus(filter, s)));
             }
         }
         return table;
