@@ -247,22 +247,26 @@ table.included_file_args td {
     font-family: verdana;
 }
 
-.sr_resultset th {
+.sr_resultset th,  .sr_resultset td {
     border: 1px dotted black;
+    padding: 2px; 
 }
 
 .sr_resultset td {
     font-size: 8pt;
 }
 
-.sr_actiontypes {
-    width: 100%;
+.sr_resultsetn {
+    text-align: center;
 }
 
-.sr_actiontypes td {
-    border-bottom: 1px dotted black; 
+.sr_even {
+    background-color: #F8F8F8;
 }
 
+.sr_odd {
+
+}
 
 .sr_resume {
     vertical-align: middle;

@@ -110,7 +110,7 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      *            A subclass of <code>Status</code>.
      * @return An iterator of status.
      */
-    <T extends Status> Iterable<T> availableStatus();
+    <T extends Status> List<T> availableStatus();
 
     /**
      * Lists error status in result.
@@ -148,6 +148,19 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
     <T extends Status> List<IResult> filterByStatus(int start, int end, T... status);
 
     /**
+     * Filters result by status type.
+     * 
+     * @param <T>
+     *            A subtype of Status.
+     * @param subset
+     *            Subset list.
+     * @param status
+     *            The filters.
+     * @return The subset of status.
+     */
+    <T extends Status> List<IResult> filterByStatus(List<IResult> subset, T... status);
+
+    /**
      * Counts the status of a given type.
      * 
      * @param <T>
@@ -172,6 +185,19 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * @return The number of result.
      */
     <T extends Status> int countStatus(int start, int end, T... status);
+
+    /**
+     * Counts the status of a given type.
+     * 
+     * @param subset
+     *            A subset list.
+     * @param <T>
+     *            A status class.
+     * @param status
+     *            The filters.
+     * @return The number of result.
+     */
+    <T extends Status> int countStatus(List<IResult> subset, T... status);
 
     /**
      * List action types available for all results.
