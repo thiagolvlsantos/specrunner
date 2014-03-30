@@ -19,11 +19,12 @@ package org.specrunner.webdriver;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * A specialization of AbstractPluginFind to be overridden by actions that take
@@ -67,7 +68,7 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
             return;
         }
         if (elements.length == 0) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             return;
         }
         WebElement element = elements[index];

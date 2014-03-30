@@ -35,6 +35,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.IBuilderFactory;
@@ -43,7 +44,6 @@ import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Compare nodes.
@@ -142,7 +142,7 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
             Element expected = (Element) e.evaluate(context);
             if (!strict) {
                 if (!PluginCompareUtils.compareNode(this, expected, element, context.peek(), context, result, client)) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), new WritablePage(client));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Nodes do not match."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
                 }
             } else {
                 Object tmp = ((JavascriptExecutor) client).executeScript("return arguments[0].innerHTML", element);

@@ -21,15 +21,16 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFind;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Check if an id, name, value, xpath, etc is not present.
@@ -49,7 +50,7 @@ public class PluginNotPresent extends AbstractPluginFind {
         if (list == null || list.isEmpty()) {
             result.addResult(Success.INSTANCE, context.peek());
         } else {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinderInstance().resume(context) + "."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
         }
     }
 

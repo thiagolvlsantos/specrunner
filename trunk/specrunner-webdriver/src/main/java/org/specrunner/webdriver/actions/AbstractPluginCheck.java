@@ -19,15 +19,16 @@ package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFind;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Partial implementation of actions in checkboxes.
@@ -48,7 +49,7 @@ public abstract class AbstractPluginCheck extends AbstractPluginFind {
         for (int i = 0; i < elements.length; i++) {
             WebElement e = elements[i];
             if (!isCheckbox(e)) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + e + " is not a checkbox."), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + e + " is not a checkbox."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
                 success = false;
                 break;
             }

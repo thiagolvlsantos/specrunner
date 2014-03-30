@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.util;
+package org.specrunner.webdriver.result;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -47,7 +47,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * @author Thiago Santos
  * 
  */
-public class WritablePage implements IWritable {
+public class WritableWebDriver implements IWritable {
 
     /**
      * Map of information.
@@ -68,13 +68,8 @@ public class WritablePage implements IWritable {
      * @param driver
      *            The driver.
      */
-    public WritablePage(WebDriver driver) {
+    public WritableWebDriver(WebDriver driver) {
         this(null, driver);
-    }
-
-    @Override
-    public boolean hasInformation() {
-        return information != null && !information.isEmpty();
     }
 
     /**
@@ -85,7 +80,7 @@ public class WritablePage implements IWritable {
      * @param driver
      *            The web driver.
      */
-    public WritablePage(Map<String, Object> information, WebDriver driver) {
+    public WritableWebDriver(Map<String, Object> information, WebDriver driver) {
         this.information = information;
         try {
             if (driver instanceof IHtmlUnitDriver) {
@@ -102,6 +97,11 @@ public class WritablePage implements IWritable {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
+    }
+
+    @Override
+    public boolean hasInformation() {
+        return information != null && !information.isEmpty();
     }
 
     /**

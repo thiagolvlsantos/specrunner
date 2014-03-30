@@ -19,15 +19,16 @@ package org.specrunner.webdriver.assertions;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFind;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Check if elements are selected.
@@ -48,11 +49,11 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind {
             if (isCheckbox(element) || isRadio(element)) {
                 boolean componentStatus = element.isSelected();
                 if (expected() != componentStatus) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (componentStatus ? "checked" : "unchecked") + "'."), new WritablePage(client));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (componentStatus ? "checked" : "unchecked") + "'."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
                     error = true;
                 }
             } else {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a checkbox or radio is " + element.getTagName()), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a checkbox or radio is " + element.getTagName()), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
                 error = true;
             }
         }

@@ -15,34 +15,38 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.actions;
+package org.specrunner.webdriver.result;
+
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
-import org.specrunner.SRServices;
-import org.specrunner.context.IContext;
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.type.Command;
-import org.specrunner.result.IResultSet;
-import org.specrunner.result.IWritableFactoryManager;
-import org.specrunner.result.status.Success;
-import org.specrunner.webdriver.AbstractPluginBrowserAware;
+import org.specrunner.result.IWritable;
+import org.specrunner.result.IWritableFactory;
 
 /**
- * Take a snapshoot.
+ * Writable factory for WebDriver.
  * 
  * @author Thiago Santos
- * 
  */
-public class PluginView extends AbstractPluginBrowserAware {
+@SuppressWarnings("serial")
+public class WritableFactoryWebDriver implements IWritableFactory<WebDriver> {
 
     @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
+    public void initialize() {
     }
 
     @Override
-    protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        result.addResult(Success.INSTANCE, context.peek(), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
+    public Class<WebDriver> getType() {
+        return WebDriver.class;
+    }
+
+    @Override
+    public IWritable newWritable(WebDriver driver) {
+        return newWritable(null, driver);
+    }
+
+    @Override
+    public IWritable newWritable(Map<String, Object> information, WebDriver driver) {
+        return new WritableWebDriver(information, driver);
     }
 }

@@ -25,15 +25,16 @@ import nu.xom.Nodes;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Perform some action over select elements.
@@ -51,7 +52,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         if (!isSelect(element)) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
         } else {
             Node node = context.getNode();
             Nodes nodes = node.query("descendant::li");
@@ -77,7 +78,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
                 }
             }
             if (errors > 0) {
-                result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException(errors + " option(s) is(are) missing."), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException(errors + " option(s) is(are) missing."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             } else {
                 result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }

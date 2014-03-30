@@ -27,6 +27,7 @@ import nu.xom.Nodes;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
@@ -34,6 +35,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.CellAdapter;
@@ -42,7 +44,6 @@ import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Compare tables.
@@ -61,7 +62,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         Node node = context.getNode();
         boolean success = compareTable(context, result, client, element, node);
         if (!success) {
-            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Tables do not match."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Tables do not match."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
         }
     }
 
@@ -95,7 +96,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
 
         List<WebElement> tablesReceived = element.findElements(By.xpath("descendant-or-self::table"));
         if (tablesReceived.isEmpty()) {
-            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), new WritablePage(client));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             return false;
         }
         WebElement tableReceived = tablesReceived.get(0);
