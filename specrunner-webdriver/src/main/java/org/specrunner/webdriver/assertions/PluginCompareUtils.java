@@ -30,16 +30,17 @@ import org.joda.time.format.DateTimeFormatter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Comparison utilities.
@@ -106,7 +107,7 @@ public final class PluginCompareUtils {
     protected static void addError(String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         try {
             if (client != null) {
-                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), new WritablePage(client));
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             } else {
                 result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received));
             }

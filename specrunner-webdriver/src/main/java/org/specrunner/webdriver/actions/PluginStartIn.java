@@ -20,18 +20,19 @@ package org.specrunner.webdriver.actions;
 import nu.xom.Node;
 
 import org.openqa.selenium.WebDriver;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringProvider;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * Sets initial page of a given driver. Once set, relative references can be
@@ -98,7 +99,7 @@ public class PluginStartIn extends AbstractPluginUrlAware {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);
                 }
-                result.addResult(Failure.INSTANCE, context.newBlock(node, this), e, new WritablePage(client));
+                result.addResult(Failure.INSTANCE, context.newBlock(node, this), e, SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
                 return;
             }
         }

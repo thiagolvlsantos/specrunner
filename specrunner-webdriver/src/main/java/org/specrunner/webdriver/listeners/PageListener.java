@@ -24,18 +24,19 @@ import nu.xom.Element;
 import nu.xom.ParentNode;
 
 import org.openqa.selenium.WebDriver;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.core.SourceDumperWritables;
 import org.specrunner.listeners.core.AbstractPluginListener;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Detail;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.PluginBrowser;
-import org.specrunner.webdriver.util.WritablePage;
 
 /**
  * A listener to record screenshots after each step.
@@ -93,7 +94,7 @@ public class PageListener extends AbstractPluginListener {
                     Element ele = new Element("span");
                     UtilNode.setIgnore(ele);
                     view.appendChild(ele);
-                    result.addResult(Detail.INSTANCE, context.newBlock(ele, p), new WritablePage(info, client));
+                    result.addResult(Detail.INSTANCE, context.newBlock(ele, p), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(info, client));
                 }
             }
         }
