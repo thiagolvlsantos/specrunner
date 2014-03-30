@@ -17,16 +17,18 @@
  */
 package org.specrunner.htmlunit.assertions;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
@@ -50,7 +52,7 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind {
         boolean error = false;
         for (HtmlElement element : elements) {
             if (!(element instanceof HtmlCheckBoxInput) && !(element instanceof HtmlRadioButtonInput)) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a checkbox or radio is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
                 error = true;
             } else {
                 boolean onComponent = false;
@@ -63,7 +65,7 @@ public abstract class AbstractPluginCheckable extends AbstractPluginFind {
                     onComponent = in.isChecked();
                 }
                 if (expected() != onComponent) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " should be '" + (expected() ? "checked" : "unchecked") + "' but is '" + (onComponent ? "checked" : "unchecked") + "'."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
                     error = true;
                 }
             }

@@ -17,15 +17,17 @@
  */
 package org.specrunner.htmlunit.actions;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginBrowserAware;
-import org.specrunner.htmlunit.util.WritablePage;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Success;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
@@ -43,6 +45,6 @@ public class PluginView extends AbstractPluginBrowserAware {
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client) throws PluginException {
-        result.addResult(Success.INSTANCE, context.peek(), new WritablePage(client.getCurrentWindow().getEnclosedPage()));
+        result.addResult(Success.INSTANCE, context.peek(), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(client.getCurrentWindow().getEnclosedPage()));
     }
 }

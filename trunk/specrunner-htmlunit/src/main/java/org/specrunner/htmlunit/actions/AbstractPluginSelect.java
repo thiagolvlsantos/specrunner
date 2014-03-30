@@ -22,16 +22,18 @@ import java.util.List;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.htmlunit.util.WritablePage;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -54,7 +56,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         if (!(element instanceof HtmlSelect)) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), new WritablePage(page));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
         } else {
             Node node = context.getNode();
             Nodes nodes = node.query("descendant::li");
@@ -81,7 +83,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
                 }
             }
             if (errors > 0) {
-                result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException(errors + " option(s) is(are) missing."), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException(errors + " option(s) is(are) missing."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
             } else {
                 result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }

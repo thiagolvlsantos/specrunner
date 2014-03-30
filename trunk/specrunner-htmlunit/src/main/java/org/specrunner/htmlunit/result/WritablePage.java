@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.htmlunit.util;
+package org.specrunner.htmlunit.result;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -56,11 +56,6 @@ public class WritablePage implements IWritable {
      */
     public WritablePage(Page page) {
         this(null, page);
-    }
-
-    @Override
-    public boolean hasInformation() {
-        return information != null && !information.isEmpty();
     }
 
     /**
@@ -116,6 +111,11 @@ public class WritablePage implements IWritable {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
+    }
+
+    @Override
+    public boolean hasInformation() {
+        return information != null && !information.isEmpty();
     }
 
     @Override

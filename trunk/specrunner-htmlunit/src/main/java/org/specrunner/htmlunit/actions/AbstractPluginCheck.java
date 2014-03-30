@@ -17,16 +17,18 @@
  */
 package org.specrunner.htmlunit.actions;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
-import org.specrunner.htmlunit.util.WritablePage;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
@@ -49,7 +51,7 @@ public abstract class AbstractPluginCheck extends AbstractPluginFind {
         boolean success = true;
         for (int i = 0; i < elements.length; i++) {
             if (!isCheckbox(elements[i])) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + elements[i] + " is not a checkbox."), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + elements[i] + " is not a checkbox."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
                 success = false;
                 break;
             }

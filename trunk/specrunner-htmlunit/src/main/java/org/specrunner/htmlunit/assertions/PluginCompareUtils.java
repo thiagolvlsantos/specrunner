@@ -27,17 +27,19 @@ import nu.xom.Nodes;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -109,7 +111,7 @@ public final class PluginCompareUtils {
             if (page == null) {
                 result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received));
             } else {
-                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

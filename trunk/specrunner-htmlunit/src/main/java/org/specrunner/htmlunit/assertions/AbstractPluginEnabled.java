@@ -17,16 +17,18 @@
  */
 package org.specrunner.htmlunit.assertions;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFind;
-import org.specrunner.htmlunit.util.WritablePage;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 
+import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DisabledElement;
@@ -49,12 +51,12 @@ public abstract class AbstractPluginEnabled extends AbstractPluginFind {
         boolean error = false;
         for (HtmlElement element : elements) {
             if (!(element instanceof DisabledElement)) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinderInstance().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), new WritablePage(page));
+                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element on " + getFinderInstance().resume(context) + " is not an " + DisabledElement.class.getName() + " is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
                 error = true;
             } else {
                 DisabledElement in = (DisabledElement) element;
                 if (!(enabled() == !in.isDisabled())) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element '" + getFinderInstance().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), new WritablePage(page));
+                    result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element '" + getFinderInstance().resume(context) + " should be '" + (enabled() ? "enabled" : "disabled") + "' but is '" + (!in.isDisabled() ? "enabled" : "disabled") + "'."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
                     error = true;
                 }
             }
