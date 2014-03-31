@@ -80,11 +80,6 @@ public class WritablePage implements IWritable {
                     HtmlPage html = (HtmlPage) page;
                     // add imagens/css/etc.
                     html.save(tmp);
-                    // remove XML readers.
-                    fout = new FileWriter(tmp);
-                    String xml = html.asXml();
-                    fout.write(xml.substring(xml.indexOf('\n'), xml.lastIndexOf('\n')));
-                    fout.close();
                 } catch (IOException e) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Page information could not be saved.");
@@ -157,7 +152,7 @@ public class WritablePage implements IWritable {
         try {
             File dir = new File(from.getParentFile(), name.substring(0, name.lastIndexOf('.')));
             if (dir.exists()) {
-                move(dir, new File(target));
+                move(dir, new File(to.getParentFile(), dir.getName()));
             }
         } catch (IOException e) {
             throw new ResultException(e);
