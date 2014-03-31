@@ -57,6 +57,9 @@
                         <tr>
                             <td colspan="2"><input type="text" value="Linha" /> <textarea>Texto</textarea></td>
                         </tr>
+                        <tr>
+                            <td colspan="2"><img src="img/image.jpg"/></td>
+                        </tr>
                     </tbody>
                 </table>
             </td>
