@@ -25,6 +25,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
@@ -196,7 +197,7 @@ public class PluginDatabase extends AbstractPluginValue {
     }
 
     @Override
-    public void doEnd(IContext context, IResultSet result) throws PluginException {
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
         String[] bases = StringUtil.tokenize(getName() != null ? getName() : DEFAULT_DATABASE_NAME, separator);
         if (providerInstance == null) {
             providerInstance = new IDatabase[bases.length];
@@ -219,7 +220,7 @@ public class PluginDatabase extends AbstractPluginValue {
                         }
                         context.saveGlobal(currentName, ir.getObject());
                         result.addResult(Success.INSTANCE, context.peek());
-                        return;
+                        return ENext.DEEP;
                     }
                 }
             }
@@ -273,6 +274,7 @@ public class PluginDatabase extends AbstractPluginValue {
         if (failure == 0) {
             result.addResult(Success.INSTANCE, context.peek());
         }
+        return ENext.DEEP;
     }
 
     /**

@@ -33,7 +33,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilIO;
-import org.specrunner.util.UtilLog;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
 
 /**
  * Allows a pause in execution, waiting for an 'OK' in dialog, or 'Enter' when
@@ -43,6 +44,16 @@ import org.specrunner.util.UtilLog;
  * 
  */
 public class PluginPause extends AbstractPlugin {
+
+    /**
+     * Condition.
+     */
+    public static final String FEATURE_PAUSE_CONDITION = PluginPause.class.getName() + ".condition";
+
+    /**
+     * Model condition.
+     */
+    public static final String FEATURE_PAUSE_CONDITION_MODEL = PluginPause.class.getName() + ".conditionModel";
 
     /**
      * Enter feature.
@@ -57,7 +68,7 @@ public class PluginPause extends AbstractPlugin {
     /**
      * Pause using a keyboard request.
      */
-    private boolean enter;
+    private Boolean enter;
 
     /**
      * Pause time.
@@ -69,7 +80,7 @@ public class PluginPause extends AbstractPlugin {
      * 
      * @return true, if pause halt on 'Enter', false, otherwise.
      */
-    public boolean isEnter() {
+    public Boolean getEnter() {
         return enter;
     }
 
@@ -80,7 +91,7 @@ public class PluginPause extends AbstractPlugin {
      *            true to request for 'Enter', false, otherwise (default is a
      *            dialog request).
      */
-    public void setEnter(boolean enter) {
+    public void setEnter(Boolean enter) {
         this.enter = enter;
     }
 
@@ -112,7 +123,11 @@ public class PluginPause extends AbstractPlugin {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
-        fm.set(FEATURE_ENTER, this);
+        fm.set(FEATURE_PAUSE_CONDITION, this);
+        fm.set(FEATURE_PAUSE_CONDITION_MODEL, this);
+        if (enter == null) {
+            fm.set(FEATURE_ENTER, this);
+        }
         if (time == null) {
             fm.set(FEATURE_TIME, this);
         }
@@ -120,22 +135,19 @@ public class PluginPause extends AbstractPlugin {
 
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
+        IOutput output = SRServices.get(IOutputFactory.class).currentOutput();
         if (getTime() != null) {
             try {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") sleeping for " + getTime() + "mls.");
-                }
+                output.println("(" + Thread.currentThread().getName() + ") sleeping for " + getTime() + "mls.");
                 Thread.sleep(getTime());
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("(" + Thread.currentThread().getName() + ") woke up.");
-                }
+                output.println("(" + Thread.currentThread().getName() + ") woke up.");
                 result.addResult(Success.INSTANCE, context.peek());
             } catch (InterruptedException e) {
                 result.addResult(Failure.INSTANCE, context.peek(), e);
             }
         } else {
             try {
-                if (enter) {
+                if (enter != null && enter) {
                     UtilIO.pressKey();
                 } else {
                     JOptionPane.showMessageDialog(null, "Pause requested. Press 'Ok' to continue.");

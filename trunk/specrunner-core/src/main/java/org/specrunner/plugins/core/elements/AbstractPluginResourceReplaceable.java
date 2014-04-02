@@ -102,8 +102,8 @@ public abstract class AbstractPluginResourceReplaceable extends AbstractPluginRe
                     }
                     pathToFile.put(key, newName);
                 } else {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Reuse of " + newName + ".");
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Reuse of " + newName + ".");
                     }
                 }
                 replaceName(element, newName);

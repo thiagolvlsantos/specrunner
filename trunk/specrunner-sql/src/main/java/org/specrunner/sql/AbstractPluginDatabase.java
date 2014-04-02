@@ -27,7 +27,6 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
-import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
@@ -212,7 +211,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+    public void doEnd(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         Schema schema = PluginSchema.getSchema(context, getSchema());
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(getClass().getSimpleName() + "     schema(" + getSchema() + "):" + schema);
@@ -267,6 +266,5 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
         if (erros == 0) {
             result.addResult(Success.INSTANCE, context.peek());
         }
-        return ENext.DEEP;
     }
 }
