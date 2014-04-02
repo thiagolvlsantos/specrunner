@@ -367,7 +367,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             }
         }
         StringBuilder order = keys;
-        if (virtual && references.length() > 0) {
+        if (virtual != null && virtual && references.length() > 0) {
             order = references;
         }
         return "select " + fields + " from " + schema.getName() + "." + table.getName() + " order by " + order;
