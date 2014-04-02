@@ -33,6 +33,8 @@ import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
 
 /**
  * IO utilities.
@@ -287,12 +289,9 @@ public final class UtilIO {
      */
     public static void pressKey() throws IOException {
         IConcurrentMapping cm = SRServices.get(IConcurrentMapping.class);
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("(" + cm.getThread() + ") read keybord (press 'Enter' to go on)...");
-        }
-        int count = System.in.read(new byte[READ_SIZE]);
-        if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("(" + cm.getThread() + ") done..." + count);
-        }
+        IOutput output = SRServices.get(IOutputFactory.class).currentOutput();
+        output.println("(" + cm.getThread() + ") read keybord (press 'Enter' to go on)...");
+        System.in.read(new byte[READ_SIZE]);
+        output.println("(" + cm.getThread() + ") done...");
     }
 }

@@ -19,8 +19,10 @@ package org.specrunner.junit;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import nu.xom.Document;
 import nu.xom.Nodes;
@@ -89,9 +91,14 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
             Document document = source.getDocument();
             Nodes scenarios = document.query("//*[contains(@class,'" + ScenarioListener.CSS_SCENARIO + "')]");
             listeners = new LinkedList<INodeListener>();
+            Set<String> titles = new HashSet<String>();
             for (int i = 0; i < scenarios.size(); i++) {
                 String title = UtilNode.getCssNode(scenarios.get(i), ScenarioListener.CSS_TITLE).getValue();
                 title = UtilString.camelCase(title, true);
+                if (titles.contains(title)) {
+                    throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
+                }
+                titles.add(title);
                 methods.add(new ScenarioFrameworkMethod(fake, title));
                 listeners.add(new ScenarioListener(title));
             }

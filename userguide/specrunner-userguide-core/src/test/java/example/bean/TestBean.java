@@ -9,5 +9,4 @@ public class TestBean {
     public String name() {
         return " Working";
     }
-
 }

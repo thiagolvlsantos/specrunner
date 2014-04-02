@@ -210,7 +210,7 @@ public class RunnerImpl implements IRunner {
                 factory.finalizePlugin(node, context, plugin);
                 end(context, result, plugin, listeners);
             } else {
-                if (block.hasNode()) {
+                if (block.hasNode() && node instanceof Element) {
                     result.addResult(Info.INSTANCE, block, "Conditional '" + ((Element) node).getAttributeValue("condition") + "' prevented execution.");
                 } else {
                     result.addResult(Info.INSTANCE, block, "Conditional prevented execution. " + plugin);
