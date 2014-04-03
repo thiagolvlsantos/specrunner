@@ -58,6 +58,10 @@ public interface ISchemaLoaderXML extends ISchemaLoader {
      */
     String ATT_REFERENCE = "reference";
     /**
+     * Attribute 'pointer' mark.
+     */
+    String ATTR_POINTER = "pointer";
+    /**
      * Default value for boolean fields marks.
      */
     String DEFAULT_FALSE = "false";

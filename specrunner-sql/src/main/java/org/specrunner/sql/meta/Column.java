@@ -92,6 +92,10 @@ public class Column implements IReplicable<Column> {
      * Virtual column indicator.
      */
     private boolean virtual;
+    /**
+     * Column to lookup for virtual column type.
+     */
+    private String pointer;
 
     /**
      * Get the column table.
@@ -362,8 +366,30 @@ public class Column implements IReplicable<Column> {
         return this;
     }
 
+    /**
+     * Get the column pointer to a column with the type of this virtual
+     * register.
+     * 
+     * @return The column to lookup for virtual key table alias.
+     */
+    public String getPointer() {
+        return pointer;
+    }
+
+    /**
+     * Set the pointer reference.
+     * 
+     * @param pointer
+     *            A pointer.
+     * @return The column itself.
+     */
+    public Column setPointer(String pointer) {
+        this.pointer = pointer;
+        return this;
+    }
+
     @Override
     public Column copy() {
-        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setSequence(sequence).setDate(date).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual);
+        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setSequence(sequence).setDate(date).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual).setPointer(pointer);
     }
 }

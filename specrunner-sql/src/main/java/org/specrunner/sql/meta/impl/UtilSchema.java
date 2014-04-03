@@ -83,5 +83,6 @@ public final class UtilSchema {
         }
         column.setVirtual(column.isVirtual() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_VIRTUAL, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setReference(column.isReference() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_REFERENCE, ISchemaLoaderXML.DEFAULT_FALSE)));
+        column.setPointer(holder.getAttribute(ISchemaLoaderXML.ATTR_POINTER, column.getPointer()));
     }
 }
