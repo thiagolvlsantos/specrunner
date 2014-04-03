@@ -632,13 +632,17 @@ public class Database implements IDatabase {
                 String alias = column.getAlias();
                 if (column.isVirtual()) {
                     // the target table is the column header
-                    if (column.getPointer() != null) {
-                        String pointer = column.getPointer();
+                    String pointer = column.getPointer();
+                    if (pointer != null) {
+                        alias = null;
                         for (Value vp : values) {
-                            if (vp.getColumn().getAlias().equalsIgnoreCase(pointer)) {
+                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
                                 alias = String.valueOf(vp.getCell().getValue());
                                 break;
                             }
+                        }
+                        if (alias == null) {
+                            throw new PluginException("The column " + column.getAlias() + " point to a non-existing column of this table named '" + pointer + "'. Adjust attribute 'pointer' into database mapping file.");
                         }
                     }
                     obj = idManager.lookup(alias, obj);
@@ -828,17 +832,23 @@ public class Database implements IDatabase {
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
-                    Column tmp = column.copy();
-                    if (column.getPointer() != null) {
-                        String pointer = column.getPointer();
+                    Column virtual = column;
+                    String pointer = column.getPointer();
+                    if (pointer != null) {
+                        virtual = column.copy();
+                        String alias = null;
                         for (Value vp : values) {
-                            if (vp.getColumn().getAlias().equalsIgnoreCase(pointer)) {
-                                tmp.setAlias(String.valueOf(vp.getCell().getValue()));
+                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
+                                alias = String.valueOf(vp.getCell().getValue());
                                 break;
                             }
                         }
+                        if (alias == null) {
+                            throw new PluginException("The column " + column.getAlias() + " point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
+                        }
+                        virtual.setAlias(alias);
                     }
-                    value = idManager.findValue(con, tmp, value, outputs);
+                    value = idManager.findValue(con, virtual, value, outputs);
                 }
                 if (column.isDate()) {
                     IComparator comp = column.getComparator();
@@ -881,18 +891,25 @@ public class Database implements IDatabase {
                             UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                         }
                         Object value = v.getValue();
+                        Column virtual = null;
                         if (column.isVirtual()) {
-                            Column tmp = column.copy();
-                            if (column.getPointer() != null) {
-                                String pointer = column.getPointer();
+                            virtual = column;
+                            String pointer = column.getPointer();
+                            if (pointer != null) {
+                                virtual = column.copy();
+                                String alias = null;
                                 for (Value vp : values) {
-                                    if (vp.getColumn().getAlias().equalsIgnoreCase(pointer)) {
-                                        tmp.setAlias(String.valueOf(vp.getCell().getValue()));
+                                    if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
+                                        alias = String.valueOf(vp.getCell().getValue());
                                         break;
                                     }
                                 }
+                                if (alias == null) {
+                                    throw new PluginException("The column " + column.getAlias() + " point to a non-existing column of this table named '" + pointer + "'. Adjust attribute 'pointer' into database mapping file.");
+                                }
+                                virtual.setAlias(alias);
                             }
-                            value = idManager.findValue(con, tmp, value, outputs);
+                            value = idManager.findValue(con, virtual, value, outputs);
                         }
                         comparator.initialize();
                         CellAdapter cell = v.getCell();
