@@ -70,7 +70,7 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
                 for (int j = 0; j < nColumns.size(); j++) {
                     INodeHolder nColumn = UtilNode.newNodeHolder(nColumns.get(j));
                     Column column = new Column();
-                    UtilSchema.setupColumn(column, nColumn);
+                    UtilSchema.setupColumn(table, column, nColumn);
                     table.add(column);
                 }
             }

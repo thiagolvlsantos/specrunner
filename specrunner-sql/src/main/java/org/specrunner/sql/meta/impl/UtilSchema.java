@@ -24,6 +24,7 @@ import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
+import org.specrunner.sql.meta.Table;
 import org.specrunner.util.xom.INodeHolder;
 
 /**
@@ -44,6 +45,8 @@ public final class UtilSchema {
      * Setup a column in a conservative way. Only filled attributes are replaced
      * the old ones remain unchanged.
      * 
+     * @param table
+     *            The table where column is expected to be.
      * @param column
      *            The column to fill.
      * @param holder
@@ -53,7 +56,7 @@ public final class UtilSchema {
      * @throws ComparatorException
      *             On comparator lookup errors.
      */
-    public static void setupColumn(Column column, INodeHolder holder) throws ConverterException, ComparatorException {
+    public static void setupColumn(Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException {
         column.setName(holder.getAttribute(ISchemaLoaderXML.ATTR_NAME, column.getName()));
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
         column.setKey(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_KEY, ISchemaLoaderXML.DEFAULT_FALSE)));
@@ -71,7 +74,7 @@ public final class UtilSchema {
                 try {
                     obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());
                 } catch (ConverterException e) {
-                    throw new ConverterException("Convertion error at table: " + column.getTable().getName() + ", column: " + column.getName() + ". Attempt to convert default value '" + defaultValue + "' using '" + conv + "'.", e);
+                    throw new ConverterException("Convertion error at table: " + table.getName() + ", column: " + column.getName() + ". Attempt to convert default value '" + defaultValue + "' using '" + conv + "'.", e);
                 }
                 column.setDefaultValue(obj);
             } else {
