@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<pipeline>
+    <listener>org.specrunner.pipeline.ProfilerPipeListener</listener>
+    <pipe>org.specrunner.core.pipes.PipeModel</pipe>
+    <pipe>org.specrunner.core.pipes.PipeTime</pipe>
+    <pipe>org.specrunner.core.pipes.PipeMemory</pipe>
+    <pipe>org.specrunner.core.pipes.PipeFeatureManager</pipe>
+    <pipe>org.specrunner.core.pipes.PipeListenerManager</pipe>
+    <pipe>org.specrunner.core.pipes.PipeSource</pipe>
+    <pipe>org.specrunner.core.pipes.PipeTransformSource</pipe>
+    <pipe>org.specrunner.core.pipes.PipeRunner</pipe>
+    <pipe>org.specrunner.core.pipes.PipeContext</pipe>
+    <pipe>org.specrunner.core.pipes.PipePopulator</pipe>
+    <pipe>org.specrunner.core.pipes.PipeResult</pipe>
+    <pipe>org.specrunner.core.pipes.PipeAnnotator</pipe>
+    <pipe>org.specrunner.core.pipes.PipeDumper</pipe>
+    <pipe>org.specrunner.core.pipes.PipeReporter</pipe>
+    <pipe>org.specrunner.core.pipes.PipeMetavariables</pipe>
+    <pipe>org.specrunner.core.pipes.PipeRun</pipe>
+    <pipe>org.specrunner.core.pipes.PipeAnnotate</pipe>
+    <pipe>org.specrunner.core.pipes.PipeTimestamp</pipe>
+    <pipe>org.specrunner.core.pipes.PipeDump</pipe>
+    <pipe>org.specrunner.core.pipes.PipeReport</pipe>
+</pipeline>
