@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.TreeSet;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
+import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
@@ -708,33 +710,49 @@ public class Database implements IDatabase {
         StringBuilder sbPla = new StringBuilder();
         Map<String, Integer> indexes = new HashMap<String, Integer>();
         boolean hasKeys = false;
+        boolean hasReferences = false;
         for (Value v : values) {
-            if (v.getColumn().isKey()) {
-                hasKeys = true;
-                break;
-            }
+            hasKeys = hasKeys || v.getColumn().isKey();
+            hasReferences = hasReferences || v.getColumn().isReference();
         }
         String and = " AND ";
         int i = 1;
+        String name;
         if (hasKeys) {
             for (Value v : values) {
+                name = v.getColumn().getName();
                 if (!v.getColumn().isKey()) {
-                    sbVal.append(v.getColumn().getName() + ",");
+                    sbVal.append(name + ",");
+                } else {
+                    sbPla.append(name + (v.getColumn().isDate() ? " between ? and ?" : " = ?") + (i > 0 ? and : ""));
+                    indexes.put(name, i++);
+                    if (v.getColumn().isDate()) {
+                        i++;
+                    }
                 }
             }
+        } else if (hasReferences) {
             for (Value v : values) {
-                if (v.getColumn().isKey()) {
-                    indexes.put(v.getColumn().getName(), i++);
-                    sbPla.append(v.getColumn().getName() + " = ?" + and);
+                name = v.getColumn().getName();
+                if (!v.getColumn().isReference()) {
+                    sbVal.append(name + ",");
+                } else {
+                    sbPla.append(name + (v.getColumn().isDate() ? " between ? and ?" : " = ?") + (i > 0 ? and : ""));
+                    indexes.put(name, i++);
+                    if (v.getColumn().isDate()) {
+                        i++;
+                    }
                 }
             }
         } else {
             for (Value v : values) {
-                sbVal.append(v.getColumn().getName() + ",");
-            }
-            for (Value v : values) {
-                indexes.put(v.getColumn().getName(), i++);
-                sbPla.append(v.getColumn().getName() + " = ?" + and);
+                name = v.getColumn().getName();
+                sbVal.append(name + ",");
+                sbPla.append(name + (v.getColumn().isDate() ? " between ? and ?" : " = ?") + (i > 0 ? and : ""));
+                indexes.put(name, i++);
+                if (v.getColumn().isDate()) {
+                    i++;
+                }
             }
         }
         if (sbVal.length() == 0) {
@@ -802,10 +820,27 @@ public class Database implements IDatabase {
                 if (column.isVirtual()) {
                     value = idManager.findValue(con, column, value, outputs);
                 }
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("performOut.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + value);
+                if (column.isDate()) {
+                    IComparator comp = column.getComparator();
+                    if (!(comp instanceof ComparatorDate)) {
+                        throw new PluginException("Date columns must have comparators of type 'date'. Current type:" + comp.getClass());
+                    }
+                    ComparatorDate comparator = (ComparatorDate) comp;
+                    comparator.initialize();
+                    Date dateBefore = new Date(((Date) value).getTime() - comparator.getTolerance());
+                    Date dateAfter = new Date(((Date) value).getTime() + comparator.getTolerance());
+                    pstmt.setObject(index, dateBefore);
+                    pstmt.setObject(index + 1, dateAfter);
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("performOut.SET(" + (index) + "," + column.getAlias() + "," + column.getName() + ") = " + dateBefore);
+                        UtilLog.LOG.debug("performOut.SET(" + (index + 1) + "," + column.getAlias() + "," + column.getName() + ") = " + dateAfter);
+                    }
+                } else {
+                    if (UtilLog.LOG.isDebugEnabled()) {
+                        UtilLog.LOG.debug("performOut.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + value);
+                    }
+                    pstmt.setObject(index, value);
                 }
-                pstmt.setObject(index, value);
                 v.setValue(value);
             }
         }
