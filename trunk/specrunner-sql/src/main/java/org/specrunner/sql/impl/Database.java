@@ -629,12 +629,22 @@ public class Database implements IDatabase {
             Integer index = indexes.get(column.getName());
             if (index != null) {
                 Object obj = v.getValue();
+                String alias = column.getAlias();
                 if (column.isVirtual()) {
                     // the target table is the column header
-                    obj = idManager.lookup(column.getAlias(), obj);
+                    if (column.getPointer() != null) {
+                        String pointer = column.getPointer();
+                        for (Value vp : values) {
+                            if (vp.getColumn().getAlias().equalsIgnoreCase(pointer)) {
+                                alias = String.valueOf(vp.getCell().getValue());
+                                break;
+                            }
+                        }
+                    }
+                    obj = idManager.lookup(alias, obj);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("performIn.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + obj);
+                    UtilLog.LOG.debug("performIn.SET(" + index + "," + alias + "," + column.getName() + ") = " + obj);
                 }
                 pstmt.setObject(index, obj);
                 if (column.isReference()) {
@@ -818,7 +828,17 @@ public class Database implements IDatabase {
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
-                    value = idManager.findValue(con, column, value, outputs);
+                    Column tmp = column.copy();
+                    if (column.getPointer() != null) {
+                        String pointer = column.getPointer();
+                        for (Value vp : values) {
+                            if (vp.getColumn().getAlias().equalsIgnoreCase(pointer)) {
+                                tmp.setAlias(String.valueOf(vp.getCell().getValue()));
+                                break;
+                            }
+                        }
+                    }
+                    value = idManager.findValue(con, tmp, value, outputs);
                 }
                 if (column.isDate()) {
                     IComparator comp = column.getComparator();
@@ -862,7 +882,17 @@ public class Database implements IDatabase {
                         }
                         Object value = v.getValue();
                         if (column.isVirtual()) {
-                            value = idManager.findValue(con, column, value, outputs);
+                            Column tmp = column.copy();
+                            if (column.getPointer() != null) {
+                                String pointer = column.getPointer();
+                                for (Value vp : values) {
+                                    if (vp.getColumn().getAlias().equalsIgnoreCase(pointer)) {
+                                        tmp.setAlias(String.valueOf(vp.getCell().getValue()));
+                                        break;
+                                    }
+                                }
+                            }
+                            value = idManager.findValue(con, tmp, value, outputs);
                         }
                         comparator.initialize();
                         CellAdapter cell = v.getCell();
