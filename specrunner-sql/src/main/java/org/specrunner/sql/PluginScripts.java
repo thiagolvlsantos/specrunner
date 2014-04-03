@@ -484,12 +484,12 @@ public class PluginScripts extends AbstractPluginValue {
                         }
                         continue;
                     }
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Command  before: " + line);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Command  before: " + line);
                     }
                     line = UtilEvaluator.replace(line, context, true);
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("Command   after: " + line);
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Command   after: " + line);
                     }
                     command.append(" " + line);
                 }
