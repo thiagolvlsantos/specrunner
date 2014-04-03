@@ -4,7 +4,7 @@
 	<groupId>org.specrunner.application</groupId>
 	<artifactId>specrunner-application</artifactId>
 	<packaging>war</packaging>
-	<version>1.3.16</version>
+	<version>1.3.17</version>
 	<!-- TODO project name -->
 	<name>quickstart</name>
 	<description></description>
