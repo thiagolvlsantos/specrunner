@@ -217,7 +217,7 @@ public class Database implements IDatabase {
             // update to specific header adjusts
             if (column != null) {
                 try {
-                    UtilSchema.setupColumn(column, cell);
+                    UtilSchema.setupColumn(table, column, cell);
                 } catch (ConverterException e) {
                     throw new PluginException(e);
                 } catch (ComparatorException e) {
@@ -246,7 +246,7 @@ public class Database implements IDatabase {
                 Column column = columns[j].copy();
                 CellAdapter td = tds.get(j);
                 try {
-                    UtilSchema.setupColumn(column, td);
+                    UtilSchema.setupColumn(table, column, td);
                 } catch (ConverterException e) {
                     throw new PluginException(e);
                 } catch (ComparatorException e) {
