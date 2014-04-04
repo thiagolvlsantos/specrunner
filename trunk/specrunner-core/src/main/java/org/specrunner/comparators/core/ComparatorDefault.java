@@ -54,6 +54,17 @@ public class ComparatorDefault implements IComparator {
             Comparable right = (Comparable) o2;
             return left.compareTo(right);
         }
-        return 0;
+        return toString(o1).compareTo(toString(o2));
+    }
+
+    /**
+     * Convert object to String.
+     * 
+     * @param obj
+     *            An object.
+     * @return A string for that object.
+     */
+    protected String toString(Object obj) {
+        return String.valueOf(obj);
     }
 }

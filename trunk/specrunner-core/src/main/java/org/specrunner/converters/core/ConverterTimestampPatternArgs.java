@@ -15,24 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.core;
+package org.specrunner.converters.core;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+import org.specrunner.converters.ConverterException;
 
 /**
- * A string comparator using equals.
+ * Convert any date (Timestamp from Java), given a provided pattern in arg[0].
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorString extends ComparatorDefault {
+public class ConverterTimestampPatternArgs extends ConverterDatePatternArgs {
 
     @Override
-    public Class<?> getType() {
-        return String.class;
-    }
-
-    @Override
-    public boolean match(Object expected, Object received) {
-        return expected == null ? received == null : toString(expected).equals(toString(received));
+    public Object convert(Object value, Object[] args) throws ConverterException {
+        Object tmp = super.convert(value, args);
+        if (tmp instanceof Date) {
+            tmp = new Timestamp(((Date) tmp).getTime());
+        }
+        return tmp;
     }
 }

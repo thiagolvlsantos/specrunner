@@ -15,24 +15,21 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.core;
+package org.specrunner.converters.core;
 
 /**
- * A string comparator using equals.
+ * Create current date (in timestamp).
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorString extends ComparatorDefault {
+public class ConverterTimestampCurrent extends ConverterTimestampCurrentTemplate {
 
-    @Override
-    public Class<?> getType() {
-        return String.class;
-    }
-
-    @Override
-    public boolean match(Object expected, Object received) {
-        return expected == null ? received == null : toString(expected).equals(toString(received));
+    /**
+     * Basic timestamp converter.
+     */
+    public ConverterTimestampCurrent() {
+        super(new String[] { "hora atual", "data hora atual", "current time", "current timestamp" });
     }
 }
