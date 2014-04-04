@@ -54,6 +54,11 @@ public class NodeHolder implements INodeHolder {
     protected Node node;
 
     /**
+     * The attribute value.
+     */
+    protected String attributeValue = ATTRIBUTE_VALUE;
+
+    /**
      * Create a element holder.
      * 
      * @param element
@@ -71,6 +76,16 @@ public class NodeHolder implements INodeHolder {
     @Override
     public void setNode(Node element) {
         this.node = element;
+    }
+
+    @Override
+    public String getAttributeValue() {
+        return attributeValue;
+    }
+
+    @Override
+    public void setAttributeValue(String attributeValue) {
+        this.attributeValue = attributeValue;
     }
 
     @Override
@@ -304,8 +319,8 @@ public class NodeHolder implements INodeHolder {
                     }
                 } else {
                     String tmp;
-                    if (hasAttribute(ATTRIBUTE_VALUE)) {
-                        tmp = getAttribute(ATTRIBUTE_VALUE);
+                    if (hasAttribute(attributeValue)) {
+                        tmp = getAttribute(attributeValue);
                         if (UtilLog.LOG.isTraceEnabled()) {
                             UtilLog.LOG.trace("Attribute value present, value is '" + tmp + "'.");
                         }

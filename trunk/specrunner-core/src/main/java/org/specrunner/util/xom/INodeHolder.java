@@ -77,6 +77,22 @@ public interface INodeHolder {
     void setNode(Node node);
 
     /**
+     * Set attribute value to look for on <code>getObject(...)</code>
+     * calls.Default is ATTRIBUTE_VALUE.
+     * 
+     * @return The attribute value holder.
+     */
+    String getAttributeValue();
+
+    /**
+     * Set value attribute holder.
+     * 
+     * @param attributeValue
+     *            A attribute name.
+     */
+    void setAttributeValue(String attributeValue);
+
+    /**
      * Get qualified name (include namespace).
      * 
      * @return The local name.

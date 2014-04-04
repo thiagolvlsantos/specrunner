@@ -17,11 +17,10 @@
  */
 package org.specrunner.sql.meta.impl;
 
-import java.util.List;
-
 import org.specrunner.comparators.ComparatorException;
+import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Table;
@@ -45,6 +44,8 @@ public final class UtilSchema {
      * Setup a column in a conservative way. Only filled attributes are replaced
      * the old ones remain unchanged.
      * 
+     * @param context
+     *            The test context.
      * @param table
      *            The table where column is expected to be.
      * @param column
@@ -56,7 +57,7 @@ public final class UtilSchema {
      * @throws ComparatorException
      *             On comparator lookup errors.
      */
-    public static void setupColumn(Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException {
+    public static void setupColumn(IContext context, Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException {
         column.setName(holder.getAttribute(ISchemaLoaderXML.ATTR_NAME, column.getName()));
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
         column.setKey(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_KEY, ISchemaLoaderXML.DEFAULT_FALSE)));
@@ -66,19 +67,11 @@ public final class UtilSchema {
         column.setArguments(holder.getArguments(column.getArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));
         if (holder.hasAttribute(ISchemaLoaderXML.ATT_DEFAULT)) {
-            String defaultValue = holder.getAttribute(ISchemaLoaderXML.ATT_DEFAULT);
-            IConverter conv = column.getConverter();
-            if (conv.accept(defaultValue)) {
-                List<String> args = holder.getArguments();
-                Object obj = null;
-                try {
-                    obj = conv.convert(defaultValue, args.isEmpty() ? null : args.toArray());
-                } catch (ConverterException e) {
-                    throw new ConverterException("Convertion error at table: " + table.getName() + ", column: " + column.getName() + ". Attempt to convert default value '" + defaultValue + "' using '" + conv + "'.", e);
-                }
-                column.setDefaultValue(obj);
-            } else {
-                column.setDefaultValue(conv.convert(defaultValue, null));
+            holder.setAttributeValue(ISchemaLoaderXML.ATT_DEFAULT);
+            try {
+                column.setDefaultValue(holder.getObject(context, true));
+            } catch (PluginException e) {
+                throw new ConverterException(e);
             }
         }
         column.setVirtual(column.isVirtual() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_VIRTUAL, ISchemaLoaderXML.DEFAULT_FALSE)));

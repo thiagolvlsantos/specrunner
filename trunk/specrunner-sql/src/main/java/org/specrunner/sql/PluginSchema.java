@@ -162,7 +162,7 @@ public class PluginSchema extends AbstractPluginValue {
         if (providerInstance == null) {
             if (provider != null) {
                 try {
-                    providerInstance = provider.load(source);
+                    providerInstance = provider.load(context, source);
                 } catch (Exception e) {
                     throw new PluginException("Invalid ISchemaLoader provider '" + providerInstance + "'.", e);
                 }
