@@ -24,6 +24,7 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Nodes;
 
+import org.specrunner.context.IContext;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Schema;
@@ -45,7 +46,7 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
     protected Builder builder;
 
     @Override
-    public Schema load(Object source) {
+    public Schema load(IContext context, Object source) {
         Schema schema = null;
         InputStream in = null;
         try {
@@ -70,7 +71,7 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
                 for (int j = 0; j < nColumns.size(); j++) {
                     INodeHolder nColumn = UtilNode.newNodeHolder(nColumns.get(j));
                     Column column = new Column();
-                    UtilSchema.setupColumn(table, column, nColumn);
+                    UtilSchema.setupColumn(context, table, column, nColumn);
                     table.add(column);
                 }
             }

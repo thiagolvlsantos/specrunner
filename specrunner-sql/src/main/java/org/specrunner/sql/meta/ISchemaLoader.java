@@ -17,6 +17,8 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.context.IContext;
+
 /**
  * Load the schema information from somewhere.
  * 
@@ -28,9 +30,11 @@ public interface ISchemaLoader {
     /**
      * Load a Schema object from a object.
      * 
+     * @param context
+     *            Test context.
      * @param source
      *            The loader source of information.
      * @return The schema.
      */
-    Schema load(Object source);
+    Schema load(IContext context, Object source);
 }

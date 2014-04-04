@@ -217,7 +217,7 @@ public class Database implements IDatabase {
             // update to specific header adjusts
             if (column != null) {
                 try {
-                    UtilSchema.setupColumn(table, column, cell);
+                    UtilSchema.setupColumn(context, table, column, cell);
                 } catch (ConverterException e) {
                     throw new PluginException(e);
                 } catch (ComparatorException e) {
@@ -246,7 +246,7 @@ public class Database implements IDatabase {
                 Column column = columns[j].copy();
                 CellAdapter td = tds.get(j);
                 try {
-                    UtilSchema.setupColumn(table, column, td);
+                    UtilSchema.setupColumn(context, table, column, td);
                 } catch (ConverterException e) {
                     throw new PluginException(e);
                 } catch (ComparatorException e) {
@@ -353,6 +353,7 @@ public class Database implements IDatabase {
         String value = UtilEvaluator.replace(nh.hasAttribute(INodeHolder.ATTRIBUTE_VALUE) ? nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE) : previous, context, true);
         // if text has changed... adjust on screen.
         if (previous != null && !previous.equals(value)) {
+            // nh.append(" {" + value + "}");
             nh.setValue(value);
         }
         return value;
@@ -918,10 +919,13 @@ public class Database implements IDatabase {
                             if (column.isVirtual()) {
                                 received = idManager.lookup(column.getAlias(), received);
                             }
-                            cell.setValue(String.valueOf(expected));
+                            cell.append(" {" + String.valueOf(expected) + "}");
                             result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
                         } else {
-                            cell.setValue(String.valueOf(value));
+                            String str = String.valueOf(value);
+                            if (!cell.getValue().equals(str)) {
+                                cell.append(" {" + str + "}");
+                            }
                         }
                     }
                 }
