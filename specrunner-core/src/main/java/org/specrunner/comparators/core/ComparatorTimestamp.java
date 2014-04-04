@@ -17,22 +17,39 @@
  */
 package org.specrunner.comparators.core;
 
+import java.sql.Timestamp;
+
 /**
- * A string comparator using equals.
+ * Comparator of timestamps.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorString extends ComparatorDefault {
+public class ComparatorTimestamp extends AbstractComparatorTime {
 
     @Override
     public Class<?> getType() {
-        return String.class;
+        return Timestamp.class;
     }
 
     @Override
     public boolean match(Object expected, Object received) {
-        return expected == null ? received == null : toString(expected).equals(toString(received));
+        if (expected instanceof Timestamp && received instanceof Timestamp) {
+            Timestamp left = (Timestamp) expected;
+            Timestamp right = (Timestamp) received;
+            return compare(left.getTime(), right.getTime());
+        }
+        return false;
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        if (o1 instanceof Timestamp && o2 instanceof Timestamp) {
+            Timestamp left = (Timestamp) o1;
+            Timestamp right = (Timestamp) o2;
+            return left.compareTo(right);
+        }
+        return 0;
     }
 }

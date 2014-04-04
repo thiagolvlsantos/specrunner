@@ -18,21 +18,16 @@
 package org.specrunner.comparators.core;
 
 /**
- * A string comparator using equals.
+ * Compare two strings using trim to clean strings.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorString extends ComparatorDefault {
+public class ComparatorStringTrim extends ComparatorString {
 
     @Override
-    public Class<?> getType() {
-        return String.class;
-    }
-
-    @Override
-    public boolean match(Object expected, Object received) {
-        return expected == null ? received == null : toString(expected).equals(toString(received));
+    protected String toString(Object obj) {
+        return super.toString(obj).trim();
     }
 }
