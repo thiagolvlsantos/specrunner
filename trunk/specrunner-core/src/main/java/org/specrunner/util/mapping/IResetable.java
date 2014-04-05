@@ -11,7 +11,7 @@ import java.io.Serializable;
 public interface IResetable extends Serializable {
 
     /**
-     * Initialize the converter.
+     * Initialize something.
      */
     void initialize();
 }
