@@ -27,7 +27,7 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.core.pipes.PipeConfiguration;
 import org.specrunner.core.pipes.PipeInput;
 import org.specrunner.core.pipes.PipeResult;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
@@ -54,8 +54,8 @@ public class SpecRunnerPipeline implements ISpecRunner {
     @Override
     public IResultSet run(String input, String output, IConfiguration configuration) throws SpecRunnerException {
         File file = new File(output);
-        configuration.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, file.getParentFile());
-        configuration.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, file.getName());
+        configuration.add(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY, file.getParentFile());
+        configuration.add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, file.getName());
         return doRun(input, configuration);
     }
 

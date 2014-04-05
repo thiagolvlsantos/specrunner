@@ -17,6 +17,10 @@
  */
 package org.specrunner.dumper.core;
 
+import static org.specrunner.dumper.core.ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY;
+import static org.specrunner.dumper.core.ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY;
+import static org.specrunner.dumper.core.ConstantsDumperFile.FEATURE_OUTPUT_NAME;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,7 +33,7 @@ import nu.xom.Serializer;
 
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
-import org.specrunner.dumper.ISourceDumperFile;
+import org.specrunner.dumper.ISourceDumper;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
@@ -48,7 +52,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractSourceDumperFile extends EncodedImpl implements ISourceDumperFile {
+public abstract class AbstractSourceDumperFile extends EncodedImpl implements ISourceDumper {
 
     /**
      * Gap used to dump sources.

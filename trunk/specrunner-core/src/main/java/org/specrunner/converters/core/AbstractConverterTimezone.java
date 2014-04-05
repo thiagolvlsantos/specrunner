@@ -80,7 +80,7 @@ public abstract class AbstractConverterTimezone<T> extends ConverterNotNullNotEm
      * 
      * @return A timezone, of name is valid, false, otherwise.
      */
-    protected TimeZone getTimeZone() {
+    protected TimeZone getZone() {
         String name = getTimezone();
         if (name != null) {
             synchronized (cacheTimezone) {

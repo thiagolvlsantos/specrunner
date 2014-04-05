@@ -30,7 +30,7 @@ import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.core.SpecRunnerPipelineUtils;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.ISpecRunnerListener;
@@ -165,8 +165,8 @@ public class SpecRunnerStatement extends Statement {
             }
         }
         cfg.add(PluginHtml.BEAN_NAME, instance);
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
+        cfg.add(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());
+        cfg.add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, getOutputName(output.getName()));
         ExpectedMessages expected = getMessages();
         if (expected != null) {
             cfg.add(IResultSet.FEATURE_EXPECTED_MESSAGES, expected.value());

@@ -18,7 +18,6 @@
 package org.specrunner.comparators.core;
 
 import org.specrunner.SRServices;
-import org.specrunner.comparators.IComparator;
 import org.specrunner.features.IFeatureManager;
 
 /**
@@ -28,7 +27,7 @@ import org.specrunner.features.IFeatureManager;
  * 
  */
 @SuppressWarnings("serial")
-public abstract class AbstractComparatorTime implements IComparator {
+public abstract class AbstractComparatorTime extends ComparatorDefault {
 
     /**
      * Feature to set time tolerance.
@@ -65,17 +64,38 @@ public abstract class AbstractComparatorTime implements IComparator {
         this.tolerance = tolerance;
     }
 
+    @Override
+    public boolean match(Object expected, Object received) {
+        Long left = getMillis(expected);
+        Long right = getMillis(received);
+        return compare(left, right);
+    }
+
+    /**
+     * Get the corresponding time information in milliseconds.
+     * 
+     * @param obj
+     *            The time object.
+     * @return The time in milliseconds corresponding to the object.
+     */
+    protected abstract Long getMillis(Object obj);
+
     /**
      * Compare the expected and received.
      * 
-     * @param left
+     * @param expected
      *            The expected time.
-     * @param right
+     * @param received
      *            The received time.
      * @return true, if acceptable, false, otherwise.
      */
-    protected boolean compare(long left, long right) {
-        long gap = Math.max(left, right) - Math.min(left, right);
+    protected boolean compare(Long expected, Long received) {
+        long gap = Math.max(expected, received) - Math.min(expected, received);
         return gap <= tolerance;
+    }
+
+    @Override
+    public int compare(Object o1, Object o2) {
+        return getMillis(o1).compareTo(getMillis(o2));
     }
 }

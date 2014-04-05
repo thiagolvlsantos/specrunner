@@ -129,8 +129,8 @@ public class Sentence implements IValidable {
         if (text == null) {
             sb.append("Invalid sentence with null text.\n");
         }
-        if (text.endsWith(":") && !hasData() && !hasMessage()) {
-            sb.append("Sentencesterminated by ':' expect data table or message values.");
+        if (text != null && text.endsWith(":") && !hasData() && !hasMessage()) {
+            sb.append("Sentences terminated by ':' expect data table or message values.");
         }
         if (hasData()) {
             sb.append(data.validate());

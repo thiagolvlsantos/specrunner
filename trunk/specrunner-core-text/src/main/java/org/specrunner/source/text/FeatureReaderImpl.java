@@ -242,23 +242,23 @@ public class FeatureReaderImpl implements IFeatureReader {
     private String readTableOrMessage(BufferedReader reader, String line, Sentence sentence) throws IOException {
         if (line != null) {
             line = line.trim();
-        }
-        String lineMark = "\"\"\"";
-        if (line.startsWith("|")) {
-            DataTable table = new DataTable();
-            line = readTable(reader, line, table);
-            sentence.setData(table);
-        } else if (line.equals(lineMark)) {
-            StringBuilder msg = new StringBuilder();
-            line = reader.readLine();
-            while (line != null && !lineMark.equals(line.trim())) {
-                msg.append(line + "\n");
+            String lineMark = "\"\"\"";
+            if (line.startsWith("|")) {
+                DataTable table = new DataTable();
+                line = readTable(reader, line, table);
+                sentence.setData(table);
+            } else if (line.equals(lineMark)) {
+                StringBuilder msg = new StringBuilder();
                 line = reader.readLine();
+                while (line != null && !lineMark.equals(line.trim())) {
+                    msg.append(line + "\n");
+                    line = reader.readLine();
+                }
+                line = reader.readLine();
+                sentence.setMessage(msg.toString());
+            } else {
+                throw new IOException("After sentences ending with ':' data tables or messages are expected.");
             }
-            line = reader.readLine();
-            sentence.setMessage(msg.toString());
-        } else {
-            throw new IOException("After sentences ending with ':' data tables or messages are expected.");
         }
         return line;
     }

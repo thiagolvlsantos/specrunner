@@ -35,7 +35,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
@@ -266,7 +266,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                     }
                     UnexpectedPage up = (UnexpectedPage) tmp;
                     IFeatureManager fm = SRServices.getFeatureManager();
-                    File outputDirectory = dir != null ? new File(dir) : (File) fm.get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
+                    File outputDirectory = dir != null ? new File(dir) : (File) fm.get(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY);
                     File outputFile = new File(outputDirectory, download);
                     File outputParent = outputFile.getAbsoluteFile().getParentFile();
                     if (!outputParent.exists()) {

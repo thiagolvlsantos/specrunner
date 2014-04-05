@@ -13,7 +13,7 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.context.core.Model;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.SpecRunnerJUnit;
@@ -99,7 +99,7 @@ public class TestJetty {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
-        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
+        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
         // same as before.
         runJetty(cfg);
     }
@@ -109,7 +109,7 @@ public class TestJetty {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
-        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
+        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
         // same as before.
         runJetty(cfg);
     }
@@ -119,7 +119,7 @@ public class TestJetty {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         // disable recording browser information change output from
         // default(example-jetty.html) to another file.
-        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
+        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
         // same as before.
         runJetty(cfg);
     }
@@ -128,12 +128,12 @@ public class TestJetty {
     public void runTwice() throws Exception {
         // run again to check time performance after classes are loaded.
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
+        cfg.add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
         runJetty(cfg);
 
         // run again to check time performance after classes are loaded.
         cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
+        cfg.add(PluginBrowser.FEATURE_RECORDING, false).add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
         runJetty(cfg);
     }
 
@@ -142,10 +142,10 @@ public class TestJetty {
         tj.prepareTest();
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.add(PluginBrowser.FEATURE_RECORDING, false);
-        fm.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
+        fm.add(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 10000; j++) {
             try {
-                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run.html");
+                fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run.html");
                 tj.runJettyWithRecording();
             } catch (Exception e) {
                 e.printStackTrace();

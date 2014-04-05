@@ -24,7 +24,7 @@ import nu.xom.Element;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -79,8 +79,8 @@ public abstract class AbstractPluginResourceReplaceable extends AbstractPluginRe
                 String path = String.valueOf(relative.getURI());
 
                 File file = null;
-                File outDir = (File) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
-                String outFile = (String) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
+                File outDir = (File) SRServices.getFeatureManager().get(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY);
+                String outFile = (String) SRServices.getFeatureManager().get(ConstantsDumperFile.FEATURE_OUTPUT_NAME);
                 if (outDir != null || outFile != null) {
                     file = new File(outDir, outFile);
                 } else {

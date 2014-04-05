@@ -91,7 +91,7 @@ public class PluginCompareTree extends AbstractPlugin {
             }
             Object objReceived = null;
             Object objExpected = null;
-            IComparator comparator = null;
+            IComparator comparator = SRServices.getComparatorManager().getDefault();
             if (received instanceof Element && expected instanceof Element) {
                 INodeHolder holderReceived = UtilNode.newNodeHolder(received);
                 INodeHolder holderExpected = UtilNode.newNodeHolder(expected);
@@ -111,7 +111,6 @@ public class PluginCompareTree extends AbstractPlugin {
             } else {
                 objReceived = received.getValue();
                 objExpected = expected.getValue();
-                comparator = SRServices.getComparatorManager().getDefault();
             }
             try {
                 UtilPlugin.compare(expected, PluginAssertion.INSTANCE, result, comparator, objExpected, objReceived);
