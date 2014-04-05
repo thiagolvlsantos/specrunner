@@ -34,22 +34,10 @@ public class ComparatorJodatime extends AbstractComparatorTime {
     }
 
     @Override
-    public boolean match(Object expected, Object received) {
-        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
-            ReadableInstant left = (ReadableInstant) expected;
-            ReadableInstant right = (ReadableInstant) received;
-            return compare(left.getMillis(), right.getMillis());
+    protected Long getMillis(Object obj) {
+        if (obj instanceof ReadableInstant) {
+            return ((ReadableInstant) obj).getMillis();
         }
-        return false;
-    }
-
-    @Override
-    public int compare(Object expected, Object received) {
-        if (expected instanceof ReadableInstant && received instanceof ReadableInstant) {
-            ReadableInstant left = (ReadableInstant) expected;
-            ReadableInstant right = (ReadableInstant) received;
-            return (int) (left.getMillis() - right.getMillis());
-        }
-        return 0;
+        return 0L;
     }
 }

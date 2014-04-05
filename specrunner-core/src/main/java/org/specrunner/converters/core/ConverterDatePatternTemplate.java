@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.specrunner.converters.ConverterException;
+import org.specrunner.util.UtilLog;
 
 /**
  * General date converter.
@@ -57,8 +58,11 @@ public class ConverterDatePatternTemplate extends AbstractConverterTimezone<Date
             return value;
         }
         try {
-            TimeZone tz = getTimeZone();
+            TimeZone tz = getZone();
             if (tz != null) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Using timezone : " + tz.getDisplayName() + " -> " + tz);
+                }
                 pattern.setTimeZone(tz);
             }
             return pattern.parse(String.valueOf(value));

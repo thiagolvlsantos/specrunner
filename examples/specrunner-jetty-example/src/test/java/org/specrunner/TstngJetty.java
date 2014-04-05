@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.result.IResultSet;
@@ -53,7 +53,7 @@ public class TstngJetty {
         // disable recording browser information.
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
+        fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording.html");
 
         // same as before.
         runJetty();
@@ -65,7 +65,7 @@ public class TstngJetty {
         // disable recording browser information.
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
+        fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording2.html");
 
         // same as before.
         runJetty();
@@ -77,7 +77,7 @@ public class TstngJetty {
         // disable recording browser information.
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
         // change output from default(example-jetty.html) to another file.
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
+        fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-without-recording3.html");
 
         // same as before.
         runJetty();
@@ -88,13 +88,13 @@ public class TstngJetty {
         // run again to check time performance after classes are loaded.
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, true);
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
+        fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-one.html");
         runJetty();
 
         // run again to check time performance after classes are loaded.
         fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
+        fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-two.html");
         runJetty();
     }
 
@@ -103,10 +103,10 @@ public class TstngJetty {
         tj.prepareTest();
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.put(PluginBrowser.FEATURE_RECORDING, false);
-        fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
+        fm.put(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY, new File("src/test/resources/outcome/run"));
         for (int j = 0; j < 5; j++) {
             try {
-                fm.put(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
+                fm.put(ConstantsDumperFile.FEATURE_OUTPUT_NAME, "example-jetty-run" + j + ".html");
                 tj.runJetty();
             } catch (Exception e) {
                 e.printStackTrace();

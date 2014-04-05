@@ -15,30 +15,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.dumper;
+package org.specrunner.dumper.core;
 
 import java.io.File;
 
 /**
- * Dumps source and results to files.
+ * Placeholders for output files.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceDumperFile extends ISourceDumper {
+public final class ConstantsDumperFile {
+
+    /**
+     * Default constructor.
+     */
+    private ConstantsDumperFile() {
+        super();
+    }
 
     /**
      * The output directory. The default value is 'src/test/resources/outcome'.
      */
-    String FEATURE_OUTPUT_DIRECTORY = ISourceDumperFile.class.getName() + ".outputDirectory";
+    public static final String FEATURE_OUTPUT_DIRECTORY = ConstantsDumperFile.class.getName() + ".outputDirectory";
 
     /**
      * Default output directory.
      */
-    File DEFAULT_OUTPUT_DIRECTORY = new File("src/test/resources/outcome");
+    public static final File DEFAULT_OUTPUT_DIRECTORY = new File("src/test/resources/outcome");
 
     /**
      * The output file name. The default name is the same of the input file.
      */
-    String FEATURE_OUTPUT_NAME = ISourceDumperFile.class.getName() + ".outputName";
+    public static final String FEATURE_OUTPUT_NAME = ConstantsDumperFile.class.getName() + ".outputName";
 }

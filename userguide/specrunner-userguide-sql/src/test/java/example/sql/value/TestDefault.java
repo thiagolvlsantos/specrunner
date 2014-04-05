@@ -3,7 +3,6 @@ package example.sql.value;
 import org.junit.runner.RunWith;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.converters.core.AbstractConverterTimezone;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.sql.IDatabase;
@@ -30,6 +29,6 @@ public class TestDefault {
         cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new Database() });
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 5000L);
-        cfg.add(AbstractConverterTimezone.FEATURE_TIMEZONE, "UTC");
+        // cfg.add(AbstractConverterTimezone.FEATURE_TIMEZONE, "UTC");
     }
 }

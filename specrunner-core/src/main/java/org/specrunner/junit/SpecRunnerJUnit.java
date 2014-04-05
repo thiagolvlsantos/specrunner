@@ -23,7 +23,7 @@ import org.junit.Assert;
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
-import org.specrunner.dumper.core.AbstractSourceDumperFile;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 
@@ -63,8 +63,8 @@ public final class SpecRunnerJUnit {
     public static void defaultRun(String input, IConfiguration cfg) {
         try {
             IResultSet result = SRServices.getSpecRunner().run(input, cfg);
-            File dir = (File) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY);
-            String file = (String) SRServices.getFeatureManager().get(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME);
+            File dir = (File) SRServices.getFeatureManager().get(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY);
+            String file = (String) SRServices.getFeatureManager().get(ConstantsDumperFile.FEATURE_OUTPUT_NAME);
             Assert.assertTrue((dir != null && file != null ? "OUTPUT: " + new File(dir, file).getAbsolutePath() + "\n" : "") + result.asString(), !result.getStatus().isError());
         } catch (Exception e) {
             e.printStackTrace();
@@ -100,8 +100,8 @@ public final class SpecRunnerJUnit {
      */
     public static void defaultRun(String input, String output, IConfiguration cfg) {
         File file = new File(output);
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_DIRECTORY, file.getParentFile());
-        cfg.add(AbstractSourceDumperFile.FEATURE_OUTPUT_NAME, file.getName());
+        cfg.add(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY, file.getParentFile());
+        cfg.add(ConstantsDumperFile.FEATURE_OUTPUT_NAME, file.getName());
         defaultRun(input, cfg);
     }
 }

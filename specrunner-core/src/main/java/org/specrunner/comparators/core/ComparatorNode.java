@@ -19,7 +19,6 @@ package org.specrunner.comparators.core;
 
 import nu.xom.Node;
 
-import org.specrunner.comparators.IComparator;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.UtilNode;
 
@@ -31,7 +30,7 @@ import org.specrunner.util.xom.UtilNode;
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorNode implements IComparator {
+public class ComparatorNode extends ComparatorDefault {
 
     @Override
     public Class<?> getType() {
@@ -39,24 +38,15 @@ public class ComparatorNode implements IComparator {
     }
 
     @Override
-    public void initialize() {
-    }
-
-    @Override
     public boolean match(Object expected, Object received) {
-        String strExpected = UtilString.normalize(UtilNode.getChildrenAsString((Node) expected));
-        String strReceived = UtilString.normalize(UtilNode.getChildrenAsString((Node) received));
-        return strExpected.equals(strReceived);
+        if (expected instanceof Node && received instanceof Node) {
+            return toString(expected).equals(toString(received));
+        }
+        return false;
     }
 
     @Override
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public int compare(Object o1, Object o2) {
-        if (o1 instanceof Comparable<?> && o2 instanceof Comparable<?>) {
-            Comparable left = (Comparable) o1;
-            Comparable right = (Comparable) o2;
-            return left.compareTo(right);
-        }
-        return 0;
+    protected String toString(Object obj) {
+        return UtilString.normalize(UtilNode.getChildrenAsString((Node) obj));
     }
 }

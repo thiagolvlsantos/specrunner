@@ -19,24 +19,29 @@ package org.specrunner.comparators.core;
 
 import java.util.Date;
 
+import org.joda.time.ReadableInstant;
+
 /**
- * Comparator of dates.
+ * Comparator of JVM dates and Joda Time readable instants.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ComparatorDate extends AbstractComparatorTime {
+public class ComparatorTime extends AbstractComparatorTime {
 
     @Override
     public Class<?> getType() {
-        return Date.class;
+        return Object.class;
     }
 
     @Override
     protected Long getMillis(Object obj) {
         if (obj instanceof Date) {
             return ((Date) obj).getTime();
+        }
+        if (obj instanceof ReadableInstant) {
+            return ((ReadableInstant) obj).getMillis();
         }
         return 0L;
     }
