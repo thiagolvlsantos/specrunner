@@ -30,7 +30,7 @@ import org.specrunner.converters.ConverterException;
  *            Date object.
  */
 @SuppressWarnings("serial")
-public abstract class AbstractConverterTimeTemplate<T> extends ConverterNotNullNotEmpty {
+public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverterTimezone<T> {
 
     /**
      * Strings that stand for 'current date'.

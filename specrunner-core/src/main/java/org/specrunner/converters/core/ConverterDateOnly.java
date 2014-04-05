@@ -38,7 +38,7 @@ public class ConverterDateOnly extends ConverterDateCurrentTemplate {
 
     @Override
     protected Date instance() {
-        Calendar c = Calendar.getInstance();
+        Calendar c = getCalendar();
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         return c.getTime();
     }

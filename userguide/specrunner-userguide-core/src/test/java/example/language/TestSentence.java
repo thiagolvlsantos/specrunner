@@ -1,6 +1,7 @@
 package example.language;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -9,7 +10,9 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
 import org.specrunner.converters.Converter;
+import org.specrunner.converters.core.AbstractConverterTimezone;
 import org.specrunner.converters.core.ConverterDatePatternArgs;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.SRRunnerConcurrent;
@@ -22,7 +25,9 @@ public class TestSentence {
     @Before
     public void before() {
         SRServices.getExpressionFactory().bindClass("dt", DateTime.class);
-        SRServices.getFeatureManager().add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
+        fm.add(AbstractConverterTimezone.FEATURE_TIMEZONE, "UTC");
     }
 
     @ExpectedMessage("Falhou!")
@@ -89,5 +94,9 @@ public class TestSentence {
 
     public void convertBigDecimal(BigDecimal big) {
         System.out.println("CALLED.12: big decimal = " + big);
+    }
+
+    public void convertTimestamp(@Converter(args = { "dd/MM/yyyy HH:mm:ss" }) Timestamp other) throws Exception {
+        System.out.println("CALLED.13:" + other);
     }
 }

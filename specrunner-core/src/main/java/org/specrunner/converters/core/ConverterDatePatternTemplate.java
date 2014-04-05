@@ -20,6 +20,7 @@ package org.specrunner.converters.core;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import org.specrunner.converters.ConverterException;
 
@@ -30,7 +31,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDatePatternTemplate extends ConverterNotNullNotEmpty {
+public class ConverterDatePatternTemplate extends AbstractConverterTimezone<Date> {
 
     /**
      * Parser instance.
@@ -56,6 +57,10 @@ public class ConverterDatePatternTemplate extends ConverterNotNullNotEmpty {
             return value;
         }
         try {
+            TimeZone tz = getTimeZone();
+            if (tz != null) {
+                pattern.setTimeZone(tz);
+            }
             return pattern.parse(String.valueOf(value));
         } catch (ParseException e) {
             throw new ConverterException(e);

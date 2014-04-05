@@ -18,6 +18,8 @@
 package org.specrunner.converters.core;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.specrunner.converters.ConverterException;
 
@@ -52,7 +54,23 @@ public class ConverterTimestampCurrentTemplate extends AbstractConverterTimeTemp
 
     @Override
     protected Timestamp instance() {
-        return new Timestamp(System.currentTimeMillis());
+        return new Timestamp(getCalendar().getTimeInMillis());
+    }
+
+    /**
+     * Get a calendar object based on timestamp.
+     * 
+     * @return A calendar.
+     */
+    protected Calendar getCalendar() {
+        Calendar calendar = null;
+        TimeZone timeZone = getTimeZone();
+        if (timeZone == null) {
+            calendar = Calendar.getInstance();
+        } else {
+            calendar = Calendar.getInstance(timeZone);
+        }
+        return calendar;
     }
 
     @Override
