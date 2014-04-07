@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
@@ -15,11 +16,13 @@ import org.specrunner.converters.core.ConverterDatePatternArgs;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.junit.Concurrent;
 import org.specrunner.junit.ExpectedMessage;
+import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunnerConcurrent;
 import org.specrunner.listeners.core.PauseOnFailureNodeListener;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
+@ExpectedMessages("Method to call not found. Add a 'method' attribute, or extend text to match a regular expression in @Sentence annotations.")
 public class TestSentence {
 
     @Before
@@ -98,5 +101,10 @@ public class TestSentence {
 
     public void convertTimestamp(@Converter(args = { "dd/MM/yyyy HH:mm:ss" }) Timestamp other) throws Exception {
         System.out.println("CALLED.13:" + other);
+    }
+
+    public void emptyName(String text) {
+        System.out.println("CALLED.14:" + text);
+        Assert.assertEquals("single argument", text);
     }
 }

@@ -147,8 +147,11 @@ public class PluginSentence extends AbstractPlugin {
         StringBuilder methodName = new StringBuilder();
         List<Object> arguments = new LinkedList<Object>();
         extractMethodNameArguments(context, target, methodName, arguments);
-        if (methodToCall == null) {
+        if (methodToCall == null || methodToCall.isEmpty()) {
             methodToCall = methodName.toString();
+        }
+        if (methodToCall == null || methodToCall.isEmpty()) {
+            throw new PluginException("Method to call not found. Add a 'method' attribute, or extend text to match a regular expression in @Sentence annotations.");
         }
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("FULL:" + context.getNode().toXML());
@@ -274,7 +277,7 @@ public class PluginSentence extends AbstractPlugin {
         if (!onlyText || annotation) {
             onlyArgs(context, node, annotation ? new StringBuilder() : methodName, arguments);
         } else {
-            onlyText(value, methodName, arguments);
+            onlyText(holder.getValue(), methodName, arguments);
         }
         if (!annotation) {
             String tmp = UtilString.camelCase(methodName.toString());

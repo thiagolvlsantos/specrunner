@@ -25,7 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation to sign the evaluator to ignore an attribute or method.
+ * Annotation to enable runner ignore some specific messages.
  * 
  * @author Thiago Santos
  * 
