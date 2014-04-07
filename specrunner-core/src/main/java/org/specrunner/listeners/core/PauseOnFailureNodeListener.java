@@ -31,6 +31,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
 
 /**
  * Listener to pause execution on errors.
@@ -40,6 +42,14 @@ import org.specrunner.util.UtilLog;
  */
 public class PauseOnFailureNodeListener extends AbstractNodeListener implements ErrorFrameListener {
 
+    /**
+     * Default conditional feature.
+     */
+    public static final String FEATURE_CONDITION = PauseOnFailureNodeListener.class.getName() + ".condition";
+    /**
+     * Pause perform condition.
+     */
+    private Boolean condition = Boolean.TRUE;
     /**
      * Enable pause on errors.
      */
@@ -76,6 +86,25 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     @Override
     public String getName() {
         return "errorListener";
+    }
+
+    /**
+     * Condition to enable pause on failure behavior.
+     * 
+     * @return true, if pause on failure can pause, false, otherwise.
+     */
+    public Boolean getCondition() {
+        return condition;
+    }
+
+    /**
+     * Set pause condition.
+     * 
+     * @param condition
+     *            true, if pause listener can pause, false, otherwise.
+     */
+    public void setCondition(Boolean condition) {
+        this.condition = condition;
     }
 
     /**
@@ -118,6 +147,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
 
     @Override
     public void reset() {
+        condition = true;
         pauseOnFailure = false;
         showDialog = false;
         okToAll = false;
@@ -126,6 +156,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     @Override
     public ENext onBefore(Node node, IContext context, IResultSet result) {
         IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_CONDITION, this);
         fm.set(FEATURE_PAUSE_ON_FAILURE, this);
         fm.set(FEATURE_SHOW_DIALOG, this);
         start = result.size();
@@ -134,22 +165,25 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
 
     @Override
     public void onAfter(Node node, IContext context, IResultSet result) {
+        if (!condition) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Pause on error listener disabled.");
+            }
+            return;
+        }
         if (pauseOnFailure && !okToAll) {
             List<Status> status = result.errorStatus();
             Status[] array = status.toArray(new Status[status.size()]);
             List<IResult> errors = result.filterByStatus(start, result.size(), array);
             if (!errors.isEmpty()) {
                 try {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Error pause enabled.");
-                    }
+                    IOutput output = SRServices.get(IOutputFactory.class).currentOutput();
+                    output.println("Pause on error enabled.");
                     StringBuilder sb = new StringBuilder();
                     for (IResult e : errors) {
                         sb.append(e.asString());
                     }
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Errors:" + sb);
-                    }
+                    output.println("Errors: " + sb);
                     if (showDialog) {
                         showDialog(sb);
                     } else {

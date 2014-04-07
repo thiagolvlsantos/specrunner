@@ -29,8 +29,11 @@ public class TestSentence {
     public void before() {
         SRServices.getExpressionFactory().bindClass("dt", DateTime.class);
         IFeatureManager fm = SRServices.getFeatureManager();
-        fm.add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE).add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
+        fm.add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, Boolean.TRUE);
+        fm.add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, Boolean.TRUE);
+        fm.add(PauseOnFailureNodeListener.FEATURE_CONDITION, Boolean.FALSE);
         fm.add(AbstractConverterTimezone.FEATURE_TIMEZONE, "UTC");
+
     }
 
     @ExpectedMessage("Falhou!")
