@@ -15,31 +15,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.core;
+package org.specrunner.comparators.core;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.specrunner.util.UtilString;
 
 /**
- * Create current date without without hour information.
+ * Compare two strings/clobs using <code>UtilString.normalized(...)</code> to
+ * clean strings.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateOnly extends ConverterDateCurrentTemplate {
-
-    /**
-     * Basic data converter.
-     */
-    public ConverterDateOnly() {
-        super(new String[] { "data", "data atual", "date", "current date" });
-    }
+public class ComparatorClobNormalized extends ComparatorClob {
 
     @Override
-    protected Date instance() {
-        Calendar c = getCalendar();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return c.getTime();
+    protected String toString(Object obj) {
+        return UtilString.normalize(super.toString(obj));
     }
 }

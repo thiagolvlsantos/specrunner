@@ -21,6 +21,7 @@ import nu.xom.Node;
 
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
+import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
@@ -30,12 +31,12 @@ import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
 /**
- * Monitor for scenarios.
+ * Monitor for scenarios frames.
  * 
  * @author Thiago Santos.
  * 
  */
-public class ScenarioListener implements INodeListener {
+public class ScenarioFrameListener implements INodeListener {
 
     /**
      * Expected style for scenarios.
@@ -63,6 +64,11 @@ public class ScenarioListener implements INodeListener {
      */
     protected String name;
     /**
+     * Scenario listeners.
+     */
+    protected IScenarioListener[] listeners;
+
+    /**
      * An auxiliary node holder.
      */
     protected INodeHolder holder;
@@ -89,9 +95,12 @@ public class ScenarioListener implements INodeListener {
      * 
      * @param name
      *            The scenario.
+     * @param listeners
+     *            List of scenario listeners.
      */
-    public ScenarioListener(String name) {
+    public ScenarioFrameListener(String name, IScenarioListener... listeners) {
         this.name = name;
+        this.listeners = listeners;
     }
 
     @Override
@@ -120,6 +129,8 @@ public class ScenarioListener implements INodeListener {
                     pending = UtilNode.isPending(node);
                     if (pending) {
                         next = ENext.SKIP;
+                    } else {
+                        fireBefore(name, node, context, result);
                     }
                 }
             } catch (PluginException e) {
@@ -127,6 +138,26 @@ public class ScenarioListener implements INodeListener {
             }
         }
         return next;
+    }
+
+    /**
+     * Fire listeners before scenarios.
+     * 
+     * @param title
+     *            The scenario title.
+     * @param node
+     *            The scenario node.
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result set.
+     */
+    protected void fireBefore(String title, Node node, IContext context, IResultSet result) {
+        if (listeners != null) {
+            for (IScenarioListener c : listeners) {
+                c.beforeScenario(title, node, context, result);
+            }
+        }
     }
 
     @Override
@@ -143,11 +174,33 @@ public class ScenarioListener implements INodeListener {
                     UtilLog.LOG.info("Scenario FAILURE:" + name);
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_FAILURE);
+                fireAfter(name, node, context, result);
             } else {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Scenario SUCCESS:" + name);
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
+                fireAfter(name, node, context, result);
+            }
+        }
+    }
+
+    /**
+     * Fire listeners after scenarios.
+     * 
+     * @param title
+     *            The scenario title.
+     * @param node
+     *            The scenario node.
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result set.
+     */
+    protected void fireAfter(String title, Node node, IContext context, IResultSet result) {
+        if (listeners != null) {
+            for (IScenarioListener c : listeners) {
+                c.afterScenario(title, node, context, result);
             }
         }
     }

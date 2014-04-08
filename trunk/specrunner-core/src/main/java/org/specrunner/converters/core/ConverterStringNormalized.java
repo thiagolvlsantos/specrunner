@@ -17,29 +17,20 @@
  */
 package org.specrunner.converters.core;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.specrunner.converters.ConverterException;
+import org.specrunner.util.UtilString;
 
 /**
- * Create current date without without hour information.
+ * Convert any object to String using <code>UtilString.normalized(...)</code>.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateOnly extends ConverterDateCurrentTemplate {
-
-    /**
-     * Basic data converter.
-     */
-    public ConverterDateOnly() {
-        super(new String[] { "data", "data atual", "date", "current date" });
-    }
+public class ConverterStringNormalized extends ConverterString {
 
     @Override
-    protected Date instance() {
-        Calendar c = getCalendar();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return c.getTime();
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        return UtilString.normalize((String) super.convert(obj, args));
     }
 }

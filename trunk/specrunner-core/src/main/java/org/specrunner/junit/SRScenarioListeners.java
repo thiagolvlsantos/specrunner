@@ -15,31 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.converters.core;
+package org.specrunner.junit;
 
-import java.util.Calendar;
-import java.util.Date;
+import static java.lang.annotation.ElementType.TYPE;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.specrunner.listeners.IScenarioListener;
 
 /**
- * Create current date without without hour information.
+ * Provides scenario listeners.
  * 
  * @author Thiago Santos
- * 
  */
-@SuppressWarnings("serial")
-public class ConverterDateOnly extends ConverterDateCurrentTemplate {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ TYPE })
+public @interface SRScenarioListeners {
 
     /**
-     * Basic data converter.
+     * List of scenario classes.
      */
-    public ConverterDateOnly() {
-        super(new String[] { "data", "data atual", "date", "current date" });
-    }
-
-    @Override
-    protected Date instance() {
-        Calendar c = getCalendar();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return c.getTime();
-    }
+    Class<? extends IScenarioListener>[] value() default {};
 }
