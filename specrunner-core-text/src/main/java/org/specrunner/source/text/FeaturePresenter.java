@@ -24,7 +24,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.SRServices;
-import org.specrunner.listeners.core.ScenarioListener;
+import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.data.PluginMap;
@@ -99,7 +99,7 @@ public class FeaturePresenter implements IPresenter {
      */
     protected void dumpDescription(Element root, String keyword, NamedSentences description, String tag) {
         Element e = new Element(tag);
-        UtilNode.appendCss(e, ScenarioListener.CSS_TITLE);
+        UtilNode.appendCss(e, ScenarioFrameListener.CSS_TITLE);
         root.appendChild(e);
         e.appendChild(keyword + (description != null ? description.getName() : ""));
     }
@@ -135,7 +135,7 @@ public class FeaturePresenter implements IPresenter {
      */
     protected void dumpScenario(Element root, Keywords words, Scenario scenario) {
         Element divScenario = new Element("div");
-        UtilNode.appendCss(divScenario, ScenarioListener.CSS_SCENARIO);
+        UtilNode.appendCss(divScenario, ScenarioFrameListener.CSS_SCENARIO);
         root.appendChild(divScenario);
         if (scenario instanceof ScenarioOutline) {
             dumpMultiScenario(divScenario, words, (ScenarioOutline) scenario);

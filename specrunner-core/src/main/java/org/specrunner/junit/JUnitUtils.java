@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.Set;
 
 import org.specrunner.SRServices;
+import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.util.UtilLog;
 
@@ -119,5 +120,30 @@ public final class JUnitUtils {
         } else {
             return name;
         }
+    }
+
+    /**
+     * Given a class return instances for scenario listeners.
+     * 
+     * @param type
+     *            The base object type.
+     * @return An array of listener instances.
+     */
+    public static IScenarioListener[] getScenarioListener(Class<?> type) {
+        SRScenarioListeners list = type.getAnnotation(SRScenarioListeners.class);
+        if (list == null) {
+            return new IScenarioListener[0];
+        }
+        IScenarioListener[] result = new IScenarioListener[list.value().length];
+        for (int i = 0; i < result.length; i++) {
+            try {
+                result[i] = list.value()[i].newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 }

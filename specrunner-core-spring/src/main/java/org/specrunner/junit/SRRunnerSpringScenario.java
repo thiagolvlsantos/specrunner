@@ -18,7 +18,7 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.specrunner.SRServices;
 import org.specrunner.listeners.INodeListener;
-import org.specrunner.listeners.core.ScenarioListener;
+import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
@@ -73,18 +73,18 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
             ISourceFactoryManager sfm = SRServices.get(ISourceFactoryManager.class);
             ISource source = sfm.newSource(input.toString());
             Document document = source.getDocument();
-            Nodes scenarios = document.query("//*[contains(@class,'" + ScenarioListener.CSS_SCENARIO + "')]");
+            Nodes scenarios = document.query("//*[contains(@class,'" + ScenarioFrameListener.CSS_SCENARIO + "')]");
             listeners = new LinkedList<INodeListener>();
             Set<String> titles = new HashSet<String>();
             for (int i = 0; i < scenarios.size(); i++) {
-                String title = UtilNode.getCssNode(scenarios.get(i), ScenarioListener.CSS_TITLE).getValue();
+                String title = UtilNode.getCssNode(scenarios.get(i), ScenarioFrameListener.CSS_TITLE).getValue();
                 title = UtilString.camelCase(title, true);
                 if (titles.contains(title)) {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
                 }
                 titles.add(title);
                 methods.add(new ScenarioFrameworkMethod(fake, title));
-                listeners.add(new ScenarioListener(title));
+                listeners.add(new ScenarioFrameListener(title, JUnitUtils.getScenarioListener(getTestClass().getJavaClass())));
             }
             return methods;
         } catch (Exception e) {
@@ -109,7 +109,7 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
             super.runChild(method, notifier);
         } else {
             Description description = Description.createTestDescription(getTestClass().getJavaClass(), ((ScenarioFrameworkMethod) method).getName());
-            ScenarioListener scenario = (ScenarioListener) listeners.get(index - 2);
+            ScenarioFrameListener scenario = (ScenarioFrameListener) listeners.get(index - 2);
             IResultSet result = scenario.getResult();
             if (scenario.isPending()) {
                 notifier.fireTestIgnored(description);

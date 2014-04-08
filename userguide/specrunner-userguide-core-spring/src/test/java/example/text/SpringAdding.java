@@ -3,6 +3,7 @@ package example.text;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunnerSpringScenario;
+import org.specrunner.junit.SRScenarioListeners;
 import org.specrunner.plugins.core.language.Sentence;
 import org.specrunner.plugins.core.language.Synonyms;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import example.text.suv.Calc;
 
 @RunWith(SRRunnerSpringScenario.class)
 @ContextConfiguration(locations = { "/applicationContext-Calc.xml" })
+@SRScenarioListeners({ ScenarioListenerPrint.class })
 public class SpringAdding {
 
     @Autowired

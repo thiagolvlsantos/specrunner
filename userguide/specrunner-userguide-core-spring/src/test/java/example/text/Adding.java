@@ -3,12 +3,14 @@ package example.text;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunnerScenario;
+import org.specrunner.junit.SRScenarioListeners;
 import org.specrunner.plugins.core.language.Sentence;
 import org.specrunner.plugins.core.language.Synonyms;
 
 import example.text.suv.Calc;
 
 @RunWith(SRRunnerScenario.class)
+@SRScenarioListeners({ ScenarioListenerPrint.class })
 public class Adding {
 
     private Calc calc = new Calc();
