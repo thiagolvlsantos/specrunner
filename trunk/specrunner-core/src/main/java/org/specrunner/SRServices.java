@@ -46,6 +46,16 @@ import org.specrunner.util.UtilLog;
 public final class SRServices {
 
     /**
+     * Set if SRServices is thread-safe or not.
+     */
+    private static boolean threadSafe = Boolean.valueOf(System.getProperty("sr.threadsafe", "true"));
+
+    /**
+     * Instance global.
+     */
+    private static SRServices global;
+
+    /**
      * Instance by thread.
      */
     private static ThreadLocal<SRServices> instance = new ThreadLocal<SRServices>();
@@ -69,7 +79,7 @@ public final class SRServices {
      * Create a group of services provided by SpecRunner.
      */
     private SRServices() {
-        String str = System.getProperty("srmapping", "org.specrunner.core.SRMappingDefault");
+        String str = System.getProperty("sr.mapping", "org.specrunner.core.SRMappingDefault");
         try {
             mapping = (ISRMapping) Class.forName(str).newInstance();
         } catch (InstantiationException e) {
@@ -182,13 +192,37 @@ public final class SRServices {
      * @return The services instance.
      */
     public static SRServices get() {
-        if (instance.get() == null) {
-            SRServices service = new SRServices();
-            service.threadName = Thread.currentThread().getName();
-            Runtime.getRuntime().addShutdownHook(new ShutDown(service));
-            instance.set(service);
+        if (threadSafe) {
+            if (instance.get() == null) {
+                SRServices service = new SRServices();
+                addHook(service);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Instance is thread-safe: " + service);
+                }
+                instance.set(service);
+            }
+            return instance.get();
+        } else {
+            if (global == null) {
+                global = new SRServices();
+                addHook(global);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Instance is global: " + global);
+                }
+            }
+            return global;
         }
-        return instance.get();
+    }
+
+    /**
+     * Add shutdown hook to the environment.
+     * 
+     * @param service
+     *            A service to be shut down.
+     */
+    protected static void addHook(SRServices service) {
+        service.threadName = Thread.currentThread().getName();
+        Runtime.getRuntime().addShutdownHook(new ShutDown(service));
     }
 
     /**
