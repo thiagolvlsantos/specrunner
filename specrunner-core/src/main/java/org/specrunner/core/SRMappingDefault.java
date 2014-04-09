@@ -39,6 +39,7 @@ import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipelineFactory;
 import org.specrunner.plugins.IPluginFactory;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.report.IReporterFactory;
 import org.specrunner.result.IResultFactory;
@@ -85,6 +86,7 @@ public class SRMappingDefault implements ISRMapping {
         types.put(IComparatorManager.class, "org.specrunner.comparators.core.ComparatorManagerImpl");
         types.put(IPresenterManager.class, "org.specrunner.util.xom.core.PresenterManagerImpl");
         types.put(IAccessFactory.class, "org.specrunner.parameters.core.AccessFactoryImpl");
+        types.put(IObjectManager.class, "org.specrunner.plugins.core.objects.core.ObjectManagerDefault");
         types.put(IConcurrentMapping.class, "org.specrunner.concurrency.core.ConcurrentMappingImpl");
         types.put(IResourceManagerFactory.class, "org.specrunner.source.resource.core.ResourceManagerFactoryImpl");
         types.put(ISourceFactoryManager.class, "org.specrunner.source.core.SourceFactoryManagerImpl");

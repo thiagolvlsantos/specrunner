@@ -33,7 +33,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
@@ -128,12 +128,12 @@ public class PluginConfiguration extends AbstractPluginFactory {
             context.saveGlobal(str, cfg);
             result.addResult(Success.INSTANCE, context.peek());
 
-            PluginObjectManager.get().clear();
+            SRServices.get(IObjectManager.class).clear();
             for (Iterator<?> ite = cfg.getClassMappings(); ite.hasNext();) {
                 PersistentClass persistent = (PersistentClass) ite.next();
                 PluginInsert pin = new PluginInsert();
                 pin.setTypeInstance(Class.forName(persistent.getClassName()));
-                PluginObjectManager.get().bind(pin);
+                SRServices.get(IObjectManager.class).bind(pin);
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

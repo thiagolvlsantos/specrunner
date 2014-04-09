@@ -8,6 +8,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.comparators.core.ComparatorManagerImpl" />
   <bean class="org.specrunner.util.xom.core.PresenterManagerImpl" />
   <bean class="org.specrunner.parameters.core.AccessFactoryImpl" />
+  <bean class="org.specrunner.plugins.core.objects.core.ObjectManagerDefault" />
   <bean class="org.specrunner.concurrency.core.ConcurrentMappingImpl" />
   <bean class="org.specrunner.source.resource.core.ResourceManagerFactoryImpl" />
   <bean class="org.specrunner.source.core.SourceFactoryManagerImpl" />

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.core.objects.impl;
+package org.specrunner.plugins.core.objects.core;
 
 import java.util.Map;
 
@@ -23,7 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.plugins.core.objects.AbstractPluginObjectSelectUnique;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -35,7 +35,7 @@ import org.specrunner.util.xom.RowAdapter;
  * @author Thiago Santos
  * 
  */
-public class PluginDelete extends AbstractPluginObjectSelectUnique<PluginObjectManager> {
+public class PluginDelete extends AbstractPluginObjectSelectUnique<IObjectManager> {
 
     /**
      * Create an update plugin.

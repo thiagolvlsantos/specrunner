@@ -1,5 +1,6 @@
 package org.specrunner.plugins.core.objects;
 
+import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.core.ConverterNotNullNotEmpty;
 import org.specrunner.plugins.PluginException;
@@ -23,7 +24,7 @@ public class ConverterObject extends ConverterNotNullNotEmpty {
         }
         Class<?> type = (Class<?>) args[0];
         try {
-            return PluginObjectManager.get().lookup(type, String.valueOf(value));
+            return SRServices.get(IObjectManager.class).lookup(type, String.valueOf(value));
         } catch (PluginException e) {
             throw new ConverterException(e);
         }

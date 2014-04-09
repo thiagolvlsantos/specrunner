@@ -15,12 +15,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.core.objects;
+package org.specrunner.plugins.core.objects.core;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.core.objects.AbstractPluginObject;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -29,56 +31,19 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginObjectManager {
-
-    /**
-     * Thread instance of manager.
-     */
-    private static ThreadLocal<PluginObjectManager> instance = new ThreadLocal<PluginObjectManager>() {
-        @Override
-        protected PluginObjectManager initialValue() {
-            return new PluginObjectManager();
-        };
-    };
+public class ObjectManagerDefault implements IObjectManager {
 
     /**
      * Map of instances for a given entity.
      */
     protected Map<Class<?>, AbstractPluginObject> entities = new HashMap<Class<?>, AbstractPluginObject>();
 
-    /**
-     * The object manager instance (Thread safe).
-     * 
-     * @return The instance.
-     */
-    public static PluginObjectManager get() {
-        return instance.get();
-    }
-
-    /**
-     * Clear all object mappings.
-     */
-    public void clear() {
-        entities.clear();
-    }
-
-    /**
-     * Check if a given class is bound to a AbstractPluginObject.
-     * 
-     * @param clazz
-     *            The object type.
-     * @return true, of bound, false, otherwise.
-     */
+    @Override
     public boolean isBound(Class<?> clazz) {
         return entities.containsKey(clazz);
     }
 
-    /**
-     * Bind a object plugin to the manager.
-     * 
-     * @param input
-     *            The object plugin.
-     */
+    @Override
     public void bind(AbstractPluginObject input) {
         AbstractPluginObject old = entities.get(input.getTypeInstance());
         if (old == null) {
@@ -97,17 +62,7 @@ public class PluginObjectManager {
         }
     }
 
-    /**
-     * Lookup for a object of a given type, with the given key.
-     * 
-     * @param clazz
-     *            The object type.
-     * @param key
-     *            The object key.
-     * @return The object if exists,null, otherwise.
-     * @throws PluginException
-     *             On lookup errors.
-     */
+    @Override
     public Object lookup(Class<?> clazz, String key) throws PluginException {
         AbstractPluginObject map = entities.get(clazz);
         if (map == null) {
@@ -116,12 +71,13 @@ public class PluginObjectManager {
         return map.getObject(key);
     }
 
-    /**
-     * The mapping of all entities.
-     * 
-     * @return The entity mapping.
-     */
+    @Override
     public Map<Class<?>, AbstractPluginObject> getEntities() {
         return entities;
+    }
+
+    @Override
+    public void clear() {
+        entities.clear();
     }
 }

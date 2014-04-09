@@ -15,10 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.core.objects.impl;
+package org.specrunner.plugins.core.objects.core;
 
 import org.specrunner.plugins.core.objects.AbstractPluginObjectSelectNone;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.IObjectManager;
 
 /**
  * Check if an object is not in memory.
@@ -26,7 +26,7 @@ import org.specrunner.plugins.core.objects.PluginObjectManager;
  * @author Thiago Santos
  * 
  */
-public class PluginNotContains extends AbstractPluginObjectSelectNone<PluginObjectManager> {
+public class PluginNotContains extends AbstractPluginObjectSelectNone<IObjectManager> {
 
     /**
      * Creates the plugin.
