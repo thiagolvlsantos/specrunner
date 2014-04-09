@@ -289,7 +289,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading object mapping>" + mapping);
             }
-            URL file = getClass().getResource(mapping);
+            URL file = AbstractPluginObject.class.getResource(mapping);
             if (file == null) {
                 throw new PluginException("The object mapping file '" + mapping + "' not found.");
             }
@@ -360,7 +360,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     @Override
     public void doEnd(IContext context, IResultSet result, TableAdapter table) throws PluginException {
         if (isMapped()) {
-            PluginObjectManager.get().bind(this);
+            SRServices.get(IObjectManager.class).bind(this);
         }
         for (int i = 0; i < table.getRowCount(); i++) {
             if (i == 0) {
@@ -988,7 +988,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 setFloat(instance, f, value);
             } else if (st == double.class || st == Double.class) {
                 setDouble(instance, f, value);
-            } else if (PluginObjectManager.get().isBound(st)) {
+            } else if (SRServices.get(IObjectManager.class).isBound(st)) {
                 setEntity(instance, f, value);
             } else {
                 setObject(instance, f, value);
@@ -1125,7 +1125,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("LOOKUP(" + f.getSpecificType() + ")");
         }
-        Object obj = PluginObjectManager.get().lookup(f.getSpecificType(), String.valueOf(value));
+        Object obj = SRServices.get(IObjectManager.class).lookup(f.getSpecificType(), String.valueOf(value));
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("FOUND(" + obj + ")");
         }

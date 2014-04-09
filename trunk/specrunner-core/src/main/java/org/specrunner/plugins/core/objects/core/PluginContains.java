@@ -15,10 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.core.objects.impl;
+package org.specrunner.plugins.core.objects.core;
 
 import org.specrunner.plugins.core.objects.AbstractPluginObjectCompare;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.IObjectManager;
 
 /**
  * Check if a given list of objects is present in memory. The object output list
@@ -27,7 +27,7 @@ import org.specrunner.plugins.core.objects.PluginObjectManager;
  * @author Thiago Santos
  * 
  */
-public class PluginContains extends AbstractPluginObjectCompare<PluginObjectManager> {
+public class PluginContains extends AbstractPluginObjectCompare<IObjectManager> {
 
     /**
      * Create a output comparison.

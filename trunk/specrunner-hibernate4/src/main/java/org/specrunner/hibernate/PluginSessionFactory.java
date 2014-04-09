@@ -35,7 +35,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
@@ -197,7 +197,7 @@ public class PluginSessionFactory extends AbstractPluginFactory {
      */
     protected void setListeners(SessionFactory sessionFactory) {
         EventListenerRegistry registry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
-        HibernateListener listener = new HibernateListener(PluginObjectManager.get().getEntities());
+        HibernateListener listener = new HibernateListener(SRServices.get(IObjectManager.class).getEntities());
         registry.appendListeners(EventType.PRE_INSERT, listener);
         registry.appendListeners(EventType.POST_INSERT, listener);
     }

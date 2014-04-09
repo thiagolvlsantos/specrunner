@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -149,7 +149,7 @@ public final class UtilConverter {
                 converter = cm.get(simpleName);
                 converterArguments = new Object[] {};
             }
-            if (converter == null && PluginObjectManager.get().isBound(type)) {
+            if (converter == null && SRServices.get(IObjectManager.class).isBound(type)) {
                 // special converter for objects, lookup object in memory
                 converter = cm.get("object");
                 converterArguments = new Object[] { type };

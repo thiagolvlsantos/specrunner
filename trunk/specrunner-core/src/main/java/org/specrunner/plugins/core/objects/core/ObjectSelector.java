@@ -15,16 +15,17 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.plugins.core.objects.impl;
+package org.specrunner.plugins.core.objects.core;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.core.objects.AbstractPluginObject;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.plugins.core.objects.IObjectSelector;
-import org.specrunner.plugins.core.objects.PluginObjectManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.RowAdapter;
@@ -35,7 +36,7 @@ import org.specrunner.util.xom.RowAdapter;
  * @author Thiago Santos.
  * 
  */
-public class ObjectSelector implements IObjectSelector<PluginObjectManager> {
+public class ObjectSelector implements IObjectSelector<IObjectManager> {
 
     /**
      * Thread safe instance of <code>ObjecySelector</code>.
@@ -57,8 +58,8 @@ public class ObjectSelector implements IObjectSelector<PluginObjectManager> {
     }
 
     @Override
-    public PluginObjectManager getSource(AbstractPluginObject caller, IContext context) throws Exception {
-        return PluginObjectManager.get();
+    public IObjectManager getSource(AbstractPluginObject caller, IContext context) throws Exception {
+        return SRServices.get(IObjectManager.class);
     }
 
     @Override
