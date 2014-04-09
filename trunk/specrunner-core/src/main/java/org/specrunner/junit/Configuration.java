@@ -23,6 +23,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * This tag informa if a method is a configuration method. Each configuration
+ * method should receive 1 argument of type <code>IConfiguratio</code>.
+ * 
+ * @author Thiago Santos
+ * 
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD })
 public @interface Configuration {
