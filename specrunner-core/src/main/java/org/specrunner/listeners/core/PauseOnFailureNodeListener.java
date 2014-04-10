@@ -166,8 +166,8 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     @Override
     public void onAfter(Node node, IContext context, IResultSet result) {
         if (!condition) {
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Pause on error listener disabled.");
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Pause on error listener disabled.");
             }
             return;
         }
