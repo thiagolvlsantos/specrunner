@@ -107,11 +107,13 @@ public class ResultSetEnumerator implements IResultEnumerator {
             }
             if (comp < 0) {
                 exp = rsExpected;
-                readExp = true;
                 rec = null;
+                readExp = true;
+                readRec = false;
             } else if (comp > 0) {
                 exp = null;
                 rec = rsReceived;
+                readExp = false;
                 readRec = true;
             } else {
                 exp = rsExpected;
@@ -120,11 +122,15 @@ public class ResultSetEnumerator implements IResultEnumerator {
                 readRec = true;
             }
         } else if (keysExp == null) {
-            readExp = false;
             exp = null;
+            rec = rsReceived;
+            readExp = false;
+            readRec = true;
         } else if (keysRec == null) {
-            readRec = false;
+            exp = rsExpected;
             rec = null;
+            readExp = true;
+            readRec = false;
         }
         return exp != null || rec != null;
     }
