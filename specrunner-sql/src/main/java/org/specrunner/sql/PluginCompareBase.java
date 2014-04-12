@@ -270,6 +270,9 @@ public class PluginCompareBase extends AbstractPluginValue {
                     continue;
                 }
                 String sql = createTableSelect(schema, table);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Compare table (" + table.getName() + ", " + table.getAlias() + ") = " + sql);
+                }
                 ResultSet rsExpected = null;
                 ResultSet rsReceived = null;
                 try {
