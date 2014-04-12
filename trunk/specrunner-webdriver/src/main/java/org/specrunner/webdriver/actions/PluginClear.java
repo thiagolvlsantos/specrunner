@@ -20,20 +20,20 @@ package org.specrunner.webdriver.actions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.webdriver.AbstractPluginFindSingle;
+import org.specrunner.webdriver.AbstractPluginFind;
 
 /**
- * Clear a given element.
+ * Clear elements.
  * 
  * @author Thiago Santos.
  * 
  */
-public class PluginClear extends AbstractPluginFindSingle {
+public class PluginClear extends AbstractPluginFind {
 
     @Override
     public ActionType getActionType() {
@@ -41,8 +41,12 @@ public class PluginClear extends AbstractPluginFindSingle {
     }
 
     @Override
-    protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        element.clear();
+    protected void process(IContext context, IResultSet result, WebDriver client, WebElement[] elements) throws PluginException {
+        if (elements != null) {
+            for (int i = 0; i < elements.length; i++) {
+                elements[i].clear();
+            }
+        }
         result.addResult(Success.INSTANCE, context.peek());
     }
 }
