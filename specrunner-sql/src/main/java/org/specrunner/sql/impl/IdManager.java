@@ -408,6 +408,11 @@ public class IdManager {
                     if (alias == null) {
                         alias = table.getAlias() + "." + v.getValue();
                     }
+                } else if (column.isReference()) {
+                    sb.append((i++ == 0 ? "" : " AND ") + column.getName() + " = '" + v.getValue() + "'");
+                    if (alias == null) {
+                        alias = table.getAlias() + "." + v.getValue();
+                    }
                 }
             }
             Statement stmt = null;

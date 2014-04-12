@@ -475,11 +475,34 @@ public class Database implements IDatabase {
         StringBuilder sb = new StringBuilder();
         sb.append("update " + table.getSchema().getName() + "." + table.getName() + " set ");
 
+        boolean hasKeys = false;
+        boolean hasReferences = false;
+        for (Value v : values) {
+            hasKeys = hasKeys || v.getColumn().isKey();
+            hasReferences = hasReferences || v.getColumn().isReference();
+        }
+
         StringBuilder sbColumns = new StringBuilder();
         int i = 1;
-        for (Value v : values) {
-            Column column = v.getColumn();
-            if (!column.isKey()) {
+        if (hasKeys) {
+            for (Value v : values) {
+                Column column = v.getColumn();
+                if (!column.isKey()) {
+                    indexes.put(column.getName(), i++);
+                    sbColumns.append(column.getName() + " = ?,");
+                }
+            }
+        } else if (hasReferences) {
+            for (Value v : values) {
+                Column column = v.getColumn();
+                if (!column.isReference()) {
+                    indexes.put(column.getName(), i++);
+                    sbColumns.append(column.getName() + " = ?,");
+                }
+            }
+        } else {
+            for (Value v : values) {
+                Column column = v.getColumn();
                 indexes.put(column.getName(), i++);
                 sbColumns.append(column.getName() + " = ?,");
             }
@@ -488,14 +511,29 @@ public class Database implements IDatabase {
             sbColumns.setLength(sbColumns.length() - 1);
         }
         sb.append(sbColumns);
+        sb.append(" where ");
 
-        String and = " AND ";
-
-        sb.append(" where (");
         StringBuilder sbConditions = new StringBuilder();
-        for (Value v : values) {
-            Column column = v.getColumn();
-            if (column.isKey()) {
+        String and = " AND ";
+        if (hasKeys) {
+            for (Value v : values) {
+                Column column = v.getColumn();
+                if (column.isKey()) {
+                    indexes.put(column.getName(), i++);
+                    sbConditions.append(column.getName() + " = ? " + and);
+                }
+            }
+        } else if (hasReferences) {
+            for (Value v : values) {
+                Column column = v.getColumn();
+                if (column.isReference()) {
+                    indexes.put(column.getName(), i++);
+                    sbConditions.append(column.getName() + " = ? " + and);
+                }
+            }
+        } else {
+            for (Value v : values) {
+                Column column = v.getColumn();
                 indexes.put(column.getName(), i++);
                 sbConditions.append(column.getName() + " = ? " + and);
             }
@@ -504,7 +542,6 @@ public class Database implements IDatabase {
             sbConditions.setLength(sbConditions.length() - (1 + and.length()));
         }
         sb.append(sbConditions);
-        sb.append(")");
 
         performIn(context, result, con, updateWrapper(sb, expectedCount), table, indexes, values);
     }
@@ -547,18 +584,34 @@ public class Database implements IDatabase {
 
         StringBuilder sb = new StringBuilder();
         sb.append("delete from " + table.getSchema().getName() + "." + table.getName() + " where ");
+
+        boolean hasKeys = false;
+        boolean hasReferences = false;
+        for (Value v : values) {
+            hasKeys = hasKeys || v.getColumn().isKey();
+            hasReferences = hasReferences || v.getColumn().isReference();
+        }
+
         StringBuilder sbConditions = new StringBuilder();
         int i = 1;
         String and = " AND ";
-        for (Value v : values) {
-            Column column = v.getColumn();
-            if (column.isKey()) {
-                indexes.put(column.getName(), i++);
-                sbConditions.append(column.getName() + " = ?" + and);
+        if (hasKeys) {
+            for (Value v : values) {
+                Column column = v.getColumn();
+                if (column.isKey()) {
+                    indexes.put(column.getName(), i++);
+                    sbConditions.append(column.getName() + " = ?" + and);
+                }
             }
-        }
-        // if keys where not set
-        if (i == 1) {
+        } else if (hasReferences) {
+            for (Value v : values) {
+                Column column = v.getColumn();
+                if (column.isReference()) {
+                    indexes.put(column.getName(), i++);
+                    sbConditions.append(column.getName() + " = ?" + and);
+                }
+            }
+        } else {
             for (Value v : values) {
                 Column column = v.getColumn();
                 indexes.put(column.getName(), i++);
