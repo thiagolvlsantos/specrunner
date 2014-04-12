@@ -18,11 +18,12 @@
 package org.specrunner.htmlunit.actions;
 
 import org.specrunner.context.IContext;
-import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.plugins.PluginException;
+import org.specrunner.htmlunit.AbstractPluginFind;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Success;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -30,12 +31,12 @@ import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
 
 /**
- * Clear a given element.
+ * Clear elements.
  * 
  * @author Thiago Santos.
  * 
  */
-public class PluginClear extends AbstractPluginFindSingle {
+public class PluginClear extends AbstractPluginFind {
 
     @Override
     public ActionType getActionType() {
@@ -43,11 +44,16 @@ public class PluginClear extends AbstractPluginFindSingle {
     }
 
     @Override
-    protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        if (!(element instanceof SelectableTextInput)) {
-            throw new PluginException("Only SelectableTextInput instances can be cleaned.");
+    protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement[] elements) throws PluginException {
+        if (elements != null) {
+            for (int i = 0; i < elements.length; i++) {
+                if (!(elements[i] instanceof SelectableTextInput)) {
+                    throw new PluginException("Only SelectableTextInput instances can be cleaned.");
+                }
+                SelectableTextInput sel = (SelectableTextInput) elements[i];
+                sel.setText("");
+            }
         }
-        SelectableTextInput sel = (SelectableTextInput) element;
-        sel.setText("");
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }
