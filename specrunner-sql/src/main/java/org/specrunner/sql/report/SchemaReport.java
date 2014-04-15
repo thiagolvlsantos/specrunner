@@ -91,9 +91,13 @@ public class SchemaReport implements IPresentation {
         Element caption = new Element("caption");
         table.appendChild(caption);
         {
-            caption.addAttribute(new Attribute("title", schema.getName()));
             caption.addAttribute(new Attribute("class", "sr_sreport"));
             caption.appendChild(schema.getAlias());
+
+            Element sup = new Element("sup");
+            sup.addAttribute(new Attribute("class", "sr_treport"));
+            sup.appendChild(schema.getName());
+            caption.appendChild(sup);
         }
         for (TableReport r : tables) {
             Element tr = new Element("tr");
