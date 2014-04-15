@@ -17,9 +17,9 @@
  */
 package org.specrunner.comparators.core;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.sql.Clob;
+
+import org.specrunner.util.UtilSql;
 
 /**
  * Compare two string/clobs.
@@ -38,29 +38,7 @@ public class ComparatorClob extends ComparatorString {
     @Override
     protected String toString(Object obj) {
         if (obj instanceof Clob) {
-            Clob clob = (Clob) obj;
-            Reader in = null;
-            try {
-                in = clob.getCharacterStream();
-                if (in != null) {
-                    StringBuilder sb = new StringBuilder();
-                    int i;
-                    while ((i = in.read()) != -1) {
-                        sb.append((char) i);
-                    }
-                    return sb.toString();
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
+            return UtilSql.toString((Clob) obj);
         }
         return super.toString(obj);
     }

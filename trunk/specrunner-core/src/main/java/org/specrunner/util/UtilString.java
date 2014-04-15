@@ -115,5 +115,4 @@ public final class UtilString {
     public static String clean(String str) {
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
-
 }

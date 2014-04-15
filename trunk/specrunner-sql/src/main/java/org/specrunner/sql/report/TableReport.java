@@ -137,9 +137,13 @@ public class TableReport implements IPresentation {
         {
             Element cap = new Element("caption");
             {
-                cap.addAttribute(new Attribute("title", table.getName()));
                 cap.addAttribute(new Attribute("class", "sr_treport"));
                 cap.appendChild(table.getAlias());
+
+                Element sup = new Element("sup");
+                sup.addAttribute(new Attribute("class", "sr_treport"));
+                sup.appendChild(table.getName());
+                cap.appendChild(sup);
             }
             result.appendChild(cap);
             int index = 0;
@@ -159,9 +163,13 @@ public class TableReport implements IPresentation {
                         th = new Element("th");
                         tr.appendChild(th);
                         {
-                            th.addAttribute(new Attribute("title", c.getName()));
                             th.addAttribute(new Attribute("class", "sr_lreport"));
                             th.appendChild(c.getAlias());
+
+                            Element sup = new Element("sup");
+                            sup.addAttribute(new Attribute("class", "sr_treport"));
+                            sup.appendChild(c.getName());
+                            th.appendChild(sup);
                         }
                     }
                 }

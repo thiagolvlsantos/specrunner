@@ -27,6 +27,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.sql.meta.Column;
+import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
 
@@ -308,7 +309,7 @@ public class LineReport implements IPresentation {
                 tr.appendChild(td);
                 {
                     td.addAttribute(new Attribute("class", type.getStyle()));
-                    td.appendChild(String.valueOf(vals.get(index)));
+                    td.appendChild(UtilSql.toString(vals.get(index)));
                 }
             } else {
                 tr.appendChild(new Element("td"));
@@ -332,10 +333,10 @@ public class LineReport implements IPresentation {
         columnsToIndexes.put(c.getName(), index);
         columns.add(c);
         if (expected != null) {
-            expectedObjects.add(expected);
+            expectedObjects.add(UtilSql.toString(expected));
         }
         if (received != null) {
-            receivedObjects.add(received);
+            receivedObjects.add(UtilSql.toString(received));
         }
     }
 

@@ -94,8 +94,8 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
             String name = getField(feature);
             IAccess access = SRServices.get(IAccessFactory.class).newAccess(target, name);
             if (access == null) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Feature(" + target + "." + name + ") not found: ignoring attempt.");
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Feature(" + target + "." + name + ") not found: ignoring attempt.");
                 }
                 return;
             }
@@ -159,8 +159,8 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
             } else {
                 access.set(target, field, value);
             }
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Feature '" + feature + "' set to object '" + target + "', current value is " + value + ".");
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Feature '" + feature + "' set to object '" + target + "', current value is " + value + ".");
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

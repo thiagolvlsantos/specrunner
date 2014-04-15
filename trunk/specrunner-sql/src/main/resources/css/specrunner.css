@@ -10,11 +10,8 @@ table.sr_sreport caption.sr_sreport, table.sr_treport caption.sr_treport {
     font-size: large;
 }
 
-table.sr_sreport caption:after, table.sr_treport caption:after, table.sr_treport th:after {
-    padding: 1px 1px 1px 1px;
-    font-size: x-small;
-    vertical-align: top;
-    content: attr(title);
+sup.sr_sreport, sup.sr_treport {
+    padding: 2px;
 }
 
 table.sr_treport th.sr_lreport {
