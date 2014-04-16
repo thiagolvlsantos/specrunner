@@ -1,16 +1,22 @@
 package example.sql.reference;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.junit.runner.RunWith;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
+import org.specrunner.sql.IColumnReader;
 import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
+import org.specrunner.sql.impl.ColumnReaderImpl;
 import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 import example.sql.DataSourceProviderImpl;
@@ -30,5 +36,14 @@ public class TestReference {
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 5000L);
         // cfg.add(AbstractConverterTimezone.FEATURE_TIMEZONE, "UTC");
+        cfg.add(Database.FEATURE_COLUMN_READER, new IColumnReader() {
+            private IColumnReader cr = new ColumnReaderImpl();
+
+            @Override
+            public Object read(ResultSet rs, Column column) throws SQLException {
+                System.out.println("ON:" + column.getName() + ": " + rs.getObject(column.getName()));
+                return cr.read(rs, column);
+            }
+        });
     }
 }
