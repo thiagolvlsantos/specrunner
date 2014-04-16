@@ -381,3 +381,16 @@ table.included_file_args td {
     vertical-align: top;
     background-color: white;
 }
+
+/* COMPARE */
+.compare .expected, .compare .received {
+    text-align: right;
+}
+
+.compare .expected {
+    color: green;
+}
+
+.compare .received {
+    color: red;
+}

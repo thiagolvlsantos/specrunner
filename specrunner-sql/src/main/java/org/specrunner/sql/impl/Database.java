@@ -61,8 +61,11 @@ import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.core.PresentationCompare;
+import org.specrunner.util.xom.core.PresentationException;
 
 /**
  * Basic implementation of <code>IDatabase</code> using cached prepared
@@ -972,8 +975,16 @@ public class Database implements IDatabase {
                             if (column.isVirtual()) {
                                 received = idManager.lookup(column.getAlias(), received);
                             }
-                            cell.append(" {" + String.valueOf(expected) + "}");
-                            result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+                            String expStr = String.valueOf(expected);
+                            String recStr = String.valueOf(received);
+                            cell.append(" {" + expStr + "}");
+                            IPresentation error = null;
+                            if (expStr.equals(recStr)) {
+                                error = new PresentationCompare(expected, received);
+                            } else {
+                                error = new DefaultAlignmentException("Values are different.", expStr, recStr);
+                            }
+                            result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
                         } else {
                             String str = String.valueOf(value);
                             if (!cell.getValue().equals(str)) {
