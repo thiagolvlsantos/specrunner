@@ -45,6 +45,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.CommandType;
 import org.specrunner.sql.EMode;
+import org.specrunner.sql.IColumnReader;
 import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.ISequenceProvider;
 import org.specrunner.sql.SqlWrapper;
@@ -69,8 +70,8 @@ import org.specrunner.util.xom.core.PresentationException;
 
 /**
  * Basic implementation of <code>IDatabase</code> using cached prepared
- * statements, an ID manager to work with generated keys, and a sequence
- * provider to enable sequence interactions.
+ * statements, an ID manager to work with generated keys, a sequence provider to
+ * enable sequence interactions and a column reader to recover column objects.
  * 
  * @author Thiago Santos
  * 
@@ -94,6 +95,11 @@ public class Database implements IDatabase {
     public static final String FEATURE_SEQUENCE_PROVIDER = Database.class.getName() + ".sequenceProvider";
 
     /**
+     * Feature for database column reader.
+     */
+    public static final String FEATURE_COLUMN_READER = Database.class.getName() + ".columnReader";
+
+    /**
      * Prepared statements for input actions.
      */
     protected ICache<String, PreparedStatement> inputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
@@ -112,6 +118,12 @@ public class Database implements IDatabase {
      * Sequence next value generator.
      */
     protected ISequenceProvider sequenceProvider = new SequenceProviderImpl();
+
+    /**
+     * Recover object from a result set column to be compared against the
+     * specification object.
+     */
+    protected IColumnReader columnReader = new ColumnReaderImpl();
 
     /**
      * Feature for dump size.
@@ -180,12 +192,32 @@ public class Database implements IDatabase {
         this.sequenceProvider = sequenceProvider;
     }
 
+    /**
+     * Get current column reader.
+     * 
+     * @return The current reader.
+     */
+    public IColumnReader getColumnReader() {
+        return columnReader;
+    }
+
+    /**
+     * Set a column reader.
+     * 
+     * @param columnReader
+     *            A reader.
+     */
+    public void setColumnReader(IColumnReader columnReader) {
+        this.columnReader = columnReader;
+    }
+
     @Override
     public void initialize() {
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_LIMIT, this);
         fm.set(FEATURE_ID_MANAGER, this);
         fm.set(FEATURE_SEQUENCE_PROVIDER, this);
+        fm.set(FEATURE_COLUMN_READER, this);
         // every use of database clear mappings to avoid memory overload and
         // test interference
         idManager.clear();
@@ -943,7 +975,7 @@ public class Database implements IDatabase {
                     Integer index = indexes.get(column.getName());
                     if (index == null) {
                         IComparator comparator = v.getComparator();
-                        Object received = rs.getObject(column.getName());
+                        Object received = columnReader.read(rs, column);
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                         }
