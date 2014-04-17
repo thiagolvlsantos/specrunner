@@ -17,6 +17,9 @@
  */
 package org.specrunner.annotator.core;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
@@ -28,6 +31,7 @@ import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.Status;
 
 /**
  * Add a anchor link (relative) to errors.
@@ -39,11 +43,19 @@ public class AnnotatorLink implements IAnnotator {
 
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
-        int stackIndex = 1;
+        Map<Status, Integer> indexes = new HashMap<Status, Integer>();
         for (IResult r : result) {
             IBlock block = r.getBlock();
             if (block.hasNode() && r.hasFailure()) {
-                addLinkToError(block.getNode(), stackIndex++);
+                Status status = r.getStatus();
+                Integer stackIndex = indexes.get(status);
+                if (stackIndex == null) {
+                    stackIndex = 0;
+                    indexes.put(status, stackIndex);
+                }
+                stackIndex++;
+                indexes.put(status, stackIndex);
+                addLinkToError(block.getNode(), status, stackIndex);
             }
         }
     }
@@ -53,17 +65,19 @@ public class AnnotatorLink implements IAnnotator {
      * 
      * @param node
      *            The node.
-     * @param errorIndex
+     * @param status
+     *            The annotation status.
+     * @param statusIndex
      *            The index number.
      */
-    protected void addLinkToError(Node node, int errorIndex) {
+    protected void addLinkToError(Node node, Status status, int statusIndex) {
         if (node instanceof ParentNode) {
             ParentNode ele = (ParentNode) node;
             if (ele instanceof Document) {
                 ele = ((Document) ele).getRootElement();
             }
             Element child = new Element("a");
-            child.addAttribute(new Attribute("name", "" + errorIndex));
+            child.addAttribute(new Attribute("name", status.getCssName() + statusIndex));
             ele.insertChild(child, 0);
         }
     }
