@@ -18,6 +18,8 @@
 package org.specrunner.annotator.core;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import nu.xom.Attribute;
 import nu.xom.Document;
@@ -30,6 +32,7 @@ import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresentation;
@@ -44,11 +47,19 @@ public class AnnotatorStacktrace implements IAnnotator {
 
     @Override
     public void annotate(IResultSet result) throws AnnotatorException {
-        int stackIndex = 1;
+        Map<Status, Integer> indexes = new HashMap<Status, Integer>();
         for (IResult r : result) {
             IBlock block = r.getBlock();
             if (block.hasNode() && r.hasFailure()) {
-                addStackTrace(block.getNode(), r, stackIndex++);
+                Status status = r.getStatus();
+                Integer stackIndex = indexes.get(status);
+                if (stackIndex == null) {
+                    stackIndex = 0;
+                    indexes.put(status, stackIndex);
+                }
+                stackIndex++;
+                indexes.put(status, stackIndex);
+                addStackTrace(block.getNode(), r, stackIndex);
             }
         }
     }
@@ -61,7 +72,7 @@ public class AnnotatorStacktrace implements IAnnotator {
      * @param result
      *            The result.
      * @param stackIndex
-     *            The start index.
+     *            The indexes map.
      * @throws AnnotatorException
      *             On annotator errors.
      */
@@ -78,9 +89,10 @@ public class AnnotatorStacktrace implements IAnnotator {
 
         Element button = new Element("input");
         button.addAttribute(new Attribute("type", "button"));
-        button.addAttribute(new Attribute("class", "stackbutton"));
+        String cssName = result.getStatus().getCssName();
+        button.addAttribute(new Attribute("class", cssName + " sr_stackbutton"));
         button.addAttribute(new Attribute("value", " + " + stackIndex));
-        button.addAttribute(new Attribute("id", "error" + stackIndex));
+        button.addAttribute(new Attribute("id", cssName + stackIndex));
         parent.insertChild(button, index++);
 
         Throwable failure = result.getFailure();
@@ -102,8 +114,8 @@ public class AnnotatorStacktrace implements IAnnotator {
                 throw new AnnotatorException(e);
             }
         }
-        stack.addAttribute(new Attribute("id", "error" + stackIndex + "_stack"));
-        stack.addAttribute(new Attribute("class", "stacktrace"));
+        stack.addAttribute(new Attribute("id", cssName + stackIndex + "_stack"));
+        stack.addAttribute(new Attribute("class", cssName + " sr_stacktrace"));
         parent.insertChild(stack, index);
     }
 }

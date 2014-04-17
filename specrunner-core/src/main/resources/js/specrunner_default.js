@@ -16,10 +16,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 $(document).ready(function() {
-    $(".stacktrace").each(function(event) {
+    $(".sr_stacktrace").each(function(event) {
         $(this).hide();
     });
-    $(":button.stackbutton").click(function(event) {
+    $(":button.sr_stackbutton").click(function(event) {
         var name = $(this).attr("id");
         var trace = "#" + name + "_stack";
         var comando = $(this).attr("value");
@@ -29,21 +29,16 @@ $(document).ready(function() {
             comando = comando.replace("-", "+");
         }
         $(this).attr("value", comando);
-        var button = $(this);
-        //button.addClass("sr_border");
-        $(trace).toggle(250, function(){
-                //button.removeClass("sr_border");
-            }
-        );
+        $(trace).toggle(200);
     });
     $("#right_exp").click(function(event) {
-        window.opener.document.$(":button.stackbutton[value*='+']").each(function() {
+        window.opener.document.$(":button.sr_stackbutton[value*='+']").each(function() {
             $(this).click();
         });
         event.preventDefault();
     });
     $("#right_col").click(function(event) {
-        window.opener.document.$(":button.stackbutton[value*='-']").each(function() {
+        window.opener.document.$(":button.sr_stackbutton[value*='-']").each(function() {
             $(this).click();
         });
         event.preventDefault();

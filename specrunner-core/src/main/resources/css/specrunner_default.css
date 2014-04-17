@@ -139,18 +139,14 @@
 /* STACK TRACE */
 .sr_border {
     border-color: red;
-    /*
-    border-style: inset;
-    border-width: 5px;
-    */
 }
 
 .sr_stackbutton {
-    
+    font-weight: bolder;
+    font-style: italic;
 }
 
 .sr_stacktrace {
-    background: #ffd9d9;
 }
 
 .sr_details,.sr_screen,.sr_source {

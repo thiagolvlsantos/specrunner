@@ -177,11 +177,12 @@ public class SourceDumperDetails extends AbstractSourceDumperFile {
                                 Element link = new Element("a");
                                 String name = ((Element) UtilNode.getHighest(nodes)).getAttributeValue("name");
                                 link.addAttribute(new Attribute("href", outputName + "#" + name));
-                                link.addAttribute(new Attribute("id", "error" + name));
+                                link.addAttribute(new Attribute("id", name));
                                 li.appendChild(link);
                                 {
+                                    String prefix = name.substring(local.getStatus().getCssName().length());
                                     if (!s.isError()) {
-                                        link.appendChild(name + "-" + s.getName());
+                                        link.appendChild(prefix + "-" + s.getName());
                                     } else {
                                         Throwable failure = local.getFailure();
                                         String msg = null;
@@ -194,7 +195,7 @@ public class SourceDumperDetails extends AbstractSourceDumperFile {
                                             msg = "Failure missing.";
                                         }
                                         link.addAttribute(new Attribute("title", msg));
-                                        link.appendChild(name + "-" + msg);
+                                        link.appendChild(prefix + "-" + msg);
                                     }
                                 }
                             }
