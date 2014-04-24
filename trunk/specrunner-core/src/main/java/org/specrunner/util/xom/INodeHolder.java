@@ -205,12 +205,28 @@ public interface INodeHolder {
     void prepend(String text);
 
     /**
+     * Prepend a note to the node.
+     * 
+     * @param node
+     *            A node.
+     */
+    void prepend(Node node);
+
+    /**
      * Append text to the node.
      * 
      * @param text
      *            A text.
      */
     void append(String text);
+
+    /**
+     * Append node to the node.
+     * 
+     * @param node
+     *            A node.
+     */
+    void append(Node node);
 
     /**
      * Get the converter.

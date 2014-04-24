@@ -37,9 +37,6 @@ public class ComparatorClob extends ComparatorString {
 
     @Override
     protected String toString(Object obj) {
-        if (obj instanceof Clob) {
-            return UtilSql.toString((Clob) obj);
-        }
-        return super.toString(obj);
+        return UtilSql.toString(obj);
     }
 }
