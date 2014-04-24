@@ -16,6 +16,42 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 $(document).ready(function() {
+	/*
+    $(".sr_resultset th[class*=sr_nop]").each(function(event) {
+        $(this).append('<input id="sr_plus" type=button value="+"/>');
+        $(this).append('<input id="sr_minus" type=button value="-"/>');
+        $(this).append('<input id="sr_previous" type=button value="&lt;"/>');
+        $(this).append('<span id="sr_counter">0</span>');
+        $(this).append('<input id="sr_next" type=button value="&gt;"/>');
+    });
+
+    $("#sr_plus").click(function(event) {
+        $(":button.sr_stackbutton").each(function(e) {
+            $(this).click();
+        });
+    });
+    $("#sr_minus").click(function(event) {
+        $(":button.sr_stackbutton").each(function(e) {
+            $(this).click();
+        });
+    });
+    $("#sr_next").click(function(event) {
+    	var index = $("#sr_counter").data("index");
+    	if(index == undefined) {
+    		index = 0;
+    	}
+		$("#sr_counter").data("index",index+1);
+    	$("#sr_counter").html($("#sr_counter").data("index"));
+    });
+    $("#sr_previous").click(function(event) {
+    	var index = $("#sr_counter").data("index");
+    	if(index == undefined) {
+    		index = 0;
+    	}
+		$("#sr_counter").data("index",index-1);
+    	$("#sr_counter").html($("#sr_counter").data("index"));
+    });
+	*/
     $(".sr_stacktrace").each(function(event) {
         $(this).hide();
     });

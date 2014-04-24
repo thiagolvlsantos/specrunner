@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import nu.xom.Attribute;
+import nu.xom.Element;
+
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -57,6 +60,7 @@ import org.specrunner.sql.meta.Value;
 import org.specrunner.sql.meta.impl.UtilSchema;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
@@ -1007,9 +1011,9 @@ public class Database implements IDatabase {
                             if (column.isVirtual()) {
                                 received = idManager.lookup(column.getAlias(), received);
                             }
-                            String expStr = String.valueOf(expected);
-                            String recStr = String.valueOf(received);
-                            cell.append(" {" + expStr + "}");
+                            String expStr = UtilSql.toString(expected);
+                            String recStr = UtilSql.toString(received);
+                            shortView(cell, expected, expStr, recStr);
                             IPresentation error = null;
                             if (expStr.equals(recStr)) {
                                 error = new PresentationCompare(expected, received);
@@ -1019,7 +1023,7 @@ public class Database implements IDatabase {
                             result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
                         } else {
                             String str = String.valueOf(value);
-                            if (!cell.getValue().equals(str)) {
+                            if (!str.equals(cell.getValue())) {
                                 cell.append(" {" + str + "}");
                             }
                         }
@@ -1038,6 +1042,47 @@ public class Database implements IDatabase {
                 rs.close();
             }
         }
+    }
+
+    /**
+     * Create an error information to append to a cell.
+     * 
+     * @param cell
+     *            A cell.
+     * @param expected
+     *            Expected object.
+     * @param expStr
+     *            Expected as string.
+     * @param recStr
+     *            Received as string.
+     */
+    protected void shortView(CellAdapter cell, Object expected, String expStr, String recStr) {
+        if (!expStr.equals(expected)) {
+            Element spanExp = new Element("span");
+            spanExp.addAttribute(new Attribute("class", "compare"));
+            spanExp.appendChild(new Element("br"));
+            {
+                Element spanLabelExp = new Element("span");
+                spanLabelExp.addAttribute(new Attribute("class", "expected"));
+                spanExp.appendChild(spanLabelExp);
+
+                spanLabelExp.appendChild(" (expected):");
+            }
+            spanExp.appendChild(expStr);
+            cell.append(spanExp);
+        }
+        Element spanRec = new Element("span");
+        spanRec.addAttribute(new Attribute("class", "compare"));
+        spanRec.appendChild(new Element("br"));
+        {
+            Element spanLabelRec = new Element("span");
+            spanLabelRec.addAttribute(new Attribute("class", "received"));
+            spanRec.appendChild(spanLabelRec);
+
+            spanLabelRec.appendChild(" (received):");
+        }
+        spanRec.appendChild(recStr);
+        cell.append(spanRec);
     }
 
     /**

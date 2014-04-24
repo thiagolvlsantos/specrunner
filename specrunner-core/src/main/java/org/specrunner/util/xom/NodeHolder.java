@@ -184,6 +184,17 @@ public class NodeHolder implements INodeHolder {
     }
 
     @Override
+    public void prepend(Node child) {
+        if (node instanceof Text) {
+            ParentNode parent = node.getParent();
+            int index = parent.indexOf(node);
+            parent.insertChild(child, Math.max(0, index - 1));
+        } else if (node instanceof Element) {
+            ((Element) node).insertChild(child, 0);
+        }
+    }
+
+    @Override
     public void append(String text) {
         if (node instanceof Text) {
             ParentNode parent = node.getParent();
@@ -191,6 +202,17 @@ public class NodeHolder implements INodeHolder {
             parent.insertChild(new Text(text), index + 1);
         } else if (node instanceof Element) {
             ((Element) node).appendChild(text);
+        }
+    }
+
+    @Override
+    public void append(Node child) {
+        if (node instanceof Text) {
+            ParentNode parent = node.getParent();
+            int index = parent.indexOf(node);
+            parent.insertChild(child, index + 1);
+        } else if (node instanceof Element) {
+            ((Element) node).appendChild(child);
         }
     }
 

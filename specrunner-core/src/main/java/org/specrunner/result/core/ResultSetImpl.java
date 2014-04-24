@@ -515,11 +515,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
         td = new Element("th");
         td.addAttribute(new Attribute("class", "sr_nop"));
-        tr.appendChild(td);
-        td.appendChild("");
-
-        td = new Element("th");
-        td.addAttribute(new Attribute("class", "sr_nop"));
+        td.addAttribute(new Attribute("colspan", "2"));
         tr.appendChild(td);
         td.appendChild("");
 

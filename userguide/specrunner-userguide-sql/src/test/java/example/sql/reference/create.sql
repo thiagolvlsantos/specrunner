@@ -5,4 +5,5 @@ create table ORD.customers (
 	name VARCHAR(255),
 	description VARCHAR(255), 
 	number smallint,
+	text clob,
 		primary key (id))
