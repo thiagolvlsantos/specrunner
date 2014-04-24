@@ -251,6 +251,7 @@ table.included_file_args td {
 
 .sr_resultset th.sr_nop {
     border: none;
+    text-align: left;
 }
 
 .sr_resultset th.sr_small {
