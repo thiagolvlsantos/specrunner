@@ -532,7 +532,9 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         Element td;
 
         td = new Element("th");
+        td.addAttribute(new Attribute("id", "sr_control"));
         td.addAttribute(new Attribute("class", "sr_nop"));
+        td.addAttribute(new Attribute("status", getStatus().getCssName()));
         td.addAttribute(new Attribute("colspan", "2"));
         tr.appendChild(td);
         td.appendChild("");
@@ -547,7 +549,10 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             td = new Element("th");
             tr.appendChild(td);
             td.addAttribute(new Attribute("class", "sr_small"));
-            td.appendChild("[" + countStatus(s) + "]");
+            int countStatus = countStatus(s);
+            td.addAttribute(new Attribute("id", "max_" + s.getCssName()));
+            td.addAttribute(new Attribute("max", String.valueOf(countStatus)));
+            td.appendChild("[" + countStatus + "]");
         }
         int index = 0;
         for (ActionType t : actionTypes()) {
