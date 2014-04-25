@@ -17,13 +17,12 @@
  */
 $(document).ready(function() {
     $(".sr_resultset th[class*=sr_nop]").each(function(event) {
-        $(this).append(' <input id="sr_plus" type=button value="+" style="width:25px"/>');
-        $(this).append(' <input id="sr_minus" type=button value="-" style="width:25px"/>');
-        /*
-        $(this).append('<input id="sr_previous" type=button value="&lt;"/>');
-        $(this).append('<span id="sr_counter">0</span>');
-        $(this).append('<input id="sr_next" type=button value="&gt;"/>');
-        */
+        var size = "20px";
+        $(this).append('<input id="sr_plus" type=button value="+" style="width:'+size+'"/>');
+        $(this).append(' <input id="sr_minus" type=button value="-" style="width:'+size+'"/>');
+        $(this).append(' <input id="sr_previous" type=button value="&lt;" style="width:'+size+'"/>');
+        $(this).append(' <span id="sr_counter">0</span>');
+        $(this).append(' <input id="sr_next" type=button value="&gt;" style="width:'+size+'"/>');
     });
 
     $("#sr_plus").click(function(event) {
@@ -42,24 +41,41 @@ $(document).ready(function() {
             } 
         });
     });
-    /*
     $("#sr_next").click(function(event) {
-    	var index = $("#sr_counter").data("index");
-    	if(index == undefined) {
-    		index = 0;
-    	}
-		$("#sr_counter").data("index",index+1);
-    	$("#sr_counter").html($("#sr_counter").data("index"));
+        var index = $("#sr_counter").data("index");
+        if(index == undefined) {
+            index = 0;
+        }
+        var type = $("#sr_control").attr("status");
+        var max = $("#max_"+type).attr("max");
+        index++;
+        if(index <= max){
+            $("#sr_counter").data("index",index);
+            $("#sr_counter").html(index);
+            var target = $("#"+type+index);
+            if(target.attr("value").indexOf('+')>=0){
+                target.click();
+            }
+            target.focus();
+        }
     });
     $("#sr_previous").click(function(event) {
-    	var index = $("#sr_counter").data("index");
-    	if(index == undefined) {
-    		index = 0;
-    	}
-		$("#sr_counter").data("index",index-1);
-    	$("#sr_counter").html($("#sr_counter").data("index"));
+        var index = $("#sr_counter").data("index");
+        if(index == undefined) {
+            index = 0;
+        }
+        var type = $("#sr_control").attr("status");
+        index--;
+        if(index > 0){
+            $("#sr_counter").data("index",index);
+            $("#sr_counter").html(index);
+            var target = $("#"+type+index);
+            if(target.attr("value").indexOf('+')>=0){
+                target.click();
+            }
+            target.focus();
+        }
     });
-	*/
     $(".sr_stacktrace").each(function(event) {
         $(this).hide();
     });
