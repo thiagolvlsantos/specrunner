@@ -34,6 +34,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
+import org.specrunner.result.IResultFilter;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
@@ -52,6 +53,10 @@ import org.specrunner.source.SourceException;
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     /**
+     * The result filter.
+     */
+    private IResultFilter resultFilter;
+    /**
      * Record success flag.
      */
     private boolean recordSuccess = true;
@@ -64,6 +69,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      * Ordered flag.
      */
     private boolean sorted;
+
+    @Override
+    public IResultFilter getResultFilter() {
+        return resultFilter;
+    }
+
+    @Override
+    public void setResultFilter(IResultFilter resultFilter) {
+        this.resultFilter = resultFilter;
+    }
 
     @Override
     public Boolean getRecordSuccess() {
@@ -371,6 +386,9 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             return null;
         }
         IResult result = new ResultImpl(status, source, message, failure, writable);
+        if (resultFilter != null && !resultFilter.accept(result)) {
+            return null;
+        }
         if (add(result)) {
             return result;
         }

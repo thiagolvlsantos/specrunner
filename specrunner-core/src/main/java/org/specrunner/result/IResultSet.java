@@ -33,6 +33,11 @@ import org.specrunner.util.xom.IPresentation;
 public interface IResultSet extends List<IResult>, IStatus, IPresentation {
 
     /**
+     * Feature for result filter.
+     */
+    String FEATURE_RESULT_FILTER = IResultSet.class.getName() + ".resultFilter";
+
+    /**
      * Feature for disable success recording.
      */
     String FEATURE_RECORD_SUCCESS = IResultSet.class.getName() + ".recordSuccess";
@@ -46,6 +51,21 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * Feature for messages expectation order.
      */
     String FEATURE_EXPECTED_SORTED = IResultSet.class.getName() + ".sorted";
+
+    /**
+     * Set result filter.
+     * 
+     * @param resultFilter
+     *            A filter.
+     */
+    void setResultFilter(IResultFilter resultFilter);
+
+    /**
+     * Return the filter.
+     * 
+     * @return The result filter.
+     */
+    IResultFilter getResultFilter();
 
     /**
      * Setting to record success action in result set.

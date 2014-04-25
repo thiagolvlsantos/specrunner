@@ -8,6 +8,10 @@ import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
+import org.specrunner.result.IResult;
+import org.specrunner.result.IResultFilter;
+import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Warning;
 import org.specrunner.sql.IColumnReader;
 import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginConnection;
@@ -43,6 +47,12 @@ public class TestReference {
             public Object read(ResultSet rs, Column column) throws SQLException {
                 System.out.println("ON:" + column.getName() + ": " + rs.getObject(column.getName()));
                 return cr.read(rs, column);
+            }
+        });
+        cfg.add(IResultSet.FEATURE_RESULT_FILTER, new IResultFilter() {
+            @Override
+            public boolean accept(IResult result) {
+                return result.getStatus() != Warning.INSTANCE;
             }
         });
     }
