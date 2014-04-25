@@ -17,12 +17,15 @@
  */
 $(document).ready(function() {
     $(".sr_resultset th[class*=sr_nop]").each(function(event) {
-        var size = "20px";
-        $(this).append('<input id="sr_plus" type=button value="+" style="width:'+size+'"/>');
-        $(this).append(' <input id="sr_minus" type=button value="-" style="width:'+size+'"/>');
-        $(this).append(' <input id="sr_previous" type=button value="&lt;" style="width:'+size+'"/>');
-        $(this).append(' <span id="sr_counter">0</span>');
-        $(this).append(' <input id="sr_next" type=button value="&gt;" style="width:'+size+'"/>');
+        var show = $("#sr_control").attr("show");
+        if(show=="true"){
+            var size = "20px";
+            $(this).append('<input id="sr_plus" type=button value="+" style="width:'+size+'"/>');
+            $(this).append(' <input id="sr_minus" type=button value="-" style="width:'+size+'"/>');
+            $(this).append(' <input id="sr_previous" type=button value="&lt;" style="width:'+size+'"/>');
+            $(this).append(' <span id="sr_counter">0</span>');
+            $(this).append(' <input id="sr_next" type=button value="&gt;" style="width:'+size+'"/>');
+        }
     });
 
     $("#sr_plus").click(function(event) {
