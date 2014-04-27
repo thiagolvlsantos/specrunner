@@ -50,6 +50,11 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     private IParameterDecorator parameters;
 
     /**
+     * Index of last children not skipped.
+     */
+    private int index = 0;
+
+    /**
      * Default constructor.
      */
     public PluginGroupImpl() {
@@ -118,10 +123,12 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         ENext exit = ENext.DEEP;
         for (IPlugin p : getChildren()) {
+            index++;
             try {
                 ENext n = p.doStart(context, result);
                 if (n == ENext.SKIP) {
                     exit = ENext.SKIP;
+                    break;
                 }
                 if (context.isChanged()) {
                     break;
@@ -135,7 +142,12 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
 
     @Override
     public void doEnd(IContext context, IResultSet result) throws PluginException {
+        int i = 0;
         for (IPlugin p : getChildren()) {
+            i++;
+            if (i > index) {
+                break;
+            }
             try {
                 p.doEnd(context, result);
             } catch (Exception e) {

@@ -32,6 +32,10 @@ import nu.xom.Nodes;
 public class TableAdapter extends NodeHolder {
 
     /**
+     * List of col elements.
+     */
+    protected List<CellAdapter> cols;
+    /**
      * List of caption elements.
      */
     protected List<CellAdapter> captions;
@@ -51,12 +55,58 @@ public class TableAdapter extends NodeHolder {
     }
 
     /**
-     * Gets the XPath for rows.
+     * The counter of cols.
      * 
-     * @return The rows XPath.
+     * @return The number of cols.
      */
-    public String getXPath() {
-        return "child::tr | child::thead/tr | child::tbody/tr";
+    public int getColsCount() {
+        return getCols().size();
+    }
+
+    /**
+     * Get cols list.
+     * 
+     * @return The cols list.
+     */
+    public List<CellAdapter> getCols() {
+        if (cols == null) {
+            List<CellAdapter> result = new LinkedList<CellAdapter>();
+            Nodes nodes = getNode().query(getColsXPath());
+            for (int i = 0; i < nodes.size(); i++) {
+                result.add(new CellAdapter((Element) nodes.get(i)));
+            }
+            cols = result;
+        }
+        return cols;
+    }
+
+    /**
+     * Gets the XPath for cols.
+     * 
+     * @return The cols XPath.
+     */
+    public String getColsXPath() {
+        return "child::colgroup/col";
+    }
+
+    /**
+     * The col given by that index.
+     * 
+     * @param i
+     *            The col index.
+     * @return The col.
+     */
+    public CellAdapter getCol(int i) {
+        return getCols().get(i);
+    }
+
+    /**
+     * The counter of captions.
+     * 
+     * @return The number of captions.
+     */
+    public int getCaptionsCount() {
+        return getCaptions().size();
     }
 
     /**
@@ -67,13 +117,33 @@ public class TableAdapter extends NodeHolder {
     public List<CellAdapter> getCaptions() {
         if (captions == null) {
             List<CellAdapter> result = new LinkedList<CellAdapter>();
-            Nodes nodes = getNode().query("child::caption");
+            Nodes nodes = getNode().query(getCaptionsXPath());
             for (int i = 0; i < nodes.size(); i++) {
                 result.add(new CellAdapter((Element) nodes.get(i)));
             }
             captions = result;
         }
         return captions;
+    }
+
+    /**
+     * Gets the XPath for captions.
+     * 
+     * @return The captions XPath.
+     */
+    public String getCaptionsXPath() {
+        return "child::caption";
+    }
+
+    /**
+     * The caption given by that index.
+     * 
+     * @param i
+     *            The caption index.
+     * @return The caption.
+     */
+    public CellAdapter getCaption(int i) {
+        return getCaptions().get(i);
     }
 
     /**
@@ -93,13 +163,22 @@ public class TableAdapter extends NodeHolder {
     public List<RowAdapter> getRows() {
         if (rows == null) {
             List<RowAdapter> result = new LinkedList<RowAdapter>();
-            Nodes nodes = getNode().query(getXPath());
+            Nodes nodes = getNode().query(getRowsXPath());
             for (int i = 0; i < nodes.size(); i++) {
                 result.add(new RowAdapter((Element) nodes.get(i)));
             }
             rows = result;
         }
         return rows;
+    }
+
+    /**
+     * Gets the XPath for rows.
+     * 
+     * @return The rows XPath.
+     */
+    public String getRowsXPath() {
+        return "child::tr | child::thead/tr | child::tbody/tr";
     }
 
     /**
@@ -111,5 +190,36 @@ public class TableAdapter extends NodeHolder {
      */
     public RowAdapter getRow(int i) {
         return getRows().get(i);
+    }
+
+    /**
+     * Filter a table in range of columns.
+     * 
+     * @param fixedCols
+     *            Fixed columns.
+     * @param colIndex
+     *            Col index.
+     * @param columnIndex
+     *            Columns index.
+     * @param span
+     *            Colspan.
+     */
+    public void select(int fixedCols, int colIndex, int columnIndex, int span) {
+        int i = 0;
+        for (CellAdapter ca : getCols()) {
+            if (i > 0 && i != colIndex) {
+                ca.getNode().detach();
+            }
+            i++;
+        }
+        for (RowAdapter ra : getRows()) {
+            i = 0;
+            for (CellAdapter ca : ra.getCells()) {
+                if (i > fixedCols && (i < columnIndex || i >= columnIndex + span)) {
+                    ca.getNode().detach();
+                }
+                i++;
+            }
+        }
     }
 }
