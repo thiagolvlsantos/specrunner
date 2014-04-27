@@ -48,16 +48,16 @@ public abstract class AbstractPluginObjectSelectUnique<T> extends AbstractPlugin
     @Override
     public void processList(IContext context, Object instance, RowAdapter row, IResultSet result, List<Object> list) throws Exception {
         if (list.isEmpty()) {
-            addError(context, row, result, new PluginException("None element found. XML:" + row.getNode().toXML()));
+            addError(context, row, result, new PluginException("None element found. XML:" + row.toXML()));
             return;
         }
         if (list.size() > 1) {
-            addError(context, row, result, new PluginException("More than one element found. XML:" + row.getNode().toXML()));
+            addError(context, row, result, new PluginException("More than one element found. XML:" + row.toXML()));
             return;
         }
         Object base = list.get(0);
         if (base == null) {
-            addError(context, row, result, new PluginException("This item is not present in object repository. XML:" + row.getNode().toXML()));
+            addError(context, row, result, new PluginException("This item is not present in object repository. XML:" + row.toXML()));
         } else {
             perform(context, base, instance, row, result);
         }

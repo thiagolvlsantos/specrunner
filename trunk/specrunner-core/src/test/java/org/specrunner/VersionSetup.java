@@ -14,7 +14,7 @@ public class VersionSetup {
     public static int serial = 0;
 
     public static void main(String[] args) throws IOException {
-        adjust("", new File(System.getProperty("user.dir") + "/.."), "version>1.3.25</", "version>1.3.26</");
+        adjust("", new File(System.getProperty("user.dir") + "/.."), "version>1.3.26</", "version>1.3.27</");
     }
 
     private static void adjust(String gap, File file, String from, String to) throws IOException {

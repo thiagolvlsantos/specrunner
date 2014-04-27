@@ -79,6 +79,13 @@ public class NodeHolder implements INodeHolder {
     }
 
     @Override
+    public void detach() {
+        if (node != null) {
+            node.detach();
+        }
+    }
+
+    @Override
     public String getAttributeValue() {
         return attributeValue;
     }
@@ -384,7 +391,12 @@ public class NodeHolder implements INodeHolder {
     }
 
     @Override
-    public String toString() {
+    public String toXML() {
         return getNode() != null ? getNode().toXML() : "null";
+    }
+
+    @Override
+    public String toString() {
+        return toXML();
     }
 }
