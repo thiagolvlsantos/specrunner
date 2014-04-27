@@ -208,7 +208,7 @@ public class TableAdapter extends NodeHolder {
         int i = 0;
         for (CellAdapter ca : getCols()) {
             if (i > 0 && i != colIndex) {
-                ca.getNode().detach();
+                ca.detach();
             }
             i++;
         }
@@ -216,7 +216,7 @@ public class TableAdapter extends NodeHolder {
             i = 0;
             for (CellAdapter ca : ra.getCells()) {
                 if (i > fixedCols && (i < columnIndex || i >= columnIndex + span)) {
-                    ca.getNode().detach();
+                    ca.detach();
                 }
                 i++;
             }

@@ -53,7 +53,7 @@ public abstract class AbstractPluginObjectSelectNone<T> extends AbstractPluginOb
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(i).getNode(), this));
             }
         } else {
-            Exception e = new PluginException("Element found in object repository. XML:" + row.getNode().toXML());
+            Exception e = new PluginException("Element found in object repository. XML:" + row.toXML());
             for (int i = 0; i < row.getCellsCount(); i++) {
                 result.addResult(i == 0 ? Failure.INSTANCE : Warning.INSTANCE, context.newBlock(row.getCell(i).getNode(), this), i == 0 ? e : null);
             }

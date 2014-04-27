@@ -77,6 +77,11 @@ public interface INodeHolder {
     void setNode(Node node);
 
     /**
+     * Detaches the current node.
+     */
+    void detach();
+
+    /**
      * Set attribute value to look for on <code>getObject(...)</code>
      * calls.Default is ATTRIBUTE_VALUE.
      * 
@@ -315,4 +320,10 @@ public interface INodeHolder {
      */
     Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException;
 
+    /**
+     * The XML representation.
+     * 
+     * @return The XML version.
+     */
+    String toXML();
 }
