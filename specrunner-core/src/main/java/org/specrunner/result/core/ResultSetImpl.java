@@ -386,7 +386,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             return null;
         }
         IResult result = new ResultImpl(status, source, message, failure, writable);
-        if (resultFilter != null && !resultFilter.accept(result)) {
+        if (!status.isError() && resultFilter != null && !resultFilter.accept(result)) {
             return null;
         }
         if (add(result)) {
