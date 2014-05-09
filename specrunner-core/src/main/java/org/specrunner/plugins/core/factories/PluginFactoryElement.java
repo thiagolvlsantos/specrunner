@@ -40,6 +40,22 @@ import org.specrunner.plugins.core.UtilPlugin;
 public class PluginFactoryElement extends PluginFactoryImpl {
 
     /**
+     * Attribute to create a element as another type. Use <code>as='type'</code>
+     * to refer the actual expected type. For example: to use a select element
+     * in a specification you can do:
+     * 
+     * <pre>
+     *      &lt;select as="options" by="id:selectField"&gt;
+     *      ...
+     *      &lt;/select&gt;
+     * </pre>
+     * 
+     * This construction allows convert select action which select items in a
+     * verification of options in the specified select.
+     */
+    private static final String ATT_AS = "as";
+
+    /**
      * Creates a factory loading file 'sr_plugins_element.properties'.
      */
     public PluginFactoryElement() {
@@ -52,6 +68,10 @@ public class PluginFactoryElement extends PluginFactoryImpl {
         if (node instanceof Element) {
             Element ele = (Element) node;
             String name = ele.getQualifiedName().toLowerCase();
+            String as = ele.getAttributeValue(ATT_AS);
+            if (as != null) {
+                name = as;
+            }
             IPlugin template = templates.get(name);
             if (template != null) {
                 IPlugin create = UtilPlugin.create(context, template, ele);

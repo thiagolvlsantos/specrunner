@@ -43,7 +43,7 @@ public class PluginOptions extends AbstractPluginSelection {
     @Override
     protected int checkSelection(IContext context, IResultSet result, WebClient client, Page page, HtmlElement element) throws PluginException {
         Node node = context.getNode();
-        Nodes expectedOptions = node.query("descendant::li");
+        Nodes expectedOptions = node.query("descendant::li  | descendant::option");
         List<HtmlOption> currentOptions = ((HtmlSelect) element).getOptions();
         return testList(context, result, page, expectedOptions, currentOptions, true);
     }
