@@ -59,7 +59,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
         } else {
             Node node = context.getNode();
-            Nodes nodes = node.query("descendant::li");
+            Nodes nodes = node.query("descendant::li | descendant::option");
             if (nodes.size() == 0) {
                 nodes = new Nodes(node);
             }

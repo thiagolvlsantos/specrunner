@@ -140,6 +140,15 @@ public class PluginInclude extends AbstractPlugin {
     protected String transformer;
 
     /**
+     * Resolver of URIs.
+     */
+    public static final String FEATURE_RESOLVER = PluginInclude.class.getName() + ".resolver";
+    /**
+     * Relative URI resolver.
+     */
+    protected IResolver resolver = new ResolverDefault();
+
+    /**
      * The input directory.
      * 
      * @return The directory.
@@ -238,6 +247,25 @@ public class PluginInclude extends AbstractPlugin {
         this.transformer = transformer;
     }
 
+    /**
+     * Resolver of relative links.
+     * 
+     * @return The current resolver.
+     */
+    public IResolver getResolver() {
+        return resolver;
+    }
+
+    /**
+     * Change the resolver.
+     * 
+     * @param resolver
+     *            A resolver.
+     */
+    public void setResolver(IResolver resolver) {
+        this.resolver = resolver;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -254,6 +282,7 @@ public class PluginInclude extends AbstractPlugin {
         if (transformer == null) {
             fm.set(FEATURE_TRANSFORMER, this);
         }
+        fm.set(FEATURE_RESOLVER, this);
     }
 
     @Override
@@ -281,7 +310,7 @@ public class PluginInclude extends AbstractPlugin {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("SRC>" + source);
             }
-            newHref = dir == null ? source.resolve(newHref) : newHref;
+            newHref = dir == null ? resolver.resolve(source, newHref) : newHref;
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("URI_RESOLVED>" + newHref);
             }
@@ -569,5 +598,18 @@ public class PluginInclude extends AbstractPlugin {
             sb.append("\n" + i);
         }
         return sb;
+    }
+
+    /**
+     * Basic resolver implementation.
+     * 
+     * @author Thiago Santos.
+     */
+    protected class ResolverDefault implements IResolver {
+
+        @Override
+        public URI resolve(URI base, URI target) {
+            return base.resolve(target);
+        }
     }
 }

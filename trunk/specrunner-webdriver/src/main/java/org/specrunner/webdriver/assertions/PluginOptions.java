@@ -26,8 +26,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 
@@ -46,7 +46,7 @@ public class PluginOptions extends AbstractPluginSelection {
     @Override
     protected int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Node node = context.getNode();
-        Nodes expectedOptions = node.query("descendant::li");
+        Nodes expectedOptions = node.query("descendant::li | descendant::option");
         List<WebElement> currentOptions = element.findElements(By.xpath("descendant::option"));
         return testList(context, result, client, expectedOptions, currentOptions, true);
     }
