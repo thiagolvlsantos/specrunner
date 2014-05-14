@@ -42,17 +42,17 @@ public class ReporterTxt extends AbstractReport {
     @Override
     protected void dumpPart(SRServices services, String header, List<Resume> list) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
-        out.printf("\t+---------------- TXT (%s)---------------------+%n", header);
-        String pattern = "\t%10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s%n";
+        out.printf("  +---------------- TXT (%s)---------------------+%n", header);
+        String pattern = "  %10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s%n";
         out.printf(pattern, "", "#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "INPUT <-> OUTPUT");
-        pattern = "\t%10s %10s | %10s | %7.2f | %23s  | %-15s | %-10s | %10s%n";
+        pattern = "  %10s %10s | %10s | %7.2f | %23s  | %-15s | %-10s | %10s%n";
         for (Resume r : list) {
             out.printf(pattern, "", r.getIndex(), r.getTime(), asPercentage(r.getTime()), r.getTimestamp(), r.getStatus().getName() + " " + r.getStatusCounter() + "/" + r.getStatusTotal(), r.getAssertionCounter() + "/" + r.getAssertionTotal(), r.getInput() + " <-> " + r.getOutput());
         }
-        out.print("\t          ----------------------------------\n");
-        pattern = "\t%10s %10s : %10d (AVG: %.2f)%n";
+        out.print("            ----------------------------------\n");
+        pattern = "  %10s %10s : %10d (AVG: %.2f)%n";
         out.printf(pattern, "", "TOTAL", total, ((double) total / (list.isEmpty() ? 1 : list.size())));
-        out.printf("\t+---------------------%s-----------------------+%n", "");
+        out.printf("  +---------------------%s-----------------------+%n", "");
     }
 
     @Override
