@@ -41,6 +41,7 @@ import org.specrunner.plugins.ITestPlugin;
 import org.specrunner.plugins.ITimedPlugin;
 import org.specrunner.plugins.IWaitPlugin;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Ignored;
@@ -329,7 +330,7 @@ public class RunnerImpl implements IRunner {
      *             On sleep checking errors.
      */
     protected void doWait(IPlugin plugin, IContext context) throws SpecRunnerException {
-        if (plugin instanceof IWaitPlugin) {
+        if (plugin != PluginNop.emptyPlugin() && plugin instanceof IWaitPlugin) {
             IWaitPlugin waitPlugin = (IWaitPlugin) plugin;
             IModel<Long> model = waitPlugin.getWaitModel();
             Long sleep = null;
@@ -466,7 +467,7 @@ public class RunnerImpl implements IRunner {
      *             On sleep checking errors.
      */
     protected void doSleep(IPlugin plugin, IContext context) throws SpecRunnerException {
-        if (plugin instanceof ISleepPlugin) {
+        if (plugin != PluginNop.emptyPlugin() && plugin instanceof ISleepPlugin) {
             ISleepPlugin sleepPlugin = (ISleepPlugin) plugin;
             IModel<Long> model = sleepPlugin.getSleepModel();
             Long sleep = null;
