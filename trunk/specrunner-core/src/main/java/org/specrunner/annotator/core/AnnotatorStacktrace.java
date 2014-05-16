@@ -36,6 +36,7 @@ import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresentation;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * Add stack traces to nodes with errors.
@@ -95,13 +96,18 @@ public class AnnotatorStacktrace implements IAnnotator {
         button.addAttribute(new Attribute("id", cssName + stackIndex));
         parent.insertChild(button, index++);
 
-        Throwable failure = result.getFailure();
+        Throwable failure = UtilException.unwrapPresentation(result.getFailure());
         Element stack = null;
         if (failure instanceof IPresentation) {
             // for special exceptions which implement IPresentation interface,
             // the asNode() method is used to print error
-            stack = new Element("span");
-            stack.appendChild(((IPresentation) failure).asNode());
+            Node out = ((IPresentation) failure).asNode();
+            if (out instanceof Element) {
+                stack = (Element) out;
+            } else {
+                stack = new Element("span");
+                stack.appendChild(out);
+            }
         } else {
             // otherwise print default stack trace
             stack = new Element("pre");
@@ -115,7 +121,7 @@ public class AnnotatorStacktrace implements IAnnotator {
             }
         }
         stack.addAttribute(new Attribute("id", cssName + stackIndex + "_stack"));
-        stack.addAttribute(new Attribute("class", cssName + " sr_stacktrace"));
+        UtilNode.appendCss(stack, cssName + " sr_stacktrace");
         parent.insertChild(stack, index);
     }
 }

@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.util.xom.IPresentation;
 
 /**
  * Exception utilities.
@@ -73,5 +74,25 @@ public final class UtilException {
             }
         }
         return error;
+    }
+
+    /**
+     * Unwrap SpecRunner IPresentation to find root cause.
+     * 
+     * @param error
+     *            The error.
+     * @return The unwrapped exception.
+     */
+    public static Throwable unwrapPresentation(Throwable error) {
+        Throwable presentation = null;
+        Throwable tmp = error;
+        while (tmp != null) {
+            if (tmp instanceof IPresentation) {
+                presentation = tmp;
+				break;
+            }
+            tmp = tmp.getCause();
+        }
+        return presentation != null ? presentation : unwrapException(error);
     }
 }

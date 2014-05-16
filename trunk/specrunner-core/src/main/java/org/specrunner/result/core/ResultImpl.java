@@ -31,6 +31,7 @@ import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.IPresentation;
 
 /**
  * Default result implementation.
@@ -155,7 +156,7 @@ public class ResultImpl implements IResult {
         String msg2 = hasFailure() ? getFailure().getMessage() : getMessage();
         if (hasFailure()) {
             try {
-                msg2 += "\n" + UtilException.toString(getFailure());
+                msg2 += "\n" + UtilException.toString(UtilException.unwrapPresentation(getFailure()));
             } catch (IOException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -167,6 +168,10 @@ public class ResultImpl implements IResult {
 
     @Override
     public Node asNode() {
+        Throwable out = UtilException.unwrapPresentation(getFailure());
+        if (out instanceof IPresentation) {
+            return ((IPresentation) out).asNode();
+        }
         return new Text(asString());
     }
 
