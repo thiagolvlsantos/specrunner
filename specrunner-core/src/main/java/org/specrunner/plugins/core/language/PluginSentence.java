@@ -210,7 +210,7 @@ public class PluginSentence extends AbstractPlugin {
         ExpectedMessage em = m.getAnnotation(ExpectedMessage.class);
         if (error != null) {
             if (em == null) {
-                error = UtilException.unwrapException(error);
+                error = UtilException.unwrapPresentation(error);
                 result.addResult(Failure.INSTANCE, context.peek(), error);
                 return;
             }

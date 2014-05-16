@@ -19,11 +19,18 @@ import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunnerConcurrent;
 import org.specrunner.listeners.core.PauseOnFailureNodeListener;
+import org.specrunner.util.aligner.core.DefaultAlignmentException;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
 @ExpectedMessages("Method to call not found. Add a 'method' attribute, or extend text to match a regular expression in @Sentence annotations.")
 public class TestSentence {
+
+    public void verificar(String text) {
+        System.out.println("TEXT:" + text);
+        // throw new RuntimeException("Qualquer");
+        throw new RuntimeException("Qualquer", new DefaultAlignmentException("contento", text));
+    }
 
     @Before
     public void before() {
