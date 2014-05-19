@@ -59,7 +59,7 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element " + getFinderInstance().resume(context) + " is not a select is " + element.getClass().getName()), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
         } else {
             Node node = context.getNode();
-            Nodes nodes = node.query("descendant::li | descendant::option");
+            Nodes nodes = node.query(getOptionsPath());
             if (nodes.size() == 0) {
                 nodes = new Nodes(node);
             }
@@ -68,10 +68,10 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
             int errors = 0;
             for (int i = 0; i < nodes.size(); i++) {
                 Node current = nodes.get(i);
-                String option = current.getValue();
+                String option = getNormalized(current.getValue());
                 boolean success = false;
                 for (HtmlOption o : options) {
-                    if (option.equals(o.asText())) {
+                    if (option.equals(getNormalized(o.asText()))) {
                         doSomething(element, o);
                         success = true;
                         break;
@@ -88,6 +88,15 @@ public abstract class AbstractPluginSelect extends AbstractPluginFindSingle {
                 result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }
         }
+    }
+
+    /**
+     * The XPath for options.
+     * 
+     * @return The XPath.
+     */
+    protected String getOptionsPath() {
+        return "descendant::li | descendant::option";
     }
 
     /**

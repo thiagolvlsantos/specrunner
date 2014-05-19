@@ -47,7 +47,7 @@ public class PluginSelected extends AbstractPluginSelection {
     @Override
     protected int checkSelection(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
         Node node = context.getNode();
-        Nodes expectedSelection = node.query("descendant::li | descendant::option");
+        Nodes expectedSelection = node.query(getOptionsPath());
         if (expectedSelection.size() == 0) {
             expectedSelection = new Nodes(node);
         }
@@ -59,5 +59,14 @@ public class PluginSelected extends AbstractPluginSelection {
             }
         }
         return testList(context, result, client, expectedSelection, currentSelection, false);
+    }
+
+    /**
+     * The XPath for options.
+     * 
+     * @return The XPath.
+     */
+    protected String getOptionsPath() {
+        return "descendant::li | descendant::option";
     }
 }

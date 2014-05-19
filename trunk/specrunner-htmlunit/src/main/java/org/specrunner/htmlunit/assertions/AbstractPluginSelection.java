@@ -115,11 +115,11 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
         int error = 0;
         String[] expecteds = new String[nodes.size()];
         for (int i = 0; i < nodes.size(); i++) {
-            expecteds[i] = nodes.get(i).getValue();
+            expecteds[i] = getNormalized(nodes.get(i).getValue());
         }
         String[] receiveds = new String[options.size()];
         for (int i = 0; i < receiveds.length; i++) {
-            receiveds[i] = options.get(i).asText();
+            receiveds[i] = getNormalized(options.get(i).asText());
         }
         if (expecteds.length != receiveds.length) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Number of itens (" + receiveds.length + ") in " + (content != null && content ? "content" : "selected") + " is different from expected ones (" + expecteds.length + ")."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));

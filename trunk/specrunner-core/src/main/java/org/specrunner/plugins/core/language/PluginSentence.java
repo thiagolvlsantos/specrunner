@@ -216,7 +216,7 @@ public class PluginSentence extends AbstractPlugin {
             }
             String received = error.getMessage();
             String expectation = em.value();
-            if (expectation.equals(received)) {
+            if (getNormalized(expectation).equals(getNormalized(received))) {
                 result.addResult(Success.INSTANCE, context.peek());
                 return;
             }
