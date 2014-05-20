@@ -1,18 +1,7 @@
-1.3.31
-OK - colocar uma campo de mensagem nas anotações pause, exemplos:
-	<pause msg="parei aqui"/>, <span class="pause" msg="parei aqui"/>, <span pause="parei aqui"/>.
-OK - Transformar o pause em um frame independente feito o errors messages, para ele aparecer independentemente do Eclipse, o que facilita a visão do option.
-
-1.3.30
-OK - Fazer os campos de select selecionarem, ou verificarem os itens de forma normalizada (mas podendo escolher se não normaliza, default sempre normaliza), isso evita muito falso negativo;
-
-1.3.29
-OK - quando houver erro no plugin sentence, mostrar sempre a exceção encapsulada que tiver o tipo diferente de runtime, ou que seja do tipo IPresentation;
-OK - o Runner só deve fazer sleep/wait para ações que não são 'nop';
-
 1.3.28
-OK - Ver a questão do assert de tela ser feito usando os próprios componentes visuais (exemplo: select) - usado estratégia do 'as=<tipo>';
-OK - Corrigir o código de URI.resolve para aceitar mais que 12 níveis de '../' (http://www.ietf.org/rfc/rfc2396.txt  - Seção 5.2);
+- Ver a questão do assert de tela ser feito usando os próprios componentes visuais (exemplo: select);
+    Feito com uso do atributo as='<objeto>'
+- Corrigir o código de URI.resolve para aceitar mais que 12 níveis de '../' (http://www.ietf.org/rfc/rfc2396.txt  - Seção 5.2);
     Nesse ponto adicionei um IResolver para usar a estratégia que quiser além do URI.resolve(...);
 
 1.3.27

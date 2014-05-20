@@ -17,19 +17,9 @@
  */
 package org.specrunner.plugins.core.flow;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
@@ -76,16 +66,6 @@ public class PluginPause extends AbstractPlugin {
     public static final String FEATURE_TIME = PluginPause.class.getName() + ".time";
 
     /**
-     * Message frame screen ratio.
-     */
-    private static final int RATIO = 4;
-
-    /**
-     * Pause message.
-     */
-    private String msg;
-
-    /**
      * Pause using a keyboard request.
      */
     private Boolean enter;
@@ -94,44 +74,6 @@ public class PluginPause extends AbstractPlugin {
      * Pause time.
      */
     private Long time;
-
-    /**
-     * Get pause message.
-     * 
-     * @return The message.
-     */
-    public String getMsg() {
-        return msg;
-    }
-
-    /**
-     * Set pause message.
-     * 
-     * @param msg
-     *            Set pause message.
-     */
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    /**
-     * Get pause message.
-     * 
-     * @return The message.
-     */
-    public String getPause() {
-        return msg;
-    }
-
-    /**
-     * Set pause message.
-     * 
-     * @param msg
-     *            Set pause message.
-     */
-    public void setPause(String msg) {
-        this.msg = msg;
-    }
 
     /**
      * Flag to indicate if pause is on dialog or 'Enter' key. Default is false.
@@ -208,9 +150,7 @@ public class PluginPause extends AbstractPlugin {
                 if (enter != null && enter) {
                     UtilIO.pressKey();
                 } else {
-                    String message = msg != null ? msg : "";
-                    output.println("Test (" + Thread.currentThread().getName() + ") on pause. " + message);
-                    showMessage(message);
+                    JOptionPane.showMessageDialog(null, "Pause requested. Press 'Ok' to continue.");
                 }
                 result.addResult(Success.INSTANCE, context.peek());
             } catch (IOException e) {
@@ -218,45 +158,5 @@ public class PluginPause extends AbstractPlugin {
             }
         }
         return ENext.DEEP;
-    }
-
-    /**
-     * Show a message on a dialog.
-     * 
-     * @param message
-     *            A message.
-     */
-    protected void showMessage(String message) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        final JFrame frame = new JFrame("Pause frame.");
-        final JDialog dialog = new JDialog(frame, "Pause dialog");
-        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dialog.setSize(screenSize.width / RATIO, screenSize.height / RATIO);
-        dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
-        dialog.setModal(true);
-        dialog.setLayout(new BorderLayout());
-
-        JPanel buttons = new JPanel();
-        GridLayout mgr = new GridLayout(RATIO, 1);
-        buttons.setLayout(mgr);
-        dialog.add(buttons, BorderLayout.CENTER);
-        buttons.add(new JLabel("Pause requested."));
-        buttons.add(new JLabel(message));
-        buttons.add(new JLabel("Press 'Ok' to continue."));
-
-        JButton ok = new JButton("Ok");
-        ok.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dialog.setVisible(false);
-                dialog.dispose();
-                frame.setVisible(false);
-                frame.dispose();
-            }
-        });
-        dialog.add(ok, BorderLayout.SOUTH);
-
-        frame.setVisible(true);
-        dialog.setVisible(true);
     }
 }
