@@ -51,6 +51,7 @@ import org.specrunner.sql.EMode;
 import org.specrunner.sql.IColumnReader;
 import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.ISequenceProvider;
+import org.specrunner.sql.ISqlDumper;
 import org.specrunner.sql.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
@@ -94,16 +95,6 @@ public class Database implements IDatabase {
     public static final String FEATURE_ID_MANAGER = Database.class.getName() + ".idManager";
 
     /**
-     * Feature for sequence provider instance.
-     */
-    public static final String FEATURE_SEQUENCE_PROVIDER = Database.class.getName() + ".sequenceProvider";
-
-    /**
-     * Feature for database column reader.
-     */
-    public static final String FEATURE_COLUMN_READER = Database.class.getName() + ".columnReader";
-
-    /**
      * Prepared statements for input actions.
      */
     protected ICache<String, PreparedStatement> inputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
@@ -122,6 +113,11 @@ public class Database implements IDatabase {
      * Sequence next value generator.
      */
     protected ISequenceProvider sequenceProvider = new SequenceProviderImpl();
+
+    /**
+     * Database dumper of commands.
+     */
+    protected ISqlDumper sqlDumper;
 
     /**
      * Recover object from a result set column to be compared against the
@@ -186,14 +182,23 @@ public class Database implements IDatabase {
         return sequenceProvider;
     }
 
-    /**
-     * Set the sequence provider.
-     * 
-     * @param sequenceProvider
-     *            The provider.
-     */
+    @Override
     public void setSequenceProvider(ISequenceProvider sequenceProvider) {
         this.sequenceProvider = sequenceProvider;
+    }
+
+    /**
+     * Get current database dumper. Default is <code>null</code>.
+     * 
+     * @return Current dumper.
+     */
+    public ISqlDumper getSqlDumper() {
+        return sqlDumper;
+    }
+
+    @Override
+    public void setSqlDumper(ISqlDumper sqlDumper) {
+        this.sqlDumper = sqlDumper;
     }
 
     /**
@@ -205,12 +210,7 @@ public class Database implements IDatabase {
         return columnReader;
     }
 
-    /**
-     * Set a column reader.
-     * 
-     * @param columnReader
-     *            A reader.
-     */
+    @Override
     public void setColumnReader(IColumnReader columnReader) {
         this.columnReader = columnReader;
     }
@@ -221,6 +221,7 @@ public class Database implements IDatabase {
         fm.set(FEATURE_LIMIT, this);
         fm.set(FEATURE_ID_MANAGER, this);
         fm.set(FEATURE_SEQUENCE_PROVIDER, this);
+        fm.set(FEATURE_SQL_DUMPER, this);
         fm.set(FEATURE_COLUMN_READER, this);
         // every use of database clear mappings to avoid memory overload and
         // test interference
@@ -716,6 +717,11 @@ public class Database implements IDatabase {
             }
         }
 
+        Map<Integer, Object> resolved = null;
+        if (sqlDumper != null) {
+            resolved = new HashMap<Integer, Object>();
+        }
+
         idManager.clearLocal();
         for (Value v : values) {
             Column column = v.getColumn();
@@ -744,6 +750,9 @@ public class Database implements IDatabase {
                     UtilLog.LOG.debug("performIn.SET(" + index + "," + alias + "," + column.getName() + ") = " + obj);
                 }
                 pstmt.setObject(index, obj);
+                if (resolved != null) {
+                    resolved.put(index, obj);
+                }
                 if (column.isReference()) {
                     idManager.addLocal(table.getAlias(), v.getCell().getValue());
                 }
@@ -757,6 +766,10 @@ public class Database implements IDatabase {
         int count = pstmt.executeUpdate();
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
+        }
+
+        if (sqlDumper != null && resolved != null) {
+            sqlDumper.dump(context, result, wrapper.getSql(), resolved);
         }
 
         idManager.readKeys(con, pstmt, wrapper, table, values);
