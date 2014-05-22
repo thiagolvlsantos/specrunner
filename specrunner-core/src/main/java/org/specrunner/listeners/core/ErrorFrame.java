@@ -24,6 +24,8 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -65,9 +67,9 @@ public class ErrorFrame extends JFrame {
      */
     public ErrorFrame(final ErrorFrameListener listener) {
         super("Error messages");
-        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         createText();
-        createDialog();
+        createDialog(listener);
         createButtons(listener);
     }
 
@@ -91,10 +93,20 @@ public class ErrorFrame extends JFrame {
 
     /**
      * Creates the dialog.
+     * 
+     * @param listener
+     *            A listener.
      */
-    protected void createDialog() {
+    protected void createDialog(final ErrorFrameListener listener) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         dialog = new JDialog(this, "Error messages");
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                listener.ok();
+                dialog.setVisible(false);
+            }
+        });
         dialog.setSize(screenSize.width / 2, screenSize.height / 2);
         dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
         dialog.setLayout(new BorderLayout(GAPS, GAPS));
