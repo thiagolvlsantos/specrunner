@@ -19,17 +19,19 @@ package org.specrunner.plugins.core.flow;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
@@ -79,6 +81,11 @@ public class PluginPause extends AbstractPlugin {
      * Message frame screen ratio.
      */
     private static final int RATIO = 4;
+
+    /**
+     * Screen font size.
+     */
+    private static final int FONT_SIZE = 12;
 
     /**
      * Pause message.
@@ -227,36 +234,53 @@ public class PluginPause extends AbstractPlugin {
      *            A message.
      */
     protected void showMessage(String message) {
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         final JFrame frame = new JFrame("Pause frame.");
+
         final JDialog dialog = new JDialog(frame, "Pause dialog");
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setSize(screenSize.width / RATIO, screenSize.height / RATIO);
         dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
         dialog.setModal(true);
         dialog.setLayout(new BorderLayout());
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                releaseWindow(frame, dialog);
+            }
+        });
 
-        JPanel buttons = new JPanel();
-        GridLayout mgr = new GridLayout(RATIO, 1);
-        buttons.setLayout(mgr);
-        dialog.add(buttons, BorderLayout.CENTER);
-        buttons.add(new JLabel("Pause requested."));
-        buttons.add(new JLabel(message));
-        buttons.add(new JLabel("Press 'Ok' to continue."));
+        JTextArea text = new JTextArea(" Pause requested." + (!message.isEmpty() ? "\n\n " + message : "") + "\n\n Press 'Ok' to continue.");
+        text.setFont(new Font("Courrier New", Font.PLAIN, FONT_SIZE));
+        text.setLineWrap(true);
+        text.setEditable(false);
+        dialog.add(new JScrollPane(text), BorderLayout.CENTER);
 
         JButton ok = new JButton("Ok");
         ok.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dialog.setVisible(false);
-                dialog.dispose();
-                frame.setVisible(false);
-                frame.dispose();
+                releaseWindow(frame, dialog);
             }
         });
         dialog.add(ok, BorderLayout.SOUTH);
 
         frame.setVisible(true);
         dialog.setVisible(true);
+    }
+
+    /**
+     * Release message frame and dialog.
+     * 
+     * @param frame
+     *            The frame.
+     * @param dialog
+     *            The dialog.
+     */
+    protected void releaseWindow(JFrame frame, JDialog dialog) {
+        dialog.setVisible(false);
+        dialog.dispose();
+        frame.setVisible(false);
+        frame.dispose();
     }
 }
