@@ -8,6 +8,7 @@ import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
+import org.specrunner.listeners.core.PauseOnFailureNodeListener;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultFilter;
 import org.specrunner.result.IResultSet;
@@ -58,5 +59,7 @@ public class TestReference {
                 return result.getStatus() != Warning.INSTANCE;
             }
         });
+        cfg.add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, true);
+        cfg.add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, true);
     }
 }
