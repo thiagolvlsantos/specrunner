@@ -298,6 +298,7 @@ table.included_file_args td {
 /* LINK frame */
 .sr_frame_link_div {
     float: right;
+    background-color: white;
     text-align: right;
     font-weight: bold;
     font-size: 10pt;
