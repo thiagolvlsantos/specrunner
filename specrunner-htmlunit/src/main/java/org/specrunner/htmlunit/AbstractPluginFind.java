@@ -27,6 +27,7 @@ import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -138,6 +139,10 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client, SgmlPage page) throws PluginException {
         List<?> list = getFinderInstance(context).find(context, result, client, page);
+        if (list.isEmpty()) {
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."));
+            return;
+        }
         HtmlElement[] elements = list.toArray(new HtmlElement[list.size()]);
         if (UtilLog.LOG.isInfoEnabled()) {
             for (int i = 0; i < elements.length; i++) {
