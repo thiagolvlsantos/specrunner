@@ -59,7 +59,9 @@ $(document).ready(function() {
             if(target.attr("value").indexOf('+')>=0){
                 target.click();
             }
-            target.focus();
+            var pos = target.position();
+            $(window).scrollTop( pos.top );
+            $(window).scrollLeft( pos.left );
         }
     });
     $("#sr_previous").click(function(event) {
@@ -76,7 +78,9 @@ $(document).ready(function() {
             if(target.attr("value").indexOf('+')>=0){
                 target.click();
             }
-            target.focus();
+            var pos = target.position();
+            $(window).scrollTop( pos.top );
+            $(window).scrollLeft( pos.left );
         }
     });
     $(".sr_stacktrace").each(function(event) {
