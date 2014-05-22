@@ -299,6 +299,7 @@ table.included_file_args td {
 .sr_frame_link_div {
     float: right;
     background-color: white;
+    padding: 5px;
     text-align: right;
     font-weight: bold;
     font-size: 10pt;
