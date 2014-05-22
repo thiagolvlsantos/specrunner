@@ -20,6 +20,7 @@ import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.impl.ColumnReaderImpl;
 import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.impl.SqlDumperPrint;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
@@ -40,7 +41,7 @@ public class TestReference {
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 5000L);
         // cfg.add(AbstractConverterTimezone.FEATURE_TIMEZONE, "UTC");
-        cfg.add(Database.FEATURE_COLUMN_READER, new IColumnReader() {
+        cfg.add(IDatabase.FEATURE_COLUMN_READER, new IColumnReader() {
             private IColumnReader cr = new ColumnReaderImpl();
 
             @Override
@@ -49,6 +50,8 @@ public class TestReference {
                 return cr.read(rs, column);
             }
         });
+
+        cfg.add(IDatabase.FEATURE_SQL_DUMPER, new SqlDumperPrint());
         cfg.add(IResultSet.FEATURE_RESULT_FILTER, new IResultFilter() {
             @Override
             public boolean accept(IResult result) {

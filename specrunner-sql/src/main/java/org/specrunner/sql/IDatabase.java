@@ -35,6 +35,45 @@ import org.specrunner.util.xom.TableAdapter;
 public interface IDatabase extends IResetable {
 
     /**
+     * Feature for sequence provider instance.
+     */
+    String FEATURE_SEQUENCE_PROVIDER = IDatabase.class.getName() + ".sequenceProvider";
+
+    /**
+     * Feature for database sql dumper.
+     */
+    String FEATURE_SQL_DUMPER = IDatabase.class.getName() + ".sqlDumper";
+
+    /**
+     * Feature for database column reader.
+     */
+    String FEATURE_COLUMN_READER = IDatabase.class.getName() + ".columnReader";
+
+    /**
+     * Set the sequence provider.
+     * 
+     * @param sequenceProvider
+     *            The provider.
+     */
+    void setSequenceProvider(ISequenceProvider sequenceProvider);
+
+    /**
+     * Set the database SQL dumper.
+     * 
+     * @param sqlDumper
+     *            A dumper.
+     */
+    void setSqlDumper(ISqlDumper sqlDumper);
+
+    /**
+     * Set a column reader.
+     * 
+     * @param columnReader
+     *            A reader.
+     */
+    void setColumnReader(IColumnReader columnReader);
+
+    /**
      * Perform some actions in a database.
      * 
      * @param context
