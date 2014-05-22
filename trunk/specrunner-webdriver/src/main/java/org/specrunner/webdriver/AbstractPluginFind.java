@@ -28,6 +28,8 @@ import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IWritableFactoryManager;
+import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.impl.FinderXPath;
 
@@ -142,6 +144,10 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         List<WebElement> list = getFinderInstance(context).find(context, result, client);
+        if (list.isEmpty()) {
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
+            return;
+        }
         WebElement[] elements = list.toArray(new WebElement[list.size()]);
         if (UtilLog.LOG.isInfoEnabled()) {
             for (int i = 0; i < elements.length; i++) {

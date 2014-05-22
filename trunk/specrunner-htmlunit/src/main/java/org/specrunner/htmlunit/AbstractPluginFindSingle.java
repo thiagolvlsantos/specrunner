@@ -67,12 +67,7 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Index out of range '" + index + "', max = '" + elements.length + "'."));
             return;
         }
-        if (elements.length == 0) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."));
-            return;
-        }
-        HtmlElement element = elements[index];
-        process(context, result, client, page, element);
+        process(context, result, client, page, elements[index]);
     }
 
     /**
