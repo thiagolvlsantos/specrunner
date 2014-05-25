@@ -84,6 +84,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * The max wait time.
      */
     private Long maxwait = DEFAULT_MAXWAIT;
+    /**
+     * To seconds milliseconds factor.
+     */
+    private static final int TO_SECONDS = 1000;
 
     /**
      * Wait for feature. Use it to set generic XPath wait condition.
@@ -371,7 +375,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      */
     protected void waitForClient(WebDriver client) {
         if (getWait() == null) {
-            (new WebDriverWait(client, maxwait, interval)).until(getWaitCondition(System.currentTimeMillis(), getTimeout()));
+            (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(System.currentTimeMillis(), getTimeout()));
         }
     }
 
