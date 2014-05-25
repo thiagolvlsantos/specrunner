@@ -2,12 +2,13 @@ package org.specrunner.junit;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import nu.xom.Document;
+import nu.xom.Node;
 import nu.xom.Nodes;
 
 import org.junit.runner.Description;
@@ -17,7 +18,9 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
+import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
@@ -35,14 +38,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
 
     /**
-     * Fake method.
+     * The notifier.
      */
-    private static final String FAKE = "toString";
+    private RunNotifier notifier;
 
     /**
-     * Auxiliary index.
+     * The fake method.
      */
-    private int index;
+    private FrameworkMethod fakeMethod;
 
     /**
      * Scenario listeners.
@@ -62,18 +65,24 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
     }
 
     @Override
+    public void run(RunNotifier notifier) {
+        this.notifier = notifier;
+        super.run(notifier);
+    }
+
+    @Override
     protected List<FrameworkMethod> computeTestMethods() {
+        List<FrameworkMethod> methods = new LinkedList<FrameworkMethod>();
         try {
-            List<FrameworkMethod> methods = new LinkedList<FrameworkMethod>();
-            Method fake = getTestClass().getJavaClass().getMethod(FAKE);
-            methods.add(new FrameworkMethod(fake));
+            Class<?> javaClass = getTestClass().getJavaClass();
+            Method fake = javaClass.getMethod("toString");
+            fakeMethod = new FrameworkMethod(fake);
+            methods.add(fakeMethod);
 
             // read scenario entries
-            File input = JUnitUtils.getFile(getTestClass().getJavaClass());
-            ISourceFactoryManager sfm = SRServices.get(ISourceFactoryManager.class);
-            ISource source = sfm.newSource(input.toString());
-            Document document = source.getDocument();
-            Nodes scenarios = document.query("//*[contains(@class,'" + ScenarioFrameListener.CSS_SCENARIO + "')]");
+            File input = JUnitUtils.getFile(javaClass);
+            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
+            Nodes scenarios = source.getDocument().query("//*[contains(@class,'" + ScenarioFrameListener.CSS_SCENARIO + "')]");
             listeners = new LinkedList<INodeListener>();
             Set<String> titles = new HashSet<String>();
             for (int i = 0; i < scenarios.size(); i++) {
@@ -83,18 +92,46 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
                 }
                 titles.add(title);
-                methods.add(new ScenarioFrameworkMethod(fake, title));
-                listeners.add(new ScenarioFrameListener(title, JUnitUtils.getScenarioListener(getTestClass().getJavaClass())));
+
+                ScenarioFrameworkMethod scenarioMethod = new ScenarioFrameworkMethod(fake, title);
+                methods.add(scenarioMethod);
+                final Description description = describeChild(scenarioMethod);
+
+                IScenarioListener[] annotationListeners = JUnitUtils.getScenarioListener(javaClass);
+                IScenarioListener[] fullListeners = Arrays.copyOf(annotationListeners, annotationListeners.length + 1);
+                final ScenarioFrameListener frameListener = new ScenarioFrameListener(title, fullListeners);
+                fullListeners[fullListeners.length - 1] = new IScenarioListener() {
+                    @Override
+                    public void beforeScenario(String title, Node node, IContext context, IResultSet result) {
+                        IResultSet r = frameListener.getResult();
+                        if (frameListener.isPending()) {
+                            notifier.fireTestIgnored(description);
+                        } else if (r == null || !r.getStatus().isError()) {
+                            notifier.fireTestStarted(description);
+                        }
+                    }
+
+                    @Override
+                    public void afterScenario(String title, Node node, IContext context, IResultSet result) {
+                        IResultSet r = frameListener.getResult();
+                        if (r == null || !r.getStatus().isError()) {
+                            notifier.fireTestFinished(description);
+                        } else {
+                            notifier.fireTestFailure(new Failure(description, new Exception(r.asString())));
+                        }
+                    }
+                };
+                listeners.add(frameListener);
             }
-            return methods;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        return methods;
     }
 
     @Override
-    protected Description describeChild(FrameworkMethod method) {
-        if (!method.getName().equalsIgnoreCase(FAKE)) {
+    public Description describeChild(FrameworkMethod method) {
+        if (method != fakeMethod) {
             return super.describeChild(method);
         }
         if (method instanceof ScenarioFrameworkMethod) {
@@ -105,26 +142,14 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
 
     @Override
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
-        if (index++ == 0) {
+        if (method == fakeMethod) {
             super.runChild(method, notifier);
-        } else {
-            Description description = Description.createTestDescription(getTestClass().getJavaClass(), ((ScenarioFrameworkMethod) method).getName());
-            ScenarioFrameListener scenario = (ScenarioFrameListener) listeners.get(index - 2);
-            IResultSet result = scenario.getResult();
-            if (scenario.isPending()) {
-                notifier.fireTestIgnored(description);
-            } else if (result == null || !result.getStatus().isError()) {
-                notifier.fireTestStarted(description);
-                notifier.fireTestFinished(description);
-            } else {
-                notifier.fireTestFailure(new Failure(description, new Exception(result.asString())));
-            }
         }
     }
 
     @Override
     protected Statement methodInvoker(FrameworkMethod method, final Object test) {
-        if (!method.getName().equalsIgnoreCase(FAKE)) {
+        if (method != fakeMethod) {
             return super.methodInvoker(method, test);
         } else {
             return new SpecRunnerStatement(getTestClass(), test, listeners);
