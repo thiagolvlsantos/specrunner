@@ -39,7 +39,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
     /**
      * Fake method.
      */
-    private static final String FAKE = "toString";
+    private FrameworkMethod fakeMethod;
 
     /**
      * Basic constructor.
@@ -56,7 +56,8 @@ public class SRRunner extends BlockJUnit4ClassRunner {
     @Override
     protected List<FrameworkMethod> computeTestMethods() {
         try {
-            return Arrays.asList(new FrameworkMethod(getTestClass().getJavaClass().getMethod(FAKE)));
+            fakeMethod = new FrameworkMethod(getTestClass().getJavaClass().getMethod("toString"));
+            return Arrays.asList(fakeMethod);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +65,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected Description describeChild(FrameworkMethod method) {
-        if (!method.getName().equalsIgnoreCase(FAKE)) {
+        if (method != fakeMethod) {
             return super.describeChild(method);
         }
         return Description.createSuiteDescription(getTestClass().getJavaClass());
@@ -72,7 +73,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
 
     @Override
     protected Statement methodInvoker(FrameworkMethod method, final Object test) {
-        if (!method.getName().equalsIgnoreCase(FAKE)) {
+        if (method != fakeMethod) {
             return super.methodInvoker(method, test);
         } else {
             return new SpecRunnerStatement(getTestClass(), test, new LinkedList<INodeListener>());
