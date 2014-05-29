@@ -1,0 +1,96 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+td {
+	border: 1px dotted gray;
+}
+.prepare:before {
+    content: "PREPARE";
+}
+.verify:before {
+    content: "VERIFY";
+}
+</style>
+</head>
+<body>
+	<p>
+	A connection 
+	<span class="connection" connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_INICIAL|sa|" name="conA" reuse="true">A</span> 
+	and a connection
+	<span class="connection" connection="org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TESTE_FINAL|sa|" name="conB" reuse="true">B</span>.
+	</p>
+	
+	<p>
+	 <a class="scripts" href="drop.sql" value="href" failsafe="true" name="conA">Re</a>
+	 <a class="scripts" href="create.sql" value="href" name="conA">create</a> schema A
+	  and
+	 <a class="scripts" href="drop.sql" value="href" failsafe="true" name="conB">Re</a>
+	 <a class="scripts" href="create.sql" value="href" name="conB">create</a> schema B.
+	 </p>
+
+	<p>
+	With a 
+	<span class="schemaloader" provider="org.specrunner.sql.meta.impl.SchemaLoaderXOM" reuse="true">reader</span>
+	of schemas read the 
+	<span class="schema" source="/example/sql/negative/value.cfg.xml" reuse="true">schema</span>.
+	</p>
+	
+	<p>
+	Prepare a command runner 
+	<span class="database" provider="org.specrunner.sql.impl.Database" reuse="true" name="dataA">A</span>
+	and a command runner 
+	<span class="database" provider="org.specrunner.sql.impl.Database" reuse="true" name="dataB">B</span>.
+
+
+    <table class="prepare" datasource="conA;conB" database="dataA;dataB">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a class="scripts" href="insert.sql" value="href" failsafe="true" name="conA">simulate system</a>
+    
+    <table class="prepare" datasource="conB" database="dataB">
+        <caption>Logging</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Field</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Any</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Where are you.</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Here I am.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <compareBase system="conA" reference="conB"/>
+    
+</body>
+</html>

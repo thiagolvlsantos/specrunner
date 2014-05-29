@@ -1,0 +1,105 @@
+1.3.31
+OK - colocar uma campo de mensagem nas anotações pause, exemplos:
+	<pause msg="parei aqui"/>, <span class="pause" msg="parei aqui"/>, <span pause="parei aqui"/>.
+OK - Transformar o pause em um frame independente feito o errors messages, para ele aparecer independentemente do Eclipse, o que facilita a visão do option.
+
+1.3.30
+OK - Fazer os campos de select selecionarem, ou verificarem os itens de forma normalizada (mas podendo escolher se não normaliza, default sempre normaliza), isso evita muito falso negativo;
+
+1.3.29
+OK - quando houver erro no plugin sentence, mostrar sempre a exceção encapsulada que tiver o tipo diferente de runtime, ou que seja do tipo IPresentation;
+OK - o Runner só deve fazer sleep/wait para ações que não são 'nop';
+
+1.3.28
+OK - Ver a questão do assert de tela ser feito usando os próprios componentes visuais (exemplo: select) - usado estratégia do 'as=<tipo>';
+OK - Corrigir o código de URI.resolve para aceitar mais que 12 níveis de '../' (http://www.ietf.org/rfc/rfc2396.txt  - Seção 5.2);
+    Nesse ponto adicionei um IResolver para usar a estratégia que quiser além do URI.resolve(...);
+
+1.3.27
+OK - Melhorando a estratégia de JOINED com nomes de tabelas, CSS e tratamento de erro instrutivo.
+
+1.3.26
+OK - Criar uma estratégia para representar tabelas JOINED do hibernate usando apenas uma tabela única, agregando nela todos os atributos das demais tabelas, na verdade é fazer algo como o secondary table funcionar no nível da especificação. (usar a combinação de colgroup com transformador).
+
+1.3.25
+OK - Adicionar uma feature para ignorar determinados status ou comand types, por exemplo, ignorar os warnings no anotador de saída.
+OK - Adicionar o navegador de errors na tela. (Java).
+OK - Melhor deixar (colocar só um title?)! - Colocar o warning para não gerar botão de expansão; -> Decidi permitir filtrar os IResult direto no result set.
+
+1.3.24
+OK - No momento que der erro de comparação com os dados da base, mostrar dentro do parênteses o valor que veio da base, e não o valor já da tela, 
+OK - Bem como no caso de clobs mostrar a comparação com strings e não to toString() do clob para se saber qual o conteúdo.
+
+1.3.23.
+OK - Formatação e numeração dos botões de acordo com o tipo da ação.
+
+1.3.22
+OK - Quando os valores de comparação de base não coincidirem colocar os tipos ao lado para facilitar a identificação dos erros;
+OK - No relatório de escopo negativo transformar os clobs em texto para exibição (colocar um boolean para indicar se deve ser assim ou não, pois pode haver sistemas que tenha clobs realmente grandes que não devem ser exibidos);
+OK - No relatório de escopo negativo usar texto ao invés de title e css para mostrar os campos das tabelas;
+OK - Corrigir o "protected void performUpdate(", ele deve sempre ter ou key ou reference para usar no WHERE, quando não tiver lancar um erro (não precisa, vai haver um update com set e where idênticos, aí aponta o erro de id/references);
+OK - Aumentar o nível de log para trace no "2014-04-14 13:24:24,144 [main] DEBUG on [FeatureManagerImpl.java,163] - Feature 'org.specrunner.listeners.core.PauseOnFailureNodeListener.condition' set to object 'org";
+
+1.3.21
+OK - Testar escopo negativo apenas com reference;
+OK - Ver o enumerador de resultset, está dando falso positivo no escopo negativo.
+OK - Verificar se o virtual do comparador de bases funciona mesmo com update.
+OK - Parametrizar o PluginObjectManager para ser ThreadLocal ou não, isso é necessário nos testes envolvendo o Jetty que cria threads específicos para cada requisição.
+OK - Criar o conceito de listeners por cenários, para, por exemplo, limpar os objetos em memória.
+OK - Resolver o problema de timestamp Vs date na base de dados. Coloquei uma feature para timezone nos conversores date/timestamp.
+OK - Colocar o pause failure listener para ter o mesmo modelo de pausa condicionada de forna a não travar integração contínua;
+OK - Verificar o plugin sentence que não está aceitando apenas o argumento como texto;
+OK - Criar um comparador de tempo que aceite qualquer combinação de tipos date/timestamp/jodatime.
+OK - Criar um comparator de strings com trim e um normalizado para uso com o banco de dados;
+OK - Ver se é possível manter os valores de campos enumerados no resultado para facilitar a visualização
+OK - Ver uma estratégia para resolver registros de log de auditoria;
+OK - Colocar uma feature para habilitar ou não a pausa, de forma que no Linux, por exemplo, a pausa nunca seja executada p/não travar a integração contínua;
+OK - Fazer o plugindatabase poder escolher entre doStart e doEnd (in e out); Usando o doEnd;
+OK - Lançar erros quando cenários tiverem os mesmos nomes;
+OK - Reduzir o log do reuso de imagens no resultado para nível 'trace';
+OK - No uso de imagens idênticas no mesmo arquivo usar uma cache com o nome do gerado para economizar cópias na saída;
+OK - Ver porque que as imagens dentro de tables não não estão sendo copiadas para o destino dentro de compareTable;
+
+OK - targets ajustados para Linux
+------
+URI:file:/opt/java/hudson/workspace/disin.autran/web/target/test-classes/br/gov/bcb/autran/web/crt2/servidores.html
+TARGET:/opt/java/hudson/workspace/disin.autran/web/target/test-classes/br/gov/bcb/autran/web/crt2/servidores.html
+URI:jar:file:/opt/java/hudson/workspace/disin.autran/negocio/target/negocio-1.0.0-tests.jar!/objetos/servidor.html
+TARGET:jar:file:/opt/java/hudson/workspace/disin.autran/negocio/target/negocio-1.0.0-tests.jar!/objetos/servidor.html
+URI:file:/opt/java/hudson/workspace/disin.autran/web/target/test-classes/br/gov/bcb/autran/web/crt2/login/login.html
+TARGET:/opt/java/hudson/workspace/disin.autran/web/target/test-classes/br/gov/bcb/autran/web/crt2/login/login.html
+------
+
+- Delegar a criação de:
+	1- PageListeners;
+        2-WritablePages  - OK feito!
+para poder substituir quando quiser, o uso de herança inviabiliza a substituição.
+
+OK - O renaming de arquivos no Linux não funciona direito, substituir pelo código: FileUtils.moveDirectory(from, to); 
+
+Corrigir todo ponto de "file:" para deixar esperto o suficiente para funcionar em Linux (sources, includes, runners, etc) - unificar código para facilitar manutenção.
+USAR como exemplo:
+-      URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
+        String str;
+        try {
+            URI ui = location.toURI();
+            System.out.println("UI:" + ui);
+            File file = new File(ui);
+            str = file.toString();
+            System.out.println("FILE:" + file);
+            if (file.isDirectory()) {
+                str = str + File.separator;
+            }
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+-------------------------------------------------------------------------
+OK
+
+OK - Corrigir os links do recursos (screen/source) para serem relativos ao arquivo de saída.
+OK - Colocar todas as caches de objetos como no mínimo protected para permitir reuso. 
+OK -Trocar os valores dos campos na especificação também para as telas, assim com foi feito para o SQL, melhora a depuração; 
+OK - Fazer também no SQL depois que ele realizar a conversão, para melhorar a tela. 
+OK - MELHORAR O LEITOR DE  SQL; 
+
+Criar o conceito de composite action, para tarefas agrupadas, e o somatório ser segregado, bem com a exibição no relatório de debug. (Precisa?)
