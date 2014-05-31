@@ -106,10 +106,10 @@ public final class PluginCompareUtils {
      */
     protected static void addError(String expected, String received, IBlock block, IContext context, IResultSet result, WebDriver client) throws PluginException {
         try {
-            if (client != null) {
-                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
-            } else {
+            if (client == null) {
                 result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received));
+            } else {
+                result.addResult(Failure.INSTANCE, block, new DefaultAlignmentException(expected, received), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -189,11 +189,9 @@ public final class PluginCompareUtils {
      *            The context.
      * @param result
      *            The result information.
-     * @param client
-     *            The WebDriver client.
      * @return true, if can be considered equals, false, otherwise.
      */
-    public static boolean compareNode(PluginCompareNode compare, Element expected, WebElement received, IBlock block, IContext context, IResultSet result, WebDriver client) {
+    public static boolean compareNode(PluginCompareNode compare, Element expected, WebElement received, IBlock block, IContext context, IResultSet result) {
         int errors = compareTexts(compare, context, result, expected, received, 0);
         Nodes expChildren = expected.query("descendant::*");
         List<WebElement> recChildren = received.findElements(By.xpath("descendant::*"));

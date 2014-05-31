@@ -93,14 +93,14 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         Nodes tables = node.query("descendant-or-self::table");
         Node table = UtilNode.getHighest(tables);
         if (table == null) {
-            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
+            result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
             return false;
         }
         TableAdapter tableExpected = UtilNode.newTableAdapter(table);
 
         List<?> tablesReceived = element.getByXPath("descendant-or-self::table");
         if (tablesReceived.isEmpty()) {
-            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), SRServices.get(IWritableFactoryManager.class).get(Page.class).newWritable(page));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."));
             return false;
         }
         HtmlTable tableReceived = (HtmlTable) tablesReceived.get(0);
@@ -155,7 +155,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                     }
                     received = (HtmlElement) iteElements.next();
                 }
-                if (expected.getAttribute(UtilNode.IGNORE) != null && received.isDisplayed()) {
+                if (!expected.hasAttribute(UtilNode.IGNORE) && received.isDisplayed()) {
                     success = success & compareTerminal(this, context, result, page, expected, received);
                 }
             }
@@ -200,26 +200,26 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         if (isTable(expected)) {
             return compareTable(context, result, page, received, expected.getNode());
         } else if (PluginCompareDate.isDate(expected)) {
-            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, (Element) expected.getNode());
+            PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, (Element) expected.getNode(), true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             if (!expected.getValue().equals(exp)) {
                 expected.append("{" + exp + "}");
             }
             String rec = received.asText();
-            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, page);
+            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, null);
         } else if (PluginCompareNode.isNode(expected)) {
             PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, (Element) expected.getNode(), true);
             return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);
         } else {
-            PluginCompareText compare = UtilPlugin.create(context, PluginCompareText.class, (Element) expected.getNode());
+            PluginCompareText compare = UtilPlugin.create(context, PluginCompareText.class, (Element) expected.getNode(), true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
             String exp = String.valueOf(tmp);
             if (!expected.getValue().equals(exp)) {
                 expected.append("{" + exp + "}");
             }
             String rec = received.asText();
-            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getNode(), plugin), context, result, page);
+            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getNode(), plugin), context, result, null);
         }
     }
 

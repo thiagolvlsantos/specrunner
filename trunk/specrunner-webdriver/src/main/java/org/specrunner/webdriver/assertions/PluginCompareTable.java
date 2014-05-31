@@ -96,7 +96,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
 
         List<WebElement> tablesReceived = element.findElements(By.xpath("descendant-or-self::table"));
         if (tablesReceived.isEmpty()) {
-            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
+            result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."));
             return false;
         }
         WebElement tableReceived = tablesReceived.get(0);
@@ -203,10 +203,10 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 expected.append("{" + exp + "}");
             }
             String rec = received.getText();
-            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, client);
+            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, null);
         } else if (PluginCompareNode.isNode(expected)) {
             PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, (Element) expected.getNode(), true);
-            return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result, client);
+            return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);
         } else {
             PluginCompareText compare = UtilPlugin.create(context, PluginCompareText.class, (Element) expected.getNode(), true);
             Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
@@ -215,7 +215,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 expected.append("{" + exp + "}");
             }
             String rec = received.getText();
-            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getNode(), plugin), context, result, client);
+            return PluginCompareUtils.compare(compare.getNormalized(exp), compare.getNormalized(rec), context.newBlock(expected.getNode(), plugin), context, result, null);
         }
     }
 

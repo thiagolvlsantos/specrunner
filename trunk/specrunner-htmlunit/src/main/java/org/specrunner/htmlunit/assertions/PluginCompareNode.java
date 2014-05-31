@@ -24,13 +24,11 @@ import nu.xom.Element;
 
 import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
-import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.comparators.core.ComparatorNode;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
@@ -52,7 +50,7 @@ import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
 /**
- * Compare strings.
+ * Compare nodes.
  * 
  * @author Thiago Santos
  * 
@@ -70,14 +68,14 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
     private Boolean strict = false;
 
     /**
-     * Comparator type.
+     * Plugin default comparator.
      */
-    private String comparator;
-
-    /**
-     * The comparator instance.
-     */
-    private IComparator comparatorInstance;
+    private ThreadLocal<IComparator> comparator = new ThreadLocal<IComparator>() {
+        @Override
+        protected IComparator initialValue() {
+            return new ComparatorNode();
+        };
+    };
 
     /**
      * Defines the attribute comparison strategy as contains. For example, if
@@ -134,56 +132,9 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
         this.strict = strict;
     }
 
-    /**
-     * Get the comparator alias or class. The comparator can be any mapped in
-     * <code>IComparatorManager</code>, or any class implementor of
-     * <code>IComparator</code>.
-     * 
-     * @return The comparator alias or class name.
-     */
-    public String getComparator() {
-        return comparator;
-    }
-
-    /**
-     * Set the comparator type (alias or class name).
-     * 
-     * @param comparator
-     *            The comparator.
-     */
-    @DontEval
-    public void setComparator(String comparator) {
-        this.comparator = comparator;
-    }
-
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
-    }
-
-    @Override
-    public void initialize(IContext context) throws PluginException {
-        super.initialize(context);
-        if (comparator != null) {
-            IComparatorManager cm = SRServices.getComparatorManager();
-            comparatorInstance = cm.get(comparator);
-            if (comparatorInstance == null) {
-                try {
-                    comparatorInstance = (IComparator) Class.forName(comparator).newInstance();
-                    cm.bind(comparator, comparatorInstance);
-                } catch (Exception e) {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Comparator '" + comparator + "' not found.");
-                    }
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
-                    }
-                }
-            }
-        }
-        if (comparatorInstance == null) {
-            comparatorInstance = new ComparatorNode();
-        }
     }
 
     @Override
@@ -205,7 +156,8 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 IBuilderFactory bf = SRServices.get(IBuilderFactory.class);
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + tmp + "</body></html>", null).query("//body").get(0);
-                if (!comparatorInstance.match(expected, received)) {
+                INodeHolder holder = UtilNode.newNodeHolder(context.getNode());
+                if (!holder.getComparator(comparator.get()).match(expected, received)) {
                     result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(UtilString.normalize(UtilNode.getChildrenAsString(expected)), UtilString.normalize(UtilNode.getChildrenAsString(received))));
                 } else {
                     result.addResult(Success.INSTANCE, context.peek());
