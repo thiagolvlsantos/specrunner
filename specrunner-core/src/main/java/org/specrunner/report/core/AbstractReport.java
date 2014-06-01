@@ -196,11 +196,7 @@ public abstract class AbstractReport implements IReporter {
         sb.append("\n");
 
         sb.append(gap);
-        sb.append(String.format(format + "%d ms", "TOTAL TIME", total));
-        sb.append("\n");
-
-        sb.append(gap);
-        sb.append(String.format(format + "%02d:%02d:%02d.%03d (HH:mm:ss.SSS)", "FORMATED TIME", TimeUnit.MILLISECONDS.toHours(total), TimeUnit.MILLISECONDS.toMinutes(total), TimeUnit.MILLISECONDS.toSeconds(total), total % SECOND));
+        sb.append(String.format(format + "%d ms [ %02d:%02d:%02d.%03d (HH:mm:ss.SSS) ]", "TOTAL TIME", total, TimeUnit.MILLISECONDS.toHours(total), TimeUnit.MILLISECONDS.toMinutes(total), TimeUnit.MILLISECONDS.toSeconds(total), total % SECOND));
         sb.append("\n");
 
         sb.append(gap);
