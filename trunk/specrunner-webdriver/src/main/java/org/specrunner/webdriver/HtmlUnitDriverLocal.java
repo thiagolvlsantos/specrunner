@@ -36,7 +36,6 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal() {
         super();
-        initialize();
     }
 
     /**
@@ -47,7 +46,6 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal(boolean enableJavascript) {
         super(enableJavascript);
-        initialize();
     }
 
     /**
@@ -58,7 +56,6 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal(BrowserVersion version) {
         super(version);
-        initialize();
     }
 
     /**
@@ -69,7 +66,6 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
      */
     public HtmlUnitDriverLocal(Capabilities capabilities) {
         super(capabilities);
-        initialize();
     }
 
     @Override
@@ -77,13 +73,11 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
         return super.getWebClient();
     }
 
-    /**
-     * Perform some missing initialization on webclient.
-     */
-    public void initialize() {
-        WebClient client = getWebClient();
+    @Override
+    protected WebClient modifyWebClient(WebClient client) {
         client.setCssErrorHandler(new OptimizedCssErrorHandler());
         client.setIncorrectnessListener(new OptimizedIncorrectnessListener());
+        return client;
     }
 
     /**
