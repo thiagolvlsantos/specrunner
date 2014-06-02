@@ -31,14 +31,6 @@ import com.gargoylesoftware.htmlunit.WebClient;
 public interface IHtmlUnitDriver extends IParameterHolder, IResetable {
 
     /**
-     * Set driver name.
-     * 
-     * @param name
-     *            A name.
-     */
-    void setName(String name);
-
-    /**
      * Return the webdriver client.
      * 
      * @return The client.
