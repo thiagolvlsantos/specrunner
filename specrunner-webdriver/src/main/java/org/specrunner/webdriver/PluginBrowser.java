@@ -38,6 +38,7 @@ import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.core.AbstractReusable;
 import org.specrunner.util.UtilLog;
+import org.specrunner.webdriver.impl.WebDriverFactoryHtmlUnit;
 import org.specrunner.webdriver.listeners.PageListener;
 
 /**
@@ -286,7 +287,7 @@ public class PluginBrowser extends AbstractPluginScoped {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Using  " + webdriverfactory + " to created WebDriver.");
                 }
-                webdriverInstance = ((IWebDriverFactory) Class.forName(webdriverfactory).newInstance()).create(context);
+                webdriverInstance = ((IWebDriverFactory) Class.forName(webdriverfactory).newInstance()).create(getName() != null ? getName() : BROWSER_NAME, context);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("WebDriver of type " + webdriverInstance.getClass() + " created by factory.");
                 }
@@ -295,7 +296,7 @@ public class PluginBrowser extends AbstractPluginScoped {
             }
         }
         if (webdriverInstance == null) {
-            webdriverInstance = new HtmlUnitDriverLocal(true);
+            webdriverInstance = new WebDriverFactoryHtmlUnit().create(getName() != null ? getName() : BROWSER_NAME, context);
         }
         save(context, webdriverInstance);
         if (reuse) {

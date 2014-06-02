@@ -235,10 +235,11 @@ public class PluginPause extends AbstractPlugin {
      */
     protected void showMessage(String message) {
         final JFrame frame = new JFrame("Pause frame.");
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         final JDialog dialog = new JDialog(frame, "Pause dialog");
+        dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         dialog.setSize(screenSize.width / RATIO, screenSize.height / RATIO);
         dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
         dialog.setModal(true);
@@ -279,8 +280,6 @@ public class PluginPause extends AbstractPlugin {
      */
     protected void releaseWindow(JFrame frame, JDialog dialog) {
         dialog.setVisible(false);
-        dialog.dispose();
         frame.setVisible(false);
-        frame.dispose();
     }
 }

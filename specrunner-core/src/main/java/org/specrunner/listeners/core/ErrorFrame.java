@@ -43,6 +43,10 @@ import javax.swing.JTextArea;
 @SuppressWarnings("serial")
 public class ErrorFrame extends JFrame {
     /**
+     * Estimate size of task bar.
+     */
+    private static final int HEIGHT_TASK_BAR = 25;
+    /**
      * Get default font size.
      */
     private static final int FONT_SIZE = 12;
@@ -67,7 +71,7 @@ public class ErrorFrame extends JFrame {
      */
     public ErrorFrame(final ErrorFrameListener listener) {
         super("Error messages");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         createText();
         createDialog(listener);
         createButtons(listener);
@@ -108,7 +112,7 @@ public class ErrorFrame extends JFrame {
             }
         });
         dialog.setSize(screenSize.width / 2, screenSize.height / 2);
-        dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
+        dialog.setLocation(screenSize.width / 2, (screenSize.height / 2) - HEIGHT_TASK_BAR);
         dialog.setLayout(new BorderLayout(GAPS, GAPS));
         dialog.add(new JScrollPane(text), BorderLayout.CENTER);
         dialog.setModal(true);

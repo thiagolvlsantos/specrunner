@@ -17,10 +17,14 @@
  */
 package org.specrunner.webdriver.impl;
 
+import nu.xom.Element;
+import nu.xom.Node;
+
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.core.UtilParametrized;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
-import org.specrunner.webdriver.HtmlUnitDriverLocal;
 import org.specrunner.webdriver.IWebDriverFactory;
 
 /**
@@ -32,10 +36,23 @@ import org.specrunner.webdriver.IWebDriverFactory;
 public class WebDriverFactoryHtmlUnit implements IWebDriverFactory {
 
     @Override
-    public WebDriver create(IContext context) {
+    public WebDriver create(String name, IContext context) {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Default factory:" + getClass());
         }
-        return new HtmlUnitDriverLocal(true);
+        HtmlUnitDriverLocal driver = new HtmlUnitDriverLocal(true);
+        driver.setName(name);
+        Node node = context.getNode();
+        if (node instanceof Element) {
+            try {
+                UtilParametrized.setProperties(context, driver, (Element) node);
+            } catch (PluginException e) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info(e.getMessage(), e);
+                }
+            }
+        }
+        driver.initialize();
+        return driver;
     }
 }

@@ -1,4 +1,4 @@
-package org.specrunner.webdriver;
+package org.specrunner.webdriver.impl.htmlunit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

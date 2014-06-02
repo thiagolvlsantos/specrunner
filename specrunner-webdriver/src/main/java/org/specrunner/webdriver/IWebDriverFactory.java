@@ -32,11 +32,13 @@ public interface IWebDriverFactory {
     /**
      * Create a WebDriver.
      * 
+     * @param name
+     *            The driver alias.
      * @param context
      *            The context.
      * @return W web driver based on context.
      * @throws PluginException
      *             On creation errors.
      */
-    WebDriver create(IContext context) throws PluginException;
+    WebDriver create(String name, IContext context) throws PluginException;
 }

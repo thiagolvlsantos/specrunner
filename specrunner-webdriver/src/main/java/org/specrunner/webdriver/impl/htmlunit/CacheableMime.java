@@ -15,33 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver;
+package org.specrunner.webdriver.impl.htmlunit;
 
-import org.specrunner.parameters.IParameterHolder;
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.UtilLog;
 
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 
 /**
- * A webdriver which returns the web client.
+ * Everything other that "text/html" mime type is cacheable.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IHtmlUnitDriver extends IParameterHolder, IResetable {
+public class CacheableMime implements ICacheable {
 
-    /**
-     * Set driver name.
-     * 
-     * @param name
-     *            A name.
-     */
-    void setName(String name);
-
-    /**
-     * Return the webdriver client.
-     * 
-     * @return The client.
-     */
-    WebClient getWebClient();
+    @Override
+    public boolean isCacheable(WebRequest request, WebResponse response) {
+        String mime = response.getContentType();
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Mime type (" + mime + "): " + request.getUrl());
+        }
+        return !"".equals(mime) && !"text/html".equals(mime);
+    }
 }

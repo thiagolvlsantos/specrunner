@@ -76,7 +76,7 @@ public class WebDriverFactoryIe implements IWebDriverFactory {
     }
 
     @Override
-    public WebDriver create(IContext context) throws PluginException {
+    public WebDriver create(String alias, IContext context) throws PluginException {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Factory:" + getClass());
         }

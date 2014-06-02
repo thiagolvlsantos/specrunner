@@ -19,15 +19,15 @@ package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
-import org.specrunner.webdriver.HtmlUnitDriverLocal;
+import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
 
 /**
  * Set the header information.
