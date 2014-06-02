@@ -14,8 +14,12 @@ public class AbstractTest {
 
     @Configuration
     public void onConfigure(IConfiguration cfg) {
-        System.out.println("Running with SRRunner.class");
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
+        // cfg.add(HtmlUnitDriverLocal.FEATURE_CONNECTION,
+        // WebConnectionFile.class.getName());
+        // cfg.add(WebConnectionFile.FEATURE_CLEAN, true);
+        // cfg.add(PauseOnFailureNodeListener.FEATURE_PAUSE_ON_FAILURE, true);
+        // cfg.add(PauseOnFailureNodeListener.FEATURE_SHOW_DIALOG, true);
     }
 
     @Before

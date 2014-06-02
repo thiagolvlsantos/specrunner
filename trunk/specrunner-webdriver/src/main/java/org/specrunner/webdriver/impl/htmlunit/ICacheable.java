@@ -15,33 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver;
+package org.specrunner.webdriver.impl.htmlunit;
 
-import org.specrunner.parameters.IParameterHolder;
-import org.specrunner.util.mapping.IResetable;
-
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebRequest;
+import com.gargoylesoftware.htmlunit.WebResponse;
 
 /**
- * A webdriver which returns the web client.
+ * Answer if a request and(or) response can be cached.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IHtmlUnitDriver extends IParameterHolder, IResetable {
+public interface ICacheable {
 
     /**
-     * Set driver name.
+     * Check if a request/response is cacheable.
      * 
-     * @param name
-     *            A name.
+     * @param request
+     *            The request.
+     * @param response
+     *            The response.
+     * @return true, if cacheable, false, otherwise.
      */
-    void setName(String name);
+    boolean isCacheable(WebRequest request, WebResponse response);
 
-    /**
-     * Return the webdriver client.
-     * 
-     * @return The client.
-     */
-    WebClient getWebClient();
 }
