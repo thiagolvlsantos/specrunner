@@ -131,7 +131,9 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner {
                     @Override
                     public void afterScenario(String title, Node node, IContext context, IResultSet result) {
                         IResultSet r = frameListener.getResult();
-                        if (r == null || !r.getStatus().isError()) {
+                        if (frameListener.isPending()) {
+                            notifier.fireTestIgnored(description);
+                        } else if (r == null || !r.getStatus().isError()) {
                             notifier.fireTestFinished(description);
                         } else {
                             notifier.fireTestFailure(new Failure(description, new Exception(r.asString())));
