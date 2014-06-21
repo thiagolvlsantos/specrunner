@@ -174,14 +174,13 @@ public class ScenarioFrameListener implements INodeListener {
                     UtilLog.LOG.info("Scenario FAILURE:" + name);
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_FAILURE);
-                fireAfter(name, node, context, result);
             } else {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Scenario SUCCESS:" + name);
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
-                fireAfter(name, node, context, result);
             }
+            fireAfter(name, node, context, result);
         }
     }
 
