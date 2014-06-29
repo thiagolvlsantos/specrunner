@@ -21,6 +21,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.openqa.selenium.WebDriver;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
@@ -35,11 +36,61 @@ import org.specrunner.webdriver.IWebDriverFactory;
  */
 public class WebDriverFactoryHtmlUnit implements IWebDriverFactory {
 
+    /**
+     * Enable webdriver instance reuse.
+     */
+    private Boolean reuse = Boolean.FALSE;
+
+    /**
+     * Current instance.
+     */
+    private HtmlUnitDriverLocal driver;
+
+    /**
+     * Get reuse flag.
+     * 
+     * @return true, if reuse enabled, false, otherwise.
+     */
+    public Boolean getReuse() {
+        return reuse;
+    }
+
+    /**
+     * Set reuse flag.
+     * 
+     * @param reuse
+     *            The flag state.
+     */
+    public void setReuse(Boolean reuse) {
+        this.reuse = reuse;
+    }
+
     @Override
     public WebDriver create(String name, IContext context) {
+        SRServices.getFeatureManager().set(FEATURE_REUSE, this);
         if (UtilLog.LOG.isInfoEnabled()) {
-            UtilLog.LOG.info("Default factory:" + getClass());
+            UtilLog.LOG.info("Default factory( reuse = " + reuse + "," + this + "):" + getClass());
         }
+        if (reuse) {
+            if (driver == null) {
+                driver = newInstance(name, context);
+            }
+        } else {
+            driver = newInstance(name, context);
+        }
+        return driver;
+    }
+
+    /**
+     * Creates a new instance.
+     * 
+     * @param name
+     *            A instance name.
+     * @param context
+     *            A context.
+     * @return A webdriver instance.
+     */
+    protected HtmlUnitDriverLocal newInstance(String name, IContext context) {
         HtmlUnitDriverLocal driver = new HtmlUnitDriverLocal(true);
         driver.setName(name);
         Node node = context.getNode();

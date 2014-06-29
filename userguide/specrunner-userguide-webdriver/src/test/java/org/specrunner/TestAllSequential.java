@@ -5,7 +5,9 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.webdriver.PluginBrowser;
-import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
+import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
+import org.specrunner.webdriver.impl.WebDriverFactoryHtmlUnit;
+import org.specrunner.webdriver.impl.htmlunit.WebConnectionFile;
 
 public class TestAllSequential extends AbstractTest {
 
@@ -18,7 +20,16 @@ public class TestAllSequential extends AbstractTest {
 
     protected void run(String name, String out) {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
+
+        // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
+        // WebDriverFactoryChrome.class.getName());
+
+        cfg.add(PluginBrowser.FEATURE_REUSE, true);
+        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryHtmlUnit.class.getName());
+        cfg.add(WebDriverFactoryHtmlUnit.FEATURE_REUSE, true);
+        cfg.add(HtmlUnitDriverLocal.FEATURE_CONNECTION, WebConnectionFile.class.getName());
+        cfg.add(WebConnectionFile.FEATURE_CLEAN, true);
+
         SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out, cfg);
     }
 

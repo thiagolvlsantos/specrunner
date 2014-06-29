@@ -3,6 +3,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Node example</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <h1>Node</h1>

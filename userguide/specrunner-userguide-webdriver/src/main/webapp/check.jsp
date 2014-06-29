@@ -3,6 +3,7 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Checkbox and radios example</title>
+<link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
     <h1>Checks</h1>

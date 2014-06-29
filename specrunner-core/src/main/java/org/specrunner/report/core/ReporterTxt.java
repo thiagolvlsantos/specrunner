@@ -43,9 +43,9 @@ public class ReporterTxt extends AbstractReport {
     protected void dumpPart(SRServices services, String header, List<Resume> list) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.printf("  +---------------- TXT (%s)---------------------+%n", header);
-        String pattern = "  %10s %10s | %10s | %7s | %-24s | %-15s | %-10s | %10s%n";
+        String pattern = "  %10s %10s | %10s | %7s | %-24s | %-17s | %-12s | %10s%n";
         out.printf(pattern, "", "#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "INPUT <-> OUTPUT");
-        pattern = "  %10s %10s | %10s | %7.2f | %23s  | %-15s | %-10s | %10s%n";
+        pattern = "  %10s %10s | %10s | %7.2f | %23s  | %-17s | %-12s | %10s%n";
         for (Resume r : list) {
             out.printf(pattern, "", r.getIndex(), r.getTime(), asPercentage(r.getTime()), r.getTimestamp(), r.getStatus().getName() + " " + r.getStatusCounter() + "/" + r.getStatusTotal(), r.getAssertionCounter() + "/" + r.getAssertionTotal(), r.getInput() + " <-> " + r.getOutput());
         }
