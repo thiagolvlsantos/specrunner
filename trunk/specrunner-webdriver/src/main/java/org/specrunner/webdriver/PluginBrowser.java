@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.FeatureManagerException;
@@ -95,6 +94,15 @@ public class PluginBrowser extends AbstractPluginScoped {
      * The web driver instance.
      */
     protected WebDriver webdriverInstance;
+
+    /**
+     * Feature to set webdriver factory instance.
+     */
+    public static final String FEATURE_WEBDRIVER_FACTORY_INSTANCE = PluginBrowser.class.getName() + ".webdriverfactoryInstance";
+    /**
+     * The web driver factory instance.
+     */
+    protected IWebDriverFactory webdriverfactoryInstance;
 
     /**
      * Feature to set web driver reuse.
@@ -183,6 +191,25 @@ public class PluginBrowser extends AbstractPluginScoped {
     }
 
     /**
+     * Get the webdriver factory instance.
+     * 
+     * @return The factory instance.
+     */
+    public IWebDriverFactory getWebdriverfactoryInstance() {
+        return webdriverfactoryInstance;
+    }
+
+    /**
+     * Set the webdriver factory instance.
+     * 
+     * @param webdriverfactoryInstance
+     *            The instance.
+     */
+    public void setWebdriverfactoryInstance(IWebDriverFactory webdriverfactoryInstance) {
+        this.webdriverfactoryInstance = webdriverfactoryInstance;
+    }
+
+    /**
      * Gets the reuse status. If reuse is true, the browser can be reused by
      * multiple tests if the browser name is the same.
      * 
@@ -219,18 +246,6 @@ public class PluginBrowser extends AbstractPluginScoped {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_RECORDING, this);
-        if (webdriver == null) {
-            try {
-                fm.setStrict(FEATURE_WEBDRIVER_TYPE, this);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("WebDriver type is " + webdriver);
-                }
-            } catch (FeatureManagerException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
-        }
         if (webdriverfactory == null) {
             try {
                 fm.setStrict(FEATURE_WEBDRIVER_FACTORY, this);
@@ -243,9 +258,20 @@ public class PluginBrowser extends AbstractPluginScoped {
                 }
             }
         }
-        if (webdriverInstance == null) {
-            fm.set(FEATURE_WEBDRIVER_INSTANCE, this);
+        fm.set(FEATURE_WEBDRIVER_FACTORY_INSTANCE, this);
+        if (webdriver == null) {
+            try {
+                fm.setStrict(FEATURE_WEBDRIVER_TYPE, this);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("WebDriver type is " + webdriver);
+                }
+            } catch (FeatureManagerException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
         }
+        fm.set(FEATURE_WEBDRIVER_INSTANCE, this);
     }
 
     @Override
@@ -260,8 +286,9 @@ public class PluginBrowser extends AbstractPluginScoped {
         if (reuse) {
             Map<String, Object> cfg = new HashMap<String, Object>();
             cfg.put("webdriver", webdriver);
-            cfg.put("webdriverfactory", webdriverfactory);
             cfg.put("webdriverInstance", webdriverInstance);
+            cfg.put("webdriverfactory", webdriverfactory);
+            cfg.put("webdriverfactoryInstance", webdriverfactoryInstance);
             IReusable<?> reusable = reusables.get(getName());
             if (reusable != null && reusable.canReuse(cfg)) {
                 reusable.reset();
@@ -273,6 +300,19 @@ public class PluginBrowser extends AbstractPluginScoped {
                 return ENext.DEEP;
             }
         }
+        if (webdriverfactory != null) {
+            try {
+                webdriverfactoryInstance = (IWebDriverFactory) Class.forName(webdriverfactory).newInstance();
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("WebDriver factory of type " + webdriverfactoryInstance.getClass() + " will be used.");
+                }
+            } catch (Exception e) {
+                throw new PluginException("IWebDriverFactory implementation not found or invalid.", e);
+            }
+        }
+        if (webdriverfactoryInstance == null) {
+            webdriverfactoryInstance = new WebDriverFactoryHtmlUnit();
+        }
         if (webdriver != null) {
             try {
                 webdriverInstance = (WebDriver) Class.forName(webdriver).newInstance();
@@ -282,21 +322,9 @@ public class PluginBrowser extends AbstractPluginScoped {
             } catch (Exception e) {
                 throw new PluginException("WebDriver implementation not found or invalid.", e);
             }
-        } else if (webdriverfactory != null) {
-            try {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("Using  " + webdriverfactory + " to created WebDriver.");
-                }
-                webdriverInstance = ((IWebDriverFactory) Class.forName(webdriverfactory).newInstance()).create(getName() != null ? getName() : BROWSER_NAME, context);
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("WebDriver of type " + webdriverInstance.getClass() + " created by factory.");
-                }
-            } catch (Exception e) {
-                throw new PluginException("IWebDriverFactory implementation not found or invalid.", e);
-            }
         }
         if (webdriverInstance == null) {
-            webdriverInstance = new WebDriverFactoryHtmlUnit().create(getName() != null ? getName() : BROWSER_NAME, context);
+            webdriverInstance = webdriverfactoryInstance.create(getName() != null ? getName() : BROWSER_NAME, context);
         }
         save(context, webdriverInstance);
         if (reuse) {
@@ -307,30 +335,20 @@ public class PluginBrowser extends AbstractPluginScoped {
                 @Override
                 public boolean canReuse(Map<String, Object> extra) {
                     String localWebdriver = (String) extra.get("webdriver");
-                    String localWebDriverFactory = (String) extra.get("webdriverfactory");
                     WebDriver localWebDriverInstance = (WebDriver) extra.get("webdriverInstance");
-                    if (webdriver != null) {
-                        return webdriver.equalsIgnoreCase(localWebdriver);
-                    } else if (webdriverfactory != null) {
-                        return webdriverfactory.equalsIgnoreCase(localWebDriverFactory);
-                    } else if (webdriverInstance != null) {
-                        return webdriverInstance == localWebDriverInstance;
-                    } else if (webdriver == null && webdriverfactory == null) {
-                        return true;
-                    }
-                    return false;
+                    String localWebDriverFactory = (String) extra.get("webdriverfactory");
+                    IWebDriverFactory localWebDriverFactoryInstance = (IWebDriverFactory) extra.get("webdriverfactoryInstance");
+                    boolean isDriver = webdriver != null && webdriver.equalsIgnoreCase(localWebdriver);
+                    boolean isDriverInstance = webdriverInstance != null && webdriverInstance == localWebDriverInstance;
+                    boolean isDriverFactory = webdriverfactory != null && webdriverfactory.equalsIgnoreCase(localWebDriverFactory);
+                    boolean isDriverFactoryInstance = webdriverfactoryInstance != null && webdriverfactoryInstance == localWebDriverFactoryInstance;
+                    return isDriverFactory || isDriverFactoryInstance || isDriver || isDriverInstance;
                 }
 
                 @Override
                 public void reset() {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("WebDriver recycling '" + getName() + "'.");
-                    }
-                    if (webdriverInstance instanceof HtmlUnitDriver) {
-                        webdriverInstance.close();
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("WebDriver '" + getName() + "' windows closed.");
-                        }
                     }
                 }
 

@@ -30,6 +30,11 @@ import org.specrunner.plugins.PluginException;
 public interface IWebDriverFactory {
 
     /**
+     * Feature to reuse the first driver instance created by factory.
+     */
+    String FEATURE_REUSE = IWebDriverFactory.class.getName() + ".reuse";
+
+    /**
      * Create a WebDriver.
      * 
      * @param name
