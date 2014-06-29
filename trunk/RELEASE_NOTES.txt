@@ -1,3 +1,27 @@
+1.3.35
+OK - O reuso de browser está criando sempre novas conexões WebConnectionFile, desta forma a cache de arquivos não é reutilizada entre testes, apenas dentro do mesmo teste, o que não gera o ganho de performance geral desejado, corrigir.
+OK - ver se os pending estão sendo notificados corretamente pelos listeners de execução junit.
+OK - Colocar 4 caracteres nos valores de status:
++---------------- TXT (STATUS ORDER)---------------------+
+                      # |  TIME (ms) |       % | ON                       | STATUS          | ASSERTS    | INPUT <-> OUTPUT
+                      5 |      21584 |   23,11 | 2014-06-27 22:37:32.233  | success 4729/4729 | 14/14      | D:\ThiagoSantos\projetos\AUTRAN\TRUNK\Modelos_e_Implementacao\Java\autran\negocio\target\test-classes\br\gov\bcb\autran\crt2\dominio\concessao\TestCadastroConcessaoGrupo.html <-> D:\ThiagoSantos\projetos\AUTRAN\TRUNK\Modelos_e_Implementacao\Java\autran\negocio\target\output\br\gov\bcb\autran\crt2\dominio\concessao\TestCadastroConcessaoGrupo.html
+
+
+1.3.34
+OK - Rever necessidade de gerar screenshoot de cada célula de uma tabela inválida, afinal a tabela é a mesma, só está custando mais gerar os arquivos.
+OK - Integrar a execução via HTML unit com suas otimizações (i.e. cache de arquivos) dentro do perfil do webdriver quando ele usar o HTMLUnit;
+
+1.3.33
+OK - Corrigir o timeout padrão do webdriver, o maxwait é dado em segundos e não em milisegundos;
+OK - Colocar uns fire listeners nos cenários JUnit a medida que forem passando (falhando).
+
+1.3.32
+OK - Criar um "cuspidor de SQL" para gerar avulsos a partir dos testes (por exemplo, o de parâmetros de sistema);
+OK - BUG: nos plugins que estendem AbstractPluginFind há falso positivo quando os elementos desejados não são encontrados, por exemplo, um enabled/disabled de um checkbox que não existe na tela.
+	Ou seja, nos elementos que permitem ações sobre múltiplos componentes deve-se verificar se foi encontrado pelo menos 1, do contrário lançar erro.
+OK - CSS: Colocar fundo branco no grupo de detalhamento do resultado;
+OK - JS: Colocar para a exceção fazer scroll para a posição dela na tela, e no canto esquerdo.
+
 1.3.31
 OK - colocar uma campo de mensagem nas anotações pause, exemplos:
 	<pause msg="parei aqui"/>, <span class="pause" msg="parei aqui"/>, <span pause="parei aqui"/>.
