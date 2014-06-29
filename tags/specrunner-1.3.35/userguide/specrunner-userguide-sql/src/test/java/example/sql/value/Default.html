@@ -1,0 +1,130 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+
+td {
+	border: 1px dotted gray;
+}
+</style>
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="create.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <h1>Testing insertion of default values</h1>
+    This example shows how a date field which is not null is created automatically based on 'default' attribute in
+    schema configuration (value.cfg.xml) or by 'default' attribute itself.
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Date full</th>
+                <th>Date any</th>
+                <th>State</th>
+                <th>gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>${user}</td>
+                <td>current time</td>
+                <td>current timestamp</td>
+                <td>current time</td>
+                <td>Active</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Ringo Star</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Inactive</td>
+                <td>F</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+                <td default="current timestamp"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>O</td>
+            </tr>
+            <!--tr>
+                <td>I</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>M</td>
+            </tr-->
+        </tbody>
+    </table>
+
+    <h1>Test data in Excel with empty cells</h1>
+    <p>
+        Import Excel <a href="input.xlsx" class="include">file </a>.
+    </p>
+
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>State</th>
+                <th>Date full</th>
+                <th>Date any</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>${user}</td>
+                <td>Active</td>
+                <td>current timestamp</td>
+                <td>current time</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Ringo Star</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>F</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+                <td>Inactive</td>
+                <td></td>
+                <td></td>
+                <td>O</td>
+            </tr>
+            <!--tr>
+                <td>I</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>M</td>
+            </tr-->
+        </tbody>
+    </table>
+</body>
+</html>
