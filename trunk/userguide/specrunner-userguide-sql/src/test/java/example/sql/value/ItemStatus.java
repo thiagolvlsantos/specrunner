@@ -2,7 +2,7 @@ package example.sql.value;
 
 public enum ItemStatus {
 
-    ENABLED(0, "Active"), DISABLED(1, "Inative");
+    ENABLED(0, "Active"), DISABLED(1, "Inactive");
 
     private int code;
     private String description;
