@@ -17,33 +17,34 @@
  */
 package org.specrunner.sql;
 
-import java.util.Map;
-
-import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.result.IResultSet;
-
 /**
- * Abstraction for SQL dumper.
+ * Identifies fields that should be handled as null or empty depending on value
+ * and database input or output mode.
  * 
  * @author Thiago Santos.
  * 
  */
-public interface ISqlDumper {
+public interface INullEmptyHandler {
 
     /**
-     * Perform some actions in a database.
+     * Check if a value should be handled as null, depending on value and mode.
      * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The test result.
-     * @param sql
-     *            Prepared SQL to replace.
-     * @param arguments
-     *            The SQL arguments.
-     * @throws PluginException
-     *             On dump errors.
+     * @param value
+     *            The value.
+     * @param mode
+     *            The mode.
+     * @return true, if should be considered null, false, otherwise.
      */
-    void dump(IContext context, IResultSet result, String sql, Map<Integer, Object> arguments) throws PluginException;
+    boolean isNull(String value, EMode mode);
+
+    /**
+     * Check if a value should be handled as empty, depending on value and mode.
+     * 
+     * @param value
+     *            The value.
+     * @param mode
+     *            The mode.
+     * @return true, if should be considered empty, false, otherwise.
+     */
+    boolean isEmpty(String value, EMode mode);
 }
