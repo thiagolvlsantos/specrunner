@@ -50,6 +50,7 @@ import org.specrunner.sql.CommandType;
 import org.specrunner.sql.EMode;
 import org.specrunner.sql.IColumnReader;
 import org.specrunner.sql.IDatabase;
+import org.specrunner.sql.INullEmptyHandler;
 import org.specrunner.sql.ISequenceProvider;
 import org.specrunner.sql.ISqlDumper;
 import org.specrunner.sql.SqlWrapper;
@@ -108,6 +109,11 @@ public class Database implements IDatabase {
      * Manage object lookup and reuse.
      */
     protected IdManager idManager = new IdManager();
+
+    /**
+     * A null/empty handler.
+     */
+    protected INullEmptyHandler nullEmptyHandler = new NullEmptyHandlerImpl();
 
     /**
      * Sequence next value generator.
@@ -174,6 +180,20 @@ public class Database implements IDatabase {
     }
 
     /**
+     * Get the null/empty handler.
+     * 
+     * @return Current null/empty handler.
+     */
+    public INullEmptyHandler getNullEmptyHandler() {
+        return nullEmptyHandler;
+    }
+
+    @Override
+    public void setNullEmptyHandler(INullEmptyHandler nullEmptyHandler) {
+        this.nullEmptyHandler = nullEmptyHandler;
+    }
+
+    /**
      * Get the sequence values provider.
      * 
      * @return The provider.
@@ -219,6 +239,7 @@ public class Database implements IDatabase {
     public void initialize() {
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_LIMIT, this);
+        fm.set(FEATURE_NULL_EMPTY_HANDLER, this);
         fm.set(FEATURE_ID_MANAGER, this);
         fm.set(FEATURE_SEQUENCE_PROVIDER, this);
         fm.set(FEATURE_SQL_DUMPER, this);
@@ -246,25 +267,7 @@ public class Database implements IDatabase {
         RowAdapter header = rows.get(0);
         List<CellAdapter> headers = header.getCells();
         Column[] columns = new Column[headers.size()];
-        for (int i = 0; i < headers.size(); i++) {
-            CellAdapter cell = headers.get(i);
-            String cAlias = cell.getValue();
-            columns[i] = table.getAlias(cAlias);
-            Column column = columns[i];
-            if (i > 0 && column == null) {
-                throw new PluginException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
-            }
-            // update to specific header adjusts
-            if (column != null) {
-                try {
-                    UtilSchema.setupColumn(context, table, column, cell);
-                } catch (ConverterException e) {
-                    throw new PluginException(e);
-                } catch (ComparatorException e) {
-                    throw new PluginException(e);
-                }
-            }
-        }
+        readHeadersColumns(context, table, headers, columns);
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
@@ -293,10 +296,16 @@ public class Database implements IDatabase {
                     throw new PluginException(e);
                 }
                 String value = getAdjustValue(context, td);
+                boolean isNull = nullEmptyHandler.isNull(value, mode);
+                boolean isEmpty = nullEmptyHandler.isEmpty(value, mode);
                 IConverter converter = column.getConverter();
-                if (column.isVirtual() || converter.accept(value)) {
+                if (isNull || isEmpty || column.isVirtual() || converter.accept(value)) {
                     Object obj = null;
-                    if (column.isVirtual()) {
+                    if (isNull) {
+                        obj = null;
+                    } else if (isEmpty) {
+                        obj = "";
+                    } else if (column.isVirtual()) {
                         obj = value;
                     } else {
                         List<String> args = td.getArguments();
@@ -310,7 +319,7 @@ public class Database implements IDatabase {
                             continue;
                         }
                     }
-                    if (obj == null && ct == CommandType.INSERT) {
+                    if (obj == null && ct == CommandType.INSERT && mode == EMode.INPUT) {
                         // the other column fields with default value are set in
                         // <code>addMissingValues(...)</code> method.
                         obj = column.getDefaultValue();
@@ -374,6 +383,42 @@ public class Database implements IDatabase {
             con.commit();
         } catch (SQLException e) {
             throw new PluginException(e);
+        }
+    }
+
+    /**
+     * Read headers information.
+     * 
+     * @param context
+     *            The test context.
+     * @param table
+     *            The current table.
+     * @param headers
+     *            The headers list.
+     * @param columns
+     *            The columns list.
+     * @throws PluginException
+     *             On reading errors.
+     */
+    protected void readHeadersColumns(IContext context, Table table, List<CellAdapter> headers, Column[] columns) throws PluginException {
+        for (int i = 0; i < headers.size(); i++) {
+            CellAdapter cell = headers.get(i);
+            String cAlias = cell.getValue();
+            columns[i] = table.getAlias(cAlias);
+            Column column = columns[i];
+            if (i > 0 && column == null) {
+                throw new PluginException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
+            }
+            // update to specific header adjusts
+            if (column != null) {
+                try {
+                    UtilSchema.setupColumn(context, table, column, cell);
+                } catch (ConverterException e) {
+                    throw new PluginException(e);
+                } catch (ComparatorException e) {
+                    throw new PluginException(e);
+                }
+            }
         }
     }
 

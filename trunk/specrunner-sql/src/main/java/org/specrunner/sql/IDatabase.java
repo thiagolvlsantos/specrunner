@@ -35,6 +35,11 @@ import org.specrunner.util.xom.TableAdapter;
 public interface IDatabase extends IResetable {
 
     /**
+     * Feature for null/empty handler.
+     */
+    String FEATURE_NULL_EMPTY_HANDLER = IDatabase.class.getName() + ".nullEmptyHandler";
+
+    /**
      * Feature for sequence provider instance.
      */
     String FEATURE_SEQUENCE_PROVIDER = IDatabase.class.getName() + ".sequenceProvider";
@@ -50,10 +55,18 @@ public interface IDatabase extends IResetable {
     String FEATURE_COLUMN_READER = IDatabase.class.getName() + ".columnReader";
 
     /**
+     * Set the null/empty handler implementation.
+     * 
+     * @param nullEmptyHandler
+     *            A null/empty handler.
+     */
+    void setNullEmptyHandler(INullEmptyHandler nullEmptyHandler);
+
+    /**
      * Set the sequence provider.
      * 
      * @param sequenceProvider
-     *            The provider.
+     *            A provider.
      */
     void setSequenceProvider(ISequenceProvider sequenceProvider);
 
