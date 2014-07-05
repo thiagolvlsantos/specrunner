@@ -29,6 +29,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -236,8 +237,8 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
-        if (isWaitForClient()) {
-            waitForClient(client);
+        if (isWaitForClient(context, result, client)) {
+            waitForClient(context, result, client);
         }
         doEnd(context, result, client);
         if (download != null) {
@@ -360,9 +361,16 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * Sign actions to wait for browser response.
      * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * 
      * @return true, when wait is desired, false, otherwise. Default is true.
      */
-    protected boolean isWaitForClient() {
+    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
         return true;
     }
 
@@ -370,12 +378,25 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * Wait for client. If wait is set it already has waited for the period time
      * set.
      * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result.
+     * 
      * @param client
      *            The client.
+     * @throws PluginException
+     *             On wait for client errors.
      */
-    protected void waitForClient(WebDriver client) {
+    protected void waitForClient(IContext context, IResultSet result, WebDriver client) throws PluginException {
         if (getWait() == null) {
-            (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(System.currentTimeMillis(), getTimeout()));
+            try {
+                (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(context, result, System.currentTimeMillis(), getTimeout()));
+            } catch (TimeoutException e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
+                }
+            }
         }
     }
 
@@ -383,15 +404,22 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * Return the condition to wait. If <code>waitfor</code> attribute is
      * provided, the condition turn into &lt;xpath&gt;.isDisplayed().
      * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result.
+     * 
      * @param start
      *            The begin time.
      * @param timeout
      *            The timeout.
      * @return The expected condition.
+     * @throws PluginException
+     *             On wait conditions.
      */
-    protected ExpectedCondition<?> getWaitCondition(final long start, final Long timeout) {
-        if (waitfor != null) {
-            return ExpectedConditions.visibilityOfElementLocated(By.xpath(waitfor));
+    protected ExpectedCondition<?> getWaitCondition(IContext context, IResultSet result, final long start, final Long timeout) throws PluginException {
+        if (getWaitfor(context) != null) {
+            return ExpectedConditions.visibilityOfElementLocated(By.xpath(getWaitfor(context)));
         }
         return new ExpectedCondition<Boolean>() {
             @Override
@@ -411,5 +439,18 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                 return true;
             }
         };
+    }
+
+    /**
+     * Get the wait for condition.
+     * 
+     * @param context
+     *            The test context.
+     * @return The wait for condition, if exists, null otherwise.
+     * @throws PluginException
+     *             On plugin XPath recover errors.
+     */
+    protected String getWaitfor(IContext context) throws PluginException {
+        return waitfor;
     }
 }

@@ -19,8 +19,8 @@ package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -46,7 +46,7 @@ public class PluginClose extends AbstractPluginUrlAware {
     }
 
     @Override
-    protected boolean isWaitForClient() {
+    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
         return false;
     }
 }

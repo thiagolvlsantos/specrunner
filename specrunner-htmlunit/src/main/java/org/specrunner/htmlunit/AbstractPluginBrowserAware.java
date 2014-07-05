@@ -196,8 +196,8 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
-        if (isWaitForClient()) {
-            waitForClient(client);
+        if (isWaitForClient(context, result, client)) {
+            waitForClient(context, result, client);
         }
         doEnd(context, result, client);
         if (download != null) {
@@ -303,9 +303,16 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * Sign actions to wait for browser response.
      * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
+     * 
      * @return true, when wait is desired, false, otherwise. Default is true.
      */
-    protected boolean isWaitForClient() {
+    protected boolean isWaitForClient(IContext context, IResultSet result, WebClient client) {
         return true;
     }
 
@@ -326,10 +333,14 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * Wait for client. If sleep is set, wait for sleep time.
      * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result.
      * @param client
      *            The client.
      */
-    protected void waitForClient(WebClient client) {
+    protected void waitForClient(IContext context, IResultSet result, WebClient client) {
         if (getSleep() == null) {
             long time = System.currentTimeMillis();
             int count = client.waitForBackgroundJavaScript(interval);

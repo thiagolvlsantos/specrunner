@@ -17,8 +17,10 @@
  */
 package org.specrunner.webdriver.assertions;
 
+import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.result.IResultSet;
 
 /**
  * Check if body or a given element does not contains a text.
@@ -27,6 +29,11 @@ import org.specrunner.plugins.PluginException;
  * 
  */
 public class PluginNotContains extends PluginContains {
+
+    @Override
+    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
+        return false;
+    }
 
     @Override
     protected boolean test(String content, String value) {
