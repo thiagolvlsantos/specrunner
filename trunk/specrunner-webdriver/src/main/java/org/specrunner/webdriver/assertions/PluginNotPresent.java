@@ -46,7 +46,7 @@ public class PluginNotPresent extends AbstractPluginFind {
 
     @Override
     protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
-        return false;
+        return getWaitfor() != null;
     }
 
     @Override

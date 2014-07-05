@@ -32,7 +32,7 @@ public class PluginNotContains extends PluginContains {
 
     @Override
     protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
-        return false;
+        return getWaitfor() != null;
     }
 
     @Override
