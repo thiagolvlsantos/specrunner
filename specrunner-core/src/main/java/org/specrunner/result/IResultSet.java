@@ -181,6 +181,13 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
     <T extends Status> List<IResult> filterByStatus(List<IResult> subset, T... status);
 
     /**
+     * Return number of errors.
+     * 
+     * @return The errors number.
+     */
+    int countErrors();
+
+    /**
      * Counts the status of a given type.
      * 
      * @param <T>

@@ -70,6 +70,11 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner {
     private List<INodeListener> listeners;
 
     /**
+     * Statement performed.
+     */
+    private SpecRunnerStatement statement;
+
+    /**
      * Basic constructor.
      * 
      * @param clazz
@@ -123,7 +128,7 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending()) {
                             notifier.fireTestIgnored(description);
-                        } else if (r == null || !r.getStatus().isError()) {
+                        } else if (r == null || r.countErrors() == 0) {
                             notifier.fireTestStarted(description);
                         }
                     }
@@ -133,10 +138,11 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending()) {
                             notifier.fireTestIgnored(description);
-                        } else if (r == null || !r.getStatus().isError()) {
+                        } else if (r == null || r.countErrors() == 0) {
                             notifier.fireTestFinished(description);
                         } else {
-                            notifier.fireTestFailure(new Failure(description, new Exception(r.asString())));
+                            String msg = "OUTPUT: " + statement.getOutput().getAbsoluteFile() + "\n" + r.asString();
+                            notifier.fireTestFailure(new Failure(description, new Exception(msg)));
                         }
                     }
                 };
@@ -171,7 +177,8 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner {
         if (method != fakeMethod) {
             return super.methodInvoker(method, test);
         } else {
-            return new SpecRunnerStatement(getTestClass(), test, listeners);
+            statement = new SpecRunnerStatement(getTestClass(), test, listeners);
+            return statement;
         }
     }
 }

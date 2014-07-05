@@ -274,6 +274,17 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
+    public int countErrors() {
+        int count = 0;
+        for (IResult r : this) {
+            if (r.getStatus().isError()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    @Override
     public <T extends Status> int countStatus(T... status) {
         return countStatus(0, size(), status);
     }
