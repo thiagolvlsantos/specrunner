@@ -50,7 +50,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     /**
      * The finder class name.
      */
-    protected Boolean alwaysWaitFor = Boolean.FALSE;
+    protected Boolean alwaysWaitFor = true;
 
     /**
      * Feature to set finder type.
@@ -77,7 +77,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     }
 
     /**
-     * Get if automatic waitfor is enabled. Default is 'false'.
+     * Get if automatic waitfor is enabled. Default is 'true'.
      * 
      * @return true, if enabled, otherwise, false.
      */
