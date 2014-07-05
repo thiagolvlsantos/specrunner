@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <link href="concordion.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+        <p>
+            If the time is
+            <span class="set" name="time">09:00AM</span>
+            <span class="execute" value="$THIS.setCurrentTime(time)" />
+            then the greeting will say:
+            <span class="eq" value="$THIS.getGreeting()">Good Morning World!</span>
+        </p>
+    </body>
+</html>

@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.specrunner</groupId>
+	<artifactId>specrunner-core-example</artifactId>
+	<version>1.3.36</version>
+	<dependencies>
+		<dependency>
+			<groupId>org.specrunner</groupId>
+			<artifactId>specrunner-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	<properties>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<sourceVersion>1.6</sourceVersion>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${sourceVersion}</source>
+					<target>${sourceVersion}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<parallel>methods</parallel>
+					<!--parallel>classes</parallel -->
+					<!--perCoreThreadCount>4</perCoreThreadCount -->
+					<printSummary>true</printSummary>
+					<perCoreThreadCount>true</perCoreThreadCount>
+					<!--useUnlimitedThreads>true</useUnlimitedThreads -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
