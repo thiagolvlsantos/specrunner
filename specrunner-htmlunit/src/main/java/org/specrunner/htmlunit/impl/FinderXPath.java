@@ -80,6 +80,7 @@ public class FinderXPath extends ParameterHolder implements IFinder {
         addStrategy("link", "//a[text()='{0}']");
         addStrategy("linkText", "//a[text()='{0}']");
         addStrategy("partialLinkText", "//a[contains(text(),'{0}')]");
+        addStrategy("caption", "//table/caption[contains(text(),'{0}')]/..");
         addStrategy("xpath", "{0}");
     }
 
