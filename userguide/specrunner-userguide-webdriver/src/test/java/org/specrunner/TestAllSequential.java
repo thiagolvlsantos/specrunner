@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
 import org.specrunner.webdriver.impl.WebDriverFactoryHtmlUnit;
@@ -25,7 +24,6 @@ public class TestAllSequential extends AbstractTest {
         // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
         // WebDriverFactoryChrome.class.getName());
 
-        cfg.add(AbstractPluginFind.FEATURE_ALWAYS_WAIT_FOR, true);
         cfg.add(PluginBrowser.FEATURE_REUSE, true);
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryHtmlUnit.class.getName());
         cfg.add(WebDriverFactoryHtmlUnit.FEATURE_REUSE, true);
