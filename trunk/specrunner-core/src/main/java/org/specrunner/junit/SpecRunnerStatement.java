@@ -34,6 +34,7 @@ import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.ISpecRunnerListener;
+import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.plugins.core.elements.PluginHtml;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
@@ -111,6 +112,15 @@ public class SpecRunnerStatement extends Statement {
         return JUnitUtils.getOutput(clazz, input);
     }
 
+    /**
+     * Get the output file.
+     * 
+     * @return The output.
+     */
+    public File getOutput() {
+        return output;
+    }
+
     @Override
     public void evaluate() throws Throwable {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
@@ -118,16 +128,25 @@ public class SpecRunnerStatement extends Statement {
         for (ISpecRunnerListener s : listeners) {
             lm.add(s);
         }
-        IResultSet result;
+        IResultSet result = null;
         try {
             ISpecRunner srunner = SRServices.getSpecRunner();
             result = srunner.run(input.getPath(), configure(cfg));
         } finally {
+            List<ScenarioFrameListener> scenarios = lm.filterByType(ScenarioFrameListener.class);
+            for (ScenarioFrameListener sl : scenarios) {
+                if (result != null) {
+                    IResultSet tmp = sl.getResult();
+                    if (tmp != null) {
+                        result.removeAll(tmp);
+                    }
+                }
+            }
             for (ISpecRunnerListener s : listeners) {
                 lm.remove(s);
             }
         }
-        if (result.getStatus().isError()) {
+        if (result.countErrors() > 0) {
             throw new Exception("OUTPUT: " + output.getAbsoluteFile() + "\n" + result.asString());
         }
     }
