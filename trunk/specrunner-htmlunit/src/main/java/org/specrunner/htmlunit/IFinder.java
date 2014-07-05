@@ -41,6 +41,18 @@ public interface IFinder extends IParameterHolder {
     void reset();
 
     /**
+     * Get the XPath expression corresponding to expected element(s).
+     * 
+     * @param context
+     *            The test context.
+     * 
+     * @return The XPath if it exists, null, otherwise.
+     * @throws PluginException
+     *             On XPath generation errors.
+     */
+    String getXPath(IContext context) throws PluginException;
+
+    /**
      * Returns a list of elements.
      * 
      * @param context

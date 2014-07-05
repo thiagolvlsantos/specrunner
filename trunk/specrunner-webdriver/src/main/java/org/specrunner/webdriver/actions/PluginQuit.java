@@ -51,7 +51,7 @@ public class PluginQuit extends AbstractPluginUrlAware {
     }
 
     @Override
-    protected boolean isWaitForClient() {
+    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
         return false;
     }
 }

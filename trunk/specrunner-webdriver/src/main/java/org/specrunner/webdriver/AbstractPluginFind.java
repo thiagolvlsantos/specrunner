@@ -43,6 +43,16 @@ import org.specrunner.webdriver.impl.FinderXPath;
 public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
 
     /**
+     * Feature to set plugins always wait for XPath corresponding component to
+     * appear.
+     */
+    public static final String FEATURE_ALWAYS_WAIT_FOR = AbstractPluginFind.class.getName() + ".alwaysWaitFor";
+    /**
+     * The finder class name.
+     */
+    protected Boolean alwaysWaitFor = Boolean.FALSE;
+
+    /**
      * Feature to set finder type.
      */
     public static final String FEATURE_FINDER_TYPE = AbstractPluginFind.class.getName() + ".finder";
@@ -64,6 +74,25 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
      * Default constructor.
      */
     public AbstractPluginFind() {
+    }
+
+    /**
+     * Get if automatic waitfor is enabled. Default is 'false'.
+     * 
+     * @return true, if enabled, otherwise, false.
+     */
+    public Boolean getAlwaysWaitFor() {
+        return alwaysWaitFor;
+    }
+
+    /**
+     * Set always wait state.
+     * 
+     * @param alwaysWaitFor
+     *            The wait flag.
+     */
+    public void setAlwaysWaitFor(Boolean alwaysWaitFor) {
+        this.alwaysWaitFor = alwaysWaitFor;
     }
 
     /**
@@ -122,6 +151,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_ALWAYS_WAIT_FOR, this);
         if (finder == null) {
             fm.set(FEATURE_FINDER_TYPE, this);
         }
@@ -139,11 +169,23 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             finderInstance = FinderXPath.get();
         }
         finderInstance.reset();
+        getFinderInstance(context);
+    }
+
+    @Override
+    public String getWaitfor(IContext context) throws PluginException {
+        if (alwaysWaitFor && getWaitfor() == null) {
+            setWaitfor(finderInstance.getXPath(context));
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Automatic wait for visibility of: " + getWaitfor());
+            }
+        }
+        return super.getWaitfor(context);
     }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        List<WebElement> list = getFinderInstance(context).find(context, result, client);
+        List<WebElement> list = finderInstance.find(context, result, client);
         if (list.isEmpty()) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             return;

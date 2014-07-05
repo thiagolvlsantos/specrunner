@@ -45,6 +45,11 @@ public class PluginNotPresent extends AbstractPluginFind {
     }
 
     @Override
+    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
+        return false;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         List<WebElement> list = getFinderInstance(context).find(context, result, client);
         if (list == null || list.isEmpty()) {

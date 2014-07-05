@@ -237,15 +237,7 @@ public class FinderXPath extends ParameterHolder implements IFinder {
         }
     }
 
-    /**
-     * Gets the XPath related to the plugin.
-     * 
-     * @param context
-     *            The test context.
-     * @return The XPath expression to find elements.
-     * @throws PluginException
-     *             On XPath generation errors.
-     */
+    @Override
     public String getXPath(IContext context) throws PluginException {
         String format = findStrategy(getType());
         if (format == null) {

@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.Configuration;
+import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;
@@ -16,6 +17,8 @@ public class AbstractTest {
 
     @Configuration
     public void onConfigure(IConfiguration cfg) {
+        cfg.add(AbstractPluginFind.FEATURE_ALWAYS_WAIT_FOR, Boolean.TRUE);
+
         // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
         // WebDriverFactoryChrome.class.getName());
 
