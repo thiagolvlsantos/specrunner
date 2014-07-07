@@ -1,10 +1,10 @@
-1.3.37 - ON GOING
+1.3.37
 OK - Criar um mecanismo automático para o waitfor ser injetado automaticamente antes de qualquer ação/comando a ser realizado em tela;
-	R: Default é sempre esperar agora.
+	R: Default é sempre esperar agora quando o driver não é HtmlUnit
 OK - Colocar caption: FinderXPath.get().addStrategy("legenda", "//table/caption[contains(text(),'{0}')]/..");
-	R: adicionando 'caption' ao webdriver e ao htmlunit
+	R: Adicionando 'caption' ao webdriver e ao htmlunit
 OK - Colocar para o teste raiz desconsiderar as janelas relacionadas aos erros dentro de cenários;
-	R: agora os erros externos estão segregados dos cenários
+	R: Agora os erros externos estão segregados dos cenários
 
 1.3.36
 OK - No Database deve-se verificar se os valores (vazios) estão com null na base de dados, ou seja no modo output deve-se verificar as colunas com valores 'null'. Considerar o caso onde se deseja realmente verificar se o valor é String vazia. 

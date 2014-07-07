@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.specrunner</groupId>
 	<artifactId>specrunner-core-example</artifactId>
-	<version>1.3.36</version>
+	<version>1.3.37</version>
 	<dependencies>
 		<dependency>
 			<groupId>org.specrunner</groupId>
