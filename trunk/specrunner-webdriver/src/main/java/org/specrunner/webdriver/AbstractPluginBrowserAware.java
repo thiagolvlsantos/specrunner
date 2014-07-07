@@ -391,7 +391,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     protected void waitForClient(IContext context, IResultSet result, WebDriver client) throws PluginException {
         if (getWait() == null) {
             try {
-                (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(context, result, System.currentTimeMillis(), getTimeout()));
+                (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(context, result, client, System.currentTimeMillis(), getTimeout()));
             } catch (TimeoutException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -408,7 +408,8 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      *            The test context.
      * @param result
      *            The result.
-     * 
+     * @param client
+     *            The client.
      * @param start
      *            The begin time.
      * @param timeout
@@ -417,9 +418,9 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * @throws PluginException
      *             On wait conditions.
      */
-    protected ExpectedCondition<?> getWaitCondition(IContext context, IResultSet result, final long start, final Long timeout) throws PluginException {
-        if (getWaitfor(context) != null) {
-            return ExpectedConditions.visibilityOfElementLocated(By.xpath(getWaitfor(context)));
+    protected ExpectedCondition<?> getWaitCondition(IContext context, IResultSet result, WebDriver client, final long start, final Long timeout) throws PluginException {
+        if (getWaitfor(context, result, client) != null) {
+            return ExpectedConditions.visibilityOfElementLocated(By.xpath(getWaitfor(context, result, client)));
         }
         return new ExpectedCondition<Boolean>() {
             @Override
@@ -446,11 +447,15 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * 
      * @param context
      *            The test context.
+     * @param result
+     *            The result.
+     * @param client
+     *            The client.
      * @return The wait for condition, if exists, null otherwise.
      * @throws PluginException
      *             On plugin XPath recover errors.
      */
-    protected String getWaitfor(IContext context) throws PluginException {
+    protected String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
         return waitfor;
     }
 }

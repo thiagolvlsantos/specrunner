@@ -18,19 +18,20 @@
 package org.specrunner.sql.meta;
 
 /**
- * Something that can be replicated.
+ * Something that can be merged.
  * 
  * @author Thiago Santos
  * 
  * @param <T>
  *            The object type.
  */
-public interface IReplicable<T> {
+public interface IMergeable<T extends IReplicable<T>> {
 
     /**
-     * A clone of the object.
+     * Merge two objects.
      * 
-     * @return A clone.
+     * @param other
+     *            The object to be merged.
      */
-    T copy();
+    void merge(T other);
 }

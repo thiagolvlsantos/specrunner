@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Thiago Santos
  * 
  */
-public class Table implements IReplicable<Table> {
+public class Table implements IReplicable<Table>, IMergeable<Table> {
 
     /**
      * The parent schema.
@@ -266,5 +266,22 @@ public class Table implements IReplicable<Table> {
             copy.add(c.copy());
         }
         return copy;
+    }
+
+    @Override
+    public void merge(Table other) {
+        if (other == null) {
+            return;
+        }
+        setName(other.name);
+        setAlias(other.alias);
+        for (Column c : other.getColumns()) {
+            Column old = getName(c.getName());
+            if (old == null) {
+                add(c.copy());
+            } else {
+                old.merge(c);
+            }
+        }
     }
 }

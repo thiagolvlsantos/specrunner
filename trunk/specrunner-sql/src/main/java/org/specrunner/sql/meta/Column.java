@@ -30,7 +30,7 @@ import org.specrunner.converters.IConverter;
  * @author Thiago Santos.
  * 
  */
-public class Column implements IReplicable<Column> {
+public class Column implements IReplicable<Column>, IMergeable<Column> {
 
     /**
      * Column table.
@@ -390,6 +390,28 @@ public class Column implements IReplicable<Column> {
 
     @Override
     public Column copy() {
-        return new Column().setTable(table).setAlias(alias).setName(name).setKey(key).setSequence(sequence).setDate(date).setConverter(converter).setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual).setPointer(pointer);
+        return new Column().setTable(table).setAlias(alias).setName(name).//
+                setKey(key).setSequence(sequence).setDate(date).setConverter(converter).//
+                setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).//
+                setReference(reference).setVirtual(virtual).setPointer(pointer);
+    }
+
+    @Override
+    public void merge(Column other) {
+        if (other == null) {
+            return;
+        }
+        setAlias(other.alias);
+        setName(other.name);
+        setKey(other.key);
+        setSequence(other.sequence);
+        setDate(other.date);
+        setConverter(other.converter);
+        setArguments(other.arguments);
+        setComparator(other.comparator);
+        setDefaultValue(other.defaultValue);
+        setReference(other.reference);
+        setVirtual(other.virtual);
+        setPointer(other.pointer);
     }
 }
