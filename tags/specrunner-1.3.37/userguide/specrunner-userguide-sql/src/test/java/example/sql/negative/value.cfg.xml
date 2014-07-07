@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+  <table name="customers" alias="customer">
+    <column name="id" alias="ID" key="true" converter="long"/>
+    <column name="name" alias="name" reference="true" converter="notNullOrEmpty"/>
+    <column name="description" alias="Description" converter="notNullOrEmpty"/>
+  </table>
+
+  <table name="log" alias="logging">
+    <column name="id" alias="ID" key="true" converter="long"/>
+    <column name="field" alias="field" reference="true" converter="notNullOrEmpty"/>
+  </table>
+</schema>
