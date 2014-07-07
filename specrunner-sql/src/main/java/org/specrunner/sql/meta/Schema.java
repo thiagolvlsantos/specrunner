@@ -28,7 +28,7 @@ import java.util.Map;
  * @author Thiago Santos.
  * 
  */
-public class Schema implements IReplicable<Schema> {
+public class Schema implements IReplicable<Schema>, IMergeable<Schema> {
 
     /**
      * Schema alias.
@@ -198,4 +198,20 @@ public class Schema implements IReplicable<Schema> {
         return copy;
     }
 
+    @Override
+    public void merge(Schema other) {
+        if (other == null) {
+            return;
+        }
+        setName(other.name);
+        setAlias(other.alias);
+        for (Table t : other.getTables()) {
+            Table old = getName(t.getName());
+            if (old == null) {
+                add(t.copy());
+            } else {
+                old.merge(t);
+            }
+        }
+    }
 }

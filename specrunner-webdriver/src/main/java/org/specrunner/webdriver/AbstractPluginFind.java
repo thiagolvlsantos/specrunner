@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -50,7 +51,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     /**
      * The finder class name.
      */
-    protected Boolean alwaysWaitFor = true;
+    protected Boolean alwaysWaitFor;
 
     /**
      * Feature to set finder type.
@@ -77,7 +78,8 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     }
 
     /**
-     * Get if automatic waitfor is enabled. Default is 'true'.
+     * Get if automatic waitfor is enabled. Default is (client !=
+     * HtmlUnitDriver), HtmlUnit wait is efficient.
      * 
      * @return true, if enabled, otherwise, false.
      */
@@ -173,14 +175,17 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     }
 
     @Override
-    public String getWaitfor(IContext context) throws PluginException {
+    public String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
+        if (alwaysWaitFor == null) {
+            alwaysWaitFor = !(client instanceof HtmlUnitDriver);
+        }
         if (alwaysWaitFor && getWaitfor() == null) {
             setWaitfor(finderInstance.getXPath(context));
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Automatic wait for visibility of: " + getWaitfor());
             }
         }
-        return super.getWaitfor(context);
+        return super.getWaitfor(context, result, client);
     }
 
     @Override
