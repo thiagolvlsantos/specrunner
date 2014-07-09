@@ -182,3 +182,12 @@
 .map:before {
     content: "map " attr(name) " " attr(scope);
 }
+
+/* Scenarios */
+.scenarioTime {
+    padding: 2px;
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+    font-weight: bold;
+}
