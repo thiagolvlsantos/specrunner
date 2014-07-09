@@ -17,6 +17,8 @@
  */
 package org.specrunner.listeners.core;
 
+import nu.xom.Attribute;
+import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.context.IContext;
@@ -67,7 +69,6 @@ public class ScenarioFrameListener implements INodeListener {
      * Scenario listeners.
      */
     protected IScenarioListener[] listeners;
-
     /**
      * An auxiliary node holder.
      */
@@ -76,6 +77,14 @@ public class ScenarioFrameListener implements INodeListener {
      * The node which holds the scenario.
      */
     protected Node scenario;
+    /**
+     * The node which holds the title.
+     */
+    protected Node title;
+    /**
+     * Time scenario has started.
+     */
+    protected long startTime;
     /**
      * A checkpoint where in the general result the scenario starts.
      */
@@ -114,6 +123,7 @@ public class ScenarioFrameListener implements INodeListener {
 
     @Override
     public ENext onBefore(Node node, IContext context, IResultSet result) {
+        long time = System.currentTimeMillis();
         ENext next = ENext.DEEP;
         if (holder == null) {
             holder = UtilNode.newNodeHolder(node);
@@ -122,9 +132,12 @@ public class ScenarioFrameListener implements INodeListener {
         }
         if (holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
             try {
-                String title = UtilString.camelCase(UtilNode.getCssNode(node, CSS_TITLE).getValue(), true);
-                if (name.equals(title)) {
-                    this.scenario = node;
+                Node sub = UtilNode.getCssNode(node, CSS_TITLE);
+                String str = UtilString.camelCase(sub.getValue(), true);
+                if (name.equals(str)) {
+                    scenario = node;
+                    title = sub;
+                    startTime = time;
                     checkpoint = result.size();
                     pending = UtilNode.isPending(node);
                     if (pending) {
@@ -181,6 +194,13 @@ public class ScenarioFrameListener implements INodeListener {
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
             }
             fireAfter(name, node, context, result);
+
+            if (UtilLog.LOG.isDebugEnabled()) {
+                Element span = new Element("span");
+                span.addAttribute(new Attribute("class", "scenarioTime"));
+                span.appendChild("TIME:" + (System.currentTimeMillis() - startTime) + " ms");
+                UtilNode.newNodeHolder(title).prepend(span);
+            }
         }
     }
 
