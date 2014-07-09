@@ -9,8 +9,10 @@
     <strong>Wicket Quickstart Archetype Homepage</strong>
 
 
-    <p>
+    <p class="example">
         Current date is: <span id="idDate"><%=new org.joda.time.DateTime().toString("HH:mm:ss")%></span>
     </p>
+
+    Old school.
 </body>
 </html>

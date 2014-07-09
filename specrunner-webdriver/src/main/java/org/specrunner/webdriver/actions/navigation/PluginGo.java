@@ -66,7 +66,7 @@ public class PluginGo extends AbstractPluginNavigation {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, Navigation history) throws PluginException {
         if (to == null) {
-            throw new PluginException("Specify 'to' index. i.e. to='-1' backs one page, to='2' forward history twice.");
+            throw new PluginException("Specify 'to' index. i.e. to='-1' will back one page, to='2' forward history twice.");
         }
         Long index = to;
         while (index < 0) {

@@ -23,15 +23,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
- * Clicks on a given element.
+ * Clicks on the next visible element of provided selector.
  * 
  * @author Thiago Santos.
  * 

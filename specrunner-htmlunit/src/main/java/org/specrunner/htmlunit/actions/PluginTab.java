@@ -15,34 +15,35 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.actions.input.keyboard;
+package org.specrunner.htmlunit.actions;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Keyboard;
+import java.io.IOException;
+
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.webdriver.AbstractPluginKeyboard;
+
+import com.gargoylesoftware.htmlunit.SgmlPage;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.javascript.host.KeyboardEvent;
 
 /**
- * Release a given key.
+ * Press/Release TAB key.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public class PluginReleaseKeys extends AbstractPluginKeyboard {
-    @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
-    }
+public class PluginTab extends AbstractPluginKeys {
 
     @Override
-    protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Keyboard keyboard) throws PluginException {
-        keyboard.releaseKey(obtainKey());
-        result.addResult(Success.INSTANCE, context.peek());
+    protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
+        try {
+            element.type(KeyboardEvent.DOM_VK_TAB);
+            result.addResult(Success.INSTANCE, context.peek());
+        } catch (IOException e) {
+            throw new PluginException("Error on TAB command.", e);
+        }
     }
 }

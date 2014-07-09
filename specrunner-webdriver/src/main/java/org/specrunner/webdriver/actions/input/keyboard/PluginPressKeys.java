@@ -42,7 +42,7 @@ public class PluginPressKeys extends AbstractPluginKeyboard {
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Keyboard keyboard) throws PluginException {
-        keyboard.pressKey(getKey());
+        keyboard.pressKey(obtainKey());
         result.addResult(Success.INSTANCE, context.peek());
     }
 }
