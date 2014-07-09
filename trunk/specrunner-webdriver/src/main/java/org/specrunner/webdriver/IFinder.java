@@ -40,6 +40,22 @@ public interface IFinder extends IParameterHolder {
     void reset();
 
     /**
+     * Return if finder is initialized.
+     * 
+     * @return true, if initialized, false, otherwise. Every reset sets
+     *         initialized to false.
+     */
+    boolean isInitialized();
+
+    /**
+     * Set initialized status.
+     * 
+     * @param initialized
+     *            true, to initialized, false, otherwise.
+     */
+    void setInitialized(boolean initialized);
+
+    /**
      * Get the XPath expression corresponding to expected element(s).
      * 
      * @param context

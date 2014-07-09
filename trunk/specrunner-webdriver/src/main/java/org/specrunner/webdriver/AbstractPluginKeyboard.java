@@ -35,6 +35,30 @@ import org.specrunner.result.IResultSet;
  */
 public abstract class AbstractPluginKeyboard extends AbstractPluginHasInputDevices {
 
+    /**
+     * Hold key to perform some action/assertion/etc.
+     */
+    private String key;
+
+    /**
+     * Set the key name.
+     * 
+     * @param key
+     *            A name in Keys.values()
+     */
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    /**
+     * Get the set key.
+     * 
+     * @return The key selected.
+     */
+    public String getKey() {
+        return key;
+    }
+
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input) throws PluginException {
         doEnd(context, result, client, input, input.getKeyboard());
@@ -65,10 +89,10 @@ public abstract class AbstractPluginKeyboard extends AbstractPluginHasInputDevic
      * @throws PluginException
      *             On key lookup errors.
      */
-    protected Keys getKey() throws PluginException {
-        Keys k = Keys.valueOf(getName());
+    protected Keys obtainKey() throws PluginException {
+        Keys k = Keys.valueOf(getKey());
         if (k == null) {
-            throw new PluginException("Key named '" + getName() + "' not found. Valid values:" + Arrays.toString(Keys.values()));
+            throw new PluginException("Key named '" + getKey() + "' not found. Valid values:" + Arrays.toString(Keys.values()));
         }
         return k;
     }

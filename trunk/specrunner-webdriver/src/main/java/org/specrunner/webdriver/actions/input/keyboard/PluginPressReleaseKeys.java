@@ -17,6 +17,7 @@
  */
 package org.specrunner.webdriver.actions.input.keyboard;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Keyboard;
@@ -29,12 +30,12 @@ import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginKeyboard;
 
 /**
- * Release a given key.
+ * Press/Release a given key.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public class PluginReleaseKeys extends AbstractPluginKeyboard {
+public class PluginPressReleaseKeys extends AbstractPluginKeyboard {
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -42,7 +43,9 @@ public class PluginReleaseKeys extends AbstractPluginKeyboard {
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Keyboard keyboard) throws PluginException {
-        keyboard.releaseKey(obtainKey());
+        Keys tmp = obtainKey();
+        keyboard.pressKey(tmp);
+        keyboard.releaseKey(tmp);
         result.addResult(Success.INSTANCE, context.peek());
     }
 }

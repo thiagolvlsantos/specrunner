@@ -109,7 +109,10 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
      *             On processing errors.
      */
     public IFinder getFinderInstance(IContext context) throws PluginException {
-        UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        if (!finderInstance.isInitialized()) {
+            UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        }
+        finderInstance.setInitialized(true);
         return finderInstance;
     }
 
@@ -134,12 +137,11 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
             finderInstance = FinderXPath.get();
         }
         finderInstance.reset();
-        getFinderInstance(context);
     }
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client, SgmlPage page) throws PluginException {
-        List<?> list = finderInstance.find(context, result, client, page);
+        List<?> list = getFinderInstance(context).find(context, result, client, page);
         if (list.isEmpty()) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."));
             return;

@@ -15,34 +15,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.actions.input.keyboard;
+package org.specrunner.webdriver.actions;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Keyboard;
+import org.openqa.selenium.WebElement;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.webdriver.AbstractPluginKeyboard;
+import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
- * Release a given key.
+ * Blur on a given element.
  * 
  * @author Thiago Santos.
  * 
  */
-public class PluginReleaseKeys extends AbstractPluginKeyboard {
+public class PluginBlur extends AbstractPluginFindSingle {
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
     }
 
     @Override
-    protected void doEnd(IContext context, IResultSet result, WebDriver client, HasInputDevices input, Keyboard keyboard) throws PluginException {
-        keyboard.releaseKey(obtainKey());
+    protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
+        JavascriptExecutor js = (JavascriptExecutor) client;
+        js.executeScript("arguments[0].focus(); arguments[0].blur(); return true;", element);
         result.addResult(Success.INSTANCE, context.peek());
     }
 }

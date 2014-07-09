@@ -21,14 +21,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 
 /**
- * Clicks something.
+ * Click on something.
  * 
  * @author Thiago Santos.
  * 
@@ -37,7 +38,7 @@ public class PluginClick extends AbstractPluginBrowserAware {
 
     @Override
     public ActionType getActionType() {
-        return org.specrunner.plugins.type.Command.INSTANCE;
+        return Command.INSTANCE;
     }
 
     @Override

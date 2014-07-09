@@ -145,7 +145,10 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
      *             On processing errors.
      */
     public IFinder getFinderInstance(IContext context) throws PluginException {
-        UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        if (!finderInstance.isInitialized()) {
+            UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        }
+        finderInstance.setInitialized(true);
         return finderInstance;
     }
 
@@ -171,7 +174,6 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             finderInstance = FinderXPath.get();
         }
         finderInstance.reset();
-        getFinderInstance(context);
     }
 
     @Override
@@ -180,7 +182,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             alwaysWaitFor = !(client instanceof HtmlUnitDriver);
         }
         if (alwaysWaitFor && getWaitfor() == null) {
-            setWaitfor(finderInstance.getXPath(context));
+            setWaitfor(getFinderInstance(context).getXPath(context));
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Automatic wait for visibility of: " + getWaitfor());
             }
@@ -190,7 +192,7 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
 
     @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        List<WebElement> list = finderInstance.find(context, result, client);
+        List<WebElement> list = getFinderInstance(context).find(context, result, client);
         if (list.isEmpty()) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             return;

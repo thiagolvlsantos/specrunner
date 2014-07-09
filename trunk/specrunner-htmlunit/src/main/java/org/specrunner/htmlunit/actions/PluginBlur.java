@@ -19,8 +19,8 @@ package org.specrunner.htmlunit.actions;
 
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
@@ -30,7 +30,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 
 /**
- * Blur a given element.
+ * Blur on a given element.
  * 
  * @author Thiago Santos.
  * 

@@ -55,6 +55,11 @@ public class FinderXPath extends ParameterHolder implements IFinder {
     };
 
     /**
+     * Get initialization status.
+     */
+    private boolean initialized;
+
+    /**
      * Mapping of XPath strategies.
      */
     private final Map<String, String> strategies = new HashMap<String, String>();
@@ -92,6 +97,16 @@ public class FinderXPath extends ParameterHolder implements IFinder {
      */
     public static FinderXPath get() {
         return instance.get();
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    @Override
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
     }
 
     /**
@@ -252,6 +267,7 @@ public class FinderXPath extends ParameterHolder implements IFinder {
 
     @Override
     public void reset() {
+        initialized = false;
         by = null;
     }
 
