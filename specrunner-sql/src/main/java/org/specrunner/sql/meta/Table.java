@@ -181,7 +181,7 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
      * @return A composite alias.
      */
     protected String createAlias(String prefix, String suffix) {
-        return prefix + "(" + suffix + ")";
+        return prefix + "(table:" + suffix + ")";
     }
 
     /**
