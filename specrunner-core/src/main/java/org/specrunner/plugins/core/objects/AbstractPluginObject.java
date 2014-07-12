@@ -98,9 +98,13 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      */
     protected String mapping;
     /**
-     * List of generic definition fields.
+     * List of header definition fields.
      */
-    protected Map<String, Field> generic = new HashMap<String, Field>();
+    protected Map<String, Field> headerToFields = new HashMap<String, Field>();
+    /**
+     * List of field definition fields.
+     */
+    protected Map<String, Field> fieldToFields = new HashMap<String, Field>();
     /**
      * List of fields.
      */
@@ -322,7 +326,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             List<Field> general = new LinkedList<Field>();
             loadFields(context, information, general);
             for (Field field : general) {
-                generic.put(field.getFieldName(), field);
+                headerToFields.put(field.getFieldName(), field);
+                fieldToFields.put(field.getFullName(), field);
             }
         } catch (SourceException e) {
             if (UtilLog.LOG.isInfoEnabled()) {
@@ -402,23 +407,19 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
-            boolean ignore = false;
-            if (cell.hasAttribute("ignore")) {
-                ignore = Boolean.parseBoolean(cell.getAttribute("ignore"));
-            }
+            boolean ignore = Boolean.parseBoolean(cell.getAttribute("ignore", "false"));
 
-            String fieldName = cell.getValue().trim();
-            String name;
-            if (cell.hasAttribute("field")) {
-                name = cell.getAttribute("field");
-            } else {
-                name = UtilString.camelCase(fieldName);
-            }
-
-            Field f = generic.get(fieldName);
+            String fieldName = UtilString.camelCase(cell.getValue());
+            String name = cell.getAttribute("field", fieldName);
+            Field f = headerToFields.get(fieldName);
             if (f == null) {
-                f = new Field();
-                f.setFieldName(fieldName);
+                f = fieldToFields.get(name);
+                if (f == null) {
+                    f = new Field();
+                    f.setFieldName(fieldName);
+                } else {
+                    name = f.getFullName();
+                }
             } else {
                 name = f.getFullName();
             }
@@ -462,15 +463,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     f.setTypes(types);
                 }
 
-                String def = null;
-                if (cell.hasAttribute("default")) {
-                    def = cell.getAttribute("default");
-                }
+                String def = cell.getAttribute("default", null);
                 if (def != null) {
                     f.setDef(def);
                 }
 
-                String converter = cell.hasAttribute("converter") ? cell.getAttribute("converter") : null;
+                String converter = cell.getAttribute("converter", null);
                 String[] converters = converter != null ? converter.split(",") : new String[0];
                 if (f.getConverters() == null || converters.length > 0) {
                     f.setConverters(converters);
@@ -486,7 +484,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     f.setArgs(args.toArray(new String[args.size()]));
                 }
 
-                String comparator = cell.hasAttribute("comparator") ? cell.getAttribute("comparator") : null;
+                String comparator = cell.getAttribute("comparator", null);
                 if (comparator != null) {
                     f.setComparator(comparator);
                 }
@@ -924,8 +922,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     UtilLog.LOG.debug("VALUE>" + value);
                 }
                 setValue(row, instance, f, value);
-                String title = cell.hasAttribute("title") ? cell.getAttribute("title") : "";
+                String title = cell.getAttribute("title", "");
                 cell.setAttribute("title", title + "|toString()=" + PropertyUtils.getProperty(instance, f.getFullName()));
+                String out = String.valueOf(value);
+                if (text != null && !text.equals(out)) {
+                    cell.append("{" + out + "}");
+                }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
