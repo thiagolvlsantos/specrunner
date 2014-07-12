@@ -133,7 +133,7 @@ public class Schema implements IReplicable<Schema>, IMergeable<Schema> {
         tables.add(table);
         aliasToTables.put(table.getAlias(), table);
         namesToTables.put(table.getName(), table);
-        table.setSchema(this);
+        table.setParent(this);
         return this;
     }
 
