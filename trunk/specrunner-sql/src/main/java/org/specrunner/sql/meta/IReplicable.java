@@ -31,6 +31,8 @@ public interface IReplicable<T> {
      * A clone of the object.
      * 
      * @return A clone.
+     * @throws ReplicableException
+     *             On replication errors.
      */
-    T copy();
+    T copy() throws ReplicableException;
 }

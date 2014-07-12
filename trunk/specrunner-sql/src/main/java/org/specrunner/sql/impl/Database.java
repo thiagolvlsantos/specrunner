@@ -55,6 +55,7 @@ import org.specrunner.sql.ISequenceProvider;
 import org.specrunner.sql.ISqlDumper;
 import org.specrunner.sql.SqlWrapper;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.ReplicableException;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.UtilNames;
@@ -261,7 +262,11 @@ public class Database implements IDatabase {
             throw new PluginException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), avaliable tables alias: " + schema.getAliasToTables().keySet());
         }
         // creates a copy only of defined tables
-        table = table.copy();
+        try {
+            table = table.copy();
+        } catch (ReplicableException e) {
+            throw new PluginException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
+        }
         List<RowAdapter> rows = tableAdapter.getRows();
         // headers are in the first row.
         RowAdapter header = rows.get(0);
