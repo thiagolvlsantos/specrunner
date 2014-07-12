@@ -35,7 +35,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
     /**
      * Column table.
      */
-    private Table table;
+    private Table parent;
     /**
      * Column alias.
      */
@@ -44,6 +44,10 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      * Column name.
      */
     private String name;
+    /**
+     * Column table name, if required.
+     */
+    private String table;
     /**
      * Column key indicator.
      */
@@ -102,26 +106,26 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      * 
      * @return The table.
      */
-    public Table getTable() {
-        return table;
+    public Table getParent() {
+        return parent;
     }
 
     /**
      * Set the table.
      * 
-     * @param table
+     * @param parent
      *            The table.
      * @return The column itself.
      */
-    public Column setTable(Table table) {
-        this.table = table;
+    public Column setParent(Table parent) {
+        this.parent = parent;
         return this;
     }
 
     /**
      * Get the table alias.
      * 
-     * @return The alias.
+     * @return The table name, if exists, null otherwise.
      */
     public String getAlias() {
         return alias;
@@ -158,6 +162,36 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
     public Column setName(String name) {
         this.name = name == null ? null : name.toUpperCase();
         return this;
+    }
+
+    /**
+     * Get column table reference.
+     * 
+     * @return Column table name if filled, otherwise, null.
+     */
+    public String getTable() {
+        return table;
+    }
+
+    /**
+     * Set table property.
+     * 
+     * @param table
+     *            A table name.
+     * @return The column itself.
+     */
+    public Column setTable(String table) {
+        this.table = table == null ? null : UtilNames.normalize(table);
+        return this;
+    }
+
+    /**
+     * If column has table attribute returns it, otherwise return alias.
+     * 
+     * @return Table if exist prior to alias.
+     */
+    public String getTableOrAlias() {
+        return getTable() != null ? getTable() : getAlias();
     }
 
     /**
@@ -384,13 +418,13 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      * @return The column itself.
      */
     public Column setPointer(String pointer) {
-        this.pointer = pointer;
+        this.pointer = pointer == null ? null : UtilNames.normalize(pointer);
         return this;
     }
 
     @Override
     public Column copy() {
-        return new Column().setTable(table).setAlias(alias).setName(name).//
+        return new Column().setParent(parent).setAlias(alias).setName(name).setTable(table).//
                 setKey(key).setSequence(sequence).setDate(date).setConverter(converter).//
                 setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).//
                 setReference(reference).setVirtual(virtual).setPointer(pointer);
@@ -404,6 +438,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
         setAlias(other.alias);
         setName(other.name);
         setKey(other.key);
+        setTable(other.table);
         setSequence(other.sequence);
         setDate(other.date);
         setConverter(other.converter);

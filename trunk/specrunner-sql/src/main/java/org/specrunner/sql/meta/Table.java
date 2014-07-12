@@ -33,7 +33,7 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
     /**
      * The parent schema.
      */
-    private Schema schema;
+    private Schema parent;
     /**
      * The table alias.
      */
@@ -54,25 +54,29 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
      * Map form names to columns.
      */
     private Map<String, Column> namesToColumns = new HashMap<String, Column>();
+    /**
+     * Map form alias to tables.
+     */
+    private Map<String, String> aliasToTables = new HashMap<String, String>();
 
     /**
      * Get the schema.
      * 
      * @return The schema.
      */
-    public Schema getSchema() {
-        return schema;
+    public Schema getParent() {
+        return parent;
     }
 
     /**
      * Set the schema.
      * 
-     * @param schema
+     * @param parent
      *            The schema.
      * @return The table itself.
      */
-    public Table setSchema(Schema schema) {
-        this.schema = schema;
+    public Table setParent(Schema parent) {
+        this.parent = parent;
         return this;
     }
 
@@ -156,10 +160,28 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
             throw new SchemaException("Column with alias '" + column.getAlias() + "' already exist in table (" + name + "," + alias + "), read before error: " + aliasToColumns.keySet());
         }
         columns.add(column);
-        aliasToColumns.put(column.getAlias(), column);
+        if (column.getTable() != null) {
+            aliasToTables.put(column.getAlias(), column.getTable());
+            aliasToColumns.put(createAlias(column.getAlias(), column.getTable()), column);
+        } else {
+            aliasToColumns.put(column.getAlias(), column);
+        }
         namesToColumns.put(column.getName(), column);
-        column.setTable(this);
+        column.setParent(this);
         return this;
+    }
+
+    /**
+     * Get an alias with prefix and suffix.
+     * 
+     * @param prefix
+     *            A prefix.
+     * @param suffix
+     *            A suffix.
+     * @return A composite alias.
+     */
+    protected String createAlias(String prefix, String suffix) {
+        return prefix + "(" + suffix + ")";
     }
 
     /**
@@ -170,7 +192,12 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
      * @return The column.
      */
     public Column getAlias(String alias) {
-        return aliasToColumns.get(alias == null ? null : UtilNames.normalize(alias));
+        String key = alias == null ? null : UtilNames.normalize(alias);
+        String table = aliasToTables.get(key);
+        if (table != null) {
+            key = createAlias(key, table);
+        }
+        return aliasToColumns.get(key);
     }
 
     /**
@@ -269,7 +296,7 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
 
     @Override
     public Table copy() throws ReplicableException {
-        Table copy = new Table().setSchema(schema).setName(name).setAlias(alias);
+        Table copy = new Table().setParent(parent).setName(name).setAlias(alias);
         for (Column c : columns) {
             try {
                 copy.add(c.copy());

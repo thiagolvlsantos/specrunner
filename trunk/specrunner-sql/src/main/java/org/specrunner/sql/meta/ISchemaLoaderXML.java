@@ -34,6 +34,10 @@ public interface ISchemaLoaderXML extends ISchemaLoader {
      */
     String ATTR_ALIAS = "alias";
     /**
+     * Attribute 'table' mark.
+     */
+    String ATTR_TABLE = "table";
+    /**
      * Attribute 'key' mark.
      */
     String ATT_KEY = "key";

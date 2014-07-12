@@ -475,7 +475,7 @@ public class Database implements IDatabase {
         addMissingValues(table, filled, values);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("insert into " + table.getSchema().getName() + "." + table.getName() + " (");
+        sb.append("insert into " + table.getParent().getName() + "." + table.getName() + " (");
         StringBuilder sbColumns = new StringBuilder();
         StringBuilder sbValues = new StringBuilder();
         int i = 1;
@@ -563,7 +563,7 @@ public class Database implements IDatabase {
         Map<String, Integer> indexes = new HashMap<String, Integer>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("update " + table.getSchema().getName() + "." + table.getName() + " set ");
+        sb.append("update " + table.getParent().getName() + "." + table.getName() + " set ");
 
         boolean hasKeys = false;
         boolean hasReferences = false;
@@ -673,7 +673,7 @@ public class Database implements IDatabase {
         Map<String, Integer> indexes = new HashMap<String, Integer>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("delete from " + table.getSchema().getName() + "." + table.getName() + " where ");
+        sb.append("delete from " + table.getParent().getName() + "." + table.getName() + " where ");
 
         boolean hasKeys = false;
         boolean hasReferences = false;
@@ -778,20 +778,24 @@ public class Database implements IDatabase {
             Integer index = indexes.get(column.getName());
             if (index != null) {
                 Object obj = v.getValue();
-                String alias = column.getAlias();
+                String alias = column.getTableOrAlias();
                 if (column.isVirtual()) {
                     // the target table is the column header
                     String pointer = column.getPointer();
                     if (pointer != null) {
                         alias = null;
                         for (Value vp : values) {
-                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
-                                alias = String.valueOf(vp.getCell().getValue());
+                            if (pointer.equals(vp.getColumn().getAlias())) {
+                                alias = UtilNames.normalize(vp.getCell().getValue());
                                 break;
                             }
                         }
                         if (alias == null) {
-                            throw new PluginException("The column " + column.getAlias() + " point to a non-existing column of this table named '" + pointer + "'. Adjust attribute 'pointer' into database mapping file.");
+                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
+                        } else {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
+                            }
                         }
                     }
                     obj = idManager.lookup(alias, obj);
@@ -940,7 +944,7 @@ public class Database implements IDatabase {
         StringBuilder sb = new StringBuilder();
         sb.append("select ");
         sb.append(sbVal);
-        sb.append(" from " + table.getSchema().getName() + "." + table.getName());
+        sb.append(" from " + table.getParent().getName() + "." + table.getName());
         sb.append(" where ");
         sb.append(sbPla);
         performOut(context, result, con, sb.toString(), indexes, values, expectedCount);
@@ -994,13 +998,17 @@ public class Database implements IDatabase {
                         virtual = column.copy();
                         String alias = null;
                         for (Value vp : values) {
-                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
+                            if (pointer.equals(vp.getColumn().getAlias())) {
                                 alias = String.valueOf(vp.getCell().getValue());
                                 break;
                             }
                         }
                         if (alias == null) {
-                            throw new PluginException("The column " + column.getAlias() + " point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
+                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
+                        } else {
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
+                            }
                         }
                         virtual.setAlias(alias);
                     }
@@ -1061,7 +1069,11 @@ public class Database implements IDatabase {
                                     }
                                 }
                                 if (alias == null) {
-                                    throw new PluginException("The column " + column.getAlias() + " point to a non-existing column of this table named '" + pointer + "'. Adjust attribute 'pointer' into database mapping file.");
+                                    throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
+                                } else {
+                                    if (UtilLog.LOG.isDebugEnabled()) {
+                                        UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
+                                    }
                                 }
                                 virtual.setAlias(alias);
                             }
