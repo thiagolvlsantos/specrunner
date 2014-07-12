@@ -17,23 +17,32 @@
  */
 package org.specrunner.sql.meta;
 
+import org.specrunner.SpecRunnerException;
+
 /**
- * Something that can be merged.
+ * Errors on replication.
  * 
  * @author Thiago Santos
  * 
- * @param <T>
- *            The object type.
  */
-public interface IMergeable<T extends IReplicable<T>> {
+@SuppressWarnings("serial")
+// CHECKSTYLE:OFF
+public class ReplicableException extends SpecRunnerException {
 
-    /**
-     * Merge two objects.
-     * 
-     * @param other
-     *            The object to be merged.
-     * @throws MergeableException
-     *             On merge error.
-     */
-    void merge(T other) throws MergeableException;
+    public ReplicableException() {
+        super();
+    }
+
+    public ReplicableException(String message) {
+        super(message);
+    }
+
+    public ReplicableException(Throwable cause) {
+        super(cause);
+    }
+
+    public ReplicableException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
+// CHECKSTYLE:ON

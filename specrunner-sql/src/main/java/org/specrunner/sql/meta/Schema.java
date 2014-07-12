@@ -120,8 +120,16 @@ public class Schema implements IReplicable<Schema>, IMergeable<Schema> {
      * @param table
      *            A table.
      * @return The schema itself.
+     * @throws SchemaException
+     *             On repetition errors.
      */
-    public Schema add(Table table) {
+    public Schema add(Table table) throws SchemaException {
+        if (namesToTables.containsKey(table.getName())) {
+            throw new SchemaException("Table with name '" + table.getName() + "' already exist in schema (" + name + "," + alias + "), read before error: " + namesToTables.keySet());
+        }
+        if (aliasToTables.containsKey(table.getAlias())) {
+            throw new SchemaException("Table with alias '" + table.getAlias() + "' already exist in schema (" + name + "," + alias + "), read before error: " + aliasToTables.keySet());
+        }
         tables.add(table);
         aliasToTables.put(table.getAlias(), table);
         namesToTables.put(table.getName(), table);
@@ -190,16 +198,20 @@ public class Schema implements IReplicable<Schema>, IMergeable<Schema> {
     }
 
     @Override
-    public Schema copy() {
+    public Schema copy() throws ReplicableException {
         Schema copy = new Schema().setName(name).setAlias(alias);
         for (Table t : tables) {
-            copy.add(t.copy());
+            try {
+                copy.add(t.copy());
+            } catch (SchemaException e) {
+                throw new ReplicableException(e);
+            }
         }
         return copy;
     }
 
     @Override
-    public void merge(Schema other) {
+    public void merge(Schema other) throws MergeableException {
         if (other == null) {
             return;
         }
@@ -208,7 +220,13 @@ public class Schema implements IReplicable<Schema>, IMergeable<Schema> {
         for (Table t : other.getTables()) {
             Table old = getName(t.getName());
             if (old == null) {
-                add(t.copy());
+                try {
+                    add(t.copy());
+                } catch (SchemaException e) {
+                    throw new MergeableException(e);
+                } catch (ReplicableException e) {
+                    throw new MergeableException(e);
+                }
             } else {
                 old.merge(t);
             }
