@@ -124,16 +124,27 @@
 }
 
 /* SCENARIO */
+.scenarioTime {
+    padding: 2px;
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+    font-weight: bold;
+}
+
 .scenarioSuccess {
     background-color: #EEFFFF;
+    border: 1px solid #A2D9EF;
 }
 
 .scenarioFailure {
     background-color: #FFEEFF; 
+    border: 1px solid #A2D9EF;
 }
 
 .scenarioPending {
     background-color: #FFFFEE; 
+    border: 1px dashed #A2D9EF;
 }
 
 /* STACK TRACE */

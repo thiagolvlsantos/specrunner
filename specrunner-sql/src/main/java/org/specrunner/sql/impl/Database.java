@@ -440,7 +440,7 @@ public class Database implements IDatabase {
      */
     protected String getAdjustValue(IContext context, INodeHolder nh) throws PluginException {
         String previous = nh.getValue();
-        String value = UtilEvaluator.replace(nh.hasAttribute(INodeHolder.ATTRIBUTE_VALUE) ? nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE) : previous, context, true);
+        String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
         // if text has changed... adjust on screen.
         if (previous != null && !previous.equals(value)) {
             // nh.append(" {" + value + "}");

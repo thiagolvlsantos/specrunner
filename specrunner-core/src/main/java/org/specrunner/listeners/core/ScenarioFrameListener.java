@@ -21,6 +21,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IScenarioListener;
@@ -39,6 +40,11 @@ import org.specrunner.util.xom.UtilNode;
  * 
  */
 public class ScenarioFrameListener implements INodeListener {
+
+    /**
+     * Feature to show time for scenarios.
+     */
+    public static final String FEATURE_SHOW_TIME = ScenarioFrameListener.class.getName() + ".showTime";
 
     /**
      * Expected style for scenarios.
@@ -195,7 +201,8 @@ public class ScenarioFrameListener implements INodeListener {
             }
             fireAfter(name, node, context, result);
 
-            if (UtilLog.LOG.isDebugEnabled()) {
+            Boolean show = (Boolean) SRServices.getFeatureManager().get(FEATURE_SHOW_TIME, Boolean.TRUE);
+            if (show) {
                 Element span = new Element("span");
                 span.addAttribute(new Attribute("class", "scenarioTime"));
                 span.appendChild("TIME:" + (System.currentTimeMillis() - startTime) + " ms");
