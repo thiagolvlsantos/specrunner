@@ -304,7 +304,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             Document doc = source.getDocument();
             Nodes ns = doc.query("//table");
             if (ns.size() == 0) {
-                throw new PluginException("The mapping file must have a table element with the field information.");
+                throw new PluginException("The mapping file must have a table element with fields information.");
             }
             Element n = (Element) ns.get(0);
             TableAdapter ta = UtilNode.newTableAdapter(n);
