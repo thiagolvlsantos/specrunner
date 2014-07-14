@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner-userguide</artifactId>
-        <version>1.3.38</version>
+        <version>1.3.39</version>
         <relativePath>../specrunner-userguide</relativePath>
     </parent>
     <artifactId>specrunner-userguide-jetty</artifactId>
