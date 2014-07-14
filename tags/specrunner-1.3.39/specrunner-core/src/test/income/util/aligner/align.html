@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Testing alignment comparators</title>
+</head>
+<body>
+
+	<h1>Alignment testing</h1>
+<p>
+	Considering alignment is to apply an aligner to two strings
+	<span class="macro" name="align" global="true">
+	<table>
+		<tr class="local" name="result" value="alignerFactory.align(x,y)">
+			<td>'<span scope="table" class="local" name="x">#{X}</span>'</td>
+			<td>'<span scope="table" class="local" name="y">#{Y}</span>'</td>
+		</tr>
+		<tr>
+			<td class="eq">'<span class="left">#{X normalized}</span>'=<span class="right">${result.getExpectedAligned()}</span></td>		
+			<td class="eq">'<span class="left">#{Y normalized}</span>'=<span class="right">${result.getReceivedAligned()}</span></td>		
+		</tr>
+	</table></span>, perform alignments to the following table:
+</p>
+	<table class="map" name="examples" border=1>
+		<tr>
+			<th>X</th>
+			<th>Y</th>
+			<th>X normalized</th>
+			<th>Y normalized</th>
+		</tr>
+		<tr>
+			<td>alfa</td>
+			<td>afa</td>
+			<td>alfa</td>
+			<td>a-fa</td>
+		</tr>
+		<tr>
+			<td>lfa</td>
+			<td>afa</td>
+			<td>lfa</td>
+			<td>afa</td>
+		</tr>
+		<tr>
+			<td>123456Q</td>
+			<td>135Q</td>
+			<td>123456Q</td>
+			<td>1-3-5-Q</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>abc</td>
+			<td>---</td>
+			<td>abc</td>
+		</tr>
+		<tr>
+			<td>def</td>
+			<td>---</td>
+			<td>def</td>
+			<td>---</td>
+		</tr>
+	</table>
+	
+	<span class="iterator" name="examples">
+		<span class="call" name="align"></span></p>
+	</span>
+</body>
+</html>
