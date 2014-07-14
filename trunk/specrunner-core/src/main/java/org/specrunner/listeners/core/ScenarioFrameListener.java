@@ -205,7 +205,7 @@ public class ScenarioFrameListener implements INodeListener {
             if (show) {
                 Element span = new Element("span");
                 span.addAttribute(new Attribute("class", "scenarioTime"));
-                span.appendChild("TIME:" + (System.currentTimeMillis() - startTime) + " ms");
+                span.appendChild((System.currentTimeMillis() - startTime) + " ms");
                 UtilNode.newNodeHolder(title).prepend(span);
             }
         }
