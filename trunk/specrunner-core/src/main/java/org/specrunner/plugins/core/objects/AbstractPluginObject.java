@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
@@ -50,6 +51,7 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
@@ -468,7 +470,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     f.setDef(def);
                 }
 
-                String converter = cell.getAttribute("converter", null);
+                String converter = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER, null);
                 String[] converters = converter != null ? converter.split(",") : new String[0];
                 if (f.getConverters() == null || converters.length > 0) {
                     f.setConverters(converters);
@@ -476,15 +478,15 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
                 int i = 0;
                 List<Object> args = new LinkedList<Object>();
-                while (cell.hasAttribute("arg" + i)) {
-                    args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context, true));
+                while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_PREFIX + i)) {
+                    args.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_PREFIX + i), context, true));
                     i++;
                 }
                 if (f.getArgs() == null || !args.isEmpty()) {
                     f.setArgs(args.toArray(new String[args.size()]));
                 }
 
-                String comparator = cell.getAttribute("comparator", null);
+                String comparator = cell.getAttribute(INodeHolder.ATTRIBUTE_COMPARATOR, null);
                 if (comparator != null) {
                     f.setComparator(comparator);
                 }
@@ -816,7 +818,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (obj != null && isMapped()) {
                 result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
                 for (CellAdapter cell : row.getCells()) {
-                    String title = cell.hasAttribute("title") ? cell.getAttribute("title") : "|";
+                    String title = cell.getAttribute("title", "|");
                     String old = title.substring(0, title.lastIndexOf('|'));
                     if (old.isEmpty()) {
                         cell.removeAttribute("title");
@@ -906,8 +908,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 Class<?> t = f.getTypes()[f.getTypes().length - 1];
                 if (!t.isInstance(value)) {
                     String[] convs = f.converters;
-                    if (cell.hasAttribute("converter")) {
-                        convs = cell.getAttribute("converter").split(",");
+                    if (cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
+                        convs = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER).split(",");
                     }
                     for (int j = 0; j < convs.length; j++) {
                         IConverter con = SRServices.getConverterManager().get(convs[j]);
@@ -927,6 +929,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 String out = String.valueOf(value);
                 if (text != null && !text.equals(out)) {
                     cell.append("{" + out + "}");
+                }
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    Element ele = new Element("span");
+                    ele.addAttribute(new Attribute("class", "object"));
+                    ele.appendChild("(" + (value != null ? value.getClass().getName() : "null") + ")");
+                    cell.append(ele);
                 }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
