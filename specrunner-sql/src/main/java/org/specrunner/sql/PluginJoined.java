@@ -79,7 +79,7 @@ public class PluginJoined extends AbstractPlugin {
         tr.appendChild(td);
         UtilNode.appendCss(included, "included");
         for (CellAdapter c : table.getCols()) {
-            int span = Integer.parseInt(c.getAttribute(ATTR_SPAN, "1"));
+            int span = c.hasAttribute(ATTR_SPAN) ? Integer.parseInt(c.getAttribute(ATTR_SPAN)) : 1;
             if (colIndex == 0) {
                 if (span < 2) {
                     throw new PluginException("First col must specify the number of fixed columns, which should be greater than 1, one column for Action type and the others like ID should be repeated.");

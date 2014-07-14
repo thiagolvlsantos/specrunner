@@ -1,17 +1,3 @@
-1.3.39
-OK - Colocar a verificação de que há duplicação de nomes/alias de tabelas e de nomes/alias e colunas;
-	R: restrição adicionada
-OK - Criar uma alias para poder usar por exemplo uma tabela 'Customers' mas na referência usar 'Customer'. :)
-	R: para usar outro nome na coluna é só colocar o atributo 'table=<nome da tabela>'.
-OK - Ajustar o tratamento de objects no mapeamento usando 'mapping';
-	R: redefinição de campos corrigida vide exemplo TestRedefinition.java
-OK - Layout de scenarios modificado;
-	R: usando padrão Concordion Plus.
-
-1.3.38
-OK - Ajustes de ações de press/release key, criação de esc, tab e blur.
-OK - Adicionado listener de tempo para os cenários.
-
 1.3.37
 OK - Criar um mecanismo automático para o waitfor ser injetado automaticamente antes de qualquer ação/comando a ser realizado em tela;
 	R: Default é sempre esperar agora quando o driver não é HtmlUnit

@@ -32,8 +32,6 @@ public interface IMergeable<T extends IReplicable<T>> {
      * 
      * @param other
      *            The object to be merged.
-     * @throws MergeableException
-     *             On merge error.
      */
-    void merge(T other) throws MergeableException;
+    void merge(T other);
 }

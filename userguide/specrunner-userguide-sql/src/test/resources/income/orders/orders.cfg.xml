@@ -2,15 +2,15 @@
 <schema name="ORD" alias="Orders">
   <!-- According to schema in 'orders.sql'  -->
 
-  <table name="customers" alias="customers">
+  <table name="customers" alias="customer">
     <column name="id" alias="ID" key="true" converter="long" />
     <!-- Neither names and alias are not case-sensitive -->
     <column name="name" alias="name" reference="true"/>
   </table>
 
-  <table name="orders" alias="Orders">
+  <table name="orders" alias="Order">
     <column name="id" alias="ID" key="true" converter="long" />
-    <column name="customer_id" alias="Customer" table="Customers" reference="true" virtual="true"/>
+    <column name="customer_id" alias="Customer" reference="true" virtual="true"/>
     <!-- nor converter and comparator names. -->
     <column name="date" alias="Date" date="true" converter="dAte" arg0="MM/dd/yyyy" comparator="date" reference="true"/>
   </table>
@@ -18,8 +18,7 @@
   <!-- extra spaces in names are ignored in final mapping -->
   <table name="line_items" alias="Items    list">
     <column name="line_number" alias="Number" key="true" converter="long" />
-    <column name="order_id" alias="Order" table="Orders" key="true" virtual="true"/>
-    <column name="order_id2" alias="Order 2" table="Orders" virtual="true"/>
+    <column name="order_id" alias="Order" key="true" virtual="true"/>
     <column name="product_id" alias="Product" virtual="true"/>
     <column name="quantity" alias="Quantity" converter="int"/>
   </table>

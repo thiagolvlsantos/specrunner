@@ -55,7 +55,6 @@ import org.specrunner.sql.ISequenceProvider;
 import org.specrunner.sql.ISqlDumper;
 import org.specrunner.sql.SqlWrapper;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.ReplicableException;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.UtilNames;
@@ -262,11 +261,7 @@ public class Database implements IDatabase {
             throw new PluginException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), avaliable tables alias: " + schema.getAliasToTables().keySet());
         }
         // creates a copy only of defined tables
-        try {
-            table = table.copy();
-        } catch (ReplicableException e) {
-            throw new PluginException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
-        }
+        table = table.copy();
         List<RowAdapter> rows = tableAdapter.getRows();
         // headers are in the first row.
         RowAdapter header = rows.get(0);
@@ -440,7 +435,7 @@ public class Database implements IDatabase {
      */
     protected String getAdjustValue(IContext context, INodeHolder nh) throws PluginException {
         String previous = nh.getValue();
-        String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
+        String value = UtilEvaluator.replace(nh.hasAttribute(INodeHolder.ATTRIBUTE_VALUE) ? nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE) : previous, context, true);
         // if text has changed... adjust on screen.
         if (previous != null && !previous.equals(value)) {
             // nh.append(" {" + value + "}");
@@ -475,7 +470,7 @@ public class Database implements IDatabase {
         addMissingValues(table, filled, values);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("insert into " + table.getParent().getName() + "." + table.getName() + " (");
+        sb.append("insert into " + table.getSchema().getName() + "." + table.getName() + " (");
         StringBuilder sbColumns = new StringBuilder();
         StringBuilder sbValues = new StringBuilder();
         int i = 1;
@@ -563,7 +558,7 @@ public class Database implements IDatabase {
         Map<String, Integer> indexes = new HashMap<String, Integer>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("update " + table.getParent().getName() + "." + table.getName() + " set ");
+        sb.append("update " + table.getSchema().getName() + "." + table.getName() + " set ");
 
         boolean hasKeys = false;
         boolean hasReferences = false;
@@ -673,7 +668,7 @@ public class Database implements IDatabase {
         Map<String, Integer> indexes = new HashMap<String, Integer>();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("delete from " + table.getParent().getName() + "." + table.getName() + " where ");
+        sb.append("delete from " + table.getSchema().getName() + "." + table.getName() + " where ");
 
         boolean hasKeys = false;
         boolean hasReferences = false;
@@ -778,24 +773,20 @@ public class Database implements IDatabase {
             Integer index = indexes.get(column.getName());
             if (index != null) {
                 Object obj = v.getValue();
-                String alias = column.getTableOrAlias();
+                String alias = column.getAlias();
                 if (column.isVirtual()) {
                     // the target table is the column header
                     String pointer = column.getPointer();
                     if (pointer != null) {
                         alias = null;
                         for (Value vp : values) {
-                            if (pointer.equals(vp.getColumn().getAlias())) {
-                                alias = UtilNames.normalize(vp.getCell().getValue());
+                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
+                                alias = String.valueOf(vp.getCell().getValue());
                                 break;
                             }
                         }
                         if (alias == null) {
-                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-                        } else {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                            }
+                            throw new PluginException("The column " + column.getAlias() + " point to a non-existing column of this table named '" + pointer + "'. Adjust attribute 'pointer' into database mapping file.");
                         }
                     }
                     obj = idManager.lookup(alias, obj);
@@ -944,7 +935,7 @@ public class Database implements IDatabase {
         StringBuilder sb = new StringBuilder();
         sb.append("select ");
         sb.append(sbVal);
-        sb.append(" from " + table.getParent().getName() + "." + table.getName());
+        sb.append(" from " + table.getSchema().getName() + "." + table.getName());
         sb.append(" where ");
         sb.append(sbPla);
         performOut(context, result, con, sb.toString(), indexes, values, expectedCount);
@@ -998,17 +989,13 @@ public class Database implements IDatabase {
                         virtual = column.copy();
                         String alias = null;
                         for (Value vp : values) {
-                            if (pointer.equals(vp.getColumn().getAlias())) {
+                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
                                 alias = String.valueOf(vp.getCell().getValue());
                                 break;
                             }
                         }
                         if (alias == null) {
-                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
-                        } else {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                            }
+                            throw new PluginException("The column " + column.getAlias() + " point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
                         }
                         virtual.setAlias(alias);
                     }
@@ -1069,11 +1056,7 @@ public class Database implements IDatabase {
                                     }
                                 }
                                 if (alias == null) {
-                                    throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-                                } else {
-                                    if (UtilLog.LOG.isDebugEnabled()) {
-                                        UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                                    }
+                                    throw new PluginException("The column " + column.getAlias() + " point to a non-existing column of this table named '" + pointer + "'. Adjust attribute 'pointer' into database mapping file.");
                                 }
                                 virtual.setAlias(alias);
                             }

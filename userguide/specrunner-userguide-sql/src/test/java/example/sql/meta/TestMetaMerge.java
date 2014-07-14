@@ -9,7 +9,7 @@ import org.specrunner.sql.meta.Table;
 public class TestMetaMerge {
 
     @Test
-    public void schemaMerge() throws Exception {
+    public void schemaMerge() {
         Schema old = new Schema().setName("PRO").setAlias("Projects");
         Schema next = new Schema().setName("PRR").setAlias("Projects set");
         old.merge(next);
@@ -18,7 +18,7 @@ public class TestMetaMerge {
     }
 
     @Test
-    public void schemaMergeTable() throws Exception {
+    public void schemaMergeTable() {
         Schema old = new Schema().setName("PRO").setAlias("Projects");
         Table t1 = new Table().setName("TAS").setAlias("Tasks");
         old.add(t1);
@@ -34,7 +34,7 @@ public class TestMetaMerge {
     }
 
     @Test
-    public void schemaMergeTableColumns() throws Exception {
+    public void schemaMergeTableColumns() {
         Schema old = new Schema().setName("PRO").setAlias("Projects");
         Table t1 = new Table().setName("TAS").setAlias("Tasks");
         old.add(t1);

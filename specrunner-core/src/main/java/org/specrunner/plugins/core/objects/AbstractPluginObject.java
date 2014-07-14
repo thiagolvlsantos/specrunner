@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Nodes;
@@ -51,7 +50,6 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilString;
 import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
@@ -100,13 +98,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      */
     protected String mapping;
     /**
-     * List of header definition fields.
+     * List of generic definition fields.
      */
-    protected Map<String, Field> headerToFields = new HashMap<String, Field>();
-    /**
-     * List of field definition fields.
-     */
-    protected Map<String, Field> fieldToFields = new HashMap<String, Field>();
+    protected Map<String, Field> generic = new HashMap<String, Field>();
     /**
      * List of fields.
      */
@@ -306,7 +300,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             Document doc = source.getDocument();
             Nodes ns = doc.query("//table");
             if (ns.size() == 0) {
-                throw new PluginException("The mapping file must have a table element with fields information.");
+                throw new PluginException("The mapping file must have a table element with the field information.");
             }
             Element n = (Element) ns.get(0);
             TableAdapter ta = UtilNode.newTableAdapter(n);
@@ -328,8 +322,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             List<Field> general = new LinkedList<Field>();
             loadFields(context, information, general);
             for (Field field : general) {
-                headerToFields.put(field.getFieldName(), field);
-                fieldToFields.put(field.getFullName(), field);
+                generic.put(field.getFieldName(), field);
             }
         } catch (SourceException e) {
             if (UtilLog.LOG.isInfoEnabled()) {
@@ -409,19 +402,23 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
-            boolean ignore = Boolean.parseBoolean(cell.getAttribute("ignore", "false"));
+            boolean ignore = false;
+            if (cell.hasAttribute("ignore")) {
+                ignore = Boolean.parseBoolean(cell.getAttribute("ignore"));
+            }
 
-            String fieldName = UtilString.camelCase(cell.getValue());
-            String name = cell.getAttribute("field", fieldName);
-            Field f = headerToFields.get(fieldName);
+            String fieldName = cell.getValue().trim();
+            String name;
+            if (cell.hasAttribute("field")) {
+                name = cell.getAttribute("field");
+            } else {
+                name = UtilString.camelCase(fieldName);
+            }
+
+            Field f = generic.get(fieldName);
             if (f == null) {
-                f = fieldToFields.get(name);
-                if (f == null) {
-                    f = new Field();
-                    f.setFieldName(fieldName);
-                } else {
-                    name = f.getFullName();
-                }
+                f = new Field();
+                f.setFieldName(fieldName);
             } else {
                 name = f.getFullName();
             }
@@ -465,12 +462,15 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     f.setTypes(types);
                 }
 
-                String def = cell.getAttribute("default", null);
+                String def = null;
+                if (cell.hasAttribute("default")) {
+                    def = cell.getAttribute("default");
+                }
                 if (def != null) {
                     f.setDef(def);
                 }
 
-                String converter = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER, null);
+                String converter = cell.hasAttribute("converter") ? cell.getAttribute("converter") : null;
                 String[] converters = converter != null ? converter.split(",") : new String[0];
                 if (f.getConverters() == null || converters.length > 0) {
                     f.setConverters(converters);
@@ -478,15 +478,15 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
                 int i = 0;
                 List<Object> args = new LinkedList<Object>();
-                while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_PREFIX + i)) {
-                    args.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_PREFIX + i), context, true));
+                while (cell.hasAttribute("arg" + i)) {
+                    args.add(UtilEvaluator.evaluate(cell.getAttribute("arg" + i), context, true));
                     i++;
                 }
                 if (f.getArgs() == null || !args.isEmpty()) {
                     f.setArgs(args.toArray(new String[args.size()]));
                 }
 
-                String comparator = cell.getAttribute(INodeHolder.ATTRIBUTE_COMPARATOR, null);
+                String comparator = cell.hasAttribute("comparator") ? cell.getAttribute("comparator") : null;
                 if (comparator != null) {
                     f.setComparator(comparator);
                 }
@@ -818,7 +818,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (obj != null && isMapped()) {
                 result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), new PluginException("Key '" + keyBefore + "' already used by :" + obj));
                 for (CellAdapter cell : row.getCells()) {
-                    String title = cell.getAttribute("title", "|");
+                    String title = cell.hasAttribute("title") ? cell.getAttribute("title") : "|";
                     String old = title.substring(0, title.lastIndexOf('|'));
                     if (old.isEmpty()) {
                         cell.removeAttribute("title");
@@ -908,8 +908,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 Class<?> t = f.getTypes()[f.getTypes().length - 1];
                 if (!t.isInstance(value)) {
                     String[] convs = f.converters;
-                    if (cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
-                        convs = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER).split(",");
+                    if (cell.hasAttribute("converter")) {
+                        convs = cell.getAttribute("converter").split(",");
                     }
                     for (int j = 0; j < convs.length; j++) {
                         IConverter con = SRServices.getConverterManager().get(convs[j]);
@@ -924,18 +924,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     UtilLog.LOG.debug("VALUE>" + value);
                 }
                 setValue(row, instance, f, value);
-                String title = cell.getAttribute("title", "");
+                String title = cell.hasAttribute("title") ? cell.getAttribute("title") : "";
                 cell.setAttribute("title", title + "|toString()=" + PropertyUtils.getProperty(instance, f.getFullName()));
-                String out = String.valueOf(value);
-                if (text != null && !text.equals(out)) {
-                    cell.append("{" + out + "}");
-                }
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    Element ele = new Element("span");
-                    ele.addAttribute(new Attribute("class", "object"));
-                    ele.appendChild("(" + (value != null ? value.getClass().getName() : "null") + ")");
-                    cell.append(ele);
-                }
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);

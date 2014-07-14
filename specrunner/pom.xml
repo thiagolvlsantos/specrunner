@@ -8,7 +8,7 @@
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner</artifactId>
     <packaging>pom</packaging>
-    <version>1.3.39</version>
+    <version>1.3.38</version>
     <name>SpecRunner (multi-module).</name>
     <url>http://code.google.com/p/specrunner</url>
     <description>Acceptance Test Driven Development tool</description>
@@ -60,7 +60,7 @@
         <!-- Web clients support -->
         <module>../specrunner-htmlunit</module>
         <module>../specrunner-webdriver</module>
-	</modules>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>

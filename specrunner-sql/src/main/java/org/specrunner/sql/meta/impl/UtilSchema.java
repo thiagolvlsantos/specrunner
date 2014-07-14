@@ -60,7 +60,6 @@ public final class UtilSchema {
     public static void setupColumn(IContext context, Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException {
         column.setName(holder.getAttribute(ISchemaLoaderXML.ATTR_NAME, column.getName()));
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
-        column.setTable(holder.getAttribute(ISchemaLoaderXML.ATTR_TABLE, column.getTable()));
         column.setKey(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_KEY, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setSequence(holder.getAttribute(ISchemaLoaderXML.ATT_SEQUENCE, column.getSequence()));
         column.setDate(column.isDate() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_DATE, ISchemaLoaderXML.DEFAULT_FALSE)));

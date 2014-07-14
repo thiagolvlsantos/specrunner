@@ -91,11 +91,11 @@ public class IdManager {
      * Clear mappings.
      */
     public void clear() {
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Cleanning map of virtual alias to IDs. Size before clean: " + (aliasToKeys.size()));
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Cleanning map of virtual alias to IDs. Size before clean: " + (aliasToKeys.size()));
         }
         aliasToKeys.clear();
-        if (UtilLog.LOG.isDebugEnabled()) {
+        if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Cleanning map of IDs to virtual alias. Size before clean: " + (keysToAlias.size()));
         }
         keysToAlias.clear();
@@ -163,9 +163,9 @@ public class IdManager {
      *            The value.
      */
     public void bind(String alias, Object generated, String key, Object value) {
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Add name -> id: " + alias + " -> " + generated);
-            UtilLog.LOG.debug("Add id -> name: " + key + " -> " + value);
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Add name -> id: " + alias + " -> " + generated);
+            UtilLog.LOG.info("Add id -> name: " + key + " -> " + value);
         }
         aliasToKeys.put(alias, generated);
         keysToAlias.put(key, value);
@@ -236,20 +236,19 @@ public class IdManager {
      *             On execution errors.
      */
     public Object findValue(Connection con, Column column, Object value, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
-        String tableOrAlias = column.getTableOrAlias();
-        String key = tableOrAlias + "." + value;
-        Object result = lookup(tableOrAlias, value);
+        String key = column.getAlias() + "." + value;
+        Object result = lookup(column.getAlias(), value);
         if (result == null) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Recover virtual key for (" + key + ")");
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Recover virtual key for (" + key + ")");
             }
-            Schema schema = column.getParent().getParent();
+            Schema schema = column.getTable().getSchema();
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Lookup in schema " + schema.getName());
             }
-            Table table = schema.getAlias(tableOrAlias);
+            Table table = schema.getAlias(column.getAlias());
             if (table == null) {
-                throw new PluginException("Virtual column '" + tableOrAlias + "' not found in schema " + schema.getName() + ". It must be a name in domain set of: " + schema.getAliasToTables());
+                throw new PluginException("Virtual column '" + column.getAlias() + "' not found in schema " + schema.getName() + ". It must be a name in domain set of: " + schema.getAliasToTables());
             }
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Lookup in table " + table.getName());
@@ -353,8 +352,8 @@ public class IdManager {
                 }
             }
         }
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Virtual key (" + key + ") replaced by '" + result + "'");
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Virtual key (" + key + ") replaced by '" + result + "'");
         }
         return result;
     }
@@ -380,8 +379,8 @@ public class IdManager {
         if (meta.supportsGetGeneratedKeys() && hasKey()) {
             // TODO: ou fazer apenas as exclusões mínimas ou
             // deixar limpar tudo como abaixo.
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("Mapping cleanup required on update.");
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Mapping cleanup required on update.");
             }
             clear();
 
@@ -398,7 +397,7 @@ public class IdManager {
                     sb.append((i++ == 0 ? "" : ",") + column.getName());
                 }
             }
-            sb.append(" from " + table.getParent().getName() + "." + table.getName());
+            sb.append(" from " + table.getSchema().getName() + "." + table.getName());
             sb.append(" where ");
             i = 0;
             for (Value v : values) {
@@ -430,7 +429,7 @@ public class IdManager {
                             if (column.isReference()) {
                                 Object tmp = rs.getObject(column.getName());
                                 if (key == null) {
-                                    key = column.getParent().getAlias() + "." + tmp;
+                                    key = column.getTable().getAlias() + "." + tmp;
                                 } else {
                                     key += VIRTUAL_SEPARATOR + tmp;
                                 }

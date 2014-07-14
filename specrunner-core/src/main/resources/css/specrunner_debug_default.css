@@ -183,8 +183,8 @@
     content: "map " attr(name) " " attr(scope);
 }
 
-/* Object */
-.object {
+/* Scenarios */
+.scenarioTime {
     padding: 2px;
     font-size: x-small;
     vertical-align: top;

@@ -35,8 +35,6 @@ public interface ISchemaLoader {
      * @param source
      *            The loader source of information.
      * @return The schema.
-     * @throws SchemaException
-     *             On loading errors.
      */
-    Schema load(IContext context, Object source) throws SchemaException;
+    Schema load(IContext context, Object source);
 }

@@ -35,7 +35,6 @@ import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.core.AbstractReusable;
 import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.Schema;
-import org.specrunner.sql.meta.SchemaException;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -164,8 +163,8 @@ public class PluginSchema extends AbstractPluginValue {
             if (provider != null) {
                 try {
                     providerInstance = provider.load(context, source);
-                } catch (SchemaException e) {
-                    throw new PluginException(e);
+                } catch (Exception e) {
+                    throw new PluginException("Invalid ISchemaLoader provider '" + providerInstance + "'.", e);
                 }
             }
 

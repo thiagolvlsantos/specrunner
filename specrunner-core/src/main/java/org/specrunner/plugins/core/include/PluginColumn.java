@@ -107,7 +107,7 @@ public class PluginColumn extends AbstractPluginTable {
                     Object received = null;
                     CellAdapter hd = header.getCells().get(j);
                     String content = "content";
-                    if (Boolean.parseBoolean(hd.getAttribute(content, "false")) || Boolean.parseBoolean(c.getAttribute(content, "false"))) {
+                    if ((hd.hasAttribute(content) && Boolean.parseBoolean(hd.getAttribute(content))) || (c.hasAttribute(content) && Boolean.parseBoolean(c.getAttribute(content)))) {
                         try {
                             received = access.get(instance, feature, value);
                         } catch (Exception e) {
@@ -251,7 +251,12 @@ public class PluginColumn extends AbstractPluginTable {
      */
     protected String feature(CellAdapter h) {
         String value = h.getValue();
-        String feature = UtilString.camelCase(h.getAttribute("feature", value));
+        String feature;
+        if (h.hasAttribute("feature")) {
+            feature = UtilString.camelCase(h.getAttribute("feature"));
+        } else {
+            feature = UtilString.camelCase(value);
+        }
         if (value != null && value.trim().endsWith("?")) {
             feature = feature + "?";
         }
