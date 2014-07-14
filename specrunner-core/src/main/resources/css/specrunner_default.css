@@ -319,6 +319,7 @@ table.included_file_args td {
     position: fixed; 
     top: 10px; 
     right: 20px;
+    border: 1px solid #A2D9EF;
 }
 
 .sr_frame_link_div .sr_resultset {
