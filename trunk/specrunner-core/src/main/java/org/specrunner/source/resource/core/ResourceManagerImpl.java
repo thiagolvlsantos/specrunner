@@ -72,7 +72,7 @@ public class ResourceManagerImpl extends LinkedList<IResource> implements IResou
     @Override
     public void addDefaultCss() throws ResourceException {
         addCss("css/specrunner.css", true, EType.BINARY, Position.HEAD_START);
-        if (UtilLog.LOG.isDebugEnabled()) {
+        if (UtilLog.LOG.isDebugEnabled() || (Boolean) SRServices.getFeatureManager().get(FEATURE_ADD_DEBUG_CSS, DEFAULT_ADD_DEBUG_CSS)) {
             addCss("css/specrunner_debug.css", true, EType.BINARY, Position.HEAD_START);
         }
     }

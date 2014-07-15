@@ -41,6 +41,17 @@ public interface IResourceManager extends List<IResource> {
     Boolean DEFAULT_ADD_RESOURCES = true;
 
     /**
+     * Add debug css (i.e. specrunner_debug.js and specrunner_debug.css) to
+     * final result.
+     */
+    String FEATURE_ADD_DEBUG_CSS = IResourceManager.class + ".addDebugCss";
+
+    /**
+     * Add debug css resource.
+     */
+    Boolean DEFAULT_ADD_DEBUG_CSS = false;
+
+    /**
      * The resource manager parent source.
      * 
      * @return The parent.
