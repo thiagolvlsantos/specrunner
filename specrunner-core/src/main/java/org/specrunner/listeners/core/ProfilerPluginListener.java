@@ -24,12 +24,14 @@ import java.util.Stack;
 import nu.xom.Attribute;
 import nu.xom.Element;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.IPluginListener;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
+import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
 
@@ -139,7 +141,8 @@ public class ProfilerPluginListener implements IPluginListener {
         }
         totalEnd += lastEnd;
         IBlock peek = context.peek();
-        if (UtilLog.LOG.isDebugEnabled() && peek.hasPlugin() && peek.getNode() instanceof Element) {
+        boolean showTime = UtilLog.LOG.isDebugEnabled() || (Boolean) SRServices.getFeatureManager().get(IResourceManager.FEATURE_ADD_DEBUG_CSS, IResourceManager.DEFAULT_ADD_DEBUG_CSS);
+        if (showTime && peek.hasPlugin() && peek.getNode() instanceof Element) {
             IPlugin p = peek.getPlugin();
             ActionType actionType = p.getActionType();
             String name = p.getClass().getSimpleName();
