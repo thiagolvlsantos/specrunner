@@ -52,6 +52,7 @@ import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.collections.ReverseIterable;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -94,7 +95,7 @@ public class RunnerImpl implements IRunner {
             throw new RunnerException(e);
         } finally {
             // perform after listeners
-            for (ISourceListener sl : listeners) {
+            for (ISourceListener sl : new ReverseIterable<ISourceListener>(listeners)) {
                 sl.onAfter(source, context, result);
             }
         }
@@ -139,7 +140,7 @@ public class RunnerImpl implements IRunner {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Node listener returned '" + doNode + "'.");
             }
-            for (INodeListener nl : nodeListeners) {
+            for (INodeListener nl : new ReverseIterable<INodeListener>(nodeListeners)) {
                 nl.onAfter(node, context, result);
             }
             return;
@@ -229,7 +230,7 @@ public class RunnerImpl implements IRunner {
             // remove block from context
             context.pop();
             // perform after listeners
-            for (INodeListener nl : nodeListeners) {
+            for (INodeListener nl : new ReverseIterable<INodeListener>(nodeListeners)) {
                 nl.onAfter(node, context, result);
             }
         }
@@ -288,7 +289,7 @@ public class RunnerImpl implements IRunner {
             plugin.initialize(context);
         } finally {
             // perform after initialization
-            for (IPluginListener sl : listeners) {
+            for (IPluginListener sl : new ReverseIterable<IPluginListener>(listeners)) {
                 sl.onAfterInit(plugin, context, result);
             }
         }
@@ -383,7 +384,7 @@ public class RunnerImpl implements IRunner {
             checkTimeout(context, result, plugin, time, "doStart()");
         } finally {
             // perform after start
-            for (IPluginListener sl : listeners) {
+            for (IPluginListener sl : new ReverseIterable<IPluginListener>(listeners)) {
                 sl.onAfterStart(plugin, context, result);
             }
         }
@@ -450,7 +451,7 @@ public class RunnerImpl implements IRunner {
             checkTimeout(context, result, plugin, time, "doEnd()");
         } finally {
             // perform after end
-            for (IPluginListener sl : listeners) {
+            for (IPluginListener sl : new ReverseIterable<IPluginListener>(listeners)) {
                 sl.onAfterEnd(plugin, context, result);
             }
         }
