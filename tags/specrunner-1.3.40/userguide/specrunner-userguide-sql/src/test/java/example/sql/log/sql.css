@@ -1,0 +1,23 @@
+table {
+	border: 1px solid gray;
+}
+
+td, th {
+	padding: 4px;
+}
+
+th {
+	background-color: #CCCCCC;
+}
+
+td, th {
+	border: 1px dotted gray;
+}
+
+.prepare:before {
+	content: "PREPARE " attr(datasource);
+}
+
+.verify:before {
+	content: "VERIFY " attr(datasource);
+}
