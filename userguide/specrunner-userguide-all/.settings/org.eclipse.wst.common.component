@@ -4,9 +4,6 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="specrunner-core-1.3.39.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core/specrunner-core">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="specrunner-core-excel-1.3.39.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core-excel/specrunner-core-excel">
             <dependency-type>uses</dependency-type>
         </dependent-module>
