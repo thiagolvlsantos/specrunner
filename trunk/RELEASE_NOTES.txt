@@ -1,4 +1,4 @@
-1.3.40 ON GOING
+1.3.40
 OK - Colocar uma opção para adicionar o estilo de debug mesmo sem rodar no modo debug, se o código gerar os tempos de qualquer forma do contrário não serve para nada;
 OK - A ordem de execução dos listeners nos eventos finais (onEnd) deve ser feita na ordem reversa da inicialização (onStart).
 OK - Ajustando headers para 2014.
