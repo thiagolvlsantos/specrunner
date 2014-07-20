@@ -17,7 +17,6 @@
  */
 package org.specrunner.sql;
 
-
 /**
  * Wrapper of SQL commands.
  * 
@@ -140,7 +139,7 @@ public class SqlWrapper {
     }
 
     /**
-     * Set delete.
+     * Get a new wrapper.
      * 
      * @param type
      *            A command type.
