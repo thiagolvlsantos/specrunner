@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.specrunner.comparators.IComparator;
@@ -36,13 +35,14 @@ import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.CommandType;
+import org.specrunner.sql.IRegister;
+import org.specrunner.sql.IStatementFactory;
 import org.specrunner.sql.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.cache.ICache;
 
 /**
  * Manage tables and columns key fields.
@@ -235,7 +235,7 @@ public class IdManager {
      * @throws PluginException
      *             On execution errors.
      */
-    public Object findValue(Connection con, Column column, Object value, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
+    public Object findValue(Connection con, Column column, Object value, IStatementFactory outputs) throws SQLException, PluginException {
         String tableOrAlias = column.getTableOrAlias();
         String key = tableOrAlias + "." + value;
         Object result = lookup(tableOrAlias, value);
@@ -278,10 +278,10 @@ public class IdManager {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Query for (" + value + "):" + sql);
             }
-            PreparedStatement inPstmt = outputs.get(sql);
+            PreparedStatement inPstmt = outputs.getOutput(sql);
             if (inPstmt == null) {
                 inPstmt = con.prepareStatement(sql);
-                outputs.put(sql, inPstmt);
+                outputs.putOutput(sql, inPstmt);
             } else {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("From cache:" + inPstmt);
@@ -366,7 +366,7 @@ public class IdManager {
      *            The connection.
      * @param table
      *            The table.
-     * @param values
+     * @param register
      *            The values.
      * @param outputs
      *            The output map.
@@ -375,7 +375,7 @@ public class IdManager {
      * @throws PluginException
      *             On errors.
      */
-    public void prepareUpdate(Connection con, Table table, Set<Value> values, ICache<String, PreparedStatement> outputs) throws SQLException, PluginException {
+    public void prepareUpdate(Connection con, Table table, IRegister register, IStatementFactory outputs) throws SQLException, PluginException {
         DatabaseMetaData meta = con.getMetaData();
         if (meta.supportsGetGeneratedKeys() && hasKey()) {
             // TODO: ou fazer apenas as exclusões mínimas ou
@@ -392,7 +392,7 @@ public class IdManager {
             StringBuilder sb = new StringBuilder();
             sb.append("select ");
             int i = 0;
-            for (Value v : values) {
+            for (Value v : register) {
                 Column column = v.getColumn();
                 if (column.isReference()) {
                     sb.append((i++ == 0 ? "" : ",") + column.getName());
@@ -401,7 +401,7 @@ public class IdManager {
             sb.append(" from " + table.getParent().getName() + "." + table.getName());
             sb.append(" where ");
             i = 0;
-            for (Value v : values) {
+            for (Value v : register) {
                 Column column = v.getColumn();
                 if (column.isKey()) {
                     Object find = column.isVirtual() ? findValue(con, column, v.getValue(), outputs) : v.getValue();
@@ -425,7 +425,7 @@ public class IdManager {
                     rs = stmt.executeQuery(sb.toString());
                     String key = null;
                     if (rs.next()) {
-                        for (Value v : values) {
+                        for (Value v : register) {
                             Column column = v.getColumn();
                             if (column.isReference()) {
                                 Object tmp = rs.getObject(column.getName());
@@ -471,12 +471,12 @@ public class IdManager {
      *            The wrapper.
      * @param table
      *            The table.
-     * @param values
+     * @param register
      *            The values.
      * @throws SQLException
      *             On reading errors.
      */
-    public void readKeys(Connection con, PreparedStatement pstmt, SqlWrapper wrapper, Table table, Set<Value> values) throws SQLException {
+    public void readKeys(Connection con, PreparedStatement pstmt, SqlWrapper wrapper, Table table, IRegister register) throws SQLException {
         DatabaseMetaData meta = con.getMetaData();
         if (meta.supportsGetGeneratedKeys() && hasKey()) {
             ResultSet rs = null;
@@ -492,7 +492,7 @@ public class IdManager {
                 }
                 if (!generated) {
                     // if it came from a sequence
-                    for (Value v : values) {
+                    for (Value v : register) {
                         if (v.getColumn().isSequence()) {
                             bindLocal(v.getValue());
                             break;

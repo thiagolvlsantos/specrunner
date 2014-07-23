@@ -13,7 +13,7 @@ import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.impl.Database;
-import org.specrunner.sql.impl.NullEmptyHandlerImpl;
+import org.specrunner.sql.impl.NullEmptyHandlerDefault;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 import example.sql.DataSourceProviderImpl;
@@ -33,7 +33,7 @@ public class TestNull {
         cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new Database() });
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 5000L);
-        cfg.add(IDatabase.FEATURE_NULL_EMPTY_HANDLER, new NullEmptyHandlerImpl() {
+        cfg.add(IDatabase.FEATURE_NULL_EMPTY_HANDLER, new NullEmptyHandlerDefault() {
             @Override
             public boolean isNull(String value, EMode mode) {
                 boolean tmp = super.isNull(value, mode);

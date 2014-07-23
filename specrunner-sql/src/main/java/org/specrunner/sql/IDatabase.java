@@ -18,6 +18,7 @@
 package org.specrunner.sql;
 
 import java.sql.Connection;
+import java.util.List;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
@@ -45,14 +46,24 @@ public interface IDatabase extends IResetable {
     String FEATURE_SEQUENCE_PROVIDER = IDatabase.class.getName() + ".sequenceProvider";
 
     /**
-     * Feature for database sql dumper.
-     */
-    String FEATURE_SQL_DUMPER = IDatabase.class.getName() + ".sqlDumper";
-
-    /**
      * Feature for database column reader.
      */
     String FEATURE_COLUMN_READER = IDatabase.class.getName() + ".columnReader";
+
+    /**
+     * Feature for SQL wrapper factories.
+     */
+    String FEATURE_SQL_WRAPPER_FACTORY = IDatabase.class.getName() + ".sqlWrapperFactory";
+
+    /**
+     * Feature for SQL statement factories.
+     */
+    String FEATURE_STATEMENT_FACTORY = IDatabase.class.getName() + ".statementFactory";
+
+    /**
+     * Feature for database listeners.
+     */
+    String FEATURE_LISTENERS = IDatabase.class.getName() + ".listeners";
 
     /**
      * Set the null/empty handler implementation.
@@ -71,14 +82,6 @@ public interface IDatabase extends IResetable {
     void setSequenceProvider(ISequenceProvider sequenceProvider);
 
     /**
-     * Set the database SQL dumper.
-     * 
-     * @param sqlDumper
-     *            A dumper.
-     */
-    void setSqlDumper(ISqlDumper sqlDumper);
-
-    /**
      * Set a column reader.
      * 
      * @param columnReader
@@ -87,15 +90,39 @@ public interface IDatabase extends IResetable {
     void setColumnReader(IColumnReader columnReader);
 
     /**
+     * Set SQL wrapper.
+     * 
+     * @param sqlWrapperFactory
+     *            A factory.
+     */
+    void setSqlWrapperFactory(ISqlWrapperFactory sqlWrapperFactory);
+
+    /**
+     * Set statement factory.
+     * 
+     * @param statementFactory
+     *            A factory.
+     */
+    void setStatementFactory(IStatementFactory statementFactory);
+
+    /**
+     * Set database listeners.
+     * 
+     * @param listeners
+     *            A list of listeners.
+     */
+    void setListeners(List<IDatabaseListener> listeners);
+
+    /**
      * Perform some actions in a database.
      * 
      * @param context
      *            The test context.
      * @param result
      *            The result set.
-     * @param table
+     * @param adapter
      *            The specification table.
-     * @param con
+     * @param connection
      *            The connection.
      * @param schema
      *            The database meta model.
@@ -104,7 +131,7 @@ public interface IDatabase extends IResetable {
      * @throws PluginException
      *             On perform errors.
      */
-    void perform(IContext context, IResultSet result, TableAdapter table, Connection con, Schema schema, EMode mode) throws PluginException;
+    void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws PluginException;
 
     /**
      * Release database resources.

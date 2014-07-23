@@ -28,7 +28,7 @@ import org.specrunner.sql.INullEmptyHandler;
  * @author Thiago Santos
  * 
  */
-public class NullEmptyHandlerImpl implements INullEmptyHandler {
+public class NullEmptyHandlerDefault implements INullEmptyHandler {
 
     /**
      * Default empty String markup.

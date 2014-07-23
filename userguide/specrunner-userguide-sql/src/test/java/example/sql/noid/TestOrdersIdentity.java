@@ -1,9 +1,11 @@
 package example.sql.noid;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginSchema;
-import org.specrunner.sql.impl.SqlDumperPrint;
+import org.specrunner.sql.impl.DatabasePrintListener;
 
 public class TestOrdersIdentity extends AbstractTestOrders {
 
@@ -11,7 +13,9 @@ public class TestOrdersIdentity extends AbstractTestOrders {
         super();
         cfg.add(PluginSchema.FEATURE_SOURCE, "/income/orders/orders.cfg.xml");
         cfg.add(PluginSchema.FEATURE_REUSE, true);
-        cfg.add(IDatabase.FEATURE_SQL_DUMPER, new SqlDumperPrint());
+        // cfg.add(IDatabase.FEATURE_LISTENERS, Arrays.asList(new
+        // DatabaseCountListener()));
+        cfg.add(IDatabase.FEATURE_LISTENERS, Arrays.asList(new DatabasePrintListener()));
     }
 
     @Override

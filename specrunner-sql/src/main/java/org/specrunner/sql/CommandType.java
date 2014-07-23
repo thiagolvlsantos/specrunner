@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql;
 
+
 /**
  * Abstraction for database command types.
  * 
@@ -28,15 +29,15 @@ public enum CommandType {
     /**
      * Stand for insert operations.
      */
-    INSERT("I"),
+    INSERT("I", "Inserts"),
     /**
      * Stand for update operations.
      */
-    UPDATE("U"),
+    UPDATE("U", "Updates"),
     /**
      * Stand for delete operations.
      */
-    DELETE("D");
+    DELETE("D", "Deletes");
 
     /**
      * The operation key.
@@ -44,13 +45,21 @@ public enum CommandType {
     private String key;
 
     /**
+     * A description.
+     */
+    private String description;
+
+    /**
      * Default constructor.
      * 
      * @param key
      *            Element key.
+     * @param description
+     *            A short description of command type.
      */
-    private CommandType(String key) {
+    private CommandType(String key, String description) {
         this.key = key;
+        this.description = description;
     }
 
     /**
@@ -67,5 +76,10 @@ public enum CommandType {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("'%s' for %s", key, description);
     }
 }

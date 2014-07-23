@@ -17,6 +17,8 @@
  */
 package org.specrunner.sql;
 
+import java.util.Map;
+
 /**
  * Wrapper of SQL commands.
  * 
@@ -32,6 +34,12 @@ public class SqlWrapper {
      * SQL command.
      */
     private String sql;
+
+    /**
+     * A mapping from column names to their corresponding index in wrapped SQL.
+     */
+    private Map<String, Integer> namesToIndexes;
+
     /**
      * Expected count of command.
      */
@@ -91,6 +99,15 @@ public class SqlWrapper {
     }
 
     /**
+     * A column name to index in SQL mapping.
+     * 
+     * @return The mapping.
+     */
+    public Map<String, Integer> getNamesToIndexes() {
+        return namesToIndexes;
+    }
+
+    /**
      * get the expected count.
      * 
      * @return The count.
@@ -104,12 +121,14 @@ public class SqlWrapper {
      * 
      * @param sql
      *            The command.
+     * @param namesToIndexes
+     *            A mapping from column name to placeholder index.
      * @param expectedCount
      *            The expected count result.
      * @return The wrapper.
      */
-    public static SqlWrapper insert(String sql, int expectedCount) {
-        return prepare(INSERT.get(), sql, expectedCount);
+    public static SqlWrapper insert(String sql, Map<String, Integer> namesToIndexes, int expectedCount) {
+        return prepare(INSERT.get(), sql, namesToIndexes, expectedCount);
     }
 
     /**
@@ -117,12 +136,14 @@ public class SqlWrapper {
      * 
      * @param sql
      *            The command.
+     * @param namesToIndexes
+     *            A mapping from column name to placeholder index.
      * @param expectedCount
      *            The expected result count.
      * @return The wrapper.
      */
-    public static SqlWrapper update(String sql, int expectedCount) {
-        return prepare(UPDATE.get(), sql, expectedCount);
+    public static SqlWrapper update(String sql, Map<String, Integer> namesToIndexes, int expectedCount) {
+        return prepare(UPDATE.get(), sql, namesToIndexes, expectedCount);
     }
 
     /**
@@ -130,12 +151,14 @@ public class SqlWrapper {
      * 
      * @param sql
      *            The command.
+     * @param namesToIndexes
+     *            A mapping from column name to placeholder index.
      * @param expectedCount
      *            The expected result count.
      * @return The wrapper.
      */
-    public static SqlWrapper delete(String sql, int expectedCount) {
-        return prepare(DELETE.get(), sql, expectedCount);
+    public static SqlWrapper delete(String sql, Map<String, Integer> namesToIndexes, int expectedCount) {
+        return prepare(DELETE.get(), sql, namesToIndexes, expectedCount);
     }
 
     /**
@@ -145,12 +168,14 @@ public class SqlWrapper {
      *            A command type.
      * @param sql
      *            The command.
+     * @param namesToIndexes
+     *            A mapping from column name to placeholder index.
      * @param expectedCount
      *            The expected result count.
      * @return The wrapper.
      */
-    public static SqlWrapper newWrapper(CommandType type, String sql, int expectedCount) {
-        return prepare(new SqlWrapper(type), sql, expectedCount);
+    public static SqlWrapper newWrapper(CommandType type, String sql, Map<String, Integer> namesToIndexes, int expectedCount) {
+        return prepare(new SqlWrapper(type), sql, namesToIndexes, expectedCount);
     }
 
     /**
@@ -160,12 +185,15 @@ public class SqlWrapper {
      *            The instance.
      * @param sql
      *            The command.
+     * @param namesToIndexes
+     *            A mapping from column name to placeholder index.
      * @param expectedCount
      *            The expected result count.
      * @return The wrapper.
      */
-    protected static SqlWrapper prepare(SqlWrapper type, String sql, int expectedCount) {
+    protected static SqlWrapper prepare(SqlWrapper type, String sql, Map<String, Integer> namesToIndexes, int expectedCount) {
         type.sql = sql;
+        type.namesToIndexes = namesToIndexes;
         type.expectedCount = expectedCount;
         return type;
     }

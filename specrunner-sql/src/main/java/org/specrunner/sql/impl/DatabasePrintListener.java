@@ -26,27 +26,65 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.sql.ISqlDumper;
+import org.specrunner.sql.DatabaseRegisterEvent;
+import org.specrunner.sql.DatabaseTableEvent;
+import org.specrunner.sql.IDatabaseListener;
 import org.specrunner.util.output.IOutputFactory;
 
 /**
- * Default SQL dumper.
+ * A SQL dumper listener.
  * 
  * @author Thiago Santos.
  * 
  */
-public class SqlDumperPrint implements ISqlDumper {
+@SuppressWarnings("serial")
+public class DatabasePrintListener implements IDatabaseListener {
 
     /**
      * Format timestamps.
      */
-    private SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSS");
+    protected SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSS");
     /**
      * Format dates.
      */
-    private SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00.00000");
+    protected SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00.00000");
 
     @Override
+    public void initialize() {
+    }
+
+    @Override
+    public void onTableIn(DatabaseTableEvent event) throws PluginException {
+    }
+
+    @Override
+    public void onRegisterIn(DatabaseRegisterEvent event) throws PluginException {
+        dump(event.getContext(), event.getResult(), event.getWrapper().getSql(), event.getIndexesToValues());
+    }
+
+    @Override
+    public void onRegisterOut(DatabaseRegisterEvent event) throws PluginException {
+        dump(event.getContext(), event.getResult(), event.getWrapper().getSql(), event.getIndexesToValues());
+    }
+
+    @Override
+    public void onTableOut(DatabaseTableEvent event) throws PluginException {
+    }
+
+    /**
+     * Dump SQL.
+     * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The test result.
+     * @param sql
+     *            The SQL.
+     * @param arguments
+     *            The arguments.
+     * @throws PluginException
+     *             On dump errors.
+     */
     public void dump(IContext context, IResultSet result, String sql, Map<Integer, Object> arguments) throws PluginException {
         StringBuilder sb = new StringBuilder();
         int counter = 1;
