@@ -18,18 +18,16 @@
 package org.specrunner.sql.impl;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map.Entry;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -47,12 +45,10 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.CommandType;
+import org.specrunner.sql.DatabaseRegisterEvent;
+import org.specrunner.sql.DatabaseTableEvent;
 import org.specrunner.sql.EMode;
-import org.specrunner.sql.IColumnReader;
-import org.specrunner.sql.IDatabase;
-import org.specrunner.sql.INullEmptyHandler;
-import org.specrunner.sql.ISequenceProvider;
-import org.specrunner.sql.ISqlDumper;
+import org.specrunner.sql.IRegister;
 import org.specrunner.sql.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ReplicableException;
@@ -65,8 +61,6 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
-import org.specrunner.util.cache.ICache;
-import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.IPresentation;
@@ -84,7 +78,7 @@ import org.specrunner.util.xom.core.PresentationException;
  * 
  */
 @SuppressWarnings("serial")
-public class Database implements IDatabase {
+public class Database extends AbstractDatabase {
 
     /**
      * Feature for database error dump limit.
@@ -97,40 +91,9 @@ public class Database implements IDatabase {
     public static final String FEATURE_ID_MANAGER = Database.class.getName() + ".idManager";
 
     /**
-     * Prepared statements for input actions.
-     */
-    protected ICache<String, PreparedStatement> inputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
-
-    /**
-     * Prepared statements for output actions.
-     */
-    protected ICache<String, PreparedStatement> outputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
-
-    /**
      * Manage object lookup and reuse.
      */
     protected IdManager idManager = new IdManager();
-
-    /**
-     * A null/empty handler.
-     */
-    protected INullEmptyHandler nullEmptyHandler = new NullEmptyHandlerImpl();
-
-    /**
-     * Sequence next value generator.
-     */
-    protected ISequenceProvider sequenceProvider = new SequenceProviderImpl();
-
-    /**
-     * Database dumper of commands.
-     */
-    protected ISqlDumper sqlDumper;
-
-    /**
-     * Recover object from a result set column to be compared against the
-     * specification object.
-     */
-    protected IColumnReader columnReader = new ColumnReaderImpl();
 
     /**
      * Feature for dump size.
@@ -141,25 +104,6 @@ public class Database implements IDatabase {
      * Max size of errors dump.
      */
     private Integer limit = DEFAULT_LIMIT;
-
-    /**
-     * Get the error dump limit.
-     * 
-     * @return The limit.
-     */
-    public Integer getLimit() {
-        return limit;
-    }
-
-    /**
-     * Set error limit.
-     * 
-     * @param limit
-     *            The limit.
-     */
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
 
     /**
      * Get the id manager.
@@ -181,78 +125,40 @@ public class Database implements IDatabase {
     }
 
     /**
-     * Get the null/empty handler.
+     * Get the error dump limit.
      * 
-     * @return Current null/empty handler.
+     * @return The limit.
      */
-    public INullEmptyHandler getNullEmptyHandler() {
-        return nullEmptyHandler;
-    }
-
-    @Override
-    public void setNullEmptyHandler(INullEmptyHandler nullEmptyHandler) {
-        this.nullEmptyHandler = nullEmptyHandler;
+    public Integer getLimit() {
+        return limit;
     }
 
     /**
-     * Get the sequence values provider.
+     * Set error limit.
      * 
-     * @return The provider.
+     * @param limit
+     *            The limit.
      */
-    public ISequenceProvider getSequenceProvider() {
-        return sequenceProvider;
-    }
-
-    @Override
-    public void setSequenceProvider(ISequenceProvider sequenceProvider) {
-        this.sequenceProvider = sequenceProvider;
-    }
-
-    /**
-     * Get current database dumper. Default is <code>null</code>.
-     * 
-     * @return Current dumper.
-     */
-    public ISqlDumper getSqlDumper() {
-        return sqlDumper;
-    }
-
-    @Override
-    public void setSqlDumper(ISqlDumper sqlDumper) {
-        this.sqlDumper = sqlDumper;
-    }
-
-    /**
-     * Get current column reader.
-     * 
-     * @return The current reader.
-     */
-    public IColumnReader getColumnReader() {
-        return columnReader;
-    }
-
-    @Override
-    public void setColumnReader(IColumnReader columnReader) {
-        this.columnReader = columnReader;
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     @Override
     public void initialize() {
+        super.initialize();
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_LIMIT, this);
-        fm.set(FEATURE_NULL_EMPTY_HANDLER, this);
         fm.set(FEATURE_ID_MANAGER, this);
-        fm.set(FEATURE_SEQUENCE_PROVIDER, this);
-        fm.set(FEATURE_SQL_DUMPER, this);
-        fm.set(FEATURE_COLUMN_READER, this);
         // every use of database clear mappings to avoid memory overload and
         // test interference
         idManager.clear();
+        // clear listeners
+        fireInitialize();
     }
 
     @Override
-    public void perform(IContext context, IResultSet result, TableAdapter tableAdapter, Connection con, Schema schema, EMode mode) throws PluginException {
-        List<CellAdapter> captions = tableAdapter.getCaptions();
+    public void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws PluginException {
+        List<CellAdapter> captions = adapter.getCaptions();
         if (captions.isEmpty()) {
             throw new PluginException("Tables must have a caption.");
         }
@@ -267,12 +173,16 @@ public class Database implements IDatabase {
         } catch (ReplicableException e) {
             throw new PluginException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
         }
-        List<RowAdapter> rows = tableAdapter.getRows();
+        List<RowAdapter> rows = adapter.getRows();
+
         // headers are in the first row.
         RowAdapter header = rows.get(0);
         List<CellAdapter> headers = header.getCells();
         Column[] columns = new Column[headers.size()];
         readHeadersColumns(context, table, headers, columns);
+
+        fireTableIn(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
+
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
@@ -284,12 +194,12 @@ public class Database implements IDatabase {
             }
             int expectedCount = Integer.parseInt(row.getAttribute("count", "1"));
             String type = tds.get(0).getValue();
-            CommandType ct = CommandType.get(type);
-            if (ct == null) {
-                throw new PluginException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0)");
+            CommandType command = CommandType.get(type);
+            if (command == null) {
+                throw new PluginException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0). The first column is required for one of the following values: " + Arrays.toString(CommandType.values()));
             }
             Map<String, Value> filled = new HashMap<String, Value>();
-            Set<Value> values = new TreeSet<Value>();
+            IRegister register = new RegisterDefault();
             for (int j = 1; j < tds.size(); j++) {
                 Column column = columns[j].copy();
                 CellAdapter td = tds.get(j);
@@ -324,38 +234,38 @@ public class Database implements IDatabase {
                             continue;
                         }
                     }
-                    if (obj == null && ct == CommandType.INSERT && mode == EMode.INPUT) {
+                    if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
                         // the other column fields with default value are set in
                         // <code>addMissingValues(...)</code> method.
                         obj = column.getDefaultValue();
                     }
                     Value v = new Value(column, td, obj, column.getComparator());
-                    values.add(v);
+                    register.add(v);
                     filled.put(column.getName(), v);
                 }
             }
             try {
                 boolean error = false;
-                switch (ct) {
+                switch (command) {
                 case INSERT:
                     if (mode == EMode.INPUT) {
-                        performInsert(context, result, con, table, values, filled);
+                        performInsert(context, result, connection, table, register, filled);
                     } else {
-                        performSelect(context, result, con, table, values, 1);
+                        performSelect(context, result, connection, table, command, register, expectedCount);
                     }
                     break;
                 case UPDATE:
                     if (mode == EMode.INPUT) {
-                        performUpdate(context, result, con, table, values, expectedCount);
+                        performUpdate(context, result, connection, table, register, expectedCount);
                     } else {
-                        performSelect(context, result, con, table, values, 1);
+                        performSelect(context, result, connection, table, command, register, expectedCount);
                     }
                     break;
                 case DELETE:
                     if (mode == EMode.INPUT) {
-                        performDelete(context, result, con, table, values, expectedCount);
+                        performDelete(context, result, connection, table, register, expectedCount);
                     } else {
-                        performSelect(context, result, con, table, values, 0);
+                        performSelect(context, result, connection, table, command, register, 0);
                     }
                     break;
                 default:
@@ -370,7 +280,7 @@ public class Database implements IDatabase {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 try {
-                    result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()), new PluginException("Error in connection (" + con.getMetaData().getURL() + "): " + e.getMessage(), e));
+                    result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()), new PluginException("Error in connection (" + connection.getMetaData().getURL() + "): " + e.getMessage(), e));
                 } catch (SQLException e1) {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
@@ -385,10 +295,12 @@ public class Database implements IDatabase {
             }
         }
         try {
-            con.commit();
+            connection.commit();
         } catch (SQLException e) {
             throw new PluginException(e);
         }
+
+        fireTableOut(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
     }
 
     /**
@@ -443,7 +355,6 @@ public class Database implements IDatabase {
         String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
         // if text has changed... adjust on screen.
         if (previous != null && !previous.equals(value)) {
-            // nh.append(" {" + value + "}");
             nh.setValue(value);
         }
         return value;
@@ -456,11 +367,11 @@ public class Database implements IDatabase {
      *            The context.
      * @param result
      *            The result set.
-     * @param con
+     * @param connection
      *            The connection.
      * @param table
      *            The specification.
-     * @param values
+     * @param register
      *            The values.
      * @param filled
      *            Filled fields.
@@ -469,38 +380,9 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performInsert(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, Map<String, Value> filled) throws PluginException, SQLException {
-        Map<String, Integer> indexes = new HashMap<String, Integer>();
-
-        addMissingValues(table, filled, values);
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("insert into " + table.getParent().getName() + "." + table.getName() + " (");
-        StringBuilder sbColumns = new StringBuilder();
-        StringBuilder sbValues = new StringBuilder();
-        int i = 1;
-        for (Value e : values) {
-            Column column = e.getColumn();
-            sbColumns.append(column.getName() + ",");
-            if (column.isSequence()) {
-                sbValues.append(e.getValue() + ",");
-            } else {
-                sbValues.append("?,");
-                indexes.put(column.getName(), i++);
-            }
-        }
-        if (sbColumns.length() > 1) {
-            sbColumns.setLength(sbColumns.length() - 1);
-        }
-        if (sbValues.length() > 1) {
-            sbValues.setLength(sbValues.length() - 1);
-        }
-        sb.append(sbColumns);
-        sb.append(") values (");
-        sb.append(sbValues);
-        sb.append(")");
-
-        performIn(context, result, con, insertWrapper(sb), table, indexes, values);
+    protected void performInsert(IContext context, IResultSet result, Connection connection, Table table, IRegister register, Map<String, Value> filled) throws PluginException, SQLException {
+        addMissingValues(table, register, filled);
+        performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.INSERT, register, 1), table, register);
     }
 
     /**
@@ -508,35 +390,24 @@ public class Database implements IDatabase {
      * 
      * @param table
      *            The table.
+     * @param register
+     *            The set of values.
      * @param filled
      *            A map of filled fields.
-     * @param values
-     *            The set of values.
      */
-    protected void addMissingValues(Table table, Map<String, Value> filled, Set<Value> values) {
+    protected void addMissingValues(Table table, IRegister register, Map<String, Value> filled) {
         for (Column column : table.getColumns()) {
             // table columns not present in test table
             if (filled.get(column.getName()) == null) {
                 if (column.getDefaultValue() != null) {
                     // with default values should be set
-                    values.add(new Value(column, null, column.getDefaultValue(), column.getComparator()));
+                    register.add(new Value(column, null, column.getDefaultValue(), column.getComparator()));
                 } else if (column.isSequence()) {
                     // or if it is a sequence: add their next value command.
-                    values.add(new Value(column, null, sequenceProvider.nextValue(column.getSequence()), column.getComparator()));
+                    register.add(new Value(column, null, sequenceProvider.nextValue(column.getSequence()), column.getComparator()));
                 }
             }
         }
-    }
-
-    /**
-     * Creates an insert wrapper.
-     * 
-     * @param sb
-     *            The command.
-     * @return A wrapper.
-     */
-    protected SqlWrapper insertWrapper(StringBuilder sb) {
-        return SqlWrapper.insert(sb.toString(), 1);
     }
 
     /**
@@ -546,11 +417,11 @@ public class Database implements IDatabase {
      *            The context.
      * @param result
      *            The result set.
-     * @param con
+     * @param connection
      *            The connection.
      * @param table
      *            The specification.
-     * @param values
+     * @param register
      *            The values.
      * @param expectedCount
      *            The expected action counter.
@@ -559,94 +430,8 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performUpdate(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, int expectedCount) throws PluginException, SQLException {
-        Map<String, Integer> indexes = new HashMap<String, Integer>();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("update " + table.getParent().getName() + "." + table.getName() + " set ");
-
-        boolean hasKeys = false;
-        boolean hasReferences = false;
-        for (Value v : values) {
-            hasKeys = hasKeys || v.getColumn().isKey();
-            hasReferences = hasReferences || v.getColumn().isReference();
-        }
-
-        StringBuilder sbColumns = new StringBuilder();
-        int i = 1;
-        if (hasKeys) {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                if (!column.isKey()) {
-                    indexes.put(column.getName(), i++);
-                    sbColumns.append(column.getName() + " = ?,");
-                }
-            }
-        } else if (hasReferences) {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                if (!column.isReference()) {
-                    indexes.put(column.getName(), i++);
-                    sbColumns.append(column.getName() + " = ?,");
-                }
-            }
-        } else {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                indexes.put(column.getName(), i++);
-                sbColumns.append(column.getName() + " = ?,");
-            }
-        }
-        if (sbColumns.length() > 1) {
-            sbColumns.setLength(sbColumns.length() - 1);
-        }
-        sb.append(sbColumns);
-        sb.append(" where ");
-
-        StringBuilder sbConditions = new StringBuilder();
-        String and = " AND ";
-        if (hasKeys) {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                if (column.isKey()) {
-                    indexes.put(column.getName(), i++);
-                    sbConditions.append(column.getName() + " = ? " + and);
-                }
-            }
-        } else if (hasReferences) {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                if (column.isReference()) {
-                    indexes.put(column.getName(), i++);
-                    sbConditions.append(column.getName() + " = ? " + and);
-                }
-            }
-        } else {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                indexes.put(column.getName(), i++);
-                sbConditions.append(column.getName() + " = ? " + and);
-            }
-        }
-        if (sbConditions.length() > (1 + and.length())) {
-            sbConditions.setLength(sbConditions.length() - (1 + and.length()));
-        }
-        sb.append(sbConditions);
-
-        performIn(context, result, con, updateWrapper(sb, expectedCount), table, indexes, values);
-    }
-
-    /**
-     * Creates an update wrapper.
-     * 
-     * @param sb
-     *            The command.
-     * @param expectedCount
-     *            The command expected counter.
-     * @return A wrapper.
-     */
-    protected SqlWrapper updateWrapper(StringBuilder sb, int expectedCount) {
-        return SqlWrapper.update(sb.toString(), expectedCount);
+    protected void performUpdate(IContext context, IResultSet result, Connection connection, Table table, IRegister register, int expectedCount) throws PluginException, SQLException {
+        performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.UPDATE, register, expectedCount), table, register);
     }
 
     /**
@@ -656,11 +441,11 @@ public class Database implements IDatabase {
      *            The context.
      * @param result
      *            The result set.
-     * @param con
+     * @param connection
      *            The connection.
      * @param table
      *            The specification.
-     * @param values
+     * @param register
      *            The values.
      * @param expectedCount
      *            The delete expected count.
@@ -669,64 +454,8 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performDelete(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, int expectedCount) throws PluginException, SQLException {
-        Map<String, Integer> indexes = new HashMap<String, Integer>();
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("delete from " + table.getParent().getName() + "." + table.getName() + " where ");
-
-        boolean hasKeys = false;
-        boolean hasReferences = false;
-        for (Value v : values) {
-            hasKeys = hasKeys || v.getColumn().isKey();
-            hasReferences = hasReferences || v.getColumn().isReference();
-        }
-
-        StringBuilder sbConditions = new StringBuilder();
-        int i = 1;
-        String and = " AND ";
-        if (hasKeys) {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                if (column.isKey()) {
-                    indexes.put(column.getName(), i++);
-                    sbConditions.append(column.getName() + " = ?" + and);
-                }
-            }
-        } else if (hasReferences) {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                if (column.isReference()) {
-                    indexes.put(column.getName(), i++);
-                    sbConditions.append(column.getName() + " = ?" + and);
-                }
-            }
-        } else {
-            for (Value v : values) {
-                Column column = v.getColumn();
-                indexes.put(column.getName(), i++);
-                sbConditions.append(column.getName() + " = ?" + and);
-            }
-        }
-        if (sbConditions.length() > and.length()) {
-            sbConditions.setLength(sbConditions.length() - and.length());
-        }
-        sb.append(sbConditions);
-
-        performIn(context, result, con, deleteWrapper(sb, expectedCount), table, indexes, values);
-    }
-
-    /**
-     * Creates a delete wrapper.
-     * 
-     * @param sb
-     *            The command.
-     * @param expectedCount
-     *            The command expected counter.
-     * @return A wrapper.
-     */
-    protected SqlWrapper deleteWrapper(StringBuilder sb, int expectedCount) {
-        return SqlWrapper.delete(sb.toString(), expectedCount);
+    protected void performDelete(IContext context, IResultSet result, Connection connection, Table table, IRegister register, int expectedCount) throws PluginException, SQLException {
+        performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.DELETE, register, expectedCount), table, register);
     }
 
     /**
@@ -736,46 +465,67 @@ public class Database implements IDatabase {
      *            The context.
      * @param result
      *            The result set.
-     * @param con
+     * @param connection
      *            The connection.
      * @param wrapper
      *            The SQL wrapper.
      * @param table
      *            The target table.
-     * @param indexes
-     *            The column indexes.
-     * @param values
+     * @param register
      *            The values.
      * @throws PluginException
      *             On plugin errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performIn(IContext context, IResultSet result, Connection con, SqlWrapper wrapper, Table table, Map<String, Integer> indexes, Set<Value> values) throws PluginException, SQLException {
+    protected void performIn(IContext context, IResultSet result, Connection connection, SqlWrapper wrapper, Table table, IRegister register) throws PluginException, SQLException {
+        Map<String, Integer> namesToIndexes = wrapper.getNamesToIndexes();
         if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug(wrapper.getSql() + ". MAP: " + indexes + ". VALUES: " + values);
+            UtilLog.LOG.debug(wrapper.getSql() + ". MAP: " + namesToIndexes + ". VALUES: " + register);
+        }
+        PreparedStatement pstmt = statementFactory.getInput(connection, wrapper, table);
+        Map<Integer, Object> indexesToValues = prepareInputValues(table, register, namesToIndexes);
+        for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
+            pstmt.setObject(e.getKey(), e.getValue());
         }
 
-        PreparedStatement pstmt = inputs.get(wrapper.getSql());
-        if (pstmt == null) {
-            pstmt = createStatement(con, table, wrapper);
-            inputs.put(wrapper.getSql(), pstmt);
-        } else {
-            pstmt.clearParameters();
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("REUSE: " + pstmt);
-            }
+        if (wrapper.getType() == CommandType.UPDATE) {
+            idManager.prepareUpdate(connection, table, register, statementFactory);
         }
 
-        Map<Integer, Object> resolved = null;
-        if (sqlDumper != null) {
-            resolved = new HashMap<Integer, Object>();
+        int count = pstmt.executeUpdate();
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
         }
 
+        idManager.readKeys(connection, pstmt, wrapper, table, register);
+
+        if (wrapper.getExpectedCount() != count) {
+            throw new PluginException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
+        }
+
+        fireRegisterIn(new DatabaseRegisterEvent(context, result, connection, table, register, wrapper, indexesToValues));
+    }
+
+    /**
+     * Prepare values to use in insert/update/delete.
+     * 
+     * @param table
+     *            A table.
+     * @param register
+     *            A register.
+     * @param namesToIndexes
+     *            Map from indexes to values.
+     * @return A map of object to use in statement setup.
+     * @throws PluginException
+     *             On prepare errors.
+     */
+    protected Map<Integer, Object> prepareInputValues(Table table, IRegister register, Map<String, Integer> namesToIndexes) throws PluginException {
         idManager.clearLocal();
-        for (Value v : values) {
+        Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
+        for (Value v : register) {
             Column column = v.getColumn();
-            Integer index = indexes.get(column.getName());
+            Integer index = namesToIndexes.get(column.getName());
             if (index != null) {
                 Object obj = v.getValue();
                 String alias = column.getTableOrAlias();
@@ -784,7 +534,7 @@ public class Database implements IDatabase {
                     String pointer = column.getPointer();
                     if (pointer != null) {
                         alias = null;
-                        for (Value vp : values) {
+                        for (Value vp : register) {
                             if (pointer.equals(vp.getColumn().getAlias())) {
                                 alias = UtilNames.normalize(vp.getCell().getValue());
                                 break;
@@ -792,10 +542,9 @@ public class Database implements IDatabase {
                         }
                         if (alias == null) {
                             throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-                        } else {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                            }
+                        }
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
                         }
                     }
                     obj = idManager.lookup(alias, obj);
@@ -803,60 +552,13 @@ public class Database implements IDatabase {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("performIn.SET(" + index + "," + alias + "," + column.getName() + ") = " + obj);
                 }
-                pstmt.setObject(index, obj);
-                if (resolved != null) {
-                    resolved.put(index, obj);
-                }
+                indexesToValues.put(index, obj);
                 if (column.isReference()) {
                     idManager.addLocal(table.getAlias(), v.getCell().getValue());
                 }
             }
         }
-
-        if (wrapper.getType() == CommandType.UPDATE) {
-            idManager.prepareUpdate(con, table, values, outputs);
-        }
-
-        int count = pstmt.executeUpdate();
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
-        }
-
-        if (sqlDumper != null && resolved != null) {
-            sqlDumper.dump(context, result, wrapper.getSql(), resolved);
-        }
-
-        idManager.readKeys(con, pstmt, wrapper, table, values);
-
-        if (wrapper.getExpectedCount() != count) {
-            throw new PluginException("The expected update count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + values);
-        }
-    }
-
-    /**
-     * Create the prepared statement.
-     * 
-     * @param con
-     *            The connection.
-     * @param table
-     *            The table under analysis.
-     * @param sqlWrapper
-     *            The wrapper.
-     * @return A new prepared statement.
-     * @throws SQLException
-     *             On creation errors.
-     */
-    protected PreparedStatement createStatement(Connection con, Table table, SqlWrapper sqlWrapper) throws SQLException {
-        DatabaseMetaData meta = con.getMetaData();
-        if (meta.supportsGetGeneratedKeys()) {
-            List<String> lista = new LinkedList<String>();
-            for (Column c : table.getKeys()) {
-                lista.add(c.getName());
-            }
-            return con.prepareStatement(sqlWrapper.getSql(), lista.toArray(new String[lista.size()]));
-        } else {
-            return con.prepareStatement(sqlWrapper.getSql());
-        }
+        return indexesToValues;
     }
 
     /**
@@ -866,11 +568,13 @@ public class Database implements IDatabase {
      *            The context.
      * @param result
      *            The result set.
-     * @param con
+     * @param connection
      *            The connection.
      * @param table
      *            The specification.
-     * @param values
+     * @param command
+     *            Command type.
+     * @param register
      *            The values.
      * @param expectedCount
      *            The select expected count.
@@ -879,75 +583,8 @@ public class Database implements IDatabase {
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performSelect(IContext context, IResultSet result, Connection con, Table table, Set<Value> values, int expectedCount) throws PluginException, SQLException {
-        StringBuilder sbVal = new StringBuilder();
-        StringBuilder sbPla = new StringBuilder();
-        Map<String, Integer> indexes = new HashMap<String, Integer>();
-        boolean hasKeys = false;
-        boolean hasReferences = false;
-        for (Value v : values) {
-            hasKeys = hasKeys || v.getColumn().isKey();
-            hasReferences = hasReferences || v.getColumn().isReference();
-        }
-        String and = " AND ";
-        int i = 1;
-        String name;
-        if (hasKeys) {
-            for (Value v : values) {
-                name = v.getColumn().getName();
-                if (!v.getColumn().isKey()) {
-                    sbVal.append(name + ",");
-                } else {
-                    sbPla.append(name + (v.getColumn().isDate() ? " between ? and ?" : " = ?") + (i > 0 ? and : ""));
-                    indexes.put(name, i++);
-                    if (v.getColumn().isDate()) {
-                        i++;
-                    }
-                }
-            }
-        } else if (hasReferences) {
-            for (Value v : values) {
-                name = v.getColumn().getName();
-                if (!v.getColumn().isReference()) {
-                    sbVal.append(name + ",");
-                } else {
-                    sbPla.append(name + (v.getColumn().isDate() ? " between ? and ?" : " = ?") + (i > 0 ? and : ""));
-                    indexes.put(name, i++);
-                    if (v.getColumn().isDate()) {
-                        i++;
-                    }
-                }
-            }
-        } else {
-            for (Value v : values) {
-                name = v.getColumn().getName();
-                sbVal.append(name + ",");
-                sbPla.append(name + (v.getColumn().isDate() ? " between ? and ?" : " = ?") + (i > 0 ? and : ""));
-                indexes.put(name, i++);
-                if (v.getColumn().isDate()) {
-                    i++;
-                }
-            }
-        }
-        if (sbVal.length() == 0) {
-            // when only keys are provided
-            for (Value v : values) {
-                sbVal.append(v.getColumn().getName() + ",");
-            }
-        }
-        if (sbVal.length() > 1) {
-            sbVal.setLength(sbVal.length() - 1);
-        }
-        if (sbPla.length() > and.length()) {
-            sbPla.setLength(sbPla.length() - and.length());
-        }
-        StringBuilder sb = new StringBuilder();
-        sb.append("select ");
-        sb.append(sbVal);
-        sb.append(" from " + table.getParent().getName() + "." + table.getName());
-        sb.append(" where ");
-        sb.append(sbPla);
-        performOut(context, result, con, sb.toString(), indexes, values, expectedCount);
+    protected void performSelect(IContext context, IResultSet result, Connection connection, Table table, CommandType command, IRegister register, int expectedCount) throws PluginException, SQLException {
+        performOut(context, result, connection, sqlWrapperFactory.createOutputWrapper(table, command, register, expectedCount), table, register);
     }
 
     /**
@@ -957,38 +594,74 @@ public class Database implements IDatabase {
      *            The context.
      * @param result
      *            The result set.
-     * @param con
+     * @param connection
      *            The connection.
-     * @param sql
-     *            The SQL.
-     * @param indexes
-     *            The column indexes.
-     * @param values
+     * @param wrapper
+     *            The SQL wrapper.
+     * @param table
+     *            The output table.
+     * @param register
      *            The values.
-     * @param expectedCount
-     *            Expected count to the operation.
      * @throws PluginException
      *             On plugin errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performOut(IContext context, IResultSet result, Connection con, String sql, Map<String, Integer> indexes, Set<Value> values, int expectedCount) throws PluginException, SQLException {
+    protected void performOut(IContext context, IResultSet result, Connection connection, SqlWrapper wrapper, Table table, IRegister register) throws PluginException, SQLException {
+        Map<String, Integer> namesToIndexes = wrapper.getNamesToIndexes();
+        String sql = wrapper.getSql();
         if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug(sql + ". MAP:" + indexes + ". values = " + values + ". indexes = " + indexes);
+            UtilLog.LOG.debug(sql + ". MAP:" + namesToIndexes + ". values = " + register + ". indexes = " + namesToIndexes);
         }
-        PreparedStatement pstmt = inputs.get(sql);
-        if (pstmt == null) {
-            pstmt = con.prepareStatement(sql);
-            inputs.put(sql, pstmt);
-        } else {
-            pstmt.clearParameters();
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("REUSE:" + pstmt);
+        PreparedStatement pstmt = statementFactory.getOutput(connection, wrapper, table);
+        Map<Integer, Object> indexesToValues = prepareSelectValues(connection, register, namesToIndexes);
+        for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
+            pstmt.setObject(e.getKey(), e.getValue());
+        }
+        ResultSet rs = null;
+        try {
+            rs = pstmt.executeQuery();
+            if (wrapper.getExpectedCount() == 1) {
+                if (!rs.next()) {
+                    throw new PluginException("None register found with the given conditions: " + sql + " and values: [" + register + "]");
+                }
+                compareRegister(context, result, connection, register, namesToIndexes, rs);
+                if (rs.next()) {
+                    throw new PluginException("More than one register satisfy the condition: " + sql + "[" + register + "]\n" + dumpRs("Extra itens:", rs));
+                }
+            } else {
+                if (rs.next()) {
+                    throw new PluginException("A result for " + sql + "[" + register + "] was not expected.\n" + dumpRs("Unexpected items:", rs));
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
             }
         }
-        for (Value v : values) {
+        fireRegisterOut(new DatabaseRegisterEvent(context, result, connection, table, register, wrapper, indexesToValues));
+    }
+
+    /**
+     * Prepare values to use in select.
+     * 
+     * @param connection
+     *            A connection.
+     * @param register
+     *            A register.
+     * @param namesToIndexes
+     *            Map from indexes to values.
+     * @return A map of object to use in statement setup.
+     * @throws PluginException
+     *             On prepare errors.
+     * @throws SQLException
+     *             On database errors.
+     */
+    protected Map<Integer, Object> prepareSelectValues(Connection connection, IRegister register, Map<String, Integer> namesToIndexes) throws PluginException, SQLException {
+        Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
+        for (Value v : register) {
             Column column = v.getColumn();
-            Integer index = indexes.get(column.getName());
+            Integer index = namesToIndexes.get(column.getName());
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
@@ -997,7 +670,7 @@ public class Database implements IDatabase {
                     if (pointer != null) {
                         virtual = column.copy();
                         String alias = null;
-                        for (Value vp : values) {
+                        for (Value vp : register) {
                             if (pointer.equals(vp.getColumn().getAlias())) {
                                 alias = String.valueOf(vp.getCell().getValue());
                                 break;
@@ -1012,7 +685,7 @@ public class Database implements IDatabase {
                         }
                         virtual.setAlias(alias);
                     }
-                    value = idManager.findValue(con, virtual, value, outputs);
+                    value = idManager.findValue(connection, virtual, value, statementFactory);
                 }
                 if (column.isDate()) {
                     IComparator comp = column.getComparator();
@@ -1023,98 +696,102 @@ public class Database implements IDatabase {
                     comparator.initialize();
                     Date dateBefore = new Date(((Date) value).getTime() - comparator.getTolerance());
                     Date dateAfter = new Date(((Date) value).getTime() + comparator.getTolerance());
-                    pstmt.setObject(index, dateBefore);
-                    pstmt.setObject(index + 1, dateAfter);
+                    indexesToValues.put(index, dateBefore);
+                    indexesToValues.put(index + 1, dateAfter);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("performOut.SET(" + (index) + "," + column.getAlias() + "," + column.getName() + ") = " + dateBefore);
                         UtilLog.LOG.debug("performOut.SET(" + (index + 1) + "," + column.getAlias() + "," + column.getName() + ") = " + dateAfter);
                     }
                 } else {
+                    indexesToValues.put(index, value);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("performOut.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + value);
                     }
-                    pstmt.setObject(index, value);
                 }
                 v.setValue(value);
             }
         }
-        ResultSet rs = null;
-        try {
-            rs = pstmt.executeQuery();
-            if (expectedCount == 1) {
-                if (!rs.next()) {
-                    throw new PluginException("None register found with the given conditions: " + sql + " and values: [" + values + "]");
+        return indexesToValues;
+    }
+
+    /**
+     * Compare register with current result set item.
+     * 
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result.
+     * @param connection
+     *            The connection.
+     * @param register
+     *            The register.
+     * @param namesToIndexes
+     *            A mapping from column names to indexes.
+     * @param rs
+     *            A result.
+     * @throws PluginException
+     *             On compare errors.
+     * @throws SQLException
+     *             On database errors.
+     */
+    protected void compareRegister(IContext context, IResultSet result, Connection connection, IRegister register, Map<String, Integer> namesToIndexes, ResultSet rs) throws PluginException, SQLException {
+        for (Value v : register) {
+            Column column = v.getColumn();
+            Integer index = namesToIndexes.get(column.getName());
+            if (index == null) {
+                IComparator comparator = v.getComparator();
+                Object received = columnReader.read(rs, column);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                 }
-                for (Value v : values) {
-                    Column column = v.getColumn();
-                    Integer index = indexes.get(column.getName());
-                    if (index == null) {
-                        IComparator comparator = v.getComparator();
-                        Object received = columnReader.read(rs, column);
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
+                Object value = v.getValue();
+                Column virtual = null;
+                if (column.isVirtual()) {
+                    virtual = column;
+                    String pointer = column.getPointer();
+                    if (pointer != null) {
+                        virtual = column.copy();
+                        String alias = null;
+                        for (Value vp : register) {
+                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
+                                alias = String.valueOf(vp.getCell().getValue());
+                                break;
+                            }
                         }
-                        Object value = v.getValue();
-                        Column virtual = null;
-                        if (column.isVirtual()) {
-                            virtual = column;
-                            String pointer = column.getPointer();
-                            if (pointer != null) {
-                                virtual = column.copy();
-                                String alias = null;
-                                for (Value vp : values) {
-                                    if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
-                                        alias = String.valueOf(vp.getCell().getValue());
-                                        break;
-                                    }
-                                }
-                                if (alias == null) {
-                                    throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-                                } else {
-                                    if (UtilLog.LOG.isDebugEnabled()) {
-                                        UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                                    }
-                                }
-                                virtual.setAlias(alias);
-                            }
-                            value = idManager.findValue(con, virtual, value, outputs);
-                        }
-                        comparator.initialize();
-                        CellAdapter cell = v.getCell();
-                        if (!comparator.match(value, received)) {
-                            Object expected = v.getValue();
-                            if (column.isVirtual()) {
-                                received = idManager.lookup(column.getAlias(), received);
-                            }
-                            String expStr = UtilSql.toString(expected);
-                            String recStr = UtilSql.toString(received);
-                            shortView(cell, expected, expStr, recStr);
-                            IPresentation error = null;
-                            if (expStr.equals(recStr)) {
-                                error = new PresentationCompare(expected, received);
-                            } else {
-                                error = new DefaultAlignmentException("Values are different.", expStr, recStr);
-                            }
-                            result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
+                        if (alias == null) {
+                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
                         } else {
-                            String str = String.valueOf(value);
-                            if (!str.equals(cell.getValue())) {
-                                cell.append(" {" + str + "}");
+                            if (UtilLog.LOG.isDebugEnabled()) {
+                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
                             }
                         }
+                        virtual.setAlias(alias);
+                    }
+                    value = idManager.findValue(connection, virtual, value, statementFactory);
+                }
+                comparator.initialize();
+                CellAdapter cell = v.getCell();
+                if (!comparator.match(value, received)) {
+                    Object expected = v.getValue();
+                    if (column.isVirtual()) {
+                        received = idManager.lookup(column.getAlias(), received);
+                    }
+                    String expStr = UtilSql.toString(expected);
+                    String recStr = UtilSql.toString(received);
+                    shortView(cell, expected, expStr, recStr);
+                    IPresentation error = null;
+                    if (expStr.equals(recStr)) {
+                        error = new PresentationCompare(expected, received);
+                    } else {
+                        error = new DefaultAlignmentException("Values are different.", expStr, recStr);
+                    }
+                    result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
+                } else {
+                    String str = String.valueOf(value);
+                    if (!str.equals(cell.getValue())) {
+                        cell.append(" {" + str + "}");
                     }
                 }
-                if (rs.next()) {
-                    throw new PluginException("More than one register satisfy the condition: " + sql + "[" + values + "]\n" + dumpRs("Extra itens:", rs));
-                }
-            } else {
-                if (rs.next()) {
-                    throw new PluginException("A result for " + sql + "[" + values + "] was not expected.\n" + dumpRs("Unxepected itens:", rs));
-                }
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
             }
         }
     }
@@ -1188,7 +865,6 @@ public class Database implements IDatabase {
 
     @Override
     public void release() throws PluginException {
-        inputs.release();
-        outputs.release();
+        statementFactory.release();
     }
 }

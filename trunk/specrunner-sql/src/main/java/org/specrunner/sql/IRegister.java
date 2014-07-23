@@ -15,24 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Set;
 
-import org.specrunner.sql.IColumnReader;
-import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.Value;
 
 /**
- * Default column reader.
+ * A register is a set of values. This is a semantic interface.
  * 
- * @author Thiago Santos.
- * 
+ * @author Thiago Santos
  */
-public class ColumnReaderImpl implements IColumnReader {
-
-    @Override
-    public Object read(ResultSet rs, Column column) throws SQLException {
-        return rs.getObject(column.getName());
-    }
+public interface IRegister extends Set<Value> {
 }

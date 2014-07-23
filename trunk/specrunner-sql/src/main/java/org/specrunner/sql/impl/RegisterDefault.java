@@ -15,35 +15,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.impl;
 
-import java.util.Map;
+import java.util.TreeSet;
 
-import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.result.IResultSet;
+import org.specrunner.sql.IRegister;
+import org.specrunner.sql.meta.Value;
 
 /**
- * Abstraction for SQL dumper.
+ * Basic instance of a register. The tree set is used to keep values column name
+ * order and optimize cache of statements.
  * 
  * @author Thiago Santos.
- * 
  */
-public interface ISqlDumper {
-
-    /**
-     * Perform some actions in a database.
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The test result.
-     * @param sql
-     *            Prepared SQL to replace.
-     * @param arguments
-     *            The SQL arguments.
-     * @throws PluginException
-     *             On dump errors.
-     */
-    void dump(IContext context, IResultSet result, String sql, Map<Integer, Object> arguments) throws PluginException;
+@SuppressWarnings("serial")
+public class RegisterDefault extends TreeSet<Value> implements IRegister {
 }

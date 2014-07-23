@@ -23,9 +23,8 @@ import org.specrunner.sql.ISequenceProvider;
  * Default sequence provider.
  * 
  * @author Thiago Santos
- * 
  */
-public class SequenceProviderImpl implements ISequenceProvider {
+public class SequenceProviderDefault implements ISequenceProvider {
 
     @Override
     public String nextValue(String sequence) {
