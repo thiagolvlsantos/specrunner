@@ -15,23 +15,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.specrunner.SRServices;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.sql.DatabaseRegisterEvent;
-import org.specrunner.sql.DatabaseTableEvent;
-import org.specrunner.sql.IColumnReader;
-import org.specrunner.sql.IDatabase;
-import org.specrunner.sql.IDatabaseListener;
-import org.specrunner.sql.INullEmptyHandler;
-import org.specrunner.sql.ISequenceProvider;
-import org.specrunner.sql.ISqlWrapperFactory;
-import org.specrunner.sql.IStatementFactory;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.database.DatabaseRegisterEvent;
+import org.specrunner.sql.database.DatabaseTableEvent;
+import org.specrunner.sql.database.IColumnReader;
+import org.specrunner.sql.database.IDatabase;
+import org.specrunner.sql.database.IDatabaseListener;
+import org.specrunner.sql.database.INullEmptyHandler;
+import org.specrunner.sql.database.ISequenceProvider;
+import org.specrunner.sql.database.ISqlWrapperFactory;
+import org.specrunner.sql.database.IStatementFactory;
 import org.specrunner.util.collections.ReverseIterable;
 
 /**
@@ -187,10 +187,10 @@ public abstract class AbstractDatabase implements IDatabase {
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On processing errors.
      */
-    protected void fireTableIn(DatabaseTableEvent event) throws PluginException {
+    protected void fireTableIn(DatabaseTableEvent event) throws DatabaseException {
         synchronized (listeners) {
             for (IDatabaseListener listener : listeners) {
                 listener.onTableIn(event);
@@ -203,10 +203,10 @@ public abstract class AbstractDatabase implements IDatabase {
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On processing errors.
      */
-    protected void fireRegisterIn(DatabaseRegisterEvent event) throws PluginException {
+    protected void fireRegisterIn(DatabaseRegisterEvent event) throws DatabaseException {
         synchronized (listeners) {
             for (IDatabaseListener listener : listeners) {
                 listener.onRegisterIn(event);
@@ -219,10 +219,10 @@ public abstract class AbstractDatabase implements IDatabase {
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On processing errors.
      */
-    protected void fireRegisterOut(DatabaseRegisterEvent event) throws PluginException {
+    protected void fireRegisterOut(DatabaseRegisterEvent event) throws DatabaseException {
         synchronized (listeners) {
             for (IDatabaseListener listener : new ReverseIterable<IDatabaseListener>(listeners)) {
                 listener.onRegisterOut(event);
@@ -235,10 +235,10 @@ public abstract class AbstractDatabase implements IDatabase {
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On processing errors.
      */
-    protected void fireTableOut(DatabaseTableEvent event) throws PluginException {
+    protected void fireTableOut(DatabaseTableEvent event) throws DatabaseException {
         synchronized (listeners) {
             for (IDatabaseListener listener : new ReverseIterable<IDatabaseListener>(listeners)) {
                 listener.onTableOut(event);

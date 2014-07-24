@@ -15,23 +15,37 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database;
+
 
 /**
- * Database mode.
+ * Identifies fields that should be handled as null or empty depending on value
+ * and database input or output mode.
  * 
  * @author Thiago Santos.
  * 
  */
-public enum EMode {
+public interface INullEmptyHandler {
 
     /**
-     * Input mode.
+     * Check if a value should be handled as null, depending on value and mode.
+     * 
+     * @param value
+     *            The value.
+     * @param mode
+     *            The mode.
+     * @return true, if should be considered null, false, otherwise.
      */
-    INPUT,
+    boolean isNull(String value, EMode mode);
 
     /**
-     * Output mode.
+     * Check if a value should be handled as empty, depending on value and mode.
+     * 
+     * @param value
+     *            The value.
+     * @param mode
+     *            The mode.
+     * @return true, if should be considered empty, false, otherwise.
      */
-    OUTPUT;
+    boolean isEmpty(String value, EMode mode);
 }

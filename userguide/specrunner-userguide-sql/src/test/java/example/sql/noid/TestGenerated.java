@@ -5,12 +5,12 @@ import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
-import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.database.IDatabase;
+import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 import example.sql.DataSourceProviderImpl;
@@ -30,7 +30,7 @@ public class TestGenerated {
         cfg.add(PluginSchemaLoader.FEATURE_REUSE, true);
         cfg.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/generated.cfg.xml");
         cfg.add(PluginSchema.FEATURE_REUSE, true);
-        cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new Database() });
+        cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new DatabaseDefault() });
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
     }
 

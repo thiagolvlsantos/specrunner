@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -33,11 +33,11 @@ import java.util.StringTokenizer;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.converters.ConverterException;
-import org.specrunner.plugins.PluginException;
-import org.specrunner.sql.CommandType;
-import org.specrunner.sql.IRegister;
-import org.specrunner.sql.IStatementFactory;
-import org.specrunner.sql.SqlWrapper;
+import org.specrunner.sql.database.CommandType;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.database.IRegister;
+import org.specrunner.sql.database.IStatementFactory;
+import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -232,10 +232,10 @@ public class IdManager {
      * @return The object to set in outer select.
      * @throws SQLException
      *             On SQL errors.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On execution errors.
      */
-    public Object findValue(Connection con, Column column, Object value, IStatementFactory outputs) throws SQLException, PluginException {
+    public Object findValue(Connection con, Column column, Object value, IStatementFactory outputs) throws SQLException, DatabaseException {
         String tableOrAlias = column.getTableOrAlias();
         String key = tableOrAlias + "." + value;
         Object result = lookup(tableOrAlias, value);
@@ -249,7 +249,7 @@ public class IdManager {
             }
             Table table = schema.getAlias(tableOrAlias);
             if (table == null) {
-                throw new PluginException("Virtual column '" + tableOrAlias + "' not found in schema " + schema.getName() + ". It must be a name in domain set of: " + schema.getAliasToTables());
+                throw new DatabaseException("Virtual column '" + tableOrAlias + "' not found in schema " + schema.getName() + ". It must be a name in domain set of: " + schema.getAliasToTables());
             }
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Lookup in table " + table.getName());
@@ -302,7 +302,7 @@ public class IdManager {
                     try {
                         tmp = reference.getConverter().convert(token, reference.getArguments().toArray());
                     } catch (ConverterException e) {
-                        throw new PluginException(e);
+                        throw new DatabaseException(e);
                     }
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
@@ -311,7 +311,7 @@ public class IdManager {
                 if (reference.isDate()) {
                     IComparator comp = reference.getComparator();
                     if (!(comp instanceof ComparatorDate)) {
-                        throw new PluginException("Date columns must have comparators of type 'date'. Current type:" + comp.getClass());
+                        throw new DatabaseException("Date columns must have comparators of type 'date'. Current type:" + comp.getClass());
                     }
                     ComparatorDate comparator = (ComparatorDate) comp;
                     comparator.initialize();
@@ -372,10 +372,10 @@ public class IdManager {
      *            The output map.
      * @throws SQLException
      *             On reading errors.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On errors.
      */
-    public void prepareUpdate(Connection con, Table table, IRegister register, IStatementFactory outputs) throws SQLException, PluginException {
+    public void prepareUpdate(Connection con, Table table, IRegister register, IStatementFactory outputs) throws SQLException, DatabaseException {
         DatabaseMetaData meta = con.getMetaData();
         if (meta.supportsGetGeneratedKeys() && hasKey()) {
             // TODO: ou fazer apenas as exclusões mínimas ou

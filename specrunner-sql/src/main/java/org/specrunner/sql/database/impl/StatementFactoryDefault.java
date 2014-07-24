@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -26,8 +26,8 @@ import java.util.List;
 
 import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.sql.IStatementFactory;
-import org.specrunner.sql.SqlWrapper;
+import org.specrunner.sql.database.IStatementFactory;
+import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.UtilLog;
@@ -44,12 +44,12 @@ public class StatementFactoryDefault implements IStatementFactory {
     /**
      * Prepared statements for input actions.
      */
-    protected ICache<String, PreparedStatement> inputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
+    protected ICache<String, PreparedStatement> inputs = SRServices.get(ICacheFactory.class).newCache(StatementFactoryDefault.class.getName() + ".inputs", PreparedStatementCleaner.INSTANCE.get());
 
     /**
      * Prepared statements for output actions.
      */
-    protected ICache<String, PreparedStatement> outputs = SRServices.get(ICacheFactory.class).newCache(Database.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
+    protected ICache<String, PreparedStatement> outputs = SRServices.get(ICacheFactory.class).newCache(StatementFactoryDefault.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
 
     @Override
     public PreparedStatement getInput(Connection connection, SqlWrapper wrapper, Table table) throws SQLException {

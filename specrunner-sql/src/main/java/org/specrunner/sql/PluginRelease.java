@@ -29,6 +29,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReuseManager;
+import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
 

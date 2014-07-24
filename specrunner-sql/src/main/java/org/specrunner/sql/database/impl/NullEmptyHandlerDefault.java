@@ -15,10 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
-import org.specrunner.sql.EMode;
-import org.specrunner.sql.INullEmptyHandler;
+import org.specrunner.sql.database.EMode;
+import org.specrunner.sql.database.INullEmptyHandler;
 
 /**
  * Default implementation. On output verification empty TDs are considered null.
@@ -61,7 +61,7 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
 
     @Override
     public boolean isNull(String value, EMode mode) {
-        return value != null && value.isEmpty() && mode == EMode.OUTPUT;
+        return value == null || (value != null && value.isEmpty() && mode == EMode.OUTPUT);
     }
 
     @Override

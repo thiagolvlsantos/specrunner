@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,11 +24,11 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.plugins.PluginException;
-import org.specrunner.sql.CommandType;
-import org.specrunner.sql.DatabaseRegisterEvent;
-import org.specrunner.sql.DatabaseTableEvent;
-import org.specrunner.sql.IDatabaseListener;
+import org.specrunner.sql.database.CommandType;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.database.DatabaseRegisterEvent;
+import org.specrunner.sql.database.DatabaseTableEvent;
+import org.specrunner.sql.database.IDatabaseListener;
 import org.specrunner.sql.meta.Table;
 
 /**
@@ -57,7 +57,7 @@ public class DatabaseCountListener implements IDatabaseListener {
     }
 
     @Override
-    public void onTableIn(DatabaseTableEvent event) throws PluginException {
+    public void onTableIn(DatabaseTableEvent event) throws DatabaseException {
     }
 
     @Override
@@ -99,7 +99,7 @@ public class DatabaseCountListener implements IDatabaseListener {
     }
 
     @Override
-    public void onTableOut(DatabaseTableEvent event) throws PluginException {
+    public void onTableOut(DatabaseTableEvent event) throws DatabaseException {
         String name = event.getTable().getName();
 
         Integer in = countersIn.get(name);
@@ -122,10 +122,10 @@ public class DatabaseCountListener implements IDatabaseListener {
      *            A table meta-data.
      * @param rows
      *            Rows to check.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On count errors.
      */
-    protected void checkCount(Connection con, Table table, int rows) throws PluginException {
+    protected void checkCount(Connection con, Table table, int rows) throws DatabaseException {
         Statement stmt = null;
         ResultSet rs = null;
         try {
@@ -136,26 +136,26 @@ public class DatabaseCountListener implements IDatabaseListener {
                 int received = rs.getInt(1);
                 int expected = rows;
                 if (received != expected) {
-                    throw new PluginException("The number of elements present in table '" + alias + "' is " + received + ", expected was " + expected);
+                    throw new DatabaseException("The number of elements present in table '" + alias + "' is " + received + ", expected was " + expected);
                 }
             } else {
-                throw new PluginException("Could not count rows for table '" + alias + "'.");
+                throw new DatabaseException("Could not count rows for table '" + alias + "'.");
             }
         } catch (SQLException e) {
-            throw new PluginException(e);
+            throw new DatabaseException(e);
         } finally {
             if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
-                    throw new PluginException(e);
+                    throw new DatabaseException(e);
                 }
             }
             if (stmt != null) {
                 try {
                     stmt.close();
                 } catch (SQLException e) {
-                    throw new PluginException(e);
+                    throw new DatabaseException(e);
                 }
             }
         }

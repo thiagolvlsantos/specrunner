@@ -15,24 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.specrunner.sql.IColumnReader;
 import org.specrunner.sql.meta.Column;
 
 /**
- * Default column reader.
+ * Abstraction for SQL column reader.
  * 
  * @author Thiago Santos.
  * 
  */
-public class ColumnReaderDefault implements IColumnReader {
+public interface IColumnReader {
 
-    @Override
-    public Object read(ResultSet rs, Column column) throws SQLException {
-        return rs.getObject(column.getName());
-    }
+    /**
+     * Read a column from a result set.
+     * 
+     * @param rs
+     *            A result set.
+     * @param column
+     *            A column to be read.
+     * @return The object for that column.
+     * @throws SQLException
+     *             On read errors.
+     */
+    Object read(ResultSet rs, Column column) throws SQLException;
 }
