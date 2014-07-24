@@ -15,9 +15,8 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database;
 
-import org.specrunner.plugins.PluginException;
 import org.specrunner.util.mapping.IResetable;
 
 /**
@@ -32,38 +31,38 @@ public interface IDatabaseListener extends IResetable {
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On processing errors.
      */
-    void onTableIn(DatabaseTableEvent event) throws PluginException;
+    void onTableIn(DatabaseTableEvent event) throws DatabaseException;
 
     /**
      * On register input command.
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On register errors.
      */
-    void onRegisterIn(DatabaseRegisterEvent event) throws PluginException;
+    void onRegisterIn(DatabaseRegisterEvent event) throws DatabaseException;
 
     /**
      * On register output command.
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             O register errors.
      */
-    void onRegisterOut(DatabaseRegisterEvent event) throws PluginException;
+    void onRegisterOut(DatabaseRegisterEvent event) throws DatabaseException;
 
     /**
      * On table end processing.
      * 
      * @param event
      *            Event.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On processing errors.
      */
-    void onTableOut(DatabaseTableEvent event) throws PluginException;
+    void onTableOut(DatabaseTableEvent event) throws DatabaseException;
 }

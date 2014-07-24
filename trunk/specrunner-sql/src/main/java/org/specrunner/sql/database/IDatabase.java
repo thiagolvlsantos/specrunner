@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database;
 
 import java.sql.Connection;
 import java.util.List;
@@ -128,10 +128,10 @@ public interface IDatabase extends IResetable {
      *            The database meta model.
      * @param mode
      *            The database mode (in - actions|out - asserts)
-     * @throws PluginException
+     * @throws DatabaseException
      *             On perform errors.
      */
-    void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws PluginException;
+    void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws DatabaseException;
 
     /**
      * Release database resources.

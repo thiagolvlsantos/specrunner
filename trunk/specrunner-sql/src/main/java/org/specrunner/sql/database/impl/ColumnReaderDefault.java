@@ -15,29 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database.impl;
 
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Command;
-import org.specrunner.sql.database.EMode;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import org.specrunner.sql.database.IColumnReader;
+import org.specrunner.sql.meta.Column;
 
 /**
- * Prepare a database.
+ * Default column reader.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class PluginPrepare extends AbstractPluginDatabase {
-
-    /**
-     * Default constructor.
-     */
-    public PluginPrepare() {
-        super(EMode.INPUT);
-    }
+public class ColumnReaderDefault implements IColumnReader {
 
     @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
+    public Object read(ResultSet rs, Column column) throws SQLException {
+        return rs.getObject(column.getName());
     }
 }

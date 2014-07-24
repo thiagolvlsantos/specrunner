@@ -15,19 +15,23 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
-
-import java.util.TreeSet;
-
-import org.specrunner.sql.IRegister;
-import org.specrunner.sql.meta.Value;
+package org.specrunner.sql.database;
 
 /**
- * Basic instance of a register. The tree set is used to keep values column name
- * order and optimize cache of statements.
+ * Database mode.
  * 
  * @author Thiago Santos.
+ * 
  */
-@SuppressWarnings("serial")
-public class RegisterDefault extends TreeSet<Value> implements IRegister {
+public enum EMode {
+
+    /**
+     * Input mode.
+     */
+    INPUT,
+
+    /**
+     * Output mode.
+     */
+    OUTPUT;
 }

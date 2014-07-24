@@ -35,7 +35,7 @@ import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.core.AbstractReusable;
-import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
 
@@ -298,7 +298,7 @@ public class PluginDatabase extends AbstractPluginValue {
         }
         IDatabase provider = (IDatabase) context.getByName(name);
         if (provider == null) {
-            throw new PluginException("Instance of '" + Database.class.getName() + "' named '" + name + "' not found. Use " + PluginDatabase.class.getName() + " first.");
+            throw new PluginException("Instance of '" + IDatabase.class.getName() + "' named '" + name + "' not found. Use " + PluginDatabase.class.getName() + " first.");
         }
         return provider;
     }

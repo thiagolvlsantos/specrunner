@@ -38,7 +38,7 @@ import org.specrunner.sql.PluginRelease;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
-import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 import org.specrunner.sql.report.FilterDefault;
@@ -60,7 +60,7 @@ public class TestDbmsNegativeFeature {
         cfg.add(PluginSchema.FEATURE_SOURCE, "/income/dbms/schema.cfg.xml");
         cfg.add(PluginSchema.FEATURE_REUSE, true);
 
-        cfg.add(PluginDatabase.FEATURE_PROVIDER, Database.class.getName());
+        cfg.add(PluginDatabase.FEATURE_PROVIDER, DatabaseDefault.class.getName());
         cfg.add(PluginDatabase.FEATURE_NAME, "dataA;dataB");
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
 

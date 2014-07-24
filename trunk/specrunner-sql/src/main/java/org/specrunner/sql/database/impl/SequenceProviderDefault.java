@@ -15,31 +15,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database.impl;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.database.ISequenceProvider;
 
 /**
- * Abstraction for SQL column reader.
+ * Default sequence provider.
  * 
- * @author Thiago Santos.
- * 
+ * @author Thiago Santos
  */
-public interface IColumnReader {
+public class SequenceProviderDefault implements ISequenceProvider {
 
-    /**
-     * Read a column from a result set.
-     * 
-     * @param rs
-     *            A result set.
-     * @param column
-     *            A column to be read.
-     * @return The object for that column.
-     * @throws SQLException
-     *             On read errors.
-     */
-    Object read(ResultSet rs, Column column) throws SQLException;
+    @Override
+    public String nextValue(String sequence) {
+        return "NEXT VALUE FOR " + sequence;
+    }
 }

@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,12 +44,13 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.sql.CommandType;
-import org.specrunner.sql.DatabaseRegisterEvent;
-import org.specrunner.sql.DatabaseTableEvent;
-import org.specrunner.sql.EMode;
-import org.specrunner.sql.IRegister;
-import org.specrunner.sql.SqlWrapper;
+import org.specrunner.sql.database.CommandType;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.database.DatabaseRegisterEvent;
+import org.specrunner.sql.database.DatabaseTableEvent;
+import org.specrunner.sql.database.EMode;
+import org.specrunner.sql.database.IRegister;
+import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ReplicableException;
 import org.specrunner.sql.meta.Schema;
@@ -78,17 +79,17 @@ import org.specrunner.util.xom.core.PresentationException;
  * 
  */
 @SuppressWarnings("serial")
-public class Database extends AbstractDatabase {
+public class DatabaseDefault extends AbstractDatabase {
 
     /**
      * Feature for database error dump limit.
      */
-    public static final String FEATURE_LIMIT = Database.class.getName() + ".limit";
+    public static final String FEATURE_LIMIT = DatabaseDefault.class.getName() + ".limit";
 
     /**
      * Feature for object manager instance.
      */
-    public static final String FEATURE_ID_MANAGER = Database.class.getName() + ".idManager";
+    public static final String FEATURE_ID_MANAGER = DatabaseDefault.class.getName() + ".idManager";
 
     /**
      * Manage object lookup and reuse.
@@ -152,26 +153,24 @@ public class Database extends AbstractDatabase {
         // every use of database clear mappings to avoid memory overload and
         // test interference
         idManager.clear();
-        // clear listeners
-        fireInitialize();
     }
 
     @Override
-    public void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws PluginException {
+    public void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws DatabaseException {
         List<CellAdapter> captions = adapter.getCaptions();
         if (captions.isEmpty()) {
-            throw new PluginException("Tables must have a caption.");
+            throw new DatabaseException("Tables must have a caption.");
         }
         String tAlias = captions.get(0).getValue();
         Table table = schema.getAlias(tAlias);
         if (table == null) {
-            throw new PluginException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), avaliable tables alias: " + schema.getAliasToTables().keySet());
+            throw new DatabaseException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), avaliable tables alias: " + schema.getAliasToTables().keySet());
         }
         // creates a copy only of defined tables
         try {
             table = table.copy();
         } catch (ReplicableException e) {
-            throw new PluginException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
+            throw new DatabaseException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
         }
         List<RowAdapter> rows = adapter.getRows();
 
@@ -181,22 +180,26 @@ public class Database extends AbstractDatabase {
         Column[] columns = new Column[headers.size()];
         readHeadersColumns(context, table, headers, columns);
 
+        // clear listeners
+        fireInitialize();
+
+        // start using listeners
         fireTableIn(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
 
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
             if (tds.isEmpty()) {
-                throw new PluginException("Empty lines are useless. " + row.getValue());
+                throw new DatabaseException("Empty lines are useless. " + row.getValue());
             }
             if (tds.size() != headers.size()) {
-                throw new PluginException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
+                throw new DatabaseException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
             }
             int expectedCount = Integer.parseInt(row.getAttribute("count", "1"));
             String type = tds.get(0).getValue();
             CommandType command = CommandType.get(type);
             if (command == null) {
-                throw new PluginException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0). The first column is required for one of the following values: " + Arrays.toString(CommandType.values()));
+                throw new DatabaseException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0). The first column is required for one of the following values: " + Arrays.toString(CommandType.values()));
             }
             Map<String, Value> filled = new HashMap<String, Value>();
             IRegister register = new RegisterDefault();
@@ -206,9 +209,9 @@ public class Database extends AbstractDatabase {
                 try {
                     UtilSchema.setupColumn(context, table, column, td);
                 } catch (ConverterException e) {
-                    throw new PluginException(e);
+                    throw new DatabaseException(e);
                 } catch (ComparatorException e) {
-                    throw new PluginException(e);
+                    throw new DatabaseException(e);
                 }
                 String value = getAdjustValue(context, td);
                 boolean isNull = nullEmptyHandler.isNull(value, mode);
@@ -223,10 +226,7 @@ public class Database extends AbstractDatabase {
                     } else if (column.isVirtual()) {
                         obj = value;
                     } else {
-                        List<String> args = td.getArguments();
-                        if (args.isEmpty()) {
-                            args = column.getArguments();
-                        }
+                        List<String> args = td.getArguments(column.getArguments());
                         try {
                             obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
                         } catch (ConverterException e) {
@@ -285,19 +285,14 @@ public class Database extends AbstractDatabase {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug(e.getMessage(), e);
                     }
-                    throw new PluginException("Could not log error:" + e1.getMessage(), e1);
+                    throw new DatabaseException("Could not log error:" + e1.getMessage(), e1);
                 }
-            } catch (PluginException e) {
+            } catch (DatabaseException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
                 result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), context.getPlugin()), e);
             }
-        }
-        try {
-            connection.commit();
-        } catch (SQLException e) {
-            throw new PluginException(e);
         }
 
         fireTableOut(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
@@ -314,26 +309,26 @@ public class Database extends AbstractDatabase {
      *            The headers list.
      * @param columns
      *            The columns list.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On reading errors.
      */
-    protected void readHeadersColumns(IContext context, Table table, List<CellAdapter> headers, Column[] columns) throws PluginException {
+    protected void readHeadersColumns(IContext context, Table table, List<CellAdapter> headers, Column[] columns) throws DatabaseException {
         for (int i = 0; i < headers.size(); i++) {
             CellAdapter cell = headers.get(i);
             String cAlias = cell.getValue();
             columns[i] = table.getAlias(cAlias);
             Column column = columns[i];
             if (i > 0 && column == null) {
-                throw new PluginException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
+                throw new DatabaseException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
             }
             // update to specific header adjusts
             if (column != null) {
                 try {
                     UtilSchema.setupColumn(context, table, column, cell);
                 } catch (ConverterException e) {
-                    throw new PluginException(e);
+                    throw new DatabaseException(e);
                 } catch (ComparatorException e) {
-                    throw new PluginException(e);
+                    throw new DatabaseException(e);
                 }
             }
         }
@@ -347,17 +342,21 @@ public class Database extends AbstractDatabase {
      * @param nh
      *            A node holder.
      * @return The interpreted string value.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On evaluation errors.
      */
-    protected String getAdjustValue(IContext context, INodeHolder nh) throws PluginException {
-        String previous = nh.getValue();
-        String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
-        // if text has changed... adjust on screen.
-        if (previous != null && !previous.equals(value)) {
-            nh.setValue(value);
+    protected String getAdjustValue(IContext context, INodeHolder nh) throws DatabaseException {
+        try {
+            String previous = nh.getValue();
+            String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
+            // if text has changed... adjust on screen.
+            if (previous != null && !previous.equals(value)) {
+                nh.setValue(value);
+            }
+            return value;
+        } catch (PluginException e) {
+            throw new DatabaseException(e);
         }
-        return value;
     }
 
     /**
@@ -375,12 +374,12 @@ public class Database extends AbstractDatabase {
      *            The values.
      * @param filled
      *            Filled fields.
-     * @throws PluginException
-     *             On plugin errors.
+     * @throws DatabaseException
+     *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performInsert(IContext context, IResultSet result, Connection connection, Table table, IRegister register, Map<String, Value> filled) throws PluginException, SQLException {
+    protected void performInsert(IContext context, IResultSet result, Connection connection, Table table, IRegister register, Map<String, Value> filled) throws DatabaseException, SQLException {
         addMissingValues(table, register, filled);
         performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.INSERT, register, 1), table, register);
     }
@@ -425,12 +424,12 @@ public class Database extends AbstractDatabase {
      *            The values.
      * @param expectedCount
      *            The expected action counter.
-     * @throws PluginException
-     *             On plugin errors.
+     * @throws DatabaseException
+     *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performUpdate(IContext context, IResultSet result, Connection connection, Table table, IRegister register, int expectedCount) throws PluginException, SQLException {
+    protected void performUpdate(IContext context, IResultSet result, Connection connection, Table table, IRegister register, int expectedCount) throws DatabaseException, SQLException {
         performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.UPDATE, register, expectedCount), table, register);
     }
 
@@ -449,12 +448,12 @@ public class Database extends AbstractDatabase {
      *            The values.
      * @param expectedCount
      *            The delete expected count.
-     * @throws PluginException
-     *             On plugin errors.
+     * @throws DatabaseException
+     *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performDelete(IContext context, IResultSet result, Connection connection, Table table, IRegister register, int expectedCount) throws PluginException, SQLException {
+    protected void performDelete(IContext context, IResultSet result, Connection connection, Table table, IRegister register, int expectedCount) throws DatabaseException, SQLException {
         performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.DELETE, register, expectedCount), table, register);
     }
 
@@ -473,12 +472,12 @@ public class Database extends AbstractDatabase {
      *            The target table.
      * @param register
      *            The values.
-     * @throws PluginException
-     *             On plugin errors.
+     * @throws DatabaseException
+     *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performIn(IContext context, IResultSet result, Connection connection, SqlWrapper wrapper, Table table, IRegister register) throws PluginException, SQLException {
+    protected void performIn(IContext context, IResultSet result, Connection connection, SqlWrapper wrapper, Table table, IRegister register) throws DatabaseException, SQLException {
         Map<String, Integer> namesToIndexes = wrapper.getNamesToIndexes();
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(wrapper.getSql() + ". MAP: " + namesToIndexes + ". VALUES: " + register);
@@ -501,7 +500,7 @@ public class Database extends AbstractDatabase {
         idManager.readKeys(connection, pstmt, wrapper, table, register);
 
         if (wrapper.getExpectedCount() != count) {
-            throw new PluginException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
+            throw new DatabaseException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
         }
 
         fireRegisterIn(new DatabaseRegisterEvent(context, result, connection, table, register, wrapper, indexesToValues));
@@ -517,10 +516,10 @@ public class Database extends AbstractDatabase {
      * @param namesToIndexes
      *            Map from indexes to values.
      * @return A map of object to use in statement setup.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On prepare errors.
      */
-    protected Map<Integer, Object> prepareInputValues(Table table, IRegister register, Map<String, Integer> namesToIndexes) throws PluginException {
+    protected Map<Integer, Object> prepareInputValues(Table table, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException {
         idManager.clearLocal();
         Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
         for (Value v : register) {
@@ -528,29 +527,12 @@ public class Database extends AbstractDatabase {
             Integer index = namesToIndexes.get(column.getName());
             if (index != null) {
                 Object obj = v.getValue();
-                String alias = column.getTableOrAlias();
                 if (column.isVirtual()) {
-                    // the target table is the column header
-                    String pointer = column.getPointer();
-                    if (pointer != null) {
-                        alias = null;
-                        for (Value vp : register) {
-                            if (pointer.equals(vp.getColumn().getAlias())) {
-                                alias = UtilNames.normalize(vp.getCell().getValue());
-                                break;
-                            }
-                        }
-                        if (alias == null) {
-                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-                        }
-                        if (UtilLog.LOG.isDebugEnabled()) {
-                            UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                        }
-                    }
+                    String alias = getTableAlias(register, column);
                     obj = idManager.lookup(alias, obj);
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("performIn.SET(" + index + "," + alias + "," + column.getName() + ") = " + obj);
+                    UtilLog.LOG.debug("performIn.SET(" + index + "," + column.getName() + ") = " + obj);
                 }
                 indexesToValues.put(index, obj);
                 if (column.isReference()) {
@@ -559,6 +541,38 @@ public class Database extends AbstractDatabase {
             }
         }
         return indexesToValues;
+    }
+
+    /**
+     * Get the alias for the column table.
+     * 
+     * @param register
+     *            A register.
+     * @param column
+     *            A column.
+     * @return The table alias to lookup.
+     * @throws DatabaseException
+     *             On lookup errors.
+     */
+    protected String getTableAlias(IRegister register, Column column) throws DatabaseException {
+        String alias = column.getTableOrAlias();
+        String pointer = column.getPointer();
+        if (pointer != null) {
+            alias = null;
+            for (Value vp : register) {
+                if (pointer.equals(vp.getColumn().getAlias())) {
+                    alias = UtilNames.normalize(vp.getCell().getValue());
+                    break;
+                }
+            }
+            if (alias == null) {
+                throw new DatabaseException("The column '" + column.getTableOrAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
+            }
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
+            }
+        }
+        return alias;
     }
 
     /**
@@ -578,12 +592,12 @@ public class Database extends AbstractDatabase {
      *            The values.
      * @param expectedCount
      *            The select expected count.
-     * @throws PluginException
-     *             On plugin errors.
+     * @throws DatabaseException
+     *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performSelect(IContext context, IResultSet result, Connection connection, Table table, CommandType command, IRegister register, int expectedCount) throws PluginException, SQLException {
+    protected void performSelect(IContext context, IResultSet result, Connection connection, Table table, CommandType command, IRegister register, int expectedCount) throws DatabaseException, SQLException {
         performOut(context, result, connection, sqlWrapperFactory.createOutputWrapper(table, command, register, expectedCount), table, register);
     }
 
@@ -602,12 +616,12 @@ public class Database extends AbstractDatabase {
      *            The output table.
      * @param register
      *            The values.
-     * @throws PluginException
-     *             On plugin errors.
+     * @throws DatabaseException
+     *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performOut(IContext context, IResultSet result, Connection connection, SqlWrapper wrapper, Table table, IRegister register) throws PluginException, SQLException {
+    protected void performOut(IContext context, IResultSet result, Connection connection, SqlWrapper wrapper, Table table, IRegister register) throws DatabaseException, SQLException {
         Map<String, Integer> namesToIndexes = wrapper.getNamesToIndexes();
         String sql = wrapper.getSql();
         if (UtilLog.LOG.isDebugEnabled()) {
@@ -623,15 +637,15 @@ public class Database extends AbstractDatabase {
             rs = pstmt.executeQuery();
             if (wrapper.getExpectedCount() == 1) {
                 if (!rs.next()) {
-                    throw new PluginException("None register found with the given conditions: " + sql + " and values: [" + register + "]");
+                    throw new DatabaseException("None register found with the given conditions: " + sql + " and values: [" + register + "]");
                 }
                 compareRegister(context, result, connection, register, namesToIndexes, rs);
                 if (rs.next()) {
-                    throw new PluginException("More than one register satisfy the condition: " + sql + "[" + register + "]\n" + dumpRs("Extra itens:", rs));
+                    throw new DatabaseException("More than one register satisfy the condition: " + sql + "[" + register + "]\n" + dumpRs("Extra itens:", rs));
                 }
             } else {
                 if (rs.next()) {
-                    throw new PluginException("A result for " + sql + "[" + register + "] was not expected.\n" + dumpRs("Unexpected items:", rs));
+                    throw new DatabaseException("A result for " + sql + "[" + register + "] was not expected.\n" + dumpRs("Unexpected items:", rs));
                 }
             }
         } finally {
@@ -652,12 +666,12 @@ public class Database extends AbstractDatabase {
      * @param namesToIndexes
      *            Map from indexes to values.
      * @return A map of object to use in statement setup.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On prepare errors.
      * @throws SQLException
      *             On database errors.
      */
-    protected Map<Integer, Object> prepareSelectValues(Connection connection, IRegister register, Map<String, Integer> namesToIndexes) throws PluginException, SQLException {
+    protected Map<Integer, Object> prepareSelectValues(Connection connection, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException, SQLException {
         Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
         for (Value v : register) {
             Column column = v.getColumn();
@@ -677,7 +691,7 @@ public class Database extends AbstractDatabase {
                             }
                         }
                         if (alias == null) {
-                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
+                            throw new DatabaseException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
                         } else {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
@@ -690,7 +704,7 @@ public class Database extends AbstractDatabase {
                 if (column.isDate()) {
                     IComparator comp = column.getComparator();
                     if (!(comp instanceof ComparatorDate)) {
-                        throw new PluginException("Date columns must have comparators of type 'date'. Current type:" + comp.getClass());
+                        throw new DatabaseException("Date columns must have comparators of type 'date'. Current type:" + comp.getClass());
                     }
                     ComparatorDate comparator = (ComparatorDate) comp;
                     comparator.initialize();
@@ -729,12 +743,12 @@ public class Database extends AbstractDatabase {
      *            A mapping from column names to indexes.
      * @param rs
      *            A result.
-     * @throws PluginException
+     * @throws DatabaseException
      *             On compare errors.
      * @throws SQLException
      *             On database errors.
      */
-    protected void compareRegister(IContext context, IResultSet result, Connection connection, IRegister register, Map<String, Integer> namesToIndexes, ResultSet rs) throws PluginException, SQLException {
+    protected void compareRegister(IContext context, IResultSet result, Connection connection, IRegister register, Map<String, Integer> namesToIndexes, ResultSet rs) throws DatabaseException, SQLException {
         for (Value v : register) {
             Column column = v.getColumn();
             Integer index = namesToIndexes.get(column.getName());
@@ -759,7 +773,7 @@ public class Database extends AbstractDatabase {
                             }
                         }
                         if (alias == null) {
-                            throw new PluginException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
+                            throw new DatabaseException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
                         } else {
                             if (UtilLog.LOG.isDebugEnabled()) {
                                 UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);

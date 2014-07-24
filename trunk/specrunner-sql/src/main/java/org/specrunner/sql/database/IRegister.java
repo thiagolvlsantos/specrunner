@@ -15,19 +15,16 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database;
 
-import org.specrunner.sql.ISequenceProvider;
+import java.util.Set;
+
+import org.specrunner.sql.meta.Value;
 
 /**
- * Default sequence provider.
+ * A register is a set of values. This is a semantic interface.
  * 
  * @author Thiago Santos
  */
-public class SequenceProviderDefault implements ISequenceProvider {
-
-    @Override
-    public String nextValue(String sequence) {
-        return "NEXT VALUE FOR " + sequence;
-    }
+public interface IRegister extends Set<Value> {
 }

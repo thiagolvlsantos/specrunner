@@ -15,16 +15,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database;
 
-import java.util.Set;
-
-import org.specrunner.sql.meta.Value;
+import org.specrunner.SpecRunnerException;
 
 /**
- * A register is a set of values. This is a semantic interface.
+ * Errors on database.
  * 
  * @author Thiago Santos
+ * 
  */
-public interface IRegister extends Set<Value> {
+@SuppressWarnings("serial")
+// CHECKSTYLE:OFF
+public class DatabaseException extends SpecRunnerException {
+
+    public DatabaseException() {
+        super();
+    }
+
+    public DatabaseException(String message) {
+        super(message);
+    }
+
+    public DatabaseException(Throwable cause) {
+        super(cause);
+    }
+
+    public DatabaseException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
+// CHECKSTYLE:ON

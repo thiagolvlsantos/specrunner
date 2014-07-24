@@ -15,15 +15,15 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.specrunner.sql.CommandType;
-import org.specrunner.sql.IRegister;
-import org.specrunner.sql.ISqlWrapperFactory;
-import org.specrunner.sql.SqlWrapper;
+import org.specrunner.sql.database.CommandType;
+import org.specrunner.sql.database.IRegister;
+import org.specrunner.sql.database.ISqlWrapperFactory;
+import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;

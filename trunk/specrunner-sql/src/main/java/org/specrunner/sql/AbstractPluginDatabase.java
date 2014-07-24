@@ -32,6 +32,9 @@ import org.specrunner.plugins.core.AbstractPluginTable;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.database.EMode;
+import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
@@ -243,7 +246,7 @@ public abstract class AbstractPluginDatabase extends AbstractPluginTable {
                 }
                 erros++;
                 result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Error in datasource: " + source + ", and database: " + base + ", and schema: " + schema.getAlias() + ". Error: " + e.getMessage(), e));
-            } catch (PluginException e) {
+            } catch (DatabaseException e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }

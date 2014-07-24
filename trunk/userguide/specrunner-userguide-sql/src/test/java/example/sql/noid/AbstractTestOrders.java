@@ -9,11 +9,11 @@ import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchemaLoader;
-import org.specrunner.sql.impl.Database;
+import org.specrunner.sql.database.IDatabase;
+import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 import example.sql.DataSourceProviderImpl;
@@ -28,7 +28,7 @@ public abstract class AbstractTestOrders {
         cfg.add(PluginConnection.FEATURE_REUSE, true);
         cfg.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
         cfg.add(PluginSchemaLoader.FEATURE_REUSE, true);
-        cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new Database() });
+        cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new DatabaseDefault() });
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         // time comparators tolerance of 1000 milliseconds.
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 1000L);

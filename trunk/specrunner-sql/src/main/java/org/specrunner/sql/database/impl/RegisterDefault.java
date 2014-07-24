@@ -15,29 +15,19 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.sql.database.impl;
 
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Command;
-import org.specrunner.sql.database.EMode;
+import java.util.TreeSet;
+
+import org.specrunner.sql.database.IRegister;
+import org.specrunner.sql.meta.Value;
 
 /**
- * Prepare a database.
+ * Basic instance of a register. The tree set is used to keep values column name
+ * order and optimize cache of statements.
  * 
- * @author Thiago Santos
- * 
+ * @author Thiago Santos.
  */
-public class PluginPrepare extends AbstractPluginDatabase {
-
-    /**
-     * Default constructor.
-     */
-    public PluginPrepare() {
-        super(EMode.INPUT);
-    }
-
-    @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
-    }
+@SuppressWarnings("serial")
+public class RegisterDefault extends TreeSet<Value> implements IRegister {
 }

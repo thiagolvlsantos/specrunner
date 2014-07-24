@@ -3,9 +3,9 @@ package example.sql.noid;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.specrunner.sql.IDatabase;
 import org.specrunner.sql.PluginSchema;
-import org.specrunner.sql.impl.DatabasePrintListener;
+import org.specrunner.sql.database.IDatabase;
+import org.specrunner.sql.database.impl.DatabasePrintListener;
 
 public class TestOrdersIdentity extends AbstractTestOrders {
 

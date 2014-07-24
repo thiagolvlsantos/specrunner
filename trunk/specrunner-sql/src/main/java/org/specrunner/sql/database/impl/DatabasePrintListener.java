@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.impl;
+package org.specrunner.sql.database.impl;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -24,11 +24,11 @@ import java.util.Map;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.sql.DatabaseRegisterEvent;
-import org.specrunner.sql.DatabaseTableEvent;
-import org.specrunner.sql.IDatabaseListener;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.database.DatabaseRegisterEvent;
+import org.specrunner.sql.database.DatabaseTableEvent;
+import org.specrunner.sql.database.IDatabaseListener;
 import org.specrunner.util.output.IOutputFactory;
 
 /**
@@ -54,21 +54,21 @@ public class DatabasePrintListener implements IDatabaseListener {
     }
 
     @Override
-    public void onTableIn(DatabaseTableEvent event) throws PluginException {
+    public void onTableIn(DatabaseTableEvent event) throws DatabaseException {
     }
 
     @Override
-    public void onRegisterIn(DatabaseRegisterEvent event) throws PluginException {
+    public void onRegisterIn(DatabaseRegisterEvent event) throws DatabaseException {
         dump(event.getContext(), event.getResult(), event.getWrapper().getSql(), event.getIndexesToValues());
     }
 
     @Override
-    public void onRegisterOut(DatabaseRegisterEvent event) throws PluginException {
+    public void onRegisterOut(DatabaseRegisterEvent event) throws DatabaseException {
         dump(event.getContext(), event.getResult(), event.getWrapper().getSql(), event.getIndexesToValues());
     }
 
     @Override
-    public void onTableOut(DatabaseTableEvent event) throws PluginException {
+    public void onTableOut(DatabaseTableEvent event) throws DatabaseException {
     }
 
     /**
@@ -82,10 +82,8 @@ public class DatabasePrintListener implements IDatabaseListener {
      *            The SQL.
      * @param arguments
      *            The arguments.
-     * @throws PluginException
-     *             On dump errors.
      */
-    public void dump(IContext context, IResultSet result, String sql, Map<Integer, Object> arguments) throws PluginException {
+    public void dump(IContext context, IResultSet result, String sql, Map<Integer, Object> arguments) {
         StringBuilder sb = new StringBuilder();
         int counter = 1;
         char c;
