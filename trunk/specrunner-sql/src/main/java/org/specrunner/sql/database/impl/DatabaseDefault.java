@@ -159,12 +159,12 @@ public class DatabaseDefault extends AbstractDatabase {
     public void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws DatabaseException {
         List<CellAdapter> captions = adapter.getCaptions();
         if (captions.isEmpty()) {
-            throw new DatabaseException("Tables must have a caption.");
+            throw new DatabaseException("Tables must have a caption. The caption must be part of this set: " + schema.getAliasToTables().keySet());
         }
         String tAlias = captions.get(0).getValue();
         Table table = schema.getAlias(tAlias);
         if (table == null) {
-            throw new DatabaseException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), avaliable tables alias: " + schema.getAliasToTables().keySet());
+            throw new DatabaseException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), available tables: " + schema.getAliasToTables().keySet());
         }
         // creates a copy only of defined tables
         try {
@@ -173,7 +173,9 @@ public class DatabaseDefault extends AbstractDatabase {
             throw new DatabaseException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
         }
         List<RowAdapter> rows = adapter.getRows();
-
+        if (rows.isEmpty() || rows.size() == 1) {
+            throw new DatabaseException("A valid table should have at least 2 rows, one for headers (th's) and another for values (td's).");
+        }
         // headers are in the first row.
         RowAdapter header = rows.get(0);
         List<CellAdapter> headers = header.getCells();
@@ -190,7 +192,7 @@ public class DatabaseDefault extends AbstractDatabase {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
             if (tds.isEmpty()) {
-                throw new DatabaseException("Empty lines are useless. " + row.getValue());
+                throw new DatabaseException("Empty lines are useless. Invalid row[" + i + "]:" + row.getValue());
             }
             if (tds.size() != headers.size()) {
                 throw new DatabaseException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
@@ -213,35 +215,16 @@ public class DatabaseDefault extends AbstractDatabase {
                 } catch (ComparatorException e) {
                     throw new DatabaseException(e);
                 }
-                String value = getAdjustValue(context, td);
-                boolean isNull = nullEmptyHandler.isNull(value, mode);
-                boolean isEmpty = nullEmptyHandler.isEmpty(value, mode);
-                IConverter converter = column.getConverter();
-                if (isNull || isEmpty || column.isVirtual() || converter.accept(value)) {
-                    Object obj = null;
-                    if (isNull) {
-                        obj = null;
-                    } else if (isEmpty) {
-                        obj = "";
-                    } else if (column.isVirtual()) {
-                        obj = value;
-                    } else {
-                        List<String> args = td.getArguments(column.getArguments());
-                        try {
-                            obj = converter.convert(value, args.isEmpty() ? null : args.toArray());
-                        } catch (ConverterException e) {
-                            result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), new PluginException("Convertion error at row: " + i + ", cell: " + j + ". Attempt to convert '" + value + "' using a '" + converter + "'."));
-                            continue;
-                        }
+                String content = getAdjustContent(context, td);
+                try {
+                    Value v = getValue(mode, command, column, td, content);
+                    if (v != null) {
+                        register.add(v);
+                        filled.put(column.getName(), v);
                     }
-                    if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
-                        // the other column fields with default value are set in
-                        // <code>addMissingValues(...)</code> method.
-                        obj = column.getDefaultValue();
-                    }
-                    Value v = new Value(column, td, obj, column.getComparator());
-                    register.add(v);
-                    filled.put(column.getName(), v);
+                } catch (ConverterException e) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), new PluginException("Convertion error at row: " + i + ", cell: " + j + ".", e));
+                    continue;
                 }
             }
             try {
@@ -299,6 +282,50 @@ public class DatabaseDefault extends AbstractDatabase {
     }
 
     /**
+     * Get value object for a given cell.
+     * 
+     * @param mode
+     *            Action mode.
+     * @param command
+     *            Command type.
+     * @param column
+     *            Column meta-data.
+     * @param td
+     *            The cell.
+     * @param content
+     *            Cell content.
+     * @return A value, if valid, null, otherwise.
+     * @throws ConverterException
+     *             On data convertion errors.
+     */
+    protected Value getValue(EMode mode, CommandType command, Column column, CellAdapter td, String content) throws ConverterException {
+        boolean isNull = nullEmptyHandler.isNull(content, mode);
+        boolean isEmpty = nullEmptyHandler.isEmpty(content, mode);
+        boolean isVirtual = column.isVirtual();
+        IConverter converter = column.getConverter();
+        if (isNull || isEmpty || isVirtual || converter.accept(content)) {
+            Object obj = null;
+            if (isNull) {
+                obj = null;
+            } else if (isEmpty) {
+                obj = "";
+            } else if (isVirtual) {
+                obj = content;
+            } else {
+                List<String> args = column.getArguments();
+                obj = converter.convert(content, args.isEmpty() ? null : args.toArray());
+            }
+            if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
+                // the other column fields with default value are set in
+                // <code>addMissingValues(...)</code> method.
+                obj = column.getDefaultValue();
+            }
+            return new Value(column, td, obj, column.getComparator());
+        }
+        return null;
+    }
+
+    /**
      * Read headers information.
      * 
      * @param context
@@ -345,7 +372,7 @@ public class DatabaseDefault extends AbstractDatabase {
      * @throws DatabaseException
      *             On evaluation errors.
      */
-    protected String getAdjustValue(IContext context, INodeHolder nh) throws DatabaseException {
+    protected String getAdjustContent(IContext context, INodeHolder nh) throws DatabaseException {
         try {
             String previous = nh.getValue();
             String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
