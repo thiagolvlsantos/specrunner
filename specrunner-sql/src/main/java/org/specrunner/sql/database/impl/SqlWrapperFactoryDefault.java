@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.specrunner.sql.database.CommandType;
-import org.specrunner.sql.database.IRegister;
 import org.specrunner.sql.database.ISqlWrapperFactory;
 import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.Value;
 

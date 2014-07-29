@@ -19,8 +19,12 @@ package org.specrunner.sql.database.impl;
 
 import java.util.TreeSet;
 
-import org.specrunner.sql.database.IRegister;
+import org.specrunner.sql.database.DatabaseException;
+import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IRegister;
+import org.specrunner.sql.meta.UtilNames;
 import org.specrunner.sql.meta.Value;
+import org.specrunner.util.UtilLog;
 
 /**
  * Basic instance of a register. The tree set is used to keep values column name
@@ -30,4 +34,26 @@ import org.specrunner.sql.meta.Value;
  */
 @SuppressWarnings("serial")
 public class RegisterDefault extends TreeSet<Value> implements IRegister {
+
+    @Override
+    public String getTableOrAlias(Column column) throws DatabaseException {
+        String alias = column.getTableOrAlias();
+        String pointer = column.getPointer();
+        if (pointer != null) {
+            alias = null;
+            for (Value vp : this) {
+                if (pointer.equals(vp.getColumn().getAlias())) {
+                    alias = UtilNames.normalize(vp.getCell().getValue());
+                    break;
+                }
+            }
+            if (alias == null) {
+                throw new DatabaseException("The column '" + column.getTableOrAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
+            }
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
+            }
+        }
+        return alias;
+    }
 }

@@ -61,6 +61,11 @@ public interface IDatabase extends IResetable {
     String FEATURE_STATEMENT_FACTORY = IDatabase.class.getName() + ".statementFactory";
 
     /**
+     * Feature for object manager instance.
+     */
+    String FEATURE_ID_MANAGER = IDatabase.class.getName() + ".idManager";
+
+    /**
      * Feature for database listeners.
      */
     String FEATURE_LISTENERS = IDatabase.class.getName() + ".listeners";
@@ -104,6 +109,14 @@ public interface IDatabase extends IResetable {
      *            A factory.
      */
     void setStatementFactory(IStatementFactory statementFactory);
+
+    /**
+     * Set the manager.
+     * 
+     * @param idManager
+     *            The manager.
+     */
+    void setIdManager(IIdManager idManager);
 
     /**
      * Set database listeners.

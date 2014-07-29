@@ -15,11 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.database;
+package org.specrunner.sql.meta;
 
 import java.util.Set;
 
-import org.specrunner.sql.meta.Value;
+import org.specrunner.sql.database.DatabaseException;
 
 /**
  * A register is a set of values. This is a semantic interface.
@@ -27,4 +27,15 @@ import org.specrunner.sql.meta.Value;
  * @author Thiago Santos
  */
 public interface IRegister extends Set<Value> {
+
+    /**
+     * Get the table which is referred by the column.
+     * 
+     * @param column
+     *            Base column.
+     * @return The table or alias.
+     * @throws DatabaseException
+     *             On table resolution error.
+     */
+    String getTableOrAlias(Column column) throws DatabaseException;
 }
