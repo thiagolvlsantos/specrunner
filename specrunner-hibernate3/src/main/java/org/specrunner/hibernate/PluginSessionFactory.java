@@ -23,6 +23,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IDestructable;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ENext;
@@ -121,7 +122,7 @@ public class PluginSessionFactory extends AbstractPluginFactory {
             throw new PluginException("Parameter 'configuration', 'type', or 'factory' and 'method' missing. In 'type' use an subtype of ISessionFactoryProvider, or choose a class in 'factory' whose 'method' is static and returns a Hibernate Configuration, or a 'configuration' by its name.");
         }
         try {
-            SessionFactory sf = null;
+            final SessionFactory sf;
             if (type != null) {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("SessionFactory by type: " + type + ".");
@@ -145,7 +146,17 @@ public class PluginSessionFactory extends AbstractPluginFactory {
             }
 
             String str = getName() != null ? getName() : SESSION_FACTORY;
-            context.saveGlobal(str, sf);
+            context.saveGlobal(str, new IDestructable() {
+                @Override
+                public Object getObject() {
+                    return sf;
+                }
+
+                @Override
+                public void destroy() {
+                    sf.close();
+                }
+            });
             result.addResult(Success.INSTANCE, context.peek());
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

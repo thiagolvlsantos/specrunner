@@ -31,8 +31,11 @@ import org.specrunner.SpecRunnerException;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
+import org.specrunner.context.IBlockListener;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IDestructable;
 import org.specrunner.context.IModel;
+import org.specrunner.listeners.IListenerManager;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.core.PluginNop;
@@ -85,6 +88,22 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         sources.add(source);
         add(new BlockImpl(null, PluginNop.emptyPlugin(), new HashMap<String, Object>()));
         setRunner(runner);
+    }
+
+    @Override
+    public void push(IBlock e) {
+        super.push(e);
+        for (IBlockListener listener : SRServices.get(IListenerManager.class).filterByType(IBlockListener.class)) {
+            listener.onPush(e);
+        }
+    }
+
+    @Override
+    public IBlock pop() {
+        for (IBlockListener listener : SRServices.get(IListenerManager.class).filterByType(IBlockListener.class)) {
+            listener.onPop(super.peek());
+        }
+        return super.pop();
     }
 
     @Override
@@ -299,9 +318,12 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
                         count--;
                         continue;
                     }
+                    if (o instanceof IDestructable) {
+                        o = ((IDestructable) o).getObject();
+                    }
                     if (o instanceof IModel) {
                         try {
-                            return ((IModel<?>) o).getObject(this);
+                            o = ((IModel<?>) o).getObject(this);
                         } catch (SpecRunnerException e) {
                             if (UtilLog.LOG.isTraceEnabled()) {
                                 UtilLog.LOG.trace(e.getMessage(), e);

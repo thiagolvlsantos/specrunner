@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IDestructable;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.listeners.PageListener;
 import org.specrunner.listeners.IListenerManager;
@@ -564,7 +565,7 @@ public class PluginBrowser extends AbstractPluginScoped {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Browser named '" + getName() + "' bound to '" + client + "'.");
             }
-            saveGlobal(context, getName(), client);
+            save(context, client);
             result.addResult(Success.INSTANCE, context.peek());
             if (reuse) {
                 if (UtilLog.LOG.isInfoEnabled()) {
@@ -600,6 +601,34 @@ public class PluginBrowser extends AbstractPluginScoped {
             return ENext.DEEP;
         } catch (Exception e) {
             throw new PluginException(e);
+        }
+    }
+
+    /**
+     * Save client on context.
+     * 
+     * @param context
+     *            A context.
+     * @param client
+     *            A client.
+     */
+    protected void save(IContext context, final WebClient client) {
+        if (reuse) {
+            saveGlobal(context, getName(), client);
+        } else {
+            // not reuse mean close resources on context destroy
+            saveGlobal(context, getName(), new IDestructable() {
+
+                @Override
+                public Object getObject() {
+                    return client;
+                }
+
+                @Override
+                public void destroy() {
+                    client.closeAllWindows();
+                }
+            });
         }
     }
 

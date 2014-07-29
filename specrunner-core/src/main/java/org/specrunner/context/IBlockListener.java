@@ -17,21 +17,29 @@
  */
 package org.specrunner.context;
 
+import org.specrunner.listeners.ISpecRunnerListener;
+
 /**
- * Populates context with extra-information, for example, all Java System
- * properties as global variables.
+ * Stands for a context listener.
  * 
  * @author Thiago Santos
  * 
  */
-public interface IContextPopulator {
+public interface IBlockListener extends ISpecRunnerListener {
 
     /**
-     * Populates a context.
+     * O block queue.
      * 
-     * @param context
-     *            The context modified or a new one.
-     * @return The context populated.
+     * @param block
+     *            A block.
      */
-    IContext populate(IContext context);
+    void onPush(IBlock block);
+
+    /**
+     * On block dequeue.
+     * 
+     * @param block
+     *            A block.
+     */
+    void onPop(IBlock block);
 }

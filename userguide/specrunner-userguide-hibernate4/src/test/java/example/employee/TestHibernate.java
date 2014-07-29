@@ -16,7 +16,7 @@ import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.core.AbstractPlugin;
 
 @RunWith(ConcurrentRunner.class)
-@Concurrent(threads = 1)
+@Concurrent(threads = 3)
 public class TestHibernate {
 
     @Before
