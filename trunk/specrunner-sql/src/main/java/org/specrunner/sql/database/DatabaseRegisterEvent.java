@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Table;
 
 /**

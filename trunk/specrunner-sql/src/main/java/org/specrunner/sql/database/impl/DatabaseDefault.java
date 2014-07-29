@@ -18,6 +18,7 @@
 package org.specrunner.sql.database.impl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -25,6 +26,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -49,9 +51,17 @@ import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.DatabaseRegisterEvent;
 import org.specrunner.sql.database.DatabaseTableEvent;
 import org.specrunner.sql.database.EMode;
-import org.specrunner.sql.database.IRegister;
+import org.specrunner.sql.database.IColumnReader;
+import org.specrunner.sql.database.IDatabase;
+import org.specrunner.sql.database.IDatabaseListener;
+import org.specrunner.sql.database.IIdManager;
+import org.specrunner.sql.database.INullEmptyHandler;
+import org.specrunner.sql.database.ISequenceProvider;
+import org.specrunner.sql.database.ISqlWrapperFactory;
+import org.specrunner.sql.database.IStatementFactory;
 import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.ReplicableException;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -62,6 +72,7 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
+import org.specrunner.util.collections.ReverseIterable;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.IPresentation;
@@ -79,22 +90,48 @@ import org.specrunner.util.xom.core.PresentationException;
  * 
  */
 @SuppressWarnings("serial")
-public class DatabaseDefault extends AbstractDatabase {
+public class DatabaseDefault implements IDatabase {
+
+    /**
+     * A null/empty handler.
+     */
+    protected INullEmptyHandler nullEmptyHandler = new NullEmptyHandlerDefault();
+
+    /**
+     * Sequence next value generator.
+     */
+    protected ISequenceProvider sequenceProvider = new SequenceProviderDefault();
+
+    /**
+     * Recover object from a result set column to be compared against the
+     * specification object.
+     */
+    protected IColumnReader columnReader = new ColumnReaderDefault();
+
+    /**
+     * Factory of SQLs.
+     */
+    protected ISqlWrapperFactory sqlWrapperFactory = new SqlWrapperFactoryDefault();
+
+    /**
+     * Factory of statements.
+     */
+    protected IStatementFactory statementFactory = new StatementFactoryDefault();
+
+    /**
+     * Manage object lookup and reuse.
+     */
+    protected IIdManager idManager = new IdManagerDefault();
+
+    /**
+     * List of listeners.
+     */
+    protected List<IDatabaseListener> listeners = new LinkedList<IDatabaseListener>();
 
     /**
      * Feature for database error dump limit.
      */
     public static final String FEATURE_LIMIT = DatabaseDefault.class.getName() + ".limit";
-
-    /**
-     * Feature for object manager instance.
-     */
-    public static final String FEATURE_ID_MANAGER = DatabaseDefault.class.getName() + ".idManager";
-
-    /**
-     * Manage object lookup and reuse.
-     */
-    protected IdManager idManager = new IdManager();
 
     /**
      * Feature for dump size.
@@ -106,23 +143,121 @@ public class DatabaseDefault extends AbstractDatabase {
      */
     private Integer limit = DEFAULT_LIMIT;
 
+    @Override
+    public void initialize() {
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_NULL_EMPTY_HANDLER, this);
+        fm.set(FEATURE_SEQUENCE_PROVIDER, this);
+        fm.set(FEATURE_COLUMN_READER, this);
+        fm.set(FEATURE_SQL_WRAPPER_FACTORY, this);
+        fm.set(FEATURE_STATEMENT_FACTORY, this);
+        fm.set(FEATURE_ID_MANAGER, this);
+        fm.set(FEATURE_LISTENERS, this);
+        fm.set(FEATURE_LIMIT, this);
+        // every use of database clear mappings to avoid memory overload and
+        // test interference
+        idManager.reset();
+    }
+
+    /**
+     * Get the null/empty handler.
+     * 
+     * @return Current null/empty handler.
+     */
+    public INullEmptyHandler getNullEmptyHandler() {
+        return nullEmptyHandler;
+    }
+
+    @Override
+    public void setNullEmptyHandler(INullEmptyHandler nullEmptyHandler) {
+        this.nullEmptyHandler = nullEmptyHandler;
+    }
+
+    /**
+     * Get the sequence values provider.
+     * 
+     * @return The provider.
+     */
+    public ISequenceProvider getSequenceProvider() {
+        return sequenceProvider;
+    }
+
+    @Override
+    public void setSequenceProvider(ISequenceProvider sequenceProvider) {
+        this.sequenceProvider = sequenceProvider;
+    }
+
+    /**
+     * Get current column reader.
+     * 
+     * @return The current reader.
+     */
+    public IColumnReader getColumnReader() {
+        return columnReader;
+    }
+
+    @Override
+    public void setColumnReader(IColumnReader columnReader) {
+        this.columnReader = columnReader;
+    }
+
+    /**
+     * Get the SQL wrapper factory.
+     * 
+     * @return The current factory.
+     */
+    public ISqlWrapperFactory getSqlWrapperFactory() {
+        return sqlWrapperFactory;
+    }
+
+    @Override
+    public void setSqlWrapperFactory(ISqlWrapperFactory sqlWrapperFactory) {
+        this.sqlWrapperFactory = sqlWrapperFactory;
+    }
+
+    /**
+     * Get statement factory.
+     * 
+     * @return The current factory.
+     */
+    public IStatementFactory getStatementFactory() {
+        return statementFactory;
+    }
+
+    @Override
+    public void setStatementFactory(IStatementFactory statementFactory) {
+        this.statementFactory = statementFactory;
+    }
+
     /**
      * Get the id manager.
      * 
      * @return The manager.
      */
-    public IdManager getIdManager() {
+    public IIdManager getIdManager() {
         return idManager;
     }
 
-    /**
-     * Set the manager.
-     * 
-     * @param idManager
-     *            The manager.
-     */
-    public void setIdManager(IdManager idManager) {
+    @Override
+    public void setIdManager(IIdManager idManager) {
         this.idManager = idManager;
+    }
+
+    /**
+     * Get listeners.
+     * 
+     * @return Listeners.
+     */
+    public List<IDatabaseListener> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public void setListeners(List<IDatabaseListener> listeners) {
+        if (listeners == null) {
+            throw new IllegalArgumentException("Listeners cannot be a null list.");
+        }
+        this.listeners = listeners;
     }
 
     /**
@@ -144,15 +279,79 @@ public class DatabaseDefault extends AbstractDatabase {
         this.limit = limit;
     }
 
-    @Override
-    public void initialize() {
-        super.initialize();
-        IFeatureManager fm = SRServices.getFeatureManager();
-        fm.set(FEATURE_LIMIT, this);
-        fm.set(FEATURE_ID_MANAGER, this);
-        // every use of database clear mappings to avoid memory overload and
-        // test interference
-        idManager.clear();
+    /**
+     * Fire initialize event.
+     */
+    protected void fireInitialize() {
+        synchronized (listeners) {
+            for (IDatabaseListener listener : listeners) {
+                listener.initialize();
+            }
+        }
+    }
+
+    /**
+     * Fire table in event.
+     * 
+     * @param event
+     *            Event.
+     * @throws DatabaseException
+     *             On processing errors.
+     */
+    protected void fireTableIn(DatabaseTableEvent event) throws DatabaseException {
+        synchronized (listeners) {
+            for (IDatabaseListener listener : listeners) {
+                listener.onTableIn(event);
+            }
+        }
+    }
+
+    /**
+     * Fire register in event.
+     * 
+     * @param event
+     *            Event.
+     * @throws DatabaseException
+     *             On processing errors.
+     */
+    protected void fireRegisterIn(DatabaseRegisterEvent event) throws DatabaseException {
+        synchronized (listeners) {
+            for (IDatabaseListener listener : listeners) {
+                listener.onRegisterIn(event);
+            }
+        }
+    }
+
+    /**
+     * Fire register out event.
+     * 
+     * @param event
+     *            Event.
+     * @throws DatabaseException
+     *             On processing errors.
+     */
+    protected void fireRegisterOut(DatabaseRegisterEvent event) throws DatabaseException {
+        synchronized (listeners) {
+            for (IDatabaseListener listener : new ReverseIterable<IDatabaseListener>(listeners)) {
+                listener.onRegisterOut(event);
+            }
+        }
+    }
+
+    /**
+     * Fire table out event.
+     * 
+     * @param event
+     *            Event.
+     * @throws DatabaseException
+     *             On processing errors.
+     */
+    protected void fireTableOut(DatabaseTableEvent event) throws DatabaseException {
+        synchronized (listeners) {
+            for (IDatabaseListener listener : new ReverseIterable<IDatabaseListener>(listeners)) {
+                listener.onTableOut(event);
+            }
+        }
     }
 
     @Override
@@ -282,50 +481,6 @@ public class DatabaseDefault extends AbstractDatabase {
     }
 
     /**
-     * Get value object for a given cell.
-     * 
-     * @param mode
-     *            Action mode.
-     * @param command
-     *            Command type.
-     * @param column
-     *            Column meta-data.
-     * @param td
-     *            The cell.
-     * @param content
-     *            Cell content.
-     * @return A value, if valid, null, otherwise.
-     * @throws ConverterException
-     *             On data convertion errors.
-     */
-    protected Value getValue(EMode mode, CommandType command, Column column, CellAdapter td, String content) throws ConverterException {
-        boolean isNull = nullEmptyHandler.isNull(content, mode);
-        boolean isEmpty = nullEmptyHandler.isEmpty(content, mode);
-        boolean isVirtual = column.isVirtual();
-        IConverter converter = column.getConverter();
-        if (isNull || isEmpty || isVirtual || converter.accept(content)) {
-            Object obj = null;
-            if (isNull) {
-                obj = null;
-            } else if (isEmpty) {
-                obj = "";
-            } else if (isVirtual) {
-                obj = content;
-            } else {
-                List<String> args = column.getArguments();
-                obj = converter.convert(content, args.isEmpty() ? null : args.toArray());
-            }
-            if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
-                // the other column fields with default value are set in
-                // <code>addMissingValues(...)</code> method.
-                obj = column.getDefaultValue();
-            }
-            return new Value(column, td, obj, column.getComparator());
-        }
-        return null;
-    }
-
-    /**
      * Read headers information.
      * 
      * @param context
@@ -384,6 +539,50 @@ public class DatabaseDefault extends AbstractDatabase {
         } catch (PluginException e) {
             throw new DatabaseException(e);
         }
+    }
+
+    /**
+     * Get value object for a given cell.
+     * 
+     * @param mode
+     *            Action mode.
+     * @param command
+     *            Command type.
+     * @param column
+     *            Column meta-data.
+     * @param td
+     *            The cell.
+     * @param content
+     *            Cell content.
+     * @return A value, if valid, null, otherwise.
+     * @throws ConverterException
+     *             On data convertion errors.
+     */
+    protected Value getValue(EMode mode, CommandType command, Column column, CellAdapter td, String content) throws ConverterException {
+        boolean isNull = nullEmptyHandler.isNull(content, mode);
+        boolean isEmpty = nullEmptyHandler.isEmpty(content, mode);
+        boolean isVirtual = column.isVirtual();
+        IConverter converter = column.getConverter();
+        if (isNull || isEmpty || isVirtual || converter.accept(content)) {
+            Object obj = null;
+            if (isNull) {
+                obj = null;
+            } else if (isEmpty) {
+                obj = "";
+            } else if (isVirtual) {
+                obj = content;
+            } else {
+                List<String> args = column.getArguments();
+                obj = converter.convert(content, args.isEmpty() ? null : args.toArray());
+            }
+            if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
+                // the other column fields with default value are set in
+                // <code>addMissingValues(...)</code> method.
+                obj = column.getDefaultValue();
+            }
+            return new Value(column, td, obj, column.getComparator());
+        }
+        return null;
     }
 
     /**
@@ -509,25 +708,25 @@ public class DatabaseDefault extends AbstractDatabase {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(wrapper.getSql() + ". MAP: " + namesToIndexes + ". VALUES: " + register);
         }
-        PreparedStatement pstmt = statementFactory.getInput(connection, wrapper, table);
+        idManager.clear();
+
+        PreparedStatement pstmt = statementFactory.getInput(connection, wrapper.getSql(), table);
         Map<Integer, Object> indexesToValues = prepareInputValues(table, register, namesToIndexes);
         for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
             pstmt.setObject(e.getKey(), e.getValue());
-        }
-
-        if (wrapper.getType() == CommandType.UPDATE) {
-            idManager.prepareUpdate(connection, table, register, statementFactory);
         }
 
         int count = pstmt.executeUpdate();
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
         }
-
-        idManager.readKeys(connection, pstmt, wrapper, table, register);
-
         if (wrapper.getExpectedCount() != count) {
             throw new DatabaseException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
+        }
+
+        DatabaseMetaData meta = connection.getMetaData();
+        if (idManager.hasKeys() && meta.supportsGetGeneratedKeys()) {
+            idManager.readKeys(pstmt);
         }
 
         fireRegisterIn(new DatabaseRegisterEvent(context, result, connection, table, register, wrapper, indexesToValues));
@@ -547,59 +746,26 @@ public class DatabaseDefault extends AbstractDatabase {
      *             On prepare errors.
      */
     protected Map<Integer, Object> prepareInputValues(Table table, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException {
-        idManager.clearLocal();
         Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
         for (Value v : register) {
             Column column = v.getColumn();
             Integer index = namesToIndexes.get(column.getName());
             if (index != null) {
+                String tableOrAlias = register.getTableOrAlias(column);
                 Object obj = v.getValue();
                 if (column.isVirtual()) {
-                    String alias = getTableAlias(register, column);
-                    obj = idManager.lookup(alias, obj);
+                    obj = idManager.lookup(tableOrAlias, String.valueOf(obj));
+                }
+                if (column.isReference()) {
+                    idManager.append(table.getAlias(), v.getCell().getValue());
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("performIn.SET(" + index + "," + column.getName() + ") = " + obj);
                 }
                 indexesToValues.put(index, obj);
-                if (column.isReference()) {
-                    idManager.addLocal(table.getAlias(), v.getCell().getValue());
-                }
             }
         }
         return indexesToValues;
-    }
-
-    /**
-     * Get the alias for the column table.
-     * 
-     * @param register
-     *            A register.
-     * @param column
-     *            A column.
-     * @return The table alias to lookup.
-     * @throws DatabaseException
-     *             On lookup errors.
-     */
-    protected String getTableAlias(IRegister register, Column column) throws DatabaseException {
-        String alias = column.getTableOrAlias();
-        String pointer = column.getPointer();
-        if (pointer != null) {
-            alias = null;
-            for (Value vp : register) {
-                if (pointer.equals(vp.getColumn().getAlias())) {
-                    alias = UtilNames.normalize(vp.getCell().getValue());
-                    break;
-                }
-            }
-            if (alias == null) {
-                throw new DatabaseException("The column '" + column.getTableOrAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-            }
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-            }
-        }
-        return alias;
     }
 
     /**
@@ -654,7 +820,7 @@ public class DatabaseDefault extends AbstractDatabase {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + namesToIndexes + ". values = " + register + ". indexes = " + namesToIndexes);
         }
-        PreparedStatement pstmt = statementFactory.getOutput(connection, wrapper, table);
+        PreparedStatement pstmt = statementFactory.getOutput(connection, wrapper.getSql(), table);
         Map<Integer, Object> indexesToValues = prepareSelectValues(connection, register, namesToIndexes);
         for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
             pstmt.setObject(e.getKey(), e.getValue());
@@ -706,27 +872,7 @@ public class DatabaseDefault extends AbstractDatabase {
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
-                    Column virtual = column;
-                    String pointer = column.getPointer();
-                    if (pointer != null) {
-                        virtual = column.copy();
-                        String alias = null;
-                        for (Value vp : register) {
-                            if (pointer.equals(vp.getColumn().getAlias())) {
-                                alias = String.valueOf(vp.getCell().getValue());
-                                break;
-                            }
-                        }
-                        if (alias == null) {
-                            throw new DatabaseException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' to this column into database mapping file.");
-                        } else {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                            }
-                        }
-                        virtual.setAlias(alias);
-                    }
-                    value = idManager.findValue(connection, virtual, value, statementFactory);
+                    value = idManager.find(register.getTableOrAlias(column), String.valueOf(value), column, connection, statementFactory);
                 }
                 if (column.isDate()) {
                     IComparator comp = column.getComparator();
@@ -737,17 +883,17 @@ public class DatabaseDefault extends AbstractDatabase {
                     comparator.initialize();
                     Date dateBefore = new Date(((Date) value).getTime() - comparator.getTolerance());
                     Date dateAfter = new Date(((Date) value).getTime() + comparator.getTolerance());
-                    indexesToValues.put(index, dateBefore);
-                    indexesToValues.put(index + 1, dateAfter);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("performOut.SET(" + (index) + "," + column.getAlias() + "," + column.getName() + ") = " + dateBefore);
                         UtilLog.LOG.debug("performOut.SET(" + (index + 1) + "," + column.getAlias() + "," + column.getName() + ") = " + dateAfter);
                     }
+                    indexesToValues.put(index, dateBefore);
+                    indexesToValues.put(index + 1, dateAfter);
                 } else {
-                    indexesToValues.put(index, value);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("performOut.SET(" + index + "," + column.getAlias() + "," + column.getName() + ") = " + value);
                     }
+                    indexesToValues.put(index, value);
                 }
                 v.setValue(value);
             }
@@ -786,36 +932,16 @@ public class DatabaseDefault extends AbstractDatabase {
                     UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                 }
                 Object value = v.getValue();
-                Column virtual = null;
+                String tableOrAlias = register.getTableOrAlias(column);
                 if (column.isVirtual()) {
-                    virtual = column;
-                    String pointer = column.getPointer();
-                    if (pointer != null) {
-                        virtual = column.copy();
-                        String alias = null;
-                        for (Value vp : register) {
-                            if (pointer.equalsIgnoreCase(vp.getColumn().getAlias())) {
-                                alias = String.valueOf(vp.getCell().getValue());
-                                break;
-                            }
-                        }
-                        if (alias == null) {
-                            throw new DatabaseException("The column '" + column.getAlias() + "' point to a non-existing column '" + pointer + "' of this table. Adjust attribute 'pointer' into database mapping file.");
-                        } else {
-                            if (UtilLog.LOG.isDebugEnabled()) {
-                                UtilLog.LOG.debug("pointer(" + pointer + ") -> " + alias);
-                            }
-                        }
-                        virtual.setAlias(alias);
-                    }
-                    value = idManager.findValue(connection, virtual, value, statementFactory);
+                    value = idManager.find(register.getTableOrAlias(column), String.valueOf(value), column, connection, statementFactory);
                 }
                 comparator.initialize();
                 CellAdapter cell = v.getCell();
                 if (!comparator.match(value, received)) {
                     Object expected = v.getValue();
                     if (column.isVirtual()) {
-                        received = idManager.lookup(column.getAlias(), received);
+                        received = idManager.lookup(tableOrAlias, String.valueOf(received));
                     }
                     String expStr = UtilSql.toString(expected);
                     String recStr = UtilSql.toString(received);

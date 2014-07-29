@@ -28,6 +28,7 @@ import org.specrunner.sql.database.CommandType;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.DatabaseRegisterEvent;
 import org.specrunner.sql.database.DatabaseTableEvent;
+import org.specrunner.sql.database.EMode;
 import org.specrunner.sql.database.IDatabaseListener;
 import org.specrunner.sql.meta.Table;
 
@@ -52,8 +53,6 @@ public class DatabaseCountListener implements IDatabaseListener {
 
     @Override
     public void initialize() {
-        countersIn.clear();
-        countersOut.clear();
     }
 
     @Override
@@ -70,47 +69,52 @@ public class DatabaseCountListener implements IDatabaseListener {
         if (old == null) {
             old = 0;
         }
+        System.out.println("COUNT_IN_BEFORE:" + countersIn);
         if (CommandType.INSERT == type) {
             old += count;
         } else if (CommandType.DELETE == type) {
             old -= count;
         }
         countersIn.put(name, old);
-        System.out.println("COUNT_IN:" + countersIn);
+        System.out.println("COUNT_IN_AFTER:" + countersIn);
     }
 
     @Override
     public void onRegisterOut(DatabaseRegisterEvent event) {
         String name = event.getTable().getName();
         CommandType type = event.getWrapper().getType();
-        int count = event.getWrapper().getExpectedCount();
+        int count = CommandType.DELETE == type ? 1 : event.getWrapper().getExpectedCount();
 
         Integer old = countersOut.get(name);
         if (old == null) {
             old = 0;
         }
+        System.out.println("COUNT_OUT_BEFORE:" + countersOut);
         if (CommandType.INSERT == type) {
             old += count;
         } else if (CommandType.DELETE == type) {
             old -= count;
         }
         countersOut.put(name, old);
-        System.out.println("COUNT_OUT:" + countersOut);
+        System.out.println("COUNT_OUT_AFTER:" + countersOut);
     }
 
     @Override
     public void onTableOut(DatabaseTableEvent event) throws DatabaseException {
-        String name = event.getTable().getName();
+        if (event.getMode() == EMode.OUTPUT) {
+            String name = event.getTable().getName();
 
-        Integer in = countersIn.get(name);
-        if (in == null) {
-            in = 0;
+            Integer in = countersIn.get(name);
+            if (in == null) {
+                in = 0;
+            }
+            Integer out = countersOut.get(name);
+            if (out == null) {
+                out = 0;
+            }
+            System.out.println("TABLE_OUT(" + in + "+" + out + ")");
+            checkCount(event.getConnection(), event.getTable(), in + out);
         }
-        Integer out = countersOut.get(name);
-        if (out == null) {
-            out = 0;
-        }
-        checkCount(event.getConnection(), event.getTable(), in + out);
     }
 
     /**

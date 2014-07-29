@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql.database;
 
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Table;
 
 /**

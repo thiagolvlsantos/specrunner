@@ -32,28 +32,19 @@ import org.specrunner.sql.meta.Table;
 public interface IStatementFactory {
 
     /**
-     * Get input prepared statement.
+     * Get statement by SQL.
      * 
      * @param connection
      *            Connection.
-     * @param wrapper
-     *            A wrapper.
+     * @param sql
+     *            SQL.
      * @param table
      *            A table.
-     * @return A new prepared statement, if not cached, otherwise, a reused one.
+     * @return A statement.
      * @throws SQLException
      *             On lookup errors.
      */
-    PreparedStatement getInput(Connection connection, SqlWrapper wrapper, Table table) throws SQLException;
-
-    /**
-     * Get statement by SQL.
-     * 
-     * @param sql
-     *            SQL.
-     * @return A statement.
-     */
-    PreparedStatement getInput(String sql);
+    PreparedStatement getInput(Connection connection, String sql, Table table) throws SQLException;
 
     /**
      * Add a statement to the factory.
@@ -66,28 +57,19 @@ public interface IStatementFactory {
     void putInput(String sql, PreparedStatement pstmt);
 
     /**
-     * Get output prepared statement.
+     * Get statement by SQL.
      * 
      * @param connection
      *            Connection.
-     * @param wrapper
-     *            SQL wrapper.
+     * @param sql
+     *            SQL.
      * @param table
      *            A table.
-     * @return A new prepared statement, if not cached, otherwise a reused one.
+     * @return A statement.
      * @throws SQLException
      *             On lookup errors.
      */
-    PreparedStatement getOutput(Connection connection, SqlWrapper wrapper, Table table) throws SQLException;
-
-    /**
-     * Get statement by SQL.
-     * 
-     * @param sql
-     *            SQL.
-     * @return A statement.
-     */
-    PreparedStatement getOutput(String sql);
+    PreparedStatement getOutput(Connection connection, String sql, Table table) throws SQLException;
 
     /**
      * Add a statement to the factory.

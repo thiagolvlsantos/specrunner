@@ -27,7 +27,6 @@ import java.util.List;
 import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.database.IStatementFactory;
-import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.UtilLog;
@@ -52,11 +51,10 @@ public class StatementFactoryDefault implements IStatementFactory {
     protected ICache<String, PreparedStatement> outputs = SRServices.get(ICacheFactory.class).newCache(StatementFactoryDefault.class.getName() + ".outputs", PreparedStatementCleaner.INSTANCE.get());
 
     @Override
-    public PreparedStatement getInput(Connection connection, SqlWrapper wrapper, Table table) throws SQLException {
-        String sql = wrapper.getSql();
-        PreparedStatement pstmt = getInput(sql);
+    public PreparedStatement getInput(Connection connection, String sql, Table table) throws SQLException {
+        PreparedStatement pstmt = inputs.get(sql);
         if (pstmt == null) {
-            pstmt = createStatement(connection, wrapper, table);
+            pstmt = createStatement(connection, sql, table);
             putInput(sql, pstmt);
         } else {
             pstmt.clearParameters();
@@ -72,30 +70,25 @@ public class StatementFactoryDefault implements IStatementFactory {
      * 
      * @param connection
      *            The connection.
-     * @param sqlWrapper
-     *            The wrapper.
+     * @param sql
+     *            A SQL.
      * @param table
      *            The table under analysis.
      * @return A new prepared statement.
      * @throws SQLException
      *             On creation errors.
      */
-    protected PreparedStatement createStatement(Connection connection, SqlWrapper sqlWrapper, Table table) throws SQLException {
+    protected PreparedStatement createStatement(Connection connection, String sql, Table table) throws SQLException {
         DatabaseMetaData meta = connection.getMetaData();
         if (meta.supportsGetGeneratedKeys()) {
             List<String> lista = new LinkedList<String>();
             for (Column c : table.getKeys()) {
                 lista.add(c.getName());
             }
-            return connection.prepareStatement(sqlWrapper.getSql(), lista.toArray(new String[lista.size()]));
+            return connection.prepareStatement(sql, lista.toArray(new String[lista.size()]));
         } else {
-            return connection.prepareStatement(sqlWrapper.getSql());
+            return connection.prepareStatement(sql);
         }
-    }
-
-    @Override
-    public PreparedStatement getInput(String sql) {
-        return inputs.get(sql);
     }
 
     @Override
@@ -104,9 +97,8 @@ public class StatementFactoryDefault implements IStatementFactory {
     }
 
     @Override
-    public PreparedStatement getOutput(Connection connection, SqlWrapper wrapper, Table table) throws SQLException {
-        String sql = wrapper.getSql();
-        PreparedStatement pstmt = getOutput(sql);
+    public PreparedStatement getOutput(Connection connection, String sql, Table table) throws SQLException {
+        PreparedStatement pstmt = outputs.get(sql);
         if (pstmt == null) {
             pstmt = connection.prepareStatement(sql);
             putOutput(sql, pstmt);
@@ -117,11 +109,6 @@ public class StatementFactoryDefault implements IStatementFactory {
             }
         }
         return pstmt;
-    }
-
-    @Override
-    public PreparedStatement getOutput(String sql) {
-        return outputs.get(sql);
     }
 
     @Override
