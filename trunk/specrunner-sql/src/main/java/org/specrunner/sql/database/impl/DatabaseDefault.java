@@ -556,7 +556,7 @@ public class DatabaseDefault implements IDatabase {
      *            Cell content.
      * @return A value, if valid, null, otherwise.
      * @throws ConverterException
-     *             On data convertion errors.
+     *             On data conversion errors.
      */
     protected Value getValue(EMode mode, CommandType command, Column column, CellAdapter td, String content) throws ConverterException {
         boolean isNull = nullEmptyHandler.isNull(content, mode);
