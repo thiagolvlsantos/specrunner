@@ -134,7 +134,6 @@ public class IdManagerDefault implements IIdManager {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("Added value -> id: " + value + " -> " + id);
         }
-
     }
 
     @Override
@@ -161,7 +160,7 @@ public class IdManagerDefault implements IIdManager {
     }
 
     @Override
-    public Object find(String tableOrAlias, String value, Column column, Connection connection, IStatementFactory outputs) throws DatabaseException, SQLException {
+    public Object find(String tableOrAlias, String value, Column column, Connection connection, IStatementFactory statementFactory) throws DatabaseException, SQLException {
         String key = makeKey(tableOrAlias, value);
         Object result = lookup(tableOrAlias, value);
         if (result == null) {
@@ -173,19 +172,22 @@ public class IdManagerDefault implements IIdManager {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("Recover virtual key for (" + key + ") at " + schema.getName() + "." + table.getName());
             }
-            PreparedStatement inPstmt = outputs.getOutput(connection, createSelect(table).toString(), table);
             StringTokenizer st = new StringTokenizer(String.valueOf(value), SEPARATOR);
-            int i = 1;
             List<Column> references = table.getReferences();
+            if (st.countTokens() != references.size()) {
+                throw new DatabaseException("Number of reference columns (" + references.size() + ") is different from value tokens (" + st.countTokens() + ").");
+            }
+            PreparedStatement pstmt = statementFactory.getOutput(connection, createSelect(table), table);
+            int i = 1;
             while (st.hasMoreTokens()) {
                 Column reference = references.get(i - 1);
                 String token = st.nextToken();
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Convert(" + reference.getAlias() + "." + token + ")");
+                    UtilLog.LOG.debug("Convert(" + reference.getTableOrAlias() + "." + token + ")");
                 }
                 Object tmp = null;
                 if (reference.isVirtual()) {
-                    tmp = find(reference.getTableOrAlias(), token, reference, connection, outputs);
+                    tmp = find(reference.getTableOrAlias(), token, reference, connection, statementFactory);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Virtual part(" + token + ") found:" + tmp + " ." + (tmp != null ? tmp.getClass() : "null"));
                     }
@@ -211,21 +213,21 @@ public class IdManagerDefault implements IIdManager {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("Date range in virtual lookup [" + dateBefore + " to " + dateAfter + "]");
                     }
-                    inPstmt.setObject(i++, dateBefore);
-                    inPstmt.setObject(i++, dateAfter);
+                    pstmt.setObject(i++, dateBefore);
+                    pstmt.setObject(i++, dateAfter);
                 } else {
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("findValue.SET(" + i + "," + reference.getTableOrAlias() + "," + reference.getName() + ") = " + tmp);
                     }
-                    inPstmt.setObject(i++, tmp);
+                    pstmt.setObject(i++, tmp);
                 }
             }
             ResultSet rs = null;
             try {
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Query: " + inPstmt);
+                    UtilLog.LOG.debug("Query(" + key + "): " + pstmt);
                 }
-                rs = inPstmt.executeQuery();
+                rs = pstmt.executeQuery();
                 while (rs.next()) {
                     for (Column c : table.getKeys()) {
                         result = rs.getObject(c.getName());
@@ -256,7 +258,7 @@ public class IdManagerDefault implements IIdManager {
      *            A table.
      * @return A select SQL.
      */
-    protected StringBuilder createSelect(Table table) {
+    protected String createSelect(Table table) {
         StringBuilder sb = new StringBuilder();
         sb.append("select ");
         List<Column> keys = table.getKeys();
@@ -277,10 +279,6 @@ public class IdManagerDefault implements IIdManager {
         for (Column c : references) {
             sb.append((i++ == 0 ? "" : " AND ") + c.getName() + (c.isDate() ? " between ? and ?" : " = ?"));
         }
-        String sql = sb.toString();
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Query for (" + value + "):" + sql);
-        }
-        return sb;
+        return sb.toString();
     }
 }
