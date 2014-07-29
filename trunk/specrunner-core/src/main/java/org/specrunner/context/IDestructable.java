@@ -15,26 +15,25 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.listeners.core;
+package org.specrunner.context;
 
 /**
- * Default listener manager.
+ * Something that can be destroyed.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public interface IDestructable {
 
     /**
-     * Default constructor.
+     * The wrapped object.
+     * 
+     * @return The object.
      */
-    public ListenerManagerDefault() {
-        add(new ContextListenerPopulator());
-        add(new ContextListenerDestroyer());
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
-    }
+    Object getObject();
+
+    /**
+     * Destroy object.
+     */
+    void destroy();
 }

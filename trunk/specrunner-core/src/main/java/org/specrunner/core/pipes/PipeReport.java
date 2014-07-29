@@ -20,6 +20,9 @@ package org.specrunner.core.pipes;
 import java.util.Map;
 
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
+import org.specrunner.context.IContextListener;
+import org.specrunner.listeners.IListenerManager;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
@@ -42,6 +45,10 @@ public class PipeReport implements IPipe {
 
     @Override
     public IChannel process(IChannel channel) throws PipelineException {
+        IContext context = PipeContext.lookup(channel);
+        for (IContextListener listener : SRServices.get(IListenerManager.class).filterByType(IContextListener.class)) {
+            listener.onDestroy(context);
+        }
         IReporter reporter = PipeReporter.lookup(channel);
         IResultSet result = PipeResult.lookup(channel);
         Map<String, Object> model = PipeModel.recover(channel);

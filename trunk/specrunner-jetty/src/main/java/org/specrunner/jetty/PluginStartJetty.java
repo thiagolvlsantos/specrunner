@@ -34,6 +34,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IDestructable;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -274,7 +275,8 @@ public class PluginStartJetty extends AbstractPluginScoped {
 
                 waitForStart(server);
 
-                saveGlobal(context, getName(), server);
+                save(context, server);
+
                 if (reuse) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Jetty reuse enabled.");
@@ -290,6 +292,39 @@ public class PluginStartJetty extends AbstractPluginScoped {
             }
         }
         return ENext.DEEP;
+    }
+
+    /**
+     * Save server to context.
+     * 
+     * @param context
+     *            A context.
+     * @param server
+     *            A server.
+     */
+    protected void save(IContext context, final Server server) {
+        if (reuse) {
+            saveGlobal(context, getName(), server);
+        } else {
+            saveGlobal(context, getName(), new IDestructable() {
+
+                @Override
+                public Object getObject() {
+                    return server;
+                }
+
+                @Override
+                public void destroy() {
+                    try {
+                        server.stop();
+                    } catch (Exception e) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug(e.getMessage(), e);
+                        }
+                    }
+                }
+            });
+        }
     }
 
     /**

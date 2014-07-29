@@ -7,7 +7,6 @@
     <pipe>org.specrunner.core.pipes.PipeListenerManager</pipe>
     <pipe>org.specrunner.core.pipes.PipeRunner</pipe>
     <pipe>org.specrunner.core.pipes.PipeContext</pipe>
-    <pipe>org.specrunner.core.pipes.PipePopulator</pipe>
     <pipe>org.specrunner.core.pipes.PipeResult</pipe>
     <pipe>org.specrunner.core.pipes.PipeReporter</pipe>
     <pipe>org.specrunner.core.pipes.PipeMetavariables</pipe>

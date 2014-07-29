@@ -15,26 +15,33 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.context.core;
+package org.specrunner.listeners.core;
 
 import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.specrunner.context.IContext;
-import org.specrunner.context.IContextPopulator;
 import org.specrunner.util.UtilLog;
 
 /**
- * Default populator implementation. Makes all Java System properties available
- * in context as variables.
+ * Populator listener.
  * 
  * @author Thiago Santos
  * 
  */
-public class ContextPopulatorImpl implements IContextPopulator {
+public class ContextListenerPopulator extends AbstractContextListener {
 
     @Override
-    public IContext populate(IContext context) {
+    public String getName() {
+        return "contextPopulator";
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    @Override
+    public void onCreate(IContext context) {
         Properties p = System.getProperties();
         for (Entry<Object, Object> e : p.entrySet()) {
             String key = String.valueOf(e.getKey()).replace(".", "_");
@@ -44,6 +51,5 @@ public class ContextPopulatorImpl implements IContextPopulator {
                 UtilLog.LOG.trace(key + " mapped to '" + value + "'(String).");
             }
         }
-        return context;
     }
 }

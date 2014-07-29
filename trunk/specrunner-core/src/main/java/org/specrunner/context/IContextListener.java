@@ -15,26 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.listeners.core;
+package org.specrunner.context;
+
+import org.specrunner.listeners.ISpecRunnerListener;
 
 /**
- * Default listener manager.
+ * Stands for a context listener.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public interface IContextListener extends ISpecRunnerListener {
 
     /**
-     * Default constructor.
+     * A context creation.
+     * 
+     * @param context
+     *            A context.
      */
-    public ListenerManagerDefault() {
-        add(new ContextListenerPopulator());
-        add(new ContextListenerDestroyer());
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
-    }
+    void onCreate(IContext context);
+
+    /**
+     * A context destruction.
+     * 
+     * @param context
+     *            A block.
+     */
+    void onDestroy(IContext context);
 }

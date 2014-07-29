@@ -23,6 +23,7 @@ import java.util.Map;
 import org.openqa.selenium.WebDriver;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.context.IDestructable;
 import org.specrunner.features.FeatureManagerException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
@@ -372,10 +373,25 @@ public class PluginBrowser extends AbstractPluginScoped {
      * @param driver
      *            The driver.
      */
-    protected void save(IContext context, WebDriver driver) {
+    protected void save(IContext context, final WebDriver driver) {
         String str = getName() != null ? getName() : BROWSER_NAME;
+        if (reuse) {
+            saveGlobal(context, str, driver);
+        } else {
+            saveGlobal(context, str, new IDestructable() {
+
+                @Override
+                public Object getObject() {
+                    return driver;
+                }
+
+                @Override
+                public void destroy() {
+                    driver.quit();
+                }
+            });
+        }
         String type = str + "_" + BROWSER_TYPE;
-        saveGlobal(context, str, driver);
         saveGlobal(context, type, driver.getClass().getSimpleName());
     }
 }

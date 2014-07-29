@@ -29,7 +29,6 @@ import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContextFactory;
-import org.specrunner.context.IContextPopulator;
 import org.specrunner.converters.IConverterManager;
 import org.specrunner.dumper.ISourceDumperFactory;
 import org.specrunner.expressions.IExpressionFactory;
@@ -96,7 +95,6 @@ public class SRMappingDefault implements ISRMapping {
         types.put(IBlockFactory.class, "org.specrunner.context.core.BlockFactoryImpl");
         types.put(IExpressionFactory.class, "org.specrunner.expressions.core.ExpressionFactoryJanino");
         types.put(IContextFactory.class, "org.specrunner.context.core.ContextFactoryImpl");
-        types.put(IContextPopulator.class, "org.specrunner.context.core.ContextPopulatorImpl");
         types.put(IRunnerFactory.class, "org.specrunner.runner.core.RunnerFactoryDefault");
         types.put(IResultFactory.class, "org.specrunner.result.core.ResultFactoryImpl");
         types.put(IWritableFactoryManager.class, "org.specrunner.result.core.WritableFactoryManagerImpl");

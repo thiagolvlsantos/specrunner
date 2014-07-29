@@ -17,24 +17,29 @@
  */
 package org.specrunner.listeners.core;
 
+import org.specrunner.context.IContext;
+import org.specrunner.context.IContextListener;
+import org.specrunner.util.UtilLog;
+
 /**
- * Default listener manager.
+ * Helper for context listeners.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public abstract class AbstractContextListener implements IContextListener {
 
-    /**
-     * Default constructor.
-     */
-    public ListenerManagerDefault() {
-        add(new ContextListenerPopulator());
-        add(new ContextListenerDestroyer());
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
+    @Override
+    public void onCreate(IContext context) {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("onDestroy(" + context + ")");
+        }
+    }
+
+    @Override
+    public void onDestroy(IContext context) {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("onDestroy(" + context + ")");
+        }
     }
 }

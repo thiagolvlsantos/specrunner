@@ -17,24 +17,29 @@
  */
 package org.specrunner.listeners.core;
 
+import org.specrunner.context.IBlock;
+import org.specrunner.context.IBlockListener;
+import org.specrunner.util.UtilLog;
+
 /**
- * Default listener manager.
+ * Helper for block listeners.
  * 
  * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ListenerManagerDefault extends ListenerManagerImpl {
+public abstract class AbstractBlockListener implements IBlockListener {
 
-    /**
-     * Default constructor.
-     */
-    public ListenerManagerDefault() {
-        add(new ContextListenerPopulator());
-        add(new ContextListenerDestroyer());
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
+    @Override
+    public void onPush(IBlock block) {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("onPush(" + block + ")");
+        }
+    }
+
+    @Override
+    public void onPop(IBlock block) {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("onPop(" + block + ")");
+        }
     }
 }

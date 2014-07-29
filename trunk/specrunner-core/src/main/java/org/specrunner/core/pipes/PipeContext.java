@@ -17,11 +17,13 @@
  */
 package org.specrunner.core.pipes;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IContextFactory;
+import org.specrunner.context.IContextListener;
+import org.specrunner.listeners.IListenerManager;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
@@ -75,7 +77,11 @@ public class PipeContext implements IPipe {
      *             On context creation.
      */
     protected IContext createContext(ISource source, IRunner runner) throws ContextException {
-        return SRServices.get(IContextFactory.class).newContext(source, runner);
+        IContext context = SRServices.get(IContextFactory.class).newContext(source, runner);
+        for (IContextListener listener : SRServices.get(IListenerManager.class).filterByType(IContextListener.class)) {
+            listener.onCreate(context);
+        }
+        return context;
     }
 
     /**
