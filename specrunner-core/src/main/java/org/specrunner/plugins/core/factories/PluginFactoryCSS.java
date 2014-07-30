@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.factories;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -60,11 +61,21 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
         if (node instanceof Element) {
             IPluginGroup result = new PluginGroupImpl();
             Element ele = (Element) node;
-            Node att = ele.getAttribute(ATTRIBUTE);
+            Attribute att = ele.getAttribute(ATTRIBUTE);
             if (att != null) {
+                StringBuilder css = new StringBuilder();
+                boolean replace = false;
                 String[] pcs = att.getValue().split(" ");
                 for (String s : pcs) {
                     String p = s.toLowerCase();
+                    int pos = p.indexOf(':');
+                    if (pos > 0) {
+                        replace = true;
+                        ele.addAttribute(new Attribute("name", p.substring(pos + 1)));
+                        p = p.substring(0, pos);
+                    }
+                    css.append(p);
+                    css.append(' ');
                     IPlugin create = null;
                     IPlugin template = templates.get(p);
                     if (template != null) {
@@ -79,6 +90,9 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
                         create.setParent(this);
                         result.add(create);
                     }
+                }
+                if (replace) {
+                    att.setValue(css.toString());
                 }
             }
             return result.getNormalized();
