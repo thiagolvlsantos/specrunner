@@ -22,7 +22,7 @@
     </distributionManagement>
 
     <properties>
-        <org.apache.tomcat.embed.version>7.0.37</org.apache.tomcat.embed.version>
+        <org.apache.tomcat.embed.version>7.0.54</org.apache.tomcat.embed.version>
         <org.eclipse.jdt.core.compiler.version>4.2.1</org.eclipse.jdt.core.compiler.version>
     </properties>
 
