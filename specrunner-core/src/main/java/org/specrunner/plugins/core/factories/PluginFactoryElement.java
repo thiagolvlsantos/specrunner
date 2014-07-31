@@ -78,6 +78,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
             if (pos > 0) {
                 ele.addAttribute(new Attribute("name", name.substring(pos + 1)));
                 name = name.substring(0, pos);
+                ele.setLocalName(name);
             }
             String as = ele.getAttributeValue(ATT_AS);
             if (as != null) {
