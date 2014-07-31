@@ -47,6 +47,10 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
      * Attribute with CSS information.
      */
     public static final String ATTRIBUTE = "class";
+    /**
+     * Separator of name field.
+     */
+    private static final char SEPARATOR = '-';
 
     /**
      * Creates the factory loading file 'sr_plugins_css.properties'.
@@ -67,21 +71,21 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
                 boolean replace = false;
                 String[] pcs = att.getValue().split(" ");
                 for (String s : pcs) {
-                    String p = s.toLowerCase();
-                    int pos = p.indexOf(':');
+                    String name = s.toLowerCase();
+                    int pos = name.indexOf(SEPARATOR);
                     if (pos > 0) {
                         replace = true;
-                        ele.addAttribute(new Attribute("name", p.substring(pos + 1)));
-                        p = p.substring(0, pos);
+                        ele.addAttribute(new Attribute("name", s.substring(pos + 1)));
+                        name = name.substring(0, pos);
                     }
-                    css.append(p);
+                    css.append(name);
                     css.append(' ');
                     IPlugin create = null;
-                    IPlugin template = templates.get(p);
+                    IPlugin template = templates.get(name);
                     if (template != null) {
                         create = UtilPlugin.create(context, template, ele);
                     } else {
-                        Class<? extends IPlugin> c = getClass(p);
+                        Class<? extends IPlugin> c = getClass(name);
                         if (c != null) {
                             create = UtilPlugin.create(context, c, ele);
                         }
