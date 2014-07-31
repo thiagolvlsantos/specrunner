@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.factories;
 
+import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
@@ -38,6 +39,11 @@ import org.specrunner.plugins.core.UtilPlugin;
  * 
  */
 public class PluginFactoryElement extends PluginFactoryImpl {
+
+    /**
+     * Separator of name field.
+     */
+    private static final char SEPARATOR = '-';
 
     /**
      * Attribute to create a element as another type. Use <code>as='type'</code>
@@ -68,6 +74,11 @@ public class PluginFactoryElement extends PluginFactoryImpl {
         if (node instanceof Element) {
             Element ele = (Element) node;
             String name = ele.getQualifiedName().toLowerCase();
+            int pos = name.indexOf(SEPARATOR);
+            if (pos > 0) {
+                ele.addAttribute(new Attribute("name", name.substring(pos + 1)));
+                name = name.substring(0, pos);
+            }
             String as = ele.getAttributeValue(ATT_AS);
             if (as != null) {
                 name = as;

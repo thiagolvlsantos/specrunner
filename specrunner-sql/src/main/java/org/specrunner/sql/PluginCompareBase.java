@@ -223,7 +223,7 @@ public class PluginCompareBase extends AbstractPluginValue {
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Schema schema = PluginSchema.getSchema(context, getSchema());
         IFilter currentFilter = null;
-        if (filter != null) {
+        if (getFilter() != null) {
             currentFilter = PluginFilter.getFilter(context, getFilter());
         } else {
             currentFilter = new FilterDefault();
