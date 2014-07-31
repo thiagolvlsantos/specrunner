@@ -159,19 +159,22 @@ public final class UtilNode {
     /**
      * Get the highest node in the specification hierarchy.
      * 
-     * @param nodes
-     *            List of nodes.
+     * @param mnodes
+     *            List of list of nodes.
      * @return The highest node.
      */
-    public static Node getHighest(Nodes nodes) {
+    public static Node getHighest(Nodes... mnodes) {
         Node result = null;
         int min = Integer.MAX_VALUE;
-        for (int i = 0; i < nodes.size(); i++) {
-            Node n = nodes.get(i);
-            int t = getDepth(n);
-            if (t < min) {
-                result = n;
-                min = t;
+        for (int i = 0; i < mnodes.length; i++) {
+            Nodes nodes = mnodes[i];
+            for (int j = 0; j < nodes.size(); j++) {
+                Node n = nodes.get(j);
+                int t = getDepth(n);
+                if (t < min) {
+                    result = n;
+                    min = t;
+                }
             }
         }
         return result;
@@ -253,7 +256,7 @@ public final class UtilNode {
      *             If node does not exist.
      */
     public static Node getLeft(Node root) throws PluginException {
-        return getCssNode(root, CSS_LETF);
+        return getCssNodeOrElement(root, CSS_LETF);
     }
 
     /**
@@ -266,7 +269,7 @@ public final class UtilNode {
      *             If node does not exist.
      */
     public static Node getRight(Node root) throws PluginException {
-        return getCssNode(root, CSS_RIGHT);
+        return getCssNodeOrElement(root, CSS_RIGHT);
     }
 
     /**
@@ -274,25 +277,40 @@ public final class UtilNode {
      * 
      * @param root
      *            The root node.
-     * @param css
+     * @param cssOrElement
      *            The expected css.
      * @return The expected node.
      * @throws PluginException
      *             If child with css does not exist.
      */
-    public static Node getCssNode(Node root, String css) throws PluginException {
+    public static Node getCssNodeOrElement(Node root, String cssOrElement) throws PluginException {
         if (root instanceof Element) {
-            Node n = ((Element) root).getAttribute(css);
+            Node n = ((Element) root).getAttribute(cssOrElement);
             if (n != null) {
                 return n;
             }
         }
-        Nodes exps = root.query("descendant::*[contains(@class,'" + css + "')]");
+        Nodes exps = root.query("descendant::*[contains(@class,'" + cssOrElement + "')] | descendant::" + cssOrElement);
         Node expected = UtilNode.getHighest(exps);
         if (expected == null) {
-            throw new PluginException("Expected value not found. Missing a element with class='" + css + "' in element:" + root.toXML());
+            throw new PluginException("Expected value not found. Missing a element with class='" + cssOrElement + "' in element:" + root.toXML());
         }
         return expected;
+    }
+
+    /**
+     * Get elements of css or tag name.
+     * 
+     * @param root
+     *            The root node.
+     * @param cssOrElement
+     *            The expected css or element.
+     * @return The expected nodes.
+     * @throws PluginException
+     *             If child with css does not exist.
+     */
+    public static Nodes getCssNodesOrElements(Node root, String cssOrElement) throws PluginException {
+        return root.query("descendant::*[contains(@class,'" + cssOrElement + "')] | descendant::" + cssOrElement);
     }
 
     /**

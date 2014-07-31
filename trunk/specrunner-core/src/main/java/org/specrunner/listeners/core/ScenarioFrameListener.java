@@ -136,9 +136,9 @@ public class ScenarioFrameListener implements INodeListener {
         } else {
             holder.setNode(node);
         }
-        if (holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
+        if (CSS_SCENARIO.equals(holder.getQualifiedName()) || holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
             try {
-                Node sub = UtilNode.getCssNode(node, CSS_TITLE);
+                Node sub = UtilNode.getCssNodeOrElement(node, CSS_TITLE);
                 String str = UtilString.camelCase(sub.getValue(), true);
                 if (name.equals(str)) {
                     scenario = node;
