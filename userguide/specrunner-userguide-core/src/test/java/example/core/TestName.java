@@ -1,9 +1,9 @@
 package example.core;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.SRRunner;
+import org.specrunner.junit.SRRunnerScenario;
 
-@RunWith(SRRunner.class)
+@RunWith(SRRunnerScenario.class)
 public class TestName {
 
 }

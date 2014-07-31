@@ -87,11 +87,11 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
             // read scenario entries
             File input = JUnitUtils.getFile(javaClass);
             ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
-            Nodes scenarios = source.getDocument().query("//*[contains(@class,'" + ScenarioFrameListener.CSS_SCENARIO + "')]");
+            Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
             listeners = new LinkedList<INodeListener>();
             Set<String> titles = new HashSet<String>();
             for (int i = 0; i < scenarios.size(); i++) {
-                String title = UtilNode.getCssNode(scenarios.get(i), ScenarioFrameListener.CSS_TITLE).getValue();
+                String title = UtilNode.getCssNodeOrElement(scenarios.get(i), ScenarioFrameListener.CSS_TITLE).getValue();
                 title = UtilString.camelCase(title, true);
                 if (titles.contains(title)) {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
