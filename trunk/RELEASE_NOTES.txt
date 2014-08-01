@@ -1,3 +1,17 @@
+1.4.00
+OK - Criação de tags: scenario e title dentro de <scenario> para os títulos;
+OK - Upgrade de bibliotecas;
+OK - Colocar o campo nome do elemento HTML para reduzir digitação
+	- Exemplo:  <set-valor>dado necessario</set-valor>
+OK - Colocar o campo nome junto do css para reduzir digitação
+	- Exemplo:  <span class="set-valor">dado necessario</span>
+OK - Fazer o controle de quantidade final de registros na base de dados usando contadores com dado que e por fim;
+	R: Usar o DatabaseCountListener
+OK - Colocar um destruidor de recursos que é realizado sempre que um contexto é dropado ou finalizado, isso permite por exemplo finalizar as sessionfactories que são usadas em apenas um teste ou fechar browsers abertos que foram esquecidos pelo testador. Lembrar de não fechar aqueles que são reusados.
+	R: adicionados listeners de contexto e de bloco.
+OK - Context populator é um listener de contexto;
+	R: populator removido e criado como listener
+
 1.3.40
 OK - Colocar uma opção para adicionar o estilo de debug mesmo sem rodar no modo debug, se o código gerar os tempos de qualquer forma do contrário não serve para nada;
 OK - A ordem de execução dos listeners nos eventos finais (onEnd) deve ser feita na ordem reversa da inicialização (onStart).
