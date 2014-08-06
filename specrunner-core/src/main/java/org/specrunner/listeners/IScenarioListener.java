@@ -19,7 +19,6 @@ package org.specrunner.listeners;
 
 import nu.xom.Node;
 
-import org.junit.runners.model.TestClass;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
@@ -43,14 +42,12 @@ public interface IScenarioListener {
      *            The test context.
      * @param result
      *            The result set.
-     * @param test
-     *            The test class wrapper.
      * @param instance
      *            The fixture object, if it exists, null, otherwise.
      * @throws SpecRunnerException
      *             Exception for scenarios.
      */
-    void beforeScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException;
+    void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException;
 
     /**
      * Perform something after each scenario.
@@ -63,12 +60,10 @@ public interface IScenarioListener {
      *            The test context.
      * @param result
      *            The result set.
-     * @param test
-     *            The test class wrapper.
      * @param instance
      *            The fixture object, if it exists, null, otherwise.
      * @throws SpecRunnerException
      *             Exception for scenarios.
      */
-    void afterScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException;
+    void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException;
 }

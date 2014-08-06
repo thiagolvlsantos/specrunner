@@ -4,6 +4,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.specrunner.configuration.IConfiguration;
+import org.specrunner.junit.AfterScenario;
+import org.specrunner.junit.BeforeScenario;
+import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunnerScenario;
 import org.specrunner.junit.SRScenarioListeners;
 import org.specrunner.plugins.core.language.Sentence;
@@ -17,9 +21,19 @@ public class Adding {
 
     private Calc calc = new Calc();
 
+    @Configuration
+    public void configure(IConfiguration cfg) {
+        System.out.println("CONFIGURE...");
+    }
+
     @Before
     public void clear() {
         System.out.println("CLEAN..." + System.currentTimeMillis());
+    }
+
+    @BeforeScenario
+    public void clearScenario() {
+        System.out.println("CLEAN SCENARIO..." + System.currentTimeMillis());
     }
 
     @Sentence("turn on")
@@ -50,5 +64,10 @@ public class Adding {
     @After
     public void finish() {
         System.out.println("FINISH..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario() {
+        System.out.println("FINISH SCENARIO..." + System.currentTimeMillis());
     }
 }
