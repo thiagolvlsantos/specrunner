@@ -17,10 +17,12 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.junit.runners.model.TestClass;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IScenarioListener;
+import org.specrunner.listeners.core.ScenarioCleanerListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
@@ -53,6 +55,11 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
     private List<INodeListener> listeners;
 
     /**
+     * The fixture object, if it exists, null, otherwise.
+     */
+    private Object instance;
+
+    /**
      * Statement performed.
      */
     private SpecRunnerStatement statement;
@@ -79,7 +86,8 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
     protected List<FrameworkMethod> computeTestMethods() {
         List<FrameworkMethod> methods = new LinkedList<FrameworkMethod>();
         try {
-            Class<?> javaClass = getTestClass().getJavaClass();
+            final TestClass testClass = getTestClass();
+            Class<?> javaClass = testClass.getJavaClass();
             Method fake = javaClass.getMethod("toString");
             fakeMethod = new FrameworkMethod(fake);
             methods.add(fakeMethod);
@@ -103,11 +111,22 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
                 final Description description = describeChild(scenarioMethod);
 
                 IScenarioListener[] annotationListeners = JUnitUtils.getScenarioListener(javaClass);
-                IScenarioListener[] fullListeners = Arrays.copyOf(annotationListeners, annotationListeners.length + 1);
-                final ScenarioFrameListener frameListener = new ScenarioFrameListener(title, fullListeners);
-                fullListeners[fullListeners.length - 1] = new IScenarioListener() {
+                IScenarioListener[] fullListeners = Arrays.copyOf(annotationListeners, annotationListeners.length + 2);
+                fullListeners[fullListeners.length - 1] = new ScenarioCleanerListener();
+                final ScenarioFrameListener frameListener = new ScenarioFrameListener(title, fullListeners) {
                     @Override
-                    public void beforeScenario(String title, Node node, IContext context, IResultSet result) {
+                    public Object getInstance() {
+                        return instance;
+                    }
+
+                    @Override
+                    public TestClass getTestClass() {
+                        return testClass;
+                    }
+                };
+                fullListeners[fullListeners.length - 2] = new IScenarioListener() {
+                    @Override
+                    public void beforeScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending()) {
                             notifier.fireTestIgnored(description);
@@ -117,7 +136,7 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
                     }
 
                     @Override
-                    public void afterScenario(String title, Node node, IContext context, IResultSet result) {
+                    public void afterScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending()) {
                             notifier.fireTestIgnored(description);
@@ -160,6 +179,7 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
         if (method != fakeMethod) {
             return super.methodInvoker(method, test);
         } else {
+            instance = test;
             statement = new SpecRunnerStatement(getTestClass(), test, listeners);
             return statement;
         }
