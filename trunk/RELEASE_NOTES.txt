@@ -1,3 +1,6 @@
+1.4.01
+OK - Cada cenário chama @Before e @After antes e depois de executado.
+
 1.4.00
 OK - Criação de tags: scenario e title dentro de <scenario> para os títulos;
 OK - Upgrade de bibliotecas;
