@@ -4,6 +4,10 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.specrunner.configuration.IConfiguration;
+import org.specrunner.junit.AfterScenario;
+import org.specrunner.junit.BeforeScenario;
+import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunnerSpringScenario;
 import org.specrunner.junit.SRScenarioListeners;
 import org.specrunner.plugins.core.language.Sentence;
@@ -21,9 +25,19 @@ public class SpringAdding {
     @Autowired
     private Calc calc;
 
+    @Configuration
+    public void configure(IConfiguration cfg) {
+        System.out.println("CONFIGURE...");
+    }
+
     @Before
     public void clear() {
-        System.out.println("CLEAN SPRING..." + System.currentTimeMillis());
+        System.out.println("CLEAN..." + System.currentTimeMillis());
+    }
+
+    @BeforeScenario
+    public void clearScenario() {
+        System.out.println("CLEAN SCENARIO..." + System.currentTimeMillis());
     }
 
     @Sentence("turn on")
@@ -53,6 +67,11 @@ public class SpringAdding {
 
     @After
     public void finish() {
-        System.out.println("FINISH SPRING..." + System.currentTimeMillis());
+        System.out.println("FINISH..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario() {
+        System.out.println("FINISH SCENARIO..." + System.currentTimeMillis());
     }
 }

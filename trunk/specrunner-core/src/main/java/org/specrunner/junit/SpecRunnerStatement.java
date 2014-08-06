@@ -20,7 +20,6 @@ package org.specrunner.junit;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.runners.model.Statement;
@@ -37,6 +36,7 @@ import org.specrunner.listeners.ISpecRunnerListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.plugins.core.elements.PluginHtml;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilAnnotations;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -191,15 +191,7 @@ public class SpecRunnerStatement extends Statement {
             cfg.add(IResultSet.FEATURE_EXPECTED_MESSAGES, expected.value());
             cfg.add(IResultSet.FEATURE_EXPECTED_SORTED, expected.sorted());
         }
-        Method[] ms = instance.getClass().getMethods();
-        List<Method> candidates = new LinkedList<Method>();
-        for (Method m : ms) {
-            Configuration c = m.getAnnotation(Configuration.class);
-            if (c != null) {
-                candidates.add(m);
-            }
-        }
-        for (Method m : candidates) {
+        for (Method m : UtilAnnotations.getAnnotatedMethods(instance, Configuration.class)) {
             Class<?>[] types = m.getParameterTypes();
             if (types.length == 1 && types[0] == IConfiguration.class) {
                 m.invoke(instance, new Object[] { cfg });

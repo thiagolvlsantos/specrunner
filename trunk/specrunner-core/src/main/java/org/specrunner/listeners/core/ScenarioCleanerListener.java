@@ -19,18 +19,17 @@ package org.specrunner.listeners.core;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.lang.reflect.Method;
 
 import nu.xom.Node;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runners.model.FrameworkMethod;
-import org.junit.runners.model.TestClass;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
+import org.specrunner.junit.AfterScenario;
+import org.specrunner.junit.BeforeScenario;
 import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilAnnotations;
 
 /**
  * Cleaner for scenarios considering @Before and @After as references.
@@ -41,19 +40,18 @@ import org.specrunner.result.IResultSet;
 public class ScenarioCleanerListener implements IScenarioListener {
 
     @Override
-    public void beforeScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException {
-        execute(test, instance, Before.class);
+    public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException {
+        execute(instance, BeforeScenario.class);
     }
 
     @Override
-    public void afterScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException {
-        execute(test, instance, After.class);
+    public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException {
+        execute(instance, AfterScenario.class);
     }
 
     /**
+     * Execute annotated methods.
      * 
-     * @param test
-     *            The test class wrapper.
      * @param instance
      *            The fixture object, if it exists, null, otherwise.
      * @param type
@@ -61,12 +59,11 @@ public class ScenarioCleanerListener implements IScenarioListener {
      * @throws SpecRunnerException
      *             On calling errors.
      */
-    protected void execute(TestClass test, Object instance, Class<? extends Annotation> type) throws SpecRunnerException {
+    protected void execute(Object instance, Class<? extends Annotation> type) throws SpecRunnerException {
         if (instance != null) {
-            List<FrameworkMethod> methods = test.getAnnotatedMethods(type);
-            for (FrameworkMethod fm : methods) {
+            for (Method m : UtilAnnotations.getAnnotatedMethods(instance, type)) {
                 try {
-                    fm.getMethod().invoke(instance);
+                    m.invoke(instance);
                 } catch (IllegalArgumentException e) {
                     throw new SpecRunnerException(e);
                 } catch (IllegalAccessException e) {

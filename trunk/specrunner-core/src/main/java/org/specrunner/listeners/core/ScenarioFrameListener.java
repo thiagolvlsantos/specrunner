@@ -21,7 +21,6 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.junit.runners.model.TestClass;
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
@@ -127,13 +126,6 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     public abstract Object getInstance();
 
-    /**
-     * The fixture test class object.
-     * 
-     * @return The class helper.
-     */
-    public abstract TestClass getTestClass();
-
     @Override
     public void reset() {
     }
@@ -165,7 +157,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     if (pending) {
                         next = ENext.SKIP;
                     } else {
-                        fireBefore(name, node, context, result, getTestClass(), getInstance());
+                        fireBefore(name, node, context, result, getInstance());
                     }
                 }
             } catch (PluginException e) {
@@ -186,8 +178,6 @@ public abstract class ScenarioFrameListener implements INodeListener {
      *            The scenario node.
      * @param context
      *            The test context.
-     * @param test
-     *            The test class wrapper.
      * @param result
      *            The result set.
      * @param instance
@@ -195,10 +185,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * @throws SpecRunnerException
      *             On event errors.
      */
-    protected void fireBefore(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException {
+    protected void fireBefore(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException {
         if (listeners != null) {
             for (int i = 0; i < listeners.length; i++) {
-                listeners[i].beforeScenario(title, node, context, result, test, instance);
+                listeners[i].beforeScenario(title, node, context, result, instance);
             }
         }
     }
@@ -224,7 +214,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
             }
             try {
-                fireAfter(name, node, context, result, getTestClass(), getInstance());
+                fireAfter(name, node, context, result, getInstance());
             } catch (SpecRunnerException e) {
                 throw new RuntimeException(e);
             }
@@ -256,10 +246,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * @throws SpecRunnerException
      *             On event errors.
      */
-    protected void fireAfter(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException {
+    protected void fireAfter(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException {
         if (listeners != null) {
             for (int i = listeners.length - 1; i >= 0; i--) {
-                listeners[i].afterScenario(title, node, context, result, test, instance);
+                listeners[i].afterScenario(title, node, context, result, instance);
             }
         }
     }

@@ -135,14 +135,10 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
                         return instance;
                     }
 
-                    @Override
-                    public TestClass getTestClass() {
-                        return testClass;
-                    }
                 };
                 fullListeners[fullListeners.length - 2] = new IScenarioListener() {
                     @Override
-                    public void beforeScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) {
+                    public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending()) {
                             notifier.fireTestIgnored(description);
@@ -152,7 +148,7 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
                     }
 
                     @Override
-                    public void afterScenario(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) {
+                    public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending()) {
                             notifier.fireTestIgnored(description);
