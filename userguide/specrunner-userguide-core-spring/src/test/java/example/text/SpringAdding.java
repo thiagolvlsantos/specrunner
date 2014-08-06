@@ -1,6 +1,8 @@
 package example.text;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunnerSpringScenario;
 import org.specrunner.junit.SRScenarioListeners;
@@ -18,6 +20,11 @@ public class SpringAdding {
 
     @Autowired
     private Calc calc;
+
+    @Before
+    public void clear() {
+        System.out.println("CLEAN SPRING..." + System.currentTimeMillis());
+    }
 
     @Sentence("turn on")
     public void reset() {
@@ -42,5 +49,10 @@ public class SpringAdding {
 
     @Sentence("end")
     public void end() {
+    }
+
+    @After
+    public void finish() {
+        System.out.println("FINISH SPRING..." + System.currentTimeMillis());
     }
 }

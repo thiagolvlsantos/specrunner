@@ -1,6 +1,8 @@
 package example.text;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunnerScenario;
 import org.specrunner.junit.SRScenarioListeners;
@@ -14,6 +16,11 @@ import example.text.suv.Calc;
 public class Adding {
 
     private Calc calc = new Calc();
+
+    @Before
+    public void clear() {
+        System.out.println("CLEAN..." + System.currentTimeMillis());
+    }
 
     @Sentence("turn on")
     public void reset() {
@@ -38,5 +45,10 @@ public class Adding {
 
     @Sentence("end")
     public void end() {
+    }
+
+    @After
+    public void finish() {
+        System.out.println("FINISH..." + System.currentTimeMillis());
     }
 }

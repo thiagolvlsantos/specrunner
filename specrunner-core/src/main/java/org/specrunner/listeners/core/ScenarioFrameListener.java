@@ -21,7 +21,9 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.junit.runners.model.TestClass;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IScenarioListener;
@@ -39,7 +41,7 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos.
  * 
  */
-public class ScenarioFrameListener implements INodeListener {
+public abstract class ScenarioFrameListener implements INodeListener {
 
     /**
      * Feature to show time for scenarios.
@@ -118,6 +120,20 @@ public class ScenarioFrameListener implements INodeListener {
         this.listeners = listeners;
     }
 
+    /**
+     * The fixture instance.
+     * 
+     * @return The fixture object, if it exists, null, otherwise.
+     */
+    public abstract Object getInstance();
+
+    /**
+     * The fixture test class object.
+     * 
+     * @return The class helper.
+     */
+    public abstract TestClass getTestClass();
+
     @Override
     public void reset() {
     }
@@ -149,10 +165,12 @@ public class ScenarioFrameListener implements INodeListener {
                     if (pending) {
                         next = ENext.SKIP;
                     } else {
-                        fireBefore(name, node, context, result);
+                        fireBefore(name, node, context, result, getTestClass(), getInstance());
                     }
                 }
             } catch (PluginException e) {
+                throw new RuntimeException(e);
+            } catch (SpecRunnerException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -168,13 +186,19 @@ public class ScenarioFrameListener implements INodeListener {
      *            The scenario node.
      * @param context
      *            The test context.
+     * @param test
+     *            The test class wrapper.
      * @param result
      *            The result set.
+     * @param instance
+     *            The fixture object, if it exists, null, otherwise.
+     * @throws SpecRunnerException
+     *             On event errors.
      */
-    protected void fireBefore(String title, Node node, IContext context, IResultSet result) {
+    protected void fireBefore(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException {
         if (listeners != null) {
-            for (IScenarioListener c : listeners) {
-                c.beforeScenario(title, node, context, result);
+            for (int i = 0; i < listeners.length; i++) {
+                listeners[i].beforeScenario(title, node, context, result, test, instance);
             }
         }
     }
@@ -199,8 +223,11 @@ public class ScenarioFrameListener implements INodeListener {
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
             }
-            fireAfter(name, node, context, result);
-
+            try {
+                fireAfter(name, node, context, result, getTestClass(), getInstance());
+            } catch (SpecRunnerException e) {
+                throw new RuntimeException(e);
+            }
             Boolean show = (Boolean) SRServices.getFeatureManager().get(FEATURE_SHOW_TIME, Boolean.TRUE);
             if (show) {
                 Element span = new Element("span");
@@ -220,13 +247,19 @@ public class ScenarioFrameListener implements INodeListener {
      *            The scenario node.
      * @param context
      *            The test context.
+     * @param test
+     *            The test class wrapper.
      * @param result
      *            The result set.
+     * @param instance
+     *            The fixture object, if it exists, null, otherwise.
+     * @throws SpecRunnerException
+     *             On event errors.
      */
-    protected void fireAfter(String title, Node node, IContext context, IResultSet result) {
+    protected void fireAfter(String title, Node node, IContext context, IResultSet result, TestClass test, Object instance) throws SpecRunnerException {
         if (listeners != null) {
-            for (IScenarioListener c : listeners) {
-                c.afterScenario(title, node, context, result);
+            for (int i = listeners.length - 1; i >= 0; i--) {
+                listeners[i].afterScenario(title, node, context, result, test, instance);
             }
         }
     }
