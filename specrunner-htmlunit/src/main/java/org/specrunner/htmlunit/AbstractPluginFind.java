@@ -109,10 +109,7 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
      *             On processing errors.
      */
     public IFinder getFinderInstance(IContext context) throws PluginException {
-        if (!finderInstance.isInitialized()) {
-            UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
-        }
-        finderInstance.setInitialized(true);
+        UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
         return finderInstance;
     }
 
