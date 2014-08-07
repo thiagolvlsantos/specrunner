@@ -43,7 +43,7 @@
 	<properties>
 		<wicket.version>6.12.0</wicket.version>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
-		<specrunner.version>1.4.02</specrunner.version>
+		<specrunner.version>1.4.01</specrunner.version>
 	</properties>
 	<dependencies>
 		<!--  WICKET DEPENDENCIES -->

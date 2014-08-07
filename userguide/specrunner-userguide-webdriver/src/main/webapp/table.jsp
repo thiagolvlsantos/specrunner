@@ -60,9 +60,6 @@
                         <tr>
                             <td colspan="2"><img src="img/image.jpg"/></td>
                         </tr>
-                        <tr>
-                            <td colspan="2">Field:<input type="text" id="txtField" value="Example if sub query"/></td>
-                        </tr>
                     </tbody>
                 </table>
             </td>

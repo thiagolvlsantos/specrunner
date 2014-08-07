@@ -145,7 +145,10 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
      *             On processing errors.
      */
     public IFinder getFinderInstance(IContext context) throws PluginException {
-        UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        if (!finderInstance.isInitialized()) {
+            UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        }
+        finderInstance.setInitialized(true);
         return finderInstance;
     }
 

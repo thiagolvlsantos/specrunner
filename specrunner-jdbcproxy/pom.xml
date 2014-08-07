@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner</artifactId>
-        <version>1.4.02</version>
+        <version>1.4.01</version>
         <relativePath>../specrunner</relativePath>
     </parent>
     <artifactId>specrunner-jdbcproxy</artifactId>
