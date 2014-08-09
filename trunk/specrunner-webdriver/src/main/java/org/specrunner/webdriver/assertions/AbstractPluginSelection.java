@@ -115,7 +115,7 @@ public abstract class AbstractPluginSelection extends AbstractPluginFindSingle {
             receiveds[i] = getNormalized(options.get(i).getText());
         }
         if (expecteds.length != receiveds.length) {
-            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Number of itens (" + receiveds.length + ") in " + (content != null && content ? "content" : "selected") + " is different from expected ones (" + expecteds.length + ")."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
+            result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Number of items (" + receiveds.length + ") in " + (content != null && content ? "select" : "selected") + " is different from expected ones (" + expecteds.length + ")."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             error = 1;
         } else {
             for (int i = 0; i < expecteds.length; i++) {
