@@ -26,7 +26,10 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReuseManager;
+import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
+import org.specrunner.webdriver.IWait;
+import org.specrunner.webdriver.impl.WaitDelegator;
 
 /**
  * Quits the driver.
@@ -35,6 +38,26 @@ import org.specrunner.webdriver.AbstractPluginUrlAware;
  * 
  */
 public class PluginQuit extends AbstractPluginUrlAware {
+
+    /**
+     * Override delegate attribute.
+     */
+    private IWait local;
+
+    @Override
+    public void setIwait(IWait iwait) {
+        this.iwait = new WaitDelegator(iwait) {
+            @Override
+            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
+                return false;
+            }
+        };
+    }
+
+    @Override
+    public IWait getIwait() {
+        return local;
+    }
 
     @Override
     public ActionType getActionType() {
@@ -50,8 +73,4 @@ public class PluginQuit extends AbstractPluginUrlAware {
         result.addResult(Success.INSTANCE, context.peek());
     }
 
-    @Override
-    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
-        return false;
-    }
 }

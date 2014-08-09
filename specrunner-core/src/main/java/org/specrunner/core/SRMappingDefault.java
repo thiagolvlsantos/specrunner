@@ -54,6 +54,7 @@ import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.output.IOutputFactory;
 import org.specrunner.util.resources.ResourceFinder;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.IPresenterManager;
 
 /**
@@ -77,6 +78,7 @@ public class SRMappingDefault implements ISRMapping {
      * Create a group of services provided by SpecRunner.
      */
     public SRMappingDefault() {
+        types.put(IStringNormalizer.class, "org.specrunner.util.string.core.StringNormalizerDefault");
         types.put(ResourceFinder.class, "org.specrunner.util.resources.ResourceFinder");
         types.put(IPropertyLoader.class, "org.specrunner.properties.core.PropertyLoaderImpl");
         types.put(IConfigurationFactory.class, "org.specrunner.configuration.core.ConfigurationFactoryImpl");

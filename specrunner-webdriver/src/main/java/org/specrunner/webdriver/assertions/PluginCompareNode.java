@@ -40,8 +40,8 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
@@ -151,7 +151,8 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
                 INodeHolder holder = UtilNode.newNodeHolder(context.getNode());
                 if (!holder.getComparator(comparator.get()).match(expected, received)) {
-                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(UtilString.normalize(UtilNode.getChildrenAsString(expected)), UtilString.normalize(UtilNode.getChildrenAsString(received))));
+                    IStringNormalizer sn = SRServices.get(IStringNormalizer.class);
+                    result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(sn.normalize(UtilNode.getChildrenAsString(expected)), sn.normalize(UtilNode.getChildrenAsString(received))));
                 } else {
                     result.addResult(Success.INSTANCE, context.peek());
                 }

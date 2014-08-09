@@ -49,7 +49,7 @@ import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
@@ -411,7 +411,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         for (CellAdapter cell : row.getCells()) {
             boolean ignore = Boolean.parseBoolean(cell.getAttribute("ignore", "false"));
 
-            String fieldName = UtilString.camelCase(cell.getValue());
+            String fieldName = SRServices.get(IStringNormalizer.class).camelCase(cell.getValue());
             String name = cell.getAttribute("field", fieldName);
             Field f = headerToFields.get(fieldName);
             if (f == null) {

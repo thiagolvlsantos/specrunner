@@ -1,11 +1,17 @@
 package org.specrunner;
 
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.context.IContext;
 import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.result.IResultSet;
+import org.specrunner.util.UtilLog;
+import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
+import org.specrunner.webdriver.impl.WaitDefault;
 import org.specrunner.webdriver.impl.WebDriverFactoryHtmlUnit;
 import org.specrunner.webdriver.impl.htmlunit.WebConnectionFile;
 
@@ -29,6 +35,17 @@ public class TestAllSequential extends AbstractTest {
         cfg.add(WebDriverFactoryHtmlUnit.FEATURE_REUSE, true);
         cfg.add(HtmlUnitDriverLocal.FEATURE_CONNECTION, WebConnectionFile.class.getName());
         cfg.add(WebConnectionFile.FEATURE_CLEAN, true);
+
+        cfg.add(AbstractPluginBrowserAware.FEATURE_IWAIT, new WaitDefault() {
+            @Override
+            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
+                boolean w = super.isWaitForClient(plugin, context, result, client);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("WAIT(" + w + "):" + plugin);
+                }
+                return w;
+            }
+        });
 
         SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out, cfg);
     }

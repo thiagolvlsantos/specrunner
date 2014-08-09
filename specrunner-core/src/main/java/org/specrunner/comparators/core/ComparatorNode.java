@@ -19,7 +19,8 @@ package org.specrunner.comparators.core;
 
 import nu.xom.Node;
 
-import org.specrunner.util.UtilString;
+import org.specrunner.SRServices;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -47,6 +48,6 @@ public class ComparatorNode extends ComparatorDefault {
 
     @Override
     protected String toString(Object obj) {
-        return UtilString.normalize(UtilNode.getChildrenAsString((Node) obj));
+        return SRServices.get(IStringNormalizer.class).normalize(UtilNode.getChildrenAsString((Node) obj));
     }
 }

@@ -15,46 +15,50 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.actions;
+package org.specrunner.webdriver.impl;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.result.status.Success;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
-import org.specrunner.webdriver.AbstractPluginUrlAware;
 import org.specrunner.webdriver.IWait;
-import org.specrunner.webdriver.impl.WaitDelegator;
 
 /**
- * Closes the driver.
+ * Wait delegator.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginClose extends AbstractPluginUrlAware {
+public class WaitDelegator implements IWait {
 
-    @Override
-    public void setIwait(IWait iwait) {
-        this.iwait = new WaitDelegator(iwait) {
-            @Override
-            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
-                return false;
-            }
-        };
+    /**
+     * Target.
+     */
+    private IWait delegate;
+
+    /**
+     * Default constructor.
+     * 
+     * @param delegate
+     *            A wait algorithm.
+     */
+    public WaitDelegator(IWait delegate) {
+        this.delegate = delegate;
     }
 
     @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
+    public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
+        return delegate.isWaitForClient(plugin, context, result, client);
     }
 
     @Override
-    protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        client.close();
-        result.addResult(Success.INSTANCE, context.peek());
+    public void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException {
+        delegate.waitForClient(plugin, context, result, client);
+    }
+
+    @Override
+    public String getWaitfor(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException {
+        return delegate.getWaitfor(plugin, context, result, client);
     }
 }

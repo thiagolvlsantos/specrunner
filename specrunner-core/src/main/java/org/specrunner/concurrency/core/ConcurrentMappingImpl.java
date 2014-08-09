@@ -17,9 +17,10 @@
  */
 package org.specrunner.concurrency.core;
 
+import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
+import org.specrunner.util.string.IStringNormalizer;
 
 /**
  * Default implementation of IConcurrentMapping, returns a String concatenated
@@ -41,6 +42,6 @@ public class ConcurrentMappingImpl implements IConcurrentMapping {
 
     @Override
     public String getThread() {
-        return UtilString.normalize(Thread.currentThread().getName()).replace("-", "");
+        return SRServices.get(IStringNormalizer.class).normalize(Thread.currentThread().getName()).replace("-", "");
     }
 }

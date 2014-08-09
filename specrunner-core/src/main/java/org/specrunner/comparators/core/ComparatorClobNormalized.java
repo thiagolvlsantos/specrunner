@@ -17,7 +17,8 @@
  */
 package org.specrunner.comparators.core;
 
-import org.specrunner.util.UtilString;
+import org.specrunner.SRServices;
+import org.specrunner.util.string.IStringNormalizer;
 
 /**
  * Compare two strings/clobs using <code>UtilString.normalized(...)</code> to
@@ -31,6 +32,6 @@ public class ComparatorClobNormalized extends ComparatorClob {
 
     @Override
     protected String toString(Object obj) {
-        return UtilString.normalize(super.toString(obj));
+        return SRServices.get(IStringNormalizer.class).normalize(super.toString(obj));
     }
 }

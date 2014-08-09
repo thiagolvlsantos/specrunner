@@ -26,12 +26,41 @@ package org.specrunner.util.string;
 public interface IStringNormalizer {
 
     /**
-     * Normalize a String.
+     * Normalize a string, removing white spaces.
      * 
      * @param str
-     *            A String.
-     * @return A normalized string.
+     *            The original string.
+     * @return The normalized version.
      */
     String normalize(String str);
 
+    /**
+     * Camel case characters, as Java attributes or methods.
+     * 
+     * @param text
+     *            The text to change.
+     * @return The text changed.
+     */
+    String camelCase(String text);
+
+    /**
+     * Normalize a string using camel case rules.
+     * 
+     * @param text
+     *            The text to be normalized.
+     * 
+     * @param changeFirst
+     *            Flag to upper first character also.
+     * @return The normalized string.
+     */
+    String camelCase(String text, boolean changeFirst);
+
+    /**
+     * Remove all Latin characters.
+     * 
+     * @param str
+     *            The string to be normalized.
+     * @return The cleaned string.
+     */
+    String clean(String str);
 }
