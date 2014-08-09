@@ -35,7 +35,8 @@ import org.specrunner.plugins.IWaitPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
+import org.specrunner.util.string.IStringNormalizer;
+import org.specrunner.util.string.core.StringNormalizerDefault;
 
 /**
  * Adapter for plugins.
@@ -121,6 +122,15 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
     private Boolean normalized = Boolean.TRUE;
 
     /**
+     * Feature to set string normalizer.
+     */
+    public static final String FEATURE_NORMALIZER = AbstractPlugin.class.getName() + ".normalizer";
+    /**
+     * The normalizer.
+     */
+    private IStringNormalizer normalizer = new StringNormalizerDefault();
+
+    /**
      * Default constructor.
      */
     public AbstractPlugin() {
@@ -161,6 +171,7 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
             threadsafe = false;
         }
         fm.set(FEATURE_NORMALIZED, this);
+        fm.set(FEATURE_NORMALIZER, this);
     }
 
     @Override
@@ -305,6 +316,25 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
     }
 
     /**
+     * Get a normalizer.
+     * 
+     * @return A normalizer.
+     */
+    public IStringNormalizer getNormalizer() {
+        return normalizer;
+    }
+
+    /**
+     * Set normalizer.
+     * 
+     * @param normalizer
+     *            A normalizer.
+     */
+    public void setNormalizer(IStringNormalizer normalizer) {
+        this.normalizer = normalizer;
+    }
+
+    /**
      * Get the normalized version of a string.
      * 
      * @param str
@@ -313,7 +343,7 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
      */
     public String getNormalized(String str) {
         if (getNormalized()) {
-            return UtilString.normalize(str);
+            return normalizer.normalize(str);
         }
         return str;
     }
