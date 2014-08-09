@@ -40,7 +40,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
@@ -166,7 +166,7 @@ public class PluginColumn extends AbstractPluginTable {
         }
         if (captions.size() > 0) {
             // captions must use imports to set packages.
-            String className = UtilString.camelCase(captions.get(0).getValue(), true);
+            String className = SRServices.get(IStringNormalizer.class).camelCase(captions.get(0).getValue(), true);
             for (String pkg : PluginImport.getPackages(context)) {
                 try {
                     instance = newInstance(Class.forName(pkg + "." + className), tableAdapter);
@@ -251,7 +251,7 @@ public class PluginColumn extends AbstractPluginTable {
      */
     protected String feature(CellAdapter h) {
         String value = h.getValue();
-        String feature = UtilString.camelCase(h.getAttribute("feature", value));
+        String feature = SRServices.get(IStringNormalizer.class).camelCase(h.getAttribute("feature", value));
         if (value != null && value.trim().endsWith("?")) {
             feature = feature + "?";
         }

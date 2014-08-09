@@ -33,6 +33,7 @@ import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.impl.FinderXPath;
+import org.specrunner.webdriver.impl.WaitDelegator;
 
 /**
  * A partial implementation of a plugin which finds elements in pages to perform
@@ -75,6 +76,25 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
      * Default constructor.
      */
     public AbstractPluginFind() {
+    }
+
+    @Override
+    public void setIwait(final IWait iwait) {
+        this.iwait = new WaitDelegator(iwait) {
+            @Override
+            public String getWaitfor(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException {
+                if (alwaysWaitFor == null) {
+                    alwaysWaitFor = !(client instanceof HtmlUnitDriver);
+                }
+                if (alwaysWaitFor && plugin.getWaitfor() == null) {
+                    setWaitfor(getFinderInstance(context).getXPath(context));
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Automatic wait for visibility of: " + plugin.getWaitfor());
+                    }
+                }
+                return iwait.getWaitfor(plugin, context, result, client);
+            }
+        };
     }
 
     /**
@@ -171,20 +191,6 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             finderInstance = FinderXPath.get();
         }
         finderInstance.reset();
-    }
-
-    @Override
-    public String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        if (alwaysWaitFor == null) {
-            alwaysWaitFor = !(client instanceof HtmlUnitDriver);
-        }
-        if (alwaysWaitFor && getWaitfor() == null) {
-            setWaitfor(getFinderInstance(context).getXPath(context));
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Automatic wait for visibility of: " + getWaitfor());
-            }
-        }
-        return super.getWaitfor(context, result, client);
     }
 
     @Override

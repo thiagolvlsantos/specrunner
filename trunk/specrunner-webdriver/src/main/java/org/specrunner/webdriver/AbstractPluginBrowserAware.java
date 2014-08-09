@@ -28,12 +28,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.core.ConstantsDumperFile;
@@ -45,6 +40,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.webdriver.impl.WaitDefault;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.UnexpectedPage;
@@ -71,7 +67,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * The interval.
      */
-    private Long interval = DEFAULT_INTERVAL;
+    protected Long interval = DEFAULT_INTERVAL;
 
     /**
      * Feature to set max interval.
@@ -84,11 +80,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * The max wait time.
      */
-    private Long maxwait = DEFAULT_MAXWAIT;
-    /**
-     * To seconds milliseconds factor.
-     */
-    private static final int TO_SECONDS = 1000;
+    protected Long maxwait = DEFAULT_MAXWAIT;
 
     /**
      * Wait for feature. Use it to set generic XPath wait condition.
@@ -98,7 +90,17 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * Wait for XPath condition.
      */
-    private String waitfor;
+    protected String waitfor;
+
+    /**
+     * Feature to set wait element.
+     */
+    public static final String FEATURE_IWAIT = AbstractPluginBrowserAware.class.getName() + ".iwait";
+
+    /**
+     * IWait implementation.
+     */
+    protected IWait iwait;
 
     /**
      * Default timeout to finish the action.
@@ -113,13 +115,13 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     /**
      * The output directory.
      */
-    private String dir;
+    protected String dir;
 
     /**
      * If and action result in downloading a file, this attribute specify where
      * download will take place on disk.
      */
-    private String download;
+    protected String download;
 
     /**
      * The interval between JavaScript finish checks. Default is '100'
@@ -181,6 +183,25 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     }
 
     /**
+     * Return current IWait implementer.
+     * 
+     * @return An IWait instance.
+     */
+    public IWait getIwait() {
+        return iwait;
+    }
+
+    /**
+     * Set wait algorithm.
+     * 
+     * @param iwait
+     *            A wait implementer.
+     */
+    public void setIwait(IWait iwait) {
+        this.iwait = iwait;
+    }
+
+    /**
      * Get current download directory, if any.
      * 
      * @return The directory.
@@ -225,6 +246,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         fm.set(FEATURE_INTERVAL, this);
         fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_WAITFOR, this);
+        fm.set(FEATURE_IWAIT, this);
+        if (iwait == null) {
+            setIwait(new WaitDefault());
+        }
         fm.set(FEATURE_TIMEOUT, this);
         fm.set(FEATURE_DIR, this);
     }
@@ -237,8 +262,8 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
-        if (isWaitForClient(context, result, client)) {
-            waitForClient(context, result, client);
+        if (iwait.isWaitForClient(this, context, result, client)) {
+            iwait.waitForClient(this, context, result, client);
         }
         doEnd(context, result, client);
         if (download != null) {
@@ -357,105 +382,4 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      *             On execution errors.
      */
     protected abstract void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException;
-
-    /**
-     * Sign actions to wait for browser response.
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The result.
-     * @param client
-     *            The client.
-     * 
-     * @return true, when wait is desired, false, otherwise. Default is true.
-     */
-    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
-        return true;
-    }
-
-    /**
-     * Wait for client. If wait is set it already has waited for the period time
-     * set.
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The result.
-     * 
-     * @param client
-     *            The client.
-     * @throws PluginException
-     *             On wait for client errors.
-     */
-    protected void waitForClient(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        if (getWait() == null) {
-            try {
-                (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(context, result, client, System.currentTimeMillis(), getTimeout()));
-            } catch (TimeoutException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-            }
-        }
-    }
-
-    /**
-     * Return the condition to wait. If <code>waitfor</code> attribute is
-     * provided, the condition turn into &lt;xpath&gt;.isDisplayed().
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The result.
-     * @param client
-     *            The client.
-     * @param start
-     *            The begin time.
-     * @param timeout
-     *            The timeout.
-     * @return The expected condition.
-     * @throws PluginException
-     *             On wait conditions.
-     */
-    protected ExpectedCondition<?> getWaitCondition(IContext context, IResultSet result, WebDriver client, final long start, final Long timeout) throws PluginException {
-        if (getWaitfor(context, result, client) != null) {
-            return ExpectedConditions.visibilityOfElementLocated(By.xpath(getWaitfor(context, result, client)));
-        }
-        return new ExpectedCondition<Boolean>() {
-            @Override
-            public Boolean apply(WebDriver d) {
-                if (d instanceof IHtmlUnitDriver) {
-                    WebClient client = ((IHtmlUnitDriver) d).getWebClient();
-                    long time = System.currentTimeMillis();
-                    int count = client.waitForBackgroundJavaScript(interval);
-                    while (count > 0 && (System.currentTimeMillis() - time <= maxwait)) {
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info(count + " threads, waiting for " + interval + "mls on max of " + maxwait + "mls.");
-                        }
-                        count = client.waitForBackgroundJavaScript(interval);
-                    }
-                    return true;
-                }
-                return true;
-            }
-        };
-    }
-
-    /**
-     * Get the wait for condition.
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The result.
-     * @param client
-     *            The client.
-     * @return The wait for condition, if exists, null otherwise.
-     * @throws PluginException
-     *             On plugin XPath recover errors.
-     */
-    protected String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        return waitfor;
-    }
 }

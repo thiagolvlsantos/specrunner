@@ -15,41 +15,46 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.webdriver.assertions;
+package org.specrunner.htmlunit.impl;
 
-import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.htmlunit.AbstractPluginBrowserAware;
+import org.specrunner.htmlunit.IWait;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.webdriver.AbstractPluginBrowserAware;
-import org.specrunner.webdriver.IWait;
-import org.specrunner.webdriver.impl.WaitDelegator;
+
+import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
- * Check if body or a given element does not contains a text.
+ * Wait delegator.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginNotContains extends PluginContains {
+public class WaitDelegator implements IWait {
 
-    @Override
-    public void setIwait(IWait iwait) {
-        this.iwait = new WaitDelegator(iwait) {
-            @Override
-            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
-                return plugin.getWaitfor() != null;
-            }
-        };
+    /**
+     * Target.
+     */
+    private IWait delegate;
+
+    /**
+     * Default constructor.
+     * 
+     * @param delegate
+     *            A wait algorithm.
+     */
+    public WaitDelegator(IWait delegate) {
+        this.delegate = delegate;
     }
 
     @Override
-    protected boolean test(String content, String value) {
-        return !content.contains(value);
+    public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) {
+        return delegate.isWaitForClient(plugin, context, result, client);
     }
 
     @Override
-    protected String getMessage(IContext context, String value) throws PluginException {
-        return getFinderInstance().resume(context) + " contains '" + value + "'.";
+    public void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) throws PluginException {
+        delegate.waitForClient(plugin, context, result, client);
     }
 }

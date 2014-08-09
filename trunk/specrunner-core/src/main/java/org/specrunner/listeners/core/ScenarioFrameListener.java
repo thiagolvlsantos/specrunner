@@ -30,7 +30,7 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
@@ -147,7 +147,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
         if (CSS_SCENARIO.equals(holder.getQualifiedName()) || holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
             try {
                 Node sub = UtilNode.getCssNodeOrElement(node, CSS_TITLE);
-                String str = UtilString.camelCase(sub.getValue(), true);
+                String str = SRServices.get(IStringNormalizer.class).camelCase(sub.getValue(), true);
                 if (name.equals(str)) {
                     scenario = node;
                     title = sub;

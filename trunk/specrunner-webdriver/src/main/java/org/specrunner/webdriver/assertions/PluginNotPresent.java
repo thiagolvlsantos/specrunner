@@ -30,7 +30,10 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.AbstractPluginFind;
+import org.specrunner.webdriver.IWait;
+import org.specrunner.webdriver.impl.WaitDelegator;
 
 /**
  * Check if an id, name, value, xpath, etc is not present.
@@ -39,14 +42,10 @@ import org.specrunner.webdriver.AbstractPluginFind;
  * 
  */
 public class PluginNotPresent extends AbstractPluginFind {
+
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
-    }
-
-    @Override
-    protected boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
-        return getWaitfor() != null;
     }
 
     @Override
@@ -57,6 +56,16 @@ public class PluginNotPresent extends AbstractPluginFind {
         } else {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
         }
+    }
+
+    @Override
+    public void setIwait(IWait iwait) {
+        this.iwait = new WaitDelegator(iwait) {
+            @Override
+            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
+                return plugin.getWaitfor() != null;
+            }
+        };
     }
 
     @Override

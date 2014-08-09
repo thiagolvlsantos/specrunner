@@ -47,10 +47,10 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilException;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
+import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.UtilNode;
 
@@ -280,7 +280,7 @@ public class PluginSentence extends AbstractPlugin {
             onlyText(holder.getValue(), methodName, arguments);
         }
         if (!annotation) {
-            String tmp = UtilString.camelCase(methodName.toString());
+            String tmp = SRServices.get(IStringNormalizer.class).camelCase(methodName.toString());
             methodName.setLength(0);
             methodName.append(tmp);
         }

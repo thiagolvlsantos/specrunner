@@ -4,13 +4,13 @@
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
-        <dependent-module archiveName="specrunner-jetty-1.4.01.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-jetty/specrunner-jetty">
+        <dependent-module archiveName="specrunner-jetty-1.4.02.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-jetty/specrunner-jetty">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="specrunner-core-1.4.01.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core/specrunner-core">
+        <dependent-module archiveName="specrunner-core-1.4.02.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core/specrunner-core">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="specrunner-webdriver-1.4.01.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-webdriver/specrunner-webdriver">
+        <dependent-module archiveName="specrunner-webdriver-1.4.02.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-webdriver/specrunner-webdriver">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="specrunner-jetty-example"/>

@@ -32,6 +32,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.htmlunit.impl.WaitDefault;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
@@ -84,6 +85,16 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * Default timeout to finish browser based actions.
      */
     public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
+
+    /**
+     * Feature to set wait element.
+     */
+    public static final String FEATURE_IWAIT = AbstractPluginBrowserAware.class.getName() + ".iwait";
+
+    /**
+     * IWait implementation.
+     */
+    protected IWait iwait;
 
     /**
      * Default directory to save downloaded files.
@@ -142,6 +153,25 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     }
 
     /**
+     * Return current IWait implementer.
+     * 
+     * @return An IWait instance.
+     */
+    public IWait getIwait() {
+        return iwait;
+    }
+
+    /**
+     * Set wait algorithm.
+     * 
+     * @param iwait
+     *            A wait implementer.
+     */
+    public void setIwait(IWait iwait) {
+        this.iwait = iwait;
+    }
+
+    /**
      * Get current download directory, if any.
      * 
      * @return The directory.
@@ -186,6 +216,10 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
         fm.set(FEATURE_INTERVAL, this);
         fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_TIMEOUT, this);
+        fm.set(FEATURE_IWAIT, this);
+        if (iwait == null) {
+            setIwait(new WaitDefault());
+        }
     }
 
     @Override
@@ -196,8 +230,8 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
-        if (isWaitForClient(context, result, client)) {
-            waitForClient(context, result, client);
+        if (iwait.isWaitForClient(this, context, result, client)) {
+            iwait.waitForClient(this, context, result, client);
         }
         doEnd(context, result, client);
         if (download != null) {
@@ -301,22 +335,6 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     }
 
     /**
-     * Sign actions to wait for browser response.
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The result.
-     * @param client
-     *            The client.
-     * 
-     * @return true, when wait is desired, false, otherwise. Default is true.
-     */
-    protected boolean isWaitForClient(IContext context, IResultSet result, WebClient client) {
-        return true;
-    }
-
-    /**
      * Method delegation which receives the browser to be used by subclasses.
      * 
      * @param context
@@ -329,27 +347,4 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      *             On execution errors.
      */
     protected abstract void doEnd(IContext context, IResultSet result, WebClient client) throws PluginException;
-
-    /**
-     * Wait for client. If sleep is set, wait for sleep time.
-     * 
-     * @param context
-     *            The test context.
-     * @param result
-     *            The result.
-     * @param client
-     *            The client.
-     */
-    protected void waitForClient(IContext context, IResultSet result, WebClient client) {
-        if (getSleep() == null) {
-            long time = System.currentTimeMillis();
-            int count = client.waitForBackgroundJavaScript(interval);
-            while (count > 0 && (System.currentTimeMillis() - time <= maxwait)) {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info(count + " threads, waiting for " + interval + "mls on max of " + maxwait + "mls.");
-                }
-                count = client.waitForBackgroundJavaScript(interval);
-            }
-        }
-    }
 }

@@ -36,8 +36,8 @@ import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.UtilString;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
+import org.specrunner.util.string.IStringNormalizer;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -246,8 +246,9 @@ public final class PluginCompareUtils {
      * @return The errors count adjusted.
      */
     protected static int compareTexts(PluginCompareNode compare, IContext context, IResultSet result, Element expected, DomNode received, int errors) {
-        String strExpected = UtilString.normalize(expected.getValue());
-        String strReceived = UtilString.normalize(received.asText());
+        IStringNormalizer sn = SRServices.get(IStringNormalizer.class);
+        String strExpected = sn.normalize(expected.getValue());
+        String strReceived = sn.normalize(received.asText());
         if (!strExpected.equals(strReceived)) {
             errors++;
             result.addResult(Failure.INSTANCE, context.newBlock(expected, compare), new DefaultAlignmentException(strExpected, strReceived));
