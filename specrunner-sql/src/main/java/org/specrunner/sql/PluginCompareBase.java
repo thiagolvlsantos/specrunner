@@ -37,10 +37,10 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.sql.report.FilterDefault;
-import org.specrunner.sql.report.IFilter;
+import org.specrunner.sql.meta.impl.DataFilterDefault;
 import org.specrunner.sql.report.LineReport;
 import org.specrunner.sql.report.RegisterType;
 import org.specrunner.sql.report.ReportException;
@@ -222,11 +222,11 @@ public class PluginCompareBase extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Schema schema = PluginSchema.getSchema(context, getSchema());
-        IFilter currentFilter = null;
+        IDataFilter currentFilter = null;
         if (getFilter() != null) {
             currentFilter = PluginFilter.getFilter(context, getFilter());
         } else {
-            currentFilter = new FilterDefault();
+            currentFilter = new DataFilterDefault();
         }
         currentFilter.setup(schema, context);
         if (!currentFilter.accept(schema)) {
@@ -381,7 +381,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * 
      * @param schema
      *            The schema object.
-     * @param filter
+     * @param dataFilter
      *            The filter object.
      * @param report
      *            The report.
@@ -394,7 +394,7 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @throws SQLException
      *             On comparison errors.
      */
-    public void populateTableReport(Schema schema, IFilter filter, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
+    public void populateTableReport(Schema schema, IDataFilter dataFilter, SchemaReport report, Table table, ResultSet rsExpected, ResultSet rsReceived) throws SQLException {
         IResultEnumerator comp = getEnumerator(table, rsExpected, rsReceived);
         TableReport tr = new TableReport(table);
         while (comp.next()) {
@@ -417,7 +417,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             } else {
                 lr = new LineReport(RegisterType.DIFFERENT, tr);
                 for (Column c : table.getColumns()) {
-                    if (!filter.accept(c)) {
+                    if (!dataFilter.accept(c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
                         }
@@ -425,7 +425,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                     Object objExp = exp.getObject(c.getName());
                     Object objRec = rec.getObject(c.getName());
-                    if (!filter.accept(c, objRec)) {
+                    if (!dataFilter.accept(c, objRec)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Value ignored(" + c.getAlias() + "," + c.getName() + "):" + objRec);
                         }

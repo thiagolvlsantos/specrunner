@@ -26,7 +26,7 @@ import org.specrunner.context.IContext;
  * @author Thiago Santos
  * 
  */
-public interface IFilter {
+public interface IBlockFilter {
 
     /**
      * Inicialize filter.

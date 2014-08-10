@@ -46,7 +46,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Ignored;
 import org.specrunner.result.status.Info;
-import org.specrunner.runner.IFilter;
+import org.specrunner.runner.IBlockFilter;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.source.ISource;
@@ -66,16 +66,16 @@ public class RunnerImpl implements IRunner {
     /**
      * A filter instance.
      */
-    private IFilter filter;
+    private IBlockFilter blockFilter;
 
     @Override
-    public IFilter getFilter() {
-        return filter;
+    public IBlockFilter getFilter() {
+        return blockFilter;
     }
 
     @Override
-    public void setFilter(IFilter filter) {
-        this.filter = filter;
+    public void setFilter(IBlockFilter blockFilter) {
+        this.blockFilter = blockFilter;
     }
 
     @Override
@@ -160,9 +160,9 @@ public class RunnerImpl implements IRunner {
                 return;
             }
 
-            IFilter local = filter;
+            IBlockFilter local = blockFilter;
             if (local == null) {
-                local = FilterDefault.INSTANCE.get();
+                local = BlockFilterDefault.INSTANCE.get();
             }
             if (local != null) {
                 local.initialize(context);

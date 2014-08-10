@@ -37,15 +37,15 @@ public interface IRunner {
      * 
      * @return The filter.
      */
-    IFilter getFilter();
+    IBlockFilter getFilter();
 
     /**
      * Set a filter.
      * 
-     * @param filter
+     * @param blockFilter
      *            A block filter.
      */
-    void setFilter(IFilter filter);
+    void setFilter(IBlockFilter blockFilter);
 
     /**
      * Performs the specification in source.

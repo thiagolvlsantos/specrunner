@@ -29,7 +29,7 @@ import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.PluginNop;
-import org.specrunner.runner.IFilter;
+import org.specrunner.runner.IBlockFilter;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -38,37 +38,37 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class FilterDefault implements IFilter {
+public class BlockFilterDefault implements IBlockFilter {
 
     /**
      * Feature to set the disabled aliases using IFeatureManager or
      * IConfiguration.
      */
-    public static final String FEATURE_DISABLED_ALIASES = FilterDefault.class.getName() + ".disabledAliases";
+    public static final String FEATURE_DISABLED_ALIASES = BlockFilterDefault.class.getName() + ".disabledAliases";
 
     /**
      * Feature to set the enabled aliases using IFeatureManager or
      * IConfiguration.
      */
-    public static final String FEATURE_ENABLED_ALIASES = FilterDefault.class.getName() + ".enabledAliases";
+    public static final String FEATURE_ENABLED_ALIASES = BlockFilterDefault.class.getName() + ".enabledAliases";
 
     /**
      * Feature to set the disabled type using IFeatureManager or IConfiguration.
      */
-    public static final String FEATURE_DISABLED_TYPES = FilterDefault.class.getName() + ".disabledTypes";
+    public static final String FEATURE_DISABLED_TYPES = BlockFilterDefault.class.getName() + ".disabledTypes";
 
     /**
      * Feature to set the enabled types using IFeatureManager or IConfiguration.
      */
-    public static final String FEATURE_ENABLED_TYPES = FilterDefault.class.getName() + ".enabledTypes";
+    public static final String FEATURE_ENABLED_TYPES = BlockFilterDefault.class.getName() + ".enabledTypes";
 
     /**
      * Thread safe filter instance.
      */
-    public static final ThreadLocal<FilterDefault> INSTANCE = new ThreadLocal<FilterDefault>() {
+    public static final ThreadLocal<BlockFilterDefault> INSTANCE = new ThreadLocal<BlockFilterDefault>() {
         @Override
-        protected FilterDefault initialValue() {
-            return new FilterDefault();
+        protected BlockFilterDefault initialValue() {
+            return new BlockFilterDefault();
         }
     };
 

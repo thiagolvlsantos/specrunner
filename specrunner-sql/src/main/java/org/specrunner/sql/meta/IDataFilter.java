@@ -15,14 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.report;
+package org.specrunner.sql.meta;
 
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.Schema;
-import org.specrunner.sql.meta.Table;
 
 /**
  * Provides a multi-level database comparison filter.
@@ -30,7 +26,32 @@ import org.specrunner.sql.meta.Table;
  * @author Thiago Santos
  * 
  */
-public interface IFilter extends IParameterHolder {
+public interface IDataFilter {
+
+    /**
+     * CSS for filtered tables.
+     */
+    String CSS_SCHEMA = "sqlschemaignore";
+
+    /**
+     * CSS for filtered tables.
+     */
+    String CSS_TABLE = "sqltableignore";
+
+    /**
+     * CSS for filtered register.
+     */
+    String CSS_REGISTER = "sqlregisterignore";
+
+    /**
+     * CSS for filtered columns.
+     */
+    String CSS_COLUMN = "sqlcolumnignore";
+
+    /**
+     * CSS for filtered values.
+     */
+    String CSS_VALUE = "sqlvalueignore";
 
     /**
      * Enable the filter to perform some setup before use.
@@ -48,7 +69,7 @@ public interface IFilter extends IParameterHolder {
      * Check if a schema is accepted.
      * 
      * @param schema
-     *            The schema.
+     *            A schema.
      * @return true, to compare, false, to ignore item.
      */
     boolean accept(Schema schema);
@@ -57,16 +78,25 @@ public interface IFilter extends IParameterHolder {
      * Check if a table in a schema is accepted.
      * 
      * @param table
-     *            The table.
+     *            A table.
      * @return true, to compare, false, to ignore item.
      */
     boolean accept(Table table);
 
     /**
+     * Check if a register in a schema is accepted.
+     * 
+     * @param register
+     *            A register.
+     * @return true, to compare, false, to ignore item.
+     */
+    boolean accept(IRegister register);
+
+    /**
      * Check if a column, in table from a schema is accepted.
      * 
      * @param column
-     *            The column.
+     *            A column.
      * @return true, to compare, false, to ignore item.
      */
     boolean accept(Column column);
@@ -75,9 +105,9 @@ public interface IFilter extends IParameterHolder {
      * Check if a value, in a column of a table from a schema is accepted.
      * 
      * @param column
-     *            The column.
+     *            A column.
      * @param value
-     *            The value.
+     *            A value.
      * @return true, to compare, false, to ignore item.
      */
     boolean accept(Column column, Object value);
