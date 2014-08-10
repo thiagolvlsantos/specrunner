@@ -29,6 +29,13 @@ import org.specrunner.sql.database.DatabaseException;
 public interface IRegister extends Set<Value> {
 
     /**
+     * Parent table.
+     * 
+     * @return A table.
+     */
+    Table getParent();
+
+    /**
      * Get the table which is referred by the column.
      * 
      * @param column
@@ -38,4 +45,22 @@ public interface IRegister extends Set<Value> {
      *             On table resolution error.
      */
     String getTableOrAlias(Column column) throws DatabaseException;
+
+    /**
+     * Get a value by its name.
+     * 
+     * @param name
+     *            A name.
+     * @return A value, if it exists, null, otherwise.
+     */
+    Value getByName(String name);
+
+    /**
+     * Get a value by its alias.
+     * 
+     * @param alias
+     *            An alias.
+     * @return A value, if it exists, null, otherwise.
+     */
+    Value getByAlias(String alias);
 }

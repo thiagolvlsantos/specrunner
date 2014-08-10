@@ -40,8 +40,8 @@ import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
 import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.impl.DataFilterDefault;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
-import org.specrunner.sql.report.FilterDefault;
 
 //CHECKSTYLE:OFF
 //@RunWith(ConcurrentRunner.class)
@@ -68,7 +68,7 @@ public class TestDbmsNegativeFeature {
         cfg.add(AbstractPluginDatabase.FEATURE_DATABASE, "dataA|dataB");
         cfg.add(AbstractPluginDatabase.FEATURE_SEPARATOR, "|");
 
-        cfg.add(PluginFilter.FEATURE_FILTER_INSTANCE, new FilterDefault() {
+        cfg.add(PluginFilter.FEATURE_FILTER_INSTANCE, new DataFilterDefault() {
             @Override
             public boolean accept(Column column) {
                 return !column.getName().equalsIgnoreCase("PRO_NM");

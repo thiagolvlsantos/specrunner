@@ -42,10 +42,12 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.sql.PluginFilter;
 import org.specrunner.sql.database.CommandType;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.DatabaseRegisterEvent;
@@ -61,12 +63,14 @@ import org.specrunner.sql.database.ISqlWrapperFactory;
 import org.specrunner.sql.database.IStatementFactory;
 import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.ReplicableException;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.UtilNames;
 import org.specrunner.sql.meta.Value;
+import org.specrunner.sql.meta.impl.DataFilterDefault;
 import org.specrunner.sql.meta.impl.UtilSchema;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -78,6 +82,7 @@ import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.RowAdapter;
 import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.core.PresentationCompare;
 import org.specrunner.util.xom.core.PresentationException;
 
@@ -91,6 +96,15 @@ import org.specrunner.util.xom.core.PresentationException;
  */
 @SuppressWarnings("serial")
 public class DatabaseDefault implements IDatabase {
+
+    /**
+     * Feature for comparison filter.
+     */
+    public static final String FEATURE_FILTER = DatabaseDefault.class.getName() + ".filter";
+    /**
+     * Pattern name to be used.
+     */
+    private String filter;
 
     /**
      * A null/empty handler.
@@ -146,6 +160,7 @@ public class DatabaseDefault implements IDatabase {
     @Override
     public void initialize() {
         IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_FILTER, this);
         fm.set(FEATURE_NULL_EMPTY_HANDLER, this);
         fm.set(FEATURE_SEQUENCE_PROVIDER, this);
         fm.set(FEATURE_COLUMN_READER, this);
@@ -157,6 +172,26 @@ public class DatabaseDefault implements IDatabase {
         // every use of database clear mappings to avoid memory overload and
         // test interference
         idManager.reset();
+    }
+
+    /**
+     * Get the filter name.
+     * 
+     * @return The name.
+     */
+    public String getFilter() {
+        return filter;
+    }
+
+    /**
+     * Set the filter name.
+     * 
+     * @param filter
+     *            Name.
+     */
+    @DontEval
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 
     /**
@@ -356,6 +391,24 @@ public class DatabaseDefault implements IDatabase {
 
     @Override
     public void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws DatabaseException {
+        IDataFilter afilter = null;
+        try {
+            afilter = PluginFilter.getFilter(context, getFilter());
+        } catch (PluginException e) {
+            afilter = new DataFilterDefault();
+        }
+        try {
+            afilter.setup(schema, context);
+        } catch (PluginException e) {
+            throw new DatabaseException(e);
+        }
+        if (!afilter.accept(schema)) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Schema ignored:" + schema.getAlias() + "(" + schema.getName() + ")");
+            }
+            UtilNode.appendCss(adapter.getNode(), IDataFilter.CSS_SCHEMA);
+            return;
+        }
         List<CellAdapter> captions = adapter.getCaptions();
         if (captions.isEmpty()) {
             throw new DatabaseException("Tables must have a caption. The caption must be part of this set: " + schema.getAliasToTables().keySet());
@@ -364,6 +417,13 @@ public class DatabaseDefault implements IDatabase {
         Table table = schema.getAlias(tAlias);
         if (table == null) {
             throw new DatabaseException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), available tables: " + schema.getAliasToTables().keySet());
+        }
+        if (!afilter.accept(table)) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Table ignored:" + table.getAlias() + "(" + table.getName() + ")");
+            }
+            UtilNode.appendCss(adapter.getNode(), IDataFilter.CSS_TABLE);
+            return;
         }
         // creates a copy only of defined tables
         try {
@@ -379,7 +439,7 @@ public class DatabaseDefault implements IDatabase {
         RowAdapter header = rows.get(0);
         List<CellAdapter> headers = header.getCells();
         Column[] columns = new Column[headers.size()];
-        readHeadersColumns(context, table, headers, columns);
+        readHeadersColumns(context, table, headers, columns, afilter);
 
         // clear listeners
         fireInitialize();
@@ -403,7 +463,8 @@ public class DatabaseDefault implements IDatabase {
                 throw new DatabaseException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0). The first column is required for one of the following values: " + Arrays.toString(CommandType.values()));
             }
             Map<String, Value> filled = new HashMap<String, Value>();
-            IRegister register = new RegisterDefault();
+            Map<String, CellAdapter> missing = new HashMap<String, CellAdapter>();
+            IRegister register = new RegisterDefault(table);
             for (int j = 1; j < tds.size(); j++) {
                 Column column = columns[j].copy();
                 CellAdapter td = tds.get(j);
@@ -416,22 +477,31 @@ public class DatabaseDefault implements IDatabase {
                 }
                 String content = getAdjustContent(context, td);
                 try {
-                    Value v = getValue(mode, command, column, td, content);
+                    Value v = getValue(mode, command, column, afilter, td, content);
                     if (v != null) {
                         register.add(v);
                         filled.put(column.getName(), v);
+                    } else {
+                        missing.put(column.getName(), td);
                     }
                 } catch (ConverterException e) {
                     result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), new PluginException("Convertion error at row: " + i + ", cell: " + j + ".", e));
                     continue;
                 }
             }
+            if (!afilter.accept(register)) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Register ignored:" + register + ".");
+                }
+                UtilNode.appendCss(row.getNode(), IDataFilter.CSS_REGISTER);
+                continue;
+            }
             try {
                 boolean error = false;
                 switch (command) {
                 case INSERT:
                     if (mode == EMode.INPUT) {
-                        performInsert(context, result, connection, table, register, filled);
+                        performInsert(context, result, connection, table, afilter, register, filled, missing);
                     } else {
                         performSelect(context, result, connection, table, command, register, expectedCount);
                     }
@@ -491,10 +561,12 @@ public class DatabaseDefault implements IDatabase {
      *            The headers list.
      * @param columns
      *            The columns list.
+     * @param afilter
+     *            A filter.
      * @throws DatabaseException
      *             On reading errors.
      */
-    protected void readHeadersColumns(IContext context, Table table, List<CellAdapter> headers, Column[] columns) throws DatabaseException {
+    protected void readHeadersColumns(IContext context, Table table, List<CellAdapter> headers, Column[] columns, IDataFilter afilter) throws DatabaseException {
         for (int i = 0; i < headers.size(); i++) {
             CellAdapter cell = headers.get(i);
             String cAlias = cell.getValue();
@@ -511,6 +583,13 @@ public class DatabaseDefault implements IDatabase {
                     throw new DatabaseException(e);
                 } catch (ComparatorException e) {
                     throw new DatabaseException(e);
+                }
+                if (!afilter.accept(column)) {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Adding 'true' comparator to ignore a column.");
+                    }
+                    column.setComparator(SRServices.getComparatorManager().get("true"));
+                    UtilNode.appendCss(cell.getNode(), IDataFilter.CSS_COLUMN);
                 }
             }
         }
@@ -550,6 +629,8 @@ public class DatabaseDefault implements IDatabase {
      *            Command type.
      * @param column
      *            Column meta-data.
+     * @param afilter
+     *            A filter.
      * @param td
      *            The cell.
      * @param content
@@ -558,7 +639,7 @@ public class DatabaseDefault implements IDatabase {
      * @throws ConverterException
      *             On data conversion errors.
      */
-    protected Value getValue(EMode mode, CommandType command, Column column, CellAdapter td, String content) throws ConverterException {
+    protected Value getValue(EMode mode, CommandType command, Column column, IDataFilter afilter, CellAdapter td, String content) throws ConverterException {
         boolean isNull = nullEmptyHandler.isNull(content, mode);
         boolean isEmpty = nullEmptyHandler.isEmpty(content, mode);
         boolean isVirtual = column.isVirtual();
@@ -574,6 +655,13 @@ public class DatabaseDefault implements IDatabase {
             } else {
                 List<String> args = column.getArguments();
                 obj = converter.convert(content, args.isEmpty() ? null : args.toArray());
+            }
+            if (!afilter.accept(column, obj)) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Ignore value '" + obj + "' in column '" + column.getAlias() + "'.");
+                }
+                UtilNode.appendCss(td.getNode(), IDataFilter.CSS_VALUE);
+                return null;
             }
             if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
                 // the other column fields with default value are set in
@@ -596,17 +684,21 @@ public class DatabaseDefault implements IDatabase {
      *            The connection.
      * @param table
      *            The specification.
+     * @param afilter
+     *            A filter.
      * @param register
      *            The values.
      * @param filled
      *            Filled fields.
+     * @param missing
+     *            Unfilled columns.
      * @throws DatabaseException
      *             On database errors.
      * @throws SQLException
      *             On SQL errors.
      */
-    protected void performInsert(IContext context, IResultSet result, Connection connection, Table table, IRegister register, Map<String, Value> filled) throws DatabaseException, SQLException {
-        addMissingValues(table, register, filled);
+    protected void performInsert(IContext context, IResultSet result, Connection connection, Table table, IDataFilter afilter, IRegister register, Map<String, Value> filled, Map<String, CellAdapter> missing) throws DatabaseException, SQLException {
+        addMissingValues(table, afilter, register, filled, missing);
         performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.INSERT, register, 1), table, register);
     }
 
@@ -615,21 +707,38 @@ public class DatabaseDefault implements IDatabase {
      * 
      * @param table
      *            The table.
+     * @param afilter
+     *            A filter.
      * @param register
      *            The set of values.
      * @param filled
      *            A map of filled fields.
+     * @param missing
+     *            A map of unfilled fields.
      */
-    protected void addMissingValues(Table table, IRegister register, Map<String, Value> filled) {
+    protected void addMissingValues(Table table, IDataFilter afilter, IRegister register, Map<String, Value> filled, Map<String, CellAdapter> missing) {
         for (Column column : table.getColumns()) {
             // table columns not present in test table
             if (filled.get(column.getName()) == null) {
+                Value v = null;
                 if (column.getDefaultValue() != null) {
                     // with default values should be set
-                    register.add(new Value(column, null, column.getDefaultValue(), column.getComparator()));
+                    v = new Value(column, missing.get(column.getName()), column.getDefaultValue(), column.getComparator());
                 } else if (column.isSequence()) {
                     // or if it is a sequence: add their next value command.
-                    register.add(new Value(column, null, sequenceProvider.nextValue(column.getSequence()), column.getComparator()));
+                    v = new Value(column, missing.get(column.getName()), sequenceProvider.nextValue(column.getSequence()), column.getComparator());
+                }
+                if (v != null) {
+                    if (!afilter.accept(column) || !afilter.accept(column, null) || !afilter.accept(column, v.getValue())) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Ignore default of ignored column '" + column.getAlias() + "(" + column.getName() + ")'.");
+                        }
+                        if (v.getCell() != null) {
+                            UtilNode.appendCss(v.getCell().getNode(), IDataFilter.CSS_VALUE);
+                        }
+                        continue;
+                    }
+                    register.add(v);
                 }
             }
         }

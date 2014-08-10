@@ -35,10 +35,10 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.runner.IFilter;
+import org.specrunner.runner.IBlockFilter;
 import org.specrunner.runner.IRunner;
 import org.specrunner.runner.RunnerException;
-import org.specrunner.runner.core.FilterDefault;
+import org.specrunner.runner.core.BlockFilterDefault;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 
@@ -233,8 +233,8 @@ public final class UtilPlugin {
      */
     public static void performComandsFirst(IContext context, IResultSet result, Node element) throws PluginException {
         IRunner runner = context.getRunner();
-        IFilter filter = runner.getFilter();
-        FilterDefault tmp = FilterDefault.INSTANCE.get();
+        IBlockFilter blockFilter = runner.getFilter();
+        BlockFilterDefault tmp = BlockFilterDefault.INSTANCE.get();
         List<? extends ActionType> types = tmp.getDisabledTypes();
         boolean show = tmp.isShowMessage();
         try {
@@ -252,7 +252,7 @@ public final class UtilPlugin {
         } finally {
             tmp.setDisabledTypes(types);
             tmp.setShowMessage(show);
-            runner.setFilter(filter);
+            runner.setFilter(blockFilter);
         }
     }
 

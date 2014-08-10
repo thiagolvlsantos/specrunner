@@ -15,60 +15,51 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.report;
+package org.specrunner.sql.meta.impl;
 
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.core.ParameterHolder;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IDataFilter;
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 
 /**
- * Encapsulate a filter and negate it answers.
+ * Default report filter. Filter nothing. :)
  * 
  * @author Thiago Santos
  * 
  */
-public class FilterNegative extends ParameterHolder implements IFilter {
-
-    /**
-     * Reference filter.
-     */
-    private IFilter filter;
-
-    /**
-     * The reference filter.
-     * 
-     * @param filter
-     *            The filter.
-     */
-    public FilterNegative(IFilter filter) {
-        this.filter = filter;
-    }
+public class DataFilterDefault extends ParameterHolder implements IDataFilter {
 
     @Override
-    public void setup(Schema schema, IContext context) throws PluginException {
-        filter.setup(schema, context);
+    public void setup(Schema schema, IContext context) {
+        // nothing.
     }
 
     @Override
     public boolean accept(Schema schema) {
-        return !filter.accept(schema);
+        return true;
     }
 
     @Override
     public boolean accept(Table table) {
-        return !filter.accept(table);
+        return true;
+    }
+
+    @Override
+    public boolean accept(IRegister register) {
+        return true;
     }
 
     @Override
     public boolean accept(Column column) {
-        return !filter.accept(column);
+        return true;
     }
 
     @Override
     public boolean accept(Column column, Object value) {
-        return !filter.accept(column, value);
+        return true;
     }
 }

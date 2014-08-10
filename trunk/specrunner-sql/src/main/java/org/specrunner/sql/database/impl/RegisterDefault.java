@@ -22,6 +22,7 @@ import java.util.TreeSet;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.IRegister;
+import org.specrunner.sql.meta.Table;
 import org.specrunner.sql.meta.UtilNames;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
@@ -34,6 +35,26 @@ import org.specrunner.util.UtilLog;
  */
 @SuppressWarnings("serial")
 public class RegisterDefault extends TreeSet<Value> implements IRegister {
+
+    /**
+     * Parent table.
+     */
+    private Table parent;
+
+    /**
+     * Default constructor.
+     * 
+     * @param parent
+     *            A table.
+     */
+    public RegisterDefault(Table parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Table getParent() {
+        return parent;
+    }
 
     @Override
     public String getTableOrAlias(Column column) throws DatabaseException {
@@ -55,5 +76,25 @@ public class RegisterDefault extends TreeSet<Value> implements IRegister {
             }
         }
         return alias;
+    }
+
+    @Override
+    public Value getByName(String name) {
+        for (Value v : this) {
+            if (v.getColumn().getName().equalsIgnoreCase(name)) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Value getByAlias(String alias) {
+        for (Value v : this) {
+            if (v.getColumn().getAlias().equalsIgnoreCase(alias)) {
+                return v;
+            }
+        }
+        return null;
     }
 }

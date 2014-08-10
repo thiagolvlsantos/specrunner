@@ -15,44 +15,67 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.report;
+package org.specrunner.sql.meta.impl;
 
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.core.ParameterHolder;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IDataFilter;
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 
 /**
- * Default report filter. Filter nothing. :)
+ * Encapsulate a filter and negate it answers.
  * 
  * @author Thiago Santos
  * 
  */
-public class FilterDefault extends ParameterHolder implements IFilter {
+public class DataFilterNegative extends ParameterHolder implements IDataFilter {
+
+    /**
+     * Reference filter.
+     */
+    private IDataFilter dataFilter;
+
+    /**
+     * The reference filter.
+     * 
+     * @param dataFilter
+     *            The filter.
+     */
+    public DataFilterNegative(IDataFilter dataFilter) {
+        this.dataFilter = dataFilter;
+    }
 
     @Override
-    public void setup(Schema schema, IContext context) {
-        // nothing.
+    public void setup(Schema schema, IContext context) throws PluginException {
+        dataFilter.setup(schema, context);
     }
 
     @Override
     public boolean accept(Schema schema) {
-        return true;
+        return !dataFilter.accept(schema);
     }
 
     @Override
     public boolean accept(Table table) {
-        return true;
+        return !dataFilter.accept(table);
+    }
+
+    @Override
+    public boolean accept(IRegister register) {
+        return !dataFilter.accept(register);
     }
 
     @Override
     public boolean accept(Column column) {
-        return true;
+        return !dataFilter.accept(column);
     }
 
     @Override
     public boolean accept(Column column, Object value) {
-        return true;
+        return !dataFilter.accept(column, value);
     }
 }

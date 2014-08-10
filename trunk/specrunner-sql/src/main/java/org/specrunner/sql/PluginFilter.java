@@ -33,7 +33,7 @@ import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.core.AbstractReusable;
-import org.specrunner.sql.report.IFilter;
+import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -65,7 +65,7 @@ public class PluginFilter extends AbstractPluginValue {
     /**
      * Filter provider instance.
      */
-    private IFilter providerInstance;
+    private IDataFilter providerInstance;
 
     /**
      * Default filter setting for reuse.
@@ -101,7 +101,7 @@ public class PluginFilter extends AbstractPluginValue {
      * 
      * @return Filter provider instance.
      */
-    public IFilter getProviderInstance() {
+    public IDataFilter getProviderInstance() {
         return providerInstance;
     }
 
@@ -111,7 +111,7 @@ public class PluginFilter extends AbstractPluginValue {
      * @param providerInstance
      *            The instance.
      */
-    public void setProviderInstance(IFilter providerInstance) {
+    public void setProviderInstance(IDataFilter providerInstance) {
         this.providerInstance = providerInstance;
     }
 
@@ -177,7 +177,7 @@ public class PluginFilter extends AbstractPluginValue {
         if (providerInstance == null) {
             if (provider != null) {
                 try {
-                    providerInstance = (IFilter) Class.forName(provider).newInstance();
+                    providerInstance = (IDataFilter) Class.forName(provider).newInstance();
                 } catch (Exception e) {
                     throw new PluginException("Invalid IFilter provider '" + provider + "'.", e);
                 }
@@ -189,7 +189,7 @@ public class PluginFilter extends AbstractPluginValue {
             }
         }
         if (reuse) {
-            rm.put(currentName, new AbstractReusable<IFilter>(currentName, providerInstance) {
+            rm.put(currentName, new AbstractReusable<IDataFilter>(currentName, providerInstance) {
                 @Override
                 public void reset() {
                 }
@@ -226,13 +226,13 @@ public class PluginFilter extends AbstractPluginValue {
      * @throws PluginException
      *             On lookup errors.
      */
-    public static IFilter getFilter(IContext context, String name) throws PluginException {
+    public static IDataFilter getFilter(IContext context, String name) throws PluginException {
         if (name == null) {
             name = DEFAULT_FILTER_NAME;
         }
-        IFilter provider = (IFilter) context.getByName(name);
+        IDataFilter provider = (IDataFilter) context.getByName(name);
         if (provider == null) {
-            throw new PluginException("Instance of '" + IFilter.class.getName() + "' named '" + name + "' not found. Use " + PluginFilter.class.getName() + " first.");
+            throw new PluginException("Instance of '" + IDataFilter.class.getName() + "' named '" + name + "' not found. Use " + PluginFilter.class.getName() + " first.");
         }
         return provider;
     }

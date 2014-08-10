@@ -11,7 +11,7 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.jetty.JettyStringProvider;
 import org.specrunner.junit.SpecRunnerJUnit;
-import org.specrunner.runner.core.FilterDefault;
+import org.specrunner.runner.core.BlockFilterDefault;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;
@@ -46,7 +46,7 @@ public class TestJump {
     @Test
     public void exampleChrome() {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("pause"));
+        cfg.add(BlockFilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("pause"));
         cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", cfg);
     }
@@ -54,7 +54,7 @@ public class TestJump {
     @Test
     public void exampleLocal() {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
-        cfg.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
+        cfg.add(BlockFilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         cfg.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyLocal.html", cfg);
     }
@@ -62,7 +62,7 @@ public class TestJump {
     @Test
     public void exampleGlobal() {
         IFeatureManager fm = SRServices.getFeatureManager();
-        fm.add(FilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
+        fm.add(BlockFilterDefault.FEATURE_DISABLED_ALIASES, Arrays.asList("jettyStart", "pause"));
         fm.add(JettyStringProvider.FEATURE_URL, "http://localhost:8080");
         SpecRunnerJUnit.defaultRun("src/test/resources/income/example-jetty.html", "src/test/resources/outcome/example-jettyGlobal.html");
     }

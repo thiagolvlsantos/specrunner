@@ -52,3 +52,18 @@ table.sr_treport td.sr_different_cell {
     background-color: #ffd9d9;
 }
 
+/** Ignore */
+.sqlschemaignore,.sqltableignore,.sqlregisterignore,.sqlcolumnignore,.sqlvalueignore{
+    text-decoration: line-through;
+    background-color: orange;
+}
+
+.sqltableignore::before {
+    content: "[IGNORED";
+    background-color: orange;
+}
+
+.sqltableignore::after {
+    content: "IGNORED]";
+    background-color: orange;
+}
