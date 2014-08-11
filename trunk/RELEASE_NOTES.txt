@@ -1,3 +1,16 @@
+1.4.03
+OK - Usar o IFilter na execução dos prepare/verify não apenas no compare base. Isso vai permitir postergar a implementação de requisitos complexos como logs.
+	 - Filtrado e pintado.
+
+OK - Corrigir o inglês: Number of itens (10) in content is different from expected ones (9).
+   - ITEMS... in field... é melhor.
+
+OK - Trocar o método getNormalized(....) por um normalizador delegado também, enfim tudo que puder ser delegado e transformado em feature é flexibilidade desejada.
+     Criada a interface IStringNormalizer e o método UtilString.normalize deixou de ser estático.
+
+OK - Criar uma interface IWait para generalizar a espera pelo webdriver, isso permitirá usar diferentes estratégias sem precisar editar o código da superclasse.
+    - Delegação ao invés de herança!
+
 1.4.02
 OK - Bug fix nas ações web aninhadas.
 
