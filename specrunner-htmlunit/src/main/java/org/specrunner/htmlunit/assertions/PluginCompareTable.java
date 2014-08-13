@@ -90,7 +90,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
     protected boolean compareTable(IContext context, IResultSet result, SgmlPage page, HtmlElement element, Node node) throws PluginException {
         boolean success = true;
 
-        Nodes tables = node.query("descendant-or-self::table");
+        Nodes tables = getTables(node);
         Node table = UtilNode.getHighest(tables);
         if (table == null) {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
@@ -98,14 +98,14 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         }
         TableAdapter tableExpected = UtilNode.newTableAdapter(table);
 
-        List<?> tablesReceived = element.getByXPath("descendant-or-self::table");
+        List<?> tablesReceived = getTables(element);
         if (tablesReceived.isEmpty()) {
             result.addResult(Failure.INSTANCE, context.newBlock(table, this), new PluginException("Expected table not present in input."));
             return false;
         }
         HtmlTable tableReceived = (HtmlTable) tablesReceived.get(0);
 
-        List<?> tableCaptions = tableReceived.getByXPath("child::caption");
+        List<?> tableCaptions = getCaptions(tableExpected, tableReceived);
         Iterator<?> iteCaptions = tableCaptions.iterator();
         for (CellAdapter expected : tableExpected.getCaptions()) {
             if (!iteCaptions.hasNext()) {
@@ -139,7 +139,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             success = false;
         }
 
-        List<?> tableElements = tableReceived.getByXPath("child::tr/th | child::tr/td | child::thead/tr/th | child::thead/tr/td | child::tbody/tr/th | child::tbody/tr/td");
+        List<?> tableElements = getCells(tableExpected, tableReceived);
         Iterator<?> iteElements = tableElements.iterator();
         for (RowAdapter rowsExpected : tableExpected.getRows()) {
             for (CellAdapter expected : rowsExpected.getCells()) {
@@ -175,6 +175,54 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         }
 
         return success;
+    }
+
+    /**
+     * Get tables.
+     * 
+     * @param expected
+     *            Expected table.
+     * @return List of table elements.
+     */
+    protected Nodes getTables(Node expected) {
+        return expected.query("descendant-or-self::table");
+    }
+
+    /**
+     * Get tables.
+     * 
+     * @param received
+     *            Received element.
+     * @return List of table elements.
+     */
+    protected List<?> getTables(HtmlElement received) {
+        return received.getByXPath("descendant-or-self::table");
+    }
+
+    /**
+     * Get received captions.
+     * 
+     * @param tableExpected
+     *            Expected table.
+     * @param tableReceived
+     *            Received table.
+     * @return List of elements to compare.
+     */
+    protected List<?> getCaptions(TableAdapter tableExpected, HtmlTable tableReceived) {
+        return tableReceived.getByXPath("child::caption");
+    }
+
+    /**
+     * Get received cells.
+     * 
+     * @param tableExpected
+     *            Expected table.
+     * @param tableReceived
+     *            Received table.
+     * @return List of elements to compare.
+     */
+    protected List<?> getCells(TableAdapter tableExpected, HtmlTable tableReceived) {
+        return tableReceived.getByXPath("child::tr/th | child::tr/td | child::thead/tr/th | child::thead/tr/td | child::tbody/tr/th | child::tbody/tr/td");
     }
 
     /**
