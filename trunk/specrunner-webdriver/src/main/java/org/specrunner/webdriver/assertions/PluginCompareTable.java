@@ -18,6 +18,7 @@
 package org.specrunner.webdriver.assertions;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import nu.xom.Element;
@@ -38,6 +39,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.math.Range;
 import org.specrunner.util.xom.CellAdapter;
 import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.RowAdapter;
@@ -218,7 +220,39 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
      * @return List of elements to compare.
      */
     protected List<WebElement> getCells(TableAdapter tableExpected, WebElement tableReceived) {
-        return tableReceived.findElements(By.xpath("child::tr/th | child::tr/td | child::thead/tr/th | child::thead/tr/td | child::tbody/tr/th | child::tbody/tr/td"));
+        List<WebElement> result = new LinkedList<WebElement>();
+        List<WebElement> rows = tableReceived.findElements(By.xpath("child::tr | child::thead/tr | child::tbody/tr"));
+        List<Range> rowRanges = Range.getRanges(tableExpected.getAttribute("rows"), tableExpected.getAttribute("separator"), 0, rows.size());
+        List<Range> colRanges = Range.getRanges(tableExpected.getAttribute("cols"), tableExpected.getAttribute("separator"), 0, Integer.MAX_VALUE);
+        int sourceRows = 0;
+        int tmpRowRange = 0;
+        for (int i = 0; i < rows.size() && tmpRowRange < rowRanges.size(); i++) {
+            Range rowRange = rowRanges.get(tmpRowRange);
+            while (rowRange.between(i) && i < rows.size()) {
+                List<WebElement> cols = rows.get(i).findElements(By.xpath("child::th | child::td"));
+                int sourceCells = 0;
+                int tmpColRange = 0;
+                for (int j = 0; j < cols.size() && tmpColRange < colRanges.size(); j++) {
+                    Range colRange = colRanges.get(tmpColRange);
+                    while (colRange.between(j) && j < cols.size()) {
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            CellAdapter cell = tableExpected.getRows().get(sourceRows).getCell(sourceCells);
+                            cell.setAttribute("title", cell.hasAttribute("title") ? cell.getAttribute("title") + " (" + i + "," + j + ")" : " (" + i + "," + j + ")");
+                        }
+
+                        result.add(cols.get(j));
+
+                        sourceCells++;
+                        j++;
+                    }
+                    tmpColRange++;
+                }
+                sourceRows++;
+                i++;
+            }
+            tmpRowRange++;
+        }
+        return result;
     }
 
     /**
