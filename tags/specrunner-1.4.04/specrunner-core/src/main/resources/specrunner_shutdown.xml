@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<pipeline>
+    <listener>org.specrunner.pipeline.ProfilerPipeListener</listener>
+    <pipe>org.specrunner.core.pipes.shutdown.PipeReusable</pipe>
+    <pipe>org.specrunner.core.pipes.shutdown.PipeResume</pipe>
+</pipeline>
