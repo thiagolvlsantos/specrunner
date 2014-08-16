@@ -432,8 +432,8 @@ public class DatabaseDefault implements IDatabase {
             throw new DatabaseException("Cannot create a copy of table " + table.getName() + " with alias " + table.getAlias() + ".", e);
         }
         List<RowAdapter> rows = adapter.getRows();
-        if (rows.isEmpty() || rows.size() == 1) {
-            throw new DatabaseException("A valid table should have at least 2 rows, one for headers (th's) and another for values (td's).");
+        if (rows.isEmpty()) {
+            throw new DatabaseException("A valid table should have at least 1 row for headers (th's).");
         }
         // headers are in the first row.
         RowAdapter header = rows.get(0);
