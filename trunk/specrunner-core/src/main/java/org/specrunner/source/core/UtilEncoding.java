@@ -44,9 +44,20 @@ public final class UtilEncoding {
      * @return The set encoding.
      */
     public static String getEncoding() {
+        return getEncoding(SRServices.getFeatureManager());
+    }
+
+    /**
+     * Get encoding information.
+     * 
+     * @param fm
+     *            Feature manager.
+     * 
+     * @return The set encoding.
+     */
+    public static String getEncoding(IFeatureManager fm) {
         String charset = null;
         try {
-            IFeatureManager fm = SRServices.getFeatureManager();
             charset = (String) fm.get(IBuilderFactory.FEATURE_ENCODING);
         } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {

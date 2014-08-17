@@ -119,6 +119,7 @@ public class PluginPresent extends AbstractPluginFind {
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         IFinder finder = getFinderInstance(context);
         List<WebElement> list = finder.find(context, result, client);
+        printBefore(context, list);
         int failure = 0;
         if (getCount() != null) {
             if (list.size() != getCount()) {

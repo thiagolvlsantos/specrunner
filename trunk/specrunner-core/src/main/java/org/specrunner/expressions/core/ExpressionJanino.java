@@ -264,8 +264,7 @@ public class ExpressionJanino extends AbstractExpression {
             r = numericValue(expression);
         } catch (NumberFormatException ne) {
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(ne.getMessage(), ne);
-                UtilLog.LOG.trace("JANINO(" + source + ")_not a number>" + r);
+                UtilLog.LOG.trace("JANINO(" + source + ")_not a number. Message:" + ne.getMessage());
             }
             try {
                 long time = System.currentTimeMillis();

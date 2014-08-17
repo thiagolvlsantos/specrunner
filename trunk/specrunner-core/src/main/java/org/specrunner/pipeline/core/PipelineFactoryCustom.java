@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.specrunner.SRServices;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.IPipeListener;
 import org.specrunner.pipeline.IPipeline;
@@ -22,7 +24,7 @@ import org.specrunner.util.UtilLog;
 public class PipelineFactoryCustom extends PipelineFactoryImpl {
 
     @Override
-    public IPipeline newPipeline(Object source) throws PipelineException {
+    public IPipeline newPipeline(SRServices services, Object source) throws PipelineException {
         IPipeline pipeline = new PipelineImpl();
         InputStream in = null;
         InputStreamReader inr = null;
@@ -37,7 +39,7 @@ public class PipelineFactoryCustom extends PipelineFactoryImpl {
                 }
                 in = new FileInputStream(file);
             }
-            inr = new InputStreamReader(in, UtilEncoding.getEncoding());
+            inr = new InputStreamReader(in, UtilEncoding.getEncoding(services.lookup(IFeatureManager.class)));
             br = new BufferedReader(inr);
 
             String line = br.readLine();

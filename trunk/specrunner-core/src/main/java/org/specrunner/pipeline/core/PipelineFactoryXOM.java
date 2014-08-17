@@ -9,6 +9,7 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.IPipeListener;
 import org.specrunner.pipeline.IPipeline;
@@ -36,7 +37,7 @@ public class PipelineFactoryXOM extends PipelineFactoryImpl {
     }
 
     @Override
-    public IPipeline newPipeline(Object source) throws PipelineException {
+    public IPipeline newPipeline(SRServices services, Object source) throws PipelineException {
         IPipeline pipeline = null;
         InputStream in = null;
         try {

@@ -103,6 +103,9 @@ public class AccessFactoryImpl implements IAccessFactory {
      * @return The access object, if the field exists, null, otherwise.
      */
     protected IAccess lookupField(Class<?> clazz, String name) {
+        if ("class".equals(name)) {
+            return null;
+        }
         IAccess access = null;
         try {
             Field f = clazz.getDeclaredField(name);
@@ -117,7 +120,7 @@ public class AccessFactoryImpl implements IAccessFactory {
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace(e.getMessage(), e);
+                UtilLog.LOG.trace("Field '" + name + "' for class '" + clazz.getName() + "' not found. Error: " + e.getClass().getName() + ", Message: " + e.getMessage());
             }
         }
         return access;

@@ -6,9 +6,12 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.context.IContext;
 import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
+import org.specrunner.webdriver.AbstractPluginFind;
+import org.specrunner.webdriver.IWait;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
 import org.specrunner.webdriver.impl.WaitDefault;
@@ -36,12 +39,16 @@ public class TestAllSequential extends AbstractTest {
         cfg.add(HtmlUnitDriverLocal.FEATURE_CONNECTION, WebConnectionFile.class.getName());
         cfg.add(WebConnectionFile.FEATURE_CLEAN, true);
 
+        cfg.add(AbstractPluginFind.FEATURE_ALWAYS_WAIT_FOR, true);
+        cfg.add(IWait.FEATURE_INTERVAL, 12345L);
+        cfg.add(IWait.FEATURE_MAXWAIT, 54321L);
+        cfg.add(IWait.FEATURE_WAITFOR, "//body");
         cfg.add(AbstractPluginBrowserAware.FEATURE_IWAIT, new WaitDefault() {
             @Override
-            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
-                boolean w = super.isWaitForClient(plugin, context, result, client);
+            public String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
+                String w = super.getWaitfor(context, result, client);
                 if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info("WAIT(" + w + "):" + plugin);
+                    UtilLog.LOG.info("WAITFOR(" + w + "):" + isWaitForClient(context, result, client));
                 }
                 return w;
             }

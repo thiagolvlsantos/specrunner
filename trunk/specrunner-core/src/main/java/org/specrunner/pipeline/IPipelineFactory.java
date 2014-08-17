@@ -17,6 +17,8 @@
  */
 package org.specrunner.pipeline;
 
+import org.specrunner.SRServices;
+
 /**
  * Stand for a channel factory.
  * 
@@ -27,22 +29,26 @@ public interface IPipelineFactory {
     /**
      * A new pipeline from source object.
      * 
+     * @param services
+     *            Mapping of resources.
      * @param source
      *            The pipeline source.
      * @return A pipeline.
      * @throws PipelineException
      *             A pipeline.
      */
-    IPipeline newPipeline(Object source) throws PipelineException;
+    IPipeline newPipeline(SRServices services, Object source) throws PipelineException;
 
     /**
      * A new pipeline.
      * 
+     * @param services
+     *            Mapping of resources.
      * @param pipes
      *            A, possibly, empty list of pipes.
      * @return A pipeline.
      * @throws PipelineException
      *             On creation errors.
      */
-    IPipeline newPipeline(IPipe... pipes) throws PipelineException;
+    IPipeline newPipeline(SRServices services, IPipe... pipes) throws PipelineException;
 }

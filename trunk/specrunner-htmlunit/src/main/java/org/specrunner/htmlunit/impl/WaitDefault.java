@@ -17,9 +17,11 @@
  */
 package org.specrunner.htmlunit.impl;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.htmlunit.AbstractPluginBrowserAware;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.IWait;
+import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
@@ -32,24 +34,65 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public class WaitDefault implements IWait {
+public class WaitDefault extends ParameterHolder implements IWait {
+
+    /**
+     * The interval.
+     */
+    protected Long interval = DEFAULT_INTERVAL;
+
+    /**
+     * The max wait time.
+     */
+    protected Long maxwait = DEFAULT_MAXWAIT;
 
     @Override
-    public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) {
+    public void reset() {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("reset()");
+        }
+        interval = DEFAULT_INTERVAL;
+        maxwait = DEFAULT_MAXWAIT;
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_INTERVAL, this);
+        fm.set(FEATURE_MAXWAIT, this);
+        fm.set(FEATURE_WAIT, this);
+    }
+
+    @Override
+    public Long getInterval() {
+        return interval;
+    }
+
+    @Override
+    public void setInterval(Long interval) {
+        this.interval = interval;
+    }
+
+    @Override
+    public Long getMaxwait() {
+        return maxwait;
+    }
+
+    @Override
+    public void setMaxwait(Long maxwait) {
+        this.maxwait = maxwait;
+    }
+
+    @Override
+    public boolean isWaitForClient(IContext context, IResultSet result, WebClient client) {
         return true;
     }
 
     @Override
-    public void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) throws PluginException {
-        if (plugin.getSleep() == null) {
-            long time = System.currentTimeMillis();
-            int count = client.waitForBackgroundJavaScript(plugin.getInterval());
-            while (count > 0 && (System.currentTimeMillis() - time <= plugin.getMaxwait())) {
-                if (UtilLog.LOG.isInfoEnabled()) {
-                    UtilLog.LOG.info(count + " threads, waiting for " + plugin.getInterval() + "mls on max of " + plugin.getMaxwait() + "mls.");
-                }
-                count = client.waitForBackgroundJavaScript(plugin.getInterval());
+    public void waitForClient(IContext context, IResultSet result, WebClient client) throws PluginException {
+        long time = System.currentTimeMillis();
+        int count = client.waitForBackgroundJavaScript(interval);
+        while (count > 0 && (System.currentTimeMillis() - time <= maxwait)) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info(count + " threads, waiting for " + interval + "mls on max of " + maxwait + "mls.");
             }
+            count = client.waitForBackgroundJavaScript(interval);
         }
     }
 }

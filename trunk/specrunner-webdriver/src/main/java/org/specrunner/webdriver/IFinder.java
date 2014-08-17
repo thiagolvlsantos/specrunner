@@ -35,7 +35,7 @@ import org.specrunner.result.IResultSet;
 public interface IFinder extends IParameterHolder {
 
     /**
-     * Clear any previous finder settings.
+     * Clear any previous settings.
      */
     void reset();
 

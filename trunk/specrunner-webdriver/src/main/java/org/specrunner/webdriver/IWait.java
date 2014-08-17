@@ -19,6 +19,7 @@ package org.specrunner.webdriver;
 
 import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
@@ -28,13 +29,95 @@ import org.specrunner.result.IResultSet;
  * @author Thiago Santos
  * 
  */
-public interface IWait {
+public interface IWait extends IParameterHolder {
+
+    /**
+     * Feature for interval.
+     */
+    String FEATURE_INTERVAL = IWait.class.getName() + ".interval";
+    /**
+     * Default interval.
+     */
+    Long DEFAULT_INTERVAL = 100L;
+
+    /**
+     * Feature to set max interval.
+     */
+    String FEATURE_MAXWAIT = IWait.class.getName() + ".maxwait";
+    /**
+     * Default max wait.
+     */
+    Long DEFAULT_MAXWAIT = 1000L;
+
+    /**
+     * Wait for feature. Use it to set generic XPath wait condition.
+     */
+    String FEATURE_WAITFOR = IWait.class.getName() + ".waitfor";
+    /**
+     * Default wait for is <code>null</code>.
+     */
+    String DEFAULT_WAITFOR = null;
+
+    /**
+     * Wait time feature.
+     */
+    String FEATURE_WAIT = IWait.class.getName() + ".wait";
+
+    /**
+     * Clear any previous settings.
+     */
+    void reset();
+
+    /**
+     * The interval between JavaScript finish checks. Default is '100'
+     * milliseconds.
+     * 
+     * @return The interval.
+     */
+    Long getInterval();
+
+    /**
+     * Change the interval.
+     * 
+     * @param interval
+     *            The interval.
+     */
+    void setInterval(Long interval);
+
+    /**
+     * The max time to wait for JavaScript return. Default is '1000'
+     * milliseconds.
+     * 
+     * @return The max time to wait for JavaScript.
+     */
+    Long getMaxwait();
+
+    /**
+     * Set the max wait interval.
+     * 
+     * @param maxwait
+     *            The max wait.
+     */
+    void setMaxwait(Long maxwait);
+
+    /**
+     * XPath expression to wait for.
+     * 
+     * @return The wait expression.
+     */
+    String getWaitfor();
+
+    /**
+     * Set the XPath condition to wait for.
+     * 
+     * @param waitfor
+     *            The condition.
+     */
+    void setWaitfor(String waitfor);
 
     /**
      * Sign actions to wait for browser response.
      * 
-     * @param plugin
-     *            Source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -44,14 +127,12 @@ public interface IWait {
      * 
      * @return true, when wait is desired, false, otherwise. Default is true.
      */
-    boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client);
+    boolean isWaitForClient(IContext context, IResultSet result, WebDriver client);
 
     /**
      * Wait for client. If wait is set it already has waited for the period time
      * set.
      * 
-     * @param plugin
-     *            Source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -62,13 +143,11 @@ public interface IWait {
      * @throws PluginException
      *             On wait for client errors.
      */
-    void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException;
+    void waitForClient(IContext context, IResultSet result, WebDriver client) throws PluginException;
 
     /**
      * Get the wait for condition.
      * 
-     * @param plugin
-     *            Source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -79,5 +158,5 @@ public interface IWait {
      * @throws PluginException
      *             On plugin XPath recover errors.
      */
-    String getWaitfor(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException;
+    String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException;
 }

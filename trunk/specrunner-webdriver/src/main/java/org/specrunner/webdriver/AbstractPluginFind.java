@@ -33,7 +33,6 @@ import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.impl.FinderXPath;
-import org.specrunner.webdriver.impl.WaitDelegator;
 
 /**
  * A partial implementation of a plugin which finds elements in pages to perform
@@ -71,31 +70,6 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
      * A finder instance.
      */
     protected IFinder finderInstance;
-
-    /**
-     * Default constructor.
-     */
-    public AbstractPluginFind() {
-    }
-
-    @Override
-    public void setIwait(final IWait iwait) {
-        this.iwait = new WaitDelegator(iwait) {
-            @Override
-            public String getWaitfor(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException {
-                if (alwaysWaitFor == null) {
-                    alwaysWaitFor = !(client instanceof HtmlUnitDriver);
-                }
-                if (alwaysWaitFor && plugin.getWaitfor() == null) {
-                    setWaitfor(getFinderInstance(context).getXPath(context));
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Automatic wait for visibility of: " + plugin.getWaitfor());
-                    }
-                }
-                return iwait.getWaitfor(plugin, context, result, client);
-            }
-        };
-    }
 
     /**
      * Get if automatic waitfor is enabled. Default is (client !=
@@ -155,20 +129,6 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
         this.finderInstance = finder;
     }
 
-    /**
-     * Propagate parameters added to finderInstance.
-     * 
-     * @param context
-     *            The context.
-     * @return The finder configured.
-     * @throws PluginException
-     *             On processing errors.
-     */
-    public IFinder getFinderInstance(IContext context) throws PluginException {
-        UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
-        return finderInstance;
-    }
-
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
@@ -194,23 +154,84 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
     }
 
     @Override
+    public IWait getWaitInstance(IContext context, IResultSet result, WebDriver client) throws PluginException {
+        IWait instance = super.getWaitInstance(context, result, client);
+        if (alwaysWaitFor == null) {
+            alwaysWaitFor = !(client instanceof HtmlUnitDriver);
+        }
+        if (instance.getWaitfor() != null) {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Specified wait for: " + instance.getWaitfor());
+            }
+        } else if (instance.isWaitForClient(context, result, client) && alwaysWaitFor) {
+            instance.setWaitfor(getFinderInstance(context).getXPath(context));
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Automatic wait for: " + instance.getWaitfor());
+            }
+        }
+        return instance;
+    }
+
+    @Override
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         List<WebElement> list = getFinderInstance(context).find(context, result, client);
         if (list.isEmpty()) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."), SRServices.get(IWritableFactoryManager.class).get(WebDriver.class).newWritable(client));
             return;
         }
+        printBefore(context, list);
         WebElement[] elements = list.toArray(new WebElement[list.size()]);
+        process(context, result, client, elements);
+        printAfter(context, list);
+    }
+
+    /**
+     * Propagate parameters added to finderInstance.
+     * 
+     * @param context
+     *            The context.
+     * @return The finder configured.
+     * @throws PluginException
+     *             On processing errors.
+     */
+    public IFinder getFinderInstance(IContext context) throws PluginException {
+        UtilParametrized.setProperties(context, finderInstance, getParameters().getAllParameters());
+        return finderInstance;
+    }
+
+    /**
+     * Print elements.
+     * 
+     * @param context
+     *            A context.
+     * @param list
+     *            Elements list.
+     * @throws PluginException
+     *             On print errors.
+     */
+    protected void printBefore(IContext context, List<WebElement> list) throws PluginException {
         if (UtilLog.LOG.isInfoEnabled()) {
-            for (int i = 0; i < elements.length; i++) {
-                UtilLog.LOG.info((getActionType() instanceof Command ? "Before" : "    On") + "[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
+            for (int i = 0; i < list.size(); i++) {
+                UtilLog.LOG.info((getActionType() instanceof Command ? "Before" : "    On") + "[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(list.get(i)));
             }
         }
-        process(context, result, client, elements);
+    }
+
+    /**
+     * Print elements.
+     * 
+     * @param context
+     *            A context.
+     * @param list
+     *            Elements list.
+     * @throws PluginException
+     *             On print errors.
+     */
+    protected void printAfter(IContext context, List<WebElement> list) throws PluginException {
         if (getActionType() instanceof Command) {
             if (UtilLog.LOG.isInfoEnabled()) {
-                for (int i = 0; i < elements.length; i++) {
-                    UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
+                for (int i = 0; i < list.size(); i++) {
+                    UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(list.get(i)));
                 }
             }
         }

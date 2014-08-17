@@ -18,6 +18,7 @@
 package org.specrunner.htmlunit;
 
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
@@ -29,13 +30,71 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public interface IWait {
+public interface IWait extends IParameterHolder {
+
+    /**
+     * Feature for interval.
+     */
+    String FEATURE_INTERVAL = IWait.class.getName() + ".interval";
+    /**
+     * Default interval.
+     */
+    Long DEFAULT_INTERVAL = 100L;
+
+    /**
+     * Feature to set max interval.
+     */
+    String FEATURE_MAXWAIT = IWait.class.getName() + ".maxwait";
+    /**
+     * Default max wait.
+     */
+    Long DEFAULT_MAXWAIT = 1000L;
+
+    /**
+     * Wait time feature.
+     */
+    String FEATURE_WAIT = IWait.class.getName() + ".wait";
+
+    /**
+     * Clear any previous settings.
+     */
+    void reset();
+
+    /**
+     * The interval between JavaScript finish checks. Default is '100'
+     * milliseconds.
+     * 
+     * @return The interval.
+     */
+    Long getInterval();
+
+    /**
+     * Change the interval.
+     * 
+     * @param interval
+     *            The interval.
+     */
+    void setInterval(Long interval);
+
+    /**
+     * The max time to wait for JavaScript return. Default is '1000'
+     * milliseconds.
+     * 
+     * @return The max time to wait for JavaScript.
+     */
+    Long getMaxwait();
+
+    /**
+     * Set the max wait interval.
+     * 
+     * @param maxwait
+     *            The max wait.
+     */
+    void setMaxwait(Long maxwait);
 
     /**
      * Sign actions to wait for browser response.
      * 
-     * @param plugin
-     *            Source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -45,14 +104,12 @@ public interface IWait {
      * 
      * @return true, when wait is desired, false, otherwise. Default is true.
      */
-    boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client);
+    boolean isWaitForClient(IContext context, IResultSet result, WebClient client);
 
     /**
      * Wait for client. If wait is set it already has waited for the period time
      * set.
      * 
-     * @param plugin
-     *            Source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -63,5 +120,5 @@ public interface IWait {
      * @throws PluginException
      *             On wait for client errors.
      */
-    void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) throws PluginException;
+    void waitForClient(IContext context, IResultSet result, WebClient client) throws PluginException;
 }

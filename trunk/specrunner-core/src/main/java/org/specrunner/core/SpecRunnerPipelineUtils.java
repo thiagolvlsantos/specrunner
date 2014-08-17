@@ -86,7 +86,7 @@ public final class SpecRunnerPipelineUtils {
             long time = System.currentTimeMillis();
             pipe = pipelines.get(name);
             if (pipe == null) {
-                pipe = services.lookup(IPipelineFactory.class).newPipeline(name);
+                pipe = services.lookup(IPipelineFactory.class).newPipeline(services, name);
                 pipelines.put(name, pipe);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Pipe of '" + name + "' loaded in " + (System.currentTimeMillis() - time) + ".");

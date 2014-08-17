@@ -33,6 +33,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
@@ -57,42 +58,6 @@ import com.gargoylesoftware.htmlunit.WebWindow;
 public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
 
     /**
-     * Feature for interval.
-     */
-    public static final String FEATURE_INTERVAL = AbstractPluginBrowserAware.class.getName() + ".interval";
-    /**
-     * Default interval.
-     */
-    private static final Long DEFAULT_INTERVAL = 100L;
-    /**
-     * The interval.
-     */
-    protected Long interval = DEFAULT_INTERVAL;
-
-    /**
-     * Feature to set max interval.
-     */
-    public static final String FEATURE_MAXWAIT = AbstractPluginBrowserAware.class.getName() + ".maxwait";
-    /**
-     * Default max wait.
-     */
-    private static final Long DEFAULT_MAXWAIT = 1000L;
-    /**
-     * The max wait time.
-     */
-    protected Long maxwait = DEFAULT_MAXWAIT;
-
-    /**
-     * Wait for feature. Use it to set generic XPath wait condition.
-     */
-    public static final String FEATURE_WAITFOR = AbstractPluginBrowserAware.class.getName() + ".waitfor";
-
-    /**
-     * Wait for XPath condition.
-     */
-    protected String waitfor;
-
-    /**
      * Feature to set wait element.
      */
     public static final String FEATURE_IWAIT = AbstractPluginBrowserAware.class.getName() + ".iwait";
@@ -101,11 +66,6 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * IWait implementation.
      */
     protected IWait iwait;
-
-    /**
-     * Default timeout to finish the action.
-     */
-    public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
 
     /**
      * Default directory to save downloaded files.
@@ -122,65 +82,6 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * download will take place on disk.
      */
     protected String download;
-
-    /**
-     * The interval between JavaScript finish checks. Default is '100'
-     * milliseconds.
-     * 
-     * @return The interval.
-     */
-    public Long getInterval() {
-        return interval;
-    }
-
-    /**
-     * Change the interval.
-     * 
-     * @param interval
-     *            The interval.
-     */
-    public void setInterval(Long interval) {
-        this.interval = interval;
-    }
-
-    /**
-     * The max time to wait for JavaScript return. Default is '1000'
-     * milliseconds.
-     * 
-     * @return The max time to wait for JavaScript.
-     */
-    public Long getMaxwait() {
-        return maxwait;
-    }
-
-    /**
-     * Set the max wait interval.
-     * 
-     * @param maxwait
-     *            The max wait.
-     */
-    public void setMaxwait(Long maxwait) {
-        this.maxwait = maxwait;
-    }
-
-    /**
-     * XPath expression to wait for.
-     * 
-     * @return The wait expression.
-     */
-    public String getWaitfor() {
-        return waitfor;
-    }
-
-    /**
-     * Set the XPath condition to wait for.
-     * 
-     * @param waitfor
-     *            The condition.
-     */
-    public void setWaitfor(String waitfor) {
-        this.waitfor = waitfor;
-    }
 
     /**
      * Return current IWait implementer.
@@ -243,15 +144,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
-        fm.set(FEATURE_INTERVAL, this);
-        fm.set(FEATURE_MAXWAIT, this);
-        fm.set(FEATURE_WAITFOR, this);
         fm.set(FEATURE_IWAIT, this);
+        fm.set(FEATURE_DIR, this);
         if (iwait == null) {
             setIwait(new WaitDefault());
         }
-        fm.set(FEATURE_TIMEOUT, this);
-        fm.set(FEATURE_DIR, this);
+        iwait.reset();
     }
 
     @Override
@@ -262,13 +160,32 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
-        if (iwait.isWaitForClient(this, context, result, client)) {
-            iwait.waitForClient(this, context, result, client);
+        IWait instance = getWaitInstance(context, result, client);
+        if (instance.isWaitForClient(context, result, client)) {
+            instance.waitForClient(context, result, client);
         }
         doEnd(context, result, client);
         if (download != null) {
             saveDownload(context, result, client);
         }
+    }
+
+    /**
+     * Propagate parameters added to iwait.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            A client.
+     * @return The iwait configured.
+     * @throws PluginException
+     *             On processing errors.
+     */
+    public IWait getWaitInstance(IContext context, IResultSet result, WebDriver client) throws PluginException {
+        UtilParametrized.setProperties(context, iwait, getParameters().getAllParameters());
+        return iwait;
     }
 
     /**

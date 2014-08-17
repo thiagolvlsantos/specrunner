@@ -143,16 +143,44 @@ public abstract class AbstractPluginFind extends AbstractPluginSgml {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("None element found for " + getFinderInstance().resume(context) + "."));
             return;
         }
+        printBefore(context, list);
         HtmlElement[] elements = list.toArray(new HtmlElement[list.size()]);
+        process(context, result, client, page, elements);
+        printAfter(context, list);
+    }
+
+    /**
+     * Print elements.
+     * 
+     * @param context
+     *            A context.
+     * @param list
+     *            Elements list.
+     * @throws PluginException
+     *             On print errors.
+     */
+    protected void printBefore(IContext context, List<?> list) throws PluginException {
         if (UtilLog.LOG.isInfoEnabled()) {
-            for (int i = 0; i < elements.length; i++) {
-                UtilLog.LOG.info((getActionType() instanceof Command ? "Before" : "    On") + "[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
+            for (int i = 0; i < list.size(); i++) {
+                UtilLog.LOG.info((getActionType() instanceof Command ? "Before" : "    On") + "[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString((HtmlElement) list.get(i)));
             }
         }
-        process(context, result, client, page, elements);
+    }
+
+    /**
+     * Print elements.
+     * 
+     * @param context
+     *            A context.
+     * @param list
+     *            Elements list.
+     * @throws PluginException
+     *             On print errors.
+     */
+    protected void printAfter(IContext context, List<?> list) throws PluginException {
         if (getActionType() instanceof Command && UtilLog.LOG.isInfoEnabled()) {
-            for (int i = 0; i < elements.length; i++) {
-                UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString(elements[i]));
+            for (int i = 0; i < list.size(); i++) {
+                UtilLog.LOG.info(" After[" + i + "]: " + getClass().getSimpleName() + "." + finderInstance.resume(context) + " on " + asString((HtmlElement) list.get(i)));
             }
         }
     }
