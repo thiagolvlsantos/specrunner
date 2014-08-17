@@ -120,6 +120,7 @@ public class PluginPresent extends AbstractPluginFind {
     protected void doEnd(IContext context, IResultSet result, WebClient client, SgmlPage page) throws PluginException {
         IFinder finder = getFinderInstance(context);
         List<?> list = finder.find(context, result, client, page);
+        printBefore(context, list);
         int failure = 0;
         if (getCount() != null) {
             if (list.size() != getCount()) {

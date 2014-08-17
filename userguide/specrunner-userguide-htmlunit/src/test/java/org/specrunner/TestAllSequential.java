@@ -3,6 +3,7 @@ package org.specrunner;
 import org.junit.Test;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.htmlunit.IWait;
 import org.specrunner.junit.SpecRunnerJUnit;
 
 public class TestAllSequential extends AbstractTest {
@@ -16,6 +17,10 @@ public class TestAllSequential extends AbstractTest {
 
     protected void run(String name, String out) {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
+
+        cfg.add(IWait.FEATURE_INTERVAL, 12345L);
+        cfg.add(IWait.FEATURE_MAXWAIT, 54321L);
+
         SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + out, cfg);
     }
 

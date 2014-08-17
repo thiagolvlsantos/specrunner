@@ -89,7 +89,7 @@ public final class UtilException {
         while (tmp != null) {
             if (tmp instanceof IPresentation) {
                 presentation = tmp;
-				break;
+                break;
             }
             tmp = tmp.getCause();
         }

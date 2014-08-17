@@ -17,6 +17,7 @@
  */
 package org.specrunner.pipeline.core;
 
+import org.specrunner.SRServices;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.IPipelineFactory;
@@ -30,12 +31,12 @@ import org.specrunner.pipeline.PipelineException;
 public class PipelineFactoryImpl implements IPipelineFactory {
 
     @Override
-    public IPipeline newPipeline(Object source) throws PipelineException {
-        return newPipeline();
+    public IPipeline newPipeline(SRServices services, Object source) throws PipelineException {
+        return newPipeline(services, source);
     }
 
     @Override
-    public IPipeline newPipeline(IPipe... pipes) {
+    public IPipeline newPipeline(SRServices services, IPipe... pipes) {
         IPipeline result = new PipelineImpl();
         if (pipes != null) {
             for (IPipe p : pipes) {

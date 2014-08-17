@@ -23,11 +23,13 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.IHtmlUnitDriver;
 import org.specrunner.webdriver.IWait;
 
@@ -39,41 +41,97 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * @author Thiago Santos
  * 
  */
-public class WaitDefault implements IWait {
+public class WaitDefault extends ParameterHolder implements IWait {
     /**
      * To seconds milliseconds factor.
      */
     private static final int TO_SECONDS = 1000;
 
+    /**
+     * The interval.
+     */
+    protected Long interval = DEFAULT_INTERVAL;
+
+    /**
+     * The max wait time.
+     */
+    protected Long maxwait = DEFAULT_MAXWAIT;
+
+    /**
+     * Wait for XPath condition.
+     */
+    protected String waitfor = DEFAULT_WAITFOR;
+
     @Override
-    public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
+    public void reset() {
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("reset()");
+        }
+        interval = DEFAULT_INTERVAL;
+        maxwait = DEFAULT_MAXWAIT;
+        waitfor = DEFAULT_WAITFOR;
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_INTERVAL, this);
+        fm.set(FEATURE_MAXWAIT, this);
+        fm.set(FEATURE_WAITFOR, this);
+        fm.set(FEATURE_WAIT, this);
+    }
+
+    @Override
+    public Long getInterval() {
+        return interval;
+    }
+
+    @Override
+    public void setInterval(Long interval) {
+        this.interval = interval;
+    }
+
+    @Override
+    public Long getMaxwait() {
+        return maxwait;
+    }
+
+    @Override
+    public void setMaxwait(Long maxwait) {
+        this.maxwait = maxwait;
+    }
+
+    @Override
+    public String getWaitfor() {
+        return waitfor;
+    }
+
+    @Override
+    public void setWaitfor(String waitfor) {
+        this.waitfor = waitfor;
+    }
+
+    @Override
+    public boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
         return true;
     }
 
     @Override
-    public void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException {
-        if (plugin.getWait() == null) {
-            try {
-                (new WebDriverWait(client, plugin.getMaxwait() / TO_SECONDS, plugin.getInterval())).until(getWaitCondition(plugin, context, result, client, System.currentTimeMillis(), plugin.getTimeout()));
-            } catch (TimeoutException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
+    public void waitForClient(IContext context, IResultSet result, WebDriver client) throws PluginException {
+        try {
+            (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(context, result, client, System.currentTimeMillis(), maxwait));
+        } catch (TimeoutException e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
             }
         }
     }
 
     @Override
-    public String getWaitfor(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) throws PluginException {
-        return plugin.getWaitfor();
+    public String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
+        return waitfor;
     }
 
     /**
      * Return the condition to wait. If <code>waitfor</code> attribute is
      * provided, the condition turn into &lt;xpath&gt;.isDisplayed().
      * 
-     * @param plugin
-     *            Source plugin.
      * @param context
      *            The test context.
      * @param result
@@ -88,9 +146,10 @@ public class WaitDefault implements IWait {
      * @throws PluginException
      *             On wait conditions.
      */
-    public ExpectedCondition<?> getWaitCondition(final AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client, long start, Long timeout) throws PluginException {
-        if (getWaitfor(plugin, context, result, client) != null) {
-            return ExpectedConditions.visibilityOfElementLocated(By.xpath(getWaitfor(plugin, context, result, client)));
+    public ExpectedCondition<?> getWaitCondition(IContext context, IResultSet result, WebDriver client, long start, Long timeout) throws PluginException {
+        String test = getWaitfor(context, result, client);
+        if (test != null) {
+            return ExpectedConditions.visibilityOfElementLocated(By.xpath(test));
         }
         return new ExpectedCondition<Boolean>() {
             @Override
@@ -98,12 +157,12 @@ public class WaitDefault implements IWait {
                 if (d instanceof IHtmlUnitDriver) {
                     WebClient client = ((IHtmlUnitDriver) d).getWebClient();
                     long time = System.currentTimeMillis();
-                    int count = client.waitForBackgroundJavaScript(plugin.getInterval());
-                    while (count > 0 && (System.currentTimeMillis() - time <= plugin.getInterval())) {
+                    int count = client.waitForBackgroundJavaScript(interval);
+                    while (count > 0 && (System.currentTimeMillis() - time <= interval)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info(count + " threads, waiting for " + plugin.getInterval() + "mls on max of " + plugin.getMaxwait() + "mls.");
+                            UtilLog.LOG.info(count + " threads, waiting for " + interval + "mls on max of " + maxwait + "mls.");
                         }
-                        count = client.waitForBackgroundJavaScript(plugin.getInterval());
+                        count = client.waitForBackgroundJavaScript(interval);
                     }
                     return true;
                 }

@@ -33,6 +33,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.impl.WaitDefault;
+import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.result.IResultSet;
@@ -54,37 +55,6 @@ import com.gargoylesoftware.htmlunit.WebWindow;
  * 
  */
 public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
-
-    /**
-     * Feature for interval.
-     */
-    public static final String FEATURE_INTERVAL = AbstractPluginBrowserAware.class.getName() + ".interval";
-    /**
-     * Default interval.
-     */
-    private static final Long DEFAULT_INTERVAL = 100L;
-    /**
-     * The interval.
-     */
-    private Long interval = DEFAULT_INTERVAL;
-
-    /**
-     * Feature to set max interval.
-     */
-    public static final String FEATURE_MAXWAIT = AbstractPluginBrowserAware.class.getName() + ".maxwait";
-    /**
-     * Default max wait.
-     */
-    private static final Long DEFAULT_MAXWAIT = 1000L;
-    /**
-     * The max wait time.
-     */
-    private Long maxwait = DEFAULT_MAXWAIT;
-
-    /**
-     * Default timeout to finish browser based actions.
-     */
-    public static final String FEATURE_TIMEOUT = AbstractPluginBrowserAware.class.getName() + ".timeout";
 
     /**
      * Feature to set wait element.
@@ -111,46 +81,6 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
      * download will take place on disk.
      */
     private String download;
-
-    /**
-     * The max time to wait for JavaScript return. Default is '1000'
-     * milliseconds.
-     * 
-     * @return The max time to wait for JavaScript.
-     */
-    public Long getMaxwait() {
-        return maxwait;
-    }
-
-    /**
-     * Set the max wait interval.
-     * 
-     * @param maxwait
-     *            The max wait.
-     */
-    public void setMaxwait(Long maxwait) {
-        this.maxwait = maxwait;
-    }
-
-    /**
-     * The interval between JavaScript finish checks. Default is '100'
-     * milliseconds.
-     * 
-     * @return The interval.
-     */
-    public Long getInterval() {
-        return interval;
-    }
-
-    /**
-     * Change the interval.
-     * 
-     * @param interval
-     *            The interval.
-     */
-    public void setInterval(Long interval) {
-        this.interval = interval;
-    }
 
     /**
      * Return current IWait implementer.
@@ -213,13 +143,12 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
-        fm.set(FEATURE_INTERVAL, this);
-        fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_TIMEOUT, this);
         fm.set(FEATURE_IWAIT, this);
         if (iwait == null) {
             setIwait(new WaitDefault());
         }
+        iwait.reset();
     }
 
     @Override
@@ -230,13 +159,32 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Browser instance named '" + tmp + "' not created. See PluginBrowser."));
             return;
         }
-        if (iwait.isWaitForClient(this, context, result, client)) {
-            iwait.waitForClient(this, context, result, client);
+        IWait instance = getWaitInstance(context, result, client);
+        if (instance.isWaitForClient(context, result, client)) {
+            instance.waitForClient(context, result, client);
         }
         doEnd(context, result, client);
         if (download != null) {
             saveDownload(context, result, client);
         }
+    }
+
+    /**
+     * Propagate parameters added to iwait.
+     * 
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
+     * @param client
+     *            A client.
+     * @return The iwait configured.
+     * @throws PluginException
+     *             On processing errors.
+     */
+    public IWait getWaitInstance(IContext context, IResultSet result, WebClient client) throws PluginException {
+        UtilParametrized.setProperties(context, iwait, getParameters().getAllParameters());
+        return iwait;
     }
 
     /**

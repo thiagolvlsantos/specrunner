@@ -30,7 +30,6 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.AbstractPluginFind;
 import org.specrunner.webdriver.IWait;
 import org.specrunner.webdriver.impl.WaitDelegator;
@@ -59,11 +58,11 @@ public class PluginNotPresent extends AbstractPluginFind {
     }
 
     @Override
-    public void setIwait(IWait iwait) {
+    public void setIwait(final IWait iwait) {
         this.iwait = new WaitDelegator(iwait) {
             @Override
-            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
-                return plugin.getWaitfor() != null;
+            public boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
+                return iwait.getWaitfor() != null;
             }
         };
     }

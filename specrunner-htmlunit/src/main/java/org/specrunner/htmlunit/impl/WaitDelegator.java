@@ -18,8 +18,8 @@
 package org.specrunner.htmlunit.impl;
 
 import org.specrunner.context.IContext;
-import org.specrunner.htmlunit.AbstractPluginBrowserAware;
 import org.specrunner.htmlunit.IWait;
+import org.specrunner.parameters.IParameterDecorator;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 
@@ -49,12 +49,47 @@ public class WaitDelegator implements IWait {
     }
 
     @Override
-    public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) {
-        return delegate.isWaitForClient(plugin, context, result, client);
+    public IParameterDecorator getParameters() {
+        return delegate.getParameters();
     }
 
     @Override
-    public void waitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebClient client) throws PluginException {
-        delegate.waitForClient(plugin, context, result, client);
+    public void setParameters(IParameterDecorator parameters) {
+        delegate.setParameters(parameters);
+    }
+
+    @Override
+    public void reset() {
+        delegate.reset();
+    }
+
+    @Override
+    public Long getInterval() {
+        return delegate.getInterval();
+    }
+
+    @Override
+    public void setInterval(Long interval) {
+        delegate.setInterval(interval);
+    }
+
+    @Override
+    public Long getMaxwait() {
+        return delegate.getMaxwait();
+    }
+
+    @Override
+    public void setMaxwait(Long maxwait) {
+        delegate.setMaxwait(maxwait);
+    }
+
+    @Override
+    public boolean isWaitForClient(IContext context, IResultSet result, WebClient client) {
+        return delegate.isWaitForClient(context, result, client);
+    }
+
+    @Override
+    public void waitForClient(IContext context, IResultSet result, WebClient client) throws PluginException {
+        delegate.waitForClient(context, result, client);
     }
 }

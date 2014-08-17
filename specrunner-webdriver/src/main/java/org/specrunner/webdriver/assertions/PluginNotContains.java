@@ -21,7 +21,6 @@ import org.openqa.selenium.WebDriver;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.IWait;
 import org.specrunner.webdriver.impl.WaitDelegator;
 
@@ -34,11 +33,11 @@ import org.specrunner.webdriver.impl.WaitDelegator;
 public class PluginNotContains extends PluginContains {
 
     @Override
-    public void setIwait(IWait iwait) {
+    public void setIwait(final IWait iwait) {
         this.iwait = new WaitDelegator(iwait) {
             @Override
-            public boolean isWaitForClient(AbstractPluginBrowserAware plugin, IContext context, IResultSet result, WebDriver client) {
-                return plugin.getWaitfor() != null;
+            public boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
+                return iwait.getWaitfor() != null;
             }
         };
     }
