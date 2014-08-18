@@ -50,6 +50,8 @@
         <module>../specrunner-ant</module>
         <!-- Basic database support -->
         <module>../specrunner-sql</module>
+        <module>../specrunner-sql-negative</module>
+        <module>../specrunner-sql-positive</module>
         <!-- ORM -->
         <module>../specrunner-hibernate3</module>
         <module>../specrunner-hibernate4</module>

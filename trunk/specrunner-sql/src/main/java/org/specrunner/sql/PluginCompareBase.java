@@ -405,12 +405,24 @@ public class PluginCompareBase extends AbstractPluginValue {
             if (exp == null && rec != null) {
                 lr = new LineReport(RegisterType.ALIEN, tr);
                 for (Column c : table.getColumns()) {
+                    if (!dataFilter.accept(c)) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
+                        }
+                        continue;
+                    }
                     lr.add(c, index++, null, rec.getObject(c.getName()));
                 }
                 tr.add(lr);
             } else if (exp != null && rec == null) {
                 lr = new LineReport(RegisterType.MISSING, tr);
                 for (Column c : table.getColumns()) {
+                    if (!dataFilter.accept(c)) {
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
+                        }
+                        continue;
+                    }
                     lr.add(c, index++, exp.getObject(c.getName()), null);
                 }
                 tr.add(lr);
@@ -440,6 +452,11 @@ public class PluginCompareBase extends AbstractPluginValue {
                     for (Column c : table.getKeys()) {
                         lr.add(c, index++, exp.getObject(c.getName()), rec.getObject(c.getName()));
                     }
+                    for (Column c : table.getReferences()) {
+                        if (!c.isKey()) {
+                            lr.add(c, index++, exp.getObject(c.getName()), rec.getObject(c.getName()));
+                        }
+                    }
                     tr.add(lr);
                 }
             }
@@ -461,6 +478,6 @@ public class PluginCompareBase extends AbstractPluginValue {
      * @return A enumerator.
      */
     public IResultEnumerator getEnumerator(Table table, ResultSet rsExpected, ResultSet rsReceived) {
-        return new ResultSetEnumerator(rsExpected, rsReceived, table.getKeys());
+        return new ResultSetEnumerator(table, virtual, rsExpected, rsReceived);
     }
 }

@@ -98,6 +98,20 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-sql-negative/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-sql-negative-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-sql-positive/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-sql-positive-clean.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-hibernate3/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
