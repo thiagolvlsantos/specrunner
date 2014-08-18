@@ -1,3 +1,8 @@
+1.4.05
+OK - Simplificar a verificação com escopo negativo (desenvolvedores só conseguem resolver de fato implementação com escopo negativo);
+OK - Permitir usar tabelas vazias nos prepare e verify, para que o strict funcione verificando que a tabela está vazia;
+OK - Rever a implementação do IWait que não ficou com a espera automática de campos em tela, tem algo errado no refactoring;
+
 1.4.04
 OK - Colocar tabelas com ignore em colunas ou linha no teste web, de forma que se possa ter na aplicação uma tabela mais complexa que o desejado, e o teste se limitar a ver apenas um grupo de dados:
 	- Isso também pode ser conseguido colocando-se o número de linha que se deseja verificar, de preferência por ranges de valores como na impressão de páginas
