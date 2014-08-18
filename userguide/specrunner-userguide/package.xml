@@ -123,6 +123,20 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-userguide-sql-negative/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-sql-negative.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/../specrunner-userguide-sql-positive/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-userguide-sql-positive.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-userguide-hibernate3/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>

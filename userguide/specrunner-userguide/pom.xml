@@ -22,6 +22,8 @@
 		<module>../specrunner-userguide-ant</module>
 
 		<module>../specrunner-userguide-sql</module>
+		<module>../specrunner-userguide-sql-negative</module>
+		<module>../specrunner-userguide-sql-positive</module>
 
 		<module>../specrunner-userguide-hibernate3</module>
 		<module>../specrunner-userguide-hibernate4</module>
