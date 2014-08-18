@@ -55,6 +55,8 @@ public class DatabasePrintListener implements IDatabaseListener {
 
     @Override
     public void onTableIn(DatabaseTableEvent event) throws DatabaseException {
+        // print(new StringBuilder("ON SCHEMA: " +
+        // event.getTable().getParent().getName()));
     }
 
     @Override

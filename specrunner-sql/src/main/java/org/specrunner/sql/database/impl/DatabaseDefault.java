@@ -391,17 +391,7 @@ public class DatabaseDefault implements IDatabase {
 
     @Override
     public void perform(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Schema schema, EMode mode) throws DatabaseException {
-        IDataFilter afilter = null;
-        try {
-            afilter = PluginFilter.getFilter(context, getFilter());
-        } catch (PluginException e) {
-            afilter = new DataFilterDefault();
-        }
-        try {
-            afilter.setup(schema, context);
-        } catch (PluginException e) {
-            throw new DatabaseException(e);
-        }
+        IDataFilter afilter = getFilter(context, schema);
         if (!afilter.accept(schema)) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Schema ignored:" + schema.getAlias() + "(" + schema.getName() + ")");
@@ -548,6 +538,32 @@ public class DatabaseDefault implements IDatabase {
         }
 
         fireTableOut(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
+    }
+
+    /**
+     * Recover filter from context.
+     * 
+     * @param context
+     *            A context.
+     * @param schema
+     *            A schema.
+     * @return A filter.
+     * @throws DatabaseException
+     *             On lookup errors.
+     */
+    protected IDataFilter getFilter(IContext context, Schema schema) throws DatabaseException {
+        IDataFilter afilter = null;
+        try {
+            afilter = PluginFilter.getFilter(context, getFilter());
+        } catch (PluginException e) {
+            afilter = new DataFilterDefault();
+        }
+        try {
+            afilter.setup(schema, context);
+        } catch (PluginException e) {
+            throw new DatabaseException(e);
+        }
+        return afilter;
     }
 
     /**

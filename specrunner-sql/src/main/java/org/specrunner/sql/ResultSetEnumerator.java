@@ -20,10 +20,9 @@ package org.specrunner.sql;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.Table;
 
 /**
  * Default implementation of result set enumeration.
@@ -34,114 +33,108 @@ import org.specrunner.sql.meta.Column;
 public class ResultSetEnumerator implements IResultEnumerator {
 
     /**
-     * Expected result set.
+     * Table under analysis.
+     */
+    private Table table;
+    /**
+     * Indicate to use reference instead of key fields.
+     */
+    private Boolean virtual;
+    /**
+     * Expected data.
      */
     private ResultSet rsExpected;
     /**
-     * Received result set.
+     * Received data.
      */
     private ResultSet rsReceived;
     /**
-     * Column keys.
+     * Read expected flag.
      */
-    private List<Column> keys;
+    private boolean readExpected = true;
     /**
-     * Flag to read expected.
+     * Read received flat.
      */
-    private boolean readExp = true;
+    private boolean readReceived = true;
     /**
-     * Temporary reference to expected.
+     * Temporary data.
      */
-    private ResultSet exp;
+    private ResultSet tmpExpected;
     /**
-     * Flag to read received.
+     * Temporary data.
      */
-    private boolean readRec = true;
-    /**
-     * Temporary reference to received.
-     */
-    private ResultSet rec;
+    private ResultSet tmpReceived;
 
     /**
-     * Basic constructor.
+     * Result set enumerator.
      * 
-     * @param rsExpected
-     *            The expected result set.
-     * @param rsReceived
-     *            The received result set.
-     * @param keys
-     *            The table columns.
+     * @param table
+     *            Table under enumeration.
+     * @param virtual
+     *            Indicator to use virtual values instead of ids.
+     * @param expected
+     *            Expected data.
+     * @param received
+     *            Received data.
      */
-    public ResultSetEnumerator(ResultSet rsExpected, ResultSet rsReceived, List<Column> keys) {
-        this.rsExpected = rsExpected;
-        this.rsReceived = rsReceived;
-        this.keys = keys;
+    public ResultSetEnumerator(Table table, Boolean virtual, ResultSet expected, ResultSet received) {
+        this.table = table;
+        this.virtual = virtual;
+        this.rsExpected = expected;
+        this.rsReceived = received;
     }
 
     @Override
     public boolean next() throws SQLException {
-        List<Object> keysExp = null;
-        List<Object> keysRec = null;
-        if (readExp && rsExpected.next()) {
-            keysExp = new LinkedList<Object>();
-            for (Column c : keys) {
-                keysExp.add(rsExpected.getObject(c.getName()));
-            }
+        boolean next = false;
+        if (readExpected && rsExpected.next()) {
+            tmpExpected = rsExpected;
+            readExpected = true;
+            next = true;
         }
-        if (readRec && rsReceived.next()) {
-            keysRec = new LinkedList<Object>();
-            for (Column c : keys) {
-                keysRec.add(rsReceived.getObject(c.getName()));
-            }
+        if (readReceived && rsReceived.next()) {
+            tmpReceived = rsReceived;
+            readReceived = true;
+            next = true;
         }
-        if (keysExp == null && keysRec == null) {
-            readExp = false;
-            exp = null;
-            readRec = false;
-            rec = null;
-        } else if (keysExp != null && keysRec != null) {
+        if (tmpExpected != null && tmpReceived != null) {
             int comp = 0;
-            Iterator<Column> it = keys.iterator();
-            for (int i = 0; comp == 0 && i < keys.size(); i++) {
-                comp = it.next().getComparator().compare(keysExp.get(i), keysRec.get(i));
+            Iterator<Column> columns = (virtual != null && virtual ? table.getReferences() : table.getKeys()).iterator();
+            while (columns.hasNext() && comp == 0) {
+                Column c = (Column) columns.next();
+                Object tExp = tmpExpected.getObject(c.getName());
+                Object tRec = tmpReceived.getObject(c.getName());
+                comp = c.getComparator().compare(tExp, tRec);
             }
             if (comp < 0) {
-                exp = rsExpected;
-                rec = null;
-                readExp = true;
-                readRec = false;
+                readExpected = true;
+                readReceived = false;
             } else if (comp > 0) {
-                exp = null;
-                rec = rsReceived;
-                readExp = false;
-                readRec = true;
+                readExpected = false;
+                readReceived = true;
             } else {
-                exp = rsExpected;
-                rec = rsReceived;
-                readExp = true;
-                readRec = true;
+                readExpected = true;
+                readReceived = true;
             }
-        } else if (keysExp == null) {
-            exp = null;
-            rec = rsReceived;
-            readExp = false;
-            readRec = true;
-        } else if (keysRec == null) {
-            exp = rsExpected;
-            rec = null;
-            readExp = true;
-            readRec = false;
         }
-        return exp != null || rec != null;
+        return next;
     }
 
     @Override
     public ResultSet getExpected() {
-        return exp;
+        ResultSet t = readExpected ? tmpExpected : null;
+        if (readExpected) {
+            tmpExpected = null;
+        }
+        return t;
     }
 
     @Override
     public ResultSet getReceived() {
-        return rec;
+        ResultSet t = readReceived ? tmpReceived : null;
+        if (readReceived) {
+            tmpReceived = null;
+        }
+        return t;
     }
 }
