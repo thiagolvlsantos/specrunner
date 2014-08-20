@@ -369,29 +369,44 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         if (isMapped()) {
             SRServices.get(IObjectManager.class).bind(this);
         }
-        for (int i = 0; i < table.getRowCount(); i++) {
-            if (i == 0) {
-                try {
-                    loadFields(context, table.getRow(i), fields);
-                    result.addResult(Success.INSTANCE, context.newBlock(table.getRow(i).getNode(), this));
-                } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
-                    }
-                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getNode(), this), e);
-                    break;
+        readHeader(context, result, table);
+        readData(context, result, table);
+    }
+
+    protected void readHeader(IContext context, IResultSet result, TableAdapter table) throws PluginException {
+        if (table.getRowCount() < 1) {
+            throw new PluginException("Table should have at least header information.");
+        }
+        // TODO: before header read
+        RowAdapter row = table.getRow(0);
+        try {
+            loadFields(context, row, fields);
+            result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), this));
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), e);
+        }
+        // TODO: after header read
+    }
+
+    protected void readData(IContext context, IResultSet result, TableAdapter table) throws PluginException {
+        // TODO: before data reading
+        for (int i = 1; i < table.getRowCount(); i++) {
+            RowAdapter row = table.getRow(i);
+            try {
+                // TODO: before instance creation
+                Object instance = processLine(context, row, result);
+                // TODO: after object creation
+            } catch (Exception e) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug(e.getMessage(), e);
                 }
-            } else {
-                try {
-                    processLine(context, table.getRow(i), result);
-                } catch (Exception e) {
-                    if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug(e.getMessage(), e);
-                    }
-                    result.addResult(Failure.INSTANCE, context.newBlock(table.getRow(i).getNode(), this), e);
-                }
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), e);
             }
         }
+        // TODO: after data reading
     }
 
     /**
@@ -798,10 +813,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      *            The row.
      * @param result
      *            The result set.
+     * @return Object instance created.
      * @throws Exception
      *             On processing errors.
      */
-    protected void processLine(IContext context, RowAdapter row, IResultSet result) throws Exception {
+    protected Object processLine(IContext context, RowAdapter row, IResultSet result) throws Exception {
         Object instance = create(row);
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("CREATE:" + instance);
@@ -842,6 +858,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 }
             }
         }
+        return instance;
     }
 
     /**
