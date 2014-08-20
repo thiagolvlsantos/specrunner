@@ -1,7 +1,7 @@
 package example.employee;
 
 import org.hibernate.cfg.Configuration;
-import org.specrunner.hibernate.IConfigurationProvider;
+import org.specrunner.hibernate4.IConfigurationProvider;
 
 public class CityConfiguration implements IConfigurationProvider {
 
