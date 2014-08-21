@@ -57,6 +57,13 @@ public class ObjectSelector implements IObjectSelector<Session> {
 
     @SuppressWarnings("unchecked")
     @Override
+    public List<Object> all(AbstractPluginObject caller, IContext context, IResultSet result) throws Exception {
+        session = getSource(caller, context);
+        return session.createCriteria(caller.getTypeInstance()).list();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public List<Object> select(AbstractPluginObject caller, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
         session = getSource(caller, context);
         Criteria c = session.createCriteria(instance.getClass());
