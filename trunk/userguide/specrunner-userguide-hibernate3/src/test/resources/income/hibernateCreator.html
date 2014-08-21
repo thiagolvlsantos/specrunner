@@ -39,6 +39,35 @@
         </tr>
     </table>
 
+    Verificando a tabela de pessoa:
+    <table class="hbnall" type="example.employee.Person" reference="id" separator="/">
+        <caption>Pessoa</caption>
+        <tr>
+            <th default="-1">ID</th>
+            <th field="contact.number">Número</th>
+            <th field="contact.email">E-mail</th>
+            <th field="contact.phone.number">Fone</th>
+        </tr>
+        <tr>
+            <td></td>
+            <td>1234</td>
+            <td>email1@gmail.com</td>
+            <td>999999</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>5678</td>
+            <td>email1@gmail.com</td>
+            <td>888888</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>9012</td>
+            <td>email1@gmail.com</td>
+            <td>7777779</td>
+        </tr>
+    </table>
+
     <h1>Com IObjectCreator</h1>
     Lista de pessoas:
     <table class="hbnins" type="example.employee.Person" reference="id" separator="/"
