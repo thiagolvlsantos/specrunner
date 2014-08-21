@@ -373,7 +373,7 @@ public class PluginCompareBase extends AbstractPluginValue {
         if (virtual != null && virtual && references.length() > 0) {
             order = references;
         }
-        return "select " + fields + " from " + schema.getName() + "." + table.getName() + " order by " + order;
+        return "select " + fields + " from " + schema.getName() + "." + table.getName() + (order.length() > 0 ? " order by " + order : "");
     }
 
     /**
@@ -413,7 +413,9 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                     lr.add(c, index++, null, rec.getObject(c.getName()));
                 }
-                tr.add(lr);
+                if (!lr.isEmpty()) {
+                    tr.add(lr);
+                }
             } else if (exp != null && rec == null) {
                 lr = new LineReport(RegisterType.MISSING, tr);
                 for (Column c : table.getColumns()) {
@@ -425,7 +427,9 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                     lr.add(c, index++, exp.getObject(c.getName()), null);
                 }
-                tr.add(lr);
+                if (!lr.isEmpty()) {
+                    tr.add(lr);
+                }
             } else {
                 lr = new LineReport(RegisterType.DIFFERENT, tr);
                 for (Column c : table.getColumns()) {
@@ -451,11 +455,6 @@ public class PluginCompareBase extends AbstractPluginValue {
                 if (!lr.isEmpty()) {
                     for (Column c : table.getKeys()) {
                         lr.add(c, index++, exp.getObject(c.getName()), rec.getObject(c.getName()));
-                    }
-                    for (Column c : table.getReferences()) {
-                        if (!c.isKey()) {
-                            lr.add(c, index++, exp.getObject(c.getName()), rec.getObject(c.getName()));
-                        }
                     }
                     tr.add(lr);
                 }

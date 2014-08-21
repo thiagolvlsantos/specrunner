@@ -120,6 +120,7 @@ public class TableReport implements IPresentation {
         for (LineReport lr : lines) {
             if (index++ == 0) {
                 sb.append("\tDetails:\n\t");
+                sb.append("Error|");
                 for (Column c : table.getColumns()) {
                     sb.append("\t" + c.getAlias() + "(" + c.getName() + ")|");
                 }

@@ -30,6 +30,7 @@ import org.specrunner.sql.meta.Column;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
+import org.specrunner.util.xom.UtilNode;
 
 /**
  * A line report. Only differences are shown for partial match of registers,
@@ -200,43 +201,31 @@ public class LineReport implements IPresentation {
         case ALIEN:
             for (Column c : tableReport.getTable().getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
-                if (index != null) {
-                    sb.append(receivedObjects.get(index));
-                    sb.append('|');
-                }
+                sb.append(receivedObjects.get(index));
+                sb.append('|');
             }
             break;
         case MISSING:
             for (Column c : tableReport.getTable().getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
-                if (index != null) {
-                    sb.append(expectedObjects.get(index));
-                    sb.append('|');
-                }
+                sb.append(expectedObjects.get(index));
+                sb.append('|');
             }
             break;
         case DIFFERENT:
-            for (int i = 0; i < columns.size(); i++) {
-                if (columns.get(i).isKey()) {
-                    for (Column c : tableReport.getTable().getColumns()) {
-                        Integer index = columnsToIndexes.get(c.getName());
-                        if (index != null) {
-                            sb.append(receivedObjects.get(index));
-                            sb.append('|');
-                        } else {
-                            sb.append('|');
-                        }
+            for (Column c : tableReport.getTable().getColumns()) {
+                Integer index = columnsToIndexes.get(c.getName());
+                if (index != null) {
+                    String rec = String.valueOf(receivedObjects.get(index));
+                    if (c.isKey()) {
+                        sb.append(rec);
+                        sb.append('|');
+                    } else {
+                        String exp = String.valueOf(expectedObjects.get(index));
+                        sb.append(new DefaultAlignmentException("", exp, rec).asString() + "|");
                     }
                 } else {
-                    for (Column c : tableReport.getTable().getColumns()) {
-                        Integer index = columnsToIndexes.get(c.getName());
-                        if (index != null) {
-                            DefaultAlignmentException def = new DefaultAlignmentException(String.valueOf(expectedObjects.get(i)), String.valueOf(receivedObjects.get(i)));
-                            sb.append(def.asString() + "|");
-                        } else {
-                            sb.append('|');
-                        }
-                    }
+                    sb.append('|');
                 }
             }
             break;
@@ -254,7 +243,7 @@ public class LineReport implements IPresentation {
             Element td = new Element("td");
             tr.appendChild(td);
             {
-                td.addAttribute(new Attribute("class", type.getStyle() + " sr_lreport"));
+                UtilNode.appendCss(td, type.getStyle() + " sr_lreport");
                 td.appendChild(type.asNode());
             }
             switch (type) {
@@ -267,22 +256,20 @@ public class LineReport implements IPresentation {
             case DIFFERENT:
                 for (Column c : tableReport.getTable().getColumns()) {
                     Integer index = columnsToIndexes.get(c.getName());
+                    td = new Element("td");
                     if (index != null) {
-                        td = new Element("td");
-                        tr.appendChild(td);
-                        {
-                            td.addAttribute(new Attribute("class", type.getStyle() + " sr_lreport"));
-                        }
-                        if (columns.get(index).isKey()) {
-                            td.appendChild(String.valueOf(receivedObjects.get(index)));
+                        UtilNode.appendCss(td, type.getStyle() + " sr_lreport");
+                        String rec = String.valueOf(receivedObjects.get(index));
+                        Column column = columns.get(index);
+                        if (column.isKey()) {
+                            td.appendChild(rec);
                         } else {
-                            td.addAttribute(new Attribute("class", td.getAttributeValue("class") + " " + type.getStyle() + "_cell"));
-                            DefaultAlignmentException def = new DefaultAlignmentException(String.valueOf(expectedObjects.get(index)), String.valueOf(receivedObjects.get(index)));
-                            td.appendChild(def.asNode());
+                            UtilNode.appendCss(td, td.getAttributeValue("class") + " " + type.getStyle() + "_cell");
+                            String exp = String.valueOf(expectedObjects.get(index));
+                            td.appendChild(new DefaultAlignmentException("", exp, rec).asNode());
                         }
-                    } else {
-                        tr.appendChild(new Element("td"));
                     }
+                    tr.appendChild(td);
                 }
                 break;
             default:
@@ -304,16 +291,12 @@ public class LineReport implements IPresentation {
     protected void line(Element tr, List<Object> vals) {
         for (Column c : tableReport.getTable().getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
+            Element td = new Element("td");
             if (index != null) {
-                Element td = new Element("td");
-                tr.appendChild(td);
-                {
-                    td.addAttribute(new Attribute("class", type.getStyle()));
-                    td.appendChild(UtilSql.toString(vals.get(index)));
-                }
-            } else {
-                tr.appendChild(new Element("td"));
+                UtilNode.appendCss(td, type.getStyle());
+                td.appendChild(UtilSql.toString(vals.get(index)));
             }
+            tr.appendChild(td);
         }
     }
 
@@ -332,12 +315,8 @@ public class LineReport implements IPresentation {
     public void add(Column c, int index, Object expected, Object received) {
         columnsToIndexes.put(c.getName(), index);
         columns.add(c);
-        if (expected != null) {
-            expectedObjects.add(UtilSql.toString(expected));
-        }
-        if (received != null) {
-            receivedObjects.add(UtilSql.toString(received));
-        }
+        expectedObjects.add(UtilSql.toString(expected));
+        receivedObjects.add(UtilSql.toString(received));
     }
 
     /**

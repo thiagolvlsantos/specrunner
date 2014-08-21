@@ -21,8 +21,10 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.PluginGroupImpl;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginCompareBase;
 import org.specrunner.sql.PluginConnection;
@@ -134,6 +136,11 @@ public class PluginDbms extends PluginGroupImpl {
     }
 
     @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
+    @Override
     public void initialize(IContext context) throws PluginException {
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_SYSTEM, this);
@@ -174,11 +181,12 @@ public class PluginDbms extends PluginGroupImpl {
         }
         {
             // create both bases
-            PluginScripts schema = new PluginScripts();
-            schema.setClasspathrelative(true);
-            schema.setValue("/sgbd_final.sql");
-            schema.setName("systemConnection;referenceConnection");
-            add(schema);
+            PluginScripts create = new PluginScripts();
+            create.setClasspathrelative(true);
+            create.setValue("/sgbd_final.sql");
+            create.setFailsafe(true);
+            create.setName("systemConnection;referenceConnection");
+            add(create);
         }
         {
             // apply filter on comparisons
