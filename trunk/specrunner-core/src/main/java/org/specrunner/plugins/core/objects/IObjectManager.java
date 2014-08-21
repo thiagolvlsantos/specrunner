@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.objects;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.specrunner.plugins.PluginException;
@@ -45,6 +46,17 @@ public interface IObjectManager {
      *            The object plugin.
      */
     void bind(AbstractPluginObject input);
+
+    /**
+     * Lookup for a object of a given type, with the given key.
+     * 
+     * @param clazz
+     *            The object type.
+     * @return All handled objects, if exists, null, otherwise.
+     * @throws PluginException
+     *             On lookup errors.
+     */
+    Collection<Object> lookup(Class<?> clazz) throws PluginException;
 
     /**
      * Lookup for a object of a given type, with the given key.

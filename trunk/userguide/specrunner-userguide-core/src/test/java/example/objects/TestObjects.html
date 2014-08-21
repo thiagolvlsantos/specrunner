@@ -22,7 +22,7 @@
 </table>
 
 <h2>Memory contains</h2>
-<table class="objon" mapping="users">
+<table class="objin" mapping="users">
     <caption>User information</caption>
     <tr>
         <th>Login</th>
@@ -35,7 +35,7 @@
 </table>
 
 <h2>Memory does not contain</h2>
-<table class="objoff" mapping="users">
+<table class="objout" mapping="users">
     <caption>User information</caption>
     <tr>
         <th field="login">User Login</th>
@@ -44,6 +44,27 @@
     <tr>
         <td>crb</td>
         <td>Carlos Branco</td>
+    </tr>
+</table>
+
+<h2>Memory full list</h2>
+<table class="objall" mapping="users">
+    <caption>User information</caption>
+    <tr>
+        <th>User Login</th>
+        <th field="name">Name</th>
+    </tr>
+    <tr>
+        <td>tlvls</td>
+        <td>Thiago Santos</td>
+    </tr>
+    <tr>
+        <td>lab</td>
+        <td>Luciano Barbosa</td>
+    </tr>
+    <tr>
+        <td>ogm</td>
+        <td>Oscar Miranda</td>
     </tr>
 </table>
 
@@ -127,7 +148,7 @@ Remove objects (only key is required to remove):
 
 <h2>Relationships are still mapped</h2>
 but... attempts to find them fail:
-<table class="objon" type="example.objects.Authorization" reference="user.login,role.alias" separator="|">
+<table class="objin" type="example.objects.Authorization" reference="user.login,role.alias" separator="|">
     <caption>Relation information</caption>
     <tr>
         <th>User</th>

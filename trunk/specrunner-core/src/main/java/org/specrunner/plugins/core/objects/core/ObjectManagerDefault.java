@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.objects.core;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +61,15 @@ public class ObjectManagerDefault implements IObjectManager {
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Plugin of " + input.getTypeInstance() + " bound.");
         }
+    }
+
+    @Override
+    public Collection<Object> lookup(Class<?> clazz) throws PluginException {
+        AbstractPluginObject map = entities.get(clazz);
+        if (map == null) {
+            throw new PluginException("Object mapping for type " + clazz.getName() + " not found.");
+        }
+        return map.getObjects();
     }
 
     @Override

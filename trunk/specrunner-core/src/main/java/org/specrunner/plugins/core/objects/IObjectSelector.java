@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.objects;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.specrunner.context.IContext;
@@ -44,6 +45,21 @@ public interface IObjectSelector<T> {
      *             On selection errors.
      */
     T getSource(AbstractPluginObject caller, IContext context) throws Exception;
+
+    /**
+     * Performs a select all object of a given type.
+     * 
+     * @param caller
+     *            The caller plugin.
+     * @param context
+     *            The test context.
+     * @param result
+     *            The result set.
+     * @return The corresponding objects from repository.
+     * @throws Exception
+     *             On selection errors.
+     */
+    Collection<Object> all(AbstractPluginObject caller, IContext context, IResultSet result) throws Exception;
 
     /**
      * Performs a select on object repository to compare with the reference.

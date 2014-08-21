@@ -20,6 +20,7 @@ package org.specrunner.plugins.core.objects;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -373,11 +374,22 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         readData(context, result, table);
     }
 
+    /**
+     * Read header information.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param table
+     *            The table.
+     * @throws PluginException
+     *             On read errors.
+     */
     protected void readHeader(IContext context, IResultSet result, TableAdapter table) throws PluginException {
         if (table.getRowCount() < 1) {
             throw new PluginException("Table should have at least header information.");
         }
-        // TODO: before header read
         RowAdapter row = table.getRow(0);
         try {
             loadFields(context, row, fields);
@@ -388,17 +400,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), e);
         }
-        // TODO: after header read
     }
 
+    /**
+     * Read data information.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param table
+     *            The table.
+     * @throws PluginException
+     *             On read errors.
+     */
     protected void readData(IContext context, IResultSet result, TableAdapter table) throws PluginException {
-        // TODO: before data reading
         for (int i = 1; i < table.getRowCount(); i++) {
             RowAdapter row = table.getRow(i);
             try {
-                // TODO: before instance creation
-                Object instance = processLine(context, row, result);
-                // TODO: after object creation
+                processLine(context, row, result);
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -406,7 +426,6 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), e);
             }
         }
-        // TODO: after data reading
     }
 
     /**
@@ -1258,6 +1277,15 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             throw new PluginException("Instance '" + key + "' of '" + typeInstance.getName() + "' not found.");
         }
         return result;
+    }
+
+    /**
+     * Set of handled objects.
+     * 
+     * @return A collection of object under control.
+     */
+    public Collection<Object> getObjects() {
+        return instances.values();
     }
 
     /**
