@@ -1,0 +1,127 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+
+td {
+	border: 1px dotted gray;
+}
+
+.prepare:before {
+    content: "PREPARE";
+}
+.verify:before {
+    content: "VERIFY";
+}
+</style>
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="create.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <h1>Check if output is verified to be null.</h1>
+
+    Insert description null.    
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+            </tr>
+        </tbody>
+    </table>
+
+    Verify description null.
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    Insert description empty.    
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>2</td>
+                <td>Oscar</td>
+                <td>@e</td>
+            </tr>
+        </tbody>
+    </table>
+
+    Verify for null. 
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>2</td>
+                <td>Oscar</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    
+    The error does not happen here because @ExpectedMessages annotation was added to class, expecting:
+    <pre>
+        Values are different.
+            (expected        )null
+            (received        )
+            (expected aligned)null
+            (received aligned)----
+    </pre>
+    which is exactly the expected behavior. On insert should set empty string, and on verify check if it was null, which
+    obviously is not the case.
+</body>
+</html>

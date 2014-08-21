@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+
+td {
+	border: 1px dotted gray;
+}
+
+.prepare:before {
+	content: "PREPARE";
+}
+
+.verify:before {
+	content: "VERIFY";
+}
+</style>
+<title>Example of negative scope</title>
+</head>
+<body>
+
+
+    <h2>Without scenario listener</h2>
+    <dbms />
+
+    <h1>Prepare two bases.</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Thiago</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Santos</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Insert using SQL (simulate system actions)</h1>
+
+    <a class="scripts" name="systemConnection" href="suv.sql" value="href" failsafe="true">Run on base A</a>
+
+    <h1>Examples of verify</h1>
+
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>Luiz</td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>Thiago</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>1</td>
+                <td>Vieira</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <compareBase />
+
+    <h2>Within a scenario</h2>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Given</th>
+            <th>When</th>
+            <th>Then</th>
+        </tr>
+        <tr class="scenario">
+            <td class="title">Basic test</td>
+            <td><table class="prepare">
+                    <caption>Customer</caption>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>I</td>
+                            <td>Thiago</td>
+                        </tr>
+                        <tr>
+                            <td>I</td>
+                            <td>Santos</td>
+                        </tr>
+                    </tbody>
+                </table></td>
+            <td><a class="scripts" name="systemConnection" href="suv.sql" value="href" failsafe="true">Run on base A</a></td>
+            <td><table class="verify">
+                    <caption>Customer</caption>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>I</td>
+                            <td>Luiz</td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td>Thiago</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="verify">
+                    <caption>Customer</caption>
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>ID</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>U</td>
+                            <td>1</td>
+                            <td>Vieira</td>
+                        </tr>
+                    </tbody>
+                </table></td>
+        </tr>
+    </table>
+
+</body>
+</html>
