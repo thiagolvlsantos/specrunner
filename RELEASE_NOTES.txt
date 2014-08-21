@@ -1,3 +1,10 @@
+1.4.06
+OK - trocar a cor do alien;
+OK - Listener do módulo SQL que limpa a base e compara a base para cada cenario.
+OK - Fazer mais exemplos de escopo negativo, com tabelas distintas e campos faltando;
+OK - Não colocar 'order by' no compareBanco se não houver campos chave ou campo reference, usar somente se houver;
+OK - Colocar o failsafe no segundo grupo
+
 1.4.05
 OK - Simplificar a verificação com escopo negativo (desenvolvedores só conseguem resolver de fato implementação com escopo negativo);
 OK - Permitir usar tabelas vazias nos prepare e verify, para que o strict funcione verificando que a tabela está vazia;
