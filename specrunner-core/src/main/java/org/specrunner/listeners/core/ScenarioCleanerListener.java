@@ -32,7 +32,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilAnnotations;
 
 /**
- * Cleaner for scenarios considering @Before and @After as references.
+ * Cleaner for scenarios considering @BeforeScenario and @AfterScenario as
+ * references.
  * 
  * @author Thiago Santos.
  * 
