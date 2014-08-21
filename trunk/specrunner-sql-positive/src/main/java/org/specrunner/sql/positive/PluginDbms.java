@@ -21,8 +21,10 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.PluginGroupImpl;
+import org.specrunner.plugins.type.Command;
 import org.specrunner.sql.AbstractPluginDatabase;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
@@ -49,26 +51,6 @@ public class PluginDbms extends PluginGroupImpl {
      * The system datasource.
      */
     private String system = "org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TEST_INIT|sa|";
-
-    /**
-     * Get the system database name.
-     * 
-     * @return The system database name.
-     */
-    public String getSystem() {
-        return system;
-    }
-
-    /**
-     * Set the system database name.
-     * 
-     * @param system
-     *            The database name.
-     */
-    @DontEval
-    public void setSystem(String system) {
-        this.system = system;
-    }
 
     public PluginDbms() {
         IFeatureManager fm = SRServices.getFeatureManager();
@@ -99,6 +81,31 @@ public class PluginDbms extends PluginGroupImpl {
         }
     }
 
+    /**
+     * Get the system database name.
+     * 
+     * @return The system database name.
+     */
+    public String getSystem() {
+        return system;
+    }
+
+    /**
+     * Set the system database name.
+     * 
+     * @param system
+     *            The database name.
+     */
+    @DontEval
+    public void setSystem(String system) {
+        this.system = system;
+    }
+
+    @Override
+    public ActionType getActionType() {
+        return Command.INSTANCE;
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         IFeatureManager fm = SRServices.getFeatureManager();
@@ -119,7 +126,7 @@ public class PluginDbms extends PluginGroupImpl {
             add(systemDatabase);
         }
         {
-            // drop both bases
+            // drop base
             PluginScripts drop = new PluginScripts();
             drop.setClasspathrelative(true);
             drop.setValue("/sgbd_drop.sql");
@@ -128,12 +135,13 @@ public class PluginDbms extends PluginGroupImpl {
             add(drop);
         }
         {
-            // create both bases
-            PluginScripts schema = new PluginScripts();
-            schema.setClasspathrelative(true);
-            schema.setValue("/sgbd_final.sql");
-            schema.setName("systemConnection");
-            add(schema);
+            // create base
+            PluginScripts create = new PluginScripts();
+            create.setClasspathrelative(true);
+            create.setValue("/sgbd_final.sql");
+            create.setFailsafe(true);
+            create.setName("systemConnection");
+            add(create);
         }
         {
             // apply filter on comparisons
