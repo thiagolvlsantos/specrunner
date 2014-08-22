@@ -196,36 +196,38 @@ public class LineReport implements IPresentation {
     @Override
     public String asString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(type.asString() + "|");
+        sb.append(type.asString());
+        int i = 0;
         switch (type) {
         case ALIEN:
-            for (Column c : tableReport.getTable().getColumns()) {
+            i = 0;
+            for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
+                sb.append("\t[" + (i++) + "]");
                 sb.append(receivedObjects.get(index));
-                sb.append('|');
             }
             break;
         case MISSING:
-            for (Column c : tableReport.getTable().getColumns()) {
+            i = 0;
+            for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
+                sb.append("\t[" + (i++) + "]");
                 sb.append(expectedObjects.get(index));
-                sb.append('|');
             }
             break;
         case DIFFERENT:
-            for (Column c : tableReport.getTable().getColumns()) {
+            i = 0;
+            for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
+                sb.append("\t[" + (i++) + "]");
                 if (index != null) {
                     String rec = String.valueOf(receivedObjects.get(index));
                     if (c.isKey()) {
                         sb.append(rec);
-                        sb.append('|');
                     } else {
                         String exp = String.valueOf(expectedObjects.get(index));
-                        sb.append(new DefaultAlignmentException("", exp, rec).asString() + "|");
+                        sb.append("{EXP:" + exp + "}{REC:" + rec + "}");
                     }
-                } else {
-                    sb.append('|');
                 }
             }
             break;
@@ -254,7 +256,7 @@ public class LineReport implements IPresentation {
                 line(tr, expectedObjects);
                 break;
             case DIFFERENT:
-                for (Column c : tableReport.getTable().getColumns()) {
+                for (Column c : tableReport.getColumns()) {
                     Integer index = columnsToIndexes.get(c.getName());
                     td = new Element("td");
                     if (index != null) {
@@ -289,7 +291,7 @@ public class LineReport implements IPresentation {
      *            The values to dump.
      */
     protected void line(Element tr, List<Object> vals) {
-        for (Column c : tableReport.getTable().getColumns()) {
+        for (Column c : tableReport.getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
             Element td = new Element("td");
             if (index != null) {
@@ -315,6 +317,7 @@ public class LineReport implements IPresentation {
     public void add(Column c, int index, Object expected, Object received) {
         columnsToIndexes.put(c.getName(), index);
         columns.add(c);
+        tableReport.add(c);
         expectedObjects.add(UtilSql.toString(expected));
         receivedObjects.add(UtilSql.toString(received));
     }
