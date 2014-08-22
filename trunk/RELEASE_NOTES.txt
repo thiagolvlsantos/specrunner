@@ -5,6 +5,10 @@ OK - No relatório de erro mostrar apenas as colunas conflitantes;
 OK - Isolar o filtro do prepare/verify do filter do compareBase senão não é possível popular a base com campos que devem ser desconsiderados na comparação final
 	Obs: isso pode ser feito colocando-se o modo como parte da assinatura dos métodos filtrados, ou seja, se for modo input, output e compare já resolve.
 OK - ExpectedMessages aumentado para aceitar substring de mensagens para validação, usar sempre com sorted='true' para funcionar o atributo 'criteria'.
+OK - Criar os módulos de configuração padrão para os testes que queiram:
+	1- Fazer testes sem escopo negativo - sem validação de counts; -> specrunner-sql-positive
+	2- Fazer testes sem escopo negativo - com validação de counts; -> specrunner-sql-positive com o DatabaseCountListener
+	3- Fazer testes com escopo negativo.                           -> specrunner-sql-negative
 	
 1.4.06
 OK - trocar a cor do alien;
