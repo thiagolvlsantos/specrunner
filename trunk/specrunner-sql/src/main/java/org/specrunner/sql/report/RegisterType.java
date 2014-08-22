@@ -68,7 +68,7 @@ public enum RegisterType implements IPresentation {
 
     @Override
     public String asString() {
-        return code;
+        return String.format("%10s", code);
     }
 
     @Override

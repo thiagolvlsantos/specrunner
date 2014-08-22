@@ -41,6 +41,11 @@ public class TableReport implements IPresentation {
     private Table table;
 
     /**
+     * List of columns to print.
+     */
+    private List<Column> columns = new LinkedList<Column>();
+
+    /**
      * Line reports.
      */
     private List<LineReport> lines = new LinkedList<LineReport>();
@@ -94,6 +99,46 @@ public class TableReport implements IPresentation {
     }
 
     /**
+     * Get table columns.
+     * 
+     * @return Columns to report.
+     */
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    /**
+     * Set columns list.
+     * 
+     * @param columns
+     *            A list.
+     */
+    public void setColumns(List<Column> columns) {
+        this.columns = columns;
+    }
+
+    /**
+     * Add a column to report.
+     * 
+     * @param column
+     *            A column.
+     */
+    public void add(Column column) {
+        if (!columns.contains(column)) {
+            int i = 0;
+            while (i < columns.size() && columns.get(i).isKey()) {
+                i++;
+            }
+            if (!column.isKey()) {
+                while (i < columns.size() && columns.get(i).isReference()) {
+                    i++;
+                }
+            }
+            columns.add(i, column);
+        }
+    }
+
+    /**
      * Check if there are line reports.
      * 
      * @return true, if any line report, false, otherwise.
@@ -120,13 +165,15 @@ public class TableReport implements IPresentation {
         for (LineReport lr : lines) {
             if (index++ == 0) {
                 sb.append("\tDetails:\n\t");
-                sb.append("Error|");
-                for (Column c : table.getColumns()) {
-                    sb.append("\t" + c.getAlias() + "(" + c.getName() + ")|");
+                sb.append(String.format("\t%10s", "Error"));
+                int i = 0;
+                for (Column c : columns) {
+                    sb.append("\t[" + (i++) + "]");
+                    sb.append(c.getAlias() + "(" + c.getName() + ")");
                 }
-                sb.append("\n");
+                sb.append("\n\n");
             }
-            sb.append("\t\t" + lr.asString() + "\n");
+            sb.append("\t\t" + lr.asString() + "\n\n");
         }
         return sb.toString();
     }
@@ -160,7 +207,7 @@ public class TableReport implements IPresentation {
                         th.addAttribute(new Attribute("class", "sr_lreport"));
                         th.appendChild("Error");
                     }
-                    for (Column c : table.getColumns()) {
+                    for (Column c : columns) {
                         th = new Element("th");
                         tr.appendChild(th);
                         {

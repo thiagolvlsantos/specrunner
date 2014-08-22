@@ -20,6 +20,8 @@ package org.specrunner.junit;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import org.specrunner.SRServices;
@@ -130,14 +132,14 @@ public final class JUnitUtils {
      * @return An array of listener instances.
      */
     public static IScenarioListener[] getScenarioListener(Class<?> type) {
-        SRScenarioListeners list = type.getAnnotation(SRScenarioListeners.class);
-        if (list == null) {
+        List<Class<? extends IScenarioListener>> scan = scanAnnotation(type);
+        if (scan.isEmpty()) {
             return new IScenarioListener[0];
         }
-        IScenarioListener[] result = new IScenarioListener[list.value().length];
+        IScenarioListener[] result = new IScenarioListener[scan.size()];
         for (int i = 0; i < result.length; i++) {
             try {
-                result[i] = list.value()[i].newInstance();
+                result[i] = scan.get(i).newInstance();
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -145,5 +147,31 @@ public final class JUnitUtils {
             }
         }
         return result;
+    }
+
+    /**
+     * Get full list of scenario listeners in annotations.
+     * 
+     * @param type
+     *            A type.
+     * @return A list of scenario listeners classes for the given type, in
+     *         order, from top most class to bottom class.
+     */
+    public static List<Class<? extends IScenarioListener>> scanAnnotation(Class<?> type) {
+        List<Class<? extends IScenarioListener>> scan = new LinkedList<Class<? extends IScenarioListener>>();
+        Class<?> tmp = type;
+        while (tmp != Object.class) {
+            SRScenarioListeners local = tmp.getAnnotation(SRScenarioListeners.class);
+            if (local != null) {
+                Class<? extends IScenarioListener>[] value = local.value();
+                if (value != null) {
+                    for (int i = 0; i < value.length; i++) {
+                        scan.add(0, value[i]);
+                    }
+                }
+            }
+            tmp = tmp.getSuperclass();
+        }
+        return scan;
     }
 }

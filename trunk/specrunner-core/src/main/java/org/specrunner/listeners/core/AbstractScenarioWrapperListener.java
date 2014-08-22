@@ -74,9 +74,14 @@ public abstract class AbstractScenarioWrapperListener implements IScenarioListen
         }
         Element s = new Element("span");
         UtilNode.appendCss(s, SRServices.get(IPluginFactory.class).getAlias(type));
-        s.appendChild(message);
+        s.appendChild("{" + message + "}");
         if (n instanceof Element) {
-            ((Element) n).appendChild(s);
+            Element element = (Element) n;
+            if (onStart) {
+                element.insertChild(s, 0);
+            } else {
+                element.appendChild(s);
+            }
         } else {
             ParentNode parent = n.getParent();
             if (onStart) {
