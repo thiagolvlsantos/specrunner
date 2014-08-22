@@ -24,6 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.specrunner.result.IStringTest;
+import org.specrunner.result.core.StringTestDefault;
+
 /**
  * Annotation to enable runner ignore some specific messages.
  * 
@@ -44,4 +47,9 @@ public @interface ExpectedMessages {
      * Default is false.
      */
     boolean sorted() default false;
+
+    /**
+     * Criteria of acceptance.
+     */
+    Class<? extends IStringTest> criteria() default StringTestDefault.class;
 }

@@ -190,6 +190,7 @@ public class SpecRunnerStatement extends Statement {
         if (expected != null) {
             cfg.add(IResultSet.FEATURE_EXPECTED_MESSAGES, expected.value());
             cfg.add(IResultSet.FEATURE_EXPECTED_SORTED, expected.sorted());
+            cfg.add(IResultSet.FEATURE_EXPECTED_CRITERIA, expected.criteria().newInstance());
         }
         for (Method m : UtilAnnotations.getAnnotatedMethods(instance, Configuration.class)) {
             Class<?>[] types = m.getParameterTypes();

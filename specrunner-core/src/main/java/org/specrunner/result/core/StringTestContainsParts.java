@@ -15,29 +15,36 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.result.core;
 
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Assertion;
-import org.specrunner.sql.meta.EMode;
+import java.util.StringTokenizer;
+
+import org.specrunner.result.IStringTest;
 
 /**
- * Check a database.
+ * Check if error contains.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginVerify extends AbstractPluginDatabase {
+public class StringTestContainsParts implements IStringTest {
 
     /**
-     * Default constructor.
+     * Auxiliar class.
      */
-    public PluginVerify() {
-        super(EMode.OUTPUT);
-    }
+    private IStringTest test = new StringTestContains();
 
     @Override
-    public ActionType getActionType() {
-        return Assertion.INSTANCE;
+    public boolean accept(String expected, String received) {
+        if (expected != null) {
+            StringTokenizer st = new StringTokenizer(expected, "|");
+            while (st.hasMoreTokens()) {
+                if (!test.accept(st.nextToken(), received)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 }

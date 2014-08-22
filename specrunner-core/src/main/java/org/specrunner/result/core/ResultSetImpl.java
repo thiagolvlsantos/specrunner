@@ -36,6 +36,7 @@ import org.specrunner.plugins.IActionType;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultFilter;
 import org.specrunner.result.IResultSet;
+import org.specrunner.result.IStringTest;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
 import org.specrunner.result.status.Failure;
@@ -64,11 +65,15 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      * List of expected messages.
      */
     private List<String> messages;
-
     /**
      * Ordered flag.
      */
     private boolean sorted;
+
+    /**
+     * String test criteria for messages.
+     */
+    private IStringTest criteria;
 
     @Override
     public IResultFilter getResultFilter() {
@@ -116,6 +121,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     }
 
     @Override
+    public IStringTest getCriteria() {
+        return criteria;
+    }
+
+    @Override
+    public void setCriteria(IStringTest criteria) {
+        this.criteria = criteria;
+    }
+
+    @Override
     public void consolidate(IContext context) {
         if (messages == null) {
             return;
@@ -134,7 +149,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             int i = 0;
             int max = Math.min(received.size(), expected.size());
             for (; i < max; i++) {
-                if (!expected.get(i).equals(received.get(i))) {
+                if (!criteria.accept(expected.get(i), received.get(i))) {
                     errors.append("Expected '" + expected.get(i) + "' does not match received '" + received.get(i) + "'.\n");
                 } else {
                     items.get(i).setStatus(Success.INSTANCE);

@@ -19,7 +19,7 @@ package org.specrunner.sql;
 
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Command;
-import org.specrunner.sql.database.EMode;
+import org.specrunner.sql.meta.EMode;
 
 /**
  * Prepare a database.

@@ -21,6 +21,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;
@@ -50,32 +51,32 @@ public class DataFilterNegative extends ParameterHolder implements IDataFilter {
     }
 
     @Override
-    public void setup(Schema schema, IContext context) throws PluginException {
-        dataFilter.setup(schema, context);
+    public void setup(IContext context, EMode mode, Schema schema) throws PluginException {
+        dataFilter.setup(context, mode, schema);
     }
 
     @Override
-    public boolean accept(Schema schema) {
-        return !dataFilter.accept(schema);
+    public boolean accept(EMode mode, Schema schema) {
+        return !dataFilter.accept(mode, schema);
     }
 
     @Override
-    public boolean accept(Table table) {
-        return !dataFilter.accept(table);
+    public boolean accept(EMode mode, Table table) {
+        return !dataFilter.accept(mode, table);
     }
 
     @Override
-    public boolean accept(IRegister register) {
-        return !dataFilter.accept(register);
+    public boolean accept(EMode mode, IRegister register) {
+        return !dataFilter.accept(mode, register);
     }
 
     @Override
-    public boolean accept(Column column) {
-        return !dataFilter.accept(column);
+    public boolean accept(EMode mode, Column column) {
+        return !dataFilter.accept(mode, column);
     }
 
     @Override
-    public boolean accept(Column column, Object value) {
-        return !dataFilter.accept(column, value);
+    public boolean accept(EMode mode, Column column, Object value) {
+        return !dataFilter.accept(mode, column, value);
     }
 }

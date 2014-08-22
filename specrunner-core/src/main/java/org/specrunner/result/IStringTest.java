@@ -15,29 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
-
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Assertion;
-import org.specrunner.sql.meta.EMode;
+package org.specrunner.result;
 
 /**
- * Check a database.
+ * Test strategy.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginVerify extends AbstractPluginDatabase {
+public interface IStringTest {
 
     /**
-     * Default constructor.
+     * Message acceptance criteria.
+     * 
+     * @param expected
+     *            Expected message.
+     * @param received
+     *            Received message.
+     * @return true, if accepted, false, otherwise.
      */
-    public PluginVerify() {
-        super(EMode.OUTPUT);
-    }
-
-    @Override
-    public ActionType getActionType() {
-        return Assertion.INSTANCE;
-    }
+    boolean accept(String expected, String received);
 }

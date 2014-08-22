@@ -64,6 +64,7 @@ public class PipeResult implements IPipe {
         fm.set(IResultSet.FEATURE_RECORD_SUCCESS, result);
         fm.set(IResultSet.FEATURE_EXPECTED_MESSAGES, result);
         fm.set(IResultSet.FEATURE_EXPECTED_SORTED, result);
+        fm.set(IResultSet.FEATURE_EXPECTED_CRITERIA, result);
         return result;
     }
 

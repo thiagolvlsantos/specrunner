@@ -20,6 +20,7 @@ package org.specrunner.sql.meta.impl;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;
@@ -34,32 +35,32 @@ import org.specrunner.sql.meta.Table;
 public class DataFilterDefault extends ParameterHolder implements IDataFilter {
 
     @Override
-    public void setup(Schema schema, IContext context) {
+    public void setup(IContext context, EMode mode, Schema schema) {
         // nothing.
     }
 
     @Override
-    public boolean accept(Schema schema) {
+    public boolean accept(EMode mode, Schema schema) {
         return true;
     }
 
     @Override
-    public boolean accept(Table table) {
+    public boolean accept(EMode mode, Table table) {
         return true;
     }
 
     @Override
-    public boolean accept(IRegister register) {
+    public boolean accept(EMode mode, IRegister register) {
         return true;
     }
 
     @Override
-    public boolean accept(Column column) {
+    public boolean accept(EMode mode, Column column) {
         return true;
     }
 
     @Override
-    public boolean accept(Column column, Object value) {
+    public boolean accept(EMode mode, Column column, Object value) {
         return true;
     }
 }
