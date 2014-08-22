@@ -17,6 +17,8 @@
  */
 package org.specrunner.sql.database;
 
+import org.specrunner.sql.meta.EMode;
+
 
 /**
  * Identifies fields that should be handled as null or empty depending on value

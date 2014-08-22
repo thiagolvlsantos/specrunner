@@ -56,59 +56,72 @@ public interface IDataFilter {
     /**
      * Enable the filter to perform some setup before use.
      * 
-     * @param schema
-     *            The schema under analysis.
      * @param context
      *            The context.
+     * @param mode
+     *            Database mode of action.
+     * @param schema
+     *            The schema under analysis.
+     * 
      * @throws PluginException
      *             On setup errors.
      */
-    void setup(Schema schema, IContext context) throws PluginException;
+    void setup(IContext context, EMode mode, Schema schema) throws PluginException;
 
     /**
      * Check if a schema is accepted.
      * 
+     * @param mode
+     *            Database mode of action.
      * @param schema
      *            A schema.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Schema schema);
+    boolean accept(EMode mode, Schema schema);
 
     /**
      * Check if a table in a schema is accepted.
      * 
+     * @param mode
+     *            Database mode of action.
      * @param table
      *            A table.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Table table);
+    boolean accept(EMode mode, Table table);
 
     /**
      * Check if a register in a schema is accepted.
      * 
+     * @param mode
+     *            Database mode of action.
      * @param register
      *            A register.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(IRegister register);
+    boolean accept(EMode mode, IRegister register);
 
     /**
      * Check if a column, in table from a schema is accepted.
      * 
+     * @param mode
+     *            Database mode of action.
      * @param column
      *            A column.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Column column);
+    boolean accept(EMode mode, Column column);
 
     /**
      * Check if a value, in a column of a table from a schema is accepted.
      * 
+     * @param mode
+     *            Database mode of action.
      * @param column
      *            A column.
      * @param value
      *            A value.
      * @return true, to compare, false, to ignore item.
      */
-    boolean accept(Column column, Object value);
+    boolean accept(EMode mode, Column column, Object value);
 }

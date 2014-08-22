@@ -15,23 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.database;
+package org.specrunner.result.core;
+
+import org.specrunner.result.IStringTest;
 
 /**
- * Database mode.
+ * Default implementation.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-public enum EMode {
+public class StringTestDefault implements IStringTest {
 
-    /**
-     * Input mode.
-     */
-    INPUT,
-
-    /**
-     * Output mode.
-     */
-    OUTPUT;
+    @Override
+    public boolean accept(String expected, String received) {
+        return expected == null ? received == null : expected.equals(received);
+    }
 }

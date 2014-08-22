@@ -40,6 +40,7 @@ import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
 import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.impl.DataFilterDefault;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
@@ -70,7 +71,7 @@ public class TestDbmsNegativeFeature {
 
         cfg.add(PluginFilter.FEATURE_FILTER_INSTANCE, new DataFilterDefault() {
             @Override
-            public boolean accept(Column column) {
+            public boolean accept(EMode mode, Column column) {
                 return !column.getName().equalsIgnoreCase("PRO_NM");
             }
         });

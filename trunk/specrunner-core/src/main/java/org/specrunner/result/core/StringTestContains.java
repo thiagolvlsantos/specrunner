@@ -15,29 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
+package org.specrunner.result.core;
 
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Assertion;
-import org.specrunner.sql.meta.EMode;
+import org.specrunner.result.IStringTest;
 
 /**
- * Check a database.
+ * Check if error contains.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginVerify extends AbstractPluginDatabase {
-
-    /**
-     * Default constructor.
-     */
-    public PluginVerify() {
-        super(EMode.OUTPUT);
-    }
+public class StringTestContains implements IStringTest {
 
     @Override
-    public ActionType getActionType() {
-        return Assertion.INSTANCE;
+    public boolean accept(String expected, String received) {
+        return received == null ? expected == null : received.contains(expected);
     }
 }

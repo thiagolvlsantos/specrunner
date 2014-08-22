@@ -17,8 +17,8 @@
  */
 package org.specrunner.sql.database.impl;
 
-import org.specrunner.sql.database.EMode;
 import org.specrunner.sql.database.INullEmptyHandler;
+import org.specrunner.sql.meta.EMode;
 
 /**
  * Default implementation. On output verification empty TDs are considered null.

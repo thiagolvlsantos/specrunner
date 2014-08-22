@@ -15,29 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql;
-
-import org.specrunner.plugins.ActionType;
-import org.specrunner.plugins.type.Assertion;
-import org.specrunner.sql.meta.EMode;
+package org.specrunner.sql.meta;
 
 /**
- * Check a database.
+ * Database mode.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class PluginVerify extends AbstractPluginDatabase {
+public enum EMode {
 
     /**
-     * Default constructor.
+     * Input mode.
      */
-    public PluginVerify() {
-        super(EMode.OUTPUT);
-    }
+    INPUT,
 
-    @Override
-    public ActionType getActionType() {
-        return Assertion.INSTANCE;
-    }
+    /**
+     * Output mode.
+     */
+    OUTPUT,
+
+    /**
+     * Output mode.
+     */
+    COMPARE;
 }

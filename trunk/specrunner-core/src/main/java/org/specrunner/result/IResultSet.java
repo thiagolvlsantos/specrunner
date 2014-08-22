@@ -53,6 +53,11 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
     String FEATURE_EXPECTED_SORTED = IResultSet.class.getName() + ".sorted";
 
     /**
+     * Feature for messages criteria.
+     */
+    String FEATURE_EXPECTED_CRITERIA = IResultSet.class.getName() + ".criteria";
+
+    /**
      * Set result filter.
      * 
      * @param resultFilter
@@ -114,6 +119,21 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * @return true, of order required, false, otherwise.
      */
     Boolean getSorted();
+
+    /**
+     * String comparison criteria for messages.
+     * 
+     * @return Criteria.
+     */
+    IStringTest getCriteria();
+
+    /**
+     * Set a string comparison criteria for messages.
+     * 
+     * @param criteria
+     *            A criteria.
+     */
+    void setCriteria(IStringTest criteria);
 
     /**
      * Consolidate expectations and received errors.

@@ -10,10 +10,10 @@ import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
-import org.specrunner.sql.database.EMode;
 import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.database.impl.NullEmptyHandlerDefault;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 import example.sql.DataSourceProviderImpl;

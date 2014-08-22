@@ -18,6 +18,7 @@ import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.database.impl.DatabasePrintListener;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;
@@ -32,23 +33,23 @@ public class TestFilter {
 
     public static class FilterTest implements IDataFilter {
         @Override
-        public void setup(Schema schema, IContext context) throws PluginException {
+        public void setup(IContext context, EMode mode, Schema schema) throws PluginException {
         }
 
         @Override
-        public boolean accept(Column column, Object value) {
+        public boolean accept(EMode mode, Column column, Object value) {
             Table table = column.getParent();
             return !(table.getAlias().equalsIgnoreCase("tasks") && column.getAlias().equalsIgnoreCase("time") && value == null);
         }
 
         @Override
-        public boolean accept(Column column) {
+        public boolean accept(EMode mode, Column column) {
             Table table = column.getParent();
             return !(table.getAlias().equalsIgnoreCase("projects") && column.getAlias().equalsIgnoreCase("description"));
         }
 
         @Override
-        public boolean accept(IRegister register) {
+        public boolean accept(EMode mode, IRegister register) {
             Table table = register.getParent();
             if (table.getAlias().equalsIgnoreCase("items")) {
                 Value left = register.getByAlias("a");
@@ -59,12 +60,12 @@ public class TestFilter {
         }
 
         @Override
-        public boolean accept(Table table) {
+        public boolean accept(EMode mode, Table table) {
             return !table.getAlias().equalsIgnoreCase("users");
         }
 
         @Override
-        public boolean accept(Schema schema) {
+        public boolean accept(EMode mode, Schema schema) {
             return true;
         }
     }

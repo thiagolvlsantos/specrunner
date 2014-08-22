@@ -37,6 +37,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -228,8 +229,8 @@ public class PluginCompareBase extends AbstractPluginValue {
         } else {
             currentFilter = new DataFilterDefault();
         }
-        currentFilter.setup(schema, context);
-        if (!currentFilter.accept(schema)) {
+        currentFilter.setup(context, EMode.COMPARE, schema);
+        if (!currentFilter.accept(EMode.COMPARE, schema)) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Schema ignored:" + schema.getAlias() + "(" + schema.getName() + ")");
             }
@@ -263,7 +264,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 UtilLog.LOG.debug(simpleName + "  statement received:" + stmtReceived);
             }
             for (Table table : schema.getTables()) {
-                if (!currentFilter.accept(table)) {
+                if (!currentFilter.accept(EMode.COMPARE, table)) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Table ignored:" + table.getAlias() + "(" + table.getName() + ")");
                     }
@@ -405,7 +406,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             if (exp == null && rec != null) {
                 lr = new LineReport(RegisterType.ALIEN, tr);
                 for (Column c : table.getColumns()) {
-                    if (!dataFilter.accept(c)) {
+                    if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
                         }
@@ -419,7 +420,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             } else if (exp != null && rec == null) {
                 lr = new LineReport(RegisterType.MISSING, tr);
                 for (Column c : table.getColumns()) {
-                    if (!dataFilter.accept(c)) {
+                    if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
                         }
@@ -433,7 +434,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             } else {
                 lr = new LineReport(RegisterType.DIFFERENT, tr);
                 for (Column c : table.getColumns()) {
-                    if (!dataFilter.accept(c)) {
+                    if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Column ignored:" + c.getAlias() + "(" + c.getName() + ")");
                         }
@@ -441,7 +442,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                     }
                     Object objExp = exp.getObject(c.getName());
                     Object objRec = rec.getObject(c.getName());
-                    if (!dataFilter.accept(c, objRec)) {
+                    if (!dataFilter.accept(EMode.COMPARE, c, objRec)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Value ignored(" + c.getAlias() + "," + c.getName() + "):" + objRec);
                         }
