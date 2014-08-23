@@ -32,16 +32,20 @@ public enum RegisterType implements IPresentation {
     /**
      * Indicates a missing register.
      */
-    MISSING("missing"),
+    MISSING("missing", "missing"),
     /**
      * Indicates an unexpected register.
      */
-    ALIEN("alien"),
+    EXTRA("extra", "extra"),
     /**
      * Registers match, but types there are some different columns.
      */
-    DIFFERENT("different");
+    DIFFERENT("not equals", "different");
 
+    /**
+     * Type simbol.
+     */
+    private String simbol;
     /**
      * Type alias.
      */
@@ -50,10 +54,13 @@ public enum RegisterType implements IPresentation {
     /**
      * Constructor.
      * 
+     * @param simbol
+     *            Type simbol.
      * @param code
      *            The text code.
      */
-    private RegisterType(String code) {
+    private RegisterType(String simbol, String code) {
+        this.simbol = simbol;
         this.code = code;
     }
 
@@ -68,7 +75,7 @@ public enum RegisterType implements IPresentation {
 
     @Override
     public String asString() {
-        return String.format("%10s", code);
+        return simbol;
     }
 
     @Override

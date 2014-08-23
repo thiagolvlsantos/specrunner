@@ -38,4 +38,9 @@ public @interface SRScenarioListeners {
      * List of scenario classes.
      */
     Class<? extends IScenarioListener>[] value() default {};
+
+    /**
+     * Inherit listeners from superclass.
+     */
+    boolean inheritListeners() default true;
 }

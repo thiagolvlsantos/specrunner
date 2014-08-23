@@ -60,11 +60,11 @@ public class LineReport implements IPresentation {
     /**
      * List of expected objects.
      */
-    private List<Object> expectedObjects = new LinkedList<Object>();
+    private List<String> expectedObjects = new LinkedList<String>();
     /**
      * List of received objects.
      */
-    private List<Object> receivedObjects = new LinkedList<Object>();
+    private List<String> receivedObjects = new LinkedList<String>();
 
     /**
      * Gets the register type.
@@ -147,7 +147,7 @@ public class LineReport implements IPresentation {
      * 
      * @return The list of objects.
      */
-    public List<Object> getExpectedObjects() {
+    public List<String> getExpectedObjects() {
         return expectedObjects;
     }
 
@@ -157,7 +157,7 @@ public class LineReport implements IPresentation {
      * @param expectedObjects
      *            The list of expected values.
      */
-    public void setExpectedObjects(List<Object> expectedObjects) {
+    public void setExpectedObjects(List<String> expectedObjects) {
         this.expectedObjects = expectedObjects;
     }
 
@@ -166,7 +166,7 @@ public class LineReport implements IPresentation {
      * 
      * @return The list of objects.
      */
-    public List<Object> getReceivedObjects() {
+    public List<String> getReceivedObjects() {
         return receivedObjects;
     }
 
@@ -176,7 +176,7 @@ public class LineReport implements IPresentation {
      * @param receivedObjects
      *            The expected objects.
      */
-    public void setReceivedObjects(List<Object> receivedObjects) {
+    public void setReceivedObjects(List<String> receivedObjects) {
         this.receivedObjects = receivedObjects;
     }
 
@@ -196,45 +196,67 @@ public class LineReport implements IPresentation {
     @Override
     public String asString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(type.asString());
-        int i = 0;
+        sb.append(String.format("%10s|", type.asString()));
         switch (type) {
-        case ALIEN:
-            i = 0;
+        case EXTRA:
             for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
-                sb.append("\t[" + (i++) + "]");
-                sb.append(receivedObjects.get(index));
+                sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", receivedObjects.get(index)));
+                sb.append('|');
             }
             break;
         case MISSING:
-            i = 0;
             for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
-                sb.append("\t[" + (i++) + "]");
-                sb.append(expectedObjects.get(index));
+                sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", expectedObjects.get(index)));
+                sb.append('|');
             }
             break;
         case DIFFERENT:
-            i = 0;
             for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
-                sb.append("\t[" + (i++) + "]");
                 if (index != null) {
                     String rec = String.valueOf(receivedObjects.get(index));
                     if (c.isKey()) {
-                        sb.append(rec);
+                        sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", rec));
                     } else {
                         String exp = String.valueOf(expectedObjects.get(index));
-                        sb.append("{EXP:" + exp + "}{REC:" + rec + "}");
+                        sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", combine(rec, exp)));
                     }
+                } else {
+                    sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", ""));
                 }
+                sb.append('|');
             }
             break;
         default:
             // nothing.
         }
         return sb.toString();
+    }
+
+    /**
+     * Combined version.
+     * 
+     * @param rec
+     *            Received.
+     * @param exp
+     *            Expected.
+     * @return String representation.
+     */
+    protected String combine(String rec, String exp) {
+        return "{EXP:" + exp + "}{REC:" + rec + "}";
+    }
+
+    /**
+     * As empty string.
+     * 
+     * @param exp
+     *            Value.
+     * @return Value.
+     */
+    public String empty(String exp) {
+        return exp.isEmpty() ? "@e" : exp;
     }
 
     @Override
@@ -249,7 +271,7 @@ public class LineReport implements IPresentation {
                 td.appendChild(type.asNode());
             }
             switch (type) {
-            case ALIEN:
+            case EXTRA:
                 line(tr, receivedObjects);
                 break;
             case MISSING:
@@ -290,13 +312,13 @@ public class LineReport implements IPresentation {
      * @param vals
      *            The values to dump.
      */
-    protected void line(Element tr, List<Object> vals) {
+    protected void line(Element tr, List<String> vals) {
         for (Column c : tableReport.getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
             Element td = new Element("td");
             if (index != null) {
                 UtilNode.appendCss(td, type.getStyle());
-                td.appendChild(UtilSql.toString(vals.get(index)));
+                td.appendChild(vals.get(index));
             }
             tr.appendChild(td);
         }
@@ -318,8 +340,13 @@ public class LineReport implements IPresentation {
         columnsToIndexes.put(c.getName(), index);
         columns.add(c);
         tableReport.add(c);
-        expectedObjects.add(UtilSql.toString(expected));
-        receivedObjects.add(UtilSql.toString(received));
+        Map<Column, Integer> sizes = tableReport.getSizes();
+        String strExp = empty(UtilSql.toString(expected));
+        String strRec = empty(UtilSql.toString(received));
+        int max = Math.max(strExp.length(), strRec.length()) + 2;
+        sizes.put(c, Math.max(sizes.get(c), type == RegisterType.DIFFERENT ? combine(strRec, strExp).length() : max));
+        expectedObjects.add(strExp);
+        receivedObjects.add(strRec);
     }
 
     /**

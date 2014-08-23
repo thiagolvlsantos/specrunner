@@ -105,13 +105,17 @@ public class PluginDbms extends PluginGroupImpl {
         IFeatureManager fm = SRServices.getFeatureManager();
         {
             // set loader.
-            fm.add(PluginSchemaLoader.FEATURE_PROVIDER_INSTANCE, new SchemaLoaderXOM());
+            fm.add(PluginSchemaLoader.FEATURE_PROVIDER, SchemaLoaderXOM.class.getName());
             fm.add(PluginSchemaLoader.FEATURE_REUSE, true);
         }
         {
             // set schema.
             fm.add(PluginSchema.FEATURE_SOURCE, "/sgbd.cfg.xml");
             fm.add(PluginSchema.FEATURE_REUSE, true);
+        }
+        // set connections
+        {
+            fm.add(PluginConnection.FEATURE_REUSE, true);
         }
         // set databases
         {

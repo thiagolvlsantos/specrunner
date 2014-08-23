@@ -52,7 +52,7 @@ public class ReportException extends Exception implements IPresentation {
 
     @Override
     public String asString() {
-        return report.asString();
+        return "Database errors:\n" + report.asString();
     }
 
     @Override
