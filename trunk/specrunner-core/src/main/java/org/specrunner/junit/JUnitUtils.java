@@ -169,6 +169,9 @@ public final class JUnitUtils {
                         scan.add(0, value[i]);
                     }
                 }
+                if (!local.inheritListeners()) {
+                    break;
+                }
             }
             tmp = tmp.getSuperclass();
         }

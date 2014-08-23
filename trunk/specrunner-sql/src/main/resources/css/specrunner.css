@@ -26,6 +26,8 @@ sup.sr_sreport, sup.sr_treport {
 table.sr_treport th.sr_lreport {
     font-size: 110%;
     background-color: lightgray;
+    color: black;
+    white-space: nowrap;
     border: 1px solid black;
     padding: 4px;
     text-align: left;
@@ -40,11 +42,11 @@ tr.sr_missing {
     background-color: LightSalmon ;
 }
 
-tr.sr_alien {
+tr.sr_extra {
     background-color: LightSteelBlue  ;
 }
 
-tr.sr_missing , tr.sr_alien {
+tr.sr_missing , tr.sr_extra {
     color: black;
     /*font-weight: bold;*/
 }
@@ -53,7 +55,7 @@ tr.sr_different {
     background-color: white;
 }
 
-td.sr_missing, td.sr_alien, td.sr_different {
+td.sr_missing, td.sr_extra, td.sr_different {
     border: 1px solid black;
     padding: 2px;
     text-align: left;

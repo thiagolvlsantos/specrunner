@@ -745,9 +745,10 @@ public class DatabaseDefault implements IDatabase {
             // table columns not present in test table
             if (filled.get(column.getName()) == null) {
                 Value v = null;
-                if (column.getDefaultValue() != null) {
+                Object defaultValue = column.getDefaultValue();
+                if (defaultValue != null) {
                     // with default values should be set
-                    v = new Value(column, missing.get(column.getName()), column.getDefaultValue(), column.getComparator());
+                    v = new Value(column, missing.get(column.getName()), defaultValue, column.getComparator());
                 } else if (column.isSequence()) {
                     // or if it is a sequence: add their next value command.
                     v = new Value(column, missing.get(column.getName()), sequenceProvider.nextValue(column.getSequence()), column.getComparator());

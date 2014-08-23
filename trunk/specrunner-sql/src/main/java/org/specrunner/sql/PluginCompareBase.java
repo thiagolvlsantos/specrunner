@@ -404,7 +404,7 @@ public class PluginCompareBase extends AbstractPluginValue {
             LineReport lr = null;
             int index = 0;
             if (exp == null && rec != null) {
-                lr = new LineReport(RegisterType.ALIEN, tr);
+                lr = new LineReport(RegisterType.EXTRA, tr);
                 for (Column c : table.getColumns()) {
                     if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {

@@ -17,8 +17,10 @@
  */
 package org.specrunner.sql.report;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -44,6 +46,16 @@ public class TableReport implements IPresentation {
      * List of columns to print.
      */
     private List<Column> columns = new LinkedList<Column>();
+
+    /**
+     * Column sizes.
+     */
+    private Map<Column, Integer> sizes = new HashMap<Column, Integer>();
+
+    /**
+     * Fill line.
+     */
+    private String fill;
 
     /**
      * Line reports.
@@ -118,6 +130,44 @@ public class TableReport implements IPresentation {
     }
 
     /**
+     * Column sizes.
+     * 
+     * @return Map of sizes.
+     */
+    public Map<Column, Integer> getSizes() {
+        return sizes;
+    }
+
+    /**
+     * Set sizes.
+     * 
+     * @param sizes
+     *            Map of sizes.
+     */
+    public void setSizes(Map<Column, Integer> sizes) {
+        this.sizes = sizes;
+    }
+
+    /**
+     * Fill line.
+     * 
+     * @return Fill line with '-'s.
+     */
+    public String getFill() {
+        if (fill == null) {
+            StringBuilder sb = new StringBuilder();
+            for (Integer i : sizes.values()) {
+                for (int j = 0; j < i; j++) {
+                    sb.append('-');
+                }
+                sb.append("--");
+            }
+            fill = sb.toString();
+        }
+        return fill;
+    }
+
+    /**
      * Add a column to report.
      * 
      * @param column
@@ -135,6 +185,7 @@ public class TableReport implements IPresentation {
                 }
             }
             columns.add(i, column);
+            sizes.put(column, (column.getAlias() + "(" + column.getName() + ")").length() + 2);
         }
     }
 
@@ -164,16 +215,17 @@ public class TableReport implements IPresentation {
         int index = 0;
         for (LineReport lr : lines) {
             if (index++ == 0) {
-                sb.append("\tDetails:\n\t");
-                sb.append(String.format("\t%10s", "Error"));
-                int i = 0;
+                sb.append("\t" + String.format("%11s%s", "", getFill()) + "\n");
+                sb.append(String.format("\t%10s|", "ERROR"));
                 for (Column c : columns) {
-                    sb.append("\t[" + (i++) + "]");
-                    sb.append(c.getAlias() + "(" + c.getName() + ")");
+                    sb.append(String.format(" %-" + sizes.get(c) + "s", c.getAlias() + "(" + c.getName() + ")"));
+                    sb.append('|');
                 }
-                sb.append("\n\n");
+                sb.append("\n");
+                sb.append("\t" + String.format("%11s%s", "", getFill()) + "\n");
             }
-            sb.append("\t\t" + lr.asString() + "\n\n");
+            sb.append("\t" + lr.asString() + "\n");
+            sb.append("\t" + String.format("%11s%s", "", getFill()) + "\n");
         }
         return sb.toString();
     }
@@ -205,7 +257,7 @@ public class TableReport implements IPresentation {
                     tr.appendChild(th);
                     {
                         th.addAttribute(new Attribute("class", "sr_lreport"));
-                        th.appendChild("Error");
+                        th.appendChild("ERROR");
                     }
                     for (Column c : columns) {
                         th = new Element("th");
