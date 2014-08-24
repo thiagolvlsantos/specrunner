@@ -17,6 +17,7 @@
  */
 package org.specrunner.sql.report;
 
+import nu.xom.Element;
 import nu.xom.Node;
 
 import org.specrunner.util.xom.IPresentation;
@@ -36,6 +37,15 @@ public class ReportException extends Exception implements IPresentation {
     private SchemaReport report;
 
     /**
+     * Cache of string representation.
+     */
+    private String stringCache;
+    /**
+     * Cache of node representation.
+     */
+    private Node nodeCache;
+
+    /**
      * Constructor.
      * 
      * @param report
@@ -52,11 +62,22 @@ public class ReportException extends Exception implements IPresentation {
 
     @Override
     public String asString() {
-        return "Database errors:\n" + report.asString();
+        if (stringCache == null) {
+            stringCache = report.asString();
+        }
+        return "Database errors:\n" + stringCache;
     }
 
     @Override
     public Node asNode() {
-        return report.asNode();
+        if (nodeCache == null) {
+            Element error = new Element("span");
+            error.appendChild("Database errors:\n");
+            error.appendChild(report.asNode());
+            nodeCache = error;
+            // return to avoid create clone for first access
+            return nodeCache;
+        }
+        return nodeCache.copy();
     }
 }

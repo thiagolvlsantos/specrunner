@@ -183,23 +183,43 @@ public class LineReport implements IPresentation {
             break;
         case DIFFERENT:
             for (Column c : tableReport.getColumns()) {
+                Integer colsize = tableReport.getSize(c);
                 Integer index = columnsToIndexes.get(c.getName());
                 if (index != null) {
-                    String rec = receivedObjects.get(index);
                     if (c.isKey()) {
-                        sb.append(String.format(" %-" + tableReport.getSize(c) + "s", rec));
+                        String rec = receivedObjects.get(index);
+                        sb.append(String.format(" %-" + colsize + "s", nullOrEmpty(rec)));
                     } else {
                         String exp = expectedObjects.get(index);
-                        sb.append(String.format(" %-" + tableReport.getSize(c) + "s", combine(exp, rec)));
+                        sb.append(String.format(" EXP:%-" + (colsize - "EXP:".length()) + "s", nullOrEmptyWrapp(exp)));
                     }
                 } else {
-                    sb.append(String.format(" %-" + tableReport.getSize(c) + "s", ""));
+                    sb.append(String.format(" %-" + colsize + "s", ""));
                 }
                 sb.append('|');
             }
             break;
         default:
             // nothing.
+        }
+        if (type == RegisterType.DIFFERENT) {
+            sb.append("\n\t");
+            sb.append(String.format("%10s|", ""));
+            for (Column c : tableReport.getColumns()) {
+                Integer colsize = tableReport.getSize(c);
+                Integer index = columnsToIndexes.get(c.getName());
+                if (index != null) {
+                    if (!c.isKey()) {
+                        String rec = receivedObjects.get(index);
+                        sb.append(String.format(" REC:%-" + (colsize - "REC:".length()) + "s", nullOrEmptyWrapp(rec)));
+                    } else {
+                        sb.append(String.format(" %-" + colsize + "s", ""));
+                    }
+                } else {
+                    sb.append(String.format(" %-" + colsize + "s", ""));
+                }
+                sb.append('|');
+            }
         }
         return sb.toString();
     }
@@ -215,33 +235,30 @@ public class LineReport implements IPresentation {
     protected void line(StringBuilder sb, List<String> list) {
         for (Column c : tableReport.getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
-            sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? list.get(index) : nullOrEmpty(list.get(index))));
+            sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? nullOrEmpty(list.get(index)) : nullOrEmptyWrapp(list.get(index))));
             sb.append('|');
         }
     }
 
     /**
-     * Combined version.
-     * 
-     * @param exp
-     *            Expected.
-     * @param rec
-     *            Received.
-     * 
-     * @return String representation.
-     */
-    protected String combine(String exp, String rec) {
-        return "EXP:" + nullOrEmpty(exp) + " | REC:" + nullOrEmpty(rec);
-    }
-
-    /**
-     * As empty string.
+     * As empty or null string.
      * 
      * @param exp
      *            Value.
      * @return Value.
      */
     public String nullOrEmpty(String exp) {
+        return exp == null ? "@null" : (exp.isEmpty() ? "@empty" : exp);
+    }
+
+    /**
+     * Wrapped text.
+     * 
+     * @param exp
+     *            Value.
+     * @return Value.
+     */
+    public String nullOrEmptyWrapp(String exp) {
         return exp == null ? "@null" : (exp.isEmpty() ? "@empty" : "'" + exp + "'");
     }
 
@@ -271,7 +288,7 @@ public class LineReport implements IPresentation {
                         UtilNode.appendCss(td, type.getStyle() + " sr_lreport");
                         String rec = receivedObjects.get(index);
                         if (c.isKey()) {
-                            td.appendChild(rec);
+                            td.appendChild(nullOrEmpty(rec));
                         } else {
                             UtilNode.appendCss(td, td.getAttributeValue("class") + " " + type.getStyle() + "_cell");
                             String exp = expectedObjects.get(index);
@@ -285,7 +302,6 @@ public class LineReport implements IPresentation {
                 // nothing
             }
         }
-
         return tr;
     }
 
@@ -303,7 +319,7 @@ public class LineReport implements IPresentation {
             Element td = new Element("td");
             if (index != null) {
                 UtilNode.appendCss(td, type.getStyle());
-                td.appendChild(c.isKey() ? vals.get(index) : nullOrEmpty(vals.get(index)));
+                td.appendChild(c.isKey() ? nullOrEmpty(vals.get(index)) : nullOrEmptyWrapp(vals.get(index)));
             }
             tr.appendChild(td);
         }
@@ -325,8 +341,8 @@ public class LineReport implements IPresentation {
         columnsToIndexes.put(c.getName(), index);
         String strExp = UtilSql.toStringNullable(expected);
         String strRec = UtilSql.toStringNullable(received);
-        int max = Math.max(strExp != null ? strExp.length() : "null".length(), strRec != null ? strRec.length() : "null".length()) + 2;
-        tableReport.add(c, type == RegisterType.DIFFERENT ? combine(strExp, strRec).length() : max);
+        int max = Math.max(strExp != null ? strExp.length() : "@null".length(), strRec != null ? strRec.length() : "@null".length());
+        tableReport.add(c, type == RegisterType.DIFFERENT ? max + "EXP:".length() + 1 : max + 1);
         expectedObjects.add(strExp);
         receivedObjects.add(strRec);
     }

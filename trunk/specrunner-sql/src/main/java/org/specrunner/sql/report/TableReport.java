@@ -146,9 +146,9 @@ public class TableReport implements IPresentation {
             }
             columns.add(i, column);
             // adjust column size min to header size
-            sizes.put(column, (column.getAlias() + "(" + column.getName() + ")").length() + 2);
+            sizes.put(column, (column.getAlias() + "(" + column.getName() + ")").length() + 1);
         }
-        sizes.put(column, Math.max(size, sizes.get(column)));
+        sizes.put(column, Math.max(size + 2, sizes.get(column)));
     }
 
     /**
@@ -198,27 +198,29 @@ public class TableReport implements IPresentation {
         StringBuilder sb = new StringBuilder();
         sb.append(table.getAlias() + " (" + table.getName() + ")\n");
         StringBuilder tmpFill = new StringBuilder();
-        for (Integer i : sizes.values()) {
+        for (Column c : columns) {
+            int i = sizes.get(c);
             for (int j = 0; j < i; j++) {
-                tmpFill.append('-');
+                tmpFill.append(j == 0 ? '+' : '-');
             }
             tmpFill.append("--");
         }
+        tmpFill.append('+');
         String fill = tmpFill.toString();
         int index = 0;
         for (LineReport lr : lines) {
             if (index++ == 0) {
-                sb.append("\t" + String.format("%11s%s", "-----------", fill) + "\n");
+                sb.append("\t" + String.format("%10s%s", "----------", fill) + "\n");
                 sb.append(String.format("\t%10s|", "ERROR(S)"));
                 for (Column c : columns) {
                     sb.append(String.format(" %-" + sizes.get(c) + "s", c.getAlias() + "(" + c.getName() + ")"));
                     sb.append('|');
                 }
                 sb.append("\n");
-                sb.append("\t" + String.format("%11s%s", "", fill) + "\n");
+                sb.append("\t" + String.format("%10s%s", "", fill) + "\n");
             }
             sb.append("\t" + lr.asString() + "\n");
-            sb.append("\t" + String.format("%11s%s", "", fill) + "\n");
+            sb.append("\t" + String.format("%10s%s", "", fill) + "\n");
         }
         return sb.toString();
     }
