@@ -65,14 +65,14 @@ public class ReportException extends Exception implements IPresentation {
         if (stringCache == null) {
             stringCache = report.asString();
         }
-        return "Database errors:\n" + stringCache;
+        return "System database errors:\n" + stringCache;
     }
 
     @Override
     public Node asNode() {
         if (nodeCache == null) {
             Element error = new Element("span");
-            error.appendChild("Database errors:\n");
+            error.appendChild("System database errors:\n");
             error.appendChild(report.asNode());
             nodeCache = error;
             // return to avoid create clone for first access
