@@ -148,7 +148,7 @@ public class TableReport implements IPresentation {
             // adjust column size min to header size
             sizes.put(column, (column.getAlias() + "(" + column.getName() + ")").length() + 1);
         }
-        sizes.put(column, Math.max(size + 2, sizes.get(column)));
+        sizes.put(column, Math.max(size + (column.isKey() ? 1 : 2), sizes.get(column)));
     }
 
     /**
@@ -210,7 +210,7 @@ public class TableReport implements IPresentation {
         int index = 0;
         for (LineReport lr : lines) {
             if (index++ == 0) {
-                sb.append("\t" + String.format("%10s%s", "----------", fill) + "\n");
+                sb.append("\t" + String.format("%10s%s", "+---------", fill) + "\n");
                 sb.append(String.format("\t%10s|", "ERROR(S)"));
                 for (Column c : columns) {
                     sb.append(String.format(" %-" + sizes.get(c) + "s", c.getAlias() + "(" + c.getName() + ")"));
@@ -252,7 +252,7 @@ public class TableReport implements IPresentation {
                     tr.appendChild(th);
                     {
                         th.addAttribute(new Attribute("class", "sr_lreport"));
-                        th.appendChild("ERROR");
+                        th.appendChild("ERROR(S)");
                     }
                     for (Column c : columns) {
                         th = new Element("th");
