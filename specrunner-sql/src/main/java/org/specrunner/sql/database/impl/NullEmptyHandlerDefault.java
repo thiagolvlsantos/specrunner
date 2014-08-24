@@ -33,12 +33,41 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
     /**
      * Default empty String markup.
      */
-    public static final String EMPTY = "@e";
+    public static final String NULL = "@null";
+
+    /**
+     * The empty string mark.
+     */
+    private String nullval = NULL;
+
+    /**
+     * Default empty String markup.
+     */
+    public static final String EMPTY = "@empty";
 
     /**
      * The empty string mark.
      */
     private String empty = EMPTY;
+
+    /**
+     * Get null explicit representation.
+     * 
+     * @return Null representation.
+     */
+    public String getNullval() {
+        return nullval;
+    }
+
+    /**
+     * Set null explicit representation.
+     * 
+     * @param nullval
+     *            Null representation.
+     */
+    public void setNullval(String nullval) {
+        this.nullval = nullval;
+    }
 
     /**
      * Return the empty constant.
@@ -61,7 +90,7 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
 
     @Override
     public boolean isNull(String value, EMode mode) {
-        return value == null || (value != null && value.isEmpty() && mode == EMode.OUTPUT);
+        return value == null || value.equalsIgnoreCase(nullval) || (value != null && value.isEmpty() && mode == EMode.OUTPUT);
     }
 
     @Override

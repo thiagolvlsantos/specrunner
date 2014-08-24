@@ -43,6 +43,21 @@ public final class UtilSql {
      *            The object to stringfy.
      * @return A String.
      */
+    public static String toStringNullable(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        return toString(obj);
+    }
+
+    /**
+     * Get string representation of value. If the object is a Blob get its
+     * String representation.
+     * 
+     * @param obj
+     *            The object to stringfy.
+     * @return A String.
+     */
     public static String toString(Object obj) {
         if (obj instanceof Clob) {
             Clob clob = (Clob) obj;
