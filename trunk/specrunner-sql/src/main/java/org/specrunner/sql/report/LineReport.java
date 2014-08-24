@@ -54,10 +54,6 @@ public class LineReport implements IPresentation {
      */
     private Map<String, Integer> columnsToIndexes = new HashMap<String, Integer>();
     /**
-     * List of columns.
-     */
-    private List<Column> columns = new LinkedList<Column>();
-    /**
      * List of expected objects.
      */
     private List<String> expectedObjects = new LinkedList<String>();
@@ -124,25 +120,6 @@ public class LineReport implements IPresentation {
     }
 
     /**
-     * Get the list of columns.
-     * 
-     * @return The columns.
-     */
-    public List<Column> getColumns() {
-        return columns;
-    }
-
-    /**
-     * Set the column list.
-     * 
-     * @param columns
-     *            The columns.
-     */
-    public void setColumns(List<Column> columns) {
-        this.columns = columns;
-    }
-
-    /**
      * List of expected objects.
      * 
      * @return The list of objects.
@@ -199,32 +176,24 @@ public class LineReport implements IPresentation {
         sb.append(String.format("%10s|", type.asString()));
         switch (type) {
         case EXTRA:
-            for (Column c : tableReport.getColumns()) {
-                Integer index = columnsToIndexes.get(c.getName());
-                sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", receivedObjects.get(index)));
-                sb.append('|');
-            }
+            line(sb, receivedObjects);
             break;
         case MISSING:
-            for (Column c : tableReport.getColumns()) {
-                Integer index = columnsToIndexes.get(c.getName());
-                sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", expectedObjects.get(index)));
-                sb.append('|');
-            }
+            line(sb, expectedObjects);
             break;
         case DIFFERENT:
             for (Column c : tableReport.getColumns()) {
                 Integer index = columnsToIndexes.get(c.getName());
                 if (index != null) {
-                    String rec = String.valueOf(receivedObjects.get(index));
+                    String rec = receivedObjects.get(index);
                     if (c.isKey()) {
-                        sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", rec));
+                        sb.append(String.format(" %-" + tableReport.getSize(c) + "s", rec));
                     } else {
-                        String exp = String.valueOf(expectedObjects.get(index));
-                        sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", combine(rec, exp)));
+                        String exp = expectedObjects.get(index);
+                        sb.append(String.format(" %-" + tableReport.getSize(c) + "s", combine(exp, rec)));
                     }
                 } else {
-                    sb.append(String.format(" %-" + tableReport.getSizes().get(c) + "s", ""));
+                    sb.append(String.format(" %-" + tableReport.getSize(c) + "s", ""));
                 }
                 sb.append('|');
             }
@@ -236,16 +205,33 @@ public class LineReport implements IPresentation {
     }
 
     /**
+     * Print a line.
+     * 
+     * @param sb
+     *            String representation.
+     * @param list
+     *            List of object.
+     */
+    protected void line(StringBuilder sb, List<String> list) {
+        for (Column c : tableReport.getColumns()) {
+            Integer index = columnsToIndexes.get(c.getName());
+            sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? list.get(index) : nullOrEmpty(list.get(index))));
+            sb.append('|');
+        }
+    }
+
+    /**
      * Combined version.
      * 
-     * @param rec
-     *            Received.
      * @param exp
      *            Expected.
+     * @param rec
+     *            Received.
+     * 
      * @return String representation.
      */
-    protected String combine(String rec, String exp) {
-        return "{EXP:" + exp + "}{REC:" + rec + "}";
+    protected String combine(String exp, String rec) {
+        return "EXP:" + nullOrEmpty(exp) + " | REC:" + nullOrEmpty(rec);
     }
 
     /**
@@ -255,8 +241,8 @@ public class LineReport implements IPresentation {
      *            Value.
      * @return Value.
      */
-    public String empty(String exp) {
-        return exp.isEmpty() ? "@e" : exp;
+    public String nullOrEmpty(String exp) {
+        return exp == null ? "@null" : (exp.isEmpty() ? "@empty" : "'" + exp + "'");
     }
 
     @Override
@@ -283,14 +269,13 @@ public class LineReport implements IPresentation {
                     td = new Element("td");
                     if (index != null) {
                         UtilNode.appendCss(td, type.getStyle() + " sr_lreport");
-                        String rec = String.valueOf(receivedObjects.get(index));
-                        Column column = columns.get(index);
-                        if (column.isKey()) {
+                        String rec = receivedObjects.get(index);
+                        if (c.isKey()) {
                             td.appendChild(rec);
                         } else {
                             UtilNode.appendCss(td, td.getAttributeValue("class") + " " + type.getStyle() + "_cell");
-                            String exp = String.valueOf(expectedObjects.get(index));
-                            td.appendChild(new DefaultAlignmentException("", exp, rec).asNode());
+                            String exp = expectedObjects.get(index);
+                            td.appendChild(new DefaultAlignmentException("", nullOrEmpty(exp), nullOrEmpty(rec)).asNode());
                         }
                     }
                     tr.appendChild(td);
@@ -318,7 +303,7 @@ public class LineReport implements IPresentation {
             Element td = new Element("td");
             if (index != null) {
                 UtilNode.appendCss(td, type.getStyle());
-                td.appendChild(vals.get(index));
+                td.appendChild(c.isKey() ? vals.get(index) : nullOrEmpty(vals.get(index)));
             }
             tr.appendChild(td);
         }
@@ -338,13 +323,10 @@ public class LineReport implements IPresentation {
      */
     public void add(Column c, int index, Object expected, Object received) {
         columnsToIndexes.put(c.getName(), index);
-        columns.add(c);
-        tableReport.add(c);
-        Map<Column, Integer> sizes = tableReport.getSizes();
-        String strExp = empty(UtilSql.toString(expected));
-        String strRec = empty(UtilSql.toString(received));
-        int max = Math.max(strExp.length(), strRec.length()) + 2;
-        sizes.put(c, Math.max(sizes.get(c), type == RegisterType.DIFFERENT ? combine(strRec, strExp).length() : max));
+        String strExp = UtilSql.toStringNullable(expected);
+        String strRec = UtilSql.toStringNullable(received);
+        int max = Math.max(strExp != null ? strExp.length() : "null".length(), strRec != null ? strRec.length() : "null".length()) + 2;
+        tableReport.add(c, type == RegisterType.DIFFERENT ? combine(strExp, strRec).length() : max);
         expectedObjects.add(strExp);
         receivedObjects.add(strRec);
     }
@@ -355,6 +337,6 @@ public class LineReport implements IPresentation {
      * @return true, if enable, false, otherwise.
      */
     public boolean isEmpty() {
-        return columns.isEmpty();
+        return columnsToIndexes.isEmpty();
     }
 }

@@ -53,11 +53,6 @@ public class TableReport implements IPresentation {
     private Map<Column, Integer> sizes = new HashMap<Column, Integer>();
 
     /**
-     * Fill line.
-     */
-    private String fill;
-
-    /**
      * Line reports.
      */
     private List<LineReport> lines = new LinkedList<LineReport>();
@@ -130,51 +125,16 @@ public class TableReport implements IPresentation {
     }
 
     /**
-     * Column sizes.
-     * 
-     * @return Map of sizes.
-     */
-    public Map<Column, Integer> getSizes() {
-        return sizes;
-    }
-
-    /**
-     * Set sizes.
-     * 
-     * @param sizes
-     *            Map of sizes.
-     */
-    public void setSizes(Map<Column, Integer> sizes) {
-        this.sizes = sizes;
-    }
-
-    /**
-     * Fill line.
-     * 
-     * @return Fill line with '-'s.
-     */
-    public String getFill() {
-        if (fill == null) {
-            StringBuilder sb = new StringBuilder();
-            for (Integer i : sizes.values()) {
-                for (int j = 0; j < i; j++) {
-                    sb.append('-');
-                }
-                sb.append("--");
-            }
-            fill = sb.toString();
-        }
-        return fill;
-    }
-
-    /**
      * Add a column to report.
      * 
      * @param column
      *            A column.
+     * @param size
+     *            Suggested size.
      */
-    public void add(Column column) {
+    public void add(Column column, Integer size) {
         if (!columns.contains(column)) {
+            // move to right position
             int i = 0;
             while (i < columns.size() && columns.get(i).isKey()) {
                 i++;
@@ -185,8 +145,33 @@ public class TableReport implements IPresentation {
                 }
             }
             columns.add(i, column);
+            // adjust column size min to header size
             sizes.put(column, (column.getAlias() + "(" + column.getName() + ")").length() + 2);
         }
+        sizes.put(column, Math.max(size, sizes.get(column)));
+    }
+
+    /**
+     * Column size.
+     * 
+     * @param column
+     *            Column definition.
+     * @return Size for that column.
+     */
+    public Integer getSize(Column column) {
+        return sizes.get(column);
+    }
+
+    /**
+     * Set column size.
+     * 
+     * @param column
+     *            Column definition.
+     * @param size
+     *            New size.
+     */
+    public void setSize(Column column, Integer size) {
+        sizes.put(column, size);
     }
 
     /**
@@ -212,20 +197,28 @@ public class TableReport implements IPresentation {
     public String asString() {
         StringBuilder sb = new StringBuilder();
         sb.append(table.getAlias() + " (" + table.getName() + ")\n");
+        StringBuilder tmpFill = new StringBuilder();
+        for (Integer i : sizes.values()) {
+            for (int j = 0; j < i; j++) {
+                tmpFill.append('-');
+            }
+            tmpFill.append("--");
+        }
+        String fill = tmpFill.toString();
         int index = 0;
         for (LineReport lr : lines) {
             if (index++ == 0) {
-                sb.append("\t" + String.format("%11s%s", "", getFill()) + "\n");
-                sb.append(String.format("\t%10s|", "ERROR"));
+                sb.append("\t" + String.format("%11s%s", "-----------", fill) + "\n");
+                sb.append(String.format("\t%10s|", "ERROR(S)"));
                 for (Column c : columns) {
                     sb.append(String.format(" %-" + sizes.get(c) + "s", c.getAlias() + "(" + c.getName() + ")"));
                     sb.append('|');
                 }
                 sb.append("\n");
-                sb.append("\t" + String.format("%11s%s", "", getFill()) + "\n");
+                sb.append("\t" + String.format("%11s%s", "", fill) + "\n");
             }
             sb.append("\t" + lr.asString() + "\n");
-            sb.append("\t" + String.format("%11s%s", "", getFill()) + "\n");
+            sb.append("\t" + String.format("%11s%s", "", fill) + "\n");
         }
         return sb.toString();
     }
