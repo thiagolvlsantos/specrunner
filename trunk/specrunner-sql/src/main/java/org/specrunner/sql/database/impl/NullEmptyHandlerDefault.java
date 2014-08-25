@@ -38,7 +38,7 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
     /**
      * The empty string mark.
      */
-    private String nullval = NULL;
+    private String nullVal = NULL;
 
     /**
      * Default empty String markup.
@@ -48,15 +48,15 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
     /**
      * The empty string mark.
      */
-    private String empty = EMPTY;
+    private String emptyVal = EMPTY;
 
     /**
      * Get null explicit representation.
      * 
      * @return Null representation.
      */
-    public String getNullval() {
-        return nullval;
+    public String getNullVal() {
+        return nullVal;
     }
 
     /**
@@ -65,8 +65,8 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
      * @param nullval
      *            Null representation.
      */
-    public void setNullval(String nullval) {
-        this.nullval = nullval;
+    public void setNullVal(String nullval) {
+        this.nullVal = nullval;
     }
 
     /**
@@ -74,8 +74,8 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
      * 
      * @return The flag.
      */
-    public String getEmpty() {
-        return empty;
+    public String getEmptyVal() {
+        return emptyVal;
     }
 
     /**
@@ -84,17 +84,27 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
      * @param empty
      *            Empty mark.
      */
-    public void setEmpty(String empty) {
-        this.empty = empty;
+    public void setEmptyVal(String empty) {
+        this.emptyVal = empty;
     }
 
     @Override
-    public boolean isNull(String value, EMode mode) {
-        return value == null || value.equalsIgnoreCase(nullval) || (value != null && value.isEmpty() && mode == EMode.OUTPUT);
+    public String nullValue(EMode mode) {
+        return nullVal;
     }
 
     @Override
-    public boolean isEmpty(String value, EMode mode) {
-        return value != null && value.equalsIgnoreCase(empty);
+    public String emptyValue(EMode mode) {
+        return emptyVal;
+    }
+
+    @Override
+    public boolean isNull(EMode mode, String value) {
+        return value == null || value.equalsIgnoreCase(nullValue(mode)) || (value != null && value.isEmpty() && mode == EMode.OUTPUT);
+    }
+
+    @Override
+    public boolean isEmpty(EMode mode, String value) {
+        return value != null && value.equalsIgnoreCase(emptyValue(mode));
     }
 }

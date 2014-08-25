@@ -11,6 +11,7 @@ import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.database.IDatabase;
+import org.specrunner.sql.database.IDatabaseNullEmpty;
 import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.database.impl.NullEmptyHandlerDefault;
 import org.specrunner.sql.meta.EMode;
@@ -33,10 +34,10 @@ public class TestNull {
         cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new DatabaseDefault() });
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 5000L);
-        cfg.add(IDatabase.FEATURE_NULL_EMPTY_HANDLER, new NullEmptyHandlerDefault() {
+        cfg.add(IDatabaseNullEmpty.FEATURE_NULL_EMPTY_HANDLER, new NullEmptyHandlerDefault() {
             @Override
-            public boolean isNull(String value, EMode mode) {
-                boolean tmp = super.isNull(value, mode);
+            public boolean isNull(EMode mode, String value) {
+                boolean tmp = super.isNull(mode, value);
                 System.out.println("isNull(" + value + "," + mode + ") = " + tmp);
                 return tmp;
             }
