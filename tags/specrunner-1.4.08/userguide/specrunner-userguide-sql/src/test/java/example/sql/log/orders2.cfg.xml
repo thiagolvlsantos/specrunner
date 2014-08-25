@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+  <!-- According to schema in 'orders.sql'  -->
+
+  <table name="customer" alias="customer">
+    <column name="id" alias="ID" key="true" converter="long" />
+    <column name="name" alias="name" reference="true"/>
+    <column name="date" alias="Date" date="true" converter="dAte" arg0="MM/dd/yyyy" comparator="date"/>
+  </table>
+
+  <table name="logging" alias="log">
+    <column name="id" alias="ID" key="true" converter="long" />
+    <column name="idRegister" alias="ID Register" virtual="true" pointer="entity" reference="true"/>
+    <column name="entity" alias="Entity" reference="true"/>
+    <column name="attribute" alias="Attribute" reference="true"/>
+    <column name="previous" alias="Previous" />
+    <column name="current" alias="Current" />
+    <column name="operator" alias="Operator" />
+    <column name="atimestamp" alias="Time" date="true" converter="dateCurrent" comparator="date"/>
+  </table>
+</schema>

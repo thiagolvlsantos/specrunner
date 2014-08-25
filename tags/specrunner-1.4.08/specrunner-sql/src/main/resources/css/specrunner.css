@@ -1,0 +1,84 @@
+table.sr_sreport, table.sr_treport {
+    border: 1px solid black;
+}
+
+table.sr_sreport caption.sr_sreport {
+    font-size: 150%;
+    background-color: gray;
+}
+
+table.sr_treport caption.sr_treport {
+    font-size: 125%;
+    background-color: gray;
+}
+
+table.sr_sreport caption.sr_sreport, table.sr_treport caption.sr_treport {
+    border: 1px solid black;
+    color: white;
+    padding: 4px;
+    text-align: left;
+}
+
+sup.sr_sreport, sup.sr_treport {
+    padding: 2px;
+}
+
+table.sr_treport th.sr_lreport {
+    font-size: 110%;
+    background-color: lightgray;
+    color: black;
+    white-space: nowrap;
+    border: 1px solid black;
+    padding: 4px;
+    text-align: left;
+}
+
+table.sr_treport th:after {
+    background-color: white;
+    white-space: nowrap;
+}
+
+tr.sr_missing {
+    background-color: LightSalmon ;
+}
+
+tr.sr_extra {
+    background-color: LightSteelBlue  ;
+}
+
+tr.sr_missing , tr.sr_extra {
+    color: black;
+    /*font-weight: bold;*/
+}
+
+tr.sr_different {
+    background-color: white;
+}
+
+td.sr_missing, td.sr_extra, td.sr_different {
+    border: 1px solid black;
+    padding: 2px;
+    text-align: left;
+    vertical-align: top;
+}
+
+table.sr_treport td.sr_different_cell {
+    border: 2px dotted red;
+    background-color: #ffd9d9;
+}
+
+/** Ignore */
+.sqlschemaignore,.sqltableignore,.sqlregisterignore,.sqlcolumnignore,.sqlvalueignore{
+    text-decoration: line-through;
+    background-color: orange;
+}
+
+.sqltableignore::before {
+    content: "[IGNORED";
+    background-color: orange;
+}
+
+.sqltableignore::after {
+    content: "IGNORED]";
+    background-color: orange;
+}

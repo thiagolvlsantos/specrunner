@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Checkbox and radios examples</title>
+</head>
+<body>
+    <p>
+        Open <a class="include" href="../open.html?url=check&x=400&y=0">browser</a>.
+    </p>
+
+    Checkbox examples:
+    <ul>
+        <li>Select all checkboxes <span class="check" by="starts:input;@id;check">C1,C2 and C3</span>;
+        </li>
+        <li>Unselect all checkboxes <span class="uncheck" by="starts:*;@id;check" status="false">C1,C2 and
+                C3</span>;
+        </li>
+        <li>Select all checkboxes <span class="check" by="starts:*;@id;check">C1,C2 and C3</span>;
+        </li>
+        <li>Check if all checks are <span class="checked" by="xpath://input[starts-with(@id,'check')]">on</span>;
+        </li>
+        <li>Check if all checks and radio 2 are <span class="checked" title="Set by custom strategy!"
+            by="starts_new:check;rad2">on</span>;
+        </li>
+
+        <li>Click on checkbox <span class="clickon" by="id:check3">C3</span>;
+        </li>
+        <li>Click on checkbox <span class="clickon" by="id:check3">C3</span>;
+        </li>
+        <li>Check if chechbox <span class="enabled" by="id:check1">C1</span> is enabled, <span class="disabled"
+            by="id:check2">C2</span> is disabled, and <span class="enabled" by="id:check3">C3</span> is enabled;
+        </li>
+        <li>Check if <span class="checked" by="id:check1">C1</span>, <span class="checked" by="id:check2">C2</span>
+            and <span class="checked" by="id:check3">C3</span> are checked;
+        </li>
+        <li>Try click on checkbox <span class="clickon" by="id:check2">C2</span>;
+        </li>
+        <li>Check if <span class="checked" by="id:check1">C1</span>, <span class="checked" by="id:check2">C2</span>
+            and <span class="checked" by="id:check3">C3</span> are checked;
+        </li>
+        <li>Click on check <span class="clickon" by="id:check1">C1</span>;
+        </li>
+        <li>Check if <span class="unchecked" by="id:check1">C1</span> is unchecked, and <span class="checked"
+            by="id:check2">C2</span> and <span class="checked" by="id:check3">C3</span> are checked;
+        </li>
+    </ul>
+</body>
+</html>

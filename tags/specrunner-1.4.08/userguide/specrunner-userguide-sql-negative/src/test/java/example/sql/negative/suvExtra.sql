@@ -1,0 +1,1 @@
+insert into ORD.customers (name,date) values ('Vieira',CURRENT_TIME);
