@@ -1,3 +1,18 @@
+1.4.08
+OK - Imprimir a versão textual do relatório de não conformidades
+	TODO: ajustar legibilidade do código, o cálculo do tamanho das colunas está obscuro.
+OK - Performance continuada dos perfis positive e negative;
+	- Colocar 
+	fm.add(PluginConnection.REUSE,true)
+	fm.add(PluginSchemaLoader.FEATURE_PROVIDER, SchemaLoaderXOM.class.getName());
+OK - ajustar estilo para
+	table.sr_treport th.sr_lreport {
+		color: black;
+		white-space: nowrap;
+	}
+OK - Fazer um listener de cenário que faça sempre o compareBase no final, e o que limpa pode ser uma extensão dele, isso será usado para os testes de pesquisa ou detalhamento, por exemplo;
+OK - Calcular o valor default apenas quando for o momento de usar, isso tem impactado em testes de longa duração com esquema reusado.
+
 1.4.07
 OK - Resolver os @ScenarioListener incluindos os da super classe, busca recursiva até o object;
 OK - Alinhar o caption do compareBase à esquerda;
