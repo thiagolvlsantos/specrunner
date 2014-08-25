@@ -37,8 +37,11 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.database.IColumnReader;
+import org.specrunner.sql.database.IDatabaseNullEmpty;
 import org.specrunner.sql.database.IDatabaseReader;
+import org.specrunner.sql.database.INullEmptyHandler;
 import org.specrunner.sql.database.impl.ColumnReaderDefault;
+import org.specrunner.sql.database.impl.NullEmptyHandlerDefault;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
@@ -62,7 +65,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginCompareBase extends AbstractPluginValue implements IDatabaseReader {
+public class PluginCompareBase extends AbstractPluginValue implements IDatabaseNullEmpty, IDatabaseReader {
 
     /**
      * Feature for schema name.
@@ -98,6 +101,10 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
      */
     private String filter;
 
+    /**
+     * A null/empty handler.
+     */
+    protected INullEmptyHandler nullEmptyHandler = new NullEmptyHandlerDefault();
     /**
      * Recover object from a result set column to be compared against the
      * specification object.
@@ -196,6 +203,20 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
     }
 
     /**
+     * Get handler.
+     * 
+     * @return A null/empty handler.
+     */
+    public INullEmptyHandler getNullEmptyHandler() {
+        return nullEmptyHandler;
+    }
+
+    @Override
+    public void setNullEmptyHandler(INullEmptyHandler nullEmptyHandler) {
+        this.nullEmptyHandler = nullEmptyHandler;
+    }
+
+    /**
      * Column reader resource.
      * 
      * @return A reader.
@@ -204,12 +225,7 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
         return columnReader;
     }
 
-    /**
-     * Set column reader for comparator.
-     * 
-     * @param columnReader
-     *            A reader.
-     */
+    @Override
     public void setColumnReader(IColumnReader columnReader) {
         this.columnReader = columnReader;
     }
@@ -245,6 +261,7 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
         fm.set(FEATURE_SCHEMA, this);
         fm.set(FEATURE_SYSTEM, this);
         fm.set(FEATURE_REFERENCE, this);
+        fm.set(IDatabaseNullEmpty.FEATURE_NULL_EMPTY_HANDLER, this);
         fm.set(IDatabaseReader.FEATURE_COLUMN_READER, this);
         fm.set(FEATURE_FILTER, this);
         fm.set(FEATURE_VIRTUAL, this);
@@ -434,7 +451,7 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
             LineReport lr = null;
             int index = 0;
             if (exp == null && rec != null) {
-                lr = new LineReport(RegisterType.EXTRA, tr);
+                lr = new LineReport(RegisterType.EXTRA, tr, nullEmptyHandler);
                 for (Column c : table.getColumns()) {
                     if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
@@ -448,7 +465,7 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
                     tr.add(lr);
                 }
             } else if (exp != null && rec == null) {
-                lr = new LineReport(RegisterType.MISSING, tr);
+                lr = new LineReport(RegisterType.MISSING, tr, nullEmptyHandler);
                 for (Column c : table.getColumns()) {
                     if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
@@ -462,7 +479,7 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseR
                     tr.add(lr);
                 }
             } else {
-                lr = new LineReport(RegisterType.DIFFERENT, tr);
+                lr = new LineReport(RegisterType.DIFFERENT, tr, nullEmptyHandler);
                 for (Column c : table.getColumns()) {
                     if (!dataFilter.accept(EMode.COMPARE, c)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
