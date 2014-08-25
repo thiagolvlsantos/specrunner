@@ -36,6 +36,9 @@ import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.sql.database.IColumnReader;
+import org.specrunner.sql.database.IDatabaseReader;
+import org.specrunner.sql.database.impl.ColumnReaderDefault;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
@@ -59,7 +62,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginCompareBase extends AbstractPluginValue {
+public class PluginCompareBase extends AbstractPluginValue implements IDatabaseReader {
 
     /**
      * Feature for schema name.
@@ -94,6 +97,13 @@ public class PluginCompareBase extends AbstractPluginValue {
      * Pattern name to be used.
      */
     private String filter;
+
+    /**
+     * Recover object from a result set column to be compared against the
+     * specification object.
+     */
+    protected IColumnReader columnReader = new ColumnReaderDefault();
+
     /**
      * Feature for virtual keys usage.
      */
@@ -186,6 +196,25 @@ public class PluginCompareBase extends AbstractPluginValue {
     }
 
     /**
+     * Column reader resource.
+     * 
+     * @return A reader.
+     */
+    public IColumnReader getColumnReader() {
+        return columnReader;
+    }
+
+    /**
+     * Set column reader for comparator.
+     * 
+     * @param columnReader
+     *            A reader.
+     */
+    public void setColumnReader(IColumnReader columnReader) {
+        this.columnReader = columnReader;
+    }
+
+    /**
      * Indicate if reference fields can be used for select construction.
      * 
      * @return true, if the answer is yes, false, otherwise.
@@ -216,6 +245,7 @@ public class PluginCompareBase extends AbstractPluginValue {
         fm.set(FEATURE_SCHEMA, this);
         fm.set(FEATURE_SYSTEM, this);
         fm.set(FEATURE_REFERENCE, this);
+        fm.set(IDatabaseReader.FEATURE_COLUMN_READER, this);
         fm.set(FEATURE_FILTER, this);
         fm.set(FEATURE_VIRTUAL, this);
     }
@@ -412,7 +442,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                         }
                         continue;
                     }
-                    lr.add(c, index++, null, rec.getObject(c.getName()));
+                    lr.add(c, index++, null, columnReader.read(rec, c));
                 }
                 if (!lr.isEmpty()) {
                     tr.add(lr);
@@ -426,7 +456,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                         }
                         continue;
                     }
-                    lr.add(c, index++, exp.getObject(c.getName()), null);
+                    lr.add(c, index++, columnReader.read(exp, c), null);
                 }
                 if (!lr.isEmpty()) {
                     tr.add(lr);
@@ -440,8 +470,8 @@ public class PluginCompareBase extends AbstractPluginValue {
                         }
                         continue;
                     }
-                    Object objExp = exp.getObject(c.getName());
-                    Object objRec = rec.getObject(c.getName());
+                    Object objExp = columnReader.read(exp, c);
+                    Object objRec = columnReader.read(rec, c);
                     if (!dataFilter.accept(EMode.COMPARE, c, objRec)) {
                         if (UtilLog.LOG.isInfoEnabled()) {
                             UtilLog.LOG.info("Value ignored(" + c.getAlias() + "," + c.getName() + "):" + objRec);
@@ -455,7 +485,7 @@ public class PluginCompareBase extends AbstractPluginValue {
                 }
                 if (!lr.isEmpty()) {
                     for (Column c : table.getKeys()) {
-                        lr.add(c, index++, exp.getObject(c.getName()), rec.getObject(c.getName()));
+                        lr.add(c, index++, columnReader.read(exp, c), columnReader.read(rec, c));
                     }
                     tr.add(lr);
                 }

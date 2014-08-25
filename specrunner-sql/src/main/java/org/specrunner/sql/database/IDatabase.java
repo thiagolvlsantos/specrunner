@@ -34,7 +34,7 @@ import org.specrunner.util.xom.TableAdapter;
  * @author Thiago Santos.
  * 
  */
-public interface IDatabase extends IResetable {
+public interface IDatabase extends IDatabaseReader, IResetable {
 
     /**
      * Feature for null/empty handler.
@@ -45,11 +45,6 @@ public interface IDatabase extends IResetable {
      * Feature for sequence provider instance.
      */
     String FEATURE_SEQUENCE_PROVIDER = IDatabase.class.getName() + ".sequenceProvider";
-
-    /**
-     * Feature for database column reader.
-     */
-    String FEATURE_COLUMN_READER = IDatabase.class.getName() + ".columnReader";
 
     /**
      * Feature for SQL wrapper factories.
@@ -86,14 +81,6 @@ public interface IDatabase extends IResetable {
      *            A provider.
      */
     void setSequenceProvider(ISequenceProvider sequenceProvider);
-
-    /**
-     * Set a column reader.
-     * 
-     * @param columnReader
-     *            A reader.
-     */
-    void setColumnReader(IColumnReader columnReader);
 
     /**
      * Set SQL wrapper.

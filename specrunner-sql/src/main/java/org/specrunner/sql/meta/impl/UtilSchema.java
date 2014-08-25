@@ -68,9 +68,13 @@ public final class UtilSchema {
         column.setArguments(holder.getArguments(column.getArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));
         if (holder.hasAttribute(ISchemaLoaderXML.ATT_DEFAULT)) {
-            holder.setAttributeValue(ISchemaLoaderXML.ATT_DEFAULT);
+            String value = holder.getAttribute(ISchemaLoaderXML.ATT_DEFAULT);
+            holder.setAttribute(INodeHolder.ATTRIBUTE_VALUE, value);
             try {
-                column.setDefaultValue(holder.getObject(context, true));
+                // try convert, to be sure expression is valid right from start
+                holder.getObject(context, true);
+                // set default expression
+                column.setDefaultValue(holder);
             } catch (PluginException e) {
                 throw new ConverterException(e);
             }

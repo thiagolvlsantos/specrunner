@@ -23,6 +23,7 @@ import java.util.List;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.converters.IConverter;
+import org.specrunner.util.xom.INodeHolder;
 
 /**
  * Column meta model.
@@ -87,7 +88,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
     /**
      * Column default value.
      */
-    private Object defaultValue;
+    private INodeHolder defaultValue;
     /**
      * Column reference indicator.
      */
@@ -338,7 +339,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      * 
      * @return The default value.
      */
-    public Object getDefaultValue() {
+    public INodeHolder getDefaultValue() {
         return defaultValue;
     }
 
@@ -349,7 +350,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      *            The value.
      * @return The column itself.
      */
-    public Column setDefaultValue(Object defaultValue) {
+    public Column setDefaultValue(INodeHolder defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }

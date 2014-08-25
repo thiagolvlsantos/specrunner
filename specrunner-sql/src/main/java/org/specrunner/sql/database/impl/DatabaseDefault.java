@@ -467,7 +467,7 @@ public class DatabaseDefault implements IDatabase {
                 }
                 String content = getAdjustContent(context, td);
                 try {
-                    Value v = getValue(mode, command, column, afilter, td, content);
+                    Value v = getValue(context, mode, command, column, afilter, td, content);
                     if (v != null) {
                         register.add(v);
                         filled.put(column.getName(), v);
@@ -656,10 +656,10 @@ public class DatabaseDefault implements IDatabase {
      * @param content
      *            Cell content.
      * @return A value, if valid, null, otherwise.
-     * @throws ConverterException
-     *             On data conversion errors.
+     * @throws DatabaseException
+     *             On default value.
      */
-    protected Value getValue(EMode mode, CommandType command, Column column, IDataFilter afilter, CellAdapter td, String content) throws ConverterException {
+    protected Value getValue(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, CellAdapter td, String content) throws ConverterException, DatabaseException {
         boolean isNull = nullEmptyHandler.isNull(content, mode);
         boolean isEmpty = nullEmptyHandler.isEmpty(content, mode);
         boolean isVirtual = column.isVirtual();
@@ -684,9 +684,14 @@ public class DatabaseDefault implements IDatabase {
                 return null;
             }
             if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
-                // the other column fields with default value are set in
+                // the remaining column fields with default value are set in
                 // <code>addMissingValues(...)</code> method.
-                obj = column.getDefaultValue();
+                try {
+                    obj = column.getDefaultValue().getObject(context, true);
+                } catch (PluginException e) {
+                    throw new DatabaseException(e);
+                }
+                System.out.println("AQUI(" + column.getName() + "):" + obj);
             }
             return new Value(column, td, obj, column.getComparator());
         }
@@ -720,13 +725,15 @@ public class DatabaseDefault implements IDatabase {
      *             On SQL errors.
      */
     protected void performInsert(IContext context, IResultSet result, Connection connection, EMode mode, Table table, IDataFilter afilter, IRegister register, Map<String, Value> filled, Map<String, CellAdapter> missing) throws DatabaseException, SQLException {
-        addMissingValues(mode, table, afilter, register, filled, missing);
+        addMissingValues(context, mode, table, afilter, register, filled, missing);
         performIn(context, result, connection, sqlWrapperFactory.createInputWrapper(table, CommandType.INSERT, register, 1), table, register);
     }
 
     /**
      * Add missing values to insert value set.
      * 
+     * @param context
+     *            A context.
      * @param mode
      *            Database mode of action.
      * @param table
@@ -739,13 +746,23 @@ public class DatabaseDefault implements IDatabase {
      *            A map of filled fields.
      * @param missing
      *            A map of unfilled fields.
+     * @throws DatabaseException
+     *             On default value construction error.
      */
-    protected void addMissingValues(EMode mode, Table table, IDataFilter afilter, IRegister register, Map<String, Value> filled, Map<String, CellAdapter> missing) {
+    protected void addMissingValues(IContext context, EMode mode, Table table, IDataFilter afilter, IRegister register, Map<String, Value> filled, Map<String, CellAdapter> missing) throws DatabaseException {
         for (Column column : table.getColumns()) {
             // table columns not present in test table
             if (filled.get(column.getName()) == null) {
                 Value v = null;
-                Object defaultValue = column.getDefaultValue();
+                Object defaultValue = null;
+                INodeHolder holder = column.getDefaultValue();
+                if (holder != null) {
+                    try {
+                        defaultValue = holder.getObject(context, true);
+                    } catch (PluginException e) {
+                        throw new DatabaseException(e);
+                    }
+                }
                 if (defaultValue != null) {
                     // with default values should be set
                     v = new Value(column, missing.get(column.getName()), defaultValue, column.getComparator());
