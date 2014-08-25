@@ -26,7 +26,9 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.sql.database.INullEmptyHandler;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.EMode;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
@@ -49,6 +51,10 @@ public class LineReport implements IPresentation {
      * The parent table.
      */
     private TableReport tableReport;
+    /**
+     * Null handler reference.
+     */
+    private INullEmptyHandler nullEmptyHandler;
     /**
      * Mapping from column names to their indexes in table report.
      */
@@ -164,10 +170,13 @@ public class LineReport implements IPresentation {
      *            The line type.
      * @param table
      *            The parent table.
+     * @param nullEmptyHandler
+     *            A handler.
      */
-    public LineReport(RegisterType type, TableReport table) {
+    public LineReport(RegisterType type, TableReport table, INullEmptyHandler nullEmptyHandler) {
         this.type = type;
         this.tableReport = table;
+        this.nullEmptyHandler = nullEmptyHandler;
     }
 
     @Override
@@ -248,7 +257,7 @@ public class LineReport implements IPresentation {
      * @return Value.
      */
     public String nullOrEmpty(String exp) {
-        return exp == null ? "@null" : (exp.isEmpty() ? "@empty" : exp);
+        return exp == null ? nullEmptyHandler.nullValue(EMode.COMPARE) : (exp.isEmpty() ? nullEmptyHandler.emptyValue(EMode.COMPARE) : exp);
     }
 
     /**
@@ -259,7 +268,7 @@ public class LineReport implements IPresentation {
      * @return Value.
      */
     public String nullOrEmptyWrapp(String exp) {
-        return exp == null ? "@null" : (exp.isEmpty() ? "@empty" : "'" + exp + "'");
+        return exp == null ? nullEmptyHandler.nullValue(EMode.COMPARE) : (exp.isEmpty() ? nullEmptyHandler.emptyValue(EMode.COMPARE) : "'" + exp + "'");
     }
 
     @Override
@@ -341,7 +350,13 @@ public class LineReport implements IPresentation {
         columnsToIndexes.put(c.getName(), index);
         String strExp = UtilSql.toStringNullable(expected);
         String strRec = UtilSql.toStringNullable(received);
-        int max = Math.max(strExp != null ? strExp.length() : "@null".length(), strRec != null ? strRec.length() : "@null".length());
+        int sizeMax = 0;
+        if (strExp == null || strRec == null) {
+            String nullValue = nullEmptyHandler.nullValue(EMode.COMPARE);
+            String emptyValue = nullEmptyHandler.emptyValue(EMode.COMPARE);
+            sizeMax = Math.max(String.valueOf(nullValue).length(), String.valueOf(emptyValue).length());
+        }
+        int max = Math.max(strExp != null ? strExp.length() : sizeMax, strRec != null ? strRec.length() : sizeMax);
         tableReport.add(c, type == RegisterType.DIFFERENT ? max + "EXP:".length() + 1 : max + 1);
         expectedObjects.add(strExp);
         receivedObjects.add(strRec);
