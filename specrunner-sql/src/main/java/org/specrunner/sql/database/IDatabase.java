@@ -34,12 +34,7 @@ import org.specrunner.util.xom.TableAdapter;
  * @author Thiago Santos.
  * 
  */
-public interface IDatabase extends IDatabaseReader, IResetable {
-
-    /**
-     * Feature for null/empty handler.
-     */
-    String FEATURE_NULL_EMPTY_HANDLER = IDatabase.class.getName() + ".nullEmptyHandler";
+public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetable {
 
     /**
      * Feature for sequence provider instance.
@@ -65,14 +60,6 @@ public interface IDatabase extends IDatabaseReader, IResetable {
      * Feature for database listeners.
      */
     String FEATURE_LISTENERS = IDatabase.class.getName() + ".listeners";
-
-    /**
-     * Set the null/empty handler implementation.
-     * 
-     * @param nullEmptyHandler
-     *            A null/empty handler.
-     */
-    void setNullEmptyHandler(INullEmptyHandler nullEmptyHandler);
 
     /**
      * Set the sequence provider.

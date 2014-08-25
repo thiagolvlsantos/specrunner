@@ -660,8 +660,8 @@ public class DatabaseDefault implements IDatabase {
      *             On default value.
      */
     protected Value getValue(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, CellAdapter td, String content) throws ConverterException, DatabaseException {
-        boolean isNull = nullEmptyHandler.isNull(content, mode);
-        boolean isEmpty = nullEmptyHandler.isEmpty(content, mode);
+        boolean isNull = nullEmptyHandler.isNull(mode, content);
+        boolean isEmpty = nullEmptyHandler.isEmpty(mode, content);
         boolean isVirtual = column.isVirtual();
         IConverter converter = column.getConverter();
         if (isNull || isEmpty || isVirtual || converter.accept(content)) {

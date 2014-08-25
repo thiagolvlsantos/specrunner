@@ -19,7 +19,6 @@ package org.specrunner.sql.database;
 
 import org.specrunner.sql.meta.EMode;
 
-
 /**
  * Identifies fields that should be handled as null or empty depending on value
  * and database input or output mode.
@@ -30,24 +29,44 @@ import org.specrunner.sql.meta.EMode;
 public interface INullEmptyHandler {
 
     /**
+     * Null value for a given mode.
+     * 
+     * @param mode
+     *            A mode.
+     * @return Explicit null representation.
+     */
+    String nullValue(EMode mode);
+
+    /**
      * Check if a value should be handled as null, depending on value and mode.
      * 
-     * @param value
-     *            The value.
      * @param mode
-     *            The mode.
+     *            A mode.
+     * @param value
+     *            A value.
+     * 
      * @return true, if should be considered null, false, otherwise.
      */
-    boolean isNull(String value, EMode mode);
+    boolean isNull(EMode mode, String value);
+
+    /**
+     * Empty value for a given mode.
+     * 
+     * @param mode
+     *            A mode.
+     * @return Explicit empty representation.
+     */
+    String emptyValue(EMode mode);
 
     /**
      * Check if a value should be handled as empty, depending on value and mode.
      * 
-     * @param value
-     *            The value.
      * @param mode
-     *            The mode.
+     *            A mode.
+     * @param value
+     *            A value.
+     * 
      * @return true, if should be considered empty, false, otherwise.
      */
-    boolean isEmpty(String value, EMode mode);
+    boolean isEmpty(EMode mode, String value);
 }
