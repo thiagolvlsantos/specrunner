@@ -17,7 +17,7 @@
  */
 package org.specrunner.converters;
 
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * A generic converter interface.

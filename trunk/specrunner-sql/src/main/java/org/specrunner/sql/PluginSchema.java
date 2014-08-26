@@ -136,7 +136,7 @@ public class PluginSchema extends AbstractPluginValue {
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+    public ENext doStart(final IContext context, IResultSet result) throws PluginException {
         ISchemaLoader provider = PluginSchemaLoader.getLoader(context, getName());
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("PluginSchema loader:" + provider);
@@ -178,6 +178,10 @@ public class PluginSchema extends AbstractPluginValue {
             rm.put(currentName, new AbstractReusable<Schema>(currentName, providerInstance) {
                 @Override
                 public void reset() {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Provider " + providerInstance + " reset.");
+                    }
+                    providerInstance.initialize(context);
                 }
 
                 @Override

@@ -1,4 +1,4 @@
-package org.specrunner.util.mapping;
+package org.specrunner.util.reset;
 
 import java.io.Serializable;
 

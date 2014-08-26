@@ -17,7 +17,7 @@
  */
 package org.specrunner.sql.database;
 
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * A database listener to perform actions on tables.

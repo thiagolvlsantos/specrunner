@@ -17,7 +17,7 @@
  */
 package org.specrunner.source;
 
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * A factory of sources.

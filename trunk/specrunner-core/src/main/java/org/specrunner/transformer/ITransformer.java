@@ -19,7 +19,7 @@ package org.specrunner.transformer;
 
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * Perform a transformation from a document source into another. For example,

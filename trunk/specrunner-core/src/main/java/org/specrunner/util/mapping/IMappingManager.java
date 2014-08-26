@@ -2,6 +2,8 @@ package org.specrunner.util.mapping;
 
 import java.util.Map;
 
+import org.specrunner.util.reset.IResetable;
+
 /**
  * Generic mapping.
  * 
