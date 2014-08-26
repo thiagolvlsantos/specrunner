@@ -149,7 +149,7 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
     @Override
     public void initialize(IContext context) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("initialize()>" + context.peek());
+            UtilLog.LOG.trace("initialize()>" + context.peek().getPlugin());
         }
         IFeatureManager fm = SRServices.getFeatureManager();
         if (condition == null) {
@@ -177,7 +177,7 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("doStart>" + context.peek());
+            UtilLog.LOG.trace("doStart>" + context.peek().getPlugin());
         }
         return ENext.DEEP;
     }
@@ -185,7 +185,7 @@ public abstract class AbstractPlugin extends ParameterHolder implements IPlugin,
     @Override
     public void doEnd(IContext context, IResultSet result) throws PluginException {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("doEnd>" + context.peek());
+            UtilLog.LOG.trace("doEnd>" + context.peek().getPlugin());
         }
     }
 
