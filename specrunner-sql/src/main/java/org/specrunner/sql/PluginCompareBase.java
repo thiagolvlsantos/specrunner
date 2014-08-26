@@ -459,7 +459,10 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseN
                         }
                         continue;
                     }
-                    lr.add(c, index++, null, columnReader.read(rec, c));
+                    Object read = columnReader.read(rec, c);
+                    if (read != null) {
+                        lr.add(c, index++, null, read);
+                    }
                 }
                 if (!lr.isEmpty()) {
                     tr.add(lr);
@@ -473,7 +476,10 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseN
                         }
                         continue;
                     }
-                    lr.add(c, index++, columnReader.read(exp, c), null);
+                    Object read = columnReader.read(exp, c);
+                    if (read != null) {
+                        lr.add(c, index++, read, null);
+                    }
                 }
                 if (!lr.isEmpty()) {
                     tr.add(lr);

@@ -19,7 +19,7 @@ table.sr_sreport caption.sr_sreport, table.sr_treport caption.sr_treport {
     text-align: left;
 }
 
-sup.sr_sreport, sup.sr_treport {
+span.sr_sreport, span.sr_treport {
     padding: 2px;
 }
 
