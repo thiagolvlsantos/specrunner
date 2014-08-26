@@ -1,3 +1,25 @@
+1.4.09
+OK- Colocar um boolean para saber se o default value é calculado no começo ou a cada uso (implicações de performance);
+	Colocado para realizar reset dos valores default de um esquema toda as vezes que houver o reuso do schema;
+OK - No caso de registros extra ou faltando pode-se omitir as colunas cujo valor esperado seja nullo (por convenção) isso reduz a quantidade de elementos na tela e facilita a leitura.
+OK - Colocar o nome da coluna em outra linha no relatório textual e no web (alinhados à esquerda);
+OK- Colocar um boolean para dizer se deve-se avaliar os argumentos fornecidos no getObject(), para usar no momento do getDefaultValue como uma feature, evitando assim avaliação desnecessária de expressões;
+OK - Criar um nodeholder factory;
+OK - Código estranho convertendo os argumentos e depois não usando eles:
+	Object[] args = new Object[arguments.size()];
+                for (int i = 0; i < arguments.size(); i++) {
+                    args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
+                }
+                Object convert;
+                try {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + Arrays.toString(args));
+                    }
+                    convert = converter.convert(value, arguments.toArray());
+                } catch (Exception e) {
+                    throw new PluginException(e);
+                }
+
 1.4.08
 OK - Imprimir a versão textual do relatório de não conformidades
 	TODO: ajustar legibilidade do código, o cálculo do tamanho das colunas está obscuro.
