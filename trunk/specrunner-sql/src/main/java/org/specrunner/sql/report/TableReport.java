@@ -146,7 +146,7 @@ public class TableReport implements IPresentation {
             }
             columns.add(i, column);
             // adjust column size min to header size
-            sizes.put(column, (column.getAlias() + "(" + column.getName() + ")").length() + 1);
+            sizes.put(column, Math.max(column.getAlias().length(), ("(" + column.getName() + ")").length()) + 1);
         }
         sizes.put(column, Math.max(size + (column.isKey() ? 1 : 2), sizes.get(column)));
     }
@@ -211,9 +211,15 @@ public class TableReport implements IPresentation {
         for (LineReport lr : lines) {
             if (index++ == 0) {
                 sb.append("\t" + String.format("%10s%s", "+---------", fill) + "\n");
+                sb.append(String.format("\t%10s|", ""));
+                for (Column c : columns) {
+                    sb.append(String.format(" %-" + sizes.get(c) + "s", c.getAlias()));
+                    sb.append('|');
+                }
+                sb.append("\n");
                 sb.append(String.format("\t%10s|", "ERROR(S)"));
                 for (Column c : columns) {
-                    sb.append(String.format(" %-" + sizes.get(c) + "s", c.getAlias() + "(" + c.getName() + ")"));
+                    sb.append(String.format(" %-" + sizes.get(c) + "s", "(" + c.getName() + ")"));
                     sb.append('|');
                 }
                 sb.append("\n");
@@ -261,10 +267,12 @@ public class TableReport implements IPresentation {
                             th.addAttribute(new Attribute("class", "sr_lreport"));
                             th.appendChild(c.getAlias());
 
-                            Element sup = new Element("sup");
-                            sup.addAttribute(new Attribute("class", "sr_treport"));
-                            sup.appendChild(c.getName());
-                            th.appendChild(sup);
+                            th.appendChild(new Element("br"));
+
+                            Element span = new Element("span");
+                            span.addAttribute(new Attribute("class", "sr_treport"));
+                            span.appendChild("(" + c.getName() + ")");
+                            th.appendChild(span);
                         }
                     }
                 }

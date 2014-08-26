@@ -244,7 +244,11 @@ public class LineReport implements IPresentation {
     protected void line(StringBuilder sb, List<String> list) {
         for (Column c : tableReport.getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
-            sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? nullOrEmpty(list.get(index)) : nullOrEmptyWrapp(list.get(index))));
+            if (index != null) {
+                sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? nullOrEmpty(list.get(index)) : nullOrEmptyWrapp(list.get(index))));
+            } else {
+                sb.append(String.format(" %-" + tableReport.getSize(c) + "s", nullOrEmpty(null)));
+            }
             sb.append('|');
         }
     }
@@ -329,6 +333,8 @@ public class LineReport implements IPresentation {
             if (index != null) {
                 UtilNode.appendCss(td, type.getStyle());
                 td.appendChild(c.isKey() ? nullOrEmpty(vals.get(index)) : nullOrEmptyWrapp(vals.get(index)));
+            } else {
+                td.appendChild(nullOrEmpty(null));
             }
             tr.appendChild(td);
         }
