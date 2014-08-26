@@ -1,0 +1,22 @@
+<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+<head>
+<link href="concordion.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <p>
+        When user <b concordion:set="#firstName">Bob</b> logs in, the greeting will be: <b
+            concordion:assertEquals="greetingFor(#firstName)">Hello Bob!</b>
+    </p>
+
+    <p>
+        The first name <span concordion:assertTrue="#firstName.startsWith(#letter)">starts with <b
+            concordion:set="#letter">B</b></span>.
+    </p>
+
+    <p>
+        The first name not <span concordion:assertFalse="#firstName.startsWith(#letter)">starts with <b
+            concordion:set="#letter">C</b></span>.
+    </p>
+</body>
+</html>

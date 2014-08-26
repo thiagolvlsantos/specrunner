@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+
+td {
+	border: 1px dotted gray;
+}
+
+.prepare:before {
+    content: "PREPARE";
+}
+.verify:before {
+    content: "VERIFY";
+}
+</style>
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="create.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <h1>Show how to specify JOINED Hibernate tables</h1>
+    
+    Show the transformation:
+    <table class="joined">
+        <colgroup>
+            <col span="3" style="background-color:gray;"/>
+            <col style="background-color:red;" caption="Customer"/>
+            <col style="background-color:green;" caption="Customer extended"/>
+            <col span="2" style="background-color:blue;" caption="Customer clob"/>
+        </colgroup>
+        <caption>Any name</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>ANY</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>ANY</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>
+    Perform insert:
+    </p>
+    <table class="joined prepare">
+        <colgroup>
+            <col span="2" style="background-color:gray;"/>
+            <col style="background-color:red;" caption="Customer"/>
+            <col style="background-color:green;" caption="Customer extended"/>
+            <col span="2" style="background-color:blue;"/>
+        </colgroup>
+        <caption>Customer clob</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+    This table performs verification.
+    </p>
+    <table class="joined verify">
+        <colgroup>
+            <col span="2" style="background-color:gray;"/>
+            <col style="background-color:red" caption="Customer"/>
+            <col style="background-color:green" caption="Customer extended"/>
+            <col span="2" style="background-color:blue" >
+        </colgroup>
+        <caption>Customer clob</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
+    <p></p>
+</body>
+</html>
