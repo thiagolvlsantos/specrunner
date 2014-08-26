@@ -4,10 +4,11 @@ import nu.xom.Element;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.specrunner.SRServices;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.INodeHolderFactory;
 
 public class TestMetaMerge {
 
@@ -51,7 +52,7 @@ public class TestMetaMerge {
         old.add(t2);
         Element element = new Element("span");
         element.appendChild("0");
-        Column col21 = new Column().setName("RES_INDEX").setAlias("Index").setDefaultValue(UtilNode.newNodeHolder(element));
+        Column col21 = new Column().setName("RES_INDEX").setAlias("Index").setDefaultValue(SRServices.get(INodeHolderFactory.class).create(element));
         t2.add(col21);
         Table t3 = new Table().setName("TAS").setAlias("Tasks new");
         next.add(t3);

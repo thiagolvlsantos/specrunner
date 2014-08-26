@@ -40,6 +40,7 @@ import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.INodeHolderFactory;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -61,10 +62,11 @@ public class PluginCompareTree extends AbstractPlugin {
         Node received = UtilNode.getLeft(node);
         Node expected = UtilNode.getRight(node);
         String alias = SRServices.get(IPluginFactory.class).getAlias(PluginInclude.class);
-        if (received instanceof Element && UtilNode.newNodeHolder(received).attributeContains("class", alias)) {
+        INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
+        if (received instanceof Element && holderFactory.create(received).attributeContains("class", alias)) {
             received = received.getParent().getChild(received.getParent().indexOf(received) + 1);
         }
-        if (expected instanceof Element && UtilNode.newNodeHolder(expected).attributeContains("class", alias)) {
+        if (expected instanceof Element && holderFactory.create(expected).attributeContains("class", alias)) {
             expected = expected.getParent().getChild(expected.getParent().indexOf(expected) + 1);
         }
         compare(context, result, received, expected);
@@ -93,8 +95,9 @@ public class PluginCompareTree extends AbstractPlugin {
             Object objExpected = null;
             IComparator comparator = SRServices.getComparatorManager().getDefault();
             if (received instanceof Element && expected instanceof Element) {
-                INodeHolder holderReceived = UtilNode.newNodeHolder(received);
-                INodeHolder holderExpected = UtilNode.newNodeHolder(expected);
+                INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
+                INodeHolder holderReceived = holderFactory.create(received);
+                INodeHolder holderExpected = holderFactory.create(expected);
                 try {
                     IConverter converter = holderExpected.getConverter();
                     List<String> arguments = holderExpected.getArguments();

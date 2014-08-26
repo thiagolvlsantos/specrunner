@@ -24,6 +24,7 @@ import nu.xom.Builder;
 import nu.xom.Document;
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
@@ -31,7 +32,7 @@ import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.INodeHolderFactory;
 
 /**
  * A loader to Schema from XML files.
@@ -56,20 +57,21 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
             }
             Document d = getBuilder().build(in);
 
-            INodeHolder nSchema = UtilNode.newNodeHolder(d.getRootElement());
+            INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
+            INodeHolder nSchema = holderFactory.create(d.getRootElement());
             schema = new Schema();
             schema.setName(nSchema.getAttribute(ATTR_NAME)).setAlias(nSchema.getAttribute(ATTR_ALIAS, schema.getName()));
 
             Nodes nTables = nSchema.getNode().query("child::table");
             for (int i = 0; i < nTables.size(); i++) {
-                INodeHolder nTable = UtilNode.newNodeHolder(nTables.get(i));
+                INodeHolder nTable = holderFactory.create(nTables.get(i));
                 Table table = new Table();
                 table.setName(nTable.getAttribute(ATTR_NAME)).setAlias(nTable.getAttribute(ATTR_ALIAS, table.getName()));
                 schema.add(table);
 
                 Nodes nColumns = nTable.getNode().query("child::column");
                 for (int j = 0; j < nColumns.size(); j++) {
-                    INodeHolder nColumn = UtilNode.newNodeHolder(nColumns.get(j));
+                    INodeHolder nColumn = holderFactory.create(nColumns.get(j));
                     Column column = new Column();
                     UtilSchema.setupColumn(context, table, column, nColumn);
                     table.add(column);

@@ -32,6 +32,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.IStringNormalizer;
 import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.INodeHolderFactory;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -140,7 +141,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
         long time = System.currentTimeMillis();
         ENext next = ENext.DEEP;
         if (holder == null) {
-            holder = UtilNode.newNodeHolder(node);
+            holder = SRServices.get(INodeHolderFactory.class).create(node);
         } else {
             holder.setNode(node);
         }
@@ -223,7 +224,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
                 Element span = new Element("span");
                 span.addAttribute(new Attribute("class", "scenarioTime"));
                 span.appendChild((System.currentTimeMillis() - startTime) + " ms");
-                UtilNode.newNodeHolder(title).prepend(span);
+                SRServices.get(INodeHolderFactory.class).create(title).prepend(span);
             }
         }
     }
