@@ -37,6 +37,15 @@ import org.specrunner.plugins.PluginException;
 public interface INodeHolder {
 
     /**
+     * Feature to eval arguments.
+     */
+    String FEATURE_EVAL_ARGS = INodeHolder.class.getName() + ".evalArgs";
+    /**
+     * Default is not eval arguments.
+     */
+    Boolean DEFAULT_EVAL_ARGS = Boolean.FALSE;
+
+    /**
      * Attribute for property access.
      */
     String ATTRIBUTE_PROPERTY = "property";

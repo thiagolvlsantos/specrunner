@@ -15,27 +15,29 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.util.xom.core;
 
-import org.specrunner.util.xom.core.NodeHolderDefault;
+import nu.xom.Node;
 
-import nu.xom.Element;
+import org.specrunner.util.xom.INodeHolderFactory;
+import org.specrunner.util.xom.INodeHolder;
 
 /**
- * Cell abstraction.
+ * Default implementation of a node holder creator.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolderDefault {
+public class NodeHolderFactoryDefault implements INodeHolderFactory {
 
     /**
-     * Construct a cell node.
+     * Creates a node holder from a node.
      * 
      * @param node
-     *            The cell node.
+     *            A node holder.
+     * @return A holder.
      */
-    public CellAdapter(Element node) {
-        super(node);
+    public INodeHolder create(Node node) {
+        return new NodeHolderDefault(node);
     }
 }

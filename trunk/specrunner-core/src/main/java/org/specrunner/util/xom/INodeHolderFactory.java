@@ -17,25 +17,22 @@
  */
 package org.specrunner.util.xom;
 
-import org.specrunner.util.xom.core.NodeHolderDefault;
-
-import nu.xom.Element;
+import nu.xom.Node;
 
 /**
- * Cell abstraction.
+ * Stands for a node holder creator.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolderDefault {
+public interface INodeHolderFactory {
 
     /**
-     * Construct a cell node.
+     * Creates a node holder from a node.
      * 
      * @param node
-     *            The cell node.
+     *            A node holder.
+     * @return A holder.
      */
-    public CellAdapter(Element node) {
-        super(node);
-    }
+    INodeHolder create(Node node);
 }

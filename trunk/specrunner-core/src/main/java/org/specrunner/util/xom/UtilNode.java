@@ -22,6 +22,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
 
 /**
@@ -243,7 +244,7 @@ public final class UtilNode {
      * @return The adapter.
      */
     public static INodeHolder newNodeHolder(Node node) {
-        return new NodeHolder(node);
+        return SRServices.get(INodeHolderFactory.class).create(node);
     }
 
     /**

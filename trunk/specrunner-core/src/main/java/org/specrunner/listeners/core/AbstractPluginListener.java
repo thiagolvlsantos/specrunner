@@ -34,42 +34,42 @@ public abstract class AbstractPluginListener implements IPluginListener {
     @Override
     public void onBeforeInit(IPlugin plugin, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("onBeforeInit(" + context + "," + result + ")");
+            UtilLog.LOG.trace("onBeforeInit(" + result + ")");
         }
     }
 
     @Override
     public void onAfterInit(IPlugin plugin, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("onAfterInit(" + context + "," + result + ")");
+            UtilLog.LOG.trace("onAfterInit(" + result + ")");
         }
     }
 
     @Override
     public void onBeforeStart(IPlugin plugin, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("onBeforeStart(" + context + "," + result + ")");
+            UtilLog.LOG.trace("onBeforeStart(" + result + ")");
         }
     }
 
     @Override
     public void onAfterStart(IPlugin plugin, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("onAfterStart(" + context + "," + result + ")");
+            UtilLog.LOG.trace("onAfterStart(" + result + ")");
         }
     }
 
     @Override
     public void onBeforeEnd(IPlugin plugin, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("onBeforeEnd(" + context + "," + result + ")");
+            UtilLog.LOG.trace("onBeforeEnd(" + result + ")");
         }
     }
 
     @Override
     public void onAfterEnd(IPlugin plugin, IContext context, IResultSet result) {
         if (UtilLog.LOG.isTraceEnabled()) {
-            UtilLog.LOG.trace("onAfterEnd(" + context + "," + result + ")");
+            UtilLog.LOG.trace("onAfterEnd(" + result + ")");
         }
     }
 

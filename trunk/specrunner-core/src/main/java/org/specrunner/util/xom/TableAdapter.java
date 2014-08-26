@@ -20,6 +20,8 @@ package org.specrunner.util.xom;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.specrunner.util.xom.core.NodeHolderDefault;
+
 import nu.xom.Element;
 import nu.xom.Nodes;
 
@@ -29,7 +31,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class TableAdapter extends NodeHolder {
+public class TableAdapter extends NodeHolderDefault {
 
     /**
      * List of col elements.

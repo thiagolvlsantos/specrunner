@@ -20,6 +20,8 @@ package org.specrunner.util.xom;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.specrunner.util.xom.core.NodeHolderDefault;
+
 import nu.xom.Element;
 import nu.xom.Nodes;
 
@@ -29,7 +31,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class RowAdapter extends NodeHolder {
+public class RowAdapter extends NodeHolderDefault {
 
     /**
      * List of row cells.

@@ -15,10 +15,9 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.util.xom.core;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,9 +35,11 @@ import org.specrunner.comparators.IComparatorManager;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.converters.IConverterManager;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.INodeHolder;
 
 /**
  * Default implementation of element holder.
@@ -46,7 +47,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class NodeHolder implements INodeHolder {
+public class NodeHolderDefault implements INodeHolder {
 
     /**
      * The node encapsulated.
@@ -64,7 +65,7 @@ public class NodeHolder implements INodeHolder {
      * @param element
      *            The element.
      */
-    public NodeHolder(Node element) {
+    public NodeHolderDefault(Node element) {
         this.node = element;
     }
 
@@ -364,16 +365,28 @@ public class NodeHolder implements INodeHolder {
                         UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
                     }
                 }
-                Object[] args = new Object[arguments.size()];
-                for (int i = 0; i < arguments.size(); i++) {
-                    args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
+                List<Object> objects = new LinkedList<Object>();
+                IFeatureManager fm = SRServices.getFeatureManager();
+                Boolean eval = (Boolean) fm.get(FEATURE_EVAL_ARGS, DEFAULT_EVAL_ARGS);
+                if (eval) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Eval args: " + arguments);
+                    }
+                    for (int i = 0; i < arguments.size(); i++) {
+                        objects.add(UtilEvaluator.evaluate(arguments.get(i), context, silent));
+                    }
+                } else {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("Not eval args: " + arguments);
+                    }
+                    objects.addAll(arguments);
                 }
                 Object convert;
                 try {
                     if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + Arrays.toString(args));
+                        UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + objects);
                     }
-                    convert = converter.convert(value, arguments.toArray());
+                    convert = converter.convert(value, objects.toArray());
                 } catch (Exception e) {
                     throw new PluginException(e);
                 }

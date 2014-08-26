@@ -308,9 +308,6 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
         name = name != null ? name.replace(UPACCESS, "") : null;
         for (int i = start; i < size(); i++) {
             IBlock g = get(i);
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace((i != PARENT ? "getByName" : "getParentByName") + " = " + g);
-            }
             if (g != null) {
                 Object o = g.getMap().get(name);
                 if (o != null) {
