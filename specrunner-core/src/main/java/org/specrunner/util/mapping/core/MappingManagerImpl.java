@@ -11,7 +11,7 @@ import org.specrunner.SRServices;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.mapping.IMappingManager;
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * Default implementation of managers loaded by property files.

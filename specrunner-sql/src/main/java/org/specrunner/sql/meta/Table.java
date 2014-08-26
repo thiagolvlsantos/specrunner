@@ -22,13 +22,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.specrunner.context.IContext;
+import org.specrunner.util.reset.IResetableExtended;
+
 /**
  * Table meta model.
  * 
  * @author Thiago Santos
  * 
  */
-public class Table implements IReplicable<Table>, IMergeable<Table> {
+@SuppressWarnings("serial")
+public class Table implements IReplicable<Table>, IMergeable<Table>, IResetableExtended {
 
     /**
      * The parent schema.
@@ -325,6 +329,13 @@ public class Table implements IReplicable<Table>, IMergeable<Table> {
             } else {
                 old.merge(c);
             }
+        }
+    }
+
+    @Override
+    public void initialize(IContext context) {
+        for (Column c : columns) {
+            c.initialize(context);
         }
     }
 }

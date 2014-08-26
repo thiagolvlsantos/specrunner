@@ -19,7 +19,7 @@ package org.specrunner.comparators;
 
 import java.util.Comparator;
 
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * Compare tow objects.

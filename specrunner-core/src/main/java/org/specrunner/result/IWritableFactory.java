@@ -19,7 +19,7 @@ package org.specrunner.result;
 
 import java.util.Map;
 
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 /**
  * Writable object factory.

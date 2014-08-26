@@ -18,7 +18,7 @@
 package org.specrunner.webdriver;
 
 import org.specrunner.parameters.IParameterHolder;
-import org.specrunner.util.mapping.IResetable;
+import org.specrunner.util.reset.IResetable;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 

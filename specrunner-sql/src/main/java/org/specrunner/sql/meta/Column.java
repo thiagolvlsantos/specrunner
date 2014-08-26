@@ -22,7 +22,11 @@ import java.util.List;
 
 import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
+import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.util.UtilLog;
+import org.specrunner.util.reset.IResetableExtended;
 import org.specrunner.util.xom.INodeHolder;
 
 /**
@@ -31,7 +35,8 @@ import org.specrunner.util.xom.INodeHolder;
  * @author Thiago Santos.
  * 
  */
-public class Column implements IReplicable<Column>, IMergeable<Column> {
+@SuppressWarnings("serial")
+public class Column implements IReplicable<Column>, IMergeable<Column>, IResetableExtended {
 
     /**
      * Column table.
@@ -86,9 +91,13 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      */
     private IComparator comparator = COMPARATOR_DEFAULT;
     /**
+     * Column default expression.
+     */
+    private INodeHolder defaultExpression;
+    /**
      * Column default value.
      */
-    private INodeHolder defaultValue;
+    private Object defaultValue;
     /**
      * Column reference indicator.
      */
@@ -335,11 +344,32 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
     }
 
     /**
+     * Get the column default value expression.
+     * 
+     * @return The default value.
+     */
+    public INodeHolder getDefaultExpression() {
+        return defaultExpression;
+    }
+
+    /**
+     * Set the column default value expression.
+     * 
+     * @param defaultExpression
+     *            The expression.
+     * @return The column itself.
+     */
+    public Column setDefaultExpression(INodeHolder defaultExpression) {
+        this.defaultExpression = defaultExpression;
+        return this;
+    }
+
+    /**
      * Get the column default value. Default values are expected to be non null.
      * 
      * @return The default value.
      */
-    public INodeHolder getDefaultValue() {
+    public Object getDefaultValue() {
         return defaultValue;
     }
 
@@ -350,7 +380,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
      *            The value.
      * @return The column itself.
      */
-    public Column setDefaultValue(INodeHolder defaultValue) {
+    public Column setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
@@ -428,7 +458,8 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
         return new Column().setParent(parent).setAlias(alias).setName(name).setTable(table).//
                 setKey(key).setSequence(sequence).setDate(date).setConverter(converter).//
                 setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).//
-                setReference(reference).setVirtual(virtual).setPointer(pointer);
+                setDefaultExpression(defaultExpression).setReference(reference).setVirtual(virtual).//
+                setPointer(pointer);
     }
 
     @Override
@@ -446,8 +477,24 @@ public class Column implements IReplicable<Column>, IMergeable<Column> {
         setArguments(other.arguments);
         setComparator(other.comparator);
         setDefaultValue(other.defaultValue);
+        setDefaultExpression(other.defaultExpression);
         setReference(other.reference);
         setVirtual(other.virtual);
         setPointer(other.pointer);
+    }
+
+    @Override
+    public void initialize(IContext context) {
+        if (defaultExpression != null) {
+            try {
+                Object tmp = defaultExpression.getObject(context, false);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("New value for default(" + alias + "," + name + "," + defaultExpression + ") is:" + tmp);
+                }
+                defaultValue = tmp;
+            } catch (PluginException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
     }
 }
