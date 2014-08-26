@@ -22,7 +22,6 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
-import org.specrunner.SRServices;
 import org.specrunner.plugins.PluginException;
 
 /**
@@ -234,17 +233,6 @@ public final class UtilNode {
             throw new IllegalArgumentException("Node is not a table.");
         }
         return new TableAdapter((Element) node);
-    }
-
-    /**
-     * Creates a element adapter for the given node.
-     * 
-     * @param node
-     *            The node.
-     * @return The adapter.
-     */
-    public static INodeHolder newNodeHolder(Node node) {
-        return SRServices.get(INodeHolderFactory.class).create(node);
     }
 
     /**

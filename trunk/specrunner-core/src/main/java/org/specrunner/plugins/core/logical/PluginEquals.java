@@ -20,6 +20,7 @@ package org.specrunner.plugins.core.logical;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
@@ -30,6 +31,7 @@ import org.specrunner.plugins.core.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.INodeHolderFactory;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -67,7 +69,8 @@ public class PluginEquals extends AbstractPluginDual {
     @Override
     protected boolean operation(Object obj, IContext context) throws PluginException {
         Node node = context.getNode();
-        INodeHolder parent = UtilNode.newNodeHolder(node);
+        INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
+        INodeHolder parent = holderFactory.create(node);
         Object objExpected = null;
         Object objReceived = null;
         if (node instanceof Element) {
@@ -81,8 +84,8 @@ public class PluginEquals extends AbstractPluginDual {
                     objReceived = tmp;
                 }
             } else {
-                objExpected = UtilNode.newNodeHolder(UtilNode.getLeft(node)).getObject(context, true);
-                objReceived = UtilNode.newNodeHolder(UtilNode.getRight(node)).getObject(context, true);
+                objExpected = holderFactory.create(UtilNode.getLeft(node)).getObject(context, true);
+                objReceived = holderFactory.create(UtilNode.getRight(node)).getObject(context, true);
             }
         }
         try {

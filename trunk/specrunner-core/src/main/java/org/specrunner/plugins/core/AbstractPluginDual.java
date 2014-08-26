@@ -19,13 +19,14 @@ package org.specrunner.plugins.core;
 
 import nu.xom.Node;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.INodeHolderFactory;
 
 /**
  * A generic plugin which performs a test, it the result is true, a success
@@ -110,7 +111,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      *             On evaluation errors.
      */
     protected Object getObjectValue(IContext context, Node node) throws PluginException {
-        return isEval() ? UtilNode.newNodeHolder(node).getObject(context, true) : node.getValue();
+        return isEval() ? SRServices.get(INodeHolderFactory.class).create(node).getObject(context, true) : node.getValue();
     }
 
     /**
