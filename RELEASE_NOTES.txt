@@ -1,3 +1,8 @@
+1.4.10
+OK - Criar uma abstração que tenha valor, conversor/etc para usar no Column e não amarrar ao INodeHolder.
+OK - Colocar getObject(...,true) no reset de colunas, deve ser silenciosa a avaliação do campo 'value'.
+OK - Fazer o initialize do schema refazer o cálculo somente se mudar o objeto contexto (guardar o contexto velho no momento da chamada ao initialize, para evitar atributo desnecessário no código de Column);
+
 1.4.09
 OK- Colocar um boolean para saber se o default value é calculado no começo ou a cada uso (implicações de performance);
 	Colocado para realizar reset dos valores default de um esquema toda as vezes que houver o reuso do schema;
