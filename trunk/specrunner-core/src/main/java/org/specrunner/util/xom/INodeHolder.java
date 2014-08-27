@@ -17,16 +17,9 @@
  */
 package org.specrunner.util.xom;
 
-import java.util.List;
+import org.specrunner.util.expression.IAbstraction;
 
 import nu.xom.Node;
-
-import org.specrunner.comparators.ComparatorException;
-import org.specrunner.comparators.IComparator;
-import org.specrunner.context.IContext;
-import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
-import org.specrunner.plugins.PluginException;
 
 /**
  * Stands for any object which hold an element.
@@ -34,16 +27,7 @@ import org.specrunner.plugins.PluginException;
  * @author Thiago Santos
  * 
  */
-public interface INodeHolder {
-
-    /**
-     * Feature to eval arguments.
-     */
-    String FEATURE_EVAL_ARGS = INodeHolder.class.getName() + ".evalArgs";
-    /**
-     * Default is not eval arguments.
-     */
-    Boolean DEFAULT_EVAL_ARGS = Boolean.FALSE;
+public interface INodeHolder extends IAbstraction {
 
     /**
      * Attribute for property access.
@@ -196,13 +180,6 @@ public interface INodeHolder {
     boolean attributeEquals(String name, String value);
 
     /**
-     * Get element value.
-     * 
-     * @return Element value.
-     */
-    String getValue();
-
-    /**
      * Set text to a node removing all children elements.
      * 
      * @param text
@@ -241,93 +218,6 @@ public interface INodeHolder {
      *            A node.
      */
     void append(Node node);
-
-    /**
-     * Get the converter.
-     * 
-     * @return A converter.
-     * @throws ConverterException
-     *             On converter lookup error.
-     */
-    IConverter getConverter() throws ConverterException;
-
-    /**
-     * Get the converter, if any, otherwise returns the default converter.
-     * 
-     * @param converterDefault
-     *            The default converter.
-     * @return A converter.
-     * @throws ConverterException
-     *             On converter lookup error.
-     */
-    IConverter getConverter(IConverter converterDefault) throws ConverterException;
-
-    /**
-     * Get element arguments in a array.
-     * 
-     * @return The list of values set for 'arg0', 'arg1',... 'argN'.
-     */
-    List<String> getArguments();
-
-    /**
-     * Get element arguments in a array.
-     * 
-     * @param arguments
-     *            The default arguments in case of not found.
-     * 
-     * @return The list of values set for 'arg0', 'arg1',... 'argN'.
-     */
-    List<String> getArguments(List<String> arguments);
-
-    /**
-     * Get the comparator of the given element.
-     * 
-     * @return The element comparator.
-     * @throws ComparatorException
-     *             O comparator lookup errors.
-     */
-    IComparator getComparator() throws ComparatorException;
-
-    /**
-     * Get the comparator of the given element.
-     * 
-     * @param comparatorDefault
-     *            The default comparator.
-     * @return The element comparator.
-     * @throws ComparatorException
-     *             O comparator lookup errors.
-     */
-    IComparator getComparator(IComparator comparatorDefault) throws ComparatorException;
-
-    /**
-     * Gets the corresponding value object.
-     * 
-     * @param context
-     *            The context.
-     * @param silent
-     *            Flag to evaluate silently or not.
-     * @return The value object.
-     * @throws PluginException
-     *             On plugin errors.
-     */
-    Object getObject(IContext context, boolean silent) throws PluginException;
-
-    /**
-     * Gets the corresponding value object.
-     * 
-     * @param context
-     *            The context.
-     * @param silent
-     *            Flag to evaluate silently or not.
-     * @param converter
-     *            The converter.
-     * @param arguments
-     *            The arguments.
-     * @return The value object.
-     * @throws PluginException
-     *             On plugin errors.
-     */
-    Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException;
 
     /**
      * The XML representation.
