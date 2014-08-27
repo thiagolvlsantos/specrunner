@@ -73,7 +73,7 @@ public final class UtilSchema {
                 // set value to enable use
                 holder.setAttribute(INodeHolder.ATTRIBUTE_VALUE, value);
                 column.setDefaultExpression(holder);
-                // try convert, to be sure expression is valid right from start
+                // try convert, to be sure expression is valid from start
                 Object defValue = holder.getObject(context, true);
                 // set default expression
                 column.setDefaultValue(defValue);

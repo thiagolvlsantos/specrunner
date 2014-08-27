@@ -150,6 +150,7 @@ public class PluginSchema extends AbstractPluginValue {
                 cfg.put("source", source);
                 cfg.put("providerInstance", providerInstance);
                 if (ir.canReuse(cfg)) {
+                    ((SchemaReusable) ir).current = context;
                     ir.reset();
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Reusing Schema " + ir.getObject());
@@ -175,29 +176,7 @@ public class PluginSchema extends AbstractPluginValue {
             }
         }
         if (reuse) {
-            rm.put(currentName, new AbstractReusable<Schema>(currentName, providerInstance) {
-                @Override
-                public void reset() {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Provider " + providerInstance + " reset.");
-                    }
-                    providerInstance.initialize(context);
-                }
-
-                @Override
-                public void release() {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Provider " + providerInstance + " released.");
-                    }
-                }
-
-                @Override
-                public boolean canReuse(Map<String, Object> cfg) {
-                    boolean sameSource = source != null && source.equals(cfg.get("source"));
-                    boolean sameInstance = providerInstance != null && providerInstance == cfg.get("providerInstance");
-                    return sameSource || sameInstance;
-                }
-            });
+            rm.put(currentName, new SchemaReusable(currentName, providerInstance));
         }
         context.saveGlobal(currentName, providerInstance);
         result.addResult(Success.INSTANCE, context.peek());
@@ -224,5 +203,63 @@ public class PluginSchema extends AbstractPluginValue {
             throw new PluginException("Instance of '" + Schema.class.getName() + "' named '" + name + "' not found. Use " + PluginSchema.class.getName() + " first.");
         }
         return provider;
+    }
+
+    /**
+     * Reusable schema.
+     * 
+     * @author Thiago Santos.
+     * 
+     */
+    public class SchemaReusable extends AbstractReusable<Schema> {
+        /**
+         * Previous context.
+         */
+        private IContext old;
+        /**
+         * Current context.
+         */
+        private IContext current;
+
+        /**
+         * Default constructor with information.
+         * 
+         * @param name
+         *            Object alias.
+         * @param schema
+         *            A schema.
+         */
+        public SchemaReusable(String name, Schema schema) {
+            super(name, schema);
+        }
+
+        @Override
+        public void reset() {
+            if (old != current) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Provider " + providerInstance + " initialization.");
+                }
+                providerInstance.initialize(current);
+            } else {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Provider " + providerInstance + " ready to use.");
+                }
+            }
+            old = current;
+        }
+
+        @Override
+        public void release() {
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Provider " + providerInstance + " released.");
+            }
+        }
+
+        @Override
+        public boolean canReuse(Map<String, Object> cfg) {
+            boolean sameSource = source != null && source.equals(cfg.get("source"));
+            boolean sameInstance = providerInstance != null && providerInstance == cfg.get("providerInstance");
+            return sameSource || sameInstance;
+        }
     }
 }
