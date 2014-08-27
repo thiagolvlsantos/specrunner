@@ -26,8 +26,8 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.IAbstraction;
 import org.specrunner.util.reset.IResetableExtended;
-import org.specrunner.util.xom.INodeHolder;
 
 /**
  * Column meta model.
@@ -93,7 +93,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     /**
      * Column default expression.
      */
-    private INodeHolder defaultExpression;
+    private IAbstraction defaultExpression;
     /**
      * Column default value.
      */
@@ -348,7 +348,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
      * 
      * @return The default value.
      */
-    public INodeHolder getDefaultExpression() {
+    public IAbstraction getDefaultExpression() {
         return defaultExpression;
     }
 
@@ -359,7 +359,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
      *            The expression.
      * @return The column itself.
      */
-    public Column setDefaultExpression(INodeHolder defaultExpression) {
+    public Column setDefaultExpression(IAbstraction defaultExpression) {
         this.defaultExpression = defaultExpression;
         return this;
     }
@@ -457,8 +457,8 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     public Column copy() {
         return new Column().setParent(parent).setAlias(alias).setName(name).setTable(table).//
                 setKey(key).setSequence(sequence).setDate(date).setConverter(converter).//
-                setArguments(arguments).setComparator(comparator).setDefaultValue(defaultValue).//
-                setDefaultExpression(defaultExpression).setReference(reference).setVirtual(virtual).//
+                setArguments(arguments).setComparator(comparator).setDefaultExpression(defaultExpression).//
+                setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual).//
                 setPointer(pointer);
     }
 
@@ -476,8 +476,8 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
         setConverter(other.converter);
         setArguments(other.arguments);
         setComparator(other.comparator);
-        setDefaultValue(other.defaultValue);
         setDefaultExpression(other.defaultExpression);
+        setDefaultValue(other.defaultValue);
         setReference(other.reference);
         setVirtual(other.virtual);
         setPointer(other.pointer);
@@ -487,7 +487,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     public void initialize(IContext context) {
         if (defaultExpression != null) {
             try {
-                Object tmp = defaultExpression.getObject(context, false);
+                Object tmp = defaultExpression.getObject(context, true);
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace("New value for default(" + alias + "," + name + "," + defaultExpression + ") is:" + tmp);
                 }
