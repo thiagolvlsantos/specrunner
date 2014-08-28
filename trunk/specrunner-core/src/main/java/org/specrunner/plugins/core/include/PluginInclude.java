@@ -599,17 +599,4 @@ public class PluginInclude extends AbstractPlugin {
         }
         return sb;
     }
-
-    /**
-     * Basic resolver implementation.
-     * 
-     * @author Thiago Santos.
-     */
-    protected class ResolverDefault implements IResolver {
-
-        @Override
-        public URI resolve(URI base, URI target) {
-            return base.resolve(target);
-        }
-    }
 }
