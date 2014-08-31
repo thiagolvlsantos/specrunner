@@ -22,6 +22,7 @@ import java.text.NumberFormat;
 import java.util.Map;
 
 import nu.xom.Attribute;
+import nu.xom.DocType;
 import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Node;
@@ -33,6 +34,9 @@ import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.source.ISource;
+import org.specrunner.source.resource.IResource;
+import org.specrunner.source.resource.positional.core.CSSResource;
+import org.specrunner.source.resource.positional.core.JSResource;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -53,9 +57,55 @@ public class SourceDumperDetails extends AbstractSourceDumperFile {
         set(source, result);
         File output = new File(outputDirectory, detailReport());
         Document doc = new Document(new Element("html"));
+        doc.setDocType(new DocType("html"));
+        head(source, doc.getRootElement());
         body(result, model, doc.getRootElement());
         saveTo(doc, output);
-        appendResources(output);
+    }
+
+    /**
+     * Get header part.
+     * 
+     * @param source
+     *            Source.
+     * @param html
+     *            Root element.
+     */
+    protected void head(ISource source, Element html) {
+        Element header = new Element("head");
+        html.appendChild(header);
+        for (IResource ir : source.getManager()) {
+            if (ir instanceof CSSResource || ir instanceof JSResource) {
+                for (Node node : ir.getNodes()) {
+                    if (node != null) {
+                        header.appendChild(replaced(outputName + "_res/", node.copy()));
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Replace reference names to current directory.
+     * 
+     * @param old
+     *            Old value.
+     * @param node
+     *            Base node.
+     * @return Node adjusted.
+     */
+    protected Node replaced(String old, Node node) {
+        if (node instanceof Element) {
+            Element e = (Element) node;
+            for (int i = 0; i < e.getAttributeCount(); i++) {
+                Attribute att = e.getAttribute(i);
+                att.setValue(att.getValue().replace(old, ""));
+            }
+        }
+        for (int i = 0; i < node.getChildCount(); i++) {
+            replaced(old, node.getChild(i));
+        }
+        return node;
     }
 
     /**

@@ -40,10 +40,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.ResultException;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.core.EncodedImpl;
-import org.specrunner.source.resource.IResource;
-import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -59,6 +56,10 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
      */
     public static final int GAP = 4;
 
+    /**
+     * Clean attribute.
+     */
+    private Boolean clean = DEFAULT_CLEAN;
     /**
      * Default output directory.
      */
@@ -85,6 +86,16 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
     protected void set(ISource source, IResultSet result) throws SourceDumperException {
         setFeatures(source);
         outputFile = new File(outputDirectory + File.separator + outputName);
+    }
+
+    @Override
+    public Boolean getClean() {
+        return clean;
+    }
+
+    @Override
+    public void setClean(Boolean clean) {
+        this.clean = clean;
     }
 
     /**
@@ -223,13 +234,15 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
      *             On cleanup errors.
      */
     protected void clean(File file) throws ResultException {
-        if (file.isDirectory()) {
-            for (File f : file.listFiles()) {
-                clean(f);
+        if (clean) {
+            if (file.isDirectory()) {
+                for (File f : file.listFiles()) {
+                    clean(f);
+                }
             }
-        }
-        if (file.exists() && !file.delete()) {
-            throw new ResultException("Could not delete " + (file.isDirectory() ? "directory" : "file") + " '" + file + "'.");
+            if (file.exists() && !file.delete()) {
+                throw new ResultException("Could not delete " + (file.isDirectory() ? "directory" : "file") + " '" + file + "'.");
+            }
         }
     }
 
@@ -312,31 +325,6 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
         File parent = output.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
             throw new SourceDumperException("Could not create output directory '" + parent + "'.");
-        }
-    }
-
-    /**
-     * Append resources to a output file.
-     * 
-     * @param output
-     *            The output file.
-     * @throws SourceDumperException
-     *             On dumper errors.
-     */
-    protected void appendResources(File output) throws SourceDumperException {
-        File res = new File(output.getAbsoluteFile() + "_res");
-        try {
-            clean(res);
-            ISource ref = SRServices.get(ISourceFactoryManager.class).newSource(output.getAbsolutePath());
-            IResourceManager manager = ref.getManager();
-            manager.addDefaultCss();
-            manager.addDefaultJs();
-            for (IResource r : manager) {
-                r.writeTo(ref);
-            }
-            saveTo(ref.getDocument(), output);
-        } catch (Exception e) {
-            throw new SourceDumperException(e);
         }
     }
 }

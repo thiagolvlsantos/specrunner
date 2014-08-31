@@ -42,6 +42,22 @@ public class SourceDumperGroupImpl extends CompositeImpl<ISourceDumperGroup, ISo
     }
 
     @Override
+    public void setClean(Boolean clean) {
+        for (ISourceDumper d : getChildren()) {
+            d.setClean(clean);
+        }
+    }
+
+    @Override
+    public Boolean getClean() {
+        Boolean clean = DEFAULT_CLEAN;
+        for (ISourceDumper d : getChildren()) {
+            clean = clean || d.getClean();
+        }
+        return clean;
+    }
+
+    @Override
     public void dump(ISource source, IResultSet result, Map<String, Object> model) throws SourceDumperException {
         long time;
         for (ISourceDumper d : getChildren()) {
