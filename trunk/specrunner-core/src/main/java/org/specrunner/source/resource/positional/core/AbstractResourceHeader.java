@@ -36,6 +36,7 @@ import org.specrunner.source.resource.ResourceException;
 import org.specrunner.source.resource.positional.EPlace;
 import org.specrunner.source.resource.positional.Position;
 import org.specrunner.util.UtilIO;
+import org.specrunner.util.UtilLog;
 
 /**
  * Default resource to be written in header part.
@@ -83,22 +84,25 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
             }
             if (places.size() > 0 && places.get(0) instanceof Element) {
                 Element target = (Element) places.get(0);
-
                 List<URL> urls = getResourceURLs();
-
                 if (getType() == EType.TEXT) {
                     Element tag = getHeaderTag();
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    UtilIO.writeAllTo(urls, out);
-                    String content = out.toString(UtilEncoding.getEncoding());
-                    out.close();
-                    tag.appendChild(content.replace("\r\n", "\n"));
+                    ByteArrayOutputStream out = null;
+                    try {
+                        out = new ByteArrayOutputStream();
+                        UtilIO.writeAllTo(urls, out);
+                        String content = out.toString(UtilEncoding.getEncoding());
+                        tag.appendChild(content.replace("\r\n", "\n"));
+                    } finally {
+                        out.close();
+                    }
                     if (getPosition().getPlace() == EPlace.START) {
                         target.insertChild(tag, 0);
                     } else {
                         target.appendChild(tag);
                     }
                 } else {
+                    int i = 1;
                     for (URL url : urls) {
                         // if its is an absolute URL copy is not required
                         String protocol = url.getProtocol();
@@ -111,12 +115,16 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                             if (!resFile.getParentFile().exists() && !resFile.getParentFile().mkdirs()) {
                                 throw new ResourceException("Could not create resource directory '" + resFile.getParent() + "'.");
                             }
+                            if (UtilLog.LOG.isTraceEnabled()) {
+                                UtilLog.LOG.trace("Writting[" + (i++) + "/" + urls.size() + "] '" + url + "' to " + resFile);
+                            }
                             UtilIO.writeToClose(url, resFile);
                             if (getPosition().getPlace() == EPlace.START) {
                                 target.insertChild(tag, 0);
                             } else {
                                 target.appendChild(tag);
                             }
+                            addNode(tag);
                         }
                     }
                 }

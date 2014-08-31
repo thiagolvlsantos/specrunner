@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import nu.xom.Node;
+
 import org.specrunner.SRServices;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
@@ -58,6 +60,10 @@ public abstract class AbstractResource implements IResource {
      * The resource nature.
      */
     private EType type;
+    /**
+     * Resource reference after writeTo call.
+     */
+    private List<Node> nodes = new LinkedList<Node>();
 
     /**
      * Partial constructor.
@@ -116,6 +122,16 @@ public abstract class AbstractResource implements IResource {
     @Override
     public void setClasspath(boolean classpath) {
         this.classpath = classpath;
+    }
+
+    @Override
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    @Override
+    public void addNode(Node node) {
+        this.nodes.add(node);
     }
 
     /**

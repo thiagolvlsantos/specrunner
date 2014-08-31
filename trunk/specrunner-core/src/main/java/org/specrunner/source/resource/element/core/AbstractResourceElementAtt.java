@@ -90,6 +90,7 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
                 fout = new File(target.getFile().getParentFile(), srcChanged);
             }
             UtilIO.writeToClose(url, fout);
+            addNode(getElement());
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);

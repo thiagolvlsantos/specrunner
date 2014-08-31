@@ -17,6 +17,10 @@
  */
 package org.specrunner.source.resource;
 
+import java.util.List;
+
+import nu.xom.Node;
+
 import org.specrunner.source.ISource;
 import org.specrunner.util.xom.IPresentation;
 
@@ -99,4 +103,20 @@ public interface IResource extends IPresentation {
      *             On writing errors.
      */
     ISource writeTo(ISource target) throws ResourceException;
+
+    /**
+     * Return node representations of resources after <code>writeTo</code> method
+     * call.
+     * 
+     * @return List of nodes for this resource, if it exists.
+     */
+    List<Node> getNodes();
+
+    /**
+     * Add a node representation.
+     * 
+     * @param node
+     *            A node.
+     */
+    void addNode(Node node);
 }

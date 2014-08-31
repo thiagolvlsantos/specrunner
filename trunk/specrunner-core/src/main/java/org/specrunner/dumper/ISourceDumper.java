@@ -32,6 +32,32 @@ import org.specrunner.source.ISource;
 public interface ISourceDumper extends IEncoded {
 
     /**
+     * Feature to setup clean resources.
+     */
+    String FEATURE_CLEAN = ISourceDumper.class.getName() + ".clean";
+
+    /**
+     * Clean default. Default is 'true', if you want minimum running time use
+     * 'false' to avoid remove files before tests.
+     */
+    Boolean DEFAULT_CLEAN = true;
+
+    /**
+     * Set clean information.
+     * 
+     * @param clean
+     *            true, to clean previous resources, false, otherwise.
+     */
+    void setClean(Boolean clean);
+
+    /**
+     * Get clean status.
+     * 
+     * @return true, if clean is enabled, false, otherwise.
+     */
+    Boolean getClean();
+
+    /**
      * Extra information to be dumped.
      * 
      * @param source

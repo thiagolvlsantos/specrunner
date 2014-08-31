@@ -17,11 +17,12 @@
  */
 package org.specrunner.core.pipes;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.dumper.ISourceDumper;
 import org.specrunner.dumper.ISourceDumperFactory;
 import org.specrunner.dumper.SourceDumperException;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IPipe;
@@ -65,7 +66,10 @@ public class PipeDumper implements IPipe {
      *             On creation error.
      */
     protected ISourceDumper createDumper() throws SourceDumperException {
-        return SRServices.get(ISourceDumperFactory.class).newDumper();
+        ISourceDumper dumper = SRServices.get(ISourceDumperFactory.class).newDumper();
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(ISourceDumper.FEATURE_CLEAN, dumper);
+        return dumper;
     }
 
     /**

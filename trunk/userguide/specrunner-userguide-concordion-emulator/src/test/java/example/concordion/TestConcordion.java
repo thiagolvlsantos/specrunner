@@ -19,5 +19,6 @@ public abstract class TestConcordion {
         cfg.add(AbstractPluginResource.FEATURE_SAVE, UtilLog.LOG.isDebugEnabled());
         cfg.add(IResourceManager.FEATURE_ADD_RESOURCES, UtilLog.LOG.isDebugEnabled());
         cfg.add(IResultSet.FEATURE_RECORD_SUCCESS, UtilLog.LOG.isDebugEnabled());
+        // cfg.add(ISourceDumper.FEATURE_CLEAN, UtilLog.LOG.isDebugEnabled());
     }
 }
