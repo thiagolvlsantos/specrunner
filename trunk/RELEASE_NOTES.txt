@@ -1,3 +1,7 @@
+1.4.11
+OK - Criar um tableadapter/rowadapter/celladapter factory;
+OK - Melhoras de performance escrevendo menos arquivos na saída.
+
 1.4.10
 OK - Criar uma abstração que tenha valor, conversor/etc para usar no Column e não amarrar ao INodeHolder.
 OK - Colocar getObject(...,true) no reset de colunas, deve ser silenciosa a avaliação do campo 'value'.
