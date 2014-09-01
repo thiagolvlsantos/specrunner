@@ -42,9 +42,10 @@ import org.specrunner.source.IBuilderFactory;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.string.IStringNormalizer;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.INodeHolderFactory;
+import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
@@ -150,9 +151,9 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 IBuilderFactory bf = SRServices.get(IBuilderFactory.class);
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
-                INodeHolder holder = SRServices.get(INodeHolderFactory.class).create(context.getNode());
+                INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
                 if (!holder.getComparator(comparator.get()).match(expected, received)) {
-                    IStringNormalizer sn = SRServices.get(IStringNormalizer.class);
+                    IStringNormalizer sn = UtilString.getNormalizer();
                     result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(sn.normalize(UtilNode.getChildrenAsString(expected)), sn.normalize(UtilNode.getChildrenAsString(received))));
                 } else {
                     result.addResult(Success.INSTANCE, context.peek());

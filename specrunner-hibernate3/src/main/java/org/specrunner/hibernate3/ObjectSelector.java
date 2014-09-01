@@ -11,7 +11,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.plugins.core.objects.IObjectSelector;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Hibernate object selector.

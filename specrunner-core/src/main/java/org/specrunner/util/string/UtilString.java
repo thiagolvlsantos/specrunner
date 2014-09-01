@@ -15,27 +15,30 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.util.string;
 
-import org.specrunner.util.xom.core.NodeHolderDefault;
-
-import nu.xom.Element;
+import org.specrunner.SRServices;
 
 /**
- * Cell abstraction.
+ * Utility String class.
  * 
  * @author Thiago Santos
  * 
  */
-public class CellAdapter extends NodeHolderDefault {
+public final class UtilString {
 
     /**
-     * Construct a cell node.
-     * 
-     * @param node
-     *            The cell node.
+     * Hidden constructor.
      */
-    public CellAdapter(Element node) {
-        super(node);
+    private UtilString() {
+    }
+
+    /**
+     * Get string normalizer.
+     * 
+     * @return A normalized.
+     */
+    public static IStringNormalizer getNormalizer() {
+        return SRServices.get(IStringNormalizer.class);
     }
 }

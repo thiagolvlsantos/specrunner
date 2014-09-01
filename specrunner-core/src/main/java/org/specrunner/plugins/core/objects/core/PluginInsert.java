@@ -22,7 +22,7 @@ import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Maps a object but do not persist it. The default behavior of objects is put

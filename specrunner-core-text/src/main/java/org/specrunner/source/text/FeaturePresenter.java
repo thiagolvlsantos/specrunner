@@ -32,7 +32,7 @@ import org.specrunner.plugins.core.flow.PluginIterator;
 import org.specrunner.plugins.core.language.PluginSentence;
 import org.specrunner.plugins.core.macro.PluginCall;
 import org.specrunner.plugins.core.macro.PluginMacro;
-import org.specrunner.util.string.IStringNormalizer;
+import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.IPresenter;
 import org.specrunner.util.xom.UtilNode;
 
@@ -179,7 +179,7 @@ public class FeaturePresenter implements IPresenter {
             alias = "macro";
         }
         macro.addAttribute(new Attribute("class", alias));
-        String name = SRServices.get(IStringNormalizer.class).camelCase(scenario.getName());
+        String name = UtilString.getNormalizer().camelCase(scenario.getName());
         macro.addAttribute(new Attribute("name", name));
         {
             dumpDescription(macro, words.getScenarioOutline(), scenario, "h2");

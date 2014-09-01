@@ -26,8 +26,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Performs comparison of objects.

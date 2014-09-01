@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom.core;
+package org.specrunner.util.xom.node.core;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
@@ -39,7 +39,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolder;
 
 /**
  * Default implementation of element holder.

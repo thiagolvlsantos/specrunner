@@ -17,8 +17,7 @@
  */
 package org.specrunner.comparators.core;
 
-import org.specrunner.SRServices;
-import org.specrunner.util.string.IStringNormalizer;
+import org.specrunner.util.string.UtilString;
 
 /**
  * Compare two strings using <code>UtilString.normalized(...)</code> to clean
@@ -32,6 +31,6 @@ public class ComparatorStringNormalized extends ComparatorString {
 
     @Override
     protected String toString(Object obj) {
-        return SRServices.get(IStringNormalizer.class).normalize(super.toString(obj));
+        return UtilString.getNormalizer().normalize(super.toString(obj));
     }
 }

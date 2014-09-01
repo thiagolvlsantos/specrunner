@@ -25,8 +25,8 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.TableAdapter;
-import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.TableAdapter;
+import org.specrunner.util.xom.node.UtilTable;
 
 /**
  * Adapter for plugins on tables.
@@ -63,7 +63,7 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
         if (!(element instanceof ParentNode)) {
             throw new PluginException("IPlugin " + getClass().getName() + " applicable only to parent elements.");
         } else {
-            table = UtilNode.newTableAdapter(element);
+            table = UtilTable.newTable(element);
         }
         if (!table.getQualifiedName().equalsIgnoreCase("table")) {
             throw new PluginException("IPlugin " + getClass().getName() + " applicable only to 'table' elements.");

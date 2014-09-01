@@ -35,7 +35,7 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.core.AbstractReusable;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 public class PluginEntityManager extends AbstractPluginObject {
 

@@ -34,9 +34,9 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilEvaluator;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.RowAdapter;
-import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
 
 /**
  * Creates a memory map.

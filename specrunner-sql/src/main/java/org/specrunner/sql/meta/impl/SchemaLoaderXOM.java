@@ -31,8 +31,8 @@ import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.INodeHolderFactory;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * A loader to Schema from XML files.
@@ -58,20 +58,20 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
             Document d = getBuilder().build(in);
 
             INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
-            INodeHolder nSchema = holderFactory.create(d.getRootElement());
+            INodeHolder nSchema = holderFactory.newHolder(d.getRootElement());
             schema = new Schema();
             schema.setName(nSchema.getAttribute(ATTR_NAME)).setAlias(nSchema.getAttribute(ATTR_ALIAS, schema.getName()));
 
             Nodes nTables = nSchema.getNode().query("child::table");
             for (int i = 0; i < nTables.size(); i++) {
-                INodeHolder nTable = holderFactory.create(nTables.get(i));
+                INodeHolder nTable = holderFactory.newHolder(nTables.get(i));
                 Table table = new Table();
                 table.setName(nTable.getAttribute(ATTR_NAME)).setAlias(nTable.getAttribute(ATTR_ALIAS, table.getName()));
                 schema.add(table);
 
                 Nodes nColumns = nTable.getNode().query("child::column");
                 for (int j = 0; j < nColumns.size(); j++) {
-                    INodeHolder nColumn = holderFactory.create(nColumns.get(j));
+                    INodeHolder nColumn = holderFactory.newHolder(nColumns.get(j));
                     Column column = new Column();
                     UtilSchema.setupColumn(context, table, column, nColumn);
                     table.add(column);

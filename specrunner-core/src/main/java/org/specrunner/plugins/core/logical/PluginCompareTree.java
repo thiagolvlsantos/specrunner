@@ -39,9 +39,9 @@ import org.specrunner.plugins.core.include.PluginInclude;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.INodeHolderFactory;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * Perform a comparison of nodes.
@@ -63,10 +63,10 @@ public class PluginCompareTree extends AbstractPlugin {
         Node expected = UtilNode.getRight(node);
         String alias = SRServices.get(IPluginFactory.class).getAlias(PluginInclude.class);
         INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
-        if (received instanceof Element && holderFactory.create(received).attributeContains("class", alias)) {
+        if (received instanceof Element && holderFactory.newHolder(received).attributeContains("class", alias)) {
             received = received.getParent().getChild(received.getParent().indexOf(received) + 1);
         }
-        if (expected instanceof Element && holderFactory.create(expected).attributeContains("class", alias)) {
+        if (expected instanceof Element && holderFactory.newHolder(expected).attributeContains("class", alias)) {
             expected = expected.getParent().getChild(expected.getParent().indexOf(expected) + 1);
         }
         compare(context, result, received, expected);
@@ -96,8 +96,8 @@ public class PluginCompareTree extends AbstractPlugin {
             IComparator comparator = SRServices.getComparatorManager().getDefault();
             if (received instanceof Element && expected instanceof Element) {
                 INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
-                INodeHolder holderReceived = holderFactory.create(received);
-                INodeHolder holderExpected = holderFactory.create(expected);
+                INodeHolder holderReceived = holderFactory.newHolder(received);
+                INodeHolder holderExpected = holderFactory.newHolder(expected);
                 try {
                     IConverter converter = holderExpected.getConverter();
                     List<String> arguments = holderExpected.getArguments();

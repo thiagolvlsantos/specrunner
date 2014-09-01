@@ -29,7 +29,7 @@ import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.plugins.core.objects.IObjectSelector;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Memory object seeker.

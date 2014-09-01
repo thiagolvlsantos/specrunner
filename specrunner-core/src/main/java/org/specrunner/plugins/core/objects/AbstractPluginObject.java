@@ -50,12 +50,12 @@ import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.string.IStringNormalizer;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.RowAdapter;
-import org.specrunner.util.xom.TableAdapter;
-import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.string.UtilString;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
+import org.specrunner.util.xom.node.UtilTable;
 
 /**
  * Generic object plugin. To write object plugins override method
@@ -310,7 +310,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 throw new PluginException("The mapping file must have a table element with fields information.");
             }
             Element n = (Element) ns.get(0);
-            TableAdapter ta = UtilNode.newTableAdapter(n);
+            TableAdapter ta = UtilTable.newTable(n);
             if (ta.getRowCount() == 0) {
                 throw new PluginException("The mapping file might have at least one row (usually a header) with the generic field information.");
             }
@@ -445,7 +445,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         for (CellAdapter cell : row.getCells()) {
             boolean ignore = Boolean.parseBoolean(cell.getAttribute("ignore", "false"));
 
-            String fieldName = SRServices.get(IStringNormalizer.class).camelCase(cell.getValue());
+            String fieldName = UtilString.getNormalizer().camelCase(cell.getValue());
             String name = cell.getAttribute("field", fieldName);
             Field f = headerToFields.get(fieldName);
             if (f == null) {

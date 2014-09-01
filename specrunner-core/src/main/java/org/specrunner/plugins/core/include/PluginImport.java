@@ -30,10 +30,10 @@ import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.RowAdapter;
-import org.specrunner.util.xom.TableAdapter;
-import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
+import org.specrunner.util.xom.node.UtilTable;
 
 /**
  * Add package information as SLIM import tables. Imports can also be performed
@@ -133,8 +133,8 @@ public class PluginImport extends AbstractPluginValue {
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
         List<String> list = getPackages(context);
-        if (UtilNode.isTable(node)) {
-            TableAdapter tableAdapter = UtilNode.newTableAdapter(node);
+        if (UtilTable.isTable(node)) {
+            TableAdapter tableAdapter = UtilTable.newTable(node);
             List<RowAdapter> rows = tableAdapter.getRows();
             for (RowAdapter r : rows) {
                 for (CellAdapter c : r.getCells()) {

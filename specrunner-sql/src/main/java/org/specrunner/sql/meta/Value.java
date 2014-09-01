@@ -18,7 +18,7 @@
 package org.specrunner.sql.meta;
 
 import org.specrunner.comparators.IComparator;
-import org.specrunner.util.xom.CellAdapter;
+import org.specrunner.util.xom.node.CellAdapter;
 
 /**
  * The value for a given cell in data tables.

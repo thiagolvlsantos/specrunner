@@ -15,22 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.comparators.core;
+package org.specrunner.util.xom.node;
 
-import org.specrunner.util.string.UtilString;
+import org.specrunner.util.xom.node.core.NodeHolderDefault;
+
+import nu.xom.Element;
 
 /**
- * Compare two strings/clobs using <code>UtilString.normalized(...)</code> to
- * clean strings.
+ * Cell abstraction.
  * 
- * @author Thiago Santos.
+ * @author Thiago Santos
  * 
  */
-@SuppressWarnings("serial")
-public class ComparatorClobNormalized extends ComparatorClob {
+public class CellAdapter extends NodeHolderDefault {
 
-    @Override
-    protected String toString(Object obj) {
-        return UtilString.getNormalizer().normalize(super.toString(obj));
+    /**
+     * Construct a cell node.
+     * 
+     * @param node
+     *            The cell node.
+     */
+    public CellAdapter(Element node) {
+        super(node);
     }
 }

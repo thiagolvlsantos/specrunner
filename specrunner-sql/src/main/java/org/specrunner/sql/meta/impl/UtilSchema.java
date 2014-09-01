@@ -24,7 +24,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.util.xom.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolder;
 
 /**
  * Utility class for Schema manipulation.
