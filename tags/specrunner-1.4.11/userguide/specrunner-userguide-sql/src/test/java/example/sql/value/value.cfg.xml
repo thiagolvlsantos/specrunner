@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+
+  <table name="customers" alias="customer">
+    <column name="id" alias="ID" key="true" converter="long" />
+
+    <column name="name" alias="name" reference="true" converter="notNullOrEmpty"/>
+
+    <column name="time" alias="Date" default="current time" date="true" converter="dateCurrent" arg0="MM/dd/yyyy" comparator="date"/>
+
+    <column name="timefull" alias="Date full" default="current timestamp" date="true" converter="timestampCurrent" comparator="timestamp"/>
+
+    <column name="anytime" alias="Date any" default="current time" date="true" converter="dateCurrent" comparator="time"/>
+
+    <column name="status" alias="State" default="example.sql.value.ItemStatus.DISABLED.getDescription()" converter="enumValue" arg0="example.sql.value.ItemStatus" arg1="getDescription" arg2="getCode" />
+
+    <column name="gender" alias="Gender" default="M" converter="itemCode"/>
+  </table>
+
+</schema>

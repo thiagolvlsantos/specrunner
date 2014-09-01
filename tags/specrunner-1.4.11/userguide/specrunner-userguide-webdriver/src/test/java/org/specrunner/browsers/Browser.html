@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Checkbox and radios examples</title>
+</head>
+<body>
+    <p>
+        Start <span class="jettyStart" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span>.
+    </p>
+    <p>
+        Open a <span class="browser size position"
+            webdriverfactory="org.specrunner.webdriver.impl.WebDriverFactoryChrome" width="400" height="400" x="0" y="0">Chrome</span>
+        and a <span class="browser size position" name="ff" webdriver="org.openqa.selenium.firefox.FirefoxDriver"
+            width="400" height="400" x="400" y="0">Firefox</span>.
+    </p>
+
+    <p>
+        Set <span class="startIn" provider="org.specrunner.jetty.JettyStringProvider">Chrome</span> and <span
+            class="startIn" name="ff" provider="org.specrunner.jetty.JettyStringProvider">Firefox</span> to default
+        location.
+    </p>
+
+    <p>
+        On both: Access '<span class="open"><open name="ff">/application/check.jsp</open></span>' and perfom:
+    <ul>
+        <li>Select all checkboxes <span class="check" by="starts:input;@id;check"><check name="ff"
+                    by="starts:input;@id;check">C1,C2 and C3</check></span>;
+        </li>
+        <li>All checkboxes <span class="checked" by="starts:input;@id;check"><checked name="ff"
+                    by="starts:input;@id;check">C1,C2 and C3</checked></span> checked;
+        </li>
+        <li>Unselect all checkboxes <span class="uncheck" by="starts:*;@id;check"><uncheck name="ff"
+                    by="starts:*;@id;check">C1,C2 and C3</uncheck></span>;
+        </li>
+        <li>All checkboxes <span class="unchecked" by="starts:input;@id;check"><unchecked name="ff"
+                    by="starts:input;@id;check">C1,C2 and C3</unchecked></span> unchecked;
+        </li>
+    </ul>
+    </p>
+
+    <!--p>
+        Pause before <pause>close</pause>
+    </p-->
+
+    <p>
+        Close
+        <quit>
+        <quit name="ff">browsers</quit></quit>
+        .
+    </p>
+
+</body>
+</html>
