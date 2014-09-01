@@ -38,7 +38,7 @@ import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
 
 /**
  * Given a data source, a schema and a table, perform operations.

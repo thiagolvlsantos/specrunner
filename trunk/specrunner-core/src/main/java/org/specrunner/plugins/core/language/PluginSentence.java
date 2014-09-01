@@ -50,9 +50,9 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
-import org.specrunner.util.string.IStringNormalizer;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.INodeHolderFactory;
+import org.specrunner.util.string.UtilString;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * A natural language plugin to perform pattern matching like
@@ -271,7 +271,7 @@ public class PluginSentence extends AbstractPlugin {
                 startText.append(child.getValue());
             }
         }
-        INodeHolder holder = SRServices.get(INodeHolderFactory.class).create(onlyText ? node : new Text(startText.toString()));
+        INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(onlyText ? node : new Text(startText.toString()));
         String value = String.valueOf(holder.getObject(context, true));
         boolean annotation = fromAnnotations(value, target, methodName, arguments);
         if (!onlyText || annotation) {
@@ -280,7 +280,7 @@ public class PluginSentence extends AbstractPlugin {
             onlyText(holder.getValue(), methodName, arguments);
         }
         if (!annotation) {
-            String tmp = SRServices.get(IStringNormalizer.class).camelCase(methodName.toString());
+            String tmp = UtilString.getNormalizer().camelCase(methodName.toString());
             methodName.setLength(0);
             methodName.append(tmp);
         }
@@ -469,7 +469,7 @@ public class PluginSentence extends AbstractPlugin {
         for (int i = 0; i < node.getChildCount(); i++) {
             Node n = node.getChild(i);
             if (n instanceof Element) {
-                INodeHolder h = SRServices.get(INodeHolderFactory.class).create(n);
+                INodeHolder h = SRServices.get(INodeHolderFactory.class).newHolder(n);
                 if (h.hasName("arg") || h.attributeContains("class", "arg")) {
                     args.add(h.getObject(context, true));
                 } else {

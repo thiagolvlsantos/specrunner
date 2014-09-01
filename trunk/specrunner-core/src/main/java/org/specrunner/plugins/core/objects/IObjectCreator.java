@@ -17,7 +17,7 @@
  */
 package org.specrunner.plugins.core.objects;
 
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Based on object type creates an instance of it, using another row information

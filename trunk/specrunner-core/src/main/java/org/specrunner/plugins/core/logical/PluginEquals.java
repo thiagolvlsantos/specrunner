@@ -30,9 +30,9 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.INodeHolderFactory;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * Compare elements. Use class 'eq', there are two approaches:
@@ -70,7 +70,7 @@ public class PluginEquals extends AbstractPluginDual {
     protected boolean operation(Object obj, IContext context) throws PluginException {
         Node node = context.getNode();
         INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
-        INodeHolder parent = holderFactory.create(node);
+        INodeHolder parent = holderFactory.newHolder(node);
         Object objExpected = null;
         Object objReceived = null;
         if (node instanceof Element) {
@@ -84,8 +84,8 @@ public class PluginEquals extends AbstractPluginDual {
                     objReceived = tmp;
                 }
             } else {
-                objExpected = holderFactory.create(UtilNode.getLeft(node)).getObject(context, true);
-                objReceived = holderFactory.create(UtilNode.getRight(node)).getObject(context, true);
+                objExpected = holderFactory.newHolder(UtilNode.getLeft(node)).getObject(context, true);
+                objReceived = holderFactory.newHolder(UtilNode.getRight(node)).getObject(context, true);
             }
         }
         try {

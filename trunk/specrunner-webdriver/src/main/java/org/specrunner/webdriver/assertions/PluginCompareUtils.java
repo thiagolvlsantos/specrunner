@@ -41,6 +41,7 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.string.IStringNormalizer;
+import org.specrunner.util.string.UtilString;
 
 /**
  * Comparison utilities.
@@ -240,7 +241,7 @@ public final class PluginCompareUtils {
      * @return The errors count adjusted.
      */
     protected static int compareTexts(PluginCompareNode compare, IContext context, IResultSet result, Element expected, WebElement received, int errors) {
-        IStringNormalizer sn = SRServices.get(IStringNormalizer.class);
+        IStringNormalizer sn = UtilString.getNormalizer();
         String strExpected = sn.normalize(expected.getValue());
         String strReceived = sn.normalize(received.getText());
         if (!strExpected.equals(strReceived)) {

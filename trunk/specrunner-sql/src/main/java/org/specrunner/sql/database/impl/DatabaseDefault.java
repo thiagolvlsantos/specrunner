@@ -77,14 +77,14 @@ import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.collections.ReverseIterable;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.INodeHolder;
 import org.specrunner.util.xom.IPresentation;
-import org.specrunner.util.xom.RowAdapter;
-import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.core.PresentationCompare;
 import org.specrunner.util.xom.core.PresentationException;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
 
 /**
  * Basic implementation of <code>IDatabase</code> using cached prepared

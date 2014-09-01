@@ -27,7 +27,7 @@ import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Delete object from memory.

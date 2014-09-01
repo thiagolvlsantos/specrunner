@@ -55,8 +55,9 @@ import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.output.IOutputFactory;
 import org.specrunner.util.resources.ResourceFinder;
 import org.specrunner.util.string.IStringNormalizer;
-import org.specrunner.util.xom.INodeHolderFactory;
 import org.specrunner.util.xom.IPresenterManager;
+import org.specrunner.util.xom.node.INodeHolderFactory;
+import org.specrunner.util.xom.node.ITableFactory;
 
 /**
  * The Spring mapping.
@@ -79,7 +80,8 @@ public class SRMappingDefault implements ISRMapping {
      * Create a group of services provided by SpecRunner.
      */
     public SRMappingDefault() {
-        types.put(INodeHolderFactory.class, "org.specrunner.util.xom.core.NodeHolderFactoryDefault");
+        types.put(INodeHolderFactory.class, "org.specrunner.util.xom.node.core.NodeHolderFactoryDefault");
+        types.put(ITableFactory.class, "org.specrunner.util.xom.node.core.TableFactoryDefault");
         types.put(IStringNormalizer.class, "org.specrunner.util.string.core.StringNormalizerDefault");
         types.put(ResourceFinder.class, "org.specrunner.util.resources.ResourceFinder");
         types.put(IPropertyLoader.class, "org.specrunner.properties.core.PropertyLoaderImpl");
@@ -125,6 +127,7 @@ public class SRMappingDefault implements ISRMapping {
      *            The type.
      * @return The service object.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T getDefault(Class<T> type) {
         long time = System.currentTimeMillis();

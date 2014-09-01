@@ -15,17 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.util.xom.node.core;
 
 import nu.xom.Node;
 
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
+
 /**
- * Stands for a node holder creator.
+ * Default implementation of a node holder creator.
  * 
  * @author Thiago Santos
  * 
  */
-public interface INodeHolderFactory {
+public class NodeHolderFactoryDefault implements INodeHolderFactory {
 
     /**
      * Creates a node holder from a node.
@@ -34,5 +37,7 @@ public interface INodeHolderFactory {
      *            A node holder.
      * @return A holder.
      */
-    INodeHolder create(Node node);
+    public INodeHolder newHolder(Node node) {
+        return new NodeHolderDefault(node);
+    }
 }

@@ -1,7 +1,7 @@
 package example.employee;
 
 import org.specrunner.plugins.core.objects.IObjectCreator;
-import org.specrunner.util.xom.RowAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
 
 public class ExampleCreator implements IObjectCreator {
 

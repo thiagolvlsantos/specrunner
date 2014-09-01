@@ -17,9 +17,8 @@
  */
 package org.specrunner.converters.core;
 
-import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
-import org.specrunner.util.string.IStringNormalizer;
+import org.specrunner.util.string.UtilString;
 
 /**
  * Convert any object to String using <code>UtilString.normalized(...)</code>.
@@ -32,6 +31,6 @@ public class ConverterStringNormalized extends ConverterString {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
-        return SRServices.get(IStringNormalizer.class).normalize((String) super.convert(obj, args));
+        return UtilString.getNormalizer().normalize((String) super.convert(obj, args));
     }
 }

@@ -15,29 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom.core;
+package org.specrunner.util.xom.node;
 
-import nu.xom.Node;
-
-import org.specrunner.util.xom.INodeHolderFactory;
-import org.specrunner.util.xom.INodeHolder;
+import nu.xom.Element;
 
 /**
- * Default implementation of a node holder creator.
+ * Stands for a table creator.
  * 
  * @author Thiago Santos
  * 
  */
-public class NodeHolderFactoryDefault implements INodeHolderFactory {
+public interface ITableFactory {
 
     /**
-     * Creates a node holder from a node.
+     * Creates a table from a node.
      * 
      * @param node
-     *            A node holder.
-     * @return A holder.
+     *            A node.
+     * @return A table adapter.
      */
-    public INodeHolder create(Node node) {
-        return new NodeHolderDefault(node);
-    }
+    TableAdapter newTable(Element node);
 }

@@ -30,9 +30,10 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
+import org.specrunner.util.xom.node.UtilTable;
 
 /**
  * Split database tables in parts like Hibernate JOINED strategy. The order of
@@ -66,7 +67,7 @@ public class PluginJoined extends AbstractPlugin {
         Node node = context.getNode();
         ParentNode parent = node.getParent();
         int index = parent.indexOf(node);
-        TableAdapter table = UtilNode.newTableAdapter(node);
+        TableAdapter table = UtilTable.newTable(node);
         int colIndex = 0;
         int fixed = 0;
         int columnIndex = 0;
@@ -89,7 +90,7 @@ public class PluginJoined extends AbstractPlugin {
                 columnIndex += span;
                 continue;
             }
-            TableAdapter copy = UtilNode.newTableAdapter(node.copy());
+            TableAdapter copy = UtilTable.newTable(node.copy());
             String alias = SRServices.get(IPluginFactory.class).getAlias(PluginJoined.class);
             copy.setAttribute(UtilNode.ATT_CSS, table.getAttribute(UtilNode.ATT_CSS).replace(alias, ""));
             if (colIndex < table.getColsCount() - 1) {

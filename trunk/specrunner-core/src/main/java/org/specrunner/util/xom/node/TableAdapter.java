@@ -15,12 +15,12 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.util.xom;
+package org.specrunner.util.xom.node;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.specrunner.util.xom.core.NodeHolderDefault;
+import org.specrunner.util.xom.node.core.NodeHolderDefault;
 
 import nu.xom.Element;
 import nu.xom.Nodes;

@@ -45,7 +45,7 @@ import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
-import org.specrunner.util.string.IStringNormalizer;
+import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -117,7 +117,7 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner {
             Set<String> titles = new HashSet<String>();
             for (int i = 0; i < scenarios.size(); i++) {
                 String title = UtilNode.getCssNodeOrElement(scenarios.get(i), ScenarioFrameListener.CSS_TITLE).getValue();
-                title = SRServices.get(IStringNormalizer.class).camelCase(title, true);
+                title = UtilString.getNormalizer().camelCase(title, true);
                 if (titles.contains(title)) {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
                 }

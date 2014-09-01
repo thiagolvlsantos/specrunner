@@ -23,7 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
 import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.Table;
-import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
 
 /**
  * Table event.

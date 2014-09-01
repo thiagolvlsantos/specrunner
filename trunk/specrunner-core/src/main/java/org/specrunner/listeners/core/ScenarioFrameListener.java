@@ -30,10 +30,10 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.string.IStringNormalizer;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.INodeHolderFactory;
+import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * Monitor for scenarios frames.
@@ -141,14 +141,14 @@ public abstract class ScenarioFrameListener implements INodeListener {
         long time = System.currentTimeMillis();
         ENext next = ENext.DEEP;
         if (holder == null) {
-            holder = SRServices.get(INodeHolderFactory.class).create(node);
+            holder = SRServices.get(INodeHolderFactory.class).newHolder(node);
         } else {
             holder.setNode(node);
         }
         if (CSS_SCENARIO.equals(holder.getQualifiedName()) || holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
             try {
                 Node sub = UtilNode.getCssNodeOrElement(node, CSS_TITLE);
-                String str = SRServices.get(IStringNormalizer.class).camelCase(sub.getValue(), true);
+                String str = UtilString.getNormalizer().camelCase(sub.getValue(), true);
                 if (name.equals(str)) {
                     scenario = node;
                     title = sub;
@@ -224,7 +224,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
                 Element span = new Element("span");
                 span.addAttribute(new Attribute("class", "scenarioTime"));
                 span.appendChild((System.currentTimeMillis() - startTime) + " ms");
-                SRServices.get(INodeHolderFactory.class).create(title).prepend(span);
+                SRServices.get(INodeHolderFactory.class).newHolder(title).prepend(span);
             }
         }
     }

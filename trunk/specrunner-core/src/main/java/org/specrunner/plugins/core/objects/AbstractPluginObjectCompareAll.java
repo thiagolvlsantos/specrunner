@@ -25,8 +25,8 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.RowAdapter;
-import org.specrunner.util.xom.TableAdapter;
+import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
 
 /**
  * Check if a given list of objects is the same of object manager. The object

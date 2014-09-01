@@ -38,11 +38,12 @@ import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.math.Range;
-import org.specrunner.util.xom.CellAdapter;
-import org.specrunner.util.xom.INodeHolder;
-import org.specrunner.util.xom.RowAdapter;
-import org.specrunner.util.xom.TableAdapter;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
+import org.specrunner.util.xom.node.UtilTable;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -98,7 +99,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), new PluginException("Table to be compared is not specified."));
             return false;
         }
-        TableAdapter tableExpected = UtilNode.newTableAdapter(table);
+        TableAdapter tableExpected = UtilTable.newTable(table);
 
         List<?> tablesReceived = getTables(element);
         if (tablesReceived.isEmpty()) {
