@@ -1,3 +1,7 @@
+1.4.12
+OK - Cenários com ignore=true são tratados adequadamente.
+OK - Relatório HTML implementado, saída em 'target/output'.
+
 1.4.11
 OK - Criar um tableadapter/rowadapter/celladapter factory;
 OK - Melhoras de performance escrevendo menos arquivos na saída.
