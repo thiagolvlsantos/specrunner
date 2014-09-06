@@ -168,6 +168,26 @@ $(document).ready(function() {
     $(":button.top_exp, #right_exp, :button.top_col, #right_col").css("width","45%");
     $(":button.top_exp, #right_exp").attr("title","Expand all");
     $(":button.top_col, #right_col").attr("title","Collapse all");
+
+
+    $(":input.htmlreport").click(function(event) {
+        var name = $(this).attr("id");
+        var body = "#body" + name;
+        var comando = $(this).attr("value");
+        if (comando.indexOf("+")>=0) {
+            comando = comando.replace("+", "-");
+        } else {
+            comando = comando.replace("-", "+");
+        }
+        $(this).attr("value", comando);
+        $(body).toggle(200);
+    });
+
+    /*
+    $(":input.htmlreport").each(function() {
+        $(this).click();
+    });
+    */    
 });
 
 $(function() {

@@ -81,7 +81,7 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
             File fout = null;
             URL url = null;
             if (isClasspath()) {
-                url = SRServices.get(ResourceFinder.class).getSpecific(getResourcePath());
+                url = SRServices.get(ResourceFinder.class).initilize().getSpecific(getResourcePath());
                 File f = new File(getResourcePath());
                 fout = new File(target.getFile().getParentFile(), target.getFile().getName() + "_res/" + f.getName());
             } else {

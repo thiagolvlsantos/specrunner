@@ -59,7 +59,7 @@ public class PropertyLoaderImpl implements IPropertyLoader {
             }
             List<URL> files;
             try {
-                files = SRServices.get(ResourceFinder.class).getAllResources(file);
+                files = SRServices.get(ResourceFinder.class).initilize().getAllResources(file);
             } catch (IOException e) {
                 throw new PropertyLoaderException(e);
             }

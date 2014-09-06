@@ -191,3 +191,24 @@
     background-color: white;
     font-weight: bold;
 }
+
+/* Scenarios */
+.scenarioSuccess::before , .scenarioFailure::before, .scenarioPending::before, .scenarioIgnored::before {
+    font-size: large;
+}
+
+.scenarioSuccess::before {
+    content: "SUCCESS";
+}
+
+.scenarioFailure::before {
+    content: "FAILURE";
+}
+
+.scenarioPending::before {
+    content: "PENDING";
+}
+
+.scenarioIgnored::before {
+    content: "IGNORED";
+}

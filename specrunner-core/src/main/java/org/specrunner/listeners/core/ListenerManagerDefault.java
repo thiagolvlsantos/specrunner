@@ -30,6 +30,7 @@ public class ListenerManagerDefault extends ListenerManagerImpl {
      * Default constructor.
      */
     public ListenerManagerDefault() {
+        add(new IgnoreNodeListener());
         add(new ContextListenerPopulator());
         add(new ContextListenerDestroyer());
         add(new ProfilerSourceListener());

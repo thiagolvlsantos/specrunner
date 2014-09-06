@@ -15,29 +15,31 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.report.core;
+package org.specrunner.report.core.comparators;
 
 import java.util.Comparator;
 
+import org.specrunner.report.core.Resume;
+
 /**
- * Default report time comparator.
+ * Default report status comparator.
  * <p>
- * Ordered by: time (countdown), index.
+ * Ordered by fields: index.
  * 
  * @author Thiago Santos
  * 
  */
-public final class TimeComparator implements Comparator<Resume> {
+public final class IndexComparator implements Comparator<Resume> {
 
     /**
-     * Thread safe instance.
+     * Unique instance.
      */
-    private static final TimeComparator INSTANCE = new TimeComparator();
+    private static final IndexComparator INSTANCE = new IndexComparator();
 
     /**
      * Default constructor.
      */
-    private TimeComparator() {
+    private IndexComparator() {
     }
 
     /**
@@ -45,25 +47,12 @@ public final class TimeComparator implements Comparator<Resume> {
      * 
      * @return The comparator.
      */
-    public static TimeComparator get() {
+    public static IndexComparator get() {
         return INSTANCE;
     }
 
     @Override
     public int compare(Resume o1, Resume o2) {
-        int result = (int) (o2.getTime() - o1.getTime());
-        if (result == 0) {
-            result = o1.getStatus().compareTo(o2.getStatus());
-            if (result == 0) {
-                result = o2.getStatusCounter() - o1.getStatusCounter();
-                if (result == 0) {
-                    result = o2.getAssertionCounter() - o1.getAssertionCounter();
-                    if (result == 0) {
-                        result = o1.getIndex() - o2.getIndex();
-                    }
-                }
-            }
-        }
-        return result;
+        return o1.getIndex() - o2.getIndex();
     }
 }

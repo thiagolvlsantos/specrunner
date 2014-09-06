@@ -99,7 +99,8 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
             listeners = new LinkedList<INodeListener>();
             Set<String> titles = new HashSet<String>();
             for (int i = 0; i < scenarios.size(); i++) {
-                String title = UtilNode.getCssNodeOrElement(scenarios.get(i), ScenarioFrameListener.CSS_TITLE).getValue();
+                Node sc = scenarios.get(i);
+                String title = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE).getValue();
                 title = UtilString.getNormalizer().camelCase(title, true);
                 if (titles.contains(title)) {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
@@ -123,7 +124,7 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
                     @Override
                     public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
                         IResultSet r = frameListener.getResult();
-                        if (frameListener.isPending()) {
+                        if (frameListener.isPending() || frameListener.isIgnored()) {
                             notifier.fireTestIgnored(description);
                         } else if (r == null || r.countErrors() == 0) {
                             notifier.fireTestStarted(description);
@@ -133,7 +134,7 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner {
                     @Override
                     public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
                         IResultSet r = frameListener.getResult();
-                        if (frameListener.isPending()) {
+                        if (frameListener.isPending() || frameListener.isIgnored()) {
                             notifier.fireTestIgnored(description);
                         } else if (r == null || r.countErrors() == 0) {
                             notifier.fireTestFinished(description);

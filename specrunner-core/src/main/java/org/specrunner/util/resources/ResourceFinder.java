@@ -86,6 +86,18 @@ public class ResourceFinder {
     }
 
     /**
+     * Initialize comparator, if required.
+     * 
+     * @return Finder itself.
+     */
+    public ResourceFinder initilize() {
+        // update comparator
+        comparator = null;
+        SRServices.getFeatureManager().set(FEATURE_COMPARATOR, this);
+        return this;
+    }
+
+    /**
      * Get the most specific file. The one which is closer in classpath lookup.
      * 
      * @param resource
@@ -113,9 +125,6 @@ public class ResourceFinder {
      *             On lookup error.
      */
     public List<URL> getAllResources(String resource) throws IOException {
-        // update comparator
-        comparator = null;
-        SRServices.getFeatureManager().set(FEATURE_COMPARATOR, this);
         synchronized (cache) {
             List<URL> files = cache.get(resource);
             if (files != null) {
@@ -123,8 +132,7 @@ public class ResourceFinder {
                     UtilLog.LOG.debug("Resource reused '" + resource + "' :" + files);
                 }
                 // get a copy, filtered and sorted. TODO: if the filter is
-                // changes
-                // the files here can be only a subset of expected ones.
+                // changes the files here can be only a subset of expected ones.
                 return filter(sort(new LinkedList<URL>(files)));
             }
             files = new LinkedList<URL>();

@@ -65,6 +65,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     public static final String CSS_SCENARIO_PENDING = "scenarioPending";
     /**
+     * Expected style for pending scenarios.
+     */
+    public static final String CSS_SCENARIO_IGNORED = "scenarioIgnored";
+    /**
      * Expected style for scenario titles.
      */
     public static final String CSS_TITLE = "title";
@@ -101,6 +105,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * Indicate if scenario is pending.
      */
     protected boolean pending = true;
+    /**
+     * Indicate if scenario is ignored.
+     */
+    protected boolean ignored = false;
     /**
      * The subset of general result for this scenario.
      */
@@ -155,7 +163,8 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     startTime = time;
                     checkpoint = result.size();
                     pending = UtilNode.isPending(node);
-                    if (pending) {
+                    ignored = UtilNode.isIgnore(node);
+                    if (pending || ignored) {
                         next = ENext.SKIP;
                     } else {
                         fireBefore(name, node, context, result, getInstance());
@@ -203,6 +212,11 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     UtilLog.LOG.info("Scenario PENDING:" + name);
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_PENDING);
+            } else if (UtilNode.isIgnore(node)) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Scenario IGNORED:" + name);
+                }
+                UtilNode.appendCss(node, CSS_SCENARIO_IGNORED);
             } else if (subset.getStatus().isError()) {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Scenario FAILURE:" + name);
@@ -238,8 +252,6 @@ public abstract class ScenarioFrameListener implements INodeListener {
      *            The scenario node.
      * @param context
      *            The test context.
-     * @param test
-     *            The test class wrapper.
      * @param result
      *            The result set.
      * @param instance
@@ -262,6 +274,15 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     public boolean isPending() {
         return pending;
+    }
+
+    /**
+     * Answer if the scenario is ignored.
+     * 
+     * @return true, if ignored, false, otherwise.
+     */
+    public boolean isIgnored() {
+        return ignored;
     }
 
     /**

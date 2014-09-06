@@ -20,6 +20,7 @@ package org.specrunner.report;
 import java.util.Map;
 
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
 
 /**
@@ -33,12 +34,14 @@ public interface IReporter {
     /**
      * Add information to the reporter.
      * 
+     * @param context
+     *            Test context.
      * @param result
      *            The result.
      * @param model
      *            The model.
      */
-    void analyse(IResultSet result, Map<String, Object> model);
+    void analyse(IContext context, IResultSet result, Map<String, Object> model);
 
     /**
      * Short information about report.
@@ -49,7 +52,7 @@ public interface IReporter {
      *            <code>SRServices.get()</code> is not available.
      * @return A partial version of resume.
      */
-    String resume(SRServices services);
+    Object partial(SRServices services);
 
     /**
      * Dump report information.

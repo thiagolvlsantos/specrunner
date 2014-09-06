@@ -20,6 +20,7 @@ package org.specrunner.report.core;
 import java.util.Map;
 
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
 import org.specrunner.report.IReporter;
 import org.specrunner.report.IReporterGroup;
 import org.specrunner.result.IResultSet;
@@ -34,17 +35,17 @@ import org.specrunner.util.composite.core.CompositeImpl;
 public class ReporterGroupImpl extends CompositeImpl<IReporterGroup, IReporter> implements IReporterGroup {
 
     @Override
-    public void analyse(IResultSet result, Map<String, Object> model) {
+    public void analyse(IContext context, IResultSet result, Map<String, Object> model) {
         for (IReporter r : getChildren()) {
-            r.analyse(result, model);
+            r.analyse(context, result, model);
         }
     }
 
     @Override
-    public String resume(SRServices services) {
+    public String partial(SRServices services) {
         StringBuilder sb = new StringBuilder();
         for (IReporter r : getChildren()) {
-            sb.append(r.resume(services));
+            sb.append(r.partial(services));
         }
         return sb.toString();
     }

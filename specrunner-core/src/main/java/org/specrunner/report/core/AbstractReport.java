@@ -23,11 +23,10 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.concurrent.TimeUnit;
 
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
 import org.specrunner.core.pipes.PipeInput;
 import org.specrunner.core.pipes.PipeTime;
 import org.specrunner.core.pipes.PipeTimestamp;
@@ -35,9 +34,13 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.report.IReporter;
+import org.specrunner.report.core.comparators.IndexComparator;
+import org.specrunner.report.core.comparators.StatusComparator;
+import org.specrunner.report.core.comparators.TimeComparator;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
+import org.specrunner.result.status.Success;
 import org.specrunner.util.output.IOutputFactory;
 
 /**
@@ -47,11 +50,6 @@ import org.specrunner.util.output.IOutputFactory;
  * 
  */
 public abstract class AbstractReport implements IReporter {
-
-    /**
-     * One second in milliseconds.
-     */
-    private static final int SECOND = 1000;
 
     /**
      * Lock to avoid report interference among threads.
@@ -74,7 +72,12 @@ public abstract class AbstractReport implements IReporter {
     protected int index = 1;
 
     /**
-     * Hash of state counters.
+     * Result status.
+     */
+    protected Status resultStatus = Success.INSTANCE;
+
+    /**
+     * Hash of status counters.
      */
     protected Map<Status, Integer> status = new TreeMap<Status, Integer>();
 
@@ -130,22 +133,29 @@ public abstract class AbstractReport implements IReporter {
      */
     protected void setFeatures(SRServices services) {
         IFeatureManager fm = services.lookup(IFeatureManager.class);
-        parts = null;
+        parts = getDefaultParts();
         fm.set(FEATURE_PARTS, this);
-        if (parts == null) {
-            parts = DEFAULT_PARTS;
-        }
+    }
+
+    /**
+     * Get part of report.
+     * 
+     * @return A list of parts.
+     */
+    protected List<ReportPart> getDefaultParts() {
+        return DEFAULT_PARTS;
     }
 
     @Override
-    public void analyse(IResultSet result, Map<String, Object> model) {
-        Resume r = createResume(result, model);
+    public void analyse(IContext context, IResultSet result, Map<String, Object> model) {
+        Resume r = newResume(context, result, model);
         Status s = r.getStatus();
         Integer c = status.get(s);
         if (c == null) {
             c = 0;
         }
         status.put(s, c + 1);
+        resultStatus = resultStatus.max(s);
         List<ActionType> listTypes = result.actionTypes();
         for (ActionType at : listTypes) {
             Integer q = types.get(at);
@@ -159,9 +169,11 @@ public abstract class AbstractReport implements IReporter {
     }
 
     @Override
-    public String resume(SRServices services) {
-        String r = resume(services, false);
-        SRServices.get(IOutputFactory.class).currentOutput().print(r);
+    public Object partial(SRServices services) {
+        Object r = resume(services, false);
+        if (r != null) {
+            SRServices.get(IOutputFactory.class).currentOutput().print(r);
+        }
         return r;
     }
 
@@ -174,89 +186,20 @@ public abstract class AbstractReport implements IReporter {
      *            If it is the final resume.
      * @return The resume.
      */
-    protected String resume(SRServices services, boolean finalResume) {
-        StringBuilder sb = new StringBuilder();
-        String gap = "";
-        String before = "+------";
-        String after = "------+";
-        if (finalResume) {
-            gap = "        ";
-        }
-        sb.append(gap);
-        sb.append(before);
-        String header = null;
-        header = " STATISTICS (" + services.getThreadName() + ") ";
-        sb.append(header);
-        sb.append(after);
-        sb.append("\n");
-
-        String format = "%16s: ";
-        sb.append(gap);
-        sb.append(String.format(format + "%d", "NUMBER OF TESTS", (index - 1)));
-        sb.append("\n");
-
-        sb.append(gap);
-        sb.append(String.format(format + "%d ms [ %02d:%02d:%02d.%03d (HH:mm:ss.SSS) ]", "TOTAL TIME", total, TimeUnit.MILLISECONDS.toHours(total), TimeUnit.MILLISECONDS.toMinutes(total), TimeUnit.MILLISECONDS.toSeconds(total), total % SECOND));
-        sb.append("\n");
-
-        sb.append(gap);
-        sb.append(String.format(format + "%7.2f ms", "AVERAGE TIME", (index > 1 ? (float) total / (index - 1) : (float) total)));
-        sb.append("\n");
-
-        sb.append(gap);
-        sb.append(String.format(format + "[%s]", "STATUS", status()));
-        sb.append("\n");
-
-        sb.append(gap);
-        sb.append(String.format(format + "[%s]", "TYPES", types()));
-        sb.append("\n");
-
-        sb.append(gap);
-        sb.append(before);
-        for (int i = 0; i < header.length(); i++) {
-            sb.append("-");
-        }
-        sb.append(after);
-        sb.append("\n");
-        return sb.toString();
-    }
-
-    /**
-     * Global status as string.
-     * 
-     * @return The overall execution resume.
-     */
-    protected String status() {
-        StringBuilder sb = new StringBuilder();
-        for (Entry<Status, Integer> e : status.entrySet()) {
-            sb.append(e.getKey().getName() + "=" + e.getValue() + ", ");
-        }
-        return sb.substring(0, sb.length() - 2);
-    }
-
-    /**
-     * Global action types as string.
-     * 
-     * @return The overall execution resume.
-     */
-    protected String types() {
-        StringBuilder sb = new StringBuilder();
-        for (Entry<ActionType, Integer> e : types.entrySet()) {
-            sb.append(e.getKey().getName() + "=" + e.getValue() + ", ");
-        }
-        return sb.length() > 2 ? sb.substring(0, sb.length() - 2) : sb.toString();
-    }
+    protected abstract Object resume(SRServices services, boolean finalResume);
 
     /**
      * Create a resume of result.
      * 
+     * @param context
+     *            A test context.
      * @param result
      *            The result.
      * @param model
      *            The model.
      * @return The resume.
      */
-    protected Resume createResume(IResultSet result, Map<String, Object> model) {
+    protected Resume newResume(IContext context, IResultSet result, Map<String, Object> model) {
         Long time = (Long) model.get(PipeTime.TIME);
         Status s = result.getStatus();
         Resume r = createInstance(result, model);
@@ -300,8 +243,10 @@ public abstract class AbstractReport implements IReporter {
             setFeatures(services);
             synchronized (LOCK) {
                 dumpStart(services);
-                for (ReportPart rp : parts) {
-                    dumpPart(services, rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                if (parts != null) {
+                    for (ReportPart rp : parts) {
+                        dumpPart(services, rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                    }
                 }
                 dumpResume(services, resume(services, true));
                 dumpEnd(services);
@@ -355,7 +300,7 @@ public abstract class AbstractReport implements IReporter {
      * @param resume
      *            Resume information.
      */
-    protected abstract void dumpResume(SRServices services, String resume);
+    protected abstract void dumpResume(SRServices services, Object resume);
 
     /**
      * Dump report ending.

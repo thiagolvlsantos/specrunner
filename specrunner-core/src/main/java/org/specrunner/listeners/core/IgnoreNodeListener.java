@@ -15,20 +15,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.report.core;
+package org.specrunner.listeners.core;
+
+import nu.xom.Node;
+
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.ENext;
+import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.UtilNode;
 
 /**
- * Default factory implementation.
+ * Listener to ignore nodes.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
-public class ReporterFactoryDefault extends ReporterFactoryImpl {
+public class IgnoreNodeListener extends AbstractNodeListener {
 
-    /**
-     * Default constructor.
-     */
-    public ReporterFactoryDefault() {
-        super(new ReporterGroupImpl().add(new ReporterTxt()).add(new ReporterHtml()));
+    @Override
+    public void reset() {
+    }
+
+    @Override
+    public String getName() {
+        return "ignore";
+    }
+
+    @Override
+    public ENext onBefore(Node node, IContext context, IResultSet result) {
+        return UtilNode.isIgnore(node) ? ENext.SKIP : ENext.DEEP;
     }
 }
