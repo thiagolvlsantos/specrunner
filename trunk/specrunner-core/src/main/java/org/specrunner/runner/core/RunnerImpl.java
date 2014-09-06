@@ -53,7 +53,6 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.collections.ReverseIterable;
-import org.specrunner.util.xom.UtilNode;
 
 /**
  * Default runner implementation.
@@ -197,16 +196,8 @@ public class RunnerImpl implements IRunner {
                     // for each children.
                     for (int i = 0; i < deep.getChildCount(); i++) {
                         Node child = deep.getChild(i);
-                        if (child instanceof Element) {
-                            // if not ignored marked
-                            if (!UtilNode.isIgnore(child)) {
-                                // recursive execution
-                                local(child, context, result, null);
-                            }
-                        } else {
-                            // recursive execution
-                            local(child, context, result, null);
-                        }
+                        // recursive execution
+                        local(child, context, result, null);
                     }
                 }
                 factory.finalizePlugin(node, context, plugin);

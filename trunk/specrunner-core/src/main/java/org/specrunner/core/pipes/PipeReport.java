@@ -52,8 +52,8 @@ public class PipeReport implements IPipe {
         IReporter reporter = PipeReporter.lookup(channel);
         IResultSet result = PipeResult.lookup(channel);
         Map<String, Object> model = PipeModel.recover(channel);
-        reporter.analyse(result, model);
-        reporter.resume(SRServices.get());
+        reporter.analyse(context, result, model);
+        reporter.partial(SRServices.get());
         return channel;
     }
 }

@@ -147,6 +147,12 @@
     border: 1px dashed #A2D9EF;
 }
 
+.scenarioIgnored {
+    background-color: #DDDDDD; 
+    border: 1px dashed #A2D9EF;
+    text-decoration: line-through;
+}
+
 /* STACK TRACE */
 .sr_border {
     border-color: red;
@@ -404,4 +410,43 @@ table.included_file_args td {
 
 .compare .received {
     color: red;
+}
+
+/* HTML REPORT */
+table.htmlreport {
+    border: 1px solid black;
+    width: 90%;
+}
+
+table.htmlreport caption {
+    background-color: black;
+    color: white;
+    text-align: left;
+    padding: 5px;
+    font-size: x-large;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+table.htmlreport th, table.htmlreport td {
+    border: 1px dotted gray;
+    text-align: left;
+}
+
+table.htmlreport th {
+    background-color: gray;
+    color: white;
+    padding: 5px;
+}
+
+table.htmlreport td {
+    padding: 2px;
+}
+
+h1.htmlreport {
+    padding:5px;
+}
+
+input.htmlreport {
+    width: 30px;
 }

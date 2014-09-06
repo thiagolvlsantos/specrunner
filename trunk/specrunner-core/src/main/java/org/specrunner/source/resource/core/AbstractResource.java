@@ -145,7 +145,7 @@ public abstract class AbstractResource implements IResource {
         List<URL> files;
         try {
             if (isClasspath()) {
-                files = SRServices.get(ResourceFinder.class).getAllResources(getResourcePath());
+                files = SRServices.get(ResourceFinder.class).initilize().getAllResources(getResourcePath());
                 Collections.reverse(files);
             } else {
                 files = Arrays.asList(new URL(getResourcePath()));

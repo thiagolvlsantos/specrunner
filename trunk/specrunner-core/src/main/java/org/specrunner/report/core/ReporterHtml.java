@@ -1,0 +1,293 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2014  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
+package org.specrunner.report.core;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import nu.xom.Attribute;
+import nu.xom.DocType;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Serializer;
+
+import org.specrunner.SRServices;
+import org.specrunner.dumper.core.ConstantsDumperFile;
+import org.specrunner.features.IFeatureManager;
+import org.specrunner.report.core.comparators.IndexComparator;
+import org.specrunner.report.core.comparators.StatusComparator;
+import org.specrunner.report.core.comparators.TimeComparator;
+import org.specrunner.source.core.UtilEncoding;
+import org.specrunner.util.UtilIO;
+import org.specrunner.util.UtilLog;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
+import org.specrunner.util.resources.ResourceFinder;
+import org.specrunner.util.string.IStringNormalizer;
+
+/**
+ * Basic HTML implementation.
+ * 
+ * @author Thiago Santos
+ * 
+ */
+public class ReporterHtml extends AbstractReport {
+    /**
+     * Base document.
+     */
+    private Document doc;
+    /**
+     * Root element.
+     */
+    private Element html;
+    /**
+     * Header part.
+     */
+    private Element head;
+    /**
+     * Content part.
+     */
+    private Element body;
+
+    @Override
+    protected List<ReportPart> getDefaultParts() {
+        return Arrays.asList(new ReportPart("Status order", StatusComparator.get()), new ReportPart("Time order", TimeComparator.get()), new ReportPart("Execution order", IndexComparator.get()));
+    }
+
+    @Override
+    protected void dumpStart(SRServices services) {
+        html = new Element("html");
+        doc = new Document(html);
+        doc.setDocType(new DocType("html"));
+        {
+            head = new Element("head");
+            html.appendChild(head);
+        }
+        {
+            body = new Element("head");
+            html.appendChild(body);
+            {
+                Element h1 = new Element("h1");
+                h1.addAttribute(new Attribute("class", "htmlreport " + resultStatus.getCssName()));
+                h1.appendChild("HTML Report " + String.format(" [%s | %s | #:%d | AVG: %.2f ms | TOTAL:%d ms]", resultStatus.getName(), services.getThreadName(), resumes.size(), ((double) total / (resumes.isEmpty() ? 1 : resumes.size())), total));
+                body.appendChild(h1);
+            }
+        }
+    }
+
+    @Override
+    protected Object resume(SRServices services, boolean finalResume) {
+        return null;
+    }
+
+    @Override
+    protected void dumpResume(SRServices services, Object resume) {
+        // useless
+    }
+
+    @Override
+    protected void dumpPart(SRServices services, String header, List<Resume> list) {
+        Element quote = new Element("blockquote");
+        body.appendChild(quote);
+        {
+            Element table = new Element("table");
+            table.addAttribute(new Attribute("class", "htmlreport"));
+            quote.appendChild(table);
+
+            IStringNormalizer normalizer = services.lookup(IStringNormalizer.class);
+            String id = normalizer.normalize(header);
+            {
+                Element caption = new Element("caption");
+                Element button = new Element("input");
+                button.addAttribute(new Attribute("type", "button"));
+                button.addAttribute(new Attribute("class", "htmlreport"));
+                button.addAttribute(new Attribute("id", id));
+                button.addAttribute(new Attribute("value", "-"));
+                caption.appendChild(button);
+                caption.appendChild("  " + header);
+                table.appendChild(caption);
+            }
+
+            Element tbody = new Element("tbody");
+            tbody.addAttribute(new Attribute("id", "body" + id));
+            table.appendChild(tbody);
+
+            Element tr = new Element("tr");
+            tbody.appendChild(tr);
+            {
+                for (String s : Arrays.asList("#", "TIME (ms)", "%", "ON", "STATUS", "ASSERTS", "OUTPUT")) {
+                    Element th = new Element("th");
+                    th.appendChild(s);
+                    tr.appendChild(th);
+                }
+            }
+
+            for (Resume r : list) {
+                tr = new Element("tr");
+                tr.addAttribute(new Attribute("class", r.getStatus().getCssName()));
+                tbody.appendChild(tr);
+                {
+                    Element td = new Element("td");
+                    tr.appendChild(td);
+                    td.appendChild(String.valueOf(r.getIndex()));
+
+                    td = new Element("td");
+                    tr.appendChild(td);
+                    td.appendChild(String.valueOf(r.getTime()));
+
+                    td = new Element("td");
+                    tr.appendChild(td);
+                    td.appendChild(String.format("%7.2f", asPercentage(r.getTime())));
+
+                    td = new Element("td");
+                    tr.appendChild(td);
+                    td.appendChild(String.valueOf(r.getTimestamp()));
+
+                    td = new Element("td");
+                    tr.appendChild(td);
+                    td.appendChild(r.getStatus().getName() + " " + r.getStatusCounter() + "/" + r.getStatusTotal());
+
+                    td = new Element("td");
+                    tr.appendChild(td);
+                    td.appendChild(r.getAssertionCounter() + "/" + r.getAssertionTotal());
+
+                    td = new Element("td");
+                    tr.appendChild(td);
+                    {
+                        Element a = new Element("a");
+                        td.appendChild(a);
+
+                        Object obj = r.getOutput();
+                        String str = String.valueOf(obj);
+                        File file = new File(str);
+                        a.addAttribute(new Attribute("href", file.getAbsolutePath()));
+                        td.appendChild(obj instanceof File ? ((File) obj).getName() : str.replace(ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY.getAbsolutePath() + File.separator, ""));
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void dumpEnd(SRServices services) {
+        File dir = ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY;
+        appendResources(services, dir);
+
+        String suffix = services.getThreadName().equals("main") ? "" : "_" + services.getThreadName();
+        File output = new File(dir, "result" + suffix + ".html");
+        write(services, doc, output);
+
+        IOutput out = services.lookup(IOutputFactory.class).currentOutput();
+        out.println(services.getThreadName() + ": HTML resume at '" + output.getAbsolutePath() + "'.");
+    }
+
+    /**
+     * Append resources to output, and write data to disk.
+     * 
+     * @param services
+     *            Services base.
+     * @param dir
+     *            Output directory.
+     */
+    protected void appendResources(SRServices services, File dir) {
+        try {
+            List<URL> all = new LinkedList<URL>();
+            for (String s : Arrays.asList("css/specrunner.css", "js/jquery.js", "js/specrunner.js")) {
+                all.addAll(services.lookup(ResourceFinder.class).getAllResources(s));
+            }
+            for (URL url : all) {
+                String tmp = url.toString();
+                File out = new File(dir, tmp.substring(tmp.lastIndexOf('/')));
+                if (!out.exists()) {
+                    UtilIO.writeToClose(url, out);
+                }
+                String link = out.getName().replace(File.separator, "/");
+                if (url.getFile().endsWith("css")) {
+                    Element css = new Element("link");
+                    css.addAttribute(new Attribute("rel", "stylesheet"));
+                    css.addAttribute(new Attribute("type", "text/css"));
+                    css.addAttribute(new Attribute("href", link));
+                    head.appendChild(css);
+                } else if (url.getFile().endsWith("js")) {
+                    Element js = new Element("script");
+                    js.addAttribute(new Attribute("type", "text/javascript"));
+                    js.addAttribute(new Attribute("src", link));
+                    js.appendChild("<!-- comment -->");
+                    head.appendChild(js);
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    /**
+     * Write document to output.
+     * 
+     * @param services
+     *            Services base.
+     * @param document
+     *            Output document.
+     * @param output
+     *            Output target file.
+     */
+    protected void write(SRServices services, Document document, File output) {
+        File parent = output.getParentFile();
+        if (!parent.exists() && !parent.mkdirs()) {
+            throw new IllegalArgumentException("Could not create output directory '" + parent + "'.");
+        }
+        FileOutputStream fout = null;
+        BufferedOutputStream bout = null;
+        try {
+            fout = new FileOutputStream(output);
+            bout = new BufferedOutputStream(fout);
+            String encoding = UtilEncoding.getEncoding(services.lookup(IFeatureManager.class));
+            new Serializer(bout, encoding).write(document);
+        } catch (Exception e) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug(e.getMessage(), e);
+            }
+            throw new IllegalArgumentException(e);
+        } finally {
+            if (fout != null) {
+                try {
+                    fout.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
+            if (bout != null) {
+                try {
+                    bout.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
+        }
+    }
+}

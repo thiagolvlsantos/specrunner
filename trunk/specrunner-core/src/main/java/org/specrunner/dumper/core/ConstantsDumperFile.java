@@ -35,14 +35,14 @@ public final class ConstantsDumperFile {
     }
 
     /**
-     * The output directory. The default value is 'src/test/resources/outcome'.
+     * The output directory. The default value is 'target/output'.
      */
     public static final String FEATURE_OUTPUT_DIRECTORY = ConstantsDumperFile.class.getName() + ".outputDirectory";
 
     /**
      * Default output directory.
      */
-    public static final File DEFAULT_OUTPUT_DIRECTORY = new File("src/test/resources/outcome");
+    public static final File DEFAULT_OUTPUT_DIRECTORY = new File("target/output");
 
     /**
      * The output file name. The default name is the same of the input file.

@@ -29,7 +29,7 @@ import org.specrunner.util.output.IOutputFactory;
  * @author Thiago Santos
  * 
  */
-public class ReporterTxt extends AbstractReport {
+public class ReporterTxt extends AbstractTxtReport {
 
     @Override
     protected void dumpStart(SRServices services) {
@@ -56,7 +56,7 @@ public class ReporterTxt extends AbstractReport {
     }
 
     @Override
-    protected void dumpResume(SRServices services, String resume) {
+    protected void dumpResume(SRServices services, Object resume) {
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
         out.print(resume);
     }
