@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+  <!-- According to schema in 'ordersSeq.sql'  -->
+  <!--property name="sequence">NEXT VALUE FOR {0}</property-->
+
+  <table name="customers" alias="customer">
+    <column name="id" alias="ID" key="true" converter="long" sequence="ORD.customers_id_seq"/>
+    <!-- Neither names and alias are not case-sensitive -->
+    <column name="name" alias="name" reference="true"/>
+  </table>
+
+  <table name="orders" alias="Order" sequence="orders_id_seq">
+    <column name="id" alias="ID" key="true" converter="long" sequence="ORD.orders_id_seq"/>
+    <column name="customer_id" alias="Customer" reference="true" virtual="true"/>
+    <!-- nor converter and comparator names. -->
+    <column name="date" alias="Date" date="true" converter="dAte" arg0="MM/dd/yyyy" comparator="date" reference="true"/>
+  </table>
+
+  <!-- extra spaces in names are ignored in final mapping -->
+  <table name="line_items" alias="Items    list">
+    <column name="line_number" alias="Number" key="true" converter="long" />
+    <column name="order_id" alias="Order" key="true" virtual="true"/>
+    <column name="product_id" alias="Product" virtual="true"/>
+    <column name="quantity" alias="Quantity" converter="int"/>
+  </table>
+
+  <table name="products" alias="Product">
+    <column name="id" alias="ID" key="true" converter="long" sequence="ORD.products_id_seq" />
+    <column name="serialNumber" alias="Serial" reference="true"/>
+  </table>
+</schema>

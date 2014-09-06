@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Select examples</title>
+</head>
+<body>
+    <p>
+        Open <a class="include" href="../open.html?url=table&y=400&x=0">browser</a>.
+    </p>
+
+
+
+<p>
+    Table information might be :
+    <span class="compareTable" by="xpath://table[@id='tableId']">
+        <table border='1'>
+            <caption>Dynamic dates</caption>
+            <tr>
+                <th>ID</th>
+                <th>Creation</th>
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td type="date" format="HH:mm" value='${dt.toString("HH:mm")}'>current date</td>
+                <td type="node" comparator="full">A<span class="blue">á</span></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td type="date" format="HH:mm:ss" value='${dt.toString("HH:mm:ss")}'>current date</td>
+                <td>B</td>
+            </tr>
+            <tr>
+                <td colspan="3" type="table">
+                    <table border="1">
+                        <caption>Inner table</caption>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                        </tr>
+                        <tr>
+                            <td>Thiago</td>
+                            <td type="date" format="HH:mm:ss" value='${dt.toString("HH:mm:ss")}'>current date</td>
+                        </tr>
+                        <tr>
+                            <td type="table">
+                                <table border="1">
+                                    <caption>Super Inner table</caption>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Month</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Santos</td>
+                                        <td>January</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td ignore="true">Celula ignorada na comparação</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" type="node"><input type="text" value="Linha" /> <textarea>Texto</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><img src="image.jpg" width="40"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Field:<input type="text" class="present" by="id:txtField" value="Example if sub query"/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </span>
+</p>
+
+<p>
+    Check table in parts using 'rows=...'
+    <span class="compareTable" by="xpath://table[@id='tableId']" >
+        <table border='1' rows="...0;2...">
+            <caption>Dynamic dates</caption>
+            <tr>
+                <th>ID</th>
+                <th>Creation</th>
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td type="date" format="HH:mm:ss" value='${dt.toString("HH:mm:ss")}'>current date</td>
+                <td>B</td>
+            </tr>
+            <tr>
+                <td colspan="3" type="table" >
+                    <table border="1" rows="0;2;4">
+                        <caption>Inner table</caption>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date</th>
+                        </tr>
+                        <tr>
+                            <td type="table">
+                                <table border="1">
+                                    <caption>Super Inner table</caption>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Month</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Santos</td>
+                                        <td>January</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td ignore="true">Celula ignorada na comparação</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><img src="image.jpg" width="40"/>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </span>
+</p>
+
+<p>
+    Check table in parts using 'rows=...' and cols="..."
+    <span class="compareTable" by="xpath://table[@id='tableId']" >
+        <table border='1' rows="0;2" cols="0;2">
+            <caption>Dynamic dates</caption>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>B</td>
+            </tr>
+        </table>
+    </span>
+</p>
+
+</body>
+</html>
