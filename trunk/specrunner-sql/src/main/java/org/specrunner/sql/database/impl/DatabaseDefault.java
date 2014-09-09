@@ -860,7 +860,7 @@ public class DatabaseDefault implements IDatabase {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
         }
-        if (wrapper.getExpectedCount() != count) {
+        if (wrapper.getExpectedCount() != Integer.MAX_VALUE && wrapper.getExpectedCount() != count) {
             throw new DatabaseException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
         }
 

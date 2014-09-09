@@ -73,7 +73,11 @@ public class DatabaseCountListener implements IDatabaseListener {
         if (CommandType.INSERT == type) {
             old += count;
         } else if (CommandType.DELETE == type) {
-            old -= count;
+            if (count == Integer.MAX_VALUE) {
+                old = 0;
+            } else {
+                old -= count;
+            }
         }
         countersIn.put(name, old);
         System.out.println("COUNT_IN_AFTER:" + countersIn);
