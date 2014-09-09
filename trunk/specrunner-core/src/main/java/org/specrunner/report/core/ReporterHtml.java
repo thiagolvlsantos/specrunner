@@ -32,6 +32,7 @@ import nu.xom.Document;
 import nu.xom.Element;
 import nu.xom.Serializer;
 
+import org.joda.time.DateTime;
 import org.specrunner.SRServices;
 import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.features.IFeatureManager;
@@ -69,6 +70,14 @@ public class ReporterHtml extends AbstractReport {
      * Content part.
      */
     private Element body;
+    /**
+     * Output directory.
+     */
+    private File output;
+    /**
+     * Output file.
+     */
+    private File outputName;
 
     @Override
     protected List<ReportPart> getDefaultParts() {
@@ -91,9 +100,14 @@ public class ReporterHtml extends AbstractReport {
                 Element h1 = new Element("h1");
                 h1.addAttribute(new Attribute("class", "htmlreport " + resultStatus.getCssName()));
                 h1.appendChild("HTML Report " + String.format(" [%s | %s | #:%d | AVG: %.2f ms | TOTAL:%d ms]", resultStatus.getName(), services.getThreadName(), resumes.size(), ((double) total / (resumes.isEmpty() ? 1 : resumes.size())), total));
+                h1.appendChild(new Element("br"));
+                h1.appendChild(new DateTime().toString("HH:mm:ss.SSS MM/dd/yyyy"));
                 body.appendChild(h1);
             }
         }
+        output = ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY;
+        String suffix = services.getThreadName().equals("main") ? "" : "_" + services.getThreadName();
+        outputName = new File(output, "result" + suffix + ".html");
     }
 
     @Override
@@ -181,7 +195,8 @@ public class ReporterHtml extends AbstractReport {
                         Object obj = r.getOutput();
                         String str = String.valueOf(obj);
                         File file = new File(str);
-                        a.addAttribute(new Attribute("href", file.getAbsolutePath()));
+                        String relative = relative(outputName.getAbsolutePath(), file.getAbsolutePath());
+                        a.addAttribute(new Attribute("href", relative));
                         td.appendChild(obj instanceof File ? ((File) obj).getName() : str.replace(ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY.getAbsolutePath() + File.separator, ""));
                     }
                 }
@@ -189,17 +204,35 @@ public class ReporterHtml extends AbstractReport {
         }
     }
 
+    /**
+     * Relative path.
+     * 
+     * @param base
+     *            Base path.
+     * @param target
+     *            Target.
+     * @return Relative link.
+     */
+    public String relative(String base, String target) {
+        int left = base.indexOf(File.separatorChar);
+        int right = target.indexOf(File.separatorChar);
+        if (left > 0 && right > 0 && base.substring(0, left).equals(target.substring(0, right))) {
+            return relative(base.substring(left + 1), target.substring(right + 1));
+        }
+        StringBuilder sb = new StringBuilder();
+        while (left > 0) {
+            sb.append(".." + File.separatorChar);
+            left = base.indexOf(File.separatorChar, left + 1);
+        }
+        return sb.toString() + target;
+    }
+
     @Override
     protected void dumpEnd(SRServices services) {
-        File dir = ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY;
-        appendResources(services, dir);
-
-        String suffix = services.getThreadName().equals("main") ? "" : "_" + services.getThreadName();
-        File output = new File(dir, "result" + suffix + ".html");
-        write(services, doc, output);
-
+        appendResources(services, output);
+        write(services, doc, outputName);
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
-        out.println(services.getThreadName() + ": HTML resume at '" + output.getAbsolutePath() + "'.");
+        out.println(services.getThreadName() + ": HTML resume at '" + outputName.getAbsolutePath() + "'.");
     }
 
     /**
@@ -290,4 +323,5 @@ public class ReporterHtml extends AbstractReport {
             }
         }
     }
+
 }
