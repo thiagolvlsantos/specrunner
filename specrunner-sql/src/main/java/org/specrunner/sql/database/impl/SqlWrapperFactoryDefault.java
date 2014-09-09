@@ -253,7 +253,7 @@ public class SqlWrapperFactoryDefault implements ISqlWrapperFactory {
     protected SqlWrapper createDeleteWrapper(Table table, IRegister register, int expectedCount) {
         Map<String, Integer> namesToIndexes = new HashMap<String, Integer>();
         StringBuilder sb = sqlDelete(table, register, namesToIndexes);
-        return deleteWrapper(sb, namesToIndexes, expectedCount);
+        return deleteWrapper(sb, namesToIndexes, register.isEmpty() ? Integer.MAX_VALUE : expectedCount);
     }
 
     /**
@@ -269,7 +269,7 @@ public class SqlWrapperFactoryDefault implements ISqlWrapperFactory {
      */
     protected StringBuilder sqlDelete(Table table, IRegister register, Map<String, Integer> namesToIndexes) {
         StringBuilder sb = new StringBuilder();
-        sb.append("delete from " + table.getParent().getName() + "." + table.getName() + " where ");
+        sb.append("delete from " + table.getParent().getName() + "." + table.getName());
 
         boolean hasKeys = false;
         boolean hasReferences = false;
@@ -307,7 +307,10 @@ public class SqlWrapperFactoryDefault implements ISqlWrapperFactory {
         if (sbConditions.length() > and.length()) {
             sbConditions.setLength(sbConditions.length() - and.length());
         }
-        sb.append(sbConditions);
+        if (sbConditions.length() > 0) {
+            sb.append(" where ");
+            sb.append(sbConditions);
+        }
         return sb;
     }
 

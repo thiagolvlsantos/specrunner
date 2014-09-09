@@ -1,3 +1,10 @@
+1.4.13
+OK - Criar o relatório de resumo das execuções dos testes (fazer por thread de execução, se for 'main' não precisa colocar sufixo no nome do relatório)
+	Criar a tabela com todos os testes executados e seus respectivos resultados (versão HTML do relatório textual que é gerado atualmente), tudo linkado
+	OK: tem que ser relativo senão não funciona no Jenkins/etc.
+
+OK - Quando realizar deleções em bloco não precisa ter campos id e(ou) quantitativo, afinal pode-se querer apagar todos os registros de uma tabela.
+
 1.4.12
 OK - Cenários com ignore=true são tratados adequadamente.
 OK - Relatório HTML implementado, saída em 'target/output'.

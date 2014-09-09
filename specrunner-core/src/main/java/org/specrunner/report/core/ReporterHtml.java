@@ -78,6 +78,10 @@ public class ReporterHtml extends AbstractReport {
      * Output file.
      */
     private File outputName;
+    /**
+     * Current date.
+     */
+    private String date;
 
     @Override
     protected List<ReportPart> getDefaultParts() {
@@ -100,9 +104,8 @@ public class ReporterHtml extends AbstractReport {
                 Element h1 = new Element("h1");
                 h1.addAttribute(new Attribute("class", "htmlreport " + resultStatus.getCssName()));
                 h1.appendChild("HTML Report " + String.format(" [%s | %s | #:%d | AVG: %.2f ms | TOTAL:%d ms]", resultStatus.getName(), services.getThreadName(), resumes.size(), ((double) total / (resumes.isEmpty() ? 1 : resumes.size())), total));
-                h1.appendChild(new Element("br"));
-                h1.appendChild(new DateTime().toString("HH:mm:ss.SSS MM/dd/yyyy"));
                 body.appendChild(h1);
+                date = new DateTime().toString("HH:mm:ss.SSS MM/dd/yyyy");
             }
         }
         output = ConstantsDumperFile.DEFAULT_OUTPUT_DIRECTORY;
@@ -139,7 +142,7 @@ public class ReporterHtml extends AbstractReport {
                 button.addAttribute(new Attribute("id", id));
                 button.addAttribute(new Attribute("value", "-"));
                 caption.appendChild(button);
-                caption.appendChild("  " + header);
+                caption.appendChild("  " + header + " at " + date);
                 table.appendChild(caption);
             }
 
