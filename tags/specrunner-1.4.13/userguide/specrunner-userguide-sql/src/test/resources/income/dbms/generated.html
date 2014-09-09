@@ -1,0 +1,472 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<link href="../sql.css" rel="stylesheet" type="text/css" />
+
+<style>
+	table, th, td {
+		border: 1px dotted black;
+		padding: 2px;
+	}
+</style>
+
+</head>
+<body>
+	Com uma
+	<span class="connection">conexão</span> deve-se
+	<a class="scripts" href="drop.sql" value="drop.sql" failsafe="true">re</a>
+	<a class="scripts" href="schema.sql" value="schema.sql">criar</a> o
+	esquema. Com um
+	<span class="schemaloader">leitor</span> de esquemas se carrega o
+	<span class="schema">esquema</span> esperado, prepara-se
+	<span class="database">o executor de comandos</span>. Por fim
+	prepara-se o banco de dados preenchendo com:
+	</span>
+	
+	<h1>Adicionado registros</h1>
+	<table class="prepare">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Nome A</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Misturando virtuais e reais.</h1>
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 1 do Projeto 1</td>
+				<td>Descr 1</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 2 do Projeto 1</td>
+				<td></td>
+				<td virtual="true">Nome A</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 1 do Projeto 2</td>
+				<td></td>
+				<td virtual="true">Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Apenas virtuais.</h1>
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th>Descrição</th>
+				<th virtual="true">Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 3 do Projeto 1</td>
+				<td>Descr 3</td>
+				<td>Nome A</td>
+			</tr>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 2 do Projeto 2</td>
+				<td></td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Verifica o projeto com base no ID</h1>
+	<table class="verify">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>ID</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Verifica o projeto usando apenas os atributos.</h1>
+	<table class="verify">
+		<caption>Projeto</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Nome B</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Verifica a tarefa usando os campos com valor real.</h1>
+	<table class="verify">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th>Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 3 do Projeto 1</td>
+				<td>1</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Verifica a tarefa usando os campos com valor virtual.</h1>
+	<table class="verify">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th>Nome</th>
+				<th virtual="true">Projeto</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>I</td>
+				<td>Tarefa 3 do Projeto 1</td>
+				<td>Nome A</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Deletando tarefa pelo ID</h1>
+	<table>
+		<tr>
+			<td>Delete</td>
+			<td>Confere ID</td>
+			<td>Confere Nome</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="prepare">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>Nome</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Tarefa 1 do Projeto 1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<h1>Deletar tarefa pelo apelido.</h1> 
+	<table>
+		<tr>
+			<td>Delete</td>
+			<td>Confere ID</td>
+			<td>Confere Nome</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="prepare">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>Nome</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Tarefa 2 do Projeto 1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>2</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>Nome</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Tarefa 2 do Projeto 1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+	
+	<h1>Deletar tarefa pelo apelido do projeto.</h1> 
+	<table>
+		<tr>
+			<td>Delete</td>
+			<td>Confere ID</td>
+			<td>Confere Nome</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="prepare">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th virtual="true">Projeto</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Nome A</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>4</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Tarefa</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>Nome</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Tarefa 3 do Projeto 1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<h1>Deletar projetos pelo apelido.</h1> 
+	<table>
+		<tr>
+			<td>Delete</td>
+			<td>Confere ID</td>
+			<td>Confere Nome</td>
+		</tr>
+		<tr>
+			<td>
+				<table class="prepare">
+					<caption>Projeto</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>Nome</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Nome A</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Projeto</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>ID</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>1</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+			<td>
+				<table class="verify">
+					<caption>Projeto</caption>
+					<thead>
+						<tr>
+							<th>Comando</th>
+							<th>Nome</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>D</td>
+							<td>Nome A</td>
+						</tr>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+
+	<h1>Atualizando a tarefa pelo apelido do projeto e pelo nome. O uso de 'key' permite atualizar por qualquer campo que não seja a chave real.</h1>
+	<table class="prepare">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th virtual="true" key="true">Projeto</th>
+				<th key="true">Nome</th>
+				<th>Descrição</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>U</td>
+				<td>Nome B</td>
+				<td>Tarefa 1 do Projeto 2</td>
+				<td>Descrição alterada</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h1>Conferindo atualização usando o campo nome como chave da busca</h1>
+	<table class="verify">
+		<caption>Tarefa</caption>
+		<thead>
+			<tr>
+				<th>Comando</th>
+				<th key="true">Nome</th>
+				<th>Descrição</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>U</td>
+				<td>Tarefa 1 do Projeto 2</td>
+				<td>Descrição alterada</td>
+			</tr>
+		</tbody>
+	</table>
+
+	TODO: rever estratégia de atributos na seleção quando os campos forem datas, blob, onde a busca pode acabar sempre
+	não econtrando registros.
+</body>
+</html>

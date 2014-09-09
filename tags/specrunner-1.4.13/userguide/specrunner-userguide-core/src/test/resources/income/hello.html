@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+</head>
+<body>
+    <script src="http://code.jquery.com/jquery.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    
+    <link href="css/local.css" rel="stylesheet" type="text/css" />
+    <h1>Basic plugin</h1>
+    <p>
+        Using variables, defining plugins in diferent formats (result report on '
+        <code>src/test/resources/outcome</code>
+        ' will keep CSS/Images/JavaScripts).
+    <table>
+        <tr>
+            <th>Using custom with class name</th>
+        </tr>
+        <tr>
+            <td>Set name as <span class="local" name="name" scope="tr">Thiago Santos</span>.
+                <p>
+                    You can use
+                    <code>custom</code>
+                    attribute to set the plugin instance.
+                <p>
+                    Check if message is '<span custom="example.core.PluginHello">Hello ${name}</span>'.
+                <p></td>
+        </tr>
+        <tr>
+            <th>Using custom with properties file</th>
+        </tr>
+        <tr>
+            <td>Variable local name previously defined is not available. (${name})
+                <p>
+                    Set name as <span class="global" name="name">Thiago LVL Santos</span>.
+                <p>
+                    You can use <b>custom</b> with a name of a class mapped in
+                    <code>plugin_custom.properties</code>
+                    .
+                <pre>
+                    hello=example.core.PluginHello
+                </pre>
+                <p>
+                    Check if message is '<span custom="hello">Hello ${name}</span>'.
+            </td>
+        </tr>
+        <tr>
+            <th>Using class with property file</th>
+        </tr>
+        <tr>
+            <td>Variable global previously defined is available. (${name})
+                <p>
+                    You can use <b>class</b> with a name of a class mapped in
+                    <code>plugin_css.properties</code>
+                    . Other class values can be used in the same attribute. .
+                <pre>
+                    hello=example.core.PluginHello
+                </pre>
+                <p>
+                    Check if message is '<span class="any hello">Hello ${name}</span>'.
+            </td>
+        </tr>
+        <tr>
+            <th>Using defined tag with property file</th>
+        </tr>
+        <tr>
+            <td>You can use a specific tag <code>&lt;hello&gt;</code> mapped in <code>plugin_element.properties</code> . <pre>
+                    hello=example.core.PluginHello
+                </pre>
+                <p>
+                    Check if message is '
+                    <hello>Hello ${name}</hello>
+                    '.</td>
+        </tr>
+    </table>
+
+    This is an example of a verification already available in
+    <span class="eq"><span class="left">${name}</span>=<span class="right">Thiago LVL Santos</span></span>.
+</body>
+</html>
