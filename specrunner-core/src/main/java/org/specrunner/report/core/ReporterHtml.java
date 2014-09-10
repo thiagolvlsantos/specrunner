@@ -219,11 +219,11 @@ public class ReporterHtml extends AbstractReport {
     public String relative(String base, String target) {
         int left = base.indexOf(File.separatorChar);
         int right = target.indexOf(File.separatorChar);
-        if (left > 0 && right > 0 && base.substring(0, left).equals(target.substring(0, right))) {
+        if (left >= 0 && right >= 0 && base.substring(0, left).equals(target.substring(0, right))) {
             return relative(base.substring(left + 1), target.substring(right + 1));
         }
         StringBuilder sb = new StringBuilder();
-        while (left > 0) {
+        while (left >= 0) {
             sb.append(".." + File.separatorChar);
             left = base.indexOf(File.separatorChar, left + 1);
         }
