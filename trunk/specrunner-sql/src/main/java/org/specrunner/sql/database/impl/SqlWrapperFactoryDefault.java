@@ -190,7 +190,6 @@ public class SqlWrapperFactoryDefault implements ISqlWrapperFactory {
             sbColumns.setLength(sbColumns.length() - 1);
         }
         sb.append(sbColumns);
-        sb.append(" where ");
 
         StringBuilder sbConditions = new StringBuilder();
         String and = " AND ";
@@ -220,7 +219,10 @@ public class SqlWrapperFactoryDefault implements ISqlWrapperFactory {
         if (sbConditions.length() > (1 + and.length())) {
             sbConditions.setLength(sbConditions.length() - (1 + and.length()));
         }
-        sb.append(sbConditions);
+        if (sbConditions.length() > 0) {
+            sb.append(" where ");
+            sb.append(sbConditions);
+        }
         return sb;
     }
 
