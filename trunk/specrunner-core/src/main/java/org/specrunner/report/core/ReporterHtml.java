@@ -227,7 +227,8 @@ public class ReporterHtml extends AbstractReport {
             sb.append(".." + File.separatorChar);
             left = base.indexOf(File.separatorChar, left + 1);
         }
-        return sb.toString() + target;
+        sb.append(target);
+        return sb.toString();
     }
 
     @Override
