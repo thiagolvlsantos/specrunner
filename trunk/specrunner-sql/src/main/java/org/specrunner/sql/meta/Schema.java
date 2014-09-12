@@ -149,7 +149,12 @@ public class Schema implements IReplicable<Schema>, IMergeable<Schema>, IResetab
      * @return A table, or null, if not found.
      */
     public Table getAlias(String alias) {
-        return aliasToTables.get(alias == null ? null : UtilNames.normalize(alias));
+        String key = alias == null ? null : UtilNames.normalize(alias);
+        Table table = aliasToTables.get(key);
+        if (table == null) {
+            table = getName(key);
+        }
+        return table;
     }
 
     /**

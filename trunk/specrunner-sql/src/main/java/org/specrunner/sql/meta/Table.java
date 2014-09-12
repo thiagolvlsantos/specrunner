@@ -201,7 +201,11 @@ public class Table implements IReplicable<Table>, IMergeable<Table>, IResetableE
         if (table != null) {
             key = createAlias(key, table);
         }
-        return aliasToColumns.get(key);
+        Column column = aliasToColumns.get(key);
+        if (column == null) {
+            column = getName(key);
+        }
+        return column;
     }
 
     /**
