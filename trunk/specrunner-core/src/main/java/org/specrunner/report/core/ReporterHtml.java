@@ -256,9 +256,7 @@ public class ReporterHtml extends AbstractReport {
             for (URL url : all) {
                 String tmp = url.toString();
                 File out = new File(dir, tmp.substring(tmp.lastIndexOf('/')));
-                if (!out.exists()) {
-                    UtilIO.writeToClose(url, out);
-                }
+                UtilIO.writeToClose(url, out);
                 String link = out.getName().replace(File.separator, "/");
                 if (url.getFile().endsWith("css")) {
                     Element css = new Element("link");
