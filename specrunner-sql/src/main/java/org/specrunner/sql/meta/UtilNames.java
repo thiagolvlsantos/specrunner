@@ -19,6 +19,9 @@ package org.specrunner.sql.meta;
 
 import java.util.StringTokenizer;
 
+import org.specrunner.SRServices;
+import org.specrunner.util.string.IStringNormalizer;
+
 /**
  * Utility names.
  * 
@@ -45,8 +48,9 @@ public final class UtilNames {
         }
         StringBuilder sb = new StringBuilder();
         StringTokenizer st = new StringTokenizer(alias);
+        IStringNormalizer normalizer = SRServices.get(IStringNormalizer.class);
         for (int i = 0; st.hasMoreTokens(); i++) {
-            sb.append((i == 0 ? "" : " ") + st.nextToken().toLowerCase());
+            sb.append((i == 0 ? "" : " ") + normalizer.clean(st.nextToken().toLowerCase()));
         }
         return sb.toString();
     }

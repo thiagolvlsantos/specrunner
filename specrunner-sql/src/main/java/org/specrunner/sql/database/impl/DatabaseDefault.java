@@ -406,7 +406,7 @@ public class DatabaseDefault implements IDatabase {
         String tAlias = captions.get(0).getValue();
         Table table = schema.getAlias(tAlias);
         if (table == null) {
-            throw new DatabaseException("Table '" + UtilNames.normalize(tAlias) + "' not found in schema " + schema.getAlias() + "(" + schema.getName() + "), available tables: " + schema.getAliasToTables().keySet());
+            throw new DatabaseException("Table '" + tAlias + "' [as '" + UtilNames.normalize(tAlias) + "'] not found in schema " + schema.getAlias() + "(" + schema.getName() + "), available alias: " + schema.getAliasToTables().keySet() + ", available tables: " + schema.getNamesToTables().keySet());
         }
         if (!afilter.accept(mode, table)) {
             if (UtilLog.LOG.isInfoEnabled()) {
@@ -593,7 +593,7 @@ public class DatabaseDefault implements IDatabase {
             columns[i] = table.getAlias(cAlias);
             Column column = columns[i];
             if (i > 0 && column == null) {
-                throw new DatabaseException("Column with alias '" + cAlias + "' not found in:" + table.getAliasToColumns().keySet());
+                throw new DatabaseException("Column '" + cAlias + "' [as '" + UtilNames.normalize(cAlias) + "'] not found in alias: " + table.getAliasToColumns().keySet() + " or in names: " + table.getNamesToColumns().keySet());
             }
             // update to specific header adjusts
             if (column != null) {
