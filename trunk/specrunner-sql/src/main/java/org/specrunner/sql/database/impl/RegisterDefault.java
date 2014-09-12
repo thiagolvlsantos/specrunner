@@ -97,4 +97,34 @@ public class RegisterDefault extends TreeSet<Value> implements IRegister {
         }
         return null;
     }
+
+    @Override
+    public boolean hasKeys() {
+        for (Value v : this) {
+            if (v.getColumn().isKey()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasReferences() {
+        for (Value v : this) {
+            if (v.getColumn().isReference()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hasKeysOrReferences() {
+        for (Value v : this) {
+            if (v.getColumn().isKey() || v.getColumn().isReference()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

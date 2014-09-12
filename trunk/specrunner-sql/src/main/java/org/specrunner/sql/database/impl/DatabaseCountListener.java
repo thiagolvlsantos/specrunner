@@ -69,7 +69,6 @@ public class DatabaseCountListener implements IDatabaseListener {
         if (old == null) {
             old = 0;
         }
-        System.out.println("COUNT_IN_BEFORE:" + countersIn);
         if (CommandType.INSERT == type) {
             old += count;
         } else if (CommandType.DELETE == type) {
@@ -80,7 +79,6 @@ public class DatabaseCountListener implements IDatabaseListener {
             }
         }
         countersIn.put(name, old);
-        System.out.println("COUNT_IN_AFTER:" + countersIn);
     }
 
     @Override
@@ -93,14 +91,12 @@ public class DatabaseCountListener implements IDatabaseListener {
         if (old == null) {
             old = 0;
         }
-        System.out.println("COUNT_OUT_BEFORE:" + countersOut);
         if (CommandType.INSERT == type) {
             old += count;
         } else if (CommandType.DELETE == type) {
             old -= count;
         }
         countersOut.put(name, old);
-        System.out.println("COUNT_OUT_AFTER:" + countersOut);
     }
 
     @Override
@@ -116,7 +112,6 @@ public class DatabaseCountListener implements IDatabaseListener {
             if (out == null) {
                 out = 0;
             }
-            System.out.println("TABLE_OUT(" + in + "+" + out + ")");
             checkCount(event.getConnection(), event.getTable(), in + out);
         }
     }
