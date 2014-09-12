@@ -113,7 +113,11 @@ public class PluginVerifyRows extends AbstractPluginValue {
             Element tr = new Element("tr");
             for (int j = 0; j < hs.size(); j++) {
                 Element td = new Element("td");
-                td.appendChild(UtilEvaluator.asExpression(((Element) hs.get(j)).getAttributeValue("value")));
+                String attVal = ((Element) hs.get(j)).getAttributeValue("value");
+                if (attVal == null) {
+                    attVal = ((Element) hs.get(j)).getAttributeValue("property");
+                }
+                td.appendChild(UtilEvaluator.asExpression(attVal));
                 tr.appendChild(td);
             }
             ele.appendChild(tr);

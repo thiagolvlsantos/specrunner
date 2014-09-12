@@ -1,3 +1,12 @@
+1.4.14
+OK - Ajuste do bug de relatório HTML final;
+OK - Realizar update em bloco;
+OK - remover o comentário de onTableIn no DatabasePrintListener
+OK - Fazer o lookup de tabelas e campos ser realizado em duas etapas, primeiro pelo alias, se não achar procupar pelo name da entidade no banco, isso permite usar alias ou names nas especificações sem problemas;
+OK - remover também os acentos dos nomes das tabelas normalizadas no esquema para evitar problemas bestas de acentuação;
+OK - Jogar sempre os js e css de saída na saída, senão os updates da ferramenta não terão efeito visual. A menos que seja feito sempre o clean da pasta de saida no build do projeto, por exemplo, se a pasta for o target do maven deveria ser sempre removida;
+OK - Ajustar o verify rows para mostrar os valores excedentes recebidos nas consultas.
+
 1.4.13
 OK - Criar o relatório de resumo das execuções dos testes (fazer por thread de execução, se for 'main' não precisa colocar sufixo no nome do relatório)
 	Criar a tabela com todos os testes executados e seus respectivos resultados (versão HTML do relatório textual que é gerado atualmente), tudo linkado
