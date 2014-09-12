@@ -63,4 +63,25 @@ public interface IRegister extends Set<Value> {
      * @return A value, if it exists, null, otherwise.
      */
     Value getByAlias(String alias);
+
+    /**
+     * Check if register has keys.
+     * 
+     * @return true, if register has keys, false, otherwise.
+     */
+    boolean hasKeys();
+
+    /**
+     * Check if register has references.
+     * 
+     * @return true, if register has references, false, otherwise.
+     */
+    boolean hasReferences();
+
+    /**
+     * Check if register has keys or references.
+     * 
+     * @return true, if register has keys or references, false, otherwise.
+     */
+    boolean hasKeysOrReferences();
 }

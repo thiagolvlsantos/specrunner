@@ -136,7 +136,7 @@ public class SqlWrapperFactoryDefault implements ISqlWrapperFactory {
     protected SqlWrapper createUpdateWrapper(Table table, IRegister register, int expectedCount) {
         Map<String, Integer> namesToIndexes = new HashMap<String, Integer>();
         StringBuilder sb = sqlUpdate(table, register, namesToIndexes);
-        return updateWrapper(sb, namesToIndexes, expectedCount);
+        return updateWrapper(sb, namesToIndexes, !register.hasKeysOrReferences() ? Integer.MAX_VALUE : expectedCount);
     }
 
     /**
