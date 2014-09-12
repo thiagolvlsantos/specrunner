@@ -17,7 +17,6 @@
  */
 package org.specrunner.util.xom.node.core;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +26,6 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 import nu.xom.Text;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -36,6 +34,8 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.converters.IConverterManager;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.parameters.IAccess;
+import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -336,12 +336,10 @@ public class NodeHolderDefault implements INodeHolder {
                     }
                     Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
                     try {
-                        value = PropertyUtils.getProperty(bean, str.substring(pos + 1));
-                    } catch (IllegalAccessException e) {
-                        throw new PluginException(e);
-                    } catch (InvocationTargetException e) {
-                        throw new PluginException(e);
-                    } catch (NoSuchMethodException e) {
+                        String prop = str.substring(pos + 1);
+                        IAccess access = SRServices.get(IAccessFactory.class).newAccess(bean, prop);
+                        value = access.get(bean, prop);
+                    } catch (Exception e) {
                         throw new PluginException(e);
                     }
                     if (UtilLog.LOG.isTraceEnabled()) {
