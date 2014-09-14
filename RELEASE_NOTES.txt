@@ -1,3 +1,10 @@
+1.4.15
+OK - No header do HTML colocar a quantidade de testes com status igual ao status geral da execução.
+OK - Nos plugin de objetcs só colocar title="X" se o texto dentro dos tds não for "X" (reduz a quantidade de dados na saída);
+NO - Adicionar um title 'CENÁRIO IGNORADO' quando for o caso
+	Denecessário.
+OK - Testar melhor o valor de campo quando preenchido com property='x.atributo' ao invés de value, tem que ser mais esperta a resolução;
+
 1.4.14
 OK - Ajuste do bug de relatório HTML final;
 OK - Realizar update em bloco;
