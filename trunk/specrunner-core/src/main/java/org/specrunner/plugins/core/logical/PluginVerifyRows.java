@@ -7,6 +7,7 @@ import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.Unsilent;
@@ -18,8 +19,9 @@ import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * Perform table verifications.
@@ -103,6 +105,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
                 context.pop();
             }
         }
+        INodeHolderFactory nf = SRServices.get(INodeHolderFactory.class);
         Element ele = (Element) node;
         first = true;
         while (ite.hasNext()) {
@@ -110,21 +113,25 @@ public class PluginVerifyRows extends AbstractPluginValue {
                 result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Returned enumeration has more elements than expected."));
                 first = false;
             }
-            Element tr = new Element("tr");
-            for (int j = 0; j < hs.size(); j++) {
-                Element td = new Element("td");
-                String attVal = ((Element) hs.get(j)).getAttributeValue("value");
-                if (attVal == null) {
-                    attVal = ((Element) hs.get(j)).getAttributeValue("property");
-                }
-                td.appendChild(UtilEvaluator.asExpression(attVal));
-                tr.appendChild(td);
-            }
-            ele.appendChild(tr);
             try {
+                Element tr = new Element("tr");
                 context.push(context.newBlock(tr, this));
                 context.saveLocal(pos, String.valueOf(i - 1));
                 context.saveLocal(getName(), ite.next());
+                for (int j = 0; j < hs.size(); j++) {
+                    Element td = new Element("td");
+                    INodeHolder newTd = nf.newHolder(td);
+                    INodeHolder header = nf.newHolder(hs.get(j));
+                    if (header.hasAttribute(INodeHolder.ATTRIBUTE_VALUE)) {
+                        newTd.setAttribute(INodeHolder.ATTRIBUTE_VALUE, header.getAttribute(INodeHolder.ATTRIBUTE_VALUE));
+                    }
+                    if (header.hasAttribute(INodeHolder.ATTRIBUTE_PROPERTY)) {
+                        newTd.setAttribute(INodeHolder.ATTRIBUTE_PROPERTY, header.getAttribute(INodeHolder.ATTRIBUTE_PROPERTY));
+                    }
+                    td.appendChild(String.valueOf(newTd.getObject(context, true)));
+                    tr.appendChild(td);
+                }
+                ele.appendChild(tr);
                 UtilPlugin.performChildren(tr, context, result);
             } finally {
                 context.clearLocal(getName());

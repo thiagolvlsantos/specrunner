@@ -29,13 +29,13 @@
     <p>Searching for "<b class="set" scope="div" name="searchString">arr</b>" will return:</p>
 
     <table class="verifyRows" name="u" value="$THIS.getSearchResultsFor(searchString)">
-        <tr><th class="eq" value="u.firstName+'.'+u.lastName">Matching Usernames</th></tr>
+        <tr><th class="eq" value="u.firstName.getName()+'.'+u.lastName.getName()">Matching Usernames</th></tr>
         <tr><td>george.harrison</td></tr>
         <tr><td>ringo.starr</td></tr>
     </table>
 
     <table class="verifyRows" name="u" value="$THIS.getSearchResultsFor(searchString)">
-        <tr><th class="eq" property="u.firstName">Matching First</th><th class="eq" property="u.lastName">Matching last</th></tr>
+        <tr><th class="eq" property="u.firstName.name">Matching First</th><th class="eq" property="u.lastName.name">Matching last</th></tr>
         <tr><td>george</td><td>harrison</td></tr>
         <tr><td>ringo</td><td>starr</td></tr>
     </table>
