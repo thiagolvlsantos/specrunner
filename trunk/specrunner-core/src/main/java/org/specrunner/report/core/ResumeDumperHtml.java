@@ -48,12 +48,12 @@ import org.specrunner.util.resources.ResourceFinder;
 import org.specrunner.util.string.IStringNormalizer;
 
 /**
- * Basic HTML implementation.
+ * Basic HTML dumper implementation.
  * 
  * @author Thiago Santos
  * 
  */
-public class ReporterHtml extends AbstractReport {
+public class ResumeDumperHtml implements IResumeDumper {
     /**
      * Base document.
      */
@@ -83,13 +83,18 @@ public class ReporterHtml extends AbstractReport {
      */
     private String date;
 
+    /**
+     * Report parts.
+     */
+    private List<ReportPart> parts = Arrays.asList(new ReportPart("Status order", StatusComparator.get()), new ReportPart("Time order", TimeComparator.get()), new ReportPart("Execution order", IndexComparator.get()));
+
     @Override
-    protected List<ReportPart> getDefaultParts() {
-        return Arrays.asList(new ReportPart("Status order", StatusComparator.get()), new ReportPart("Time order", TimeComparator.get()), new ReportPart("Execution order", IndexComparator.get()));
+    public List<ReportPart> getParts() {
+        return parts;
     }
 
     @Override
-    protected void dumpStart(SRServices services) {
+    public void dumpStart(SRServices services, ResumeReporter parent) {
         html = new Element("html");
         doc = new Document(html);
         doc.setDocType(new DocType("html"));
@@ -102,8 +107,8 @@ public class ReporterHtml extends AbstractReport {
             html.appendChild(body);
             {
                 Element h1 = new Element("h1");
-                h1.addAttribute(new Attribute("class", "htmlreport " + resultStatus.getCssName()));
-                h1.appendChild("HTML Report " + String.format(" [%s | %s | #:%d | AVG: %.2f ms | TOTAL:%d ms]", resultStatus.getName(), services.getThreadName(), resumes.size(), ((double) total / (resumes.isEmpty() ? 1 : resumes.size())), total));
+                h1.addAttribute(new Attribute("class", "htmlreport " + parent.getResultStatus().getCssName()));
+                h1.appendChild("HTML Report " + String.format(" [%s (%d of %d) | %s | AVG: %.2f ms | TOTAL:%d ms]", parent.getResultStatus().getName(), parent.getStatus().get(parent.getResultStatus()), parent.getResumes().size(), services.getThreadName(), ((double) parent.getTotal() / (parent.getResumes().isEmpty() ? 1 : parent.getResumes().size())), parent.getTotal()));
                 body.appendChild(h1);
                 date = new DateTime().toString("HH:mm:ss.SSS MM/dd/yyyy");
             }
@@ -114,17 +119,17 @@ public class ReporterHtml extends AbstractReport {
     }
 
     @Override
-    protected Object resume(SRServices services, boolean finalResume) {
+    public Object resume(SRServices services, ResumeReporter parent, boolean finalResume) {
         return null;
     }
 
     @Override
-    protected void dumpResume(SRServices services, Object resume) {
+    public void dumpResume(SRServices services, ResumeReporter parent, Object resume) {
         // useless
     }
 
     @Override
-    protected void dumpPart(SRServices services, String header, List<Resume> list) {
+    public void dumpPart(SRServices services, ResumeReporter parent, String header, List<Resume> list) {
         Element quote = new Element("blockquote");
         body.appendChild(quote);
         {
@@ -175,7 +180,7 @@ public class ReporterHtml extends AbstractReport {
 
                     td = new Element("td");
                     tr.appendChild(td);
-                    td.appendChild(String.format("%7.2f", asPercentage(r.getTime())));
+                    td.appendChild(String.format("%7.2f", parent.asPercentage(r.getTime())));
 
                     td = new Element("td");
                     tr.appendChild(td);
@@ -232,7 +237,7 @@ public class ReporterHtml extends AbstractReport {
     }
 
     @Override
-    protected void dumpEnd(SRServices services) {
+    public void dumpEnd(SRServices services, ResumeReporter parent) {
         appendResources(services, output);
         write(services, doc, outputName);
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
@@ -247,7 +252,7 @@ public class ReporterHtml extends AbstractReport {
      * @param dir
      *            Output directory.
      */
-    protected void appendResources(SRServices services, File dir) {
+    public void appendResources(SRServices services, File dir) {
         try {
             List<URL> all = new LinkedList<URL>();
             for (String s : Arrays.asList("css/specrunner.css", "js/jquery.js", "js/specrunner.js")) {
@@ -287,7 +292,7 @@ public class ReporterHtml extends AbstractReport {
      * @param output
      *            Output target file.
      */
-    protected void write(SRServices services, Document document, File output) {
+    public void write(SRServices services, Document document, File output) {
         File parent = output.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
             throw new IllegalArgumentException("Could not create output directory '" + parent + "'.");

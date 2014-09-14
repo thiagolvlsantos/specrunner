@@ -29,6 +29,6 @@ public class ReporterFactoryDefault extends ReporterFactoryImpl {
      * Default constructor.
      */
     public ReporterFactoryDefault() {
-        super(new ReporterGroupImpl().add(new ReporterTxt()).add(new ReporterHtml()));
+        super(new ReporterGroupImpl().add(new ResumeReporter().add(new ResumeDumperTxt()).add(new ResumeDumperHtml())));
     }
 }
