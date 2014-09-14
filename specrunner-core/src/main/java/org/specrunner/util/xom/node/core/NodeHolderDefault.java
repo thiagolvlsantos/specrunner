@@ -26,6 +26,7 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 import nu.xom.Text;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -34,8 +35,6 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.converters.IConverterManager;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.parameters.IAccess;
-import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
@@ -337,14 +336,7 @@ public class NodeHolderDefault implements INodeHolder {
                     Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
                     try {
                         String prop = str.substring(pos + 1);
-                        IAccess access = SRServices.get(IAccessFactory.class).newAccess(bean, prop);
-                        if (access != null) {
-                            value = access.get(bean, prop);
-                        } else {
-                            throw new PluginException("Invalid access '" + str + "'.");
-                        }
-                    } catch (PluginException e) {
-                        throw e;
+                        value = BeanUtils.getProperty(bean, prop);
                     } catch (Exception e) {
                         throw new PluginException(e);
                     }
