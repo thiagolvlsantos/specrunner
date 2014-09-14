@@ -960,8 +960,6 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     UtilLog.LOG.debug("VALUE>" + value);
                 }
                 setValue(row, instance, f, value);
-                String title = cell.getAttribute("title", "");
-                cell.setAttribute("title", title + "|toString()=" + PropertyUtils.getProperty(instance, f.getFullName()));
                 String out = String.valueOf(value);
                 if (text != null && !text.equals(out)) {
                     cell.append("{" + out + "}");

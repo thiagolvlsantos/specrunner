@@ -17,7 +17,6 @@
  */
 package org.specrunner.report.core;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -34,9 +33,6 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.report.IReporter;
-import org.specrunner.report.core.comparators.IndexComparator;
-import org.specrunner.report.core.comparators.StatusComparator;
-import org.specrunner.report.core.comparators.TimeComparator;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
@@ -44,12 +40,12 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.output.IOutputFactory;
 
 /**
- * Generic extractor of usefull information for reporter dumps.
+ * Reporter which accumulates resumes over execution.
  * 
  * @author Thiago Santos
  * 
  */
-public abstract class AbstractReport implements IReporter {
+public class ResumeReporter implements IReporter {
 
     /**
      * Lock to avoid report interference among threads.
@@ -64,65 +60,115 @@ public abstract class AbstractReport implements IReporter {
     /**
      * Total processing time.
      */
-    protected Long total = 0L;
+    private Long total = 0L;
 
     /**
      * The test index.
      */
-    protected int index = 1;
+    private int index = 1;
 
     /**
      * Result status.
      */
-    protected Status resultStatus = Success.INSTANCE;
+    private Status resultStatus = Success.INSTANCE;
 
     /**
      * Hash of status counters.
      */
-    protected Map<Status, Integer> status = new TreeMap<Status, Integer>();
+    private Map<Status, Integer> status = new TreeMap<Status, Integer>();
 
     /**
      * Hash of actions counters.
      */
-    protected Map<ActionType, Integer> types = new TreeMap<ActionType, Integer>();
+    private Map<ActionType, Integer> types = new TreeMap<ActionType, Integer>();
 
     /**
      * List of resume of results.
      */
-    protected List<Resume> resumes = new LinkedList<Resume>();
+    private List<Resume> resumes = new LinkedList<Resume>();
 
     /**
-     * Feature to set parts of report.
+     * Feature to set dumpers of report.
      */
-    public static final String FEATURE_PARTS = AbstractReport.class.getName() + ".parts";
-
+    public static final String FEATURE_DUMPERS = ResumeReporter.class.getName() + ".dumpers";
     /**
-     * Final report parts.
+     * Report dumpers.
      */
-    protected List<ReportPart> parts;
+    private List<IResumeDumper> dumpers = new LinkedList<IResumeDumper>();
 
     /**
-     * Default behavior.
-     */
-    public static final List<ReportPart> DEFAULT_PARTS = Arrays.asList(new ReportPart("EXECUTION ORDER", IndexComparator.get()), new ReportPart("PERCENTAGE ORDER", TimeComparator.get()), new ReportPart("STATUS ORDER", StatusComparator.get()));
-
-    /**
-     * Get the report pats.
+     * Get total execution time.
      * 
-     * @return The parts.
+     * @return Total time.
      */
-    public List<ReportPart> getParts() {
-        return parts;
+    public Long getTotal() {
+        return total;
     }
 
     /**
-     * Set the parts.
+     * Get resumes index.
      * 
-     * @param parts
-     *            The parts.
+     * @return Index.
      */
-    public void setParts(List<ReportPart> parts) {
-        this.parts = parts;
+    public int getIndex() {
+        return index;
+    }
+
+    /**
+     * Get execution status.
+     * 
+     * @return A status.
+     */
+    public Status getResultStatus() {
+        return resultStatus;
+    }
+
+    /**
+     * Map of status counts.
+     * 
+     * @return Map of status to counts.
+     */
+    public Map<Status, Integer> getStatus() {
+        return status;
+    }
+
+    /**
+     * Map if action types.
+     * 
+     * @return Map of types.
+     */
+    public Map<ActionType, Integer> getTypes() {
+        return types;
+    }
+
+    /**
+     * Get resume set.
+     * 
+     * @return Resume set.
+     */
+    public List<Resume> getResumes() {
+        return resumes;
+    }
+
+    /**
+     * Get dumpers list.
+     * 
+     * @return A list.
+     */
+    public List<IResumeDumper> getDumpers() {
+        return dumpers;
+    }
+
+    /**
+     * Add a dumper of resumes.
+     * 
+     * @param dumper
+     *            A dumper.
+     * @return The reporter itself.
+     */
+    public ResumeReporter add(IResumeDumper dumper) {
+        getDumpers().add(dumper);
+        return this;
     }
 
     /**
@@ -133,17 +179,7 @@ public abstract class AbstractReport implements IReporter {
      */
     protected void setFeatures(SRServices services) {
         IFeatureManager fm = services.lookup(IFeatureManager.class);
-        parts = getDefaultParts();
-        fm.set(FEATURE_PARTS, this);
-    }
-
-    /**
-     * Get part of report.
-     * 
-     * @return A list of parts.
-     */
-    protected List<ReportPart> getDefaultParts() {
-        return DEFAULT_PARTS;
+        fm.set(FEATURE_DUMPERS, this);
     }
 
     @Override
@@ -170,23 +206,16 @@ public abstract class AbstractReport implements IReporter {
 
     @Override
     public Object partial(SRServices services) {
-        Object r = resume(services, false);
-        if (r != null) {
-            SRServices.get(IOutputFactory.class).currentOutput().print(r);
+        List<Object> objs = new LinkedList<Object>();
+        for (IResumeDumper rd : dumpers) {
+            Object r = rd.resume(services, this, false);
+            if (r != null) {
+                SRServices.get(IOutputFactory.class).currentOutput().print(r);
+            }
+            objs.add(r);
         }
-        return r;
+        return objs;
     }
-
-    /**
-     * Partial resume.
-     * 
-     * @param services
-     *            The services instance.
-     * @param finalResume
-     *            If it is the final resume.
-     * @return The resume.
-     */
-    protected abstract Object resume(SRServices services, boolean finalResume);
 
     /**
      * Create a resume of result.
@@ -242,25 +271,20 @@ public abstract class AbstractReport implements IReporter {
         if (!resumes.isEmpty()) {
             setFeatures(services);
             synchronized (LOCK) {
-                dumpStart(services);
-                if (parts != null) {
-                    for (ReportPart rp : parts) {
-                        dumpPart(services, rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                for (IResumeDumper dumper : dumpers) {
+                    dumper.dumpStart(services, this);
+                    List<ReportPart> parts = dumper.getParts();
+                    if (parts != null) {
+                        for (ReportPart rp : parts) {
+                            dumper.dumpPart(services, this, rp.getHeader(), orderedList(resumes, rp.getComparator()));
+                        }
                     }
+                    dumper.dumpResume(services, this, dumper.resume(services, this, true));
+                    dumper.dumpEnd(services, this);
                 }
-                dumpResume(services, resume(services, true));
-                dumpEnd(services);
             }
         }
     }
-
-    /**
-     * Dump report starting.
-     * 
-     * @param services
-     *            Current instance.
-     */
-    protected abstract void dumpStart(SRServices services);
 
     /**
      * Creates a copy of the resume list.
@@ -281,43 +305,13 @@ public abstract class AbstractReport implements IReporter {
     }
 
     /**
-     * Dump the resume declaration.
-     * 
-     * @param services
-     *            Current instance.
-     * @param header
-     *            The header.
-     * @param list
-     *            The list of resumes.
-     */
-    protected abstract void dumpPart(SRServices services, String header, List<Resume> list);
-
-    /**
-     * Dump resume.
-     * 
-     * @param services
-     *            Current instance.
-     * @param resume
-     *            Resume information.
-     */
-    protected abstract void dumpResume(SRServices services, Object resume);
-
-    /**
-     * Dump report ending.
-     * 
-     * @param services
-     *            Current instance.
-     */
-    protected abstract void dumpEnd(SRServices services);
-
-    /**
      * Returns a time as percentage.
      * 
      * @param time
      *            The time.
      * @return The percentage value.
      */
-    protected double asPercentage(Long time) {
+    public double asPercentage(Long time) {
         return ((double) time / total) * PERCENTAGE;
     }
 }

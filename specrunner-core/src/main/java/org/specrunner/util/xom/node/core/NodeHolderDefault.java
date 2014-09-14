@@ -338,7 +338,13 @@ public class NodeHolderDefault implements INodeHolder {
                     try {
                         String prop = str.substring(pos + 1);
                         IAccess access = SRServices.get(IAccessFactory.class).newAccess(bean, prop);
-                        value = access.get(bean, prop);
+                        if (access != null) {
+                            value = access.get(bean, prop);
+                        } else {
+                            throw new PluginException("Invalid access '" + str + "'.");
+                        }
+                    } catch (PluginException e) {
+                        throw e;
                     } catch (Exception e) {
                         throw new PluginException(e);
                     }
