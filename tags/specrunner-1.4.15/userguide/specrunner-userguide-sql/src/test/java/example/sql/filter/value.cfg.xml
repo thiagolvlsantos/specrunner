@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+	<table name="users" alias="users">
+		<column name="id" alias="ID" key="true" converter="long" />
+		<column name="login" alias="login" reference="true" converter="notNullOrEmpty" />
+	</table>
+
+	<table name="projects" alias="projects">
+		<column name="id" alias="ID" key="true" converter="long" />
+		<column name="name" alias="name" reference="true" converter="notNullOrEmpty" />
+		<column name="description" alias="description" converter="notNullOrEmpty" />
+	</table>
+
+	<table name="tasks" alias="tasks">
+		<column name="id" alias="ID" key="true" converter="long" />
+		<column name="name" alias="name" reference="true" converter="notNullOrEmpty" />
+		<column name="time" alias="time" converter="long" default="10"/>
+	</table>
+
+	<table name="items" alias="items">
+		<column name="id" alias="ID" key="true" converter="long" />
+		<column name="a" alias="a" converter="long"/>
+		<column name="b" alias="b" converter="long"/>
+	</table>
+</schema>
