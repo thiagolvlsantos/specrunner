@@ -18,16 +18,36 @@
 package org.specrunner.junit;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import nu.xom.Node;
+import nu.xom.Nodes;
+
+import org.junit.runner.Description;
+import org.junit.runner.notification.Failure;
+import org.junit.runners.model.FrameworkMethod;
+import org.junit.runners.model.TestClass;
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
+import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IScenarioListener;
+import org.specrunner.listeners.core.ScenarioCleanerListener;
+import org.specrunner.listeners.core.ScenarioFrameListener;
+import org.specrunner.result.IResultSet;
+import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.string.UtilString;
+import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * JUnit useful functions.
@@ -176,5 +196,95 @@ public final class JUnitUtils {
             tmp = tmp.getSuperclass();
         }
         return scan;
+    }
+
+    /**
+     * Prepare scenario runners.
+     * 
+     * @param runner
+     *            Runners.
+     * @return A list of methods.
+     */
+    public static List<FrameworkMethod> prepareScenarios(final IRunnerScenario runner) {
+        List<FrameworkMethod> methods = new LinkedList<FrameworkMethod>();
+        try {
+            final TestClass testClass = runner.getTestClass();
+            Class<?> javaClass = testClass.getJavaClass();
+            Method fake = javaClass.getMethod("toString");
+            FrameworkMethod fakeMethod = new FrameworkMethod(fake);
+            methods.add(fakeMethod);
+            runner.setFakeMethod(fakeMethod);
+
+            // read scenario entries
+            File input = JUnitUtils.getFile(javaClass);
+            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
+            Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
+            List<INodeListener> listeners = new LinkedList<INodeListener>();
+            runner.setListeners(listeners);
+            Set<String> titles = new HashSet<String>();
+            Boolean execute = null;
+            for (int i = 0; i < scenarios.size(); i++) {
+                Node sc = scenarios.get(i);
+                INodeHolder scHolder = SRServices.get(INodeHolderFactory.class).newHolder(sc);
+                if (scHolder.attributeEquals(ScenarioFrameListener.ATT_EXECUTE, "true")) {
+                    if (scHolder.hasAttribute(UtilNode.IGNORE) || scHolder.hasAttribute(UtilNode.PENDING)) {
+                        String title = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE).getValue();
+                        throw new RuntimeException("Scenario '" + title + "' cannot have pending='true' or ignore='true' with execute='true'. Remove pending/ignore or execute.");
+                    }
+                    execute = true;
+                }
+            }
+            for (int i = 0; i < scenarios.size(); i++) {
+                Node sc = scenarios.get(i);
+                String title = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE).getValue();
+                title = UtilString.getNormalizer().camelCase(title, true);
+                if (titles.contains(title)) {
+                    throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
+                }
+                titles.add(title);
+
+                ScenarioFrameworkMethod scenarioMethod = new ScenarioFrameworkMethod(fake, title);
+                methods.add(scenarioMethod);
+                final Description description = runner.describeChild(scenarioMethod);
+
+                IScenarioListener[] annotationListeners = JUnitUtils.getScenarioListener(javaClass);
+                IScenarioListener[] fullListeners = Arrays.copyOf(annotationListeners, annotationListeners.length + 2);
+                fullListeners[fullListeners.length - 1] = new ScenarioCleanerListener();
+                final ScenarioFrameListener frameListener = new ScenarioFrameListener(title, execute, fullListeners) {
+                    @Override
+                    public Object getInstance() {
+                        return runner.getInstance();
+                    }
+                };
+                fullListeners[fullListeners.length - 2] = new IScenarioListener() {
+                    @Override
+                    public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
+                        IResultSet r = frameListener.getResult();
+                        if (frameListener.isPending() || frameListener.isIgnored()) {
+                            runner.getNotifier().fireTestIgnored(description);
+                        } else if (r == null || r.countErrors() == 0) {
+                            runner.getNotifier().fireTestStarted(description);
+                        }
+                    }
+
+                    @Override
+                    public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
+                        IResultSet r = frameListener.getResult();
+                        if (frameListener.isPending() || frameListener.isIgnored()) {
+                            runner.getNotifier().fireTestIgnored(description);
+                        } else if (r == null || r.countErrors() == 0) {
+                            runner.getNotifier().fireTestFinished(description);
+                        } else {
+                            String msg = "OUTPUT: " + runner.getStatement().getOutput().getAbsoluteFile() + "\n" + r.asString();
+                            runner.getNotifier().fireTestFailure(new Failure(description, new Exception(msg)));
+                        }
+                    }
+                };
+                listeners.add(frameListener);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return methods;
     }
 }

@@ -1,6 +1,6 @@
 <html>
 <body>
-W  <div class="scenario">
+  <div class="scenario">
     <h1 class="title">Scenario active</h1>
 
     ACTIVE: ${System.currentTimeMillis()}
@@ -18,10 +18,10 @@ W  <div class="scenario">
     IGNORED: ${System.currentTimeMillis()}
   </div>
 
-  <div class="scenario" pending="true">
-    <h1 class="title">Scenario pending precedence to ignore</h1>
+  <div class="scenario" pending="true" ignore="true">
+    <h1 class="title">Scenario pending before ignore</h1>
 
-    PENDING BEFORE IGNORED: ${System.currentTimeMillis()}
+    PENDING BEFORE IGNORE: ${System.currentTimeMillis()}
   </div>
 </body>
 </html>
