@@ -1,3 +1,23 @@
+1.4.16
+OK - Baixar o memory analyzer Java (RCP ou dentro do Luna), e ver a questão de criação de clones das especificações, conferir que todos os resultados estão sendo liberados ao longo das execuções, sem manutenção completa em memória para não detonar a heap;
+	O problema é executor que está guardando referências para os listeners, deve-se liberar as referências após a execução dos testes.
+		@Override
+		protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+			if (method == fakeMethod) {
+				super.runChild(method, notifier);
+				free();
+			}
+		}
+
+		protected void free() {
+			notifier = null;
+			fakeMethod = null;
+			listeners = null;
+			instance = null;
+			statement = null;
+		}
+OK - Definir um 'execute="true"'' que será colocado como prioridade em relação aos pending, ou seja, se houver algo com execute 'true' então os demais devem ser considerados pending='true' automagicamente, de forma a rodar apenas 1 cenário selecionado;
+
 1.4.15
 OK - No header do HTML colocar a quantidade de testes com status igual ao status geral da execução.
 OK - Nos plugin de objetcs só colocar title="X" se o texto dentro dos tds não for "X" (reduz a quantidade de dados na saída);
