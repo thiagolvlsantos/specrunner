@@ -17,35 +17,14 @@
  */
 package org.specrunner.junit;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-
-import nu.xom.Node;
-import nu.xom.Nodes;
 
 import org.junit.runner.Description;
-import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import org.junit.runners.model.TestClass;
-import org.specrunner.SRServices;
-import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
-import org.specrunner.listeners.IScenarioListener;
-import org.specrunner.listeners.core.ScenarioCleanerListener;
-import org.specrunner.listeners.core.ScenarioFrameListener;
-import org.specrunner.result.IResultSet;
-import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactoryManager;
-import org.specrunner.util.string.UtilString;
-import org.specrunner.util.xom.UtilNode;
 
 /**
  * SpecRunner concurrent executor.
@@ -53,7 +32,7 @@ import org.specrunner.util.xom.UtilNode;
  * @author Thiago Santos
  * 
  */
-public class SRRunnerConcurrentScenario extends ConcurrentRunner {
+public class SRRunnerConcurrentScenario extends ConcurrentRunner implements IRunnerScenario {
 
     /**
      * The notifier.
@@ -93,6 +72,41 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
     }
 
     @Override
+    public RunNotifier getNotifier() {
+        return notifier;
+    }
+
+    @Override
+    public FrameworkMethod getFakeMethod() {
+        return fakeMethod;
+    }
+
+    @Override
+    public void setFakeMethod(FrameworkMethod fakeMethod) {
+        this.fakeMethod = fakeMethod;
+    }
+
+    @Override
+    public List<INodeListener> getListeners() {
+        return listeners;
+    }
+
+    @Override
+    public void setListeners(List<INodeListener> listeners) {
+        this.listeners = listeners;
+    }
+
+    @Override
+    public Object getInstance() {
+        return instance;
+    }
+
+    @Override
+    public SpecRunnerStatement getStatement() {
+        return statement;
+    }
+
+    @Override
     public void run(RunNotifier notifier) {
         this.notifier = notifier;
         super.run(notifier);
@@ -100,73 +114,7 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
 
     @Override
     protected List<FrameworkMethod> computeTestMethods() {
-        List<FrameworkMethod> methods = new LinkedList<FrameworkMethod>();
-        try {
-            final TestClass testClass = getTestClass();
-            Class<?> javaClass = testClass.getJavaClass();
-            Method fake = javaClass.getMethod("toString");
-            fakeMethod = new FrameworkMethod(fake);
-            methods.add(fakeMethod);
-
-            // read scenario entries
-            File input = JUnitUtils.getFile(javaClass);
-            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
-            Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
-            listeners = new LinkedList<INodeListener>();
-            Set<String> titles = new HashSet<String>();
-            for (int i = 0; i < scenarios.size(); i++) {
-                Node sc = scenarios.get(i);
-                String title = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE).getValue();
-                title = UtilString.getNormalizer().camelCase(title, true);
-                if (titles.contains(title)) {
-                    throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
-                }
-                titles.add(title);
-
-                ScenarioFrameworkMethod scenarioMethod = new ScenarioFrameworkMethod(fake, title);
-                methods.add(scenarioMethod);
-                final Description description = describeChild(scenarioMethod);
-
-                IScenarioListener[] annotationListeners = JUnitUtils.getScenarioListener(javaClass);
-                IScenarioListener[] fullListeners = Arrays.copyOf(annotationListeners, annotationListeners.length + 2);
-                fullListeners[fullListeners.length - 1] = new ScenarioCleanerListener();
-                final ScenarioFrameListener frameListener = new ScenarioFrameListener(title, fullListeners) {
-                    @Override
-                    public Object getInstance() {
-                        return instance;
-                    }
-
-                };
-                fullListeners[fullListeners.length - 2] = new IScenarioListener() {
-                    @Override
-                    public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
-                        IResultSet r = frameListener.getResult();
-                        if (frameListener.isPending() || frameListener.isIgnored()) {
-                            notifier.fireTestIgnored(description);
-                        } else if (r == null || r.countErrors() == 0) {
-                            notifier.fireTestStarted(description);
-                        }
-                    }
-
-                    @Override
-                    public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
-                        IResultSet r = frameListener.getResult();
-                        if (frameListener.isPending() || frameListener.isIgnored()) {
-                            notifier.fireTestIgnored(description);
-                        } else if (r == null || r.countErrors() == 0) {
-                            notifier.fireTestFinished(description);
-                        } else {
-                            String msg = "OUTPUT: " + statement.getOutput().getAbsoluteFile() + "\n" + r.asString();
-                            notifier.fireTestFailure(new Failure(description, new Exception(msg)));
-                        }
-                    }
-                };
-                listeners.add(frameListener);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return methods;
+        return JUnitUtils.prepareScenarios(this);
     }
 
     @Override

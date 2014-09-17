@@ -72,11 +72,19 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * Expected style for scenario titles.
      */
     public static final String CSS_TITLE = "title";
+    /**
+     * Expected style for scenario execute priority.
+     */
+    public static final String ATT_EXECUTE = "execute";
 
     /**
      * The listener name.
      */
     protected String name;
+    /**
+     * Check if execute should be prioritized.
+     */
+    private Boolean execute;
     /**
      * Scenario listeners.
      */
@@ -120,11 +128,14 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * 
      * @param name
      *            The scenario.
+     * @param execute
+     *            Check if execute is enabled.
      * @param listeners
      *            List of scenario listeners.
      */
-    public ScenarioFrameListener(String name, IScenarioListener... listeners) {
+    public ScenarioFrameListener(String name, Boolean execute, IScenarioListener... listeners) {
         this.name = name;
+        this.execute = execute;
         this.listeners = listeners;
     }
 
@@ -162,6 +173,9 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     title = sub;
                     startTime = time;
                     checkpoint = result.size();
+                    if (execute != null && execute && !holder.attributeEquals(ATT_EXECUTE, "true")) {
+                        UtilNode.setIgnore(node);
+                    }
                     pending = UtilNode.isPending(node);
                     ignored = UtilNode.isIgnore(node);
                     if (pending || ignored) {
