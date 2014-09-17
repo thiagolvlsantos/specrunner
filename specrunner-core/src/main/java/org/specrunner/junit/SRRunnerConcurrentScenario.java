@@ -184,7 +184,19 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner {
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
         if (method == fakeMethod) {
             super.runChild(method, notifier);
+            free();
         }
+    }
+
+    /**
+     * Clean resource references to avoid JUnit overload.
+     */
+    protected void free() {
+        notifier = null;
+        fakeMethod = null;
+        listeners = null;
+        instance = null;
+        statement = null;
     }
 
     @Override
