@@ -42,12 +42,12 @@ public class ScenarioCleanerListener implements IScenarioListener {
 
     @Override
     public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException {
-        execute(instance, BeforeScenario.class);
+        execute(instance, BeforeScenario.class, title, node, context, result);
     }
 
     @Override
     public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) throws SpecRunnerException {
-        execute(instance, AfterScenario.class);
+        execute(instance, AfterScenario.class, title, node, context, result);
     }
 
     /**
@@ -57,14 +57,61 @@ public class ScenarioCleanerListener implements IScenarioListener {
      *            The fixture object, if it exists, null, otherwise.
      * @param type
      *            The annotation type to perform methods.
+     * @param title
+     *            The title.
+     * @param node
+     *            The scenario node.
+     * @param context
+     *            The context.
+     * @param result
+     *            The result set.
      * @throws SpecRunnerException
      *             On calling errors.
      */
-    protected void execute(Object instance, Class<? extends Annotation> type) throws SpecRunnerException {
+    protected void execute(Object instance, Class<? extends Annotation> type, String title, Node node, IContext context, IResultSet result) throws SpecRunnerException {
         if (instance != null) {
             for (Method m : UtilAnnotations.getAnnotatedMethods(instance, type)) {
+                Class<?>[] types = m.getParameterTypes();
                 try {
-                    m.invoke(instance);
+                    // CHECKSTYLE:OFF
+                    SpecRunnerException error = new SpecRunnerException("Invalid @" + type.getSimpleName() + " method (" + m + "). Check 'ScenarioCleanerListener' source to for avaliable methods signatures.");
+                    switch (types.length) {
+                    case 0:
+                        m.invoke(instance);
+                        break;
+                    case 1:
+                        if (types[0].isAssignableFrom(String.class)) {
+                            m.invoke(instance, title);
+                        } else if (types[0].isAssignableFrom(Node.class)) {
+                            m.invoke(instance, node);
+                        } else if (types[0].isAssignableFrom(IContext.class)) {
+                            m.invoke(instance, context);
+                        } else if (types[0].isAssignableFrom(IResultSet.class)) {
+                            m.invoke(instance, result);
+                        } else {
+                            throw error;
+                        }
+                        break;
+                    case 2:
+                        if (types[0].isAssignableFrom(String.class) && types[1].isAssignableFrom(Node.class)) {
+                            m.invoke(instance, title, node);
+                        } else if (types[0].isAssignableFrom(IContext.class) && types[1].isAssignableFrom(IResultSet.class)) {
+                            m.invoke(instance, context, result);
+                        } else {
+                            throw error;
+                        }
+                        break;
+                    case 4:
+                        if (types[0].isAssignableFrom(String.class) && types[1].isAssignableFrom(Node.class) && types[2].isAssignableFrom(IContext.class) && types[3].isAssignableFrom(IResultSet.class)) {
+                            m.invoke(instance, title, node, context, result);
+                        } else {
+                            throw error;
+                        }
+                        break;
+                    default:
+                        throw error;
+                    }
+                    // CHECKSTYLE:ON
                 } catch (IllegalArgumentException e) {
                     throw new SpecRunnerException(e);
                 } catch (IllegalAccessException e) {

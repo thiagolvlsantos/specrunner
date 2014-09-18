@@ -1,10 +1,13 @@
 package example.text;
 
+import nu.xom.Node;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.configuration.IConfiguration;
+import org.specrunner.context.IContext;
 import org.specrunner.junit.AfterScenario;
 import org.specrunner.junit.BeforeScenario;
 import org.specrunner.junit.Configuration;
@@ -12,6 +15,7 @@ import org.specrunner.junit.SRRunnerScenario;
 import org.specrunner.junit.SRScenarioListeners;
 import org.specrunner.plugins.core.language.Sentence;
 import org.specrunner.plugins.core.language.Synonyms;
+import org.specrunner.result.IResultSet;
 
 import example.text.suv.Calc;
 
@@ -69,5 +73,45 @@ public class Adding {
     @AfterScenario
     public void finishScenario() {
         System.out.println("FINISH SCENARIO..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(String title) {
+        System.out.println("FINISH SCENARIO(String.class:" + title + ")..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(Node node) {
+        System.out.println("FINISH SCENARIO(Node.class:" + node.toXML() + ")..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(IContext context) {
+        System.out.println("FINISH SCENARIO(IContext.class:" + context + ")..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(IResultSet result) {
+        System.out.println("FINISH SCENARIO(IResultSet.class:" + result + ")..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(String title, Node node) {
+        System.out.println("2.FINISH SCENARIO(String.class:" + title + ")..." + System.currentTimeMillis());
+        System.out.println("2.FINISH SCENARIO(Node.class:" + node.toXML() + ")..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(IContext context, IResultSet result) {
+        System.out.println("2.FINISH SCENARIO(IContext.class:" + context + ")..." + System.currentTimeMillis());
+        System.out.println("2.FINISH SCENARIO(IResultSet.class:" + result + ")..." + System.currentTimeMillis());
+    }
+
+    @AfterScenario
+    public void finishScenario(String title, Node node, IContext context, IResultSet result) {
+        System.out.println("4.FINISH SCENARIO(String.class:" + title + ")..." + System.currentTimeMillis());
+        System.out.println("4.FINISH SCENARIO(Node.class:" + node.toXML() + ")..." + System.currentTimeMillis());
+        System.out.println("4.FINISH SCENARIO(IContext.class:" + context + ")..." + System.currentTimeMillis());
+        System.out.println("4.FINISH SCENARIO(IResultSet.class:" + result + ")..." + System.currentTimeMillis());
     }
 }
