@@ -21,14 +21,19 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.converters.core.AbstractConverterTimezone;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.DatabaseRegisterEvent;
 import org.specrunner.sql.database.DatabaseTableEvent;
 import org.specrunner.sql.database.IDatabaseListener;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.output.IOutputFactory;
 
 /**
@@ -41,6 +46,15 @@ import org.specrunner.util.output.IOutputFactory;
 public class DatabasePrintListener implements IDatabaseListener {
 
     /**
+     * Cache of timezone.
+     */
+    protected static ICache<String, TimeZone> cacheTimezone = SRServices.get(ICacheFactory.class).newCache(AbstractConverterTimezone.class.getName());
+    /**
+     * The date timezone for adjust.
+     */
+    private String timezone;
+
+    /**
      * Format timestamps.
      */
     protected SimpleDateFormat formatTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSS");
@@ -49,8 +63,55 @@ public class DatabasePrintListener implements IDatabaseListener {
      */
     protected SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd 00:00:00.00000");
 
+    /**
+     * Get current timezone set.
+     * 
+     * @return The current timezone.
+     */
+    public String getTimezone() {
+        return timezone;
+    }
+
+    /**
+     * Set current timezone.
+     * 
+     * @param timezone
+     *            The timezone.
+     */
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
+    /**
+     * Get a timezone definition.
+     * 
+     * @return A timezone, of name is valid, false, otherwise.
+     */
+    protected TimeZone getZone() {
+        String name = getTimezone();
+        if (name != null) {
+            synchronized (cacheTimezone) {
+                TimeZone tz = cacheTimezone.get(name);
+                if (tz == null) {
+                    tz = TimeZone.getTimeZone(name);
+                    if (tz == null) {
+                        throw new RuntimeException("Invalid timezone:" + name);
+                    }
+                    cacheTimezone.put(name, tz);
+                }
+                return tz;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void initialize() {
+        IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(AbstractConverterTimezone.FEATURE_TIMEZONE, this);
+        TimeZone zone = getZone();
+        formatTime.setTimeZone(zone);
+        formatDate.setTimeZone(zone);
     }
 
     @Override
