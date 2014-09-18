@@ -102,7 +102,7 @@ public class DatabasePrintListener implements IDatabaseListener {
                 return tz;
             }
         }
-        return null;
+        return TimeZone.getDefault();
     }
 
     @Override
