@@ -90,6 +90,7 @@ public abstract class AbstractPluginObjectCompare<T> extends AbstractPluginObjec
             if (comparator == null) {
                 comparator = cf.getDefault();
             }
+            comparator.initialize();
             if (comparator.match(currentInstance, currentBase)) {
                 result.addResult(Success.INSTANCE, context.newBlock(row.getCell(f.getIndex()).getNode(), this));
             } else {
