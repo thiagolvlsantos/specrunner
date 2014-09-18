@@ -21,6 +21,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import org.specrunner.context.IContext;
+import org.specrunner.context.IDestructable;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.sql.meta.EMode;
@@ -34,7 +35,7 @@ import org.specrunner.util.xom.node.TableAdapter;
  * @author Thiago Santos.
  * 
  */
-public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetable {
+public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetable, IDestructable {
 
     /**
      * Feature for sequence provider instance.
@@ -60,6 +61,11 @@ public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetab
      * Feature for database listeners.
      */
     String FEATURE_LISTENERS = IDatabase.class.getName() + ".listeners";
+
+    /**
+     * Feature for database SQL script optimization.
+     */
+    String FEATURE_REUSE_SCRIPTS = IDatabase.class.getName() + ".reuseScripts";
 
     /**
      * Set the sequence provider.
@@ -100,6 +106,14 @@ public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetab
      *            A list of listeners.
      */
     void setListeners(List<IDatabaseListener> listeners);
+
+    /**
+     * Flag to set reuse scripts status. Default is 'false'.
+     * 
+     * @param reuseScripts
+     *            Reuse scripts flag.
+     */
+    void setReuseScripts(Boolean reuseScripts);
 
     /**
      * Perform some actions in a database.

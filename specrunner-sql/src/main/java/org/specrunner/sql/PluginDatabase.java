@@ -208,7 +208,7 @@ public class PluginDatabase extends AbstractPluginValue {
             final String currentName = base;
             IReuseManager rm = SRServices.get(IReuseManager.class);
             if (reuse) {
-                IReusable<?> ir = rm.get(currentName);
+                final IReusable<?> ir = rm.get(currentName);
                 if (ir != null) {
                     Map<String, Object> cfg = new HashMap<String, Object>();
                     cfg.put("provider", provider);

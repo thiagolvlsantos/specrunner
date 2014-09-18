@@ -17,12 +17,16 @@
  */
 package org.specrunner.sql.database.impl;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,6 +80,8 @@ import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
+import org.specrunner.util.cache.ICache;
+import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.collections.ReverseIterable;
 import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.UtilNode;
@@ -141,6 +147,26 @@ public class DatabaseDefault implements IDatabase {
      * List of listeners.
      */
     protected List<IDatabaseListener> listeners = new LinkedList<IDatabaseListener>();
+    /**
+     * Reuse script status.
+     */
+    protected Boolean reuseScripts = Boolean.FALSE;
+    /**
+     * Cache of tables tables to scripts.
+     */
+    protected static ICache<String, String> xmlToSql = SRServices.get(ICacheFactory.class).newCache(DatabaseDefault.class.getName());
+    /**
+     * Feature to use MD5 keys on cache.
+     */
+    public static final String FEATURE_MD5_KEYS = DatabaseDefault.class.getName() + ".md5Keys";
+    /**
+     * Use tables MD5 as keys.
+     */
+    protected Boolean md5Keys = Boolean.FALSE;
+    /**
+     * Message digester.
+     */
+    protected MessageDigest digester;
 
     /**
      * Feature for database error dump limit.
@@ -168,6 +194,8 @@ public class DatabaseDefault implements IDatabase {
         fm.set(FEATURE_STATEMENT_FACTORY, this);
         fm.set(FEATURE_ID_MANAGER, this);
         fm.set(FEATURE_LISTENERS, this);
+        fm.set(FEATURE_REUSE_SCRIPTS, this);
+        fm.set(FEATURE_MD5_KEYS, this);
         fm.set(FEATURE_LIMIT, this);
         // every use of database clear mappings to avoid memory overload and
         // test interference
@@ -296,6 +324,39 @@ public class DatabaseDefault implements IDatabase {
     }
 
     /**
+     * Get reuse status.
+     * 
+     * @return true, if enabled, false, otherwise.
+     */
+    public Boolean getReuseScripts() {
+        return reuseScripts;
+    }
+
+    @Override
+    public void setReuseScripts(Boolean reuseScripts) {
+        this.reuseScripts = reuseScripts;
+    }
+
+    /**
+     * Check if MD5 keys are enabled.
+     * 
+     * @return true, if enabled, false, otherwise. Default is 'false'.
+     */
+    public Boolean getMd5Keys() {
+        return md5Keys;
+    }
+
+    /**
+     * Set MD5 flag.
+     * 
+     * @param md5Keys
+     *            true, for MD5 keys, false, otherwise.
+     */
+    public void setMd5Keys(Boolean md5Keys) {
+        this.md5Keys = md5Keys;
+    }
+
+    /**
      * Get the error dump limit.
      * 
      * @return The limit.
@@ -415,6 +476,111 @@ public class DatabaseDefault implements IDatabase {
             UtilNode.appendCss(adapter.getNode(), IDataFilter.CSS_TABLE);
             return;
         }
+        if (reuseScripts && mode == EMode.INPUT) {
+            synchronized (xmlToSql) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Reuse scripts activated for '" + table.getAlias() + "/" + table.getName() + "'.");
+                }
+                String xml = adapter.toXML();
+                if (md5Keys) {
+                    if (digester == null) {
+                        try {
+                            digester = MessageDigest.getInstance("MD5");
+                        } catch (NoSuchAlgorithmException e) {
+                            throw new DatabaseException("Could not generate MD5 keys for tables.", e);
+                        }
+                    }
+                    digester.reset();
+                    digester.update(xml.getBytes());
+                    BigInteger number = new BigInteger(1, digester.digest());
+                    xml = String.valueOf(number);
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("MD5 generated: " + xml);
+                    }
+                }
+                String sql = xmlToSql.get(xml);
+                if (sql == null) {
+                    List<IDatabaseListener> old = getListeners();
+                    try {
+                        final StringBuilder tmp = new StringBuilder();
+                        List<IDatabaseListener> lista = new LinkedList<IDatabaseListener>(old);
+                        // this listeners captures SQL dump to a buffer
+                        lista.add(new DatabasePrintListener() {
+                            @Override
+                            protected void print(StringBuilder sb) {
+                                tmp.append(sb);
+                                tmp.append('\n');
+                            }
+                        });
+                        // change the listener before perform data actions
+                        setListeners(lista);
+                        processTable(context, result, adapter, connection, mode, afilter, table);
+                        // after processing data SQL script generated is
+                        // available
+                        xmlToSql.put(xml, tmp.toString());
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Saved a script for table '" + table.getAlias() + "/" + table.getName() + "'.");
+                        }
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("CACHE FOR '" + table.getAlias() + "/" + table.getName() + "':\n" + xml + "\n IS \n" + tmp);
+                        }
+                    } finally {
+                        // return listeners to previous state
+                        setListeners(old);
+                    }
+                } else {
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Reusing script " + (md5Keys ? "(MD5:" + xml + ")" : "") + " for table: '" + table.getAlias() + "/" + table.getName() + "'.");
+                    }
+                    Statement stmt = null;
+                    try {
+                        stmt = connection.createStatement();
+                        stmt.execute(sql);
+                        if (UtilLog.LOG.isInfoEnabled()) {
+                            UtilLog.LOG.info("Reused '" + table.getAlias() + "/" + table.getName() + "'.");
+                        }
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("SCRIPT:\n" + sql + ".");
+                        }
+                    } catch (SQLException e) {
+                        throw new DatabaseException("Script errors: " + e.getMessage(), e);
+                    } finally {
+                        if (stmt != null) {
+                            try {
+                                stmt.close();
+                            } catch (SQLException e) {
+                                throw new DatabaseException("Could not close statement: " + e.getMessage(), e);
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            processTable(context, result, adapter, connection, mode, afilter, table);
+        }
+    }
+
+    /**
+     * Process a data table.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param adapter
+     *            A table adapter.
+     * @param connection
+     *            A connection.
+     * @param mode
+     *            A mode.
+     * @param afilter
+     *            A filter.
+     * @param table
+     *            A schema table.
+     * @throws DatabaseException
+     *             On processing errors.
+     */
+    protected void processTable(IContext context, IResultSet result, TableAdapter adapter, Connection connection, EMode mode, IDataFilter afilter, Table table) throws DatabaseException {
         // creates a copy only of defined tables
         try {
             table = table.copy();
@@ -1173,5 +1339,18 @@ public class DatabaseDefault implements IDatabase {
     @Override
     public void release() throws PluginException {
         statementFactory.release();
+    }
+
+    @Override
+    public Object getObject() {
+        return this;
+    }
+
+    @Override
+    public void destroy() {
+        xmlToSql.release();
+        if (UtilLog.LOG.isInfoEnabled()) {
+            UtilLog.LOG.info("Cache of scripts released: " + xmlToSql);
+        }
     }
 }
