@@ -1,3 +1,13 @@
+1.4.17
+OK - Colocar initialize() nos IComparator de PluginCompareBase. Isso valor para toda vez que se quiser fazer qualquer comparação deve-se chamar o initialize antes.
+OK - Fazer o @BeforeScenario e @AfterScenario poderem chamar método com o contexto, e contexto e resultado;
+OK - Criar o listener que verifica o banco de dados no final apenas ou apenas no começo;
+OK - Criar uma cache de  SQL para o mesmo contexto - Lembrar que nesse caso não se pode ter dados binários e também que deve-se ter uma tolerância de tempo maior.
+	- Pode-se usar um MD5 para o texto da tabela para verificar se ela já foi calculada alguma vez, se sim usa-se a cache para executar o  associado. 
+		Essa cache presente no DatabaseDefault deve ser limpa entre contextos diferentes de execução.
+	Implementada usando o toXML() para ser a chave do mapeamento, se isso for muito caro pode-se usar o MD5 no lugar, isso foi apenas para economizar custo de processamento, com objetivo de deixar mais rápido em detrimento à memória. 
+         Tanto a cache quanto o md5 estão desabilitados de cara, sendo necessário habilitar, na versão 2.0 pode ser que isso seja padrão, depende dos testes em cenários reais.
+
 1.4.16
 OK - Baixar o memory analyzer Java (RCP ou dentro do Luna), e ver a questão de criação de clones das especificações, conferir que todos os resultados estão sendo liberados ao longo das execuções, sem manutenção completa em memória para não detonar a heap;
 	O problema é executor que está guardando referências para os listeners, deve-se liberar as referências após a execução dos testes.
