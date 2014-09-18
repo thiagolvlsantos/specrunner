@@ -152,7 +152,9 @@ public class PluginCompareNode extends AbstractPluginFindSingle {
                 Builder builder = bf.newBuilder(new HashMap<String, Object>());
                 Element received = (Element) builder.build("<html><head></head><body>" + String.valueOf(tmp) + "</body></html>", null).query("//body").get(0);
                 INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
-                if (!holder.getComparator(comparator.get()).match(expected, received)) {
+                IComparator holderComparator = holder.getComparator(comparator.get());
+                holderComparator.initialize();
+                if (!holderComparator.match(expected, received)) {
                     IStringNormalizer sn = UtilString.getNormalizer();
                     result.addResult(Failure.INSTANCE, context.peek(), new DefaultAlignmentException(sn.normalize(UtilNode.getChildrenAsString(expected)), sn.normalize(UtilNode.getChildrenAsString(received))));
                 } else {

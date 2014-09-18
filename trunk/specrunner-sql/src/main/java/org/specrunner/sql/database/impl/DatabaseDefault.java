@@ -1076,8 +1076,8 @@ public class DatabaseDefault implements IDatabase {
                 if (column.isVirtual()) {
                     value = idManager.find(register.getTableOrAlias(column), String.valueOf(value), column, connection, statementFactory);
                 }
-                comparator.initialize();
                 CellAdapter cell = v.getCell();
+                comparator.initialize();
                 if (!comparator.match(value, received)) {
                     Object expected = v.getValue();
                     if (column.isVirtual()) {

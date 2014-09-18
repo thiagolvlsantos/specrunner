@@ -293,6 +293,7 @@ public final class UtilPlugin {
      *             On plugin errors.
      */
     public static void compare(Node node, IPlugin plugin, IResultSet result, IComparator comparator, Object expected, Object received) throws PluginException {
+        comparator.initialize();
         if (comparator.match(expected, received)) {
             result.addResult(Success.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin));
         } else {

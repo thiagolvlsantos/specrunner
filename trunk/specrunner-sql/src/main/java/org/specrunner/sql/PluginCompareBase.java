@@ -25,6 +25,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.specrunner.SRServices;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
@@ -501,7 +502,9 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseN
                         }
                         continue;
                     }
-                    boolean match = c.getComparator().match(objExp, objRec);
+                    IComparator comparator = c.getComparator();
+                    comparator.initialize();
+                    boolean match = comparator.match(objExp, objRec);
                     if (!c.isKey() && !match) {
                         lr.add(c, index++, objExp, objRec);
                     }

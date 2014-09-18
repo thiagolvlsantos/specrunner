@@ -111,6 +111,7 @@ public class PluginEquals extends AbstractPluginDual {
      *             On condition errors.
      */
     protected boolean verify(IContext context, IComparator comparator, Object expected, Object received) throws SpecRunnerException {
+        comparator.initialize();
         boolean result = comparator.match(expected, received);
         if (!result) {
             if (expected instanceof String && received instanceof String) {
