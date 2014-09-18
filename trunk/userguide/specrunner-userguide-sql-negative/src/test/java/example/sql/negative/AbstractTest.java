@@ -25,6 +25,11 @@ import org.specrunner.sql.negative.DatabaseScenarioListener;
 public abstract class AbstractTest {
 
     @Configuration
+    public void configureCache(IConfiguration cfg) {
+        cfg.add(IDatabase.FEATURE_REUSE_SCRIPTS, true);
+    }
+
+    @Configuration
     public void configureFilter(IConfiguration cfg) {
         cfg.add(IResultSet.FEATURE_RESULT_FILTER, new IResultFilter() {
 

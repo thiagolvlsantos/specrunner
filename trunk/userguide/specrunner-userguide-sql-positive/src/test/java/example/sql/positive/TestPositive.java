@@ -20,6 +20,11 @@ import org.specrunner.sql.positive.DatabaseScenarioListener;
 public class TestPositive {
 
     @Configuration
+    public void configureCache(IConfiguration cfg) {
+        cfg.add(IDatabase.FEATURE_REUSE_SCRIPTS, true);
+    }
+
+    @Configuration
     public void config(IConfiguration cfg) {
         cfg.add(IResultSet.FEATURE_RESULT_FILTER, new IResultFilter() {
 
