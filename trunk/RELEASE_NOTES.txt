@@ -1,3 +1,9 @@
+1.4.18
+OK - Na cache de s deve-se perguntar se o SQL é não vazio;
+NÃO - fazer o reuso do connection/statement no database.
+OK - Resolver os bugs do isDisplayed() no WebDriver.
+	Fiz o comparador clicar nos ths/tds antes de perguntar se isDisplayed(), no Chorme isso se mostrou eficaz para realizar o scroll automático, se não funcionar será necessário usar a posição X,Y do component e mandar o WebDriver executar um script de scrollTo.
+
 1.4.17
 OK - Colocar initialize() nos IComparator de PluginCompareBase. Isso valor para toda vez que se quiser fazer qualquer comparação deve-se chamar o initialize antes.
 OK - Fazer o @BeforeScenario e @AfterScenario poderem chamar método com o contexto, e contexto e resultado;
