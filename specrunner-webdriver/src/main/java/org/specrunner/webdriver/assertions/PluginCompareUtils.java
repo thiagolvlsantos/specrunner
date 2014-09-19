@@ -198,6 +198,7 @@ public final class PluginCompareUtils {
         List<WebElement> recChildren = received.findElements(By.xpath("descendant::*"));
         List<WebElement> visible = new LinkedList<WebElement>();
         for (WebElement we : recChildren) {
+            we.click();
             if (we.isDisplayed()) {
                 visible.add(we);
             }

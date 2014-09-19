@@ -532,24 +532,26 @@ public class DatabaseDefault implements IDatabase {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Reusing script " + (md5Keys ? "(MD5:" + xml + ")" : "") + " for table: '" + table.getAlias() + "/" + table.getName() + "'.");
                     }
-                    Statement stmt = null;
-                    try {
-                        stmt = connection.createStatement();
-                        stmt.execute(sql);
-                        if (UtilLog.LOG.isInfoEnabled()) {
-                            UtilLog.LOG.info("Reused '" + table.getAlias() + "/" + table.getName() + "'.");
-                        }
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("SCRIPT:\n" + sql + ".");
-                        }
-                    } catch (SQLException e) {
-                        throw new DatabaseException("Script errors: " + e.getMessage(), e);
-                    } finally {
-                        if (stmt != null) {
-                            try {
-                                stmt.close();
-                            } catch (SQLException e) {
-                                throw new DatabaseException("Could not close statement: " + e.getMessage(), e);
+                    if (!sql.isEmpty()) {
+                        Statement stmt = null;
+                        try {
+                            stmt = connection.createStatement();
+                            stmt.execute(sql);
+                            if (UtilLog.LOG.isInfoEnabled()) {
+                                UtilLog.LOG.info("Reused '" + table.getAlias() + "/" + table.getName() + "'.");
+                            }
+                            if (UtilLog.LOG.isTraceEnabled()) {
+                                UtilLog.LOG.trace("SCRIPT:\n" + sql + ".");
+                            }
+                        } catch (SQLException e) {
+                            throw new DatabaseException("Script errors: " + e.getMessage(), e);
+                        } finally {
+                            if (stmt != null) {
+                                try {
+                                    stmt.close();
+                                } catch (SQLException e) {
+                                    throw new DatabaseException("Could not close statement: " + e.getMessage(), e);
+                                }
                             }
                         }
                     }
