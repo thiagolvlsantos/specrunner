@@ -18,9 +18,9 @@ public class AbstractTest {
     public void onConfigure(IConfiguration cfg) {
         // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
         // WebDriverFactoryChrome.class.getName());
+        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryHtmlUnit.class.getName());
 
         cfg.add(PluginBrowser.FEATURE_REUSE, true);
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryHtmlUnit.class.getName());
         cfg.add(WebDriverFactoryHtmlUnit.FEATURE_REUSE, true);
         cfg.add(HtmlUnitDriverLocal.FEATURE_CONNECTION, WebConnectionFile.class.getName());
         cfg.add(WebConnectionFile.FEATURE_CLEAN, true);

@@ -113,11 +113,13 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 continue;
             }
             WebElement received = iteCaptions.next();
+            received.click();
             while (!received.isDisplayed() && iteCaptions.hasNext()) {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Ignore table invisible caption:" + received);
                 }
                 received = iteCaptions.next();
+                received.click();
             }
             if (!expected.hasAttribute(UtilNode.IGNORE) && received.isDisplayed()) {
                 success = success & compareTerminal(this, context, result, client, expected, received);
@@ -128,6 +130,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         WebElement tmp;
         while (!visible && iteCaptions.hasNext()) {
             tmp = iteCaptions.next();
+            tmp.click();
             visible = tmp.isDisplayed();
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Check visibility(" + visible + ") for " + tmp);
@@ -148,11 +151,13 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                     continue;
                 }
                 WebElement received = iteElements.next();
+                received.click();
                 while (!received.isDisplayed() && iteElements.hasNext()) {
                     if (UtilLog.LOG.isInfoEnabled()) {
                         UtilLog.LOG.info("Ignore table invisible element:" + received);
                     }
                     received = iteElements.next();
+                    received.click();
                 }
                 if (!expected.hasAttribute(UtilNode.IGNORE) && received.isDisplayed()) {
                     success = success & compareTerminal(this, context, result, client, expected, received);
@@ -163,6 +168,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         visible = false;
         while (!visible && iteElements.hasNext()) {
             tmp = iteElements.next();
+            tmp.click();
             visible = tmp.isDisplayed();
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Check visibility(" + visible + ") for " + tmp);

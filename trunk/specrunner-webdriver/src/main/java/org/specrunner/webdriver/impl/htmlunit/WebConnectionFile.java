@@ -182,6 +182,11 @@ public class WebConnectionFile extends HttpWebConnection implements IWebConnecti
 
     @Override
     public void reset() {
+        if (!cacheDirectory.exists()) {
+            if (!cacheDirectory.mkdirs()) {
+                throw new RuntimeException("Could not create cache directory '" + cacheDirectory + "'.");
+            }
+        }
         for (File f : cacheDirectory.listFiles()) {
             if (f.delete()) {
                 if (UtilLog.LOG.isInfoEnabled()) {
