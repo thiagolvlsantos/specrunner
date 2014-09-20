@@ -65,6 +65,9 @@ public abstract class AbstractPluginFindSingle extends AbstractPluginFind {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Index out of range '" + index + "', max = '" + elements.length + "'."));
             return;
         }
+        if (prepare != null) {
+            prepare.prepare(this, client, elements[index]);
+        }
         process(context, result, client, elements[index]);
     }
 
