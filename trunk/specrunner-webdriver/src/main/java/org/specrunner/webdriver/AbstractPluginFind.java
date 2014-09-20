@@ -33,6 +33,7 @@ import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.UtilLog;
 import org.specrunner.webdriver.impl.FinderXPath;
+import org.specrunner.webdriver.impl.PrepareDefault;
 
 /**
  * A partial implementation of a plugin which finds elements in pages to perform
@@ -70,6 +71,11 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
      * A finder instance.
      */
     protected IFinder finderInstance;
+
+    /**
+     * Element prepare instance.
+     */
+    protected IPrepare prepare;
 
     /**
      * Get if automatic waitfor is enabled. Default is (client !=
@@ -129,6 +135,25 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
         this.finderInstance = finder;
     }
 
+    /**
+     * Get element initializer.
+     * 
+     * @return A initializer.
+     */
+    public IPrepare getPrepare() {
+        return prepare;
+    }
+
+    /**
+     * Set element initializer.
+     * 
+     * @param prepare
+     *            A initializer.
+     */
+    public void setPrepare(IPrepare prepare) {
+        this.prepare = prepare;
+    }
+
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
@@ -151,6 +176,10 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
             finderInstance = FinderXPath.get();
         }
         finderInstance.reset();
+        fm.set(IPrepare.FEATURE_PREPARE, this);
+        if (prepare == null) {
+            prepare = new PrepareDefault();
+        }
     }
 
     @Override
@@ -181,6 +210,9 @@ public abstract class AbstractPluginFind extends AbstractPluginBrowserAware {
         }
         printBefore(context, list);
         WebElement[] elements = list.toArray(new WebElement[list.size()]);
+        if (prepare != null) {
+            prepare.prepare(this, client, elements);
+        }
         process(context, result, client, elements);
         printAfter(context, list);
     }

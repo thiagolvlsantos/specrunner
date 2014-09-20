@@ -48,9 +48,13 @@ public class PluginClickNext extends AbstractPluginFindSingle {
         List<WebElement> eles = element.findElements(By.xpath("following::*"));
         boolean found = false;
         for (WebElement we : eles) {
-            we.click();
+            if (prepare != null) {
+                prepare.prepare(this, client, we);
+            }
             if (we.isDisplayed() && we.isEnabled()) {
-                we.click();
+                if (prepare != null) {
+                    prepare.prepare(this, client, we);
+                }
                 found = true;
                 break;
             }
