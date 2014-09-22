@@ -1,3 +1,11 @@
+1.4.19
+OK - Trocar o comando de click() pelo comando:
+	protected void prepare(WebDriver client, WebElement tmp) {
+        	Point location = tmp.getLocation();
+	        ((JavaExecutor) client).execute("window.scrollTo(" + location.getX() + "," + location.getY() + ")");
+	    }
+	Usar uma interface para definir como qualquer elemento será preparado para uso antes da ação acontecer e colocar isso no pluginfind.
+
 1.4.18
 OK - Na cache de s deve-se perguntar se o SQL é não vazio;
 NÃO - fazer o reuso do connection/statement no database.
