@@ -28,6 +28,20 @@ import org.specrunner.util.xom.IPresentation;
  * 
  */
 public interface IResult extends IStatusVariable, IActionType, IPresentation {
+    /**
+     * Set full trace on results dump.
+     * 
+     * @param fullTrace
+     *            true, to show full trace, false, otherwise. Default is 'true'.
+     */
+    void setFullTrace(Boolean fullTrace);
+
+    /**
+     * Get full trace status.
+     * 
+     * @return true, if full trace is enabled, false, otherwise.
+     */
+    Boolean getFullTrace();
 
     /**
      * If result has a block.

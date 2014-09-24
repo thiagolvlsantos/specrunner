@@ -1,4 +1,4 @@
-insert into ORD.customers (name,date,description) values ('Vieira',CURRENT_TIME,'');
+insert into ORD.customers (name,date,description,genre) values ('Vieira',CURRENT_TIME,'','F');
 
 delete from ORD.customers where name = 'Thiago';
 

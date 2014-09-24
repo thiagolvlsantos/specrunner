@@ -26,9 +26,12 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverterReverse;
 import org.specrunner.sql.database.INullEmptyHandler;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.EMode;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.IPresentation;
@@ -197,10 +200,10 @@ public class LineReport implements IPresentation {
                 if (index != null) {
                     if (c.isKey()) {
                         String rec = receivedObjects.get(index);
-                        sb.append(String.format(" %-" + colsize + "s", nullOrEmpty(rec)));
+                        sb.append(String.format(" %-" + colsize + "s", nullOrEmpty(c, rec)));
                     } else {
                         String exp = expectedObjects.get(index);
-                        sb.append(String.format(" EXP:%-" + (colsize - "EXP:".length()) + "s", nullOrEmptyWrapp(exp)));
+                        sb.append(String.format(" EXP:%-" + (colsize - "EXP:".length()) + "s", nullOrEmptyWrapp(c, exp)));
                     }
                 } else {
                     sb.append(String.format(" %-" + colsize + "s", ""));
@@ -220,7 +223,7 @@ public class LineReport implements IPresentation {
                 if (index != null) {
                     if (!c.isKey()) {
                         String rec = receivedObjects.get(index);
-                        sb.append(String.format(" REC:%-" + (colsize - "REC:".length()) + "s", nullOrEmptyWrapp(rec)));
+                        sb.append(String.format(" REC:%-" + (colsize - "REC:".length()) + "s", nullOrEmptyWrapp(c, rec)));
                     } else {
                         sb.append(String.format(" %-" + colsize + "s", ""));
                     }
@@ -245,9 +248,9 @@ public class LineReport implements IPresentation {
         for (Column c : tableReport.getColumns()) {
             Integer index = columnsToIndexes.get(c.getName());
             if (index != null) {
-                sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? nullOrEmpty(list.get(index)) : nullOrEmptyWrapp(list.get(index))));
+                sb.append(String.format(" %-" + tableReport.getSize(c) + "s", c.isKey() ? nullOrEmpty(c, list.get(index)) : nullOrEmptyWrapp(c, list.get(index))));
             } else {
-                sb.append(String.format(" %-" + tableReport.getSize(c) + "s", nullOrEmpty(null)));
+                sb.append(String.format(" %-" + tableReport.getSize(c) + "s", nullOrEmpty(c, null)));
             }
             sb.append('|');
         }
@@ -256,23 +259,55 @@ public class LineReport implements IPresentation {
     /**
      * As empty or null string.
      * 
+     * @param c
+     *            Column.
      * @param exp
      *            Value.
      * @return Value.
      */
-    public String nullOrEmpty(String exp) {
-        return exp == null ? nullEmptyHandler.nullValue(EMode.COMPARE) : (exp.isEmpty() ? nullEmptyHandler.emptyValue(EMode.COMPARE) : exp);
+    public String nullOrEmpty(Column c, String exp) {
+        String out = value(c, exp);
+        return out == null ? nullEmptyHandler.nullValue(EMode.COMPARE) : (out.isEmpty() ? nullEmptyHandler.emptyValue(EMode.COMPARE) : out);
+    }
+
+    /**
+     * Recover better representation for a value.
+     * 
+     * @param c
+     *            A column.
+     * @param exp
+     *            A expression.
+     * @return String representation.
+     */
+    protected String value(Column c, String exp) {
+        String out = exp;
+        if (c.getConverter() instanceof IConverterReverse) {
+            IConverterReverse converter = (IConverterReverse) c.getConverter();
+            List<String> arguments = c.getArguments();
+            try {
+                Object tmp = converter.revert(exp, arguments.toArray(new Object[arguments.size()]));
+                out = tmp == null ? null : String.valueOf(tmp);
+            } catch (ConverterException e) {
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Unable to revert '" + exp + "' with: " + converter + "" + arguments);
+                }
+            }
+        }
+        return out;
     }
 
     /**
      * Wrapped text.
-     * 
+     *
+     * @param c
+     *            Column.
      * @param exp
      *            Value.
      * @return Value.
      */
-    public String nullOrEmptyWrapp(String exp) {
-        return exp == null ? nullEmptyHandler.nullValue(EMode.COMPARE) : (exp.isEmpty() ? nullEmptyHandler.emptyValue(EMode.COMPARE) : "'" + exp + "'");
+    public String nullOrEmptyWrapp(Column c, String exp) {
+        String out = value(c, exp);
+        return out == null ? nullEmptyHandler.nullValue(EMode.COMPARE) : (out.isEmpty() ? nullEmptyHandler.emptyValue(EMode.COMPARE) : (out.equals(exp) ? "'" + out + "'" : out));
     }
 
     @Override
@@ -301,11 +336,11 @@ public class LineReport implements IPresentation {
                         UtilNode.appendCss(td, type.getStyle() + " sr_lreport");
                         String rec = receivedObjects.get(index);
                         if (c.isKey()) {
-                            td.appendChild(nullOrEmpty(rec));
+                            td.appendChild(nullOrEmpty(c, rec));
                         } else {
                             UtilNode.appendCss(td, td.getAttributeValue("class") + " " + type.getStyle() + "_cell");
                             String exp = expectedObjects.get(index);
-                            td.appendChild(new DefaultAlignmentException("", nullOrEmpty(exp), nullOrEmpty(rec)).asNode());
+                            td.appendChild(new DefaultAlignmentException("", nullOrEmpty(c, exp), nullOrEmpty(c, rec)).asNode());
                         }
                     }
                     tr.appendChild(td);
@@ -332,9 +367,9 @@ public class LineReport implements IPresentation {
             Element td = new Element("td");
             if (index != null) {
                 UtilNode.appendCss(td, type.getStyle());
-                td.appendChild(c.isKey() ? nullOrEmpty(vals.get(index)) : nullOrEmptyWrapp(vals.get(index)));
+                td.appendChild(c.isKey() ? nullOrEmpty(c, vals.get(index)) : nullOrEmptyWrapp(c, vals.get(index)));
             } else {
-                td.appendChild(nullOrEmpty(null));
+                td.appendChild(nullOrEmpty(c, null));
             }
             tr.appendChild(td);
         }

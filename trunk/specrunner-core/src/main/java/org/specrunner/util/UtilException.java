@@ -43,17 +43,36 @@ public final class UtilException {
      * 
      * @param exception
      *            The exception.
+     * @param fullTrace
+     *            Full trace flag.
      * @return The error String representation.
-     * @throws IOException
-     *             On dump errors.
      */
-    public static String toString(Throwable exception) throws IOException {
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        exception.printStackTrace(pw);
-        pw.close();
-        String result = sw.toString();
-        sw.close();
+    public static String toString(Throwable exception, Boolean fullTrace) {
+        if (!fullTrace) {
+            return exception.getMessage();
+        }
+        StringWriter sw = null;
+        PrintWriter pw = null;
+        String result = null;
+        try {
+            sw = new StringWriter();
+            pw = new PrintWriter(sw);
+            exception.printStackTrace(pw);
+            result = sw.toString();
+        } finally {
+            if (pw != null) {
+                pw.close();
+            }
+            if (sw != null) {
+                try {
+                    sw.close();
+                } catch (IOException e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
+        }
         return result;
     }
 

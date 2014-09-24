@@ -1,1 +1,1 @@
-insert into ORD.customers (name,date) values ('Vieira',CURRENT_TIME);
+insert into ORD.customers (name,date,genre) values ('Vieira',CURRENT_TIME,'F');
