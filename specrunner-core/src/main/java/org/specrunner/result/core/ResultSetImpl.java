@@ -54,6 +54,10 @@ import org.specrunner.source.SourceException;
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     /**
+     * Full trace status.
+     */
+    private Boolean fullTrace = true;
+    /**
      * The result filter.
      */
     private IResultFilter resultFilter;
@@ -74,6 +78,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
      * String test criteria for messages.
      */
     private IStringTest criteria;
+
+    @Override
+    public Boolean getFullTrace() {
+        return fullTrace;
+    }
+
+    @Override
+    public void setFullTrace(Boolean fullTrace) {
+        this.fullTrace = fullTrace;
+    }
 
     @Override
     public IResultFilter getResultFilter() {
@@ -416,6 +430,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
             return null;
         }
         if (add(result)) {
+            result.setFullTrace(fullTrace);
             return result;
         }
         return null;
@@ -538,6 +553,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                 sb.append("\t" + getName(status) + " (" + filter.size() + details(filter) + "):\n");
                 for (IResult r : filter) {
                     sb.append("\t\t[" + (++index));
+                    r.setFullTrace(fullTrace);
                     String msg = r.asString();
                     if (msg != null) {
                         msg = msg.replace("\n", "\n\t\t\t");

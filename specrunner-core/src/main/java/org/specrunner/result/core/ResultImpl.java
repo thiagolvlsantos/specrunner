@@ -17,8 +17,6 @@
  */
 package org.specrunner.result.core;
 
-import java.io.IOException;
-
 import nu.xom.Node;
 import nu.xom.Text;
 
@@ -30,7 +28,6 @@ import org.specrunner.result.IResult;
 import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresentation;
 
 /**
@@ -41,6 +38,10 @@ import org.specrunner.util.xom.IPresentation;
  */
 public class ResultImpl implements IResult {
 
+    /**
+     * Get full trace mode.
+     */
+    private Boolean fullTrace = true;
     /**
      * The status.
      */
@@ -61,6 +62,16 @@ public class ResultImpl implements IResult {
      * The associated writable information.
      */
     protected IWritable writable;
+
+    @Override
+    public Boolean getFullTrace() {
+        return fullTrace;
+    }
+
+    @Override
+    public void setFullTrace(Boolean fullTrace) {
+        this.fullTrace = fullTrace;
+    }
 
     /**
      * The result instance creator.
@@ -153,14 +164,12 @@ public class ResultImpl implements IResult {
             msg1 = ". on " + plugin + "[" + plugin.getParameters().getAllParameters() + "]";
         }
 
-        String msg2 = hasFailure() ? getFailure().getMessage() : getMessage();
+        Throwable failure1 = getFailure();
+        String msg2 = hasFailure() ? UtilException.toString(failure1, fullTrace) : getMessage();
         if (hasFailure()) {
-            try {
-                msg2 += "\n" + UtilException.toString(UtilException.unwrapPresentation(getFailure()));
-            } catch (IOException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
+            Throwable failure2 = UtilException.unwrapPresentation(failure1);
+            if (failure1 != failure2) {
+                msg2 += "\n" + UtilException.toString(failure2, fullTrace);
             }
         }
         return msg1 + msg2;

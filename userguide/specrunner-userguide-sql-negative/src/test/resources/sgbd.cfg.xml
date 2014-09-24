@@ -5,5 +5,6 @@
 		<column name="description" alias="description" converter="notNullOrEmpty" />
 		<column name="name" alias="name" reference="true" converter="notNullOrEmpty" />
 		<column name="id" alias="ID" key="true" converter="long" />
+		<column name="genre" alias="genre" converter="enumValue" arg0="example.sql.negative.EnumGenre" arg1="getDescription" arg2="getCode" />
 	</table>
 </schema>

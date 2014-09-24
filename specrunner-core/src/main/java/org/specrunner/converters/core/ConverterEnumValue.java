@@ -20,6 +20,7 @@ package org.specrunner.converters.core;
 import java.lang.reflect.Method;
 
 import org.specrunner.converters.ConverterException;
+import org.specrunner.converters.IConverterReverse;
 
 /**
  * Basic enumeration converter, from a text to the corresponding enumeration
@@ -35,14 +36,13 @@ import org.specrunner.converters.ConverterException;
  * @author Thiago Santos.
  */
 @SuppressWarnings("serial")
-public class ConverterEnumValue extends ConverterNotNullNotEmpty {
+public class ConverterEnumValue extends ConverterNotNullNotEmpty implements IConverterReverse {
 
     /**
      * Expected arguments size.
      */
     private static final int ARG_SIZE = 3;
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {
@@ -51,6 +51,33 @@ public class ConverterEnumValue extends ConverterNotNullNotEmpty {
         if (args == null || args.length < ARG_SIZE) {
             throw new ConverterException("Converter requires three arguments: 0) the enum class type (class object or name); 1) enum method name passed to compare values; 2) the enum method to be called for result.");
         }
+        return process(obj, args);
+    }
+
+    @Override
+    public Object revert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
+        if (args == null || args.length < ARG_SIZE) {
+            throw new ConverterException("Converter (revert mode) requires three arguments: 0) the enum class type (class object or name); 1) enum method name passed to compare values; 2) the enum method to be called for result.");
+        }
+        return process(obj, new Object[] { args[0], args[2], args[1] });
+    }
+
+    /**
+     * Process a value.
+     * 
+     * @param obj
+     *            Value.
+     * @param args
+     *            Arguments.
+     * @return Processed value.
+     * @throws ConverterException
+     *             On processing errors.
+     */
+    @SuppressWarnings("unchecked")
+    protected Object process(Object obj, Object[] args) throws ConverterException {
         Object result = null;
         Class<?> clazz = null;
         Object type = args[0];

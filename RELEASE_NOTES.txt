@@ -1,3 +1,11 @@
+1.4.20
+OK - Criar uma interface reversable converter e no caso do relatório de erros no compareTable usar a interface para fazer a conversão reversa quando for exibir o registro diferente;
+	- Isso vai deixar o relatório final muito ninja para os tipos enumerados.
+	- Incluidas também marcações para os campos key, reference, virtual, sequence, e date.
+OK - Colocar um boolean para definir se deve-se mostrar o stacktrace completo no resultado (isso agiliza bastante a exibição dos resultados);
+	- Deixar como default exibir tudo.
+
+
 1.4.19
 OK - Trocar o comando de click() pelo comando:
 	protected void prepare(WebDriver client, WebElement tmp) {

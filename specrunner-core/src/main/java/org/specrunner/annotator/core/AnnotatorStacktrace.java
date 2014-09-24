@@ -17,7 +17,6 @@
  */
 package org.specrunner.annotator.core;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +33,6 @@ import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.UtilNode;
 
@@ -111,14 +109,7 @@ public class AnnotatorStacktrace implements IAnnotator {
         } else {
             // otherwise print default stack trace
             stack = new Element("pre");
-            try {
-                stack.appendChild(UtilException.toString(failure));
-            } catch (IOException e) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug(e.getMessage(), e);
-                }
-                throw new AnnotatorException(e);
-            }
+            stack.appendChild(UtilException.toString(failure, true));
         }
         stack.addAttribute(new Attribute("id", cssName + stackIndex + "_stack"));
         UtilNode.appendCss(stack, cssName + " sr_stacktrace");

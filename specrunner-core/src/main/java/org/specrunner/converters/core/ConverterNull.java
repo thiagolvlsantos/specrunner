@@ -17,8 +17,6 @@
  */
 package org.specrunner.converters.core;
 
-import org.specrunner.converters.IConverter;
-
 /**
  * Turn everything to null.
  * 
@@ -26,16 +24,7 @@ import org.specrunner.converters.IConverter;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterNull implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public boolean accept(Object obj) {
-        return true;
-    }
+public class ConverterNull extends ConverterDefault {
 
     @Override
     public Object convert(Object obj, Object[] args) {

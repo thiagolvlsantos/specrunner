@@ -12,6 +12,7 @@ public class TestConverterEnumValue {
     public void testingNull() throws ConverterException {
         ConverterEnumValue ce = new ConverterEnumValue();
         Assert.assertNull(ce.convert(null, null));
+        Assert.assertNull(ce.revert(null, null));
     }
 
     @Test
@@ -40,8 +41,11 @@ public class TestConverterEnumValue {
     public void testing1() throws ConverterException {
         ConverterEnumValue ce = new ConverterEnumValue();
         for (ItemStatus i : ItemStatus.values()) {
-            Object obj = ce.convert(i.name(), new Object[] { ItemStatus.class, "name", "ordinal" });
+            Object[] args = new Object[] { ItemStatus.class, "name", "ordinal" };
+            Object obj = ce.convert(i.name(), args);
             Assert.assertEquals(i.ordinal(), obj);
+            Object rev = ce.revert(obj, args);
+            Assert.assertEquals(i.name(), rev);
         }
     }
 

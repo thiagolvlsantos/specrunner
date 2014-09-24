@@ -18,7 +18,6 @@
 package org.specrunner.converters.core;
 
 import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
 
 /**
  * Basic nullable converter. Accept only not null values and not empty strings.
@@ -27,11 +26,7 @@ import org.specrunner.converters.IConverter;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterNotNullNotEmpty implements IConverter {
-
-    @Override
-    public void initialize() {
-    }
+public class ConverterNotNullNotEmpty extends ConverterDefault {
 
     @Override
     public boolean accept(Object obj) {

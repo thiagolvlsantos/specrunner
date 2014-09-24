@@ -33,6 +33,10 @@ import org.specrunner.util.xom.IPresentation;
 public interface IResultSet extends List<IResult>, IStatus, IPresentation {
 
     /**
+     * Feature for full trace on results.
+     */
+    String FEATURE_FULL_TRACE = IResultSet.class.getName() + ".fullTrace";
+    /**
      * Feature for result filter.
      */
     String FEATURE_RESULT_FILTER = IResultSet.class.getName() + ".resultFilter";
@@ -56,6 +60,21 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * Feature for messages criteria.
      */
     String FEATURE_EXPECTED_CRITERIA = IResultSet.class.getName() + ".criteria";
+
+    /**
+     * Set full trace on results dump.
+     * 
+     * @param fullTrace
+     *            true, to show full trace, false, otherwise. Default is 'true'.
+     */
+    void setFullTrace(Boolean fullTrace);
+
+    /**
+     * Get full trace status.
+     * 
+     * @return true, if full trace is enabled, false, otherwise.
+     */
+    Boolean getFullTrace();
 
     /**
      * Set result filter.

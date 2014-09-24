@@ -38,6 +38,31 @@ import org.specrunner.util.xom.IPresentation;
  */
 public class TableReport implements IPresentation {
     /**
+     * String flag for keys.
+     */
+    public static final String KEY = "*";
+    /**
+     * String flag for reference.
+     */
+    public static final String REF = "R";
+    /**
+     * String flag for virtual.
+     */
+    public static final String VIR = "V";
+    /**
+     * String flag for sequence.
+     */
+    public static final String SEQ = "S";
+    /**
+     * String flag for enumerations.
+     */
+    public static final String ENUM = "E";
+    /**
+     * String flag for dates.
+     */
+    public static final String DATE = "D";
+
+    /**
      * The table under analysis.
      */
     private Table table;
@@ -145,8 +170,18 @@ public class TableReport implements IPresentation {
                 }
             }
             columns.add(i, column);
+            String strKey = column.isKey() ? KEY : "";
+            String strRef = column.isReference() ? REF : "";
+            String strVir = column.isVirtual() ? VIR : "";
+            String strSeq = column.isVirtual() ? SEQ : "";
+            String strEnum = column.isEnum() ? ENUM : "";
+            String strDate = column.isDate() ? DATE : "";
+            int comp = strKey.length() + strRef.length() + strVir.length() + strSeq.length() + strEnum.length() + strDate.length();
+            if (comp > 0) {
+                comp += " []".length();
+            }
             // adjust column size min to header size
-            sizes.put(column, Math.max(column.getAlias().length(), ("(" + column.getName() + ")").length()) + 1);
+            sizes.put(column, Math.max(column.getAlias().length(), column.getName().length()) + comp);
         }
         sizes.put(column, Math.max(size + (column.isKey() ? 1 : 2), sizes.get(column)));
     }
@@ -219,7 +254,30 @@ public class TableReport implements IPresentation {
                 sb.append("\n");
                 sb.append(String.format("\t%10s|", "ERROR(S)"));
                 for (Column c : columns) {
-                    sb.append(String.format(" %-" + sizes.get(c) + "s", "(" + c.getName() + ")"));
+                    StringBuilder suffix = new StringBuilder();
+                    if (c.isKey() || c.isReference() || c.isVirtual() || c.isSequence() || c.isEnum() || c.isDate()) {
+                        suffix.append(" [");
+                        if (c.isKey()) {
+                            suffix.append(KEY);
+                        }
+                        if (c.isReference()) {
+                            suffix.append(REF);
+                        }
+                        if (c.isVirtual()) {
+                            suffix.append(VIR);
+                        }
+                        if (c.isSequence()) {
+                            suffix.append(SEQ);
+                        }
+                        if (c.isEnum()) {
+                            suffix.append(ENUM);
+                        }
+                        if (c.isDate()) {
+                            suffix.append(DATE);
+                        }
+                        suffix.append("]");
+                    }
+                    sb.append(String.format(" %-" + sizes.get(c) + "s", c.getName() + suffix));
                     sb.append('|');
                 }
                 sb.append("\n");
@@ -271,7 +329,29 @@ public class TableReport implements IPresentation {
 
                             Element span = new Element("span");
                             span.addAttribute(new Attribute("class", "sr_treport"));
-                            span.appendChild("(" + c.getName() + ")");
+                            span.appendChild(c.getName());
+                            if (c.isKey() || c.isReference() || c.isVirtual() || c.isSequence() || c.isEnum() || c.isDate()) {
+                                span.appendChild(" [");
+                                if (c.isKey()) {
+                                    span.appendChild(KEY);
+                                }
+                                if (c.isReference()) {
+                                    span.appendChild(REF);
+                                }
+                                if (c.isVirtual()) {
+                                    span.appendChild(VIR);
+                                }
+                                if (c.isSequence()) {
+                                    span.appendChild(SEQ);
+                                }
+                                if (c.isEnum()) {
+                                    span.appendChild(ENUM);
+                                }
+                                if (c.isDate()) {
+                                    span.appendChild(DATE);
+                                }
+                                span.appendChild("]");
+                            }
                             th.appendChild(span);
                         }
                     }

@@ -24,6 +24,7 @@ import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
+import org.specrunner.converters.core.ConverterEnumValue;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.IAbstraction;
@@ -318,6 +319,15 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     public Column setArguments(List<String> arguments) {
         this.arguments = arguments;
         return this;
+    }
+
+    /**
+     * Check if a column is a enumeration.
+     * 
+     * @return true, if converter is enumeration based, false, otherwise.
+     */
+    public boolean isEnum() {
+        return getConverter() instanceof ConverterEnumValue;
     }
 
     /**
