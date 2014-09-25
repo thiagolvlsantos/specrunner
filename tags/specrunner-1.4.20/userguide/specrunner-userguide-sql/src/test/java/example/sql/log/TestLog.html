@@ -1,0 +1,88 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<link href="sql.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="orders_drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="orders.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <h1>Base customer</h1>
+    A customer named ${user} is
+    <global name="user">John Doe</global>
+    .
+
+    <h1>Add Customers</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>${user}</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Ringo Star</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>Any User</td>
+            </tr>
+        </tbody>
+    </table>
+
+    Insert
+    <a class="scripts" href="suv.sql" value="href">logging</a>.
+
+    <table class="verify">
+        <caption>Log</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <!--th>ID</th-->
+                <th>Entity</th>
+                <th>Attribute</th>
+                <th>Operator</th>
+                <th>Time</th>
+                <th>Previous</th>
+                <th>Current</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <!--td>0</td-->
+                <td>Customer</td>
+                <td>Name</td>
+                <td>thiago.santos</td>
+                <td>current time</td>
+                <td>Thiago</td>
+                <td>Luiz</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <!--td>1</td-->
+                <td>Customer</td>
+                <td>Name</td>
+                <td>thiago.santos</td>
+                <td>current time</td>
+                <td>Santos</td>
+                <td>Luiz</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

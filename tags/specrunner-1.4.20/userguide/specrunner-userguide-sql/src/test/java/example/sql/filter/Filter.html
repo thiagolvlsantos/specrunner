@@ -1,0 +1,208 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+
+td {
+	border: 1px dotted gray;
+}
+
+.prepare:before {
+	content: "PREPARE";
+}
+
+.verify:before {
+	content: "VERIFY";
+}
+</style>
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="create.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <div class="filter">Activate filter.</div>
+
+    <h1>Ignore table</h1>
+    <table class="prepare">
+        <caption>Users</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Login</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>tlvls</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>lab</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="verify">
+        <caption>Users</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Login</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>tlvls</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Ignore column</h1>
+    <table class="prepare">
+        <caption>Projects</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>specrunner</td>
+                <td>ATDD tool</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>jpel</td>
+                <td>Expression language</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="verify">
+        <caption>Projects</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>specrunner</td>
+                <td>ATDD tool</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>jpel</td>
+                <td>Expression language</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h1>Ignore value</h1>
+    <table class="prepare">
+        <caption>Tasks</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>implement</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>test</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>deploy</td>
+                <td>20</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="verify">
+        <caption>Tasks</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Name</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>implement</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>test</td>
+                <td>10</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>deploy</td>
+                <td>20</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h1>Ignore register</h1>
+    <table class="prepare">
+        <caption>Items</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>a</th>
+                <th>b</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>0</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

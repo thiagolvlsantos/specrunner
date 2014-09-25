@@ -1,0 +1,1 @@
+delete from ORD.customers where name = 'Thiago';
