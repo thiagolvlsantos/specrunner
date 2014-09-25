@@ -1,0 +1,56 @@
+<html>
+<head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
+<title>The example of iterations.</title>
+</head>
+<body>
+    <h1>SpecRunner</h1>
+    <h2>Loop definitions.</h2>
+    This is an example on how to generate a table of
+    <span class="local" name="y" eval="true">10</span> lines, with time information, ids, names a.
+    <br>
+    <br>
+    <table class="map" name="list" style="text-align: left;" border="1" cellpadding="2" cellspacing="2" scope=body>
+        <thead>
+            <tr>
+                <th style="vertical-align: top;">Time<br>
+                </th>
+                <th style="vertical-align: top;">ID<br>
+                </th>
+                <th style="vertical-align: top;">Name<br>
+                </th>
+                <th style="vertical-align: top;">Category rule<br>
+                </th>
+                <th style="vertical-align: top;">Category<br>
+                </th>
+            </tr>
+        </thead>
+        <tbody class="for" max="${y}">
+            <tr>
+                <td class="local" scope="tr" style="vertical-align: top;" name="time" value="System.nanoTime()">current nano seconds</td>
+                <td style="vertical-align: top;">id_${index}_${time}<br>
+                </td>
+                <td style="vertical-align: top;">name_${index}_${time}<br>
+                </td>
+                <td style="vertical-align: top;">if <span class="if" value="time % 2 == 0">time is even</span> then category is <span class="then">"<span class="local"
+                        scope="tr" name=category>Even</span>"
+                </span>, <span class="else">"<span class="local" scope="tr" name=category>Odd</span>"
+                </span>, otherwise.<br>
+                </td>
+                <td>${category}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br> Now consider
+    <span class="global" name="filter">even filter</span> as:
+    <br>
+    <ul class="macro" name_="filter">
+        <li>If <span class="if" value='System.nanoTime()%2==0'>TODO: category is "Even"</span>, say: <span class="then">"My time is #{Time} mls, and the concatenation of ID
+                and Name is ${#{ID} + #{Name}}</span><br>else show <span class="else">"My id is #{ID}"</span>.
+        </li>
+    </ul>
+    For each line in table perform
+    <span class="iterator" name="list">: '<span class="call">even filter</span>'.
+    </span>
+</body>
+</html>

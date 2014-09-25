@@ -1,0 +1,62 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.specrunner</groupId>
+        <artifactId>specrunner</artifactId>
+        <version>1.4.21</version>
+        <relativePath>../specrunner</relativePath>
+    </parent>
+    <artifactId>specrunner-tomcat</artifactId>
+
+    <distributionManagement>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <properties>
+        <org.apache.tomcat.embed.version>7.0.54</org.apache.tomcat.embed.version>
+        <org.eclipse.jdt.core.compiler.version>4.2.1</org.eclipse.jdt.core.compiler.version>
+    </properties>
+
+    <dependencies>
+		<dependency>
+			<groupId>org.specrunner</groupId>
+			<artifactId>specrunner-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${org.apache.tomcat.embed.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-log4j</artifactId>
+            <version>${org.apache.tomcat.embed.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <version>${org.apache.tomcat.embed.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jdt.core.compiler</groupId>
+            <artifactId>ecj</artifactId>
+            <version>${org.eclipse.jdt.core.compiler.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
+</project>

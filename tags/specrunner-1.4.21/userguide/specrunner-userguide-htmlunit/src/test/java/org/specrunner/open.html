@@ -1,0 +1,9 @@
+<p>
+    Start <span class="jettyStart" scope="html" file="/jetty.xml" dynamic="true" reuse="true">Jetty</span> then <span
+        class="browser" version="FIREFOX_24" reuse="true" connection="org.specrunner.htmlunit.impl.WebConnectionFile">
+        <span class="size position" condition='!browser_type.equals("HtmlUnitDriverLocal")' width="400" height="400"
+        x="x" y="y">open</span>.
+    </span> browser in <span class="startIn" provider="org.specrunner.jetty.JettyStringProvider">default location</span>.
+
+    Access '<span class="open">/application/${url}.jsp</span>'.
+</p>
