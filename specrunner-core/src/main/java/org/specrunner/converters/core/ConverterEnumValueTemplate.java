@@ -31,7 +31,7 @@ public abstract class ConverterEnumValueTemplate extends ConverterEnumValue {
     /**
      * Template parameters.
      */
-    protected Object[] template;
+    private Object[] template;
 
     /**
      * Conversion of specific types.
@@ -50,10 +50,5 @@ public abstract class ConverterEnumValueTemplate extends ConverterEnumValue {
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         return super.convert(obj, template);
-    }
-
-    @Override
-    public Object revert(Object obj, Object[] args) throws ConverterException {
-        return super.revert(obj, template);
     }
 }

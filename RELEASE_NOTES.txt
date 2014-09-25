@@ -1,9 +1,3 @@
-1.4.21
-OK - Colocar o conversor de Enumerações no comando 'not equals' foi feito para o resto mais o not equals não foi;
-	- Na verdade o problema é no método revert(....) da classe de template, que deve usar o array de template e não os args reais :)
-	- Fazer o campo de template ser protected e não private.
-OK - Adicionando suporte à conversão reversa no Database select report.
-
 1.4.20
 OK - Criar uma interface reversable converter e no caso do relatório de erros no compareTable usar a interface para fazer a conversão reversa quando for exibir o registro diferente;
 	- Isso vai deixar o relatório final muito ninja para os tipos enumerados.

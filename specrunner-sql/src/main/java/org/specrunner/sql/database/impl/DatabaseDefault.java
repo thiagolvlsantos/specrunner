@@ -45,7 +45,6 @@ import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
-import org.specrunner.converters.IConverterReverse;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
@@ -1252,15 +1251,13 @@ public class DatabaseDefault implements IDatabase {
                     if (column.isVirtual()) {
                         received = idManager.lookup(tableOrAlias, String.valueOf(received));
                     }
-                    String expStr = UtilSql.toString(value(v.getColumn(), expected));
-                    String recStr = UtilSql.toString(value(v.getColumn(), received));
+                    String expStr = UtilSql.toString(expected);
+                    String recStr = UtilSql.toString(received);
                     shortView(cell, expected, expStr, recStr);
                     IPresentation error = null;
                     if (expStr.equals(recStr)) {
-                        // same string representation but different object types
                         error = new PresentationCompare(expected, received);
                     } else {
-                        // equal object types.
                         error = new DefaultAlignmentException("Values are different.", expStr, recStr);
                     }
                     result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
@@ -1272,31 +1269,6 @@ public class DatabaseDefault implements IDatabase {
                 }
             }
         }
-    }
-
-    /**
-     * Recover better representation for a value.
-     * 
-     * @param c
-     *            A column.
-     * @param exp
-     *            A value.
-     * @return Object representation.
-     */
-    protected Object value(Column c, Object exp) {
-        Object out = exp;
-        if (c.getConverter() instanceof IConverterReverse) {
-            IConverterReverse converter = (IConverterReverse) c.getConverter();
-            List<String> arguments = c.getArguments();
-            try {
-                out = converter.revert(exp, arguments.toArray(new Object[arguments.size()]));
-            } catch (ConverterException e) {
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("Unable to revert '" + exp + "' with: " + converter + "" + arguments);
-                }
-            }
-        }
-        return out;
     }
 
     /**
