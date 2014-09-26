@@ -50,7 +50,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
     /**
      * Feature to accept execute for scenarios.
      */
-    public static final String FEATURE_EXECUTE_ENABLED = ScenarioFrameListener.class.getName() + ".execute";
+    public static final String FEATURE_EXECUTE_ENABLED = ScenarioFrameListener.class.getName() + ".executeEnabled";
 
     /**
      * Expected style for scenarios.
