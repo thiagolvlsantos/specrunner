@@ -47,6 +47,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * Feature to show time for scenarios.
      */
     public static final String FEATURE_SHOW_TIME = ScenarioFrameListener.class.getName() + ".showTime";
+    /**
+     * Feature to accept execute for scenarios.
+     */
+    public static final String FEATURE_EXECUTE_ENABLED = ScenarioFrameListener.class.getName() + ".execute";
 
     /**
      * Expected style for scenarios.
@@ -173,7 +177,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     title = sub;
                     startTime = time;
                     checkpoint = result.size();
-                    if (execute != null && execute && !holder.attributeEquals(ATT_EXECUTE, "true")) {
+                    if (((Boolean) SRServices.getFeatureManager().get(FEATURE_EXECUTE_ENABLED, true)) && execute != null && execute && !holder.attributeEquals(ATT_EXECUTE, "true")) {
                         UtilNode.setIgnore(node);
                     }
                     pending = UtilNode.isPending(node);
