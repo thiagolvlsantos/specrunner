@@ -1,6 +1,12 @@
 drop schema ORD cascade;
 create schema ord authorization dba; 
 
+CREATE TABLE "ORD"."UNCHANGED"
+(
+   ID bigint PRIMARY KEY NOT NULL,
+   OK varchar(255)
+)
+
 CREATE TABLE "ORD"."BEFORE"
 (
    ID bigint PRIMARY KEY NOT NULL,
@@ -12,12 +18,12 @@ CREATE TABLE "ORD"."ADDRESS"
    ID bigint PRIMARY KEY NOT NULL,
    CUSTOMER_ID integer NOT NULL,
    DATE timestamp,
-   ADDRESS varchar(255) DEFAULT 'Not informed'
+   ADDRESS varchar(255)  DEFAULT 'Not informed' not null 
 )
 ;
 CREATE TABLE "ORD"."CUSTOMERS"
 (
-   ID bigint PRIMARY KEY NOT NULL,
+   ID bigint ,
    NAME varchar(255),
    DESCRIPTION varchar(255),
    BIRTHDAY date DEFAULT CURRENT_DATE,
@@ -25,11 +31,6 @@ CREATE TABLE "ORD"."CUSTOMERS"
    NUMBER smallint,
    TEXT longvarchar
 )
-;
-ALTER TABLE "ORD"."ADDRESS"
-ADD CONSTRAINT SYS_FK_10098
-FOREIGN KEY (CUSTOMER_ID)
-REFERENCES "ORD"."CUSTOMERS"(ID)
 ;
 CREATE INDEX SYS_IDX_10102 ON "ORD"."ADDRESS"(CUSTOMER_ID)
 ;
