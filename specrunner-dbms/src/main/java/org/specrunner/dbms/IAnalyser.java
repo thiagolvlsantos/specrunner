@@ -8,5 +8,5 @@ public interface IAnalyser<S, T> {
 
     void remove(List<IPairListener<S, T>> listeners);
 
-    String analyse(Iterable<Pair<S, T>> data, IPairListenerManager manager);
+    String analyse(Iterable<Pair<S, T>> data, IAnalyserManager analysers, IPairListenerManager manager);
 }
