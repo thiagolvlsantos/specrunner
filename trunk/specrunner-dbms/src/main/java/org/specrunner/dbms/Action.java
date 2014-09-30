@@ -2,7 +2,7 @@ package org.specrunner.dbms;
 
 public enum Action {
 
-    ADD("+"), REMOVE("-"), MAINTAIN("!=");
+    ADD("+"), REMOVE("-"), MAINTAIN("=");
 
     private String code;
 
