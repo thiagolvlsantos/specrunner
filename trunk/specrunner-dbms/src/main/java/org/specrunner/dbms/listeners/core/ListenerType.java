@@ -1,26 +1,26 @@
-package org.specrunner.dbms.schema.listeners;
+package org.specrunner.dbms.listeners.core;
 
-import org.specrunner.dbms.IPairListener;
+import org.specrunner.dbms.IPart;
 import org.specrunner.dbms.Pair;
+import org.specrunner.dbms.core.PartDefault;
+import org.specrunner.dbms.listeners.IColumnListener;
 
 import schemacrawler.schema.Column;
-import schemacrawler.schema.Table;
 
-public class ListenerType implements IPairListener<Table, Column> {
+public class ListenerType implements IColumnListener {
 
     @Override
-    public String process(Pair<Table, Column> pair) {
+    public IPart process(String gap, Pair<Column> pair) {
         StringBuilder sb = new StringBuilder();
         switch (pair.getType()) {
         case MAINTAIN:
             String old = pair.getOld().getColumnDataType().getName();
             String current = pair.getCurrent().getColumnDataType().getName();
             if (!old.equalsIgnoreCase(current)) {
-                sb.append("\t\t\tTYPE is " + old + " should be " + current + "\n");
+                sb.append(gap + "TYPE is " + old + " should be " + current);
             }
         default:
         }
-        return sb.toString();
-
+        return new PartDefault(sb.toString());
     }
 }

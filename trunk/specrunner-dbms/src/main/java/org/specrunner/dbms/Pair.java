@@ -1,18 +1,15 @@
 package org.specrunner.dbms;
 
-public class Pair<P, T> {
+
+public class Pair<T> {
 
     private Action type;
-    private P parentOld;
     private T old;
-    private P parentCurrent;
     private T current;
 
-    public Pair(Action type, P parentOld, T old, P parentCurrent, T current) {
+    public Pair(Action type, T old, T current) {
         this.type = type;
-        this.parentOld = parentOld;
         this.old = old;
-        this.parentCurrent = parentCurrent;
         this.current = current;
     }
 
@@ -22,22 +19,6 @@ public class Pair<P, T> {
 
     public void setType(Action type) {
         this.type = type;
-    }
-
-    public P getParentOld() {
-        return parentOld;
-    }
-
-    public void setParentOld(P parentOld) {
-        this.parentOld = parentOld;
-    }
-
-    public P getParentCurrent() {
-        return parentCurrent;
-    }
-
-    public void setParentCurrent(P parentCurrent) {
-        this.parentCurrent = parentCurrent;
     }
 
     public T getOld() {
@@ -54,10 +35,5 @@ public class Pair<P, T> {
 
     public void setCurrent(T current) {
         this.current = current;
-    }
-
-    @Override
-    public String toString() {
-        return (type == Action.MAINTAIN ? "" : type + ",") + (type == Action.REMOVE || type == Action.MAINTAIN ? old : "") + (type == Action.ADD ? current : "");
     }
 }
