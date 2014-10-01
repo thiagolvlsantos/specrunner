@@ -9,11 +9,11 @@ import org.specrunner.dbms.Action;
 import org.specrunner.dbms.IPairing;
 import org.specrunner.dbms.Pair;
 
-public class PairingDefault<S, T> implements IPairing<S, T> {
+public class PairingDefault<T> implements IPairing<T> {
 
     @Override
-    public Iterable<Pair<S, T>> pair(S parentOld, Iterable<T> old, S parentCurrent, Iterable<T> current, Comparator<T> comparator) {
-        List<Pair<S, T>> result = new LinkedList<Pair<S, T>>();
+    public Iterable<Pair<T>> pair(Iterable<T> old, Iterable<T> current, Comparator<T> comparator) {
+        List<Pair<T>> result = new LinkedList<Pair<T>>();
         Iterator<T> iterOld = old.iterator();
         Iterator<T> iterCur = current.iterator();
         boolean readOld = iterOld.hasNext(), readCur = iterCur.hasNext();
@@ -27,17 +27,17 @@ public class PairingDefault<S, T> implements IPairing<S, T> {
             }
             int order = comparator.compare(tmpOld, tmpCur);
             if (order < 0) {
-                result.add(new Pair<S, T>(Action.REMOVE, parentOld, tmpOld, null, null));
+                result.add(new Pair<T>(Action.REMOVE, tmpOld, null));
                 readOld = iterOld.hasNext();
                 tmpOld = null;
                 readCur = false;
             } else if (order > 0) {
-                result.add(new Pair<S, T>(Action.ADD, null, null, parentCurrent, tmpCur));
+                result.add(new Pair<T>(Action.ADD, null, tmpCur));
                 readOld = false;
                 readCur = iterCur.hasNext();
                 tmpCur = null;
             } else {
-                result.add(new Pair<S, T>(Action.MAINTAIN, parentOld, tmpOld, parentCurrent, tmpCur));
+                result.add(new Pair<T>(Action.MAINTAIN, tmpOld, tmpCur));
                 readOld = iterOld.hasNext();
                 readCur = iterCur.hasNext();
                 tmpOld = null;
