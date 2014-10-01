@@ -271,7 +271,7 @@ public class PluginSentence extends AbstractPlugin {
                 startText.append(child.getValue());
             }
         }
-        INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(onlyText ? node : new Text(startText.toString()));
+        INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(onlyText ? node : new Text(startText == null ? "" : startText.toString()));
         String value = String.valueOf(holder.getObject(context, true));
         boolean annotation = fromAnnotations(value, target, methodName, arguments);
         if (!onlyText || annotation) {
