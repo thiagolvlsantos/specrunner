@@ -109,6 +109,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${basedir}/../specrunner-dbms/target/</directory>
+            <outputDirectory></outputDirectory>
+            <includes>
+                <include>specrunner-dbms.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${basedir}/../specrunner-sql/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>

@@ -1,3 +1,7 @@
+1.4.22
+OK - Colocar uma feature para permitir usar ou não o execute="true", isso permitirá deixá-lo habilitado apenas nas execuções dos desenvolvedores, não na integração contínua;
+OK - PluginSentence linha 274, verificar se o startText != null;
+
 1.4.21
 OK - Colocar o conversor de Enumerações no comando 'not equals' foi feito para o resto mais o not equals não foi;
 	- Na verdade o problema é no método revert(....) da classe de template, que deve usar o array de template e não os args reais :)
