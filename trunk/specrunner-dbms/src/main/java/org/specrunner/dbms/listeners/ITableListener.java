@@ -7,5 +7,5 @@ import schemacrawler.schema.Table;
 
 public interface ITableListener {
 
-    IPart process(String gap, Pair<Table> pair);
+    IPart process(Pair<Table> pair);
 }

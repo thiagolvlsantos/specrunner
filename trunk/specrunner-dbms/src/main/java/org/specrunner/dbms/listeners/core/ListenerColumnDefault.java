@@ -7,24 +7,23 @@ import org.specrunner.dbms.listeners.IColumnListener;
 
 import schemacrawler.schema.Column;
 
-public class ListenerColumnPrint implements IColumnListener {
+public class ListenerColumnDefault implements IColumnListener {
 
     @Override
     public IPart process(Pair<Column> pair) {
         StringBuilder sb = new StringBuilder();
-        sb.append(pair.getType() + " ");
         switch (pair.getType()) {
         case ADD:
-            sb.append(pair.getCurrent().getFullName());
-            break;
-        case REMOVE:
-            sb.append(pair.getOld().getFullName());
+            sb.append("DEFAULT is " + pair.getCurrent().getDefaultValue());
             break;
         case MAINTAIN:
-            sb.append(pair.getOld().getFullName() + " <-> " + pair.getCurrent().getFullName());
-            break;
+            Object old = pair.getOld().getDefaultValue();
+            Object current = pair.getCurrent().getDefaultValue();
+            if (old != current) {
+                sb.append("DEFAULT is " + old + " should be " + current);
+            }
         default:
         }
-        return new PartDefault(sb.toString(), 2);
+        return new PartDefault(sb.toString(), 3);
     }
 }

@@ -5,4 +5,6 @@ public interface IPart {
     boolean hasData();
 
     String getData();
+
+    int getLevel();
 }

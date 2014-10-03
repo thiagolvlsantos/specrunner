@@ -7,5 +7,5 @@ import schemacrawler.schema.Column;
 
 public interface IColumnListener {
 
-    IPart process(String gap, Pair<Column> pair);
+    IPart process(Pair<Column> pair);
 }

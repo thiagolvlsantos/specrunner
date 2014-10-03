@@ -7,20 +7,23 @@ import org.specrunner.dbms.listeners.IColumnListener;
 
 import schemacrawler.schema.Column;
 
-public class ListenerNullable implements IColumnListener {
+public class ListenerColumnSize implements IColumnListener {
 
     @Override
-    public IPart process(String gap, Pair<Column> pair) {
+    public IPart process(Pair<Column> pair) {
         StringBuilder sb = new StringBuilder();
         switch (pair.getType()) {
+        case ADD:
+            sb.append("SIZE is " + pair.getCurrent().getSize());
+            break;
         case MAINTAIN:
-            boolean old = pair.getOld().isNullable();
-            boolean current = pair.getCurrent().isNullable();
+            int old = pair.getOld().getSize();
+            int current = pair.getCurrent().getSize();
             if (old != current) {
-                sb.append(gap + "NULLABLE is " + old + " should be " + current);
+                sb.append("SIZE is " + old + " should be " + current);
             }
         default:
         }
-        return new PartDefault(sb.toString());
+        return new PartDefault(sb.toString(), 3);
     }
 }

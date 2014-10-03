@@ -1,9 +1,12 @@
 package org.specrunner.dbms;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -13,13 +16,6 @@ import java.util.List;
 import org.specrunner.dbms.core.PairingDefault;
 import org.specrunner.dbms.listeners.IColumnListener;
 import org.specrunner.dbms.listeners.ITableListener;
-import org.specrunner.dbms.listeners.core.ListenerColumnPrint;
-import org.specrunner.dbms.listeners.core.ListenerFK;
-import org.specrunner.dbms.listeners.core.ListenerNullable;
-import org.specrunner.dbms.listeners.core.ListenerPK;
-import org.specrunner.dbms.listeners.core.ListenerSize;
-import org.specrunner.dbms.listeners.core.ListenerTablePrint;
-import org.specrunner.dbms.listeners.core.ListenerType;
 
 import schemacrawler.schema.Column;
 import schemacrawler.schema.Database;
@@ -58,9 +54,6 @@ public class BaseComparator {
         connection2.close();
     }
 
-    public static List<ITableListener> tabListeners = Arrays.asList((ITableListener) new ListenerTablePrint());
-    public static List<IColumnListener> colListeners = Arrays.asList(new ListenerColumnPrint(), new ListenerPK(), new ListenerNullable(), new ListenerFK(), new ListenerType(), new ListenerSize());
-
     private static class Config {
         public Connection connnection;
         public Database database;
@@ -93,10 +86,10 @@ public class BaseComparator {
         while (iterTables.hasNext()) {
             Pair<Table> table = iterTables.next();
             StringBuilder sbTables = new StringBuilder();
-            for (ITableListener lis : tabListeners) {
-                IPart p = lis.process("", table);
+            for (ITableListener lis : getTableListeners()) {
+                IPart p = lis.process(table);
                 if (p.hasData()) {
-                    sbTables.append(p.getData() + "\n");
+                    sbTables.append(p.getData());
                 }
             }
             Iterable<Pair<Column>> columns = new PairingDefault<Column>().pair(children(schema1, table.getOld()), children(schema2, table.getCurrent()), comparatorColumn());
@@ -104,10 +97,10 @@ public class BaseComparator {
             StringBuilder sbColumns = new StringBuilder();
             while (iterColumns.hasNext()) {
                 Pair<Column> column = iterColumns.next();
-                for (IColumnListener lis : colListeners) {
-                    IPart p = lis.process("\t\t", column);
+                for (IColumnListener lis : getColumnListeners()) {
+                    IPart p = lis.process(column);
                     if (p.hasData()) {
-                        sbColumns.append(p.getData() + "\n");
+                        sbColumns.append(p.getData());
                     }
                 }
             }
@@ -117,6 +110,52 @@ public class BaseComparator {
             }
         }
         System.out.println(report);
+    }
+
+    private static List<ITableListener> getTableListeners() {
+        return load(ITableListener.class, "/sr_tables.properties");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> List<T> load(Class<T> type, String file) {
+        List<T> result = new LinkedList<T>();
+        InputStream in = null;
+        BufferedReader br = null;
+        InputStreamReader fr = null;
+        try {
+            in = BaseComparator.class.getResourceAsStream(file);
+            if (in == null) {
+                throw new RuntimeException("Invalid configuration file (" + type + "): " + file);
+            }
+            fr = new InputStreamReader(in);
+            br = new BufferedReader(fr);
+            String input;
+            while ((input = br.readLine()) != null) {
+                result.add((T) Class.forName(input.trim()).newInstance());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (fr != null) {
+                try {
+                    fr.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static List<IColumnListener> getColumnListeners() {
+        return load(IColumnListener.class, "/sr_columns.properties");
     }
 
     private static List<Table> children(Database database, Schema schema) {

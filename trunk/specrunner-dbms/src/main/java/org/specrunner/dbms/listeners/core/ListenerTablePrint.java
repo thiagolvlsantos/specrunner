@@ -10,9 +10,9 @@ import schemacrawler.schema.Table;
 public class ListenerTablePrint implements ITableListener {
 
     @Override
-    public IPart process(String gap, Pair<Table> pair) {
+    public IPart process(Pair<Table> pair) {
         StringBuilder sb = new StringBuilder();
-        sb.append(gap + pair.getType() + ": ");
+        sb.append(pair.getType() + " ");
         switch (pair.getType()) {
         case ADD:
             sb.append(pair.getCurrent().getFullName());
@@ -25,6 +25,6 @@ public class ListenerTablePrint implements ITableListener {
             break;
         default:
         }
-        return new PartDefault(sb.toString());
+        return new PartDefault(sb.toString(), 1);
     }
 }
