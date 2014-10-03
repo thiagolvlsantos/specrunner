@@ -7,20 +7,23 @@ import org.specrunner.dbms.listeners.IColumnListener;
 
 import schemacrawler.schema.Column;
 
-public class ListenerFK implements IColumnListener {
+public class ListenerColumnFK implements IColumnListener {
 
     @Override
-    public IPart process(String gap, Pair<Column> pair) {
+    public IPart process(Pair<Column> pair) {
         StringBuilder sb = new StringBuilder();
         switch (pair.getType()) {
+        case ADD:
+            sb.append("FOREIGN KEY is " + pair.getCurrent().isPartOfForeignKey());
+            break;
         case MAINTAIN:
             boolean old = pair.getOld().isPartOfForeignKey();
             boolean current = pair.getCurrent().isPartOfForeignKey();
             if (old != current) {
-                sb.append(gap + "isFK is " + old + " should be " + current);
+                sb.append("FOREIGN KEY is " + old + " should be " + current);
             }
         default:
         }
-        return new PartDefault(sb.toString());
+        return new PartDefault(sb.toString(), 3);
     }
 }

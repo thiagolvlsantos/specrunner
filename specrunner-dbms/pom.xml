@@ -32,6 +32,7 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>2.3.2</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -64,7 +65,7 @@
 							<transformers>
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>org.specrunner.dbms.schema.AnalyserDatabase</mainClass>
+									<mainClass>org.specrunner.dbms.Main</mainClass>
 								</transformer>
 							</transformers>
 						</configuration>

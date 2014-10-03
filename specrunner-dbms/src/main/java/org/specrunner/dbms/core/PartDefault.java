@@ -5,9 +5,11 @@ import org.specrunner.dbms.IPart;
 public class PartDefault implements IPart {
 
     private String data;
+    private int level;
 
-    public PartDefault(String data) {
+    public PartDefault(String data, int level) {
         this.data = data;
+        this.level = level;
     }
 
     @Override
@@ -17,6 +19,15 @@ public class PartDefault implements IPart {
 
     @Override
     public String getData() {
-        return data;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < level; i++) {
+            sb.append('\t');
+        }
+        return sb + data + "\n";
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
     }
 }
