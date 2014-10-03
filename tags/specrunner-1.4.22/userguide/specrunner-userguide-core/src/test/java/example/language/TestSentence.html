@@ -1,0 +1,58 @@
+<html>
+<head>
+</head>
+<body>
+<!--     <p class="execute" value="$THIS.verificar($TEXT)">content</p> -->
+
+    <p class="sentence">Open file "${user_home + "testing"} 'ok'" in Browser "done \"with\" escape" (String).</p>
+
+    <p class="sentence">Open file "${user_home}" in Browser.</p>
+
+    <p class="sentence">Open file "<arg>${user_home}</arg>" in Browser <arg>IE</arg> (String).</p>
+
+    <p>Self convertion.
+        <p class="sentence">Open file "${user_home}" in Browser "2" (integer).</p>
+        
+        <p class="sentence">Open file "<span class="arg">${user_home}</span>" in Browser <span class="arg" converter="int">2</span> (integer).</p>
+    </p>
+
+    <p>Self convertion.
+        <p class="sentence">Open file "${user_home}" in Browser "2.5" (float).</p>
+        
+        <p class="sentence">Open file "<span class="arg">${user_home}</span>" in Browser <arg converter="float">2.5</arg> (float).</p>
+    </p>
+
+    <p class="sentence">Open file "<span class="arg">${user_home}</span>" in Browser <arg value="new Object()">anything</arg> (object).</p>
+
+
+    <p class="sentence">Open file "${user_home}" in Browser "12/01/2014" (Date).</p>
+
+    <p class="sentence">Open file "${user_home}" in Browser "23/01/2014" (Date typed).</p>
+
+    <p class="sentence">Open file "${user_home}" in Browser "${dt.plusYears((int)System.currentTimeMillis()%10).toString("dd/MM/yyyy")}" (Date typed).</p>
+
+    <p class="sentence">Open file "<arg>${user_home}</arg>" in Browser "<span class="arg" value='${dt.plusYears((int)System.currentTimeMillis()%10).toString("dd/MM/yyyy")}'>next 10 years random</span>" (Date typed).</p>
+
+    <p class="sentence">Open file "${user_home}" in Browser "23/01/2014" (Date typed fail).</p>
+
+    <p class="sentence" method="anyMethod">Call an specific method passing "10".</p>
+
+    <p class="sentence" method="booleanMethod">Method "0".</p>
+
+    <p class="sentence" method="booleanMethodFail">Method "1".</p>
+
+    <p class="sentence">Convert date "21/10/2013"</p>
+
+    <p class="sentence">Convert local date <arg eval="false">22/10/2013</arg></p>
+
+    <p class="sentence">Convert date time "23/10/2013 10:02:34"</p>
+
+    <p class="sentence">Convert big decimal "123.35"</p>
+
+    <p class="sentence">Convert timestamp "24/12/2014 22:30:00"</p>
+
+    <p class="sentence">"single argument"</p>
+
+    <p class="sentence" method="emptyName">"single argument"</p>
+</body>
+</html>
