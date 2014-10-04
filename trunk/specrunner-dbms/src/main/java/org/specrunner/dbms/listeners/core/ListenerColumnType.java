@@ -14,16 +14,16 @@ public class ListenerColumnType implements IColumnListener {
         StringBuilder sb = new StringBuilder();
         switch (pair.getType()) {
         case ADD:
-            sb.append("TYPE is " + pair.getCurrent().getColumnDataType().getName());
+            sb.append("TYPE is " + pair.getCurrent().getColumnDataType().getJavaSqlType().getJavaSqlTypeName());
             break;
         case MAINTAIN:
-            String old = pair.getOld().getColumnDataType().getName();
-            String current = pair.getCurrent().getColumnDataType().getName();
+            String old = pair.getOld().getColumnDataType().getJavaSqlType().getJavaSqlTypeName();
+            String current = pair.getCurrent().getColumnDataType().getJavaSqlType().getJavaSqlTypeName();
             if (!old.equalsIgnoreCase(current)) {
                 sb.append("TYPE is " + old + " should be " + current);
             }
         default:
         }
-        return new PartDefault(sb.toString(), 3);
+        return new PartDefault(true, sb.toString(), 3);
     }
 }

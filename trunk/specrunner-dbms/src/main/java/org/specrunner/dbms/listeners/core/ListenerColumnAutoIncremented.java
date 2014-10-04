@@ -7,20 +7,20 @@ import org.specrunner.dbms.listeners.IColumnListener;
 
 import schemacrawler.schema.Column;
 
-public class ListenerColumnPK implements IColumnListener {
+public class ListenerColumnAutoIncremented implements IColumnListener {
 
     @Override
     public IPart process(Pair<Column> pair) {
         StringBuilder sb = new StringBuilder();
         switch (pair.getType()) {
         case ADD:
-            sb.append("PRIMARY KEY is " + pair.getCurrent().isPartOfPrimaryKey());
+            sb.append("AUTO INCREMENTED is " + pair.getCurrent().isAutoIncremented());
             break;
         case MAINTAIN:
-            boolean old = pair.getOld().isPartOfPrimaryKey();
-            boolean current = pair.getCurrent().isPartOfPrimaryKey();
+            boolean old = pair.getOld().isAutoIncremented();
+            boolean current = pair.getCurrent().isAutoIncremented();
             if (old != current) {
-                sb.append("PRIMARY KEY is " + old + " should be " + current);
+                sb.append("AUTO INCREMENTED is " + old + " should be " + current);
             }
         default:
         }

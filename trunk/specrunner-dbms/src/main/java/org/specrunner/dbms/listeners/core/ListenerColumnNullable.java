@@ -24,6 +24,6 @@ public class ListenerColumnNullable implements IColumnListener {
             }
         default:
         }
-        return new PartDefault(sb.toString(), 3);
+        return new PartDefault(true, sb.toString(), 3);
     }
 }

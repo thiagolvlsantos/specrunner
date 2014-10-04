@@ -4,12 +4,19 @@ import org.specrunner.dbms.IPart;
 
 public class PartDefault implements IPart {
 
+    private boolean show;
     private String data;
     private int level;
 
-    public PartDefault(String data, int level) {
+    public PartDefault(boolean show, String data, int level) {
+        this.show = show;
         this.data = data;
         this.level = level;
+    }
+
+    @Override
+    public boolean show() {
+        return show;
     }
 
     @Override
