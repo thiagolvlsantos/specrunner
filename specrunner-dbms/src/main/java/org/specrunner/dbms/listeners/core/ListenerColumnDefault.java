@@ -19,11 +19,11 @@ public class ListenerColumnDefault implements IColumnListener {
         case MAINTAIN:
             Object old = pair.getOld().getDefaultValue();
             Object current = pair.getCurrent().getDefaultValue();
-            if (old != current) {
+            if (!(old == null ? current == null : old.equals(current))) {
                 sb.append("DEFAULT is " + old + " should be " + current);
             }
         default:
         }
-        return new PartDefault(sb.toString(), 3);
+        return new PartDefault(true, sb.toString(), 3);
     }
 }

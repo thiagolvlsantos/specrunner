@@ -14,16 +14,22 @@ public class ListenerColumnSize implements IColumnListener {
         StringBuilder sb = new StringBuilder();
         switch (pair.getType()) {
         case ADD:
-            sb.append("SIZE is " + pair.getCurrent().getSize());
+            int add = pair.getCurrent().getColumnDataType().getJavaSqlType().getJavaSqlType();
+            if (add == java.sql.Types.CHAR || add == java.sql.Types.VARCHAR) {
+                sb.append("SIZE is " + pair.getCurrent().getSize());
+            }
             break;
         case MAINTAIN:
-            int old = pair.getOld().getSize();
-            int current = pair.getCurrent().getSize();
-            if (old != current) {
-                sb.append("SIZE is " + old + " should be " + current);
+            int type = pair.getOld().getColumnDataType().getJavaSqlType().getJavaSqlType();
+            if (type == java.sql.Types.CHAR || type == java.sql.Types.VARCHAR) {
+                int old = pair.getOld().getSize();
+                int current = pair.getCurrent().getSize();
+                if (old != current) {
+                    sb.append("SIZE is " + old + " should be " + current);
+                }
             }
         default:
         }
-        return new PartDefault(sb.toString(), 3);
+        return new PartDefault(true, sb.toString(), 3);
     }
 }

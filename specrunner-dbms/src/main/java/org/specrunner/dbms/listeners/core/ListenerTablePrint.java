@@ -25,6 +25,6 @@ public class ListenerTablePrint implements ITableListener {
             break;
         default:
         }
-        return new PartDefault(sb.toString(), 1);
+        return new PartDefault(false, sb.toString(), 1);
     }
 }

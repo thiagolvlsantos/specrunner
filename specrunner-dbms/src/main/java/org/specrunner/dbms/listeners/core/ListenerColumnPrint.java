@@ -25,6 +25,6 @@ public class ListenerColumnPrint implements IColumnListener {
             break;
         default:
         }
-        return new PartDefault(sb.toString(), 2);
+        return new PartDefault(false, sb.toString(), 2);
     }
 }
