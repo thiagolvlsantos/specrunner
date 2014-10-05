@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2014  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.dbms.util;
 
 import java.io.BufferedReader;
@@ -13,6 +30,16 @@ import org.specrunner.dbms.BaseComparator;
 
 public class UtilIO {
 
+    /**
+     * Load object type from a file. Try first simple File reference, of not
+     * exists, lookup in classpath.
+     * 
+     * @param type
+     *            Class type of listed elements in file.
+     * @param file
+     *            File name to find.
+     * @return A list of instances.
+     */
     @SuppressWarnings("unchecked")
     public static <T> List<T> load(Class<T> type, String file) {
         List<T> result = new LinkedList<T>();
