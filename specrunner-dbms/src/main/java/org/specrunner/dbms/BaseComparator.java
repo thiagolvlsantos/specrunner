@@ -1,3 +1,20 @@
+/*
+    SpecRunner - Acceptance Test Driven Development Tool
+    Copyright (C) 2011-2014  Thiago Santos
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>
+ */
 package org.specrunner.dbms;
 
 import java.util.Collections;
@@ -16,26 +33,35 @@ import schemacrawler.schema.Database;
 import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
 
+/**
+ * Perform base comparators.
+ * 
+ * @author Thiago Santos
+ */
 public class BaseComparator {
 
-    public static void compare(ConnectionData old, ConnectionData current, String fileTableListeners, String fileColumnListeners) throws Exception {
-        ConnectionDatabase pair1 = null;
-        ConnectionDatabase pair2 = null;
+    public void compare(ConnectionInfo old, ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
+        ConnectionDatabase pairOld = null;
+        ConnectionDatabase pairCurrent = null;
         try {
-            pair1 = ConnectionDatabase.newInstance(old);
-            Database database1 = pair1.database;
+            pairOld = new ConnectionDatabase(old);
+            Database databaseOld = pairOld.database;
 
-            pair2 = ConnectionDatabase.newInstance(current);
-            Database database2 = pair2.database;
+            pairCurrent = new ConnectionDatabase(current);
+            Database databaseCurrent = pairCurrent.database;
 
-            process(database1, database1.getSchema(old.getSchema()), database2, database2.getSchema(current.getSchema()), fileTableListeners, fileColumnListeners);
+            process(databaseOld, databaseOld.getSchema(old.getSchema()), databaseCurrent, databaseCurrent.getSchema(current.getSchema()), fileTableListeners, fileColumnListeners);
         } finally {
-            pair1.finalize();
-            pair2.finalize();
+            if (pairOld != null) {
+                pairOld.finalize();
+            }
+            if (pairCurrent != null) {
+                pairCurrent.finalize();
+            }
         }
     }
 
-    private static void process(Database database1, Schema schema1, Database database2, Schema schema2, String fileTableListeners, String fileColumnListeners) {
+    protected void process(Database database1, Schema schema1, Database database2, Schema schema2, String fileTableListeners, String fileColumnListeners) {
         Iterable<Pair<Table>> tables = new PairingDefault<Table>().pair(children(database1, schema1), children(database2, schema2), comparatorTable());
         Iterator<Pair<Table>> iterTables = tables.iterator();
         StringBuilder report = new StringBuilder();
@@ -46,7 +72,7 @@ public class BaseComparator {
             for (ITableListener lis : getTableListeners(fileTableListeners)) {
                 IPart p = lis.process(table);
                 if (p.hasData()) {
-                    showData = showData || p.show();
+                    showData = showData || p.optional();
                     sbTables.append(p.getData());
                 }
             }
@@ -59,7 +85,7 @@ public class BaseComparator {
                 for (IColumnListener lis : getColumnListeners(fileColumnListeners)) {
                     IPart p = lis.process(column);
                     if (p.hasData()) {
-                        showColumn = showColumn || p.show();
+                        showColumn = showColumn || p.optional();
                         sbColumns.append(p.getData());
                     }
                 }
@@ -71,15 +97,15 @@ public class BaseComparator {
         System.out.println(report);
     }
 
-    private static List<ITableListener> getTableListeners(String file) {
+    protected List<ITableListener> getTableListeners(String file) {
         return UtilIO.load(ITableListener.class, file);
     }
 
-    private static List<IColumnListener> getColumnListeners(String file) {
+    protected List<IColumnListener> getColumnListeners(String file) {
         return UtilIO.load(IColumnListener.class, file);
     }
 
-    private static List<Table> children(Database database, Schema schema) {
+    protected List<Table> children(Database database, Schema schema) {
         if (database == null || schema == null) {
             return new LinkedList<Table>();
         }
@@ -88,7 +114,7 @@ public class BaseComparator {
         return tables;
     }
 
-    private static Comparator<Table> comparatorTable() {
+    protected Comparator<Table> comparatorTable() {
         return new Comparator<Table>() {
             @Override
             public int compare(Table o1, Table o2) {
@@ -97,7 +123,7 @@ public class BaseComparator {
         };
     }
 
-    private static List<Column> children(Schema schema, Table table) {
+    protected List<Column> children(Schema schema, Table table) {
         if (schema == null || table == null) {
             return new LinkedList<Column>();
         }
@@ -106,7 +132,7 @@ public class BaseComparator {
         return columns;
     }
 
-    private static Comparator<Column> comparatorColumn() {
+    protected Comparator<Column> comparatorColumn() {
         return new Comparator<Column>() {
             @Override
             public int compare(Column o1, Column o2) {
