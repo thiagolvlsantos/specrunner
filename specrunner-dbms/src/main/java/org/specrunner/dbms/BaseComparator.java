@@ -19,6 +19,7 @@ package org.specrunner.dbms;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,7 @@ import schemacrawler.schema.Table;
 public class BaseComparator {
 
     public void compare(ConnectionInfo old, ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
+        System.out.println("+-------------------- COMPARISON REPORT (" + new Date() + ") --------------------+");
         ConnectionDatabase pairOld = null;
         ConnectionDatabase pairCurrent = null;
         try {
@@ -50,7 +52,12 @@ public class BaseComparator {
             pairCurrent = new ConnectionDatabase(current);
             Database databaseCurrent = pairCurrent.database;
 
-            process(databaseOld, databaseOld.getSchema(old.getSchema()), databaseCurrent, databaseCurrent.getSchema(current.getSchema()), fileTableListeners, fileColumnListeners);
+            StringBuilder sb = process(databaseOld, databaseOld.getSchema(old.getSchema()), databaseCurrent, databaseCurrent.getSchema(current.getSchema()), fileTableListeners, fileColumnListeners);
+            if (sb.length() > 0) {
+                System.out.println(sb);
+            } else {
+                System.out.println("Databases compatible.");
+            }
         } finally {
             if (pairOld != null) {
                 pairOld.finalize();
@@ -59,42 +66,53 @@ public class BaseComparator {
                 pairCurrent.finalize();
             }
         }
+        System.out.println("+------------------------------------------------------------------------------------------------+");
     }
 
-    protected void process(Database database1, Schema schema1, Database database2, Schema schema2, String fileTableListeners, String fileColumnListeners) {
+    protected StringBuilder process(Database database1, Schema schema1, Database database2, Schema schema2, String fileTableListeners, String fileColumnListeners) {
         Iterable<Pair<Table>> tables = new PairingDefault<Table>().pair(children(database1, schema1), children(database2, schema2), comparatorTable());
         Iterator<Pair<Table>> iterTables = tables.iterator();
         StringBuilder report = new StringBuilder();
         while (iterTables.hasNext()) {
+            StringBuilder sbTable = new StringBuilder();
+            boolean showTable = false;
             Pair<Table> table = iterTables.next();
-            StringBuilder sbTables = new StringBuilder();
-            boolean showData = false;
             for (ITableListener lis : getTableListeners(fileTableListeners)) {
                 IPart p = lis.process(table);
                 if (p.hasData()) {
-                    showData = showData || p.optional();
-                    sbTables.append(p.getData());
+                    showTable = showTable || p.optional();
+                    sbTable.append(p.getData());
                 }
             }
             Iterable<Pair<Column>> columns = new PairingDefault<Column>().pair(children(schema1, table.getOld()), children(schema2, table.getCurrent()), comparatorColumn());
             Iterator<Pair<Column>> iterColumns = columns.iterator();
             StringBuilder sbColumns = new StringBuilder();
-            boolean showColumn = false;
+            boolean showColumns = false;
             while (iterColumns.hasNext()) {
+                StringBuilder sbColumn = new StringBuilder();
+                boolean showColumn = false;
                 Pair<Column> column = iterColumns.next();
                 for (IColumnListener lis : getColumnListeners(fileColumnListeners)) {
                     IPart p = lis.process(column);
                     if (p.hasData()) {
                         showColumn = showColumn || p.optional();
-                        sbColumns.append(p.getData());
+                        sbColumn.append(p.getData());
                     }
                 }
+                if (showColumn) {
+                    sbColumns.append(sbColumn);
+                    showColumns = true;
+                }
             }
-            report.append('\n');
-            report.append(sbTables);
-            report.append(sbColumns);
+            if (showTable || showColumns) {
+                report.append('\n');
+                report.append(sbTable);
+            }
+            if (showColumns) {
+                report.append(sbColumns);
+            }
         }
-        System.out.println(report);
+        return report;
     }
 
     protected List<ITableListener> getTableListeners(String file) {
