@@ -52,6 +52,7 @@ public class PartDefault implements IPart {
         for (int i = 0; i < level; i++) {
             sb.append('\t');
         }
-        return sb + data + "\n";
+        String tmp = data.replace("\n", "\n" + sb + "\t");
+        return sb + tmp + "\n";
     }
 }

@@ -17,6 +17,7 @@
  */
 package org.specrunner.dbms.listeners.core;
 
+import org.specrunner.dbms.Action;
 import org.specrunner.dbms.IPart;
 import org.specrunner.dbms.Pair;
 import org.specrunner.dbms.core.PartDefault;
@@ -42,6 +43,6 @@ public class ListenerColumnPrint implements IColumnListener {
             break;
         default:
         }
-        return new PartDefault(false, sb.toString(), 2);
+        return new PartDefault(pair.getType() == Action.REMOVE, sb.toString(), 2);
     }
 }
