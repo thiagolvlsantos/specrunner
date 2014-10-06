@@ -25,11 +25,9 @@ package org.specrunner.dbms;
  */
 public interface IPart {
 
-    boolean optional();
+    boolean isOptional();
 
     boolean hasData();
 
     String getData();
-
-    int getLevel();
 }

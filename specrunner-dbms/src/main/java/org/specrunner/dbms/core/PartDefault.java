@@ -26,19 +26,19 @@ import org.specrunner.dbms.IPart;
  */
 public class PartDefault implements IPart {
 
-    private boolean show;
+    private boolean optional;
     private String data;
     private int level;
 
-    public PartDefault(boolean show, String data, int level) {
-        this.show = show;
+    public PartDefault(boolean optional, String data, int level) {
+        this.optional = optional;
         this.data = data;
         this.level = level;
     }
 
     @Override
-    public boolean optional() {
-        return show;
+    public boolean isOptional() {
+        return optional;
     }
 
     @Override
@@ -53,10 +53,5 @@ public class PartDefault implements IPart {
             sb.append('\t');
         }
         return sb + data + "\n";
-    }
-
-    @Override
-    public int getLevel() {
-        return level;
     }
 }

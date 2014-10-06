@@ -77,7 +77,7 @@ public abstract class AbstractBaseTool {
             for (ITableListener lis : getTableListeners(fileTableListeners)) {
                 IPart p = lis.process(table);
                 if (p.hasData()) {
-                    showTable = showTable || p.optional();
+                    showTable = showTable || p.isOptional();
                     sbTable.append(p.getData());
                 }
             }
@@ -92,7 +92,7 @@ public abstract class AbstractBaseTool {
                 for (IColumnListener lis : getColumnListeners(fileColumnListeners)) {
                     IPart p = lis.process(column);
                     if (p.hasData()) {
-                        showColumn = showColumn || p.optional();
+                        showColumn = showColumn || p.isOptional();
                         sbColumn.append(p.getData());
                     }
                 }
