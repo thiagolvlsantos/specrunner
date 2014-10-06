@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+  <table name="customers" alias="customer">
+    <column name="id" alias="ID" key="true" converter="long"/>
+    <column name="name" alias="name" reference="true" converter="notNullOrEmpty"/>
+  </table>
+
+  <table name="customers_extended" alias="customer extended">
+    <column name="id_e" alias="ID" key="true" converter="long"/>
+    <column name="description" alias="Description" converter="notNullOrEmpty"/>
+  </table>
+
+  <table name="customers_clob" alias="customer clob">
+    <column name="id_c" alias="ID" key="true" converter="long"/>
+    <column name="number" alias="Number" default="1" converter="long"/>
+    <column name="text" alias="Text" converter="stringTrim" comparator="clob"/>
+  </table>
+</schema>
