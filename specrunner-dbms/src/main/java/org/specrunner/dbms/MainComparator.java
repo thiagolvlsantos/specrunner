@@ -1,6 +1,6 @@
 package org.specrunner.dbms;
 
-public class Main {
+public class MainComparator {
 
     public static void main(String[] args) throws Exception {
         ConnectionInfo old = new ConnectionInfo("PUBLIC.ORD", "org.hsqldb.jdbcDriver", "jdbc:hsqldb:hsql://localhost/sql", "sa", "");

@@ -20,15 +20,15 @@ package org.specrunner.dbms;
 import java.util.Date;
 
 /**
- * Perform base comparison.
+ * Perform base analysis.
  * 
  * @author Thiago Santos
  */
-public class BaseComparator extends AbstractBaseTool {
+public class BaseAnalyser extends AbstractBaseTool {
 
-    public void compare(ConnectionInfo old, ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
-        System.out.println("+-------------------- COMPARISON REPORT (" + new Date() + ") --------------------+");
-        System.out.println(process("Databases compatible.", old, current, fileTableListeners, fileColumnListeners));
+    public void analyse(ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
+        System.out.println("+-------------------- ANALYSER REPORT (" + new Date() + ") ----------------------+");
+        System.out.println(process("Database OK.", current, current, fileTableListeners, fileColumnListeners));
         System.out.println("+------------------------------------------------------------------------------------------------+");
     }
 }
