@@ -17,6 +17,12 @@
  */
 package org.specrunner.dbms;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,7 +34,6 @@ import java.util.List;
 import org.specrunner.dbms.core.PairingDefault;
 import org.specrunner.dbms.listeners.IColumnListener;
 import org.specrunner.dbms.listeners.ITableListener;
-import org.specrunner.dbms.util.UtilIO;
 
 import schemacrawler.schema.Column;
 import schemacrawler.schema.Database;
@@ -126,11 +131,66 @@ public abstract class AbstractBaseTool {
     }
 
     protected List<ITableListener> getTableListeners(ConfigurationFiles fileTableListeners) {
-        return UtilIO.load(ITableListener.class, fileTableListeners);
+        return load(ITableListener.class, fileTableListeners);
     }
 
     protected List<IColumnListener> getColumnListeners(ConfigurationFiles fileColumnListeners) {
-        return UtilIO.load(IColumnListener.class, fileColumnListeners);
+        return load(IColumnListener.class, fileColumnListeners);
+    }
+
+    /**
+     * Load object type from a file. Try first simple File reference, of not
+     * exists, lookup in classpath.
+     * 
+     * @param type
+     *            Class type of listed elements in file.
+     * @param file
+     *            File name to find.
+     * @return A list of instances.
+     */
+    @SuppressWarnings("unchecked")
+    protected <T> List<T> load(Class<T> type, ConfigurationFiles files) {
+        List<T> result = new LinkedList<T>();
+        for (String file : files) {
+            InputStream in = null;
+            BufferedReader br = null;
+            InputStreamReader fr = null;
+            try {
+                File f = new File(file);
+                if (!f.exists()) {
+                    in = BaseComparator.class.getResourceAsStream(file);
+                    if (in == null) {
+                        throw new RuntimeException("Invalid configuration file (" + type + "): " + file);
+                    }
+                } else {
+                    in = new FileInputStream(f);
+                }
+                fr = new InputStreamReader(in);
+                br = new BufferedReader(fr);
+                String input;
+                while ((input = br.readLine()) != null) {
+                    result.add((T) Class.forName(input.trim()).newInstance());
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (fr != null) {
+                    try {
+                        fr.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     protected List<Table> children(Database database, Schema schema) {
