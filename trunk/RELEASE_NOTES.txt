@@ -1,3 +1,27 @@
+1.4.24
+OK - criar o subgrupo specrunner-tools;
+OK - mudar o nome de specrunner-dbms para specrunner-tools-dbms;
+OK - Fixar o formato da data no header e colocar o tempo total de execução no final;
+OK - separar a criação do COnnectionDatabase em um método para permitir a redefinição de métodos;
+	- Deixar mais reutilizável.
+OK - Validar arquivos de regras antes de executar o emparelhamento/carga dos bancos de dados;
+OK - Deixar dois métodos compare e dois métodos analyse para usar os arquivos de configuração padrão quando não forem fornecidos os listeners de tabela ou de coluna;
+OK - Criar abstrações para receber listas de arquivos de listeners, cada listener pode ter nomes e ser sobrescrito, desta forma podemos ter listeners redefinindo apenas o que for necessário
+	- Nesse caso o método compare/analyse refebe algo como TableFiles(....) e ColumnFiles(....), ou o mesmo tipo DbmsFiles(...).
+OK - Trocar o isOptional por isMandatory() a semântica está invertida;
+OK - Remover o '	shade' da ferramenta, deixar ela como API mesmo, não precisa ser executável;
+OK - Colocar o base comparator para receber os arquivos de configuração dos listeners de tabelas e colunas (procurar diretamente e depois via classpath);
+OK - Criar dois perfis um de impressão completo e um de análise;
+OK - Finalizar os modelos de listeners em hierarquia com dump apenas se necessário;
+OK - testar tamanho apenas se forem campos de texto;
+OK - Criar o comparador de base e o extrator de esquema no perfil dbms usando o schemacrawler;
+	- Usar um modelo de listeners para geração de reports customizados, por exemplo, no banco analisar que todo campo ID é chave estrangeira, que todo campo DH é timestamp, que todo campo IB deveria ser smallint, que todo campo campo DT é date;
+	- Criar um jar executável que lê arquivo de configuração para carregar os listeners de relatório (isso vai permitir estender a ferramenta out of box);
+	- Colocar o javasource para 1.7;
+
+1.4.23
+Refactorings.
+	
 1.4.22
 OK - Colocar uma feature para permitir usar ou não o execute="true", isso permitirá deixá-lo habilitado apenas nas execuções dos desenvolvedores, não na integração contínua;
 OK - PluginSentence linha 274, verificar se o startText != null;

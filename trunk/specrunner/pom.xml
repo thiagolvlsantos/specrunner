@@ -8,7 +8,7 @@
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.23</version>
+    <version>1.4.24</version>
     <name>SpecRunner (multi-module).</name>
     <url>http://code.google.com/p/specrunner</url>
     <description>Acceptance Test Driven Development tool</description>
@@ -37,9 +37,6 @@
     </issueManagement>
 
     <modules>
-        <!-- Tools -->
-        <module>../tools/specrunner-tools</module>
-
 		<!-- Core -->
         <module>../specrunner-core</module>
         <module>../specrunner-core-excel</module>
