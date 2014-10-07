@@ -34,29 +34,41 @@ import schemacrawler.utility.SchemaCrawlerUtility;
  */
 public class ConnectionDatabase {
 
-    public Connection connnection;
-    public Database database;
+    private Connection connection;
+    private Database database;
+
+    public ConnectionDatabase(ConnectionInfo ci) throws Exception {
+        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+        prepareOptions(options, ci);
+        Class.forName(ci.getDriver());
+        connection = DriverManager.getConnection(ci.getUrl(), ci.getUser(), ci.getPassword());
+        database = SchemaCrawlerUtility.getDatabase(connection, options);
+    }
 
     @SuppressWarnings("serial")
-    public ConnectionDatabase(final ConnectionInfo cd) throws Exception {
-        SchemaCrawlerOptions options = new SchemaCrawlerOptions();
+    protected void prepareOptions(SchemaCrawlerOptions options, final ConnectionInfo ci) {
         options.setSchemaInclusionRule(new InclusionRule() {
             @Override
             public boolean include(String text) {
-                return text.equalsIgnoreCase(cd.getSchema());
+                return text.equalsIgnoreCase(ci.getSchema());
             }
         });
         options.setSchemaInfoLevel(SchemaInfoLevel.standard());
-        Class.forName(cd.getDriver());
-        connnection = DriverManager.getConnection(cd.getUrl(), cd.getUser(), cd.getPassword());
-        database = SchemaCrawlerUtility.getDatabase(connnection, options);
+    }
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public Database getDatabase() {
+        return database;
     }
 
     @Override
     public void finalize() {
-        if (connnection != null) {
+        if (connection != null) {
             try {
-                connnection.close();
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

@@ -15,44 +15,41 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.dbms.core;
+package org.specrunner.dbms;
 
-import org.specrunner.dbms.IPart;
+import java.util.Iterator;
 
 /**
- * Default report part.
+ * Configuration files.
  * 
  * @author Thiago Santos
  */
-public class PartDefault implements IPart {
+public class ConfigurationFiles implements Iterable<String> {
 
-    private boolean mandatory;
-    private String data;
-    private int level;
+    private String[] files;
 
-    public PartDefault(boolean mandatory, String data, int level) {
-        this.mandatory = mandatory;
-        this.data = data;
-        this.level = level;
+    public ConfigurationFiles(String... files) {
+        this.files = files;
     }
 
     @Override
-    public boolean isMandatory() {
-        return mandatory;
-    }
+    public Iterator<String> iterator() {
+        return new Iterator<String>() {
+            private int index = 0;
 
-    @Override
-    public boolean hasData() {
-        return data != null && !data.isEmpty();
-    }
+            @Override
+            public boolean hasNext() {
+                return index < files.length;
+            }
 
-    @Override
-    public String getData() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < level; i++) {
-            sb.append('\t');
-        }
-        String tmp = data.replace("\n", "\n" + sb + "\t");
-        return sb + tmp + "\n";
+            @Override
+            public String next() {
+                return files[index++];
+            }
+
+            @Override
+            public void remove() {
+            }
+        };
     }
 }

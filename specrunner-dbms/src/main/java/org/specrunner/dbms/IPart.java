@@ -25,7 +25,7 @@ package org.specrunner.dbms;
  */
 public interface IPart {
 
-    boolean isOptional();
+    boolean isMandatory();
 
     boolean hasData();
 
