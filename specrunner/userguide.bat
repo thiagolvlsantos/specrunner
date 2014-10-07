@@ -1,1 +1,1 @@
-cd ..\userguide\specrunner-userguide & deploy.bat
+cd ..\.. & cd ..\userguide\specrunner-userguide & deploy.bat
