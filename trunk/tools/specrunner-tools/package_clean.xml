@@ -29,7 +29,7 @@
 		<!-- root files: README.txt, LICENSE.TXT, etc.-->
 		<fileSet>
 			<directory>${basedir}</directory>
-			<outputDirectory>specrunner-userguide</outputDirectory>
+			<outputDirectory>specrunner-tools</outputDirectory>
 			<includes>
                 <include>*.txt</include>
                 <include>*.xml</include>
@@ -39,132 +39,27 @@
         <!-- source file -->		
         <fileSet>
             <directory>${basedir}/src</directory>
-            <outputDirectory>specrunner-userguide/src</outputDirectory>
+            <outputDirectory>specrunner-tools/src</outputDirectory>
         </fileSet>
 
         <!-- documentation -->
         <fileSet>
             <directory>${basedir}/docs</directory>
-            <outputDirectory>specrunner-userguide/docs</outputDirectory>
+            <outputDirectory>specrunner-tools/docs</outputDirectory>
         </fileSet>
 
 		<!-- bin files -->
 		<fileSet>
 			<directory>${basedir}/bin</directory>
-			<outputDirectory>specrunner-userguide/bin</outputDirectory>
+			<outputDirectory>specrunner-tools/bin</outputDirectory>
 		</fileSet>
 		
         <!-- children packages -->
         <fileSet>
-            <directory>${basedir}/../specrunner-userguide-core/target/</directory>
+            <directory>${basedir}/../specrunner-tools-dbms/target/</directory>
             <outputDirectory></outputDirectory>
             <includes>
-                <include>specrunner-userguide-core-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-core-excel/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-core-excel-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-core-text/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-core-text-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-core-spring/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-core-spring.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-concordion-emulator/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-concordion-emulator.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-ant/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-ant-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-sql/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-sql-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-sql-negative/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-sql-negative-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-sql-positive/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-sql-positive-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-hibernate3/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-hibernate3-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-hibernate4/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-hibernate4-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-jpa/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-jpa-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-jetty/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-jetty-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-tomcat/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-tomcat-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-htmlunit/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-htmlunit-clean.zip</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/../specrunner-userguide-webdriver/target/</directory>
-            <outputDirectory></outputDirectory>
-            <includes>
-                <include>specrunner-userguide-webdriver-clean.zip</include>
+                <include>specrunner-tools-dbms-clean.zip</include>
             </includes>
         </fileSet>
 	</fileSets>

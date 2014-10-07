@@ -37,6 +37,10 @@
     </issueManagement>
 
     <modules>
+        <!-- Tools -->
+        <module>../tools/specrunner-tools</module>
+
+		<!-- Core -->
         <module>../specrunner-core</module>
         <module>../specrunner-core-excel</module>
         <module>../specrunner-core-text</module>
@@ -49,7 +53,6 @@
         <!-- ANT integration -->
         <module>../specrunner-ant</module>
         <!-- Basic database support -->
-        <module>../specrunner-dbms</module>
         <module>../specrunner-sql</module>
         <module>../specrunner-sql-negative</module>
         <module>../specrunner-sql-positive</module>
@@ -63,6 +66,7 @@
         <!-- Web clients support -->
         <module>../specrunner-htmlunit</module>
         <module>../specrunner-webdriver</module>
+        
 	</modules>
 
     <properties>
