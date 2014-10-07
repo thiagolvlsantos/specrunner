@@ -17,8 +17,6 @@
  */
 package org.specrunner.dbms;
 
-import java.util.Date;
-
 /**
  * Perform base comparison.
  * 
@@ -26,9 +24,15 @@ import java.util.Date;
  */
 public class BaseComparator extends AbstractBaseTool {
 
-    public void compare(ConnectionInfo old, ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
-        System.out.println("+-------------------- COMPARISON REPORT (" + new Date() + ") --------------------+");
+    public void compare(ConnectionInfo old, ConnectionInfo current) throws Exception {
+        compare(old, current, new ConfigurationFiles("/sr_dbms_tables.properties"), new ConfigurationFiles("/sr_dbms_columns.properties"));
+    }
+
+    public void compare(ConnectionInfo old, ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
+        long time = System.currentTimeMillis();
+        System.out.println("+-------------------- COMPARISON REPORT (" + getDate() + ") --------------------+");
         System.out.println(process("Databases compatible.", old, current, fileTableListeners, fileColumnListeners));
-        System.out.println("+------------------------------------------------------------------------------------------------+");
+        System.out.println("+-------------------------------------------------------------------------------------+");
+        System.out.println("TIME: " + (System.currentTimeMillis() - time) + " ms");
     }
 }

@@ -17,8 +17,6 @@
  */
 package org.specrunner.dbms;
 
-import java.util.Date;
-
 /**
  * Perform base analysis.
  * 
@@ -26,9 +24,15 @@ import java.util.Date;
  */
 public class BaseAnalyser extends AbstractBaseTool {
 
-    public void analyse(ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
-        System.out.println("+-------------------- ANALYSER REPORT (" + new Date() + ") ----------------------+");
+    public void analyse(ConnectionInfo current) throws Exception {
+        analyse(current, new ConfigurationFiles("/sr_dbms_tables.properties"), new ConfigurationFiles("/sr_dbms_columns.properties"));
+    }
+
+    public void analyse(ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
+        long time = System.currentTimeMillis();
+        System.out.println("+-------------------- ANALYSER REPORT (" + getDate() + ") ----------------------+");
         System.out.println(process("Database OK.", current, current, fileTableListeners, fileColumnListeners));
-        System.out.println("+------------------------------------------------------------------------------------------------+");
+        System.out.println("+-------------------------------------------------------------------------------------+");
+        System.out.println("TIME: " + (System.currentTimeMillis() - time) + " ms");
     }
 }

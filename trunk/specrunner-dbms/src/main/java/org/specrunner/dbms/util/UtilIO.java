@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.specrunner.dbms.BaseComparator;
+import org.specrunner.dbms.ConfigurationFiles;
 
 public class UtilIO {
 
@@ -41,42 +42,44 @@ public class UtilIO {
      * @return A list of instances.
      */
     @SuppressWarnings("unchecked")
-    public static <T> List<T> load(Class<T> type, String file) {
+    public static <T> List<T> load(Class<T> type, ConfigurationFiles files) {
         List<T> result = new LinkedList<T>();
-        InputStream in = null;
-        BufferedReader br = null;
-        InputStreamReader fr = null;
-        try {
-            File f = new File(file);
-            if (!f.exists()) {
-                in = BaseComparator.class.getResourceAsStream(file);
-                if (in == null) {
-                    throw new RuntimeException("Invalid configuration file (" + type + "): " + file);
+        for (String file : files) {
+            InputStream in = null;
+            BufferedReader br = null;
+            InputStreamReader fr = null;
+            try {
+                File f = new File(file);
+                if (!f.exists()) {
+                    in = BaseComparator.class.getResourceAsStream(file);
+                    if (in == null) {
+                        throw new RuntimeException("Invalid configuration file (" + type + "): " + file);
+                    }
+                } else {
+                    in = new FileInputStream(f);
                 }
-            } else {
-                in = new FileInputStream(f);
-            }
-            fr = new InputStreamReader(in);
-            br = new BufferedReader(fr);
-            String input;
-            while ((input = br.readLine()) != null) {
-                result.add((T) Class.forName(input.trim()).newInstance());
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (fr != null) {
-                try {
-                    fr.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                fr = new InputStreamReader(in);
+                br = new BufferedReader(fr);
+                String input;
+                while ((input = br.readLine()) != null) {
+                    result.add((T) Class.forName(input.trim()).newInstance());
                 }
-            }
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if (fr != null) {
+                    try {
+                        fr.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }

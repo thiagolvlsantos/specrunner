@@ -17,8 +17,10 @@
  */
 package org.specrunner.dbms;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,15 +42,19 @@ import schemacrawler.schema.Table;
  */
 public abstract class AbstractBaseTool {
 
-    protected String process(String msg, ConnectionInfo old, ConnectionInfo current, String fileTableListeners, String fileColumnListeners) throws Exception {
+    protected String getDate() {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS").format(new Date());
+    }
+
+    protected String process(String msg, ConnectionInfo old, ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
         ConnectionDatabase pairOld = null;
         ConnectionDatabase pairCurrent = null;
         try {
-            pairOld = new ConnectionDatabase(old);
-            Database databaseOld = pairOld.database;
+            pairOld = newConnectionDatabase(old);
+            Database databaseOld = pairOld.getDatabase();
 
-            pairCurrent = new ConnectionDatabase(current);
-            Database databaseCurrent = pairCurrent.database;
+            pairCurrent = newConnectionDatabase(current);
+            Database databaseCurrent = pairCurrent.getDatabase();
 
             StringBuilder sb = process(databaseOld, databaseOld.getSchema(old.getSchema()), databaseCurrent, databaseCurrent.getSchema(current.getSchema()), fileTableListeners, fileColumnListeners);
             if (sb.length() > 0) {
@@ -66,7 +72,14 @@ public abstract class AbstractBaseTool {
         }
     }
 
-    protected StringBuilder process(Database database1, Schema schema1, Database database2, Schema schema2, String fileTableListeners, String fileColumnListeners) {
+    protected ConnectionDatabase newConnectionDatabase(ConnectionInfo ci) throws Exception {
+        return new ConnectionDatabase(ci);
+    }
+
+    protected StringBuilder process(Database database1, Schema schema1, Database database2, Schema schema2, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) {
+        List<ITableListener> tableListeners = getTableListeners(fileTableListeners);
+        List<IColumnListener> columnListeners = getColumnListeners(fileColumnListeners);
+
         Iterable<Pair<Table>> tables = new PairingDefault<Table>().pair(children(database1, schema1), children(database2, schema2), comparatorTable());
         Iterator<Pair<Table>> iterTables = tables.iterator();
         StringBuilder report = new StringBuilder();
@@ -74,10 +87,10 @@ public abstract class AbstractBaseTool {
             StringBuilder sbTable = new StringBuilder();
             boolean showTable = false;
             Pair<Table> table = iterTables.next();
-            for (ITableListener lis : getTableListeners(fileTableListeners)) {
+            for (ITableListener lis : tableListeners) {
                 IPart p = lis.process(table);
                 if (p.hasData()) {
-                    showTable = showTable || p.isOptional();
+                    showTable = showTable || p.isMandatory();
                     sbTable.append(p.getData());
                 }
             }
@@ -89,10 +102,10 @@ public abstract class AbstractBaseTool {
                 StringBuilder sbColumn = new StringBuilder();
                 boolean showColumn = false;
                 Pair<Column> column = iterColumns.next();
-                for (IColumnListener lis : getColumnListeners(fileColumnListeners)) {
+                for (IColumnListener lis : columnListeners) {
                     IPart p = lis.process(column);
                     if (p.hasData()) {
-                        showColumn = showColumn || p.isOptional();
+                        showColumn = showColumn || p.isMandatory();
                         sbColumn.append(p.getData());
                     }
                 }
@@ -112,12 +125,12 @@ public abstract class AbstractBaseTool {
         return report;
     }
 
-    protected List<ITableListener> getTableListeners(String file) {
-        return UtilIO.load(ITableListener.class, file);
+    protected List<ITableListener> getTableListeners(ConfigurationFiles fileTableListeners) {
+        return UtilIO.load(ITableListener.class, fileTableListeners);
     }
 
-    protected List<IColumnListener> getColumnListeners(String file) {
-        return UtilIO.load(IColumnListener.class, file);
+    protected List<IColumnListener> getColumnListeners(ConfigurationFiles fileColumnListeners) {
+        return UtilIO.load(IColumnListener.class, fileColumnListeners);
     }
 
     protected List<Table> children(Database database, Schema schema) {
