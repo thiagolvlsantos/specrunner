@@ -24,15 +24,21 @@ package org.specrunner.tools.dbms;
  */
 public class BaseAnalyser extends AbstractBaseTool {
 
-    public void analyse(ConnectionInfo current) throws Exception {
-        analyse(current, new ConfigurationFiles("/sr_dbms_tables.properties"), new ConfigurationFiles("/sr_dbms_columns.properties"));
+    public String analyse(ConnectionInfo current) throws Exception {
+        return analyse(current, new ConfigurationFiles("/sr_dbms_tables.properties"), new ConfigurationFiles("/sr_dbms_columns.properties"));
     }
 
-    public void analyse(ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
+    public String analyse(ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
         long time = System.currentTimeMillis();
-        System.out.println("+-------------------- ANALYSER REPORT (" + getDate() + ") ----------------------+");
-        System.out.println(process("Database OK.", current, current, fileTableListeners, fileColumnListeners));
-        System.out.println("+-------------------------------------------------------------------------------------+");
-        System.out.println("TIME: " + (System.currentTimeMillis() - time) + " ms");
+        StringBuilder sb = new StringBuilder();
+        sb.append("+-------------------- ANALYSER REPORT (" + getDate() + ") ----------------------+");
+        sb.append('\n');
+        sb.append(process("Database OK.", current, current, fileTableListeners, fileColumnListeners));
+        sb.append('\n');
+        sb.append("+-------------------------------------------------------------------------------------+");
+        sb.append('\n');
+        sb.append("TIME: " + (System.currentTimeMillis() - time) + " ms");
+        sb.append('\n');
+        return sb.toString();
     }
 }
