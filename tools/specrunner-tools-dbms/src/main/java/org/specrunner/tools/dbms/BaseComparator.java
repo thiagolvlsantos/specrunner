@@ -24,15 +24,21 @@ package org.specrunner.tools.dbms;
  */
 public class BaseComparator extends AbstractBaseTool {
 
-    public void compare(ConnectionInfo old, ConnectionInfo current) throws Exception {
-        compare(old, current, new ConfigurationFiles("/sr_dbms_tables.properties"), new ConfigurationFiles("/sr_dbms_columns.properties"));
+    public String compare(ConnectionInfo old, ConnectionInfo current) throws Exception {
+        return compare(old, current, new ConfigurationFiles("/sr_dbms_tables.properties"), new ConfigurationFiles("/sr_dbms_columns.properties"));
     }
 
-    public void compare(ConnectionInfo old, ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
+    public String compare(ConnectionInfo old, ConnectionInfo current, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) throws Exception {
         long time = System.currentTimeMillis();
-        System.out.println("+-------------------- COMPARISON REPORT (" + getDate() + ") --------------------+");
-        System.out.println(process("Databases compatible.", old, current, fileTableListeners, fileColumnListeners));
-        System.out.println("+-------------------------------------------------------------------------------------+");
-        System.out.println("TIME: " + (System.currentTimeMillis() - time) + " ms");
+        StringBuilder sb = new StringBuilder();
+        sb.append("+-------------------- COMPARISON REPORT (" + getDate() + ") --------------------+");
+        sb.append('\n');
+        sb.append(process("Databases compatible.", old, current, fileTableListeners, fileColumnListeners));
+        sb.append('\n');
+        sb.append("+-------------------------------------------------------------------------------------+");
+        sb.append('\n');
+        sb.append("TIME: " + (System.currentTimeMillis() - time) + " ms");
+        sb.append('\n');
+        return sb.toString();
     }
 }
