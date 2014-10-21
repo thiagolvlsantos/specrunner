@@ -36,14 +36,16 @@ public class DatabaseTableEvent {
     private IContext context;
     private IResultSet result;
     private TableAdapter adapter;
+    private IDatabase database;
     private Connection connection;
     private Table table;
     private EMode mode;
 
-    public DatabaseTableEvent(IContext context, IResultSet result, TableAdapter adapter, Connection connection, Table table, EMode mode) {
+    public DatabaseTableEvent(IContext context, IResultSet result, TableAdapter adapter, IDatabase database, Connection connection, Table table, EMode mode) {
         this.context = context;
         this.result = result;
         this.adapter = adapter;
+        this.database = database;
         this.connection = connection;
         this.table = table;
         this.mode = mode;
@@ -59,6 +61,10 @@ public class DatabaseTableEvent {
 
     public TableAdapter getAdapter() {
         return adapter;
+    }
+
+    public IDatabase getDatabase() {
+        return database;
     }
 
     public Connection getConnection() {
