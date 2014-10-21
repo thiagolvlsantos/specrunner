@@ -34,15 +34,17 @@ import org.specrunner.sql.meta.Table;
 public class DatabaseRegisterEvent {
     private IContext context;
     private IResultSet result;
+    private IDatabase database;
     private Connection connection;
     private Table table;
     private IRegister register;
     private SqlWrapper wrapper;
     private Map<Integer, Object> indexesToValues;
 
-    public DatabaseRegisterEvent(IContext context, IResultSet result, Connection connection, Table table, IRegister register, SqlWrapper wrapper, Map<Integer, Object> indexesToValues) {
+    public DatabaseRegisterEvent(IContext context, IResultSet result, IDatabase database, Connection connection, Table table, IRegister register, SqlWrapper wrapper, Map<Integer, Object> indexesToValues) {
         this.context = context;
         this.result = result;
+        this.database = database;
         this.connection = connection;
         this.table = table;
         this.register = register;
@@ -56,6 +58,10 @@ public class DatabaseRegisterEvent {
 
     public IResultSet getResult() {
         return result;
+    }
+
+    public IDatabase getDatabase() {
+        return database;
     }
 
     public Connection getConnection() {

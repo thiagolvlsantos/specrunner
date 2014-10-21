@@ -604,7 +604,7 @@ public class DatabaseDefault implements IDatabase {
         fireInitialize();
 
         // start using listeners
-        fireTableIn(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
+        fireTableIn(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
 
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
@@ -706,7 +706,7 @@ public class DatabaseDefault implements IDatabase {
             }
         }
 
-        fireTableOut(new DatabaseTableEvent(context, result, adapter, connection, table, mode));
+        fireTableOut(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
     }
 
     /**
@@ -1038,7 +1038,7 @@ public class DatabaseDefault implements IDatabase {
             idManager.readKeys(pstmt);
         }
 
-        fireRegisterIn(new DatabaseRegisterEvent(context, result, connection, table, register, wrapper, indexesToValues));
+        fireRegisterIn(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
     }
 
     /**
@@ -1155,7 +1155,7 @@ public class DatabaseDefault implements IDatabase {
                 rs.close();
             }
         }
-        fireRegisterOut(new DatabaseRegisterEvent(context, result, connection, table, register, wrapper, indexesToValues));
+        fireRegisterOut(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
     }
 
     /**
