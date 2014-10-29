@@ -228,7 +228,6 @@ public class PluginDatabase extends AbstractPluginValue {
                 if (provider != null) {
                     try {
                         providerInstance[index] = (IDatabase) Class.forName(provider).newInstance();
-                        providerInstance[index].initialize();
                     } catch (Exception e) {
                         failure++;
                         result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Invalid Database provider(" + index + ") '" + provider + "' for " + currentName + ". Error:" + e.getMessage(), e));
@@ -241,6 +240,7 @@ public class PluginDatabase extends AbstractPluginValue {
             }
             if (providerInstance[index] != null) {
                 providerInstance[index].initialize();
+                providerInstance[index].setName(currentName);
             }
             if (reuse) {
                 final int indexInner = index;

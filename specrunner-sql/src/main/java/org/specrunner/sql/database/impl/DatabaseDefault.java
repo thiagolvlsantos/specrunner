@@ -153,6 +153,10 @@ public class DatabaseDefault implements IDatabase {
      */
     protected Boolean reuseScripts = Boolean.FALSE;
     /**
+     * Database name.
+     */
+    protected String name;
+    /**
      * Cache of tables tables to scripts.
      */
     protected static ICache<String, String> xmlToSql = SRServices.get(ICacheFactory.class).newCache(DatabaseDefault.class.getName());
@@ -336,6 +340,16 @@ public class DatabaseDefault implements IDatabase {
     @Override
     public void setReuseScripts(Boolean reuseScripts) {
         this.reuseScripts = reuseScripts;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
