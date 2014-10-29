@@ -21,26 +21,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Nodes;
 
-import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Schema;
-import org.specrunner.sql.meta.Table;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.xom.node.INodeHolder;
-import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
- * A loader to Schema from XML files.
+ * A loader of Schema from XML files.
  * 
  * @author Thiago Santos
  * 
  */
-public class SchemaLoaderXOM implements ISchemaLoaderXML {
+public class SchemaLoaderXOM extends AbstractSchemaLoaderXOM {
     /**
      * XML parser.
      */
@@ -55,28 +47,7 @@ public class SchemaLoaderXOM implements ISchemaLoaderXML {
             if (in == null) {
                 throw new RuntimeException("Resource '" + source + "' not found.");
             }
-            Document d = getBuilder().build(in);
-
-            INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
-            INodeHolder nSchema = holderFactory.newHolder(d.getRootElement());
-            schema = new Schema();
-            schema.setName(nSchema.getAttribute(ATTR_NAME)).setAlias(nSchema.getAttribute(ATTR_ALIAS, schema.getName()));
-
-            Nodes nTables = nSchema.getNode().query("child::table");
-            for (int i = 0; i < nTables.size(); i++) {
-                INodeHolder nTable = holderFactory.newHolder(nTables.get(i));
-                Table table = new Table();
-                table.setName(nTable.getAttribute(ATTR_NAME)).setAlias(nTable.getAttribute(ATTR_ALIAS, table.getName()));
-                schema.add(table);
-
-                Nodes nColumns = nTable.getNode().query("child::column");
-                for (int j = 0; j < nColumns.size(); j++) {
-                    INodeHolder nColumn = holderFactory.newHolder(nColumns.get(j));
-                    Column column = new Column();
-                    UtilSchema.setupColumn(context, table, column, nColumn);
-                    table.add(column);
-                }
-            }
+            schema = loadDocument(context, getBuilder().build(in));
         } catch (Exception e) {
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info(e.getMessage(), e);

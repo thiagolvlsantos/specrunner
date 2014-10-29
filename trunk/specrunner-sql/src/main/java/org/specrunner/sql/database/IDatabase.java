@@ -116,6 +116,21 @@ public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetab
     void setReuseScripts(Boolean reuseScripts);
 
     /**
+     * Set database name.
+     * 
+     * @param name
+     *            Name.
+     */
+    void setName(String name);
+
+    /**
+     * Get database name.
+     * 
+     * @return The database name.
+     */
+    String getName();
+
+    /**
      * Perform some actions in a database.
      * 
      * @param context
