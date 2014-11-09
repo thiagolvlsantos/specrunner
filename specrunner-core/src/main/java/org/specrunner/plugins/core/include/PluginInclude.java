@@ -386,6 +386,7 @@ public class PluginInclude extends AbstractPlugin {
             Element link = new Element("a");
             link.addAttribute(new Attribute("href", String.valueOf(newHref)));
             link.appendChild(originalHref.toString());
+            UtilNode.setIgnore(link);
             thFile.appendChild(link);
 
             thFile = new Element("th");
