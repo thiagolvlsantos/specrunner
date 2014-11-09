@@ -117,6 +117,19 @@ public class PluginInclude extends AbstractPlugin {
     protected Integer depth = DEFAULT_DEPTH;
 
     /**
+     * Injected expanded mode for features.
+     */
+    public static final String FEATURE_INJECTED = PluginInclude.class.getName() + ".injected";
+    /**
+     * Default injected state.
+     */
+    public static final Boolean DEFAULT_INJECTED = Boolean.TRUE;
+    /**
+     * Injected state.
+     */
+    protected Boolean injected = DEFAULT_INJECTED;
+
+    /**
      * Enable expanded mode for features.
      */
     public static final String FEATURE_EXPANDED = PluginInclude.class.getName() + ".expanded";
@@ -208,6 +221,25 @@ public class PluginInclude extends AbstractPlugin {
     }
 
     /**
+     * Get the injected information.
+     * 
+     * @return true, to inject HTML, false, otherwise.
+     */
+    public Boolean getInjected() {
+        return injected;
+    }
+
+    /**
+     * Set injected state.
+     * 
+     * @param injected
+     *            true, to inject HTML, false, otherwise.
+     */
+    public void setInjected(Boolean injected) {
+        this.injected = injected;
+    }
+
+    /**
      * Gets the status expected for inclusion.
      * 
      * @return true, if node might be shown expanded after inclusion, false, if
@@ -276,6 +308,7 @@ public class PluginInclude extends AbstractPlugin {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_DEPTH, this);
+        fm.set(FEATURE_INJECTED, this);
         if (expanded == null) {
             fm.set(FEATURE_EXPANDED, this);
         }
@@ -349,7 +382,11 @@ public class PluginInclude extends AbstractPlugin {
             UtilNode.appendCss(thFile, CSS_INCLUDED_FILE);
             UtilNode.setIgnore(thFile);
             trFile.appendChild(thFile);
-            thFile.appendChild(originalHref.toString());
+
+            Element link = new Element("a");
+            link.addAttribute(new Attribute("href", String.valueOf(newHref)));
+            link.appendChild(originalHref.toString());
+            thFile.appendChild(link);
 
             thFile = new Element("th");
             UtilNode.appendCss(thFile, CSS_INCLUDED_FILE);
@@ -360,7 +397,7 @@ public class PluginInclude extends AbstractPlugin {
             // content
             Element trContent = new Element("tr");
             table.appendChild(trContent);
-            int failCount = result.countStatus(Failure.INSTANCE);
+            int failtCount = result.size();
 
             Element tdContent = new Element("td");
             tdContent.addAttribute(new Attribute("colspan", "2"));
@@ -373,6 +410,7 @@ public class PluginInclude extends AbstractPlugin {
             } else {
                 if (!context.getSources().contains(newSource)) {
                     try {
+                        int count = result.size();
                         Node root = document.getRootElement().copy();
                         tdContent.appendChild(root);
                         context.getSources().push(newSource);
@@ -390,8 +428,19 @@ public class PluginInclude extends AbstractPlugin {
                             for (ISourceListener sl : listeners) {
                                 sl.onAfter(newSource, context, result);
                             }
-                            IResourceManager resources = context.getSources().peek().getManager();
-                            resources.merge(importedResources);
+                            failtCount = result.countErrors(failtCount);
+                            if (!injected && failtCount == 0) {
+                                // remove status added
+                                while (result.size() > count) {
+                                    result.remove(result.size() - 1);
+                                }
+                                root.detach();
+                                tdContent.appendChild("All actions/assertions suceeded. ");
+                            }
+                            if (injected || failtCount != 0) {
+                                IResourceManager resources = context.getSources().peek().getManager();
+                                resources.merge(importedResources);
+                            }
                         }
                     } catch (RunnerException e) {
                         if (UtilLog.LOG.isDebugEnabled()) {
@@ -406,8 +455,7 @@ public class PluginInclude extends AbstractPlugin {
                 }
             }
 
-            failCount = result.countStatus(Failure.INSTANCE) - failCount;
-            if (failCount > 0) {
+            if (failtCount > 0) {
                 UtilNode.appendCss(ele, "expanded");
                 result.addResult(Warning.INSTANCE, context.newBlock(node, this), "Included file failed: " + path);
             } else {
