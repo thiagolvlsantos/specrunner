@@ -97,6 +97,10 @@ $(document).ready(function() {
         }
         $(this).attr("value", comando);
         $(trace).toggle(200);
+        if(!$(this).is(":visible")){
+            var off = $(this).offset();
+            window.scrollTo(off.top,off.left);
+        }
     });
     $("#right_exp").click(function(event) {
         window.opener.document.$(":button.sr_stackbutton[value*='+']").each(function() {
