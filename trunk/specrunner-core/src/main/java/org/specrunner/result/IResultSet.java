@@ -227,6 +227,15 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
     int countErrors();
 
     /**
+     * Return number of errors.
+     * 
+     * @param start
+     *            Start index.
+     * @return The errors number starting from a index position.
+     */
+    int countErrors(int start);
+
+    /**
      * Counts the status of a given type.
      * 
      * @param <T>

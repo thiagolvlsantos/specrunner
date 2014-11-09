@@ -45,7 +45,7 @@ public class WaitDefault extends ParameterHolder implements IWait {
     /**
      * To seconds milliseconds factor.
      */
-    private static final int TO_SECONDS = 1000;
+    protected static final int TO_SECONDS = 1000;
 
     /**
      * The interval.
