@@ -924,6 +924,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected boolean populate(Object instance, IContext context, RowAdapter row, IResultSet result) throws Exception {
         boolean ok = true;
         for (int i = 0; i < fields.size(); i++) {
+            if (row.getCellsCount() != fields.size()) {
+                result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), "Number of cells(" + row.getCellsCount() + ") is different of headers(" + fields.size() + ")");
+                ok = false;
+                break;
+            }
             CellAdapter cell = row.getCell(i);
             try {
                 Field f = fields.get(i);
