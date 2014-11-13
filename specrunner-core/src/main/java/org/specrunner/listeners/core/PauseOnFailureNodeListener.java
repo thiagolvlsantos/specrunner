@@ -49,7 +49,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     /**
      * Pause perform condition.
      */
-    protected Boolean condition = Boolean.TRUE;
+    private Boolean condition = Boolean.TRUE;
     /**
      * Enable pause on errors.
      */
@@ -57,7 +57,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     /**
      * Set true, to pause on errors.
      */
-    protected Boolean pauseOnFailure = Boolean.FALSE;
+    private Boolean pauseOnFailure = Boolean.FALSE;
 
     /**
      * Enable error dialog on failures.
@@ -66,22 +66,22 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
     /**
      * Set true, to show a dialog.
      */
-    protected Boolean showDialog = Boolean.FALSE;
+    private Boolean showDialog = Boolean.FALSE;
 
     /**
      * Auxiliary frame.
      */
-    protected ErrorFrame frame;
+    private ErrorFrame frame;
 
     /**
      * Flag to skip all dialog messages.
      */
-    protected Boolean okToAll;
+    private Boolean okToAll;
 
     /**
      * Count to check if errors have been added.
      */
-    protected int start;
+    private int start;
 
     @Override
     public String getName() {
@@ -172,10 +172,10 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
             return;
         }
         if (pauseOnFailure && !okToAll) {
-            if (result.countErrors(start) > 0) {
-                List<Status> status = result.errorStatus();
-                Status[] array = status.toArray(new Status[status.size()]);
-                List<IResult> errors = result.filterByStatus(start, result.size(), array);
+            List<Status> status = result.errorStatus();
+            Status[] array = status.toArray(new Status[status.size()]);
+            List<IResult> errors = result.filterByStatus(start, result.size(), array);
+            if (!errors.isEmpty()) {
                 try {
                     IOutput output = SRServices.get(IOutputFactory.class).currentOutput();
                     output.println("Pause on error enabled.");

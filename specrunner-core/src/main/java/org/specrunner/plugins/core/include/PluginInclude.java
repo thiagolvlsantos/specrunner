@@ -128,7 +128,7 @@ public class PluginInclude extends AbstractPlugin {
     /**
      * Injected state.
      */
-    protected Boolean injected = null;
+    protected Boolean injected = DEFAULT_INJECTED;
 
     /**
      * Enable expanded mode for features.
@@ -309,12 +309,7 @@ public class PluginInclude extends AbstractPlugin {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_DEPTH, this);
-        if (injected == null) {
-            fm.set(FEATURE_INJECTED, this);
-        }
-        if (injected == null) {
-            injected = DEFAULT_INJECTED;
-        }
+        fm.set(FEATURE_INJECTED, this);
         if (expanded == null) {
             fm.set(FEATURE_EXPANDED, this);
         }
@@ -390,7 +385,7 @@ public class PluginInclude extends AbstractPlugin {
             trFile.appendChild(thFile);
 
             Element link = new Element("a");
-            link.addAttribute(new Attribute("href", String.valueOf(newSource.getURI())));
+            link.addAttribute(new Attribute("href", String.valueOf(newHref)));
             link.appendChild(originalHref.toString());
             UtilNode.setIgnore(link);
             thFile.appendChild(link);
@@ -438,7 +433,9 @@ public class PluginInclude extends AbstractPlugin {
                             failCount = result.countErrors(failCount);
                             if (!injected && failCount == 0) {
                                 // remove status added
-                                result.subList(initialResultSize, Math.max(initialResultSize, result.size() - 1)).clear();
+                                while (result.size() > initialResultSize) {
+                                    result.remove(result.size() - 1);
+                                }
                                 includedRoot.detach();
                                 tdContent.appendChild("All actions/assertions were successful. ");
                                 result.addResult(Success.INSTANCE, context.newBlock(tdContent, this));
