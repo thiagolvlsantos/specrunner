@@ -67,10 +67,10 @@ public abstract class AbstractPluginObjectCompareAll<T> extends AbstractPluginOb
                 Object instance = processLine(context, row, result);
                 List<Object> selected = selector.select(this, context, instance, row, result);
                 if (selected.isEmpty()) {
-                    throw new PluginException("Element at index '" + (i - 1) + "' not found in general collection.");
+                    throw new PluginException("Element at line '" + (i - 1) + "' not found in general collection.");
                 }
                 if (selected.size() > 1) {
-                    throw new PluginException("More than 1 element found for index '" + (i - 1) + "' in general collection.");
+                    throw new PluginException("More than 1 element found for line '" + (i - 1) + "' in general collection.");
                 }
                 removeFromCollection(objects, selected.get(0));
             } catch (Exception e) {
