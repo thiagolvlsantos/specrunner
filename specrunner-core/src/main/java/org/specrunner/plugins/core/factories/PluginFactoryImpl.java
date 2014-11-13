@@ -48,7 +48,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     /**
      * Kind of factory.
      */
-    private PluginKind kind;
+    protected PluginKind kind;
     /**
      * Map from alias to class name.
      */
@@ -68,11 +68,11 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     /**
      * File to be loaded.
      */
-    private String file;
+    protected String file;
     /**
      * Initialization status.
      */
-    private boolean initialized = false;
+    protected boolean initialized = false;
 
     /**
      * Creates a factory loading the given file.
@@ -98,12 +98,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
         return kind;
     }
 
-    /**
-     * Initialize the factory.
-     * 
-     * @throws PluginException
-     *             On initialization errors.
-     */
+    @Override
     public void initialize() throws PluginException {
         if (!initialized) {
             try {
@@ -135,6 +130,7 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
     @SuppressWarnings("unchecked")
     @Override
     public Class<? extends IPlugin> getClass(String alias) throws PluginException {
+        initialize();
         String type = aliasToTypeNames.get(alias);
         if (type == null) {
             return null;
@@ -159,10 +155,10 @@ public abstract class PluginFactoryImpl implements IPluginFactory {
 
     @Override
     public String getAlias(Class<? extends IPlugin> type) throws PluginException {
-        initialize();
         if (type == null) {
             return null;
         }
+        initialize();
         return typeNamesToAlias.get(type.getName());
     }
 

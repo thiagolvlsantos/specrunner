@@ -96,7 +96,7 @@ public class PluginInclude extends AbstractPlugin {
     /**
      * Input directory file.
      */
-    private String dir;
+    protected String dir;
 
     /**
      * Link to file.
@@ -117,13 +117,14 @@ public class PluginInclude extends AbstractPlugin {
     protected Integer depth = DEFAULT_DEPTH;
 
     /**
-     * Injected expanded mode for features.
+     * Injected included files feature.
      */
     public static final String FEATURE_INJECTED = PluginInclude.class.getName() + ".injected";
     /**
-     * Default injected state.
+     * Default injected state. Default is false, only perform actions, inject
+     * data only in errors.
      */
-    public static final Boolean DEFAULT_INJECTED = Boolean.TRUE;
+    public static final Boolean DEFAULT_INJECTED = Boolean.FALSE;
     /**
      * Injected state.
      */
@@ -398,7 +399,7 @@ public class PluginInclude extends AbstractPlugin {
             // content
             Element trContent = new Element("tr");
             table.appendChild(trContent);
-            int failtCount = result.size();
+            int failCount = result.size();
 
             Element tdContent = new Element("td");
             tdContent.addAttribute(new Attribute("colspan", "2"));
@@ -411,9 +412,9 @@ public class PluginInclude extends AbstractPlugin {
             } else {
                 if (!context.getSources().contains(newSource)) {
                     try {
-                        int count = result.size();
-                        Node root = document.getRootElement().copy();
-                        tdContent.appendChild(root);
+                        int initialResultSize = result.size();
+                        Node includedRoot = document.getRootElement().copy();
+                        tdContent.appendChild(includedRoot);
                         context.getSources().push(newSource);
                         List<ISourceListener> listeners = SRServices.get(IListenerManager.class).filterByType(ISourceListener.class);
                         // perform before listeners
@@ -421,7 +422,7 @@ public class PluginInclude extends AbstractPlugin {
                             sl.onBefore(newSource, context, result);
                         }
                         try {
-                            context.getRunner().run(root, context, result);
+                            context.getRunner().run(includedRoot, context, result);
                         } finally {
                             IResourceManager importedResources = context.getSources().peek().getManager();
                             context.getSources().pop();
@@ -429,16 +430,17 @@ public class PluginInclude extends AbstractPlugin {
                             for (ISourceListener sl : listeners) {
                                 sl.onAfter(newSource, context, result);
                             }
-                            failtCount = result.countErrors(failtCount);
-                            if (!injected && failtCount == 0) {
+                            failCount = result.countErrors(failCount);
+                            if (!injected && failCount == 0) {
                                 // remove status added
-                                while (result.size() > count) {
+                                while (result.size() > initialResultSize) {
                                     result.remove(result.size() - 1);
                                 }
-                                root.detach();
-                                tdContent.appendChild("All actions/assertions suceeded. ");
+                                includedRoot.detach();
+                                tdContent.appendChild("All actions/assertions were successful. ");
+                                result.addResult(Success.INSTANCE, context.newBlock(tdContent, this));
                             }
-                            if (injected || failtCount != 0) {
+                            if (injected || failCount != 0) {
                                 IResourceManager resources = context.getSources().peek().getManager();
                                 resources.merge(importedResources);
                             }
@@ -456,7 +458,7 @@ public class PluginInclude extends AbstractPlugin {
                 }
             }
 
-            if (failtCount > 0) {
+            if (failCount > 0) {
                 UtilNode.appendCss(ele, "expanded");
                 result.addResult(Warning.INSTANCE, context.newBlock(node, this), "Included file failed: " + path);
             } else {
