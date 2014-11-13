@@ -1,4 +1,9 @@
-PENDENTE: 1.4.25
+1.4.26
+OK - Corrigir o pause on failure listener, ele está se perdendo quando se trata de um include com falhas, colocar todos atributos como protected;
+OK - Alterar o código do IListenerManager para fazer a remoção usando o getName() como referência,e não o equals do Java;
+OK - Usar http://stackoverflow.com/questions/10797663/removing-tail-of-x-elements-from-a-list para remover os elementos do final da lista de resultado;
+
+1.4.25
 OK - Fazer o analisador e comparador de bases retornarem o relatório como string não fazer System.out;
 OK - Colocar o campo de 'nome da base' no evento de listener do banco, isso permite fazer um printlistener que filtre apenas as ações de uma base no sql-negative;
 	OK - Adicionar um getName na fonte de dados.
