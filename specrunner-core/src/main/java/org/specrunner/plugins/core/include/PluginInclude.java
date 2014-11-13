@@ -438,7 +438,7 @@ public class PluginInclude extends AbstractPlugin {
                             failCount = result.countErrors(failCount);
                             if (!injected && failCount == 0) {
                                 // remove status added
-                                result.subList(initialResultSize, result.size() - 1).clear();
+                                result.subList(initialResultSize, Math.max(initialResultSize, result.size() - 1)).clear();
                                 includedRoot.detach();
                                 tdContent.appendChild("All actions/assertions were successful. ");
                                 result.addResult(Success.INSTANCE, context.newBlock(tdContent, this));
