@@ -41,8 +41,11 @@ public class ListenerManagerImpl extends LinkedList<ISpecRunnerListener> impleme
 
     @Override
     public boolean add(ISpecRunnerListener e) {
+        if (e == null) {
+            return false;
+        }
         // remove repetition
-        remove(e);
+        remove(e.getName());
         // add element
         return super.add(e);
     }
