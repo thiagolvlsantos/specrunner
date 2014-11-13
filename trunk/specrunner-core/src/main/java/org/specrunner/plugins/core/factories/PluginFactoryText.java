@@ -53,12 +53,7 @@ public class PluginFactoryText implements IPluginFactory {
     };
 
     @Override
-    public IPlugin newPlugin(Node node, IContext context) {
-        if (node instanceof Text) {
-            // reuse the instance replacer.
-            return instance.get();
-        }
-        return PluginNop.emptyPlugin();
+    public void initialize() throws PluginException {
     }
 
     @Override
@@ -77,6 +72,15 @@ public class PluginFactoryText implements IPluginFactory {
             ((IPluginGroup) instance.get()).add(plugin);
         }
         return this;
+    }
+
+    @Override
+    public IPlugin newPlugin(Node node, IContext context) {
+        if (node instanceof Text) {
+            // reuse the instance replacer.
+            return instance.get();
+        }
+        return PluginNop.emptyPlugin();
     }
 
     @Override

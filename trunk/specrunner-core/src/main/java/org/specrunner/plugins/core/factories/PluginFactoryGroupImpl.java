@@ -38,15 +38,10 @@ import org.specrunner.util.composite.core.CompositeImpl;
 public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, IPluginFactory> implements IPluginFactoryGroup {
 
     @Override
-    public IPlugin newPlugin(Node node, IContext context) throws PluginException {
-        IPluginGroup group = new PluginGroupImpl();
+    public void initialize() throws PluginException {
         for (IPluginFactory pf : getChildren()) {
-            IPlugin p = pf.newPlugin(node, context);
-            if (p != null) {
-                group.add(p);
-            }
+            pf.initialize();
         }
-        return group.getNormalized();
     }
 
     @Override
@@ -79,6 +74,18 @@ public class PluginFactoryGroupImpl extends CompositeImpl<IPluginFactoryGroup, I
             pf.bind(kind, alias, plugin);
         }
         return this;
+    }
+
+    @Override
+    public IPlugin newPlugin(Node node, IContext context) throws PluginException {
+        IPluginGroup group = new PluginGroupImpl();
+        for (IPluginFactory pf : getChildren()) {
+            IPlugin p = pf.newPlugin(node, context);
+            if (p != null) {
+                group.add(p);
+            }
+        }
+        return group.getNormalized();
     }
 
     @Override

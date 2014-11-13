@@ -1,3 +1,17 @@
+PENDENTE: 1.4.25
+OK - Fazer o analisador e comparador de bases retornarem o relatório como string não fazer System.out;
+OK - Colocar o campo de 'nome da base' no evento de listener do banco, isso permite fazer um printlistener que filtre apenas as ações de uma base no sql-negative;
+	OK - Adicionar um getName na fonte de dados.
+OK - Aumentar o tamanho do campo 'status' no relatório para xx.xxx
+OK - Na apresentação de erro, verificar se existe o unwrap seria interessante, tem muita mensagem em volta dos errors.
+OK - Verificar se o valor está no range de índices. Colocado uma verificação de o número de colunas em tabelas de objetos é correspondente à quantidade de headers.
+OK - de private static final int TO_SECONDS = 1000; para protected;
+OK - Colocar o evento de click do navegador de erros para fazer o offset do erro ficar na posição esquerda e no topo da tela;
+OK - Colocar uma feature no include para remover o conteúdo incluído após a execução com sucesso de forma que a tela de resultado fique mais barata de ser exibida, deixando apenas o link para o arquivo original incluído efetivamente, isso acelera a execução dos testes, com menos dados para escrever na saída e também a visualização dos erros no arquivo de saída;
+	- Default é não injetar.
+OK - Colocar o initialize no pluginfactory, expor na interface o initialize(); Chamar o método no momento do getClass(alias);
+OK - No PluginInclude colocar success na mensagem de que tudo foi bem sucedido;
+
 1.4.24
 OK - criar o subgrupo specrunner-tools;
 OK - mudar o nome de specrunner-dbms para specrunner-tools-dbms;

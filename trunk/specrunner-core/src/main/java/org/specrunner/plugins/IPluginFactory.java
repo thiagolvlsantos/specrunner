@@ -30,6 +30,14 @@ import org.specrunner.context.IContext;
 public interface IPluginFactory {
 
     /**
+     * Initialize a factory.
+     * 
+     * @throws PluginException
+     *             On initialization errors.
+     */
+    void initialize() throws PluginException;
+
+    /**
      * Given a name, return the corresponding plugin class associated. i.e. For
      * 'include' the class PluginInclude of core plugins package is returned or
      * if 'bean' is requested the PluginBean is returned.
