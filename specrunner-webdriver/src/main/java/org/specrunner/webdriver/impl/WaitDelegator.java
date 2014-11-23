@@ -93,6 +93,36 @@ public class WaitDelegator implements IWait {
     }
 
     @Override
+    public String getWaitforSeparator() {
+        return delegate.getWaitforSeparator();
+    }
+
+    @Override
+    public void setWaitforSeparator(String waitforSeparator) {
+        delegate.setWaitforSeparator(waitforSeparator);
+    }
+
+    @Override
+    public String getWaitforPrefix() {
+        return delegate.getWaitforPrefix();
+    }
+
+    @Override
+    public void setWaitforPrefix(String waitforPrefix) {
+        delegate.setWaitforPrefix(waitforPrefix);
+    }
+
+    @Override
+    public String getWaitforSuffix() {
+        return delegate.getWaitforSuffix();
+    }
+
+    @Override
+    public void setWaitforSuffix(String waitforSuffix) {
+        delegate.setWaitforSuffix(waitforSuffix);
+    }
+
+    @Override
     public boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
         return delegate.isWaitForClient(context, result, client);
     }

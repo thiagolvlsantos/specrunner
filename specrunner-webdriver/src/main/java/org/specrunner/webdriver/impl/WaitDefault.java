@@ -17,9 +17,14 @@
  */
 package org.specrunner.webdriver.impl;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -62,6 +67,21 @@ public class WaitDefault extends ParameterHolder implements IWait {
      */
     protected String waitfor = DEFAULT_WAITFOR;
 
+    /**
+     * Wait for XPath separator.
+     */
+    protected String waitforSeparator = DEFAULT_WAITFOR_SEPARATOR;
+
+    /**
+     * Wait for prefix.
+     */
+    protected String waitforPrefix = DEFAULT_WAITFOR_PREFIX;
+
+    /**
+     * Wait for suffix.
+     */
+    protected String waitforSuffix = DEFAULT_WAITFOR_SUFFIX;
+
     @Override
     public void reset() {
         if (UtilLog.LOG.isTraceEnabled()) {
@@ -74,7 +94,8 @@ public class WaitDefault extends ParameterHolder implements IWait {
         fm.set(FEATURE_INTERVAL, this);
         fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_WAITFOR, this);
-        fm.set(FEATURE_WAIT, this);
+        fm.set(FEATURE_WAITFOR_PREFIX, this);
+        fm.set(FEATURE_WAITFOR_SUFFIX, this);
     }
 
     @Override
@@ -108,6 +129,36 @@ public class WaitDefault extends ParameterHolder implements IWait {
     }
 
     @Override
+    public String getWaitforSeparator() {
+        return waitforSeparator;
+    }
+
+    @Override
+    public void setWaitforSeparator(String waitforSeparator) {
+        this.waitforSeparator = waitforSeparator;
+    }
+
+    @Override
+    public String getWaitforPrefix() {
+        return waitforPrefix;
+    }
+
+    @Override
+    public void setWaitforPrefix(String waitforPrefix) {
+        this.waitforPrefix = waitforPrefix;
+    }
+
+    @Override
+    public String getWaitforSuffix() {
+        return waitforSuffix;
+    }
+
+    @Override
+    public void setWaitforSuffix(String waitforSuffix) {
+        this.waitforSuffix = waitforSuffix;
+    }
+
+    @Override
     public boolean isWaitForClient(IContext context, IResultSet result, WebDriver client) {
         return true;
     }
@@ -115,7 +166,14 @@ public class WaitDefault extends ParameterHolder implements IWait {
     @Override
     public void waitForClient(IContext context, IResultSet result, WebDriver client) throws PluginException {
         try {
-            (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(getWaitCondition(context, result, client, System.currentTimeMillis(), maxwait));
+            List<ExpectedCondition<?>> conditions = getWaitCondition(context, result, client);
+            for (int i = 0; i < conditions.size(); i++) {
+                ExpectedCondition<?> c = conditions.get(i);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Wait condition[" + (i + 1) + " of " + conditions.size() + "]: " + c);
+                }
+                (new WebDriverWait(client, maxwait / TO_SECONDS, interval)).until(c);
+            }
         } catch (TimeoutException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
@@ -125,7 +183,19 @@ public class WaitDefault extends ParameterHolder implements IWait {
 
     @Override
     public String getWaitfor(IContext context, IResultSet result, WebDriver client) throws PluginException {
-        return waitfor;
+        StringBuilder sb = new StringBuilder();
+        if (waitfor != null) {
+            if (waitforPrefix != null) {
+                sb.append(waitforPrefix);
+                sb.append(waitforSeparator);
+            }
+            sb.append(waitfor);
+            if (waitforSuffix != null) {
+                sb.append(waitforSeparator);
+                sb.append(waitforSuffix);
+            }
+        }
+        return sb.length() > 0 ? sb.toString() : null;
     }
 
     /**
@@ -138,19 +208,41 @@ public class WaitDefault extends ParameterHolder implements IWait {
      *            The result.
      * @param client
      *            The client.
-     * @param start
-     *            The begin time.
-     * @param timeout
-     *            The timeout.
-     * @return The expected condition.
+     * @return The expected conditions.
      * @throws PluginException
      *             On wait conditions.
      */
-    public ExpectedCondition<?> getWaitCondition(IContext context, IResultSet result, WebDriver client, long start, Long timeout) throws PluginException {
+    public List<ExpectedCondition<?>> getWaitCondition(IContext context, IResultSet result, WebDriver client) throws PluginException {
+        List<ExpectedCondition<?>> conditions = new LinkedList<ExpectedCondition<?>>();
         String test = getWaitfor(context, result, client);
         if (test != null) {
-            return ExpectedConditions.visibilityOfElementLocated(By.xpath(test));
+            StringTokenizer st = new StringTokenizer(test, waitforSeparator);
+            while (st.hasMoreTokens()) {
+                conditions.add(getTestWait(st.nextToken()));
+            }
+        } else {
+            conditions.add(getDefaultWait());
         }
+        return conditions;
+    }
+
+    /**
+     * Get test wait conditions.
+     * 
+     * @param test
+     *            Wait expression.
+     * @return Conditions.
+     */
+    protected ExpectedCondition<WebElement> getTestWait(String test) {
+        return ExpectedConditions.visibilityOfElementLocated(By.xpath(test));
+    }
+
+    /**
+     * Default wait strategy.
+     * 
+     * @return Condition.
+     */
+    protected ExpectedCondition<Boolean> getDefaultWait() {
         return new ExpectedCondition<Boolean>() {
             @Override
             public Boolean apply(WebDriver d) {
@@ -167,6 +259,11 @@ public class WaitDefault extends ParameterHolder implements IWait {
                     return true;
                 }
                 return true;
+            }
+
+            @Override
+            public String toString() {
+                return "Wait default.";
             }
         };
     }

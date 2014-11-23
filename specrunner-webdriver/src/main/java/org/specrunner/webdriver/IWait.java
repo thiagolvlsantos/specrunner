@@ -59,9 +59,31 @@ public interface IWait extends IParameterHolder {
     String DEFAULT_WAITFOR = null;
 
     /**
-     * Wait time feature.
+     * Wait for feature. Use it to set generic XPath wait condition.
      */
-    String FEATURE_WAIT = IWait.class.getName() + ".wait";
+    String FEATURE_WAITFOR_SEPARATOR = IWait.class.getName() + ".waitforSeparator";
+    /**
+     * Default wait for separator is <code>;</code>.
+     */
+    String DEFAULT_WAITFOR_SEPARATOR = ";";
+
+    /**
+     * Wait for prefix.
+     */
+    String FEATURE_WAITFOR_PREFIX = IWait.class.getName() + ".waitforPrefix";
+    /**
+     * Default wait for prefix is <code>null</code>.
+     */
+    String DEFAULT_WAITFOR_PREFIX = null;
+
+    /**
+     * Wait for suffix.
+     */
+    String FEATURE_WAITFOR_SUFFIX = IWait.class.getName() + ".waitforSuffix";
+    /**
+     * Default wait for suffix is <code>null</code>.
+     */
+    String DEFAULT_WAITFOR_SUFFIX = null;
 
     /**
      * Clear any previous settings.
@@ -114,6 +136,51 @@ public interface IWait extends IParameterHolder {
      *            The condition.
      */
     void setWaitfor(String waitfor);
+
+    /**
+     * XPath expression to wait for separator.
+     * 
+     * @return The wait expression.
+     */
+    String getWaitforSeparator();
+
+    /**
+     * Set the XPath separator.
+     * 
+     * @param waitforSeparator
+     *            The separator.
+     */
+    void setWaitforSeparator(String waitforSeparator);
+
+    /**
+     * XPath expression to wait for.
+     * 
+     * @return The wait expression prefix.
+     */
+    String getWaitforPrefix();
+
+    /**
+     * Set the XPath condition to wait for.
+     * 
+     * @param waitforPrefix
+     *            The condition.
+     */
+    void setWaitforPrefix(String waitforPrefix);
+
+    /**
+     * XPath expression to wait for.
+     * 
+     * @return The wait expression.
+     */
+    String getWaitforSuffix();
+
+    /**
+     * Set the XPath condition to wait for.
+     * 
+     * @param waitforSuffix
+     *            The condition.
+     */
+    void setWaitforSuffix(String waitforSuffix);
 
     /**
      * Sign actions to wait for browser response.
