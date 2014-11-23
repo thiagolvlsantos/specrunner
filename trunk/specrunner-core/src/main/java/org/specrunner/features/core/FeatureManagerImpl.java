@@ -173,18 +173,14 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
         }
     }
 
-    /**
-     * Gets the configuration.
-     * 
-     * @return The configuration.
-     */
-    public IConfiguration getConfiguration() {
-        return configuration;
-    }
-
     @Override
     public void setConfiguration(IConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    @Override
+    public IConfiguration getConfiguration() {
+        return configuration;
     }
 
     @Override

@@ -98,6 +98,13 @@ public interface IFeatureManager extends Map<String, Object> {
     void setConfiguration(IConfiguration cfg);
 
     /**
+     * Get configuration.
+     * 
+     * @return Current configuration.
+     */
+    IConfiguration getConfiguration();
+
+    /**
      * Get a value from map, if not found, result is 'defaultValue'.
      * 
      * @param key

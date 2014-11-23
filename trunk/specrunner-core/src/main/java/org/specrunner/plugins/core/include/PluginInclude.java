@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.include;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +33,9 @@ import nu.xom.ParentNode;
 import nu.xom.Text;
 
 import org.specrunner.SRServices;
+import org.specrunner.configuration.IConfiguration;
 import org.specrunner.context.IContext;
+import org.specrunner.dumper.core.ConstantsDumperFile;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.listeners.IListenerManager;
 import org.specrunner.listeners.ISourceListener;
@@ -390,7 +393,7 @@ public class PluginInclude extends AbstractPlugin {
             trFile.appendChild(thFile);
 
             Element link = new Element("a");
-            link.addAttribute(new Attribute("href", String.valueOf(newSource.getURI())));
+            link.addAttribute(new Attribute("href", prepareTargetLink(newSource)));
             link.appendChild(originalHref.toString());
             UtilNode.setIgnore(link);
             thFile.appendChild(link);
@@ -652,5 +655,18 @@ public class PluginInclude extends AbstractPlugin {
             sb.append("\n" + i);
         }
         return sb;
+    }
+
+    /**
+     * Get original resource link relative to current output.
+     * 
+     * @param newSource
+     *            Referenced resource.
+     * @return Relative path.
+     */
+    protected String prepareTargetLink(ISource newSource) {
+        IConfiguration cfg = SRServices.getFeatureManager().getConfiguration();
+        File f = new File((File) cfg.get(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY), (String) cfg.get(ConstantsDumperFile.FEATURE_OUTPUT_NAME));
+        return String.valueOf(resolver.resolve(f.toURI(), newSource.getURI()));
     }
 }
