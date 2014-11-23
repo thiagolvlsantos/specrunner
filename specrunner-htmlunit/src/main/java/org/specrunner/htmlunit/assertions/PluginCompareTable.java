@@ -233,7 +233,9 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
         int tmpRowRange = 0;
         for (int i = 0; i < rows.size() && tmpRowRange < rowRanges.size(); i++) {
             Range rowRange = rowRanges.get(tmpRowRange);
+            boolean skipRange = false;
             while (rowRange.between(i) && i < rows.size()) {
+                skipRange = true;
                 List<?> cols = ((HtmlElement) rows.get(i)).getByXPath("child::th | child::td");
                 int sourceCells = 0;
                 int tmpColRange = 0;
@@ -244,9 +246,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                             CellAdapter cell = tableExpected.getRows().get(sourceRows).getCell(sourceCells);
                             cell.setAttribute("title", cell.hasAttribute("title") ? cell.getAttribute("title") + " (" + i + "," + j + ")" : " (" + i + "," + j + ")");
                         }
-
                         result.add(cols.get(j));
-
                         sourceCells++;
                         j++;
                     }
@@ -255,7 +255,9 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 sourceRows++;
                 i++;
             }
-            tmpRowRange++;
+            if (skipRange) {
+                tmpRowRange++;
+            }
         }
         return result;
     }
