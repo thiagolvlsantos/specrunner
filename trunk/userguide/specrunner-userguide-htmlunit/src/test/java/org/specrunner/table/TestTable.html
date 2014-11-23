@@ -141,6 +141,19 @@
         </table>
     </span>
 </p>
+
+<p>
+    Check table in parts using 'rows=...' and cols="...", start in '2' row.
+    <span class="compareTable" by="xpath://table[@id='tableId']" >
+        <table border='1' rows="2" cols="0;2">
+            <caption>Dynamic dates</caption>
+            <tr>
+                <td>2</td>
+                <td>B</td>
+            </tr>
+        </table>
+    </span>
+</p>
     
 </body>
 </html>
