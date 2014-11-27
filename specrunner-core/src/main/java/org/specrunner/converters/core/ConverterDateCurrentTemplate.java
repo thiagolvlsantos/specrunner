@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import org.specrunner.converters.ConverterException;
-import org.specrunner.util.UtilLog;
 
 /**
  * Create current date.
@@ -69,9 +68,6 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
         if (timeZone == null) {
             calendar = Calendar.getInstance();
         } else {
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Using timezone : " + timeZone.getDisplayName() + " -> " + timeZone);
-            }
             calendar = Calendar.getInstance(timeZone);
         }
         return calendar;
