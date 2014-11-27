@@ -17,6 +17,7 @@
  */
 package org.specrunner.webdriver.impl;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -24,7 +25,6 @@ import java.util.StringTokenizer;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -73,6 +73,11 @@ public class WaitDefault extends ParameterHolder implements IWait {
     protected String waitforSeparator = DEFAULT_WAITFOR_SEPARATOR;
 
     /**
+     * Wait for waitfor method token.
+     */
+    protected String waitforMethodSeparator = DEFAULT_WAITFOR_METHOD_SEPARATOR;
+
+    /**
      * Wait for prefix.
      */
     protected String waitforPrefix = DEFAULT_WAITFOR_PREFIX;
@@ -94,6 +99,8 @@ public class WaitDefault extends ParameterHolder implements IWait {
         fm.set(FEATURE_INTERVAL, this);
         fm.set(FEATURE_MAXWAIT, this);
         fm.set(FEATURE_WAITFOR, this);
+        fm.set(FEATURE_WAITFOR_SEPARATOR, this);
+        fm.set(FEATURE_WAITFOR_METHOD_SEPARATOR, this);
         fm.set(FEATURE_WAITFOR_PREFIX, this);
         fm.set(FEATURE_WAITFOR_SUFFIX, this);
     }
@@ -136,6 +143,16 @@ public class WaitDefault extends ParameterHolder implements IWait {
     @Override
     public void setWaitforSeparator(String waitforSeparator) {
         this.waitforSeparator = waitforSeparator;
+    }
+
+    @Override
+    public String getWaitforMethodSeparator() {
+        return waitforMethodSeparator;
+    }
+
+    @Override
+    public void setWaitforMethodSeparator(String waitforMethodSeparator) {
+        this.waitforMethodSeparator = waitforMethodSeparator;
     }
 
     @Override
@@ -232,8 +249,24 @@ public class WaitDefault extends ParameterHolder implements IWait {
      * @param test
      *            Wait expression.
      * @return Conditions.
+     * @throws PluginException
+     *             On load errors.
      */
-    protected ExpectedCondition<WebElement> getTestWait(String test) {
+    protected ExpectedCondition<?> getTestWait(String test) throws PluginException {
+        int pos = test.indexOf(getWaitforMethodSeparator());
+        if (pos > 0) {
+            String method = test.substring(0, pos);
+            String xpath = test.substring(pos + getWaitforMethodSeparator().length());
+            try {
+                Method m = ExpectedConditions.class.getMethod(method, By.class);
+                if (m == null) {
+                    throw new PluginException("Method '" + method + "' not found.");
+                }
+                return (ExpectedCondition<?>) m.invoke(null, By.xpath(xpath));
+            } catch (Exception e) {
+                throw new PluginException(e);
+            }
+        }
         return ExpectedConditions.visibilityOfElementLocated(By.xpath(test));
     }
 

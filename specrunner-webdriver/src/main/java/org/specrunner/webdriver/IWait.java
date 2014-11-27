@@ -68,6 +68,15 @@ public interface IWait extends IParameterHolder {
     String DEFAULT_WAITFOR_SEPARATOR = ";";
 
     /**
+     * Wait for feature. Use it to set generic XPath wait method separator.
+     */
+    String FEATURE_WAITFOR_METHOD_SEPARATOR = IWait.class.getName() + ".waitforMethodSeparator";
+    /**
+     * Default wait for separator is <code>:</code>.
+     */
+    String DEFAULT_WAITFOR_METHOD_SEPARATOR = ":";
+
+    /**
      * Wait for prefix.
      */
     String FEATURE_WAITFOR_PREFIX = IWait.class.getName() + ".waitforPrefix";
@@ -140,7 +149,7 @@ public interface IWait extends IParameterHolder {
     /**
      * XPath expression to wait for separator.
      * 
-     * @return The wait expression.
+     * @return The wait separator.
      */
     String getWaitforSeparator();
 
@@ -151,6 +160,24 @@ public interface IWait extends IParameterHolder {
      *            The separator.
      */
     void setWaitforSeparator(String waitforSeparator);
+
+    /**
+     * XPath expression to wait for method separator. When separator is not
+     * specified <code>visibilityOfElementLocated</code> will be used. Method
+     * options are those of <code>ExpectedConditions</code> which receives a
+     * single <code>By</code> parameter.
+     * 
+     * @return The wait method separator.
+     */
+    String getWaitforMethodSeparator();
+
+    /**
+     * Set the XPath separator.
+     * 
+     * @param waitforSeparator
+     *            The separator.
+     */
+    void setWaitforMethodSeparator(String waitforSeparator);
 
     /**
      * XPath expression to wait for.
