@@ -103,6 +103,16 @@ public class WaitDelegator implements IWait {
     }
 
     @Override
+    public String getWaitforMethodSeparator() {
+        return delegate.getWaitforMethodSeparator();
+    }
+
+    @Override
+    public void setWaitforMethodSeparator(String waitforMethodSeparator) {
+        delegate.setWaitforMethodSeparator(waitforMethodSeparator);
+    }
+
+    @Override
     public String getWaitforPrefix() {
         return delegate.getWaitforPrefix();
     }
