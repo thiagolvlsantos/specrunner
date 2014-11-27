@@ -24,7 +24,6 @@ import java.util.TimeZone;
 
 import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 
@@ -60,9 +59,6 @@ public class ConverterDatePatternArgs extends AbstractConverterTimezone<Date> {
                 }
                 TimeZone tz = getZone();
                 if (tz != null) {
-                    if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Using timezone : " + tz.getDisplayName() + " -> " + tz);
-                    }
                     formatter.setTimeZone(tz);
                 }
                 return formatter.parse(String.valueOf(value));

@@ -125,10 +125,12 @@
 
 /* SCENARIO */
 .scenarioTime {
-    padding: 2px;
+    padding: 3px;
+    font-family: verdana;
     font-size: x-small;
     vertical-align: top;
-    background-color: white;
+    background-color: black;
+    color: white;
     font-weight: bold;
 }
 

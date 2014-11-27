@@ -21,6 +21,7 @@ import java.util.TimeZone;
 
 import org.specrunner.SRServices;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 
@@ -89,6 +90,9 @@ public abstract class AbstractConverterTimezone<T> extends ConverterNotNullNotEm
                     tz = TimeZone.getTimeZone(name);
                     if (tz == null) {
                         throw new RuntimeException("Invalid timezone:" + name);
+                    }
+                    if (UtilLog.LOG.isInfoEnabled()) {
+                        UtilLog.LOG.info("Using timezone : " + tz.getDisplayName() + " -> " + tz);
                     }
                     cacheTimezone.put(name, tz);
                 }
