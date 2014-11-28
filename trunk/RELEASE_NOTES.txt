@@ -1,3 +1,15 @@
+1.4.27 
+OK - Corrigir o rows/cols do plugin table, está erradamente pulando ranges;
+OK - Criar um waitfor com múltiplas condições de espera. Sugestão separados por ';', ou separador customizado (features). Seria possível uma linguagem de expressões? Ou fazer features com prefixo/sufixo, ao invés de absolutas?
+		- Implementado apenas com AND.
+OK - Fazer o PluginInclude ter os links dos arquivos originais de forma relativa à pasta de saída;
+OK - Colocar fundo e fonte fixos no tempo dos cenários;
+OK - Colocar mensagens de timezone para o escopo de trace;
+	 R: Mantido em info, mas reduzida a quantidade, colocado apenas no momento do getZone() para colocar na cache.
+OK - Definir uma forma de chamar o método pelo nome usando o locat no webdriver wait. É possível fazer a chamada de qualquer método estático de ExpectedConditions que receba um 'By' como parâmetros facilmente.
+OK - Realizar uma implementação própria de URLResolver para resolver mais que 12 níveis;
+	?? testes com 20 níveis funcionaram sem problemas.
+
 1.4.26
 OK - Corrigir o pause on failure listener, ele está se perdendo quando se trata de um include com falhas, colocar todos atributos como protected;
 OK - Alterar o código do IListenerManager para fazer a remoção usando o getName() como referência,e não o equals do Java;
