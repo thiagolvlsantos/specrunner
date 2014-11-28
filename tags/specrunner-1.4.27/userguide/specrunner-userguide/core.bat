@@ -1,0 +1,1 @@
+cd.. & cd.. & cd specrunner & deploy
