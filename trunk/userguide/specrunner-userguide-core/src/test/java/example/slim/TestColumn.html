@@ -4,6 +4,10 @@
 table {
     border: 1px solid black;
 }
+th {
+    border: 1px solid black;
+    background-color: yellow;
+}
 td {
     border: 1px dotted black;
 }
@@ -154,6 +158,35 @@ td {
             </tr>
         </table>
     </div>
+
+    <div class="scenario">
+        <span class="title">Essa tabela verificando uma variável pública.</span>. 
+        <table class="column" bean="example.slim.pacote1.AnyQualquer" >
+            <!--tr ignore="true" style="border: 1px solid black;">
+              <th colspan="2">Entradas</th>
+              <th colspan="2">Saídas?</th>
+            </tr-->
+            <tr>
+                <th>A</th>
+                <th>B</th>
+                <th>c?</th>
+                <th>d?</th>
+            </tr>
+            <tr>
+                <td>a</td>
+                <td>b</td>
+                <td>ab</td>
+                <td>ab</td>
+            </tr>
+            <tr>
+                <td>c</td>
+                <td>d</td>
+                <td>cd</td>
+                <td>cd</td>
+            </tr>
+        </table>
+    </div>
+
 
 </body>
 </html>
