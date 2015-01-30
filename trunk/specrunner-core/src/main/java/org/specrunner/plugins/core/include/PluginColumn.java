@@ -38,9 +38,11 @@ import org.specrunner.plugins.core.var.PluginBean;
 import org.specrunner.plugins.type.Undefined;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.result.status.Ignored;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.string.UtilString;
+import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
@@ -67,7 +69,18 @@ public class PluginColumn extends AbstractPluginTable {
         if (rows.isEmpty()) {
             throw new PluginException("Header information missing.");
         }
-        RowAdapter header = rows.get(0);
+        int headerIndex = 0;
+        RowAdapter header = null;
+        while (headerIndex < rows.size()) {
+            header = rows.get(headerIndex);
+            if (!UtilNode.isIgnore(header.getNode())) {
+                break;
+            }
+            headerIndex++;
+        }
+        if (headerIndex > rows.size()) {
+            throw new PluginException("Header information missing.");
+        }
         List<String> features = new LinkedList<String>();
         List<IConverter> converters = new LinkedList<IConverter>();
         List<List<String>> args = new LinkedList<List<String>>();
@@ -82,14 +95,22 @@ public class PluginColumn extends AbstractPluginTable {
         for (String f : features) {
             accesses.add(accessFactory.newAccess(instance, f.replace("?", "")));
         }
-        for (int i = 1; i < rows.size(); i++) {
+        for (int i = headerIndex + 1; i < rows.size(); i++) {
             RowAdapter r = rows.get(i);
+            if (UtilNode.isIgnore(r.getNode())) {
+                result.addResult(Ignored.INSTANCE, context.newBlock(r.getNode(), this), "Ignored line.");
+                continue;
+            }
             if (r.getCellsCount() != features.size()) {
-                result.addResult(Failure.INSTANCE, context.peek(), "Number of coluns in line " + i + " is different of headers (" + features.size() + ").");
+                result.addResult(Failure.INSTANCE, context.peek(), "Number of coluns in line " + i + " (" + r.getCellsCount() + ") is different of headers (" + features.size() + ").");
                 continue;
             }
             for (int j = 0; j < features.size(); j++) {
                 CellAdapter c = r.getCell(j);
+                if (UtilNode.isIgnore(c.getNode())) {
+                    result.addResult(Ignored.INSTANCE, context.newBlock(r.getNode(), this), "Ignored cell.");
+                    continue;
+                }
                 Object value;
                 try {
                     value = c.getObject(context, true, converters.get(j), args.get(j));
