@@ -104,6 +104,7 @@ public class PluginColumn extends AbstractPluginTable {
                     continue;
                 }
                 if (feature.endsWith("?")) {
+                    feature = feature.replace("?", "");
                     Object received = null;
                     CellAdapter hd = header.getCells().get(j);
                     String content = "content";
