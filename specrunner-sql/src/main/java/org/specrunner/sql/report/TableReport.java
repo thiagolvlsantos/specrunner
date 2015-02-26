@@ -173,7 +173,7 @@ public class TableReport implements IPresentation {
             String strKey = column.isKey() ? KEY : "";
             String strRef = column.isReference() ? REF : "";
             String strVir = column.isVirtual() ? VIR : "";
-            String strSeq = column.isVirtual() ? SEQ : "";
+            String strSeq = column.isSequence() ? SEQ : "";
             String strEnum = column.isEnum() ? ENUM : "";
             String strDate = column.isDate() ? DATE : "";
             int comp = strKey.length() + strRef.length() + strVir.length() + strSeq.length() + strEnum.length() + strDate.length();
