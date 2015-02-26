@@ -49,21 +49,29 @@ public class ResultSetEnumerator implements IResultEnumerator {
      */
     private ResultSet rsReceived;
     /**
+     * Consume expected flag.
+     */
+    private boolean consumeExpected = true;
+    /**
+     * Consume received flat.
+     */
+    private boolean consumeReceived = true;
+    /**
+     * Has item expected flag.
+     */
+    private boolean hasExpected = false;
+    /**
+     * Has item received flat.
+     */
+    private boolean hasReceived = false;
+    /**
      * Read expected flag.
      */
-    private boolean readExpected = true;
+    private boolean readExpected = false;
     /**
      * Read received flat.
      */
-    private boolean readReceived = true;
-    /**
-     * Temporary data.
-     */
-    private ResultSet tmpExpected;
-    /**
-     * Temporary data.
-     */
-    private ResultSet tmpReceived;
+    private boolean readReceived = false;
 
     /**
      * Result set enumerator.
@@ -86,24 +94,19 @@ public class ResultSetEnumerator implements IResultEnumerator {
 
     @Override
     public boolean next() throws SQLException {
-        boolean next = false;
-        if (readExpected && rsExpected.next()) {
-            tmpExpected = rsExpected;
-            readExpected = true;
-            next = true;
+        if (consumeExpected) {
+            hasExpected = rsExpected.next();
         }
-        if (readReceived && rsReceived.next()) {
-            tmpReceived = rsReceived;
-            readReceived = true;
-            next = true;
+        if (consumeReceived) {
+            hasReceived = rsReceived.next();
         }
-        if (tmpExpected != null && tmpReceived != null) {
+        if (hasExpected && hasReceived) {
             int comp = 0;
             Iterator<Column> columns = (virtual != null && virtual ? table.getReferences() : table.getKeys()).iterator();
             while (columns.hasNext() && comp == 0) {
-                Column c = (Column) columns.next();
-                Object tExp = tmpExpected.getObject(c.getName());
-                Object tRec = tmpReceived.getObject(c.getName());
+                Column c = columns.next();
+                Object tExp = rsExpected.getObject(c.getName());
+                Object tRec = rsReceived.getObject(c.getName());
                 comp = c.getComparator().compare(tExp, tRec);
             }
             if (comp < 0) {
@@ -116,25 +119,29 @@ public class ResultSetEnumerator implements IResultEnumerator {
                 readExpected = true;
                 readReceived = true;
             }
+        } else if (hasExpected && !hasReceived) {
+            readExpected = true;
+            readReceived = false;
+        } else if (!hasExpected && hasReceived) {
+            readExpected = false;
+            readReceived = true;
         }
-        return next;
+        return readExpected || readReceived;
     }
 
     @Override
     public ResultSet getExpected() {
-        ResultSet t = readExpected ? tmpExpected : null;
-        if (readExpected) {
-            tmpExpected = null;
-        }
+        ResultSet t = readExpected ? rsExpected : null;
+        consumeExpected = readExpected;
+        readExpected = false;
         return t;
     }
 
     @Override
     public ResultSet getReceived() {
-        ResultSet t = readReceived ? tmpReceived : null;
-        if (readReceived) {
-            tmpReceived = null;
-        }
+        ResultSet t = readReceived ? rsReceived : null;
+        consumeReceived = readReceived;
+        readReceived = false;
         return t;
     }
 }
