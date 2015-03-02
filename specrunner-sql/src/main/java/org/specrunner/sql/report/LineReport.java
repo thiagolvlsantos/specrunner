@@ -397,8 +397,11 @@ public class LineReport implements IPresentation {
             String emptyValue = nullEmptyHandler.emptyValue(EMode.COMPARE);
             sizeMax = Math.max(String.valueOf(nullValue).length(), String.valueOf(emptyValue).length());
         }
-        int max = Math.max(strExp != null ? strExp.length() : sizeMax, strRec != null ? strRec.length() : sizeMax);
-        tableReport.add(c, type == RegisterType.DIFFERENT ? max + "EXP:".length() + 1 : max + 1);
+        String strExpInv = nullOrEmptyWrapp(c, strExp);
+        String strRecInv = nullOrEmptyWrapp(c, strRec);
+        sizeMax = Math.max(strExp != null ? strExp.length() : sizeMax, strRec != null ? strRec.length() : sizeMax);
+        sizeMax = Math.max(strExpInv != null ? strExpInv.length() : sizeMax, strRecInv != null ? strRecInv.length() : sizeMax);
+        tableReport.add(c, type == RegisterType.DIFFERENT ? sizeMax + "EXP:".length() : sizeMax);
         expectedObjects.add(strExp);
         receivedObjects.add(strRec);
     }

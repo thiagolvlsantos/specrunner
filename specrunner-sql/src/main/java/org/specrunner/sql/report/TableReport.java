@@ -181,9 +181,9 @@ public class TableReport implements IPresentation {
                 comp += " []".length();
             }
             // adjust column size min to header size
-            sizes.put(column, Math.max(column.getAlias().length(), column.getName().length()) + comp);
+            sizes.put(column, Math.max(column.getAlias().length(), column.getName().length()) + comp + 1);
         }
-        sizes.put(column, Math.max(size + (column.isKey() ? 1 : 2), sizes.get(column)));
+        sizes.put(column, Math.max(size, sizes.get(column)));
     }
 
     /**
