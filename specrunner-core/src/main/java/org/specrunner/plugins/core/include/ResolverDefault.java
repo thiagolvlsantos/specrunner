@@ -18,7 +18,6 @@
 package org.specrunner.plugins.core.include;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Basic resolver implementation.
@@ -29,46 +28,6 @@ public class ResolverDefault implements IResolver {
 
     @Override
     public URI resolve(URI base, URI target) {
-        URI resolve = resolveLocal(base, target);
-        if (resolve == null) {
-            resolve = base.resolve(target);
-        }
-        return resolve;
-    }
-
-    /**
-     * Resolve as strings of files.
-     * 
-     * @param a
-     *            Base.
-     * @param b
-     *            Relative.
-     * @return A URI.
-     */
-    protected URI resolveLocal(URI a, URI b) {
-        String strA = String.valueOf(a);
-        String strB = String.valueOf(b);
-        int pos = 0;
-        while (pos < strA.length() && pos < strB.length()) {
-            if (strA.charAt(pos) != strB.charAt(pos)) {
-                break;
-            }
-            pos++;
-        }
-        if (pos > 0) {
-            StringBuilder sb = new StringBuilder();
-            int q = strA.indexOf('/', pos + 1);
-            while (q > 0) {
-                q = strA.indexOf('/', q + 1);
-                sb.append("../");
-            }
-            sb.append(strB.substring(pos));
-            try {
-                return new URI(sb.toString());
-            } catch (URISyntaxException e) {
-                return null;
-            }
-        }
-        return null;
+        return base.resolve(target);
     }
 }
