@@ -870,7 +870,9 @@ public class DatabaseDefault implements IDatabase {
                 UtilNode.appendCss(td.getNode(), IDataFilter.CSS_VALUE);
                 return null;
             }
-            if (obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
+            // if isNull is true the user explicitly selected 'null', and so
+            // keep it.
+            if (!isNull && obj == null && command == CommandType.INSERT && mode == EMode.INPUT) {
                 // the remaining column fields with default value are set in
                 // <code>addMissingValues(...)</code> method.
                 obj = column.getDefaultValue();
