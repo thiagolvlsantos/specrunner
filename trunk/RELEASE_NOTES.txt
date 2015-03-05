@@ -1,3 +1,11 @@
+1.4.28
+OK - Verificar o PluginColumn quando tem o assert com final ?, em atributos javabeans, público funciona, método também;
+OK - No plugin Column Permitir incluir linhas que são apenas meta-descrições (como agrupadores de colunas, usando ignore);
+OK - Na comparação de bases ver que o último registro de expected não está sendo mostrado com pendente quando não há conformidade da base com o esperado;
+OK - Quando a coluna é uma enumeração, deve-se considerar o valor 'inverso' (textual) como base para o tamanho da coluna, ou coloca-se o código seguido da descrição textual limitada ao tamanho conhecido e com '...';
+OK- Corrigir o load do URLResolver (retornar ao modelo original);
+OK - Corrigir um bug que no escopo negativo que é quando um campo tem valor default, mas o usuário quer ajustá-lo para null, ou seja, na base gabarito deveria ir null, mas está indo o valor default setado no arquivo de configuração do mapeamento.
+
 1.4.27 
 OK - Corrigir o rows/cols do plugin table, está erradamente pulando ranges;
 OK - Criar um waitfor com múltiplas condições de espera. Sugestão separados por ';', ou separador customizado (features). Seria possível uma linguagem de expressões? Ou fazer features com prefixo/sufixo, ao invés de absolutas?
