@@ -770,6 +770,7 @@ public class DatabaseDefault implements IDatabase {
      *             On reading errors.
      */
     protected void readHeadersColumns(IContext context, EMode mode, Table table, List<CellAdapter> headers, Column[] columns, IDataFilter afilter) throws DatabaseException {
+        Map<String, CellAdapter> found = new HashMap<String, CellAdapter>();
         for (int i = 0; i < headers.size(); i++) {
             CellAdapter cell = headers.get(i);
             String cAlias = cell.getValue();
@@ -780,6 +781,11 @@ public class DatabaseDefault implements IDatabase {
             }
             // update to specific header adjusts
             if (column != null) {
+                CellAdapter old = found.get(column.getAlias());
+                if (old != null) {
+                    throw new DatabaseException("Column with alias '" + column.getAlias() + "' repeated.");
+                }
+                found.put(column.getAlias(), cell);
                 try {
                     UtilSchema.setupColumn(context, table, column, cell);
                 } catch (ConverterException e) {

@@ -153,6 +153,19 @@ public class Value implements Comparable<Value> {
     }
 
     @Override
+    public int hashCode() {
+        return column.getName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Value)) {
+            return false;
+        }
+        return column.getName().equals(((Value) obj).getColumn().getName());
+    }
+
+    @Override
     public String toString() {
         return column.getName() + "=" + String.valueOf(value);
     }
