@@ -136,8 +136,8 @@ public class RunnerImpl implements IRunner {
         ENext doNode = nodeStart(node, context, result, nodeListeners);
         // if listener were used and they said to skip
         if (doNode == ENext.SKIP) {
-            if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Node listener returned '" + doNode + "'.");
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("Node listener returned '" + doNode + "'.");
             }
             for (INodeListener nl : new ReverseIterable<INodeListener>(nodeListeners)) {
                 nl.onAfter(node, context, result);
