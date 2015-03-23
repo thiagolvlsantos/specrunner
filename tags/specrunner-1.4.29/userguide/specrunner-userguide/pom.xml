@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.specrunner</groupId>
+		<artifactId>specrunner</artifactId>
+		<version>1.4.29</version>
+		<relativePath>../../specrunner</relativePath>
+	</parent>
+	<artifactId>specrunner-userguide</artifactId>
+	<packaging>pom</packaging>
+	<name>SpecRunner (User guide).</name>
+
+	<modules>
+		<module>../specrunner-userguide-core</module>
+		<module>../specrunner-userguide-core-excel</module>
+		<module>../specrunner-userguide-core-text</module>
+		<module>../specrunner-userguide-core-spring</module>
+
+		<module>../specrunner-userguide-concordion-emulator</module>
+
+		<module>../specrunner-userguide-ant</module>
+
+		<module>../specrunner-userguide-sql</module>
+		<module>../specrunner-userguide-sql-negative</module>
+		<module>../specrunner-userguide-sql-positive</module>
+
+		<module>../specrunner-userguide-hibernate3</module>
+		<module>../specrunner-userguide-hibernate4</module>
+		<module>../specrunner-userguide-jpa</module>
+
+		<module>../specrunner-userguide-jetty</module>
+		<module>../specrunner-userguide-tomcat</module>
+
+		<module>../specrunner-userguide-htmlunit</module>
+		<module>../specrunner-userguide-webdriver</module>
+	</modules>
+
+	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+
+</project>
