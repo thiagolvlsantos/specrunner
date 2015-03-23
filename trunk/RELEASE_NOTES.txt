@@ -1,3 +1,8 @@
+1.4.29
+OK - Criar conversores de data com templates para coisas como 'data atual ((+|-) 30 (dias|meses|anos|horas|minutos|segundos|...)+' [criar teste mostrando como fazer];
+OK - Colocar o plugin sentence para salvar uma variável global com o resultado da execução, caso se defina um 'name' nela, isso permitirá fazer asserts mais facilmente no resultado recebido (estender o AbstractPluginScoped e fazer bind caso global caso não haja escopo definido) - [criar teste mostrando como fazer];
+OK - Lançar erro quando uma coluna for repetida no Input/Output do banco de dados, para evitar erro do desenvolvedor ao colocar a coluna repetida;
+
 1.4.28
 OK - Verificar o PluginColumn quando tem o assert com final ?, em atributos javabeans, público funciona, método também;
 OK - No plugin Column Permitir incluir linhas que são apenas meta-descrições (como agrupadores de colunas, usando ignore);
