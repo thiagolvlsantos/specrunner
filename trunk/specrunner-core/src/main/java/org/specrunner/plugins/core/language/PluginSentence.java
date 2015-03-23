@@ -36,7 +36,7 @@ import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.core.AbstractPlugin;
+import org.specrunner.plugins.core.AbstractPluginScoped;
 import org.specrunner.plugins.core.elements.PluginHtml;
 import org.specrunner.plugins.core.var.PluginBean;
 import org.specrunner.plugins.type.Assertion;
@@ -61,10 +61,15 @@ import org.specrunner.util.xom.node.INodeHolderFactory;
  * Method match by default is performed from Java to arguments, the other
  * direction is possible using <code>after=true</code>.
  * 
+ * When the method call return is a boolean the method is considered a assertion
+ * and the result should be true, otherwise an error is launched. When the
+ * result type is different of a boolean it can be stored in a scoped variable
+ * using 'name' attribute.
+ * 
  * @author Thiago Santos
  * 
  */
-public class PluginSentence extends AbstractPlugin {
+public class PluginSentence extends AbstractPluginScoped {
 
     /**
      * The plugin type.
@@ -192,11 +197,7 @@ public class PluginSentence extends AbstractPlugin {
                 throw new PluginException(sb.toString());
             }
             Object tmp = m.invoke(target, arguments.toArray());
-            if (type == Assertion.INSTANCE) {
-                if (tmp instanceof Boolean && !((Boolean) tmp)) {
-                    throw new PluginException("Expected result of '" + m + "' must be 'true'. Received 'false'.");
-                }
-            }
+            afterInvoke(m, context, tmp);
             result.addResult(Success.INSTANCE, context.peek());
         } catch (IllegalArgumentException e) {
             error = e.getCause() != null ? e.getCause() : e;
@@ -566,5 +567,29 @@ public class PluginSentence extends AbstractPlugin {
      */
     protected void prepareArgumentsAfter(IContext context, Method method, List<Object> arguments) throws PluginException {
         // nothing to change.
+    }
+
+    /**
+     * Perform something after method invocation.
+     * 
+     * @param method
+     *            Method call.
+     * @param context
+     *            Test context.
+     * @param returnedObject
+     *            Object returned by method call.
+     * @throws PluginException
+     *             On errors.
+     */
+    protected void afterInvoke(Method method, IContext context, Object returnedObject) throws PluginException {
+        if (type == Assertion.INSTANCE) {
+            if (returnedObject instanceof Boolean && !((Boolean) returnedObject)) {
+                throw new PluginException("Expected result of '" + method + "' must be 'true'. Received 'false'.");
+            }
+        } else {
+            if (getName() != null) {
+                saveGlobal(context, getName(), returnedObject);
+            }
+        }
     }
 }
