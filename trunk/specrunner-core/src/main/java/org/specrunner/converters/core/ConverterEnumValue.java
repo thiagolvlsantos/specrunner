@@ -29,7 +29,7 @@ import org.specrunner.converters.IConverterReverse;
  * Three arguments are required:
  * <ul>
  * <li>The enumeration class type, or enumeration class name;</li>
- * <li>The method name to be used as reference for convertion, i.e. "name";</li>
+ * <li>The method name to be used as reference for conversion, i.e. "name";</li>
  * <li>The method name to be used as result, i.e. "ordinal";</li>
  * </ul>
  * 

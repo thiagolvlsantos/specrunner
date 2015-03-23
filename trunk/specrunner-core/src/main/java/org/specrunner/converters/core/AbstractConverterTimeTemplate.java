@@ -17,8 +17,6 @@
  */
 package org.specrunner.converters.core;
 
-import java.util.Arrays;
-
 import org.specrunner.converters.ConverterException;
 
 /**
@@ -48,7 +46,14 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
      *            The values to be converted to date.
      */
     public AbstractConverterTimeTemplate(String[] values) {
-        this.values = values == null ? null : Arrays.copyOf(values, values.length);
+        if (values == null) {
+            this.values = null;
+        } else {
+            this.values = new String[values.length];
+            for (int i = 0; i < values.length; i++) {
+                this.values[i] = values[i].toLowerCase();
+            }
+        }
     }
 
     /**
@@ -66,18 +71,51 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
         if (value == null) {
             return null;
         }
+        T result = null;
         String str = String.valueOf(value);
-        if (regexp != null && str.matches(regexp)) {
-            return instance();
+        if (testRegexp(str, regexp)) {
+            result = instance();
         }
+        str = str.toLowerCase();
         if (values != null) {
             for (String v : values) {
-                if (str.contains(v)) {
-                    return instance();
+                if (testValue(str, v)) {
+                    result = instance();
                 }
             }
         }
-        throw new ConverterException("Invalid value '" + value + "'.");
+        if (result == null) {
+            throw new ConverterException("Invalid value '" + value + "'.");
+        } else {
+            result = postProcess(value, args, result);
+        }
+        return result;
+    }
+
+    /**
+     * Test the string against a regexp.
+     * 
+     * @param str
+     *            String.
+     * @param regexp
+     *            Regular expression.
+     * @return true, if valid, false, otherwise.
+     */
+    protected boolean testRegexp(String str, String regexp) {
+        return regexp != null && str.matches(regexp);
+    }
+
+    /**
+     * Test the string against a value.
+     * 
+     * @param str
+     *            String.
+     * @param value
+     *            A value.
+     * @return true, if valid, false, otherwise.
+     */
+    protected boolean testValue(String str, String value) {
+        return str.contains(value);
     }
 
     /**
@@ -86,4 +124,19 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
      * @return Something aka date.
      */
     protected abstract T instance();
+
+    /**
+     * Post process a instance of data.
+     * 
+     * @param value
+     *            The original value.
+     * @param args
+     *            The arguments.
+     * @param result
+     *            The result.
+     * @return A time processed. i.e. plusDays, if specified.
+     */
+    protected T postProcess(Object value, Object[] args, T result) {
+        return result;
+    }
 }
