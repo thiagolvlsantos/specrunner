@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 import org.joda.time.LocalDate;
 
 /**
- * Create current date + or - date/time information.
+ * Create current date + or - date information.
  * 
  * @author Thiago Santos
  * 
@@ -36,13 +36,13 @@ public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent
     protected Pattern pattern;
 
     public ConverterLocalDateCurrentVariable() {
-        bindPatterns(fieldToMethod);
-        pattern = extractPattern(fieldToMethod);
+        pattern = extractPattern(bindPatterns(fieldToMethod));
     }
 
-    protected void bindPatterns(Map<String, String> map) {
+    protected Map<String, String> bindPatterns(Map<String, String> map) {
         UtilJodatime.bindEnglishDate(map);
         UtilJodatime.bindPortugueseDate(map);
+        return map;
     }
 
     protected Pattern extractPattern(Map<String, String> map) {

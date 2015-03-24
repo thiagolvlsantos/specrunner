@@ -51,6 +51,12 @@ public class UtilJodatime {
         bindEnglishTime(map);
     }
 
+    /**
+     * Bind English date vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
     public static void bindEnglishDate(Map<String, String> map) {
         map.put("days", "plusDays");
         map.put("day", "plusDays");
@@ -62,6 +68,12 @@ public class UtilJodatime {
         map.put("year", "plusYears");
     }
 
+    /**
+     * Bind English time vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
     public static void bindEnglishTime(Map<String, String> map) {
         map.put("miliseconds", "plusMillis");
         map.put("milisecond", "plusMillis");
@@ -84,6 +96,12 @@ public class UtilJodatime {
         bindPortugueseTime(map);
     }
 
+    /**
+     * Bind Portuguese date vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
     public static void bindPortugueseDate(Map<String, String> map) {
         map.put("dias", "plusDays");
         map.put("dia", "plusDays");
@@ -95,6 +113,12 @@ public class UtilJodatime {
         map.put("ano", "plusYears");
     }
 
+    /**
+     * Bind Portuguese time vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
     public static void bindPortugueseTime(Map<String, String> map) {
         map.put("milisegundos", "plusMillis");
         map.put("milisegundo", "plusMillis");
@@ -137,6 +161,7 @@ public class UtilJodatime {
     @SuppressWarnings("unchecked")
     public static <T> T postProcess(Object value, Object[] args, T result, Pattern pattern, Map<String, String> map) {
         T tmp = result;
+        Class<? extends Object> type = result.getClass();
         Matcher m = pattern.matcher(String.valueOf(value).toLowerCase());
         while (m.find()) {
             String all = m.group(0);
@@ -144,7 +169,7 @@ public class UtilJodatime {
             String number = m.group(3);
             all = all.replace(signal, "").replace(number, "").trim();
             try {
-                Method met = result.getClass().getMethod(map.get(all), int.class);
+                Method met = type.getMethod(map.get(all), int.class);
                 tmp = (T) met.invoke(tmp, Integer.valueOf(number));
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
