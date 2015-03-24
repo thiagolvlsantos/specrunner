@@ -36,16 +36,16 @@ public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
     protected Pattern pattern;
 
     public ConverterDateTimeCurrentVariable() {
-        bindPatterns(fieldToMethod);
-        pattern = extractPattern(fieldToMethod);
+        pattern = extractPattern(bindPatterns(fieldToMethod));
+    }
+
+    protected Map<String, String> bindPatterns(Map<String, String> map) {
+        UtilJodatime.bindPatterns(map);
+        return map;
     }
 
     protected Pattern extractPattern(Map<String, String> map) {
         return UtilJodatime.extractPattern(map);
-    }
-
-    protected void bindPatterns(Map<String, String> map) {
-        UtilJodatime.bindPatterns(map);
     }
 
     @Override
