@@ -1,3 +1,6 @@
+1.4.30
+OK - conversores +- tempo para DateTime e LocalDate criados.
+
 1.4.29
 OK - Criar conversores de data com templates para coisas como 'data atual ((+|-) 30 (dias|meses|anos|horas|minutos|segundos|...)+' [criar teste mostrando como fazer];
 OK - Colocar o plugin sentence para salvar uma variável global com o resultado da execução, caso se defina um 'name' nela, isso permitirá fazer asserts mais facilmente no resultado recebido (estender o AbstractPluginScoped e fazer bind caso global caso não haja escopo definido) - [criar teste mostrando como fazer];
