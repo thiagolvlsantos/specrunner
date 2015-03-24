@@ -21,31 +21,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 /**
- * Create current date time + or - date/time information.
+ * Create current date + or - date/time information.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
+public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent {
 
     protected Map<String, String> fieldToMethod = new HashMap<String, String>();
     protected Pattern pattern;
 
-    public ConverterDateTimeCurrentVariable() {
+    public ConverterLocalDateCurrentVariable() {
         bindPatterns(fieldToMethod);
         pattern = extractPattern(fieldToMethod);
     }
 
-    protected Pattern extractPattern(Map<String, String> map) {
-        return UtilJodatime.extractPattern(map);
+    protected void bindPatterns(Map<String, String> map) {
+        UtilJodatime.bindEnglishDate(map);
+        UtilJodatime.bindPortugueseDate(map);
     }
 
-    protected void bindPatterns(Map<String, String> map) {
-        UtilJodatime.bindPatterns(map);
+    protected Pattern extractPattern(Map<String, String> map) {
+        return UtilJodatime.extractPattern(map);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
     }
 
     @Override
-    protected DateTime postProcess(Object value, Object[] args, DateTime result) {
+    protected LocalDate postProcess(Object value, Object[] args, LocalDate result) {
         return UtilJodatime.postProcess(value, args, result, pattern, fieldToMethod);
     }
 }
