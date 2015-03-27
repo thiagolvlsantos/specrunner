@@ -65,6 +65,7 @@ public class StringNormalizerDefault implements IStringNormalizer {
                 } else {
                     result.append(Character.toLowerCase(c));
                 }
+                whitespace = false;
                 continue;
             }
             if (Character.isJavaIdentifierPart(c)) {
