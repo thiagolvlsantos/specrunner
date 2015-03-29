@@ -17,37 +17,35 @@
  */
 package org.specrunner.converters.core;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.joda.time.LocalDate;
-
 /**
- * Create current date + or - date information.
+ * Create current date time + or - date/time information.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent {
+public class ConverterDateCurrentVariable extends ConverterDateCurrent {
 
-    protected Map<String, String> fieldToMethod = new HashMap<String, String>();
+    protected Map<String, Integer> fieldToMethod = new HashMap<String, Integer>();
     protected Pattern pattern;
 
-    public ConverterLocalDateCurrentVariable() {
+    public ConverterDateCurrentVariable() {
         pattern = extractPattern(bindPatterns(fieldToMethod).keySet());
     }
 
-    protected Map<String, String> bindPatterns(Map<String, String> map) {
-        UtilJodatime.bindEnglishDate(map);
-        UtilJodatime.bindPortugueseDate(map);
+    protected Map<String, Integer> bindPatterns(Map<String, Integer> map) {
+        UtilDate.bindPatterns(map);
         return map;
     }
 
-    protected Pattern extractPattern(Set<String> set) {
-        return UtilJodatime.extractPattern(set);
+    protected Pattern extractPattern(Set<String> values) {
+        return UtilDate.extractPattern(values);
     }
 
     @Override
@@ -56,7 +54,7 @@ public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent
     }
 
     @Override
-    protected LocalDate postProcess(Object value, Object[] args, LocalDate result) {
-        return UtilJodatime.postProcess(value, args, result, pattern, fieldToMethod);
+    protected Date postProcess(Object value, Object[] args, Date result) {
+        return UtilDate.postProcess(value, args, getCalendar(), result, pattern, fieldToMethod);
     }
 }

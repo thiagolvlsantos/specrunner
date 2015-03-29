@@ -384,7 +384,7 @@ public class NodeHolderDefault implements INodeHolder {
                     }
                     convert = converter.convert(value, objects.toArray());
                 } catch (Exception e) {
-                    throw new PluginException(e);
+                    throw new PluginException("Error on converter: " + converter + ". ERROR:" + e.getMessage(), e);
                 }
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace("Converted value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));

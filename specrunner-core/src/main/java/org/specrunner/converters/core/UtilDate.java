@@ -18,25 +18,27 @@
 package org.specrunner.converters.core;
 
 import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Auxiliar map of units to methods in Jodatime.
+ * Auxiliar map of units to methods in java.util.Date/Calendar.
  * 
  * @author Thiago Santos
  *
  */
-public class UtilJodatime {
+public class UtilDate {
 
     /**
      * Bind Jodatime method names.
      * 
      * @param map
      */
-    public static void bindPatterns(Map<String, String> map) {
+    public static void bindPatterns(Map<String, Integer> map) {
         bindEnglish(map);
         bindPortuguese(map);
     }
@@ -47,7 +49,7 @@ public class UtilJodatime {
      * @param map
      *            A map.
      */
-    public static void bindEnglish(Map<String, String> map) {
+    public static void bindEnglish(Map<String, Integer> map) {
         bindEnglishDate(map);
         bindEnglishTime(map);
     }
@@ -58,15 +60,15 @@ public class UtilJodatime {
      * @param map
      *            A map.
      */
-    public static void bindEnglishDate(Map<String, String> map) {
-        map.put("days", "plusDays");
-        map.put("day", "plusDays");
-        map.put("weeks", "plusWeeks");
-        map.put("week", "plusWeeks");
-        map.put("months", "plusMonths");
-        map.put("month", "plusMonths");
-        map.put("years", "plusYears");
-        map.put("year", "plusYears");
+    public static void bindEnglishDate(Map<String, Integer> map) {
+        map.put("days", Calendar.DAY_OF_MONTH);
+        map.put("day", Calendar.DAY_OF_MONTH);
+        map.put("weeks", Calendar.WEEK_OF_MONTH);
+        map.put("week", Calendar.WEEK_OF_MONTH);
+        map.put("months", Calendar.MONTH);
+        map.put("month", Calendar.MONTH);
+        map.put("years", Calendar.YEAR);
+        map.put("year", Calendar.YEAR);
     }
 
     /**
@@ -75,15 +77,15 @@ public class UtilJodatime {
      * @param map
      *            A map.
      */
-    public static void bindEnglishTime(Map<String, String> map) {
-        map.put("miliseconds", "plusMillis");
-        map.put("milisecond", "plusMillis");
-        map.put("seconds", "plusSeconds");
-        map.put("second", "plusSeconds");
-        map.put("minutes", "plusMinutes");
-        map.put("minute", "plusMinutes");
-        map.put("hours", "plusHours");
-        map.put("hour", "plusHours");
+    public static void bindEnglishTime(Map<String, Integer> map) {
+        map.put("miliseconds", Calendar.MILLISECOND);
+        map.put("milisecond", Calendar.MILLISECOND);
+        map.put("seconds", Calendar.SECOND);
+        map.put("second", Calendar.SECOND);
+        map.put("minutes", Calendar.MINUTE);
+        map.put("minute", Calendar.MINUTE);
+        map.put("hours", Calendar.HOUR_OF_DAY);
+        map.put("hour", Calendar.HOUR_OF_DAY);
     }
 
     /**
@@ -92,7 +94,7 @@ public class UtilJodatime {
      * @param map
      *            A map.
      */
-    public static void bindPortuguese(Map<String, String> map) {
+    public static void bindPortuguese(Map<String, Integer> map) {
         bindPortugueseDate(map);
         bindPortugueseTime(map);
     }
@@ -103,16 +105,16 @@ public class UtilJodatime {
      * @param map
      *            A map.
      */
-    public static void bindPortugueseDate(Map<String, String> map) {
-        map.put("dias", "plusDays");
-        map.put("dia", "plusDays");
-        map.put("semanas", "plusWeeks");
-        map.put("semana", "plusWeeks");
-        map.put("meses", "plusMonths");
-        map.put("mês", "plusMonths");
-        map.put("mes", "plusMonths");
-        map.put("anos", "plusYears");
-        map.put("ano", "plusYears");
+    public static void bindPortugueseDate(Map<String, Integer> map) {
+        map.put("dias", Calendar.DAY_OF_MONTH);
+        map.put("dia", Calendar.DAY_OF_MONTH);
+        map.put("semanas", Calendar.WEEK_OF_MONTH);
+        map.put("semana", Calendar.WEEK_OF_MONTH);
+        map.put("meses", Calendar.MONTH);
+        map.put("mês", Calendar.MONTH);
+        map.put("mes", Calendar.MONTH);
+        map.put("anos", Calendar.YEAR);
+        map.put("ano", Calendar.YEAR);
     }
 
     /**
@@ -121,15 +123,15 @@ public class UtilJodatime {
      * @param map
      *            A map.
      */
-    public static void bindPortugueseTime(Map<String, String> map) {
-        map.put("milisegundos", "plusMillis");
-        map.put("milisegundo", "plusMillis");
-        map.put("segundos", "plusSeconds");
-        map.put("segundo", "plusSeconds");
-        map.put("minutos", "plusMinutes");
-        map.put("minuto", "plusMinutes");
-        map.put("horas", "plusHours");
-        map.put("hora", "plusHours");
+    public static void bindPortugueseTime(Map<String, Integer> map) {
+        map.put("milisegundos", Calendar.MILLISECOND);
+        map.put("milisegundo", Calendar.MILLISECOND);
+        map.put("segundos", Calendar.SECOND);
+        map.put("segundo", Calendar.SECOND);
+        map.put("minutos", Calendar.MINUTE);
+        map.put("minuto", Calendar.MINUTE);
+        map.put("horas", Calendar.HOUR_OF_DAY);
+        map.put("hora", Calendar.HOUR_OF_DAY);
     }
 
     /**
@@ -161,9 +163,15 @@ public class UtilJodatime {
      * @return A changed instance of 'result'.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T postProcess(Object value, Object[] args, T result, Pattern pattern, Map<String, String> map) {
-        T tmp = result;
-        Class<? extends Object> type = result.getClass();
+    public static <T extends Date> T postProcess(Object value, Object[] args, Calendar calendar, T result, Pattern pattern, Map<String, Integer> map) {
+        calendar.setTime(result);
+        Class<? extends Date> type = result.getClass();
+        Method met;
+        try {
+            met = Calendar.class.getMethod("add", int.class, int.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
         Matcher m = pattern.matcher(String.valueOf(value).toLowerCase());
         while (m.find()) {
             String all = m.group(0);
@@ -171,12 +179,15 @@ public class UtilJodatime {
             String number = m.group(3);
             all = all.replace(signal, "").replace(number, "").trim();
             try {
-                Method met = type.getMethod(map.get(all), int.class);
-                tmp = (T) met.invoke(tmp, Integer.valueOf(number));
+                met.invoke(calendar, map.get(all), Integer.valueOf(number));
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }
         }
-        return tmp;
+        try {
+            return (T) type.getConstructor(long.class).newInstance(calendar.getTimeInMillis());
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }
