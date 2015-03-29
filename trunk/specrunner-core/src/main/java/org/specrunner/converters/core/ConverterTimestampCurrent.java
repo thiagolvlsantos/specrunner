@@ -30,6 +30,6 @@ public class ConverterTimestampCurrent extends ConverterTimestampCurrentTemplate
      * Basic timestamp converter.
      */
     public ConverterTimestampCurrent() {
-        super(new String[] { "hora atual", "data hora atual", "current time", "current timestamp" });
+        super(new String[] { "data atual", "hora atual", "data hora atual", "current date", "current time", "current timestamp" });
     }
 }

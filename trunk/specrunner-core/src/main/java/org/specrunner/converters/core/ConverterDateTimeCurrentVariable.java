@@ -19,6 +19,7 @@ package org.specrunner.converters.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
@@ -36,7 +37,7 @@ public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
     protected Pattern pattern;
 
     public ConverterDateTimeCurrentVariable() {
-        pattern = extractPattern(bindPatterns(fieldToMethod));
+        pattern = extractPattern(bindPatterns(fieldToMethod).keySet());
     }
 
     protected Map<String, String> bindPatterns(Map<String, String> map) {
@@ -44,8 +45,8 @@ public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
         return map;
     }
 
-    protected Pattern extractPattern(Map<String, String> map) {
-        return UtilJodatime.extractPattern(map);
+    protected Pattern extractPattern(Set<String> values) {
+        return UtilJodatime.extractPattern(values);
     }
 
     @Override

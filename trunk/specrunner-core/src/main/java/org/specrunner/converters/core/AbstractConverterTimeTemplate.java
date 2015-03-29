@@ -81,6 +81,7 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
             for (String v : values) {
                 if (testValue(str, v)) {
                     result = instance();
+                    break;
                 }
             }
         }
