@@ -19,10 +19,17 @@ package org.specrunner.converters.core;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.specrunner.SRServices;
+import org.specrunner.properties.IPropertyLoader;
+import org.specrunner.properties.PropertyLoaderException;
 
 /**
  * Auxiliar map of units to methods in java.util.Date/Calendar.
@@ -32,105 +39,49 @@ import java.util.regex.Pattern;
  */
 public class UtilDate {
 
+    public static void bindAliases(Map<String, String> map) {
+        bindDateAliases(map);
+        bindTimeAliases(map);
+    }
+
+    public static void bindDateAliases(Map<String, String> map) {
+        try {
+            add(map, SRServices.get(IPropertyLoader.class).load("sr_converters_date_date.properties"));
+        } catch (PropertyLoaderException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    public static void bindTimeAliases(Map<String, String> map) {
+        try {
+            add(map, SRServices.get(IPropertyLoader.class).load("sr_converters_date_time.properties"));
+        } catch (PropertyLoaderException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private static void add(Map<String, String> map, List<Properties> load) {
+        for (Properties p : load) {
+            for (Entry<Object, Object> e : p.entrySet()) {
+                map.put(String.valueOf(e.getKey()), String.valueOf(e.getValue()));
+            }
+        }
+    }
+
     /**
      * Bind Jodatime method names.
      * 
      * @param map
      */
     public static void bindPatterns(Map<String, Integer> map) {
-        bindEnglish(map);
-        bindPortuguese(map);
-    }
-
-    /**
-     * Bind English words.
-     * 
-     * @param map
-     *            A map.
-     */
-    public static void bindEnglish(Map<String, Integer> map) {
-        bindEnglishDate(map);
-        bindEnglishTime(map);
-    }
-
-    /**
-     * Bind English date vocabulary.
-     * 
-     * @param map
-     *            A map.
-     */
-    public static void bindEnglishDate(Map<String, Integer> map) {
         map.put("days", Calendar.DAY_OF_MONTH);
-        map.put("day", Calendar.DAY_OF_MONTH);
         map.put("weeks", Calendar.WEEK_OF_MONTH);
-        map.put("week", Calendar.WEEK_OF_MONTH);
         map.put("months", Calendar.MONTH);
-        map.put("month", Calendar.MONTH);
         map.put("years", Calendar.YEAR);
-        map.put("year", Calendar.YEAR);
-    }
-
-    /**
-     * Bind English time vocabulary.
-     * 
-     * @param map
-     *            A map.
-     */
-    public static void bindEnglishTime(Map<String, Integer> map) {
-        map.put("miliseconds", Calendar.MILLISECOND);
-        map.put("milisecond", Calendar.MILLISECOND);
+        map.put("milliseconds", Calendar.MILLISECOND);
         map.put("seconds", Calendar.SECOND);
-        map.put("second", Calendar.SECOND);
         map.put("minutes", Calendar.MINUTE);
-        map.put("minute", Calendar.MINUTE);
         map.put("hours", Calendar.HOUR_OF_DAY);
-        map.put("hour", Calendar.HOUR_OF_DAY);
-    }
-
-    /**
-     * Bind Portuguese words.
-     * 
-     * @param map
-     *            A map.
-     */
-    public static void bindPortuguese(Map<String, Integer> map) {
-        bindPortugueseDate(map);
-        bindPortugueseTime(map);
-    }
-
-    /**
-     * Bind Portuguese date vocabulary.
-     * 
-     * @param map
-     *            A map.
-     */
-    public static void bindPortugueseDate(Map<String, Integer> map) {
-        map.put("dias", Calendar.DAY_OF_MONTH);
-        map.put("dia", Calendar.DAY_OF_MONTH);
-        map.put("semanas", Calendar.WEEK_OF_MONTH);
-        map.put("semana", Calendar.WEEK_OF_MONTH);
-        map.put("meses", Calendar.MONTH);
-        map.put("mês", Calendar.MONTH);
-        map.put("mes", Calendar.MONTH);
-        map.put("anos", Calendar.YEAR);
-        map.put("ano", Calendar.YEAR);
-    }
-
-    /**
-     * Bind Portuguese time vocabulary.
-     * 
-     * @param map
-     *            A map.
-     */
-    public static void bindPortugueseTime(Map<String, Integer> map) {
-        map.put("milisegundos", Calendar.MILLISECOND);
-        map.put("milisegundo", Calendar.MILLISECOND);
-        map.put("segundos", Calendar.SECOND);
-        map.put("segundo", Calendar.SECOND);
-        map.put("minutos", Calendar.MINUTE);
-        map.put("minuto", Calendar.MINUTE);
-        map.put("horas", Calendar.HOUR_OF_DAY);
-        map.put("hora", Calendar.HOUR_OF_DAY);
     }
 
     /**
@@ -162,7 +113,7 @@ public class UtilDate {
      * @return A changed instance of 'result'.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Date> T postProcess(Object value, Object[] args, Calendar calendar, T result, Pattern pattern, Map<String, Integer> map) {
+    public static <T extends Date> T postProcess(Object value, Object[] args, Calendar calendar, T result, Pattern pattern, Map<String, String> aliasToField, Map<String, Integer> fieldToMethod) {
         calendar.setTime(result);
         Class<? extends Date> type = result.getClass();
         Matcher m = pattern.matcher(String.valueOf(value).toLowerCase());
@@ -173,7 +124,15 @@ public class UtilDate {
             String signal = m.group(2);
             String number = m.group(3);
             all = all.replace(signal, "").replace(number, "").trim();
-            calendar.add(map.get(all), Integer.valueOf(number));
+            String alias = aliasToField.get(all);
+            if (alias == null) {
+                throw new IllegalArgumentException("Alias '" + alias + "' not found in sr_converters_date_(date|time).properties.");
+            }
+            Integer field = fieldToMethod.get(alias);
+            if (field == null) {
+                throw new IllegalArgumentException("Field '" + field + "' not found in " + fieldToMethod.keySet() + ".");
+            }
+            calendar.add(field, Integer.valueOf(number));
         }
         if (found) {
             try {

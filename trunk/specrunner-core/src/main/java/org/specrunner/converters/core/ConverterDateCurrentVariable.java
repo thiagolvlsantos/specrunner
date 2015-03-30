@@ -32,11 +32,19 @@ import java.util.regex.Pattern;
 @SuppressWarnings("serial")
 public class ConverterDateCurrentVariable extends ConverterDateCurrent {
 
+    protected Map<String, String> aliasToField = new HashMap<String, String>();
     protected Map<String, Integer> fieldToMethod = new HashMap<String, Integer>();
     protected Pattern pattern;
 
     public ConverterDateCurrentVariable() {
-        pattern = extractPattern(bindPatterns(fieldToMethod).keySet());
+        bindAliases(aliasToField);
+        bindPatterns(fieldToMethod);
+        pattern = extractPattern(aliasToField.keySet());
+    }
+
+    protected Map<String, String> bindAliases(Map<String, String> map) {
+        UtilDate.bindAliases(map);
+        return map;
     }
 
     protected Map<String, Integer> bindPatterns(Map<String, Integer> map) {
@@ -55,6 +63,6 @@ public class ConverterDateCurrentVariable extends ConverterDateCurrent {
 
     @Override
     protected Date postProcess(Object value, Object[] args, Date result) {
-        return UtilDate.postProcess(value, args, getCalendar(), result, pattern, fieldToMethod);
+        return UtilDate.postProcess(value, args, getCalendar(), result, pattern, aliasToField, fieldToMethod);
     }
 }
