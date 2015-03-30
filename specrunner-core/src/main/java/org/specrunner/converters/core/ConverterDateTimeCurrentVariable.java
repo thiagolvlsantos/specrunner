@@ -33,20 +33,29 @@ import org.joda.time.DateTime;
 @SuppressWarnings("serial")
 public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
 
+    protected Map<String, String> aliasToField = new HashMap<String, String>();
     protected Map<String, String> fieldToMethod = new HashMap<String, String>();
     protected Pattern pattern;
 
     public ConverterDateTimeCurrentVariable() {
-        pattern = extractPattern(bindPatterns(fieldToMethod).keySet());
+        bindAliases(aliasToField);
+        bindPatterns(fieldToMethod);
+        pattern = extractPattern(aliasToField.keySet());
     }
 
-    protected Map<String, String> bindPatterns(Map<String, String> map) {
-        UtilJodatime.bindPatterns(map);
+    protected Map<String, String> bindAliases(Map<String, String> map) {
+        UtilDate.bindAliases(map);
         return map;
     }
 
-    protected Pattern extractPattern(Set<String> values) {
-        return UtilJodatime.extractPattern(values);
+    protected Map<String, String> bindPatterns(Map<String, String> map) {
+        UtilJodatime.bindDatePatterns(map);
+        UtilJodatime.bindTimePatterns(map);
+        return map;
+    }
+
+    protected Pattern extractPattern(Set<String> set) {
+        return UtilDate.extractPattern(set);
     }
 
     @Override
@@ -56,6 +65,6 @@ public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
 
     @Override
     protected DateTime postProcess(Object value, Object[] args, DateTime result) {
-        return UtilJodatime.postProcess(value, args, result, pattern, fieldToMethod);
+        return UtilJodatime.postProcess(value, args, result, pattern, aliasToField, fieldToMethod);
     }
 }

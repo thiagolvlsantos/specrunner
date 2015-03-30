@@ -33,21 +33,28 @@ import org.joda.time.LocalDate;
 @SuppressWarnings("serial")
 public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent {
 
+    protected Map<String, String> aliasToField = new HashMap<String, String>();
     protected Map<String, String> fieldToMethod = new HashMap<String, String>();
     protected Pattern pattern;
 
     public ConverterLocalDateCurrentVariable() {
-        pattern = extractPattern(bindPatterns(fieldToMethod).keySet());
+        bindAliases(aliasToField);
+        bindPatterns(fieldToMethod);
+        pattern = extractPattern(aliasToField.keySet());
+    }
+
+    protected Map<String, String> bindAliases(Map<String, String> map) {
+        UtilDate.bindDateAliases(map);
+        return map;
     }
 
     protected Map<String, String> bindPatterns(Map<String, String> map) {
-        UtilJodatime.bindEnglishDate(map);
-        UtilJodatime.bindPortugueseDate(map);
+        UtilJodatime.bindDatePatterns(map);
         return map;
     }
 
     protected Pattern extractPattern(Set<String> set) {
-        return UtilJodatime.extractPattern(set);
+        return UtilDate.extractPattern(set);
     }
 
     @Override
@@ -57,6 +64,6 @@ public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent
 
     @Override
     protected LocalDate postProcess(Object value, Object[] args, LocalDate result) {
-        return UtilJodatime.postProcess(value, args, result, pattern, fieldToMethod);
+        return UtilJodatime.postProcess(value, args, result, pattern, aliasToField, fieldToMethod);
     }
 }
