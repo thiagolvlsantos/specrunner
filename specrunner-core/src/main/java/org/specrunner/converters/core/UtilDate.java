@@ -17,7 +17,6 @@
  */
 package org.specrunner.converters.core;
 
-import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -166,28 +165,23 @@ public class UtilDate {
     public static <T extends Date> T postProcess(Object value, Object[] args, Calendar calendar, T result, Pattern pattern, Map<String, Integer> map) {
         calendar.setTime(result);
         Class<? extends Date> type = result.getClass();
-        Method met;
-        try {
-            met = Calendar.class.getMethod("add", int.class, int.class);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
         Matcher m = pattern.matcher(String.valueOf(value).toLowerCase());
+        boolean found = false;
         while (m.find()) {
+            found = true;
             String all = m.group(0);
             String signal = m.group(2);
             String number = m.group(3);
             all = all.replace(signal, "").replace(number, "").trim();
+            calendar.add(map.get(all), Integer.valueOf(number));
+        }
+        if (found) {
             try {
-                met.invoke(calendar, map.get(all), Integer.valueOf(number));
+                return (T) type.getConstructor(long.class).newInstance(calendar.getTimeInMillis());
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }
         }
-        try {
-            return (T) type.getConstructor(long.class).newInstance(calendar.getTimeInMillis());
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+        return result;
     }
 }
