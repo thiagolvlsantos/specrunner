@@ -17,6 +17,8 @@
  */
 package org.specrunner.converters.core;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.specrunner.converters.ConverterException;
 
@@ -45,7 +47,7 @@ public class ConverterLocalDateCurrentTemplate extends AbstractConverterTimeTemp
      * @param values
      *            Value.
      */
-    public ConverterLocalDateCurrentTemplate(String[] values) {
+    public ConverterLocalDateCurrentTemplate(List<String> values) {
         super(values);
     }
 

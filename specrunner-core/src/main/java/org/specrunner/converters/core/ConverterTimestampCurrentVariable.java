@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.specrunner.source.resource.ResourceException;
+
 /**
  * Create current date time + or - date/time information.
  * 
@@ -36,7 +38,7 @@ public class ConverterTimestampCurrentVariable extends ConverterTimestampCurrent
     protected Map<String, Integer> fieldToMethod = new HashMap<String, Integer>();
     protected Pattern pattern;
 
-    public ConverterTimestampCurrentVariable() {
+    public ConverterTimestampCurrentVariable() throws ResourceException {
         bindAliases(aliasToField);
         bindPatterns(fieldToMethod);
         pattern = extractPattern(aliasToField.keySet());

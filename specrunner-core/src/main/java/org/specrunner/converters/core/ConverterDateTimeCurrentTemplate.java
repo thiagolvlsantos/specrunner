@@ -17,6 +17,8 @@
  */
 package org.specrunner.converters.core;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.specrunner.converters.ConverterException;
 
@@ -45,7 +47,7 @@ public class ConverterDateTimeCurrentTemplate extends AbstractConverterTimeTempl
      * @param values
      *            Value.
      */
-    public ConverterDateTimeCurrentTemplate(String[] values) {
+    public ConverterDateTimeCurrentTemplate(List<String> values) {
         super(values);
     }
 
