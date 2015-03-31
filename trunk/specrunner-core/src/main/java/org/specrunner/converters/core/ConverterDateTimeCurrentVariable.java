@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
+import org.specrunner.source.resource.ResourceException;
 
 /**
  * Create current date time + or - date/time information.
@@ -37,7 +38,7 @@ public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
     protected Map<String, String> fieldToMethod = new HashMap<String, String>();
     protected Pattern pattern;
 
-    public ConverterDateTimeCurrentVariable() {
+    public ConverterDateTimeCurrentVariable() throws ResourceException {
         bindAliases(aliasToField);
         bindPatterns(fieldToMethod);
         pattern = extractPattern(aliasToField.keySet());

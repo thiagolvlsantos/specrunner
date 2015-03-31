@@ -19,6 +19,7 @@ package org.specrunner.converters.core;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.specrunner.converters.ConverterException;
@@ -48,7 +49,7 @@ public class ConverterTimestampCurrentTemplate extends AbstractConverterTimeTemp
      * @param values
      *            Value.
      */
-    public ConverterTimestampCurrentTemplate(String[] values) {
+    public ConverterTimestampCurrentTemplate(List<String> values) {
         super(values);
     }
 

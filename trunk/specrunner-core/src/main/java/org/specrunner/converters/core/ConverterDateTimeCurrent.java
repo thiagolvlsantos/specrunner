@@ -17,6 +17,9 @@
  */
 package org.specrunner.converters.core;
 
+import org.specrunner.source.resource.ResourceException;
+import org.specrunner.util.UtilIO;
+
 /**
  * Create current date.
  * 
@@ -28,8 +31,11 @@ public class ConverterDateTimeCurrent extends ConverterDateTimeCurrentTemplate {
 
     /**
      * Basic data converter.
+     * 
+     * @throws ResourceException
+     *             On load errors.
      */
-    public ConverterDateTimeCurrent() {
-        super(new String[] { "atual", "data atual", "data hora atual", "current", "current date", "current timestamp" });
+    public ConverterDateTimeCurrent() throws ResourceException {
+        super(UtilIO.readLines("sr_converters_time.txt"));
     }
 }

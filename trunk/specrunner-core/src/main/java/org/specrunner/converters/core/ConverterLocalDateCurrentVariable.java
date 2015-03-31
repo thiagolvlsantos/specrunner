@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.joda.time.LocalDate;
+import org.specrunner.source.resource.ResourceException;
 
 /**
  * Create current date + or - date information.
@@ -37,7 +38,7 @@ public class ConverterLocalDateCurrentVariable extends ConverterLocalDateCurrent
     protected Map<String, String> fieldToMethod = new HashMap<String, String>();
     protected Pattern pattern;
 
-    public ConverterLocalDateCurrentVariable() {
+    public ConverterLocalDateCurrentVariable() throws ResourceException {
         bindAliases(aliasToField);
         bindPatterns(fieldToMethod);
         pattern = extractPattern(aliasToField.keySet());

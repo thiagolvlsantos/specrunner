@@ -17,7 +17,12 @@
  */
 package org.specrunner.converters.core;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
+import org.specrunner.util.string.IStringNormalizer;
 
 /**
  * Create time information.
@@ -33,7 +38,7 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
     /**
      * Strings that stand for 'current date'.
      */
-    private String[] values;
+    private List<String> values;
     /**
      * Pattern for 'current date'.
      */
@@ -45,13 +50,14 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
      * @param values
      *            The values to be converted to date.
      */
-    public AbstractConverterTimeTemplate(String[] values) {
+    public AbstractConverterTimeTemplate(List<String> values) {
         if (values == null) {
             this.values = null;
         } else {
-            this.values = new String[values.length];
-            for (int i = 0; i < values.length; i++) {
-                this.values[i] = values[i].toLowerCase();
+            this.values = new LinkedList<String>();
+            IStringNormalizer sn = SRServices.get(IStringNormalizer.class);
+            for (String s : values) {
+                this.values.add(sn.camelCase(s));
             }
         }
     }
@@ -76,7 +82,7 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
         if (testRegexp(str, regexp)) {
             result = instance();
         }
-        str = str.toLowerCase();
+        str = SRServices.get(IStringNormalizer.class).camelCase(str);
         if (values != null) {
             for (String v : values) {
                 if (testValue(str, v)) {

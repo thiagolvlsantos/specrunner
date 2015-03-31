@@ -18,23 +18,29 @@
 package org.specrunner.util;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
+import org.specrunner.source.core.UtilEncoding;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
+import org.specrunner.util.resources.ResourceFinder;
 
 /**
  * IO utilities.
@@ -62,6 +68,62 @@ public final class UtilIO {
      * Hidden constructor.
      */
     private UtilIO() {
+    }
+
+    /**
+     * Read uncommented not empty lines from files.
+     * 
+     * @param filename
+     *            A file name.
+     * @return The file content as a list.
+     * @throws ResourceException
+     *             On load errors.
+     */
+    public static List<String> readLines(String filename) throws ResourceException {
+        List<URL> files;
+        try {
+            files = SRServices.get(ResourceFinder.class).initilize().getAllResources(filename);
+        } catch (IOException e) {
+            throw new ResourceException(e);
+        }
+        List<String> result = new LinkedList<String>();
+        InputStream[] ins = getInputStreams(files);
+        for (InputStream i : ins) {
+            InputStreamReader isr = null;
+            BufferedReader br = null;
+            try {
+                isr = new InputStreamReader(i, UtilEncoding.getEncoding());
+                br = new BufferedReader(isr, BUFFER_SIZE);
+                String tmp;
+                while ((tmp = br.readLine()) != null) {
+                    tmp = tmp.trim();
+                    if (tmp.startsWith("#") || tmp.isEmpty()) {
+                        continue;
+                    }
+                    result.add(tmp);
+                }
+            } catch (UnsupportedEncodingException e) {
+                throw new ResourceException(e);
+            } catch (IOException e) {
+                throw new ResourceException(e);
+            } finally {
+                if (br != null) {
+                    try {
+                        br.close();
+                    } catch (IOException e) {
+                        throw new ResourceException(e);
+                    }
+                }
+                if (isr != null) {
+                    try {
+                        isr.close();
+                    } catch (IOException e) {
+                        throw new ResourceException(e);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
