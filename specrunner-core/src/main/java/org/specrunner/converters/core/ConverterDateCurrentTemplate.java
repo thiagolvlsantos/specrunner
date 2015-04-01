@@ -19,12 +19,7 @@ package org.specrunner.converters.core;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
 
 import org.specrunner.converters.ConverterException;
 
@@ -37,9 +32,15 @@ import org.specrunner.converters.ConverterException;
 @SuppressWarnings("serial")
 public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<Date> {
 
-    protected Map<String, String> aliasToField = new HashMap<String, String>();
-    protected Map<String, Integer> fieldToMethod = new HashMap<String, Integer>();
-    protected Pattern pattern;
+    /**
+     * See superclass.
+     * 
+     * @param regexp
+     *            Regexp.
+     */
+    public ConverterDateCurrentTemplate(String regexp) {
+        super(regexp);
+    }
 
     /**
      * See superclass.
@@ -47,29 +48,8 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
      * @param values
      *            Value.
      */
-    public ConverterDateCurrentTemplate(List<String> values) {
+    public ConverterDateCurrentTemplate(String[] values) {
         super(values);
-        pattern = extractPattern(bindAliases(aliasToField).keySet());
-        bindPatterns(fieldToMethod);
-    }
-
-    protected Map<String, String> bindAliases(Map<String, String> map) {
-        UtilDate.bindAliases(map);
-        return map;
-    }
-
-    protected Map<String, Integer> bindPatterns(Map<String, Integer> map) {
-        UtilDate.bindPatterns(map);
-        return map;
-    }
-
-    protected Pattern extractPattern(Set<String> values) {
-        return UtilDate.extractPattern(values);
-    }
-
-    @Override
-    protected boolean testValue(String str, String value) {
-        return str.startsWith(value);
     }
 
     @Override
@@ -99,10 +79,5 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
             return value;
         }
         return super.convert(value, args);
-    }
-
-    @Override
-    protected Date postProcess(Object value, Object[] args, Date result) {
-        return UtilDate.postProcess(value, args, getCalendar(), result, pattern, aliasToField, fieldToMethod);
     }
 }

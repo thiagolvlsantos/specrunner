@@ -20,9 +20,6 @@ package org.specrunner.converters.core;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.specrunner.source.resource.ResourceException;
-import org.specrunner.util.UtilIO;
-
 /**
  * Create current date without without hour information.
  * 
@@ -34,12 +31,9 @@ public class ConverterDateOnly extends ConverterDateCurrentTemplate {
 
     /**
      * Basic data converter.
-     * 
-     * @throws ResourceException
-     *             On load errors.
      */
-    public ConverterDateOnly() throws ResourceException {
-        super(UtilIO.readLines("sr_converters_date.txt"));
+    public ConverterDateOnly() {
+        super(new String[] { "data", "data atual", "date", "current date" });
     }
 
     @Override

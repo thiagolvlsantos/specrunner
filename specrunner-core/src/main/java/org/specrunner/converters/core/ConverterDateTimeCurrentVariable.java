@@ -17,48 +17,44 @@
  */
 package org.specrunner.converters.core;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.joda.time.DateTime;
-import org.specrunner.converters.ConverterException;
 
 /**
- * Create current date.
+ * Create current date time + or - date/time information.
  * 
  * @author Thiago Santos
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateTimeCurrentTemplate extends AbstractConverterTimeTemplate<DateTime> {
+public class ConverterDateTimeCurrentVariable extends ConverterDateTimeCurrent {
 
-    /**
-     * See superclass.
-     * 
-     * @param regexp
-     *            Regexp.
-     */
-    public ConverterDateTimeCurrentTemplate(String regexp) {
-        super(regexp);
+    protected Map<String, String> fieldToMethod = new HashMap<String, String>();
+    protected Pattern pattern;
+
+    public ConverterDateTimeCurrentVariable() {
+        pattern = extractPattern(bindPatterns(fieldToMethod));
     }
 
-    /**
-     * See superclass.
-     * 
-     * @param values
-     *            Value.
-     */
-    public ConverterDateTimeCurrentTemplate(String[] values) {
-        super(values);
+    protected Map<String, String> bindPatterns(Map<String, String> map) {
+        UtilJodatime.bindPatterns(map);
+        return map;
+    }
+
+    protected Pattern extractPattern(Map<String, String> map) {
+        return UtilJodatime.extractPattern(map);
     }
 
     @Override
-    protected DateTime instance() {
-        return new DateTime();
+    protected boolean testValue(String str, String value) {
+        return str.startsWith(value);
     }
 
     @Override
-    public Object convert(Object value, Object[] args) throws ConverterException {
-        if (value instanceof DateTime) {
-            return value;
-        }
-        return super.convert(value, args);
+    protected DateTime postProcess(Object value, Object[] args, DateTime result) {
+        return UtilJodatime.postProcess(value, args, result, pattern, fieldToMethod);
     }
 }

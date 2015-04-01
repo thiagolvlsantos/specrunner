@@ -35,24 +35,112 @@ public class UtilJodatime {
      * 
      * @param map
      */
-    public static void bindDatePatterns(Map<String, String> map) {
-        map.put("days", "plusDays");
-        map.put("weeks", "plusWeeks");
-        map.put("months", "plusMonths");
-        map.put("years", "plusYears");
+    public static void bindPatterns(Map<String, String> map) {
+        bindEnglish(map);
+        bindPortuguese(map);
     }
 
     /**
-     * Bind time map.
+     * Bind English words.
      * 
      * @param map
-     *            Map os alias.
+     *            A map.
      */
-    public static void bindTimePatterns(Map<String, String> map) {
-        map.put("milliseconds", "plusMillis");
+    public static void bindEnglish(Map<String, String> map) {
+        bindEnglishDate(map);
+        bindEnglishTime(map);
+    }
+
+    /**
+     * Bind English date vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
+    public static void bindEnglishDate(Map<String, String> map) {
+        map.put("days", "plusDays");
+        map.put("day", "plusDays");
+        map.put("weeks", "plusWeeks");
+        map.put("week", "plusWeeks");
+        map.put("months", "plusMonths");
+        map.put("month", "plusMonths");
+        map.put("years", "plusYears");
+        map.put("year", "plusYears");
+    }
+
+    /**
+     * Bind English time vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
+    public static void bindEnglishTime(Map<String, String> map) {
+        map.put("miliseconds", "plusMillis");
+        map.put("milisecond", "plusMillis");
         map.put("seconds", "plusSeconds");
+        map.put("second", "plusSeconds");
         map.put("minutes", "plusMinutes");
+        map.put("minute", "plusMinutes");
         map.put("hours", "plusHours");
+        map.put("hour", "plusHours");
+    }
+
+    /**
+     * Bind Portuguese words.
+     * 
+     * @param map
+     *            A map.
+     */
+    public static void bindPortuguese(Map<String, String> map) {
+        bindPortugueseDate(map);
+        bindPortugueseTime(map);
+    }
+
+    /**
+     * Bind Portuguese date vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
+    public static void bindPortugueseDate(Map<String, String> map) {
+        map.put("dias", "plusDays");
+        map.put("dia", "plusDays");
+        map.put("semanas", "plusWeeks");
+        map.put("semana", "plusWeeks");
+        map.put("meses", "plusMonths");
+        map.put("mês", "plusMonths");
+        map.put("anos", "plusYears");
+        map.put("ano", "plusYears");
+    }
+
+    /**
+     * Bind Portuguese time vocabulary.
+     * 
+     * @param map
+     *            A map.
+     */
+    public static void bindPortugueseTime(Map<String, String> map) {
+        map.put("milisegundos", "plusMillis");
+        map.put("milisegundo", "plusMillis");
+        map.put("segundos", "plusSeconds");
+        map.put("segundo", "plusSeconds");
+        map.put("minutos", "plusMinutes");
+        map.put("minuto", "plusMinutes");
+        map.put("horas", "plusHours");
+        map.put("hora", "plusHours");
+    }
+
+    /**
+     * Get pattern for a map.
+     * 
+     * @param map
+     *            A map.
+     * @return The pattern for a given map.
+     */
+    public static Pattern extractPattern(Map<String, String> map) {
+        String keys = map.keySet().toString().replace("[", "").replace("]", "").replace(" ", "").replace(",", "|");
+        String str = "(([\\+|\\-])[\\s\\n]*(\\d+)[\\s\\n]*(" + keys + "))+";
+        return Pattern.compile(str);
     }
 
     /**
@@ -71,7 +159,7 @@ public class UtilJodatime {
      * @return A changed instance of 'result'.
      */
     @SuppressWarnings("unchecked")
-    public static <T> T postProcess(Object value, Object[] args, T result, Pattern pattern, Map<String, String> aliasToField, Map<String, String> fieldToMethod) {
+    public static <T> T postProcess(Object value, Object[] args, T result, Pattern pattern, Map<String, String> map) {
         T tmp = result;
         Class<? extends Object> type = result.getClass();
         Matcher m = pattern.matcher(String.valueOf(value).toLowerCase());
@@ -80,16 +168,8 @@ public class UtilJodatime {
             String signal = m.group(2);
             String number = m.group(3);
             all = all.replace(signal, "").replace(number, "").trim();
-            String alias = aliasToField.get(all);
-            if (alias == null) {
-                throw new IllegalArgumentException("Alias '" + alias + "' not found in sr_converters_date_(date|time).properties.");
-            }
-            String field = fieldToMethod.get(alias);
-            if (field == null) {
-                throw new IllegalArgumentException("Field '" + field + "' not found in " + fieldToMethod.keySet() + ".");
-            }
             try {
-                Method met = type.getMethod(field, int.class);
+                Method met = type.getMethod(map.get(all), int.class);
                 tmp = (T) met.invoke(tmp, Integer.valueOf(number));
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
@@ -97,5 +177,4 @@ public class UtilJodatime {
         }
         return tmp;
     }
-
 }

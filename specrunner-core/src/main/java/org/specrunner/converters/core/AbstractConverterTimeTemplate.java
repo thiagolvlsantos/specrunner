@@ -17,12 +17,7 @@
  */
 package org.specrunner.converters.core;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.specrunner.SRServices;
 import org.specrunner.converters.ConverterException;
-import org.specrunner.util.string.IStringNormalizer;
 
 /**
  * Create time information.
@@ -38,7 +33,11 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
     /**
      * Strings that stand for 'current date'.
      */
-    private List<String> values;
+    private String[] values;
+    /**
+     * Pattern for 'current date'.
+     */
+    private String regexp;
 
     /**
      * Constructor using strings.
@@ -46,16 +45,25 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
      * @param values
      *            The values to be converted to date.
      */
-    public AbstractConverterTimeTemplate(List<String> values) {
+    public AbstractConverterTimeTemplate(String[] values) {
         if (values == null) {
             this.values = null;
         } else {
-            this.values = new LinkedList<String>();
-            IStringNormalizer sn = SRServices.get(IStringNormalizer.class);
-            for (String s : values) {
-                this.values.add(sn.camelCase(s));
+            this.values = new String[values.length];
+            for (int i = 0; i < values.length; i++) {
+                this.values[i] = values[i].toLowerCase();
             }
         }
+    }
+
+    /**
+     * Constructor using a regular expression.
+     * 
+     * @param regexp
+     *            The regular expression to match date.
+     */
+    public AbstractConverterTimeTemplate(String regexp) {
+        this.regexp = regexp;
     }
 
     @Override
@@ -64,12 +72,15 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
             return null;
         }
         T result = null;
-        String str = SRServices.get(IStringNormalizer.class).camelCase(String.valueOf(value));
+        String str = String.valueOf(value);
+        if (testRegexp(str, regexp)) {
+            result = instance();
+        }
+        str = str.toLowerCase();
         if (values != null) {
             for (String v : values) {
                 if (testValue(str, v)) {
                     result = instance();
-                    break;
                 }
             }
         }
@@ -79,6 +90,19 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
             result = postProcess(value, args, result);
         }
         return result;
+    }
+
+    /**
+     * Test the string against a regexp.
+     * 
+     * @param str
+     *            String.
+     * @param regexp
+     *            Regular expression.
+     * @return true, if valid, false, otherwise.
+     */
+    protected boolean testRegexp(String str, String regexp) {
+        return regexp != null && str.matches(regexp);
     }
 
     /**

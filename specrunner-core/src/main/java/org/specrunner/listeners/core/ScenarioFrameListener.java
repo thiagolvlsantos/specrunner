@@ -98,10 +98,6 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     protected INodeHolder holder;
     /**
-     * Result of <code>onBefore(...)</code>.
-     */
-    protected ENext next;
-    /**
      * The node which holds the scenario.
      */
     protected Node scenario;
@@ -198,7 +194,6 @@ public abstract class ScenarioFrameListener implements INodeListener {
                 throw new RuntimeException(e);
             }
         }
-        this.next = next;
         return next;
     }
 
@@ -251,12 +246,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
             }
-            if (next != ENext.SKIP) {
-                try {
-                    fireAfter(name, node, context, result, getInstance());
-                } catch (SpecRunnerException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                fireAfter(name, node, context, result, getInstance());
+            } catch (SpecRunnerException e) {
+                throw new RuntimeException(e);
             }
             Boolean show = (Boolean) SRServices.getFeatureManager().get(FEATURE_SHOW_TIME, Boolean.TRUE);
             if (show) {
