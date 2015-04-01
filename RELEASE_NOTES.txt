@@ -1,3 +1,11 @@
+1.4.31
+OK - Listeners chamando o afterScenario sem fazer o beforeScenario quando tem execute="true". Mudar para rodar o final apenas se o começo foi feito também;
+OK - Melhorar o suporte para internacionalização dos conversores: i.e. criar arquivos properties por cada tipo com texto em inglês/português/etc.
+OK - Arquivos de propriedades para os conversores de tempo: sr_converters_date.txt para padrões de data e sr_converters_time.txt para padrões de tempo;
+OK - Arquivos de propriedades para os campos +- de data, agora os incrementos ou decrementos de tempo podem ser feitos de forma customizavel através de arquivos de propriedades;
+OK - Corrigir o StringNormalizer: whitespace = false;
+OK - Colocar o esquema de data +- algo para todos os conversores de 'data atual', só está para o de DateTime e LocalDate por enquanto;
+
 1.4.30
 OK - conversores +- tempo para DateTime e LocalDate criados.
 
