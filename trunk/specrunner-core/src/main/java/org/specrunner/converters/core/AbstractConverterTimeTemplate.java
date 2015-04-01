@@ -39,10 +39,6 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
      * Strings that stand for 'current date'.
      */
     private List<String> values;
-    /**
-     * Pattern for 'current date'.
-     */
-    private String regexp;
 
     /**
      * Constructor using strings.
@@ -62,27 +58,13 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
         }
     }
 
-    /**
-     * Constructor using a regular expression.
-     * 
-     * @param regexp
-     *            The regular expression to match date.
-     */
-    public AbstractConverterTimeTemplate(String regexp) {
-        this.regexp = regexp;
-    }
-
     @Override
     public Object convert(Object value, Object[] args) throws ConverterException {
         if (value == null) {
             return null;
         }
         T result = null;
-        String str = String.valueOf(value);
-        if (testRegexp(str, regexp)) {
-            result = instance();
-        }
-        str = SRServices.get(IStringNormalizer.class).camelCase(str);
+        String str = SRServices.get(IStringNormalizer.class).camelCase(String.valueOf(value));
         if (values != null) {
             for (String v : values) {
                 if (testValue(str, v)) {
@@ -97,19 +79,6 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
             result = postProcess(value, args, result);
         }
         return result;
-    }
-
-    /**
-     * Test the string against a regexp.
-     * 
-     * @param str
-     *            String.
-     * @param regexp
-     *            Regular expression.
-     * @return true, if valid, false, otherwise.
-     */
-    protected boolean testRegexp(String str, String regexp) {
-        return regexp != null && str.matches(regexp);
     }
 
     /**
