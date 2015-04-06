@@ -1,0 +1,47 @@
+<html>
+<body>
+W  <div class="scenario">
+    <h1 class="title">Scenario active</h1>
+
+    ACTIVE: ${System.currentTimeMillis()}
+  </div>
+
+  <div class="scenario" pending="true">
+    <h1 class="title">Scenario pending</h1>
+
+    PENDING: ${System.currentTimeMillis()}
+  </div>
+
+  <div class="scenario" ignore="true">
+    <h1 class="title">Scenario ignored</h1>
+
+    IGNORED: ${System.currentTimeMillis()}
+  </div>
+
+  <div class="scenario" execute="true">
+    <h1 class="title">Selected scenario running</h1>
+
+    Selected RUNNING SCENARIO: ${System.currentTimeMillis()}
+  </div>
+
+  <div class="scenario">
+    <h1 class="title">Scenario active 2</h1>
+
+    ACTIVE 2: ${System.currentTimeMillis()}
+  </div>
+
+
+  <div class="scenario" execute="true">
+    <h1 class="title">Selected scenario running 2</h1>
+
+    SELECTED RUNNING SCENARIO 2: ${System.currentTimeMillis()}
+  </div>
+  
+  <div class="scenario" execute="true">
+    <h1 class="title">Selected scenario running 3</h1>
+
+    SELECTED RUNNING SCENARIO 3: ${System.currentTimeMillis()}
+  </div>
+  
+</body>
+</html>
