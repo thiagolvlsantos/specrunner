@@ -188,9 +188,8 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     ignored = UtilNode.isIgnore(node);
                     if (pending || ignored) {
                         next = ENext.SKIP;
-                    } else {
-                        fireBefore(name, node, context, result, getInstance());
                     }
+                    fireBefore(name, node, context, result, getInstance());
                 }
             } catch (PluginException e) {
                 throw new RuntimeException(e);
@@ -251,12 +250,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_SUCCESS);
             }
-            if (next != ENext.SKIP) {
-                try {
-                    fireAfter(name, node, context, result, getInstance());
-                } catch (SpecRunnerException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                fireAfter(name, node, context, result, getInstance());
+            } catch (SpecRunnerException e) {
+                throw new RuntimeException(e);
             }
             Boolean show = (Boolean) SRServices.getFeatureManager().get(FEATURE_SHOW_TIME, Boolean.TRUE);
             if (show) {
