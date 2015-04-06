@@ -17,7 +17,10 @@
  */
 package org.specrunner.converters.core;
 
+import java.util.TimeZone;
+
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.specrunner.SRServices;
@@ -33,7 +36,7 @@ import org.specrunner.util.cache.ICacheFactory;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateTimePatternArgs extends ConverterNotNullNotEmpty {
+public class ConverterDateTimePatternArgs extends AbstractConverterTimezone<DateTime> {
     /**
      * Cache of formatters.
      */
@@ -54,6 +57,10 @@ public class ConverterDateTimePatternArgs extends ConverterNotNullNotEmpty {
                 if (formatter == null) {
                     formatter = DateTimeFormat.forPattern(pattern);
                     cache.put(pattern, formatter);
+                }
+                TimeZone tz = getZone();
+                if (tz != null) {
+                    formatter = formatter.withZone(DateTimeZone.forTimeZone(tz));
                 }
                 return formatter.parseDateTime(String.valueOf(value));
             }
