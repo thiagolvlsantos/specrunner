@@ -1,3 +1,7 @@
+1.4.32
+OK - Corrigindo listeners, sempre chamando before e after.
+OK - Colocar o ajuste de timezone para os conversores de ConverterDateTimePatternArgs também, hoje somente para os que extendem o AbstractConverterTimezone;
+
 1.4.31
 OK - Listeners chamando o afterScenario sem fazer o beforeScenario quando tem execute="true". Mudar para rodar o final apenas se o começo foi feito também;
 OK - Melhorar o suporte para internacionalização dos conversores: i.e. criar arquivos properties por cada tipo com texto em inglês/português/etc.
