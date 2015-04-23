@@ -63,6 +63,10 @@ public class FinderXPath extends ParameterHolder implements IFinder {
      */
     protected String by;
     /**
+     * The reference version.
+     */
+    protected String version;
+    /**
      * The separator of arguments in 'by' attribute.
      */
     protected String separator = ";";
@@ -71,17 +75,17 @@ public class FinderXPath extends ParameterHolder implements IFinder {
      * Minimum constructor.
      */
     protected FinderXPath() {
-        addStrategy("id", "//*[@id='{0}']");
-        addStrategy("name", "//*[@name='{0}']");
-        addStrategy("value", "//*[@value='{0}']");
-        addStrategy("class", "//{0}[contains(@class,'{1}')]");
-        addStrategy("contains", "//{0}[contains(.,'{1}')]");
-        addStrategy("starts", "//{0}[starts-with({1},'{2}')]");
-        addStrategy("ends", "//{0}[ends-with({1},'{2}')]");
-        addStrategy("link", "//a[text()='{0}']");
-        addStrategy("linkText", "//a[text()='{0}']");
-        addStrategy("partialLinkText", "//a[contains(text(),'{0}')]");
-        addStrategy("caption", "//table/caption[contains(text(),'{0}')]/..");
+        addStrategy("id", "//*[@id='{0}'$VERSION]");
+        addStrategy("name", "//*[@name='{0}'$VERSION]");
+        addStrategy("value", "//*[@value='{0}'$VERSION]");
+        addStrategy("class", "//{0}[contains(@class,'{1}')$VERSION]");
+        addStrategy("contains", "//{0}[contains(.,'{1}')$VERSION]");
+        addStrategy("starts", "//{0}[starts-with({1},'{2}')$VERSION]");
+        addStrategy("ends", "//{0}[ends-with({1},'{2}')$VERSION]");
+        addStrategy("link", "//a[text()='{0}'$VERSION]");
+        addStrategy("linkText", "//a[text()='{0}'$VERSION]");
+        addStrategy("partialLinkText", "//a[contains(text(),'{0}')$VERSION]");
+        addStrategy("caption", "//table/caption[contains(text(),'{0}')$VERSION]/..");
         addStrategy("xpath", "{0}");
     }
 
@@ -158,6 +162,25 @@ public class FinderXPath extends ParameterHolder implements IFinder {
      */
     public void setBy(String by) {
         this.by = by;
+    }
+
+    /**
+     * Version selector.
+     * 
+     * @return Version selector identifier.
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * Set version selector.
+     * 
+     * @param version
+     *            Selector.
+     */
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     /**
@@ -247,12 +270,25 @@ public class FinderXPath extends ParameterHolder implements IFinder {
         for (int i = 0; i < args.length; i++) {
             format = format.replace("{" + i + "}", args[i]);
         }
+        format = replaceVersion(format);
         return format;
+    }
+
+    /**
+     * Replace version tag.
+     * 
+     * @param format
+     *            The original formal.
+     * @return Version replace.
+     */
+    protected String replaceVersion(String format) {
+        return format.replace("$VERSION", (version != null ? " and @version='" + version + "'" : ""));
     }
 
     @Override
     public void reset() {
         by = null;
+        version = null;
     }
 
     @Override

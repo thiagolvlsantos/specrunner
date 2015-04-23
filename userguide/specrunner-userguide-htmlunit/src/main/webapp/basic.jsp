@@ -13,6 +13,9 @@
         Current date is: <span id="idDate"><%=new org.joda.time.DateTime().toString("HH:mm:ss")%></span>
     </p>
 
-    Old school.
+    <%! int version = 0; %>
+    <span id="old" version="<%= version %>">
+    Old school <%= version++ %>. <a href="basic.jsp" id="link">Refresh</a>
+    </span>
 </body>
 </html>
