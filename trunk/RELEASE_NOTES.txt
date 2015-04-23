@@ -1,3 +1,6 @@
+1.4.33
+OK - definido um extensor automático de condição de espera que adiciona um ' and @version=<X>' nas condições de espera de um componente em tela, isso permite que o desenvolvedor ao realizar uma interação Ajax que mude a renderização do componente na tela possa perguntar qual versão é essa apresentada e assim conseguir esperar pela versão correta.
+
 1.4.32
 OK - Corrigindo listeners, sempre chamando before e after.
 OK - Colocar o ajuste de timezone para os conversores de ConverterDateTimePatternArgs também, hoje somente para os que extendem o AbstractConverterTimezone;
