@@ -1,0 +1,1 @@
+cd ..\tools\specrunner-tools & deploy.bat

@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.specrunner</groupId>
+		<artifactId>specrunner</artifactId>
+		<version>1.4.33</version>
+		<relativePath>../../specrunner</relativePath>
+	</parent>
+	<artifactId>specrunner-tools</artifactId>
+	<packaging>pom</packaging>
+	<name>SpecRunner (Tools).</name>
+
+	<modules>
+		<module>../specrunner-tools-dbms</module>
+	</modules>
+
+	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+
+</project>
