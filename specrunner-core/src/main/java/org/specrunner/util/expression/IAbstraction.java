@@ -25,6 +25,8 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.readers.IReader;
+import org.specrunner.readers.ReaderException;
 
 /**
  * Stands for any object which can be evaluate.
@@ -49,6 +51,36 @@ public interface IAbstraction {
      * @return Element value.
      */
     String getValue();
+
+    /**
+     * Get element value.
+     * 
+     * @param args
+     *            Arguments to return value.
+     * 
+     * @return Element value.
+     */
+    String getValue(Object[] args);
+
+    /**
+     * Get reader object.
+     * 
+     * @return A reader.
+     * @throws ReaderException
+     *             On reader load error.
+     */
+    IReader getReader() throws ReaderException;
+
+    /**
+     * Get reader object or default if not found.
+     * 
+     * @param readerDefault
+     *            The default reader.
+     * @return A reader.
+     * @throws ReaderException
+     *             On reader load error.
+     */
+    IReader getReader(IReader readerDefault) throws ReaderException;
 
     /**
      * Get the converter.

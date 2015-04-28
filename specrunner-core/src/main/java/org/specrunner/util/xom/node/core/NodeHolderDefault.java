@@ -36,6 +36,9 @@ import org.specrunner.converters.IConverter;
 import org.specrunner.converters.IConverterManager;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.readers.IReader;
+import org.specrunner.readers.IReaderManager;
+import org.specrunner.readers.ReaderException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.node.INodeHolder;
@@ -161,7 +164,16 @@ public class NodeHolderDefault implements INodeHolder {
 
     @Override
     public String getValue() {
-        return node.getValue();
+        return getValue(null);
+    }
+
+    @Override
+    public String getValue(Object[] args) {
+        try {
+            return getReader().read(node, args);
+        } catch (ReaderException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
@@ -221,6 +233,35 @@ public class NodeHolderDefault implements INodeHolder {
         } else if (node instanceof Element) {
             ((Element) node).appendChild(child);
         }
+    }
+
+    @Override
+    public IReader getReader() {
+        return getReader(SRServices.getReaderManager().getDefault());
+    }
+
+    @Override
+    public IReader getReader(IReader readerDefault) {
+        IReader reader = null;
+        if (hasAttribute(ATTRIBUTE_READER)) {
+            String str = getAttribute(ATTRIBUTE_READER);
+            IReaderManager cm = SRServices.getReaderManager();
+            reader = cm.get(str);
+            if (reader == null) {
+                try {
+                    reader = (IReader) Class.forName(str).newInstance();
+                    cm.bind(str, reader);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                }
+            }
+        }
+        if (reader == null) {
+            reader = readerDefault;
+        }
+        return reader;
     }
 
     @Override

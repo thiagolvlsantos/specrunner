@@ -49,6 +49,7 @@ import org.specrunner.converters.IConverterReverse;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.readers.ReaderException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
@@ -643,6 +644,8 @@ public class DatabaseDefault implements IDatabase {
                 CellAdapter td = tds.get(j);
                 try {
                     UtilSchema.setupColumn(context, table, column, td);
+                } catch (ReaderException e) {
+                    throw new DatabaseException(e);
                 } catch (ConverterException e) {
                     throw new DatabaseException(e);
                 } catch (ComparatorException e) {
@@ -788,6 +791,8 @@ public class DatabaseDefault implements IDatabase {
                 found.put(column.getAlias(), cell);
                 try {
                     UtilSchema.setupColumn(context, table, column, cell);
+                } catch (ReaderException e) {
+                    throw new DatabaseException(e);
                 } catch (ConverterException e) {
                     throw new DatabaseException(e);
                 } catch (ComparatorException e) {
@@ -825,13 +830,15 @@ public class DatabaseDefault implements IDatabase {
      */
     protected String getAdjustContent(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, INodeHolder nh) throws DatabaseException {
         try {
-            String previous = nh.getValue();
+            String previous = column.getReader().read(nh, null);
             String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
             // if text has changed... adjust on screen.
             if (previous != null && !previous.equals(value)) {
                 nh.setValue(value);
             }
             return value;
+        } catch (ReaderException e) {
+            throw new DatabaseException(e);
         } catch (PluginException e) {
             throw new DatabaseException(e);
         }
