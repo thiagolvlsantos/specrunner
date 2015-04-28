@@ -34,7 +34,9 @@ import org.specrunner.sql.PluginRelease;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
+import org.specrunner.sql.database.IDatabase;
 import org.specrunner.sql.database.impl.DatabaseDefault;
+import org.specrunner.sql.meta.ISchemaLoader;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 /**
@@ -43,6 +45,24 @@ import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
  * @author Thiago Santos
  */
 public class PluginDbms extends PluginGroupImpl {
+
+    /**
+     * Feature for schema loader.
+     */
+    public static final String FEATURE_SCHEMA_LOADER = PluginDbms.class.getName() + ".schemaLoader";
+    /**
+     * The database schema loader class.
+     */
+    private Class<? extends ISchemaLoader> schemaLoader = SchemaLoaderXOM.class;
+
+    /**
+     * Feature for database implementation.
+     */
+    public static final String FEATURE_DATABASE = PluginDbms.class.getName() + ".database";
+    /**
+     * The database class.
+     */
+    private Class<? extends IDatabase> database = DatabaseDefault.class;
 
     /**
      * Feature for system datasource name.
@@ -60,6 +80,44 @@ public class PluginDbms extends PluginGroupImpl {
      * The guide datasource.
      */
     private String reference = "org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TEST_FINAL|sa|";
+
+    /**
+     * Get database schema loader class. Default is 'SchemaLoaderXOM'.
+     * 
+     * @return The schema loader.
+     */
+    public Class<? extends ISchemaLoader> getSchemaLoader() {
+        return schemaLoader;
+    }
+
+    /**
+     * Set schema loader class.
+     * 
+     * @param schemaLoader
+     *            A loader.
+     */
+    public void setSchemaLoader(Class<? extends ISchemaLoader> schemaLoader) {
+        this.schemaLoader = schemaLoader;
+    }
+
+    /**
+     * Get database implementation class. Default is 'DatabaseDefault'.
+     * 
+     * @return Get implementation class.
+     */
+    public Class<? extends IDatabase> getDatabase() {
+        return database;
+    }
+
+    /**
+     * Set implementation class.
+     * 
+     * @param database
+     *            Implementation class.
+     */
+    public void setDatabase(Class<? extends IDatabase> database) {
+        this.database = database;
+    }
 
     /**
      * Get the system database name.
@@ -103,9 +161,11 @@ public class PluginDbms extends PluginGroupImpl {
 
     public PluginDbms() {
         IFeatureManager fm = SRServices.getFeatureManager();
+        fm.set(FEATURE_SCHEMA_LOADER, this);
+        fm.set(FEATURE_DATABASE, this);
         {
             // set loader.
-            fm.add(PluginSchemaLoader.FEATURE_PROVIDER, SchemaLoaderXOM.class.getName());
+            fm.add(PluginSchemaLoader.FEATURE_PROVIDER, schemaLoader.getName());
             fm.add(PluginSchemaLoader.FEATURE_REUSE, true);
         }
         {
@@ -119,7 +179,7 @@ public class PluginDbms extends PluginGroupImpl {
         }
         // set databases
         {
-            fm.add(PluginDatabase.FEATURE_PROVIDER, DatabaseDefault.class.getName());
+            fm.add(PluginDatabase.FEATURE_PROVIDER, database.getName());
             fm.add(PluginDatabase.FEATURE_NAME, "systemDatabase;referenceDatabase");
             fm.add(PluginDatabase.FEATURE_REUSE, true);
         }
