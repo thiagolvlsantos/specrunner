@@ -38,21 +38,25 @@ public interface INodeHolder extends IAbstraction {
      */
     String ATTRIBUTE_VALUE = "value";
     /**
-     * Attribute for comparator.
+     * Attribute for arguments prefix.
      */
-    String ATTRIBUTE_COMPARATOR = "comparator";
+    String ATTRIBUTE_ARGUMENT_PREFIX = "arg";
     /**
      * Attribute for value evaluation.
      */
     String ATTRIBUTE_EVALUATION = "eval";
     /**
+     * Attribute for reader.
+     */
+    String ATTRIBUTE_READER = "reader";
+    /**
      * Attribute for converter.
      */
     String ATTRIBUTE_CONVERTER = "converter";
     /**
-     * Attribute for arguments prefix.
+     * Attribute for comparator.
      */
-    String ATTRIBUTE_ARGUMENT_PREFIX = "arg";
+    String ATTRIBUTE_COMPARATOR = "comparator";
 
     /**
      * Get the hold node.

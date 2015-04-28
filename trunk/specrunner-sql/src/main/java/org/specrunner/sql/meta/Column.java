@@ -26,6 +26,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.converters.core.ConverterEnumValue;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.readers.IReader;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.IAbstraction;
 import org.specrunner.util.reset.IResetableExtended;
@@ -67,6 +68,14 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
      * Indicates a date column.
      */
     private boolean date;
+    /**
+     * Column default reader.
+     */
+    private static final IReader READER_DEFAULT = SRServices.getReaderManager().getDefault();
+    /**
+     * Column reader.
+     */
+    private IReader reader = READER_DEFAULT;
     /**
      * Column default converter.
      */
@@ -278,6 +287,29 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     }
 
     /**
+     * Get the column reader.
+     * 
+     * @return The reader.
+     */
+    public IReader getReader() {
+        return reader;
+    }
+
+    /**
+     * Set the column reader.
+     * 
+     * @param reader
+     *            The reader.
+     * @return The column itself.
+     */
+    public Column setReader(IReader reader) {
+        if (reader != null) {
+            this.reader = reader;
+        }
+        return this;
+    }
+
+    /**
      * Get the column converter.
      * 
      * @return The converter.
@@ -466,7 +498,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     @Override
     public Column copy() {
         return new Column().setParent(parent).setAlias(alias).setName(name).setTable(table).//
-                setKey(key).setSequence(sequence).setDate(date).setConverter(converter).//
+                setKey(key).setSequence(sequence).setDate(date).setReader(reader).setConverter(converter).//
                 setArguments(arguments).setComparator(comparator).setDefaultExpression(defaultExpression).//
                 setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual).//
                 setPointer(pointer);
@@ -485,6 +517,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
         setDate(other.date);
         setConverter(other.converter);
         setArguments(other.arguments);
+        setReader(other.reader);
         setComparator(other.comparator);
         setDefaultExpression(other.defaultExpression);
         setDefaultValue(other.defaultValue);

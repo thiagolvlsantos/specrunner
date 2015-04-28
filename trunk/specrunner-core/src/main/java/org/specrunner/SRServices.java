@@ -29,6 +29,7 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.readers.IReaderManager;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -232,6 +233,15 @@ public final class SRServices {
      */
     public static IFeatureManager getFeatureManager() {
         return get(IFeatureManager.class);
+    }
+
+    /**
+     * Shortcut method to reader manager.
+     * 
+     * @return The reader manager.
+     */
+    public static IReaderManager getReaderManager() {
+        return get(IReaderManager.class);
     }
 
     /**

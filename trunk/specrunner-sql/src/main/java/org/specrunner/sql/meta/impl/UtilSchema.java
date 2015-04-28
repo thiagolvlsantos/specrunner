@@ -21,6 +21,7 @@ import org.specrunner.comparators.ComparatorException;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.readers.ReaderException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.ISchemaLoaderXML;
 import org.specrunner.sql.meta.Table;
@@ -56,14 +57,17 @@ public final class UtilSchema {
      *             On default value conversion errors.
      * @throws ComparatorException
      *             On comparator lookup errors.
+     * @throws ReaderException
+     *             On reader lookup errors.
      */
-    public static void setupColumn(IContext context, Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException {
+    public static void setupColumn(IContext context, Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException, ReaderException {
         column.setName(holder.getAttribute(ISchemaLoaderXML.ATTR_NAME, column.getName()));
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
         column.setTable(holder.getAttribute(ISchemaLoaderXML.ATTR_TABLE, column.getTable()));
         column.setKey(column.isKey() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_KEY, ISchemaLoaderXML.DEFAULT_FALSE)));
         column.setSequence(holder.getAttribute(ISchemaLoaderXML.ATT_SEQUENCE, column.getSequence()));
         column.setDate(column.isDate() || Boolean.parseBoolean(holder.getAttribute(ISchemaLoaderXML.ATT_DATE, ISchemaLoaderXML.DEFAULT_FALSE)));
+        column.setReader(holder.getReader(column.getReader()));
         column.setConverter(holder.getConverter(column.getConverter()));
         column.setArguments(holder.getArguments(column.getArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));

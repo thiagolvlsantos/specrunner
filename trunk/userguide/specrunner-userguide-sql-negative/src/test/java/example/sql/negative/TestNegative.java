@@ -18,7 +18,7 @@ public class TestNegative extends AbstractTest {
     public static class DatabaseLocal extends DatabaseDefault {
         @Override
         protected void fireTableIn(DatabaseTableEvent event) throws DatabaseException {
-            System.out.println("OVERRIDEN:" + event);
+            System.out.println("EXTENSION:" + event);
             super.fireTableIn(event);
         }
     }
