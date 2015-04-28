@@ -648,7 +648,7 @@ public class DatabaseDefault implements IDatabase {
                 } catch (ComparatorException e) {
                     throw new DatabaseException(e);
                 }
-                String content = getAdjustContent(context, td);
+                String content = getAdjustContent(context, mode, command, column, afilter, td);
                 try {
                     Value v = getValue(context, mode, command, column, afilter, td, content);
                     if (v != null) {
@@ -809,13 +809,21 @@ public class DatabaseDefault implements IDatabase {
      * 
      * @param context
      *            The context.
+     * @param mode
+     *            The database mode.
+     * @param command
+     *            Current line command.
+     * @param column
+     *            The column definition.
+     * @param afilter
+     *            A filter.
      * @param nh
      *            A node holder.
-     * @return The interpreted string value.
+     * @return The cell as string value.
      * @throws DatabaseException
      *             On evaluation errors.
      */
-    protected String getAdjustContent(IContext context, INodeHolder nh) throws DatabaseException {
+    protected String getAdjustContent(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, INodeHolder nh) throws DatabaseException {
         try {
             String previous = nh.getValue();
             String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
