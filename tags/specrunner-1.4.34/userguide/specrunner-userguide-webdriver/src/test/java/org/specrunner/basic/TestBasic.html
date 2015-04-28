@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Select examples</title>
+</head>
+<body>
+    <p>
+        Open <a class="include" href="../open.html?url=basic&x=0&y=0">browser</a>.
+    </p>
+
+    <ul>
+        <li>The word <span class="contains" waitfor="//html">Quickstart</span> is present;</li>
+        <li>The word <span class="contains" waitfor="presenceOfElementLocated://html">Quickstart</span> is present using waitfor="presenceOfElementLocated://html";</li>
+        <li>The word <span class="notContains">Blueprint</span> is not present;</li>
+        <li>The word <span class="contains" by="class:*;example">Current</span> is present in example;</li>
+        <li>The word <span class="notContains" by="class:*;example">Old</span> is not present in example;</li>
+        <li><span class="present" by="xpath://title">Title</span> is present;</li>
+        <li><span class="present" by="id:old">Old school</span> is present without version;</li>
+        <li><span class="present" by="id:old" version="0">Old school</span> is present with version 0;</li>
+        <li>None <span class="notPresent" by="xpath://table">table</span> is not present;</li>
+        <li>There is only <span class="present" by="xpath://title" count="1">one</span> title;</li>
+        <li>Check title that might be '<span class="compareText" by="xpath://title">Wicket Quickstart Archetype Homepage</span>';</li>
+        <li>Date information might be '<span class="compareDate" by="id:idDate" format="HH:mm:ss" value='${new org.joda.time.DateTime().toString("HH:mm:ss")}'>the current in format 'HH:mm:ss'</span>'.</li>
+    </ul>
+</body>
+</html>

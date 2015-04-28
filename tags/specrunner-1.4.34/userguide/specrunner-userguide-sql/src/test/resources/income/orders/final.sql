@@ -1,0 +1,17 @@
+insert into ORD.CUSTOMERS (NAME) values ('John Doe');
+insert into ORD.CUSTOMERS (NAME) values ('Ringo Star');
+insert into ORD.CUSTOMERS (NAME) values ('Any User');
+insert into ORD.ORDERS (CUSTOMER_ID,DATE) values (0,{ts '2013-01-01 00:00:00.00000'});
+insert into ORD.ORDERS (CUSTOMER_ID,DATE) values (0,{ts '2014-07-07 00:00:00.00000'});
+insert into ORD.ORDERS (CUSTOMER_ID,DATE) values (2,{ts '2013-07-07 00:00:00.00000'});
+insert into ORD.PRODUCTS (SERIALNUMBER) values ('Book');
+insert into ORD.PRODUCTS (SERIALNUMBER) values ('Table');
+insert into ORD.PRODUCTS (SERIALNUMBER) values ('Paper');
+insert into ORD.PRODUCTS (SERIALNUMBER) values ('Pencil');
+insert into ORD.LINE_ITEMS (LINE_NUMBER,ORDER_ID,PRODUCT_ID,QUANTITY) values (1,0,1,1);
+insert into ORD.LINE_ITEMS (LINE_NUMBER,ORDER_ID,PRODUCT_ID,QUANTITY) values (2,0,0,15);
+insert into ORD.LINE_ITEMS (LINE_NUMBER,ORDER_ID,PRODUCT_ID,QUANTITY) values (1,1,2,1000);
+delete from ORD.LINE_ITEMS where LINE_NUMBER = 1 AND ORDER_ID = 3;
+delete from ORD.LINE_ITEMS where ORDER_ID = 3;
+insert into ORD.LINE_ITEMS (LINE_NUMBER,ORDER_ID,PRODUCT_ID,QUANTITY) values (1,2,0,1);
+update ORD.CUSTOMERS set NAME = 'David' where ID = 2;
