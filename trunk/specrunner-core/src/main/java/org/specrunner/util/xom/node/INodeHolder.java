@@ -17,9 +17,9 @@
  */
 package org.specrunner.util.xom.node;
 
-import org.specrunner.util.expression.IAbstraction;
-
 import nu.xom.Node;
+
+import org.specrunner.util.expression.IAbstraction;
 
 /**
  * Stands for any object which hold an element.
