@@ -1,3 +1,7 @@
+1.4.34
+OK - Suporte à escolha do leitor usado para obter o conteúdo a se usado como base para os conversores, agora é possível usar o reader='<algo>' para descrever como deve ser lido o texto, por exemplo, reader='xml' vai retornar o conteúdo XML da célula para uso pelos conversor.
+OK - Ajuste dos PluginDbms para terem features que permitam trocar a classe que implementa o IDatabase e assim permitir a redefinição simples dessas classes mesmo nos cenários de escopo negativo e positivo.
+
 1.4.33
 OK - definido um extensor automático de condição de espera que adiciona um ' and @version=<X>' nas condições de espera de um componente em tela, isso permite que o desenvolvedor ao realizar uma interação Ajax que mude a renderização do componente na tela possa perguntar qual versão é essa apresentada e assim conseguir esperar pela versão correta.
 
