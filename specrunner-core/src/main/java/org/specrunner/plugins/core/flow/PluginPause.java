@@ -242,7 +242,6 @@ public class PluginPause extends AbstractPlugin {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         dialog.setSize(screenSize.width / RATIO, screenSize.height / RATIO);
         dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
-        dialog.setModal(true);
         dialog.setLayout(new BorderLayout());
         dialog.addWindowListener(new WindowAdapter() {
             @Override

@@ -115,7 +115,6 @@ public class ErrorFrame extends JFrame {
         dialog.setLocation(screenSize.width / 2, (screenSize.height / 2) - HEIGHT_TASK_BAR);
         dialog.setLayout(new BorderLayout(GAPS, GAPS));
         dialog.add(new JScrollPane(text), BorderLayout.CENTER);
-        dialog.setModal(true);
     }
 
     /**
