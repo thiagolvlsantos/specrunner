@@ -83,7 +83,7 @@ public class ErrorFrame extends JFrame {
     protected void createText() {
         text = new JTextArea();
         text.setEditable(false);
-        text.setFont(new Font("Courrier New", Font.PLAIN, getFontSize()));
+        text.setFont(new Font("Monospaced", Font.PLAIN, getFontSize()));
     }
 
     /**
