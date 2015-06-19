@@ -15,13 +15,11 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.database;
-
-import org.specrunner.sql.meta.EMode;
+package org.specrunner.expressions;
 
 /**
  * Identifies fields that should be handled as null or empty depending on value
- * and database input or output mode.
+ * and input, output or compare mode.
  * 
  * @author Thiago Santos.
  * 

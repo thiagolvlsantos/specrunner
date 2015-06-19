@@ -121,7 +121,7 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner implements IRunnerS
     @Override
     public Description describeChild(FrameworkMethod method) {
         if (method != fakeMethod) {
-            return super.describeChild(method);
+            return Description.createTestDescription(getTestClass().getJavaClass(), testName(method), method.getAnnotations());
         }
         if (method instanceof ScenarioFrameworkMethod) {
             return Description.createTestDescription(getTestClass().getJavaClass(), ((ScenarioFrameworkMethod) method).getName());

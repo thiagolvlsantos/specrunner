@@ -25,8 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.objects.IObjectManager;
+import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -75,6 +77,8 @@ public final class UtilConverter {
     /**
      * Prepare arguments.
      * 
+     * @param context
+     *            The context.
      * @param method
      *            The method.
      * @param arguments
@@ -82,14 +86,14 @@ public final class UtilConverter {
      * @throws PluginException
      *             On preparation errors.
      */
-    public static void prepareMethodArguments(Method method, List<Object> arguments) throws PluginException {
+    public static void prepareMethodArguments(IContext context, Method method, List<Object> arguments) throws PluginException {
         Class<?>[] types = method.getParameterTypes();
         if (types.length != arguments.size()) {
             throw new PluginException(method + " has different number of arguments. Received arguments:" + arguments);
         }
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (int i = 0; i < types.length; i++) {
-            arguments.add(i, prepareArgument(method.toString(), parameterAnnotations[i], types[i], arguments.get(i)));
+            arguments.add(i, prepareArgument(context, method.toString(), parameterAnnotations[i], types[i], arguments.get(i)));
             arguments.remove(i + 1);
         }
     }
@@ -97,6 +101,8 @@ public final class UtilConverter {
     /**
      * Prepare only one argument.
      * 
+     * @param context
+     *            The context.
      * @param message
      *            The message.
      * @param annotations
@@ -109,12 +115,18 @@ public final class UtilConverter {
      * @throws PluginException
      *             On preparation errors.
      */
-    public static Object prepareArgument(String message, Annotation[] annotations, Class<?> type, Object arg) throws PluginException {
-        Class<?> tmpType = PRIMITIVES.get(type);
-        if (tmpType != null) {
-            type = tmpType;
+    public static Object prepareArgument(IContext context, String message, Annotation[] annotations, Class<?> type, Object arg) throws PluginException {
+        if (arg == null) {
+            return null;
         }
-        if (!type.isInstance(arg)) {
+        type = getWrapper(type);
+        if (arg instanceof String) {
+            Object tmp = UtilEvaluator.evaluate((String) arg, context, true);
+            if (tmp == null || type.isInstance(tmp)) {
+                return tmp;
+            }
+        }
+        if (!type.isInstance(arg) || arg instanceof String) {
             String simpleName = type.getSimpleName().toLowerCase();
             IConverter converter = null;
             Object[] converterArguments = null;

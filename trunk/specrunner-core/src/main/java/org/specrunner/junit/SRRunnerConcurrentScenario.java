@@ -120,7 +120,7 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner implements IRun
     @Override
     public Description describeChild(FrameworkMethod method) {
         if (method != fakeMethod) {
-            return super.describeChild(method);
+            return Description.createTestDescription(getTestClass().getJavaClass(), testName(method), method.getAnnotations());
         }
         if (method instanceof ScenarioFrameworkMethod) {
             return Description.createTestDescription(getTestClass().getJavaClass(), ((ScenarioFrameworkMethod) method).getName());

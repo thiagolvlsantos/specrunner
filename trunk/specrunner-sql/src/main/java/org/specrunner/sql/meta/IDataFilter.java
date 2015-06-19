@@ -18,6 +18,7 @@
 package org.specrunner.sql.meta;
 
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
 import org.specrunner.plugins.PluginException;
 
 /**

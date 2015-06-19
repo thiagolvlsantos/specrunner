@@ -25,6 +25,7 @@ import javax.sql.DataSource;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
@@ -34,7 +35,6 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.IDatabase;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.util.StringUtil;
 import org.specrunner.util.UtilLog;

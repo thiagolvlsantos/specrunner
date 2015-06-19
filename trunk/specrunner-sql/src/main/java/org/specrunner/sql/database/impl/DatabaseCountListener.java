@@ -24,12 +24,12 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.specrunner.expressions.EMode;
 import org.specrunner.sql.database.CommandType;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.DatabaseRegisterEvent;
 import org.specrunner.sql.database.DatabaseTableEvent;
 import org.specrunner.sql.database.IDatabaseListener;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.Table;
 
 /**

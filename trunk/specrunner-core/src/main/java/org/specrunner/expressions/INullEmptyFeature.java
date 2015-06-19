@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.database;
+package org.specrunner.expressions;
 
 /**
  * Abstraction database null/empty handler.
@@ -23,12 +23,12 @@ package org.specrunner.sql.database;
  * @author Thiago Santos.
  * 
  */
-public interface IDatabaseNullEmpty {
+public interface INullEmptyFeature {
 
     /**
      * Feature for null/empty handler.
      */
-    String FEATURE_NULL_EMPTY_HANDLER = IDatabaseNullEmpty.class.getName() + ".nullEmptyHandler";
+    String FEATURE_NULL_EMPTY_HANDLER = INullEmptyFeature.class.getName() + ".nullEmptyHandler";
 
     /**
      * Set the null/empty handler implementation.

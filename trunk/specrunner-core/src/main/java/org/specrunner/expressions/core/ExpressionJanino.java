@@ -26,10 +26,13 @@ import java.util.List;
 import org.codehaus.commons.compiler.IExpressionEvaluator;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.expressions.IExpressionItem;
+import org.specrunner.expressions.INullEmptyFeature;
+import org.specrunner.expressions.INullEmptyHandler;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
@@ -76,6 +79,22 @@ public class ExpressionJanino extends AbstractExpression {
     @Override
     public Object evaluate(IContext context, boolean silent) throws ExpressionException {
         String expression = String.valueOf(source);
+        INullEmptyHandler nullEmpty = (INullEmptyHandler) SRServices.getFeatureManager().get(INullEmptyFeature.FEATURE_NULL_EMPTY_HANDLER);
+        if (nullEmpty == null) {
+            nullEmpty = NullEmptyHandlerDefault.get();
+        }
+        if (nullEmpty.isEmpty(EMode.OUTPUT, expression)) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("EMPTY VALUE(" + expression + ")");
+            }
+            return "";
+        }
+        if (nullEmpty.isNull(EMode.OUTPUT, expression)) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("NULL VALUE(" + expression + ")");
+            }
+            return null;
+        }
         List<String> args = new LinkedList<String>();
         List<Object> values = new LinkedList<Object>();
         List<Class<?>> types = new LinkedList<Class<?>>();
@@ -119,7 +138,7 @@ public class ExpressionJanino extends AbstractExpression {
      *             On expression errors.
      */
     protected Object arguments(IContext context, String expression, List<String> args, List<Class<?>> types, List<Object> values, boolean silent) throws ExpressionException {
-        if (expression.equals("")) {
+        if ("".equals(expression)) {
             return "";
         } else if (expression.equals("true")) {
             return Boolean.TRUE;

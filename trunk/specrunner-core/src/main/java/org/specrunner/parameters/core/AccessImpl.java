@@ -142,7 +142,7 @@ public class AccessImpl implements IAccess {
             annotations = getMethodAnnotations(method);
         }
         if (type != null && !type.isInstance(object)) {
-            object = UtilConverter.prepareArgument(toString(), annotations, type, object);
+            object = UtilConverter.prepareArgument(null, toString(), annotations, type, object);
         }
         return object;
     }
