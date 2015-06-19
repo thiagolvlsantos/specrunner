@@ -251,7 +251,7 @@ public class PluginPause extends AbstractPlugin {
         });
 
         JTextArea text = new JTextArea(" Pause requested." + (!message.isEmpty() ? "\n\n " + message : "") + "\n\n Press 'Ok' to continue.");
-        text.setFont(new Font("Courrier New", Font.PLAIN, FONT_SIZE));
+        text.setFont(new Font("Monospaced", Font.PLAIN, FONT_SIZE));
         text.setLineWrap(true);
         text.setEditable(false);
         dialog.add(new JScrollPane(text), BorderLayout.CENTER);
