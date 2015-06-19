@@ -22,9 +22,10 @@ import java.util.List;
 
 import org.specrunner.context.IContext;
 import org.specrunner.context.IDestructable;
+import org.specrunner.expressions.EMode;
+import org.specrunner.expressions.INullEmptyFeature;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.util.reset.IResetable;
 import org.specrunner.util.xom.node.TableAdapter;
@@ -35,7 +36,7 @@ import org.specrunner.util.xom.node.TableAdapter;
  * @author Thiago Santos.
  * 
  */
-public interface IDatabase extends IDatabaseNullEmpty, IDatabaseReader, IResetable, IDestructable {
+public interface IDatabase extends INullEmptyFeature, IDatabaseReader, IResetable, IDestructable {
 
     /**
      * Feature for sequence provider instance.

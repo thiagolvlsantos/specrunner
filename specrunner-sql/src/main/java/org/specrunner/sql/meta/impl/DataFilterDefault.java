@@ -18,9 +18,9 @@
 package org.specrunner.sql.meta.impl;
 
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
 import org.specrunner.parameters.core.ParameterHolder;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;

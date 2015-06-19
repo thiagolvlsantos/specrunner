@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
+import org.specrunner.expressions.EMode;
 import org.specrunner.junit.SpecRunnerJUnit;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.IPluginGroup;
@@ -40,7 +41,6 @@ import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.PluginScripts;
 import org.specrunner.sql.database.impl.DatabaseDefault;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.impl.DataFilterDefault;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 

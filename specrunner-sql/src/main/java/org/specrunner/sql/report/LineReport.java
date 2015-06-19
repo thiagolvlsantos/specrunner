@@ -28,9 +28,9 @@ import nu.xom.Node;
 
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverterReverse;
-import org.specrunner.sql.database.INullEmptyHandler;
+import org.specrunner.expressions.EMode;
+import org.specrunner.expressions.INullEmptyHandler;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;

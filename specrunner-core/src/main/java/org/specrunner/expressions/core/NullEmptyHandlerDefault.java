@@ -15,10 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.database.impl;
+package org.specrunner.expressions.core;
 
-import org.specrunner.sql.database.INullEmptyHandler;
-import org.specrunner.sql.meta.EMode;
+import org.specrunner.expressions.EMode;
+import org.specrunner.expressions.INullEmptyHandler;
 
 /**
  * Default implementation. On output verification empty TDs are considered null.
@@ -29,6 +29,25 @@ import org.specrunner.sql.meta.EMode;
  * 
  */
 public class NullEmptyHandlerDefault implements INullEmptyHandler {
+
+    /**
+     * Thread safe instance.
+     */
+    private static ThreadLocal<INullEmptyHandler> instance = new ThreadLocal<INullEmptyHandler>() {
+        @Override
+        protected INullEmptyHandler initialValue() {
+            return new NullEmptyHandlerDefault();
+        };
+    };
+
+    /**
+     * Singleton method.
+     * 
+     * @return A null/empty handler.
+     */
+    public static INullEmptyHandler get() {
+        return instance.get();
+    }
 
     /**
      * Default empty String markup.

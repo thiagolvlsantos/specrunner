@@ -3,6 +3,9 @@ package example.sql.nullhandler;
 import org.junit.runner.RunWith;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
+import org.specrunner.expressions.EMode;
+import org.specrunner.expressions.INullEmptyFeature;
+import org.specrunner.expressions.core.NullEmptyHandlerDefault;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunner;
@@ -11,10 +14,7 @@ import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginSchema;
 import org.specrunner.sql.PluginSchemaLoader;
 import org.specrunner.sql.database.IDatabase;
-import org.specrunner.sql.database.IDatabaseNullEmpty;
 import org.specrunner.sql.database.impl.DatabaseDefault;
-import org.specrunner.sql.database.impl.NullEmptyHandlerDefault;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.impl.SchemaLoaderXOM;
 
 import example.sql.DataSourceProviderImpl;
@@ -34,7 +34,7 @@ public class TestNull {
         cfg.add(PluginDatabase.FEATURE_PROVIDER_INSTANCE, new IDatabase[] { new DatabaseDefault() });
         cfg.add(PluginDatabase.FEATURE_REUSE, true);
         cfg.add(ComparatorDate.FEATURE_TOLERANCE, 5000L);
-        cfg.add(IDatabaseNullEmpty.FEATURE_NULL_EMPTY_HANDLER, new NullEmptyHandlerDefault() {
+        cfg.add(INullEmptyFeature.FEATURE_NULL_EMPTY_HANDLER, new NullEmptyHandlerDefault() {
             @Override
             public boolean isNull(EMode mode, String value) {
                 boolean tmp = super.isNull(mode, value);

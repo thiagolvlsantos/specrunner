@@ -15,10 +15,10 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.sql.meta;
+package org.specrunner.expressions;
 
 /**
- * Database mode.
+ * Expressions mode.
  * 
  * @author Thiago Santos.
  * 

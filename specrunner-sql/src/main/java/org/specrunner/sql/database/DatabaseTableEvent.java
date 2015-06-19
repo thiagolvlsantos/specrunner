@@ -20,8 +20,8 @@ package org.specrunner.sql.database;
 import java.sql.Connection;
 
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
 import org.specrunner.result.IResultSet;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.Table;
 import org.specrunner.util.xom.node.TableAdapter;
 

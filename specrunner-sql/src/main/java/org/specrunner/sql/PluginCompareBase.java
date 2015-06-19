@@ -27,6 +27,10 @@ import javax.sql.DataSource;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
+import org.specrunner.expressions.INullEmptyFeature;
+import org.specrunner.expressions.INullEmptyHandler;
+import org.specrunner.expressions.core.NullEmptyHandlerDefault;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
@@ -38,13 +42,9 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
 import org.specrunner.sql.database.IColumnReader;
-import org.specrunner.sql.database.IDatabaseNullEmpty;
 import org.specrunner.sql.database.IDatabaseReader;
-import org.specrunner.sql.database.INullEmptyHandler;
 import org.specrunner.sql.database.impl.ColumnReaderDefault;
-import org.specrunner.sql.database.impl.NullEmptyHandlerDefault;
 import org.specrunner.sql.meta.Column;
-import org.specrunner.sql.meta.EMode;
 import org.specrunner.sql.meta.IDataFilter;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
@@ -66,7 +66,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos
  * 
  */
-public class PluginCompareBase extends AbstractPluginValue implements IDatabaseNullEmpty, IDatabaseReader {
+public class PluginCompareBase extends AbstractPluginValue implements INullEmptyFeature, IDatabaseReader {
 
     /**
      * Feature for schema name.
@@ -262,7 +262,7 @@ public class PluginCompareBase extends AbstractPluginValue implements IDatabaseN
         fm.set(FEATURE_SCHEMA, this);
         fm.set(FEATURE_SYSTEM, this);
         fm.set(FEATURE_REFERENCE, this);
-        fm.set(IDatabaseNullEmpty.FEATURE_NULL_EMPTY_HANDLER, this);
+        fm.set(INullEmptyFeature.FEATURE_NULL_EMPTY_HANDLER, this);
         fm.set(IDatabaseReader.FEATURE_COLUMN_READER, this);
         fm.set(FEATURE_FILTER, this);
         fm.set(FEATURE_VIRTUAL, this);

@@ -188,7 +188,7 @@ public class PluginSentence extends AbstractPluginScoped {
             Class<?>[] expectedTypes = m.getParameterTypes();
             for (int i = 0; i < expectedTypes.length; i++) {
                 Object arg = arguments.get(i);
-                if (!UtilConverter.getWrapper(expectedTypes[i]).isInstance(arg)) {
+                if (arg != null && !UtilConverter.getWrapper(expectedTypes[i]).isInstance(arg)) {
                     sb.append("Method '" + m + "' expected argument[" + i + "] of type '" + expectedTypes[i].getName() + "' received '" + arg + "' of type '" + (arg == null ? "null" : arg.getClass().getName()) + "'.\n");
                 }
             }
@@ -520,7 +520,7 @@ public class PluginSentence extends AbstractPluginScoped {
      *             On preparation errors.
      */
     protected void prepareArgumentsBefore(IContext context, Method method, List<Object> arguments) throws PluginException {
-        UtilConverter.prepareMethodArguments(method, arguments);
+        UtilConverter.prepareMethodArguments(context, method, arguments);
     }
 
     /**

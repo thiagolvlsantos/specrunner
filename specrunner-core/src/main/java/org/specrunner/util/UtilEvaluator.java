@@ -82,6 +82,9 @@ public final class UtilEvaluator {
         if (text == null) {
             return null;
         }
+        if ("".equals(text)) {
+            return "";
+        }
         IExpression expression = null;
         Object result = text;
         int pos1 = text.indexOf(START_CODE);
