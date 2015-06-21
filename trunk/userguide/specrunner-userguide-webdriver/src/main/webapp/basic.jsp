@@ -19,5 +19,6 @@
     Old school <%= version++ %>. <a href="basic.jsp" id="link">Refresh</a>
     </span>
     
+    <span id="target" class="formated">A attribute check of 'class' with formated.</span>
 </body>
 </html>
