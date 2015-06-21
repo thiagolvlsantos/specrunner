@@ -159,6 +159,5 @@ public class ErrorFrame extends JFrame {
         text.setText(String.valueOf(content));
         setVisible(true);
         dialog.setVisible(true);
-        setVisible(false);
     }
 }
