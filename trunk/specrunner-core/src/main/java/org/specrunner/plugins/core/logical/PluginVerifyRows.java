@@ -52,8 +52,11 @@ public class PluginVerifyRows extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Object value = getValue();
+        if (value == null) {
+            throw new PluginException("Value is null or not found.");
+        }
         if (!(value instanceof Iterable)) {
-            throw new PluginException("Value is null or not found, or value has an invalid type (should be an Iterable).");
+            throw new PluginException("Value has an invalid type (should be an Iterable). Current type is '" + (value != null ? value.getClass().getName() : "null") + "'.");
         }
         Iterator<?> ite = ((Iterable<?>) value).iterator();
 
