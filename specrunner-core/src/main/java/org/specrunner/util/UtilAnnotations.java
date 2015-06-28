@@ -19,6 +19,7 @@ package org.specrunner.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,10 +66,13 @@ public final class UtilAnnotations {
     public static <T extends Annotation> List<Method> getAnnotatedMethods(Class<?> type, Class<T> annotation) {
         List<Method> candidates = new LinkedList<Method>();
         if (type != null) {
-            Method[] ms = type.getMethods();
+            Method[] ms = type.getDeclaredMethods();
             for (Method m : ms) {
                 T c = m.getAnnotation(annotation);
                 if (c != null) {
+                    if (!Modifier.isPublic(m.getModifiers())) {
+                        throw new IllegalArgumentException("Method is not public. " + m);
+                    }
                     candidates.add(m);
                 }
             }
