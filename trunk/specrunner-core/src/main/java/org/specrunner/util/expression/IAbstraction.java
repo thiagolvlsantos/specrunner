@@ -24,6 +24,8 @@ import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
+import org.specrunner.formatters.FormatterException;
+import org.specrunner.formatters.IFormatter;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.IReader;
 import org.specrunner.readers.ReaderException;
@@ -138,6 +140,42 @@ public interface IAbstraction {
      *             O comparator lookup errors.
      */
     IComparator getComparator(IComparator comparatorDefault) throws ComparatorException;
+
+    /**
+     * Get formatter attributes.
+     * 
+     * @return Formatter attributes.
+     */
+    List<String> getFormatterArguments();
+
+    /**
+     * Get formatter arguments.
+     * 
+     * @param arguments
+     *            Default list of arguments.
+     * @return A list of arguments.
+     */
+    List<String> getFormatterArguments(List<String> arguments);
+
+    /**
+     * Get the abstraction formatter.
+     * 
+     * @return A formatter if it exists, null, otherwise.
+     * @throws FormatterException
+     *             On formatter lookup error.
+     */
+    IFormatter getFormatter() throws FormatterException;
+
+    /**
+     * Get the abstraction formatter.
+     * 
+     * @param formatterDefault
+     *            Default formatter.
+     * @return A formatter if it exists, default otherwise.
+     * @throws FormatterException
+     *             On formatter lookup error.
+     */
+    IFormatter getFormatter(IFormatter formatterDefault) throws FormatterException;
 
     /**
      * Gets the corresponding value object.

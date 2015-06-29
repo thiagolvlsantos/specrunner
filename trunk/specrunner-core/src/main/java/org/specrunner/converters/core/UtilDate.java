@@ -132,7 +132,7 @@ public class UtilDate {
             if (field == null) {
                 throw new IllegalArgumentException("Field '" + field + "' not found in " + fieldToMethod.keySet() + ".");
             }
-            calendar.add(field, Integer.valueOf(number));
+            calendar.add(field, "+".equals(signal) ? Integer.valueOf(number) : -Integer.valueOf(number));
         }
         if (found) {
             try {

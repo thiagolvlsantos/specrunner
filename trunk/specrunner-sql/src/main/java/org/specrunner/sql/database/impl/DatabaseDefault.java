@@ -50,6 +50,7 @@ import org.specrunner.expressions.EMode;
 import org.specrunner.expressions.INullEmptyHandler;
 import org.specrunner.expressions.core.NullEmptyHandlerDefault;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.formatters.FormatterException;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.ReaderException;
@@ -649,6 +650,8 @@ public class DatabaseDefault implements IDatabase {
                     throw new DatabaseException(e);
                 } catch (ConverterException e) {
                     throw new DatabaseException(e);
+                } catch (FormatterException e) {
+                    throw new DatabaseException(e);
                 } catch (ComparatorException e) {
                     throw new DatabaseException(e);
                 }
@@ -795,6 +798,8 @@ public class DatabaseDefault implements IDatabase {
                 } catch (ReaderException e) {
                     throw new DatabaseException(e);
                 } catch (ConverterException e) {
+                    throw new DatabaseException(e);
+                } catch (FormatterException e) {
                     throw new DatabaseException(e);
                 } catch (ComparatorException e) {
                     throw new DatabaseException(e);

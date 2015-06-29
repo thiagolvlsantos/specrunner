@@ -23,13 +23,16 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.TargetLocator;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.webdriver.AbstractPluginAlert;
 
 /**
@@ -50,7 +53,8 @@ public class PluginAlertType extends AbstractPluginAlert {
             result.addResult(Warning.INSTANCE, context.peek(), new PluginException("HtmlUnit does not implement alert interactions on version 2.15.0, if a newer version is available try it."));
         } else {
             Node node = context.getNode();
-            Object tmp = getValue(getValue() != null ? getValue() : node.getValue(), true, context);
+            INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(node);
+            Object tmp = nh.getObject(context, true);
             String str = String.valueOf(tmp);
             alert.sendKeys(str);
             result.addResult(Success.INSTANCE, context.newBlock(node, this));

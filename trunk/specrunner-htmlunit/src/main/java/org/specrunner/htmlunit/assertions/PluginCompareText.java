@@ -19,12 +19,15 @@ package org.specrunner.htmlunit.assertions;
 
 import nu.xom.Node;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -44,7 +47,8 @@ public class PluginCompareText extends AbstractPluginFindSingle {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object tmp = nh.getObject(context, true);
         String expected = String.valueOf(tmp);
         String received = element.asText();
         Node node = context.getNode();

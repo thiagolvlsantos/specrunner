@@ -19,11 +19,14 @@ package org.specrunner.htmlunit.actions;
 
 import java.io.IOException;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -111,7 +114,8 @@ public class PluginType extends AbstractPluginKeys {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object tmp = nh.getObject(context, true);
         String value = String.valueOf(tmp);
         try {
             if (element instanceof SelectableTextInput) {

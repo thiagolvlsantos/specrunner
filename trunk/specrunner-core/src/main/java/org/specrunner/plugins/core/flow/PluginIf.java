@@ -21,6 +21,7 @@ import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -28,6 +29,8 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
  * Create a condition execution.
@@ -92,7 +95,8 @@ public class PluginIf extends AbstractPluginValue {
     @Override
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Element condition = (Element) context.getNode();
-        Object valueCond = getValue(getValue() != null ? getValue() : condition.getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object valueCond = nh.getObject(context, true);
         if (!(valueCond instanceof Boolean)) {
             String strCon = String.valueOf(valueCond);
             if ("true".equalsIgnoreCase(strCon) || "false".equalsIgnoreCase(strCon)) {

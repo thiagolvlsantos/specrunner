@@ -18,6 +18,7 @@
 package org.specrunner.webdriver.actions;
 
 import org.openqa.selenium.WebDriver;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
@@ -26,6 +27,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.webdriver.AbstractPluginBrowserAware;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
 
@@ -70,9 +73,10 @@ public class PluginHeader extends AbstractPluginBrowserAware {
     protected void doEnd(IContext context, IResultSet result, WebDriver client) throws PluginException {
         UtilLog.LOG.info("    On: " + getClass().getSimpleName() + " with " + client);
         if (client instanceof HtmlUnitDriverLocal) {
-            Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+            INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+            Object tmp = nh.getObject(context, true);
             if (header == null || tmp == null) {
-                throw new PluginException("To set request header both, header and value, must be provided.");
+                throw new PluginException("To set request header, both: header and value must be provided.");
             }
             String value = String.valueOf(tmp);
             ((HtmlUnitDriverLocal) client).setHeader(getHeader(), value);

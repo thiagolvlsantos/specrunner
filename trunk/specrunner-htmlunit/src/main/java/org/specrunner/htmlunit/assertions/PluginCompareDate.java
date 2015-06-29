@@ -113,11 +113,11 @@ public class PluginCompareDate extends PluginCompareText {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
+        String expected = getExpected(context);
         if (format == null) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
-        String expected = getExpected(context);
         String received = element.asText();
         PluginCompareUtils.compareDate(this, expected, received, context.newBlock(context.getNode(), this), context, result, page);
     }
@@ -133,6 +133,9 @@ public class PluginCompareDate extends PluginCompareText {
      */
     protected String getExpected(IContext context) throws PluginException {
         INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        if (getFormat() == null) {
+            setFormat(nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0));
+        }
         Object tmp = nh.getObject(context, true);
         String expected = null;
         if (tmp instanceof Date || tmp instanceof ReadableInstant || tmp instanceof ReadablePartial) {

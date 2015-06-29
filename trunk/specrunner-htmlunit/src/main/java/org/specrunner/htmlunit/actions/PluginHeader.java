@@ -17,14 +17,17 @@
  */
 package org.specrunner.htmlunit.actions;
 
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginBrowserAware;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 
@@ -68,7 +71,8 @@ public class PluginHeader extends AbstractPluginBrowserAware {
     @Override
     protected void doEnd(IContext context, IResultSet result, WebClient client) throws PluginException {
         UtilLog.LOG.info("    On: " + getClass().getSimpleName() + " with " + client);
-        Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object tmp = nh.getObject(context, true);
         if (header == null || tmp == null) {
             throw new PluginException("To set request header both, header and value, must be provided.");
         }

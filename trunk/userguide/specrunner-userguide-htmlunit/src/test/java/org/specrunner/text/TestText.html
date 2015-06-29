@@ -11,8 +11,13 @@
 
     <ul>
     	<li>Check if text field is <span class="compareText" by="name:txtName" value='""'>empty</span>;</li>
+
     	<li>Type <span class="type" by="name:txtName" value='dt.toString(pattern)'>current date in format 'HH:mm:ss'</span>;</li>
     	<li>Check if the text field value is the <span class="compareDate" by="name:txtName" format="HH:mm:ss" value='dt.toString("HH:mm:ss")'>current date</span>;</li>
+
+        <li>Type <span class="type" by="name:txtName" formatter="dt" for0="HH:mm:ss" converter='dt'>current date + 1 hour</span> in format 'HH:mm';</li>
+        <li>Check if the text field value is the <span class="compareDate view" by="name:txtName" formatter="dt" for0="HH:mm:ss" converter="dt">current date + 1 hour</span>;</li>
+
     	<li>Check if text area is '<span class="compareText" by="name:areaName">type here</span>';</li>
     	<li>Type <span class="type" by="name:areaName">new value</span> in text area;</li>
     	<li>Check if the text area value is <span class="compareText" by="name:areaName">new value</span>;</li>

@@ -27,6 +27,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
@@ -74,7 +76,8 @@ public class PluginCheckAtt extends AbstractPluginFindSingle {
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         Object attName = getValue(attribute, true, context);
         String attValue = element.getAttribute(String.valueOf(attName));
-        Object value = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object value = nh.getObject(context, true);
         if (test(attValue, value)) {
             result.addResult(Success.INSTANCE, context.peek());
         } else {

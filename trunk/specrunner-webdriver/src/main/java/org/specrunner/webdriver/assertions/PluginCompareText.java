@@ -21,11 +21,14 @@ import nu.xom.Node;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
@@ -42,7 +45,8 @@ public class PluginCompareText extends AbstractPluginFindSingle {
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object tmp = nh.getObject(context, true);
         String expected = String.valueOf(tmp);
         String received = getText(element);
         Node node = context.getNode();

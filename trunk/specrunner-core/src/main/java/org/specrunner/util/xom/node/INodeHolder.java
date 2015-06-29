@@ -40,7 +40,7 @@ public interface INodeHolder extends IAbstraction {
     /**
      * Attribute for arguments prefix.
      */
-    String ATTRIBUTE_ARGUMENT_PREFIX = "arg";
+    String ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX = "arg";
     /**
      * Attribute for value evaluation.
      */
@@ -53,6 +53,14 @@ public interface INodeHolder extends IAbstraction {
      * Attribute for converter.
      */
     String ATTRIBUTE_CONVERTER = "converter";
+    /**
+     * Attribute for formatter.
+     */
+    String ATTRIBUTE_FORMATTER = "formatter";
+    /**
+     * Attribute for arguments prefix.
+     */
+    String ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX = "for";
     /**
      * Attribute for comparator.
      */

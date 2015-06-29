@@ -90,7 +90,7 @@ public class UtilJodatime {
             }
             try {
                 Method met = type.getMethod(field, int.class);
-                tmp = (T) met.invoke(tmp, Integer.valueOf(number));
+                tmp = (T) met.invoke(tmp, "+".equals(signal) ? Integer.valueOf(number) : -Integer.valueOf(number));
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }

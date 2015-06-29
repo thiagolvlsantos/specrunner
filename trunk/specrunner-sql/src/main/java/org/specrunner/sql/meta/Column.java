@@ -25,6 +25,7 @@ import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.converters.core.ConverterEnumValue;
+import org.specrunner.formatters.IFormatter;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.IReader;
 import org.specrunner.util.UtilLog;
@@ -91,7 +92,7 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     /**
      * List of arguments.
      */
-    private List<String> arguments = ARGUMENTS_DEFAULT;
+    private List<String> arguments = new LinkedList<String>(ARGUMENTS_DEFAULT);
     /**
      * Column default comparator.
      */
@@ -100,6 +101,22 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
      * Column comparator.
      */
     private IComparator comparator = COMPARATOR_DEFAULT;
+    /**
+     * Column default formatter.
+     */
+    private static final IFormatter FORMATTER_DEFAULT = null;
+    /**
+     * Column formatter.
+     */
+    private IFormatter formatter = FORMATTER_DEFAULT;
+    /**
+     * Default list of arguments.
+     */
+    private static final List<String> FORMATTER_ARGUMENTS_DEFAULT = new LinkedList<String>();
+    /**
+     * List of arguments.
+     */
+    private List<String> formatterArguments = new LinkedList<String>(FORMATTER_ARGUMENTS_DEFAULT);
     /**
      * Column default expression.
      */
@@ -386,6 +403,50 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     }
 
     /**
+     * Get formatter.
+     * 
+     * @return The column formatter.
+     */
+    public IFormatter getFormatter() {
+        return formatter;
+    }
+
+    /**
+     * The column formatter.
+     * 
+     * @param formatter
+     *            A formatter.
+     * @return The column itself.
+     */
+    public Column setFormatter(IFormatter formatter) {
+        if (formatter != null) {
+            this.formatter = formatter;
+        }
+        return this;
+    }
+
+    /**
+     * Get formatter arguments.
+     * 
+     * @return The arguments.
+     */
+    public List<String> getFormatterArguments() {
+        return formatterArguments;
+    }
+
+    /**
+     * Set column formatter.
+     * 
+     * @param formatterArguments
+     *            Formatter arguments.
+     * @return Formatter.
+     */
+    public Column setFormatterArguments(List<String> formatterArguments) {
+        this.formatterArguments = formatterArguments;
+        return this;
+    }
+
+    /**
      * Get the column default value expression.
      * 
      * @return The default value.
@@ -499,8 +560,8 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
     public Column copy() {
         return new Column().setParent(parent).setAlias(alias).setName(name).setTable(table).//
                 setKey(key).setSequence(sequence).setDate(date).setReader(reader).setConverter(converter).//
-                setArguments(arguments).setComparator(comparator).setDefaultExpression(defaultExpression).//
-                setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual).//
+                setArguments(arguments).setComparator(comparator).setFormatter(formatter).setFormatterArguments(formatterArguments).//
+                setDefaultExpression(defaultExpression).setDefaultValue(defaultValue).setReference(reference).setVirtual(virtual).//
                 setPointer(pointer);
     }
 
@@ -519,6 +580,8 @@ public class Column implements IReplicable<Column>, IMergeable<Column>, IResetab
         setArguments(other.arguments);
         setReader(other.reader);
         setComparator(other.comparator);
+        setFormatter(other.formatter);
+        setFormatterArguments(other.formatterArguments);
         setDefaultExpression(other.defaultExpression);
         setDefaultValue(other.defaultValue);
         setReference(other.reference);
