@@ -17,6 +17,11 @@
  */
 package org.specrunner.htmlunit.assertions;
 
+import java.util.Date;
+
+import org.joda.time.DateTime;
+import org.joda.time.ReadableInstant;
+import org.joda.time.ReadablePartial;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -24,6 +29,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -111,10 +117,31 @@ public class PluginCompareDate extends PluginCompareText {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
-        Object tmp = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
-        String expected = String.valueOf(tmp);
+        String expected = getExpected(context);
         String received = element.asText();
         PluginCompareUtils.compareDate(this, expected, received, context.newBlock(context.getNode(), this), context, result, page);
+    }
+
+    /**
+     * Get expected value for comparison.
+     * 
+     * @param context
+     *            A context.
+     * @return The string for expected value.
+     * @throws PluginException
+     *             On plugin error.
+     */
+    protected String getExpected(IContext context) throws PluginException {
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object tmp = nh.getObject(context, true);
+        String expected = null;
+        if (tmp instanceof Date || tmp instanceof ReadableInstant || tmp instanceof ReadablePartial) {
+            DateTime time = new DateTime(tmp);
+            expected = time.toString(getFormat());
+        } else {
+            expected = String.valueOf(tmp);
+        }
+        return expected;
     }
 
     /**

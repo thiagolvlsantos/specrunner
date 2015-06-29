@@ -12,6 +12,7 @@
 
     <p class="example">
         Current date is: <span id="idDate"><%=new org.joda.time.DateTime().toString("HH:mm:ss")%></span>
+        Current date plus 1 hour is: <span id="idDateFormat"><%=new org.joda.time.DateTime().plusHours(1).toString("HH:mm:ss")%></span>
     </p>
     
     <%! int version = 0; %>

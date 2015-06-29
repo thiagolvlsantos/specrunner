@@ -31,7 +31,7 @@
     </repositories-->
     
     <properties>
-        <hibernate.version>4.3.9.Final</hibernate.version>
+        <hibernate.version>4.3.10.Final</hibernate.version>
     </properties>
 
     <dependencies>
