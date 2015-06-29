@@ -28,6 +28,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
+import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
 
 /**
@@ -54,7 +56,8 @@ public class PluginContains extends AbstractPluginFindSingle {
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        Object obj = getValue(getValue() != null ? getValue() : context.getNode().getValue(), true, context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        Object obj = nh.getObject(context, true);
         String value = getNormalized(String.valueOf(obj));
         String content = getNormalized(element.getText());
         if (test(content, value)) {

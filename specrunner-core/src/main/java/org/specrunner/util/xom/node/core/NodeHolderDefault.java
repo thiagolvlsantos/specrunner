@@ -35,6 +35,9 @@ import org.specrunner.context.IContext;
 import org.specrunner.converters.IConverter;
 import org.specrunner.converters.IConverterManager;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.formatters.FormatterException;
+import org.specrunner.formatters.IFormatter;
+import org.specrunner.formatters.IFormatterManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.IReader;
 import org.specrunner.readers.IReaderManager;
@@ -304,7 +307,7 @@ public class NodeHolderDefault implements INodeHolder {
         if (node instanceof Element) {
             Element element = (Element) node;
             for (int i = 0; i < element.getAttributeCount(); i++) {
-                String arg = getAttribute(ATTRIBUTE_ARGUMENT_PREFIX + i);
+                String arg = getAttribute(ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i);
                 if (arg == null) {
                     break;
                 }
@@ -347,12 +350,81 @@ public class NodeHolderDefault implements INodeHolder {
     }
 
     @Override
+    public List<String> getFormatterArguments() {
+        return getFormatterArguments(new LinkedList<String>());
+    }
+
+    @Override
+    public List<String> getFormatterArguments(List<String> arguments) {
+        List<String> params = new LinkedList<String>();
+        if (node instanceof Element) {
+            Element element = (Element) node;
+            for (int i = 0; i < element.getAttributeCount(); i++) {
+                String arg = getAttribute(ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i);
+                if (arg == null) {
+                    break;
+                }
+                params.add(arg);
+            }
+        }
+        return params.isEmpty() ? arguments : params;
+    }
+
+    @Override
+    public IFormatter getFormatter() throws FormatterException {
+        return getFormatter(null);
+    }
+
+    @Override
+    public IFormatter getFormatter(IFormatter formatterDefault) throws FormatterException {
+        IFormatter formatter = null;
+        if (hasAttribute(ATTRIBUTE_FORMATTER)) {
+            String str = getAttribute(ATTRIBUTE_FORMATTER);
+            IFormatterManager cm = SRServices.getFormatterManager();
+            formatter = cm.get(str);
+            if (formatter == null) {
+                try {
+                    formatter = (IFormatter) Class.forName(str).newInstance();
+                    cm.bind(str, formatter);
+                } catch (Exception e) {
+                    if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace(e.getMessage(), e);
+                    }
+                    if (formatterDefault == null) {
+                        throw new FormatterException(e);
+                    }
+                }
+            }
+        }
+        if (formatter == null) {
+            formatter = formatterDefault;
+        }
+        return formatter;
+    }
+
+    @Override
     public Object getObject(IContext context, boolean silent) throws PluginException {
         return getObject(context, silent, getConverter(), getArguments());
     }
 
     @Override
     public Object getObject(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException {
+        Object local = getLocal(context, silent, converter, arguments);
+        try {
+            IFormatter formatter = getFormatter();
+            if (formatter != null) {
+                return formatter.format(local, getFormatterArguments().toArray());
+            }
+        } catch (FormatterException e) {
+            throw new PluginException(e);
+        }
+        return local;
+    }
+
+    /**
+     * @see getObject.
+     */
+    protected Object getLocal(IContext context, boolean silent, IConverter converter, List<String> arguments) throws PluginException {
         boolean extend = context.getNode() != node;
         if (extend) {
             context.push(context.newBlock(node, null));

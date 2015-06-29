@@ -25,6 +25,7 @@ import org.specrunner.converters.IConverterManager;
 import org.specrunner.core.SpecRunnerPipelineUtils;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
+import org.specrunner.formatters.IFormatterManager;
 import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
@@ -251,6 +252,15 @@ public final class SRServices {
      */
     public static IConverterManager getConverterManager() {
         return get(IConverterManager.class);
+    }
+
+    /**
+     * Shortcut method to formatter manager.
+     * 
+     * @return The formatter manager.
+     */
+    public static IFormatterManager getFormatterManager() {
+        return get(IFormatterManager.class);
     }
 
     /**

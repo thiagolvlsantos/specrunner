@@ -20,6 +20,7 @@ package org.specrunner.sql.meta.impl;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
+import org.specrunner.formatters.FormatterException;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.ReaderException;
 import org.specrunner.sql.meta.Column;
@@ -59,8 +60,9 @@ public final class UtilSchema {
      *             On comparator lookup errors.
      * @throws ReaderException
      *             On reader lookup errors.
+     * @throws FormatterException On formatter lookup errors.
      */
-    public static void setupColumn(IContext context, Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException, ReaderException {
+    public static void setupColumn(IContext context, Table table, Column column, INodeHolder holder) throws ConverterException, ComparatorException, ReaderException, FormatterException {
         column.setName(holder.getAttribute(ISchemaLoaderXML.ATTR_NAME, column.getName()));
         column.setAlias(holder.getAttribute(ISchemaLoaderXML.ATTR_ALIAS, column.getAlias() != null ? column.getAlias() : column.getName()));
         column.setTable(holder.getAttribute(ISchemaLoaderXML.ATTR_TABLE, column.getTable()));
@@ -70,6 +72,8 @@ public final class UtilSchema {
         column.setReader(holder.getReader(column.getReader()));
         column.setConverter(holder.getConverter(column.getConverter()));
         column.setArguments(holder.getArguments(column.getArguments()));
+        column.setFormatter(holder.getFormatter(column.getFormatter()));
+        column.setFormatterArguments(holder.getFormatterArguments(column.getFormatterArguments()));
         column.setComparator(holder.getComparator(column.getComparator()));
         if (holder.hasAttribute(ISchemaLoaderXML.ATT_DEFAULT)) {
             String value = holder.getAttribute(ISchemaLoaderXML.ATT_DEFAULT);

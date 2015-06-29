@@ -37,6 +37,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
+import org.specrunner.formatters.IFormatter;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
@@ -512,12 +513,28 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
                 int i = 0;
                 List<Object> args = new LinkedList<Object>();
-                while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_PREFIX + i)) {
-                    args.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_PREFIX + i), context, true));
+                while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i)) {
+                    args.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i), context, true));
                     i++;
                 }
                 if (f.getArgs() == null || !args.isEmpty()) {
                     f.setArgs(args.toArray(new String[args.size()]));
+                }
+
+                String formatter = cell.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER, null);
+                String[] formatters = formatter != null ? formatter.split(",") : new String[0];
+                if (f.getFormatters() == null || formatters.length > 0) {
+                    f.setFormatters(formatters);
+                }
+
+                int j = 0;
+                List<Object> formArgs = new LinkedList<Object>();
+                while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j)) {
+                    formArgs.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j), context, true));
+                    j++;
+                }
+                if (f.getFormattersArgs() == null || !formArgs.isEmpty()) {
+                    f.setFormattersArgs(formArgs.toArray(new String[formArgs.size()]));
                 }
 
                 String comparator = cell.getAttribute(INodeHolder.ATTRIBUTE_COMPARATOR, null);
@@ -576,6 +593,14 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          * Arguments for converters.
          */
         private String[] args;
+        /**
+         * Formatters.
+         */
+        private String[] formatters;
+        /**
+         * Arguments for formatters.
+         */
+        private String[] formattersArgs;
         /**
          * Comparator name.
          */
@@ -753,6 +778,44 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
 
         /**
+         * Get formatters.
+         * 
+         * @return The formatters.
+         */
+        public String[] getFormatters() {
+            return formatters;
+        }
+
+        /**
+         * Set formatters.
+         * 
+         * @param formatters
+         *            The formatters.
+         */
+        public void setFormatters(String[] formatters) {
+            this.formatters = formatters == null ? null : Arrays.copyOf(formatters, formatters.length);
+        }
+
+        /**
+         * The formatter arguments.
+         * 
+         * @return The arguments.
+         */
+        public String[] getFormattersArgs() {
+            return formattersArgs;
+        }
+
+        /**
+         * Set formatter arguments.
+         * 
+         * @param args
+         *            The arguments.
+         */
+        public void setFormattersArgs(String[] args) {
+            this.formattersArgs = args == null ? null : Arrays.copyOf(args, args.length);
+        }
+
+        /**
          * Gets the comparator.
          * 
          * @return The comparator.
@@ -812,7 +875,15 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             for (int i = 0; args != null && i < args.length; i++) {
                 strArgs.append((i == 0 ? "" : ",") + args[i]);
             }
-            return index + ",'" + fieldName + "'(" + ignore + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],(" + comparator + ")";
+            StringBuilder strForm = new StringBuilder("");
+            for (int i = 0; formatters != null && i < formatters.length; i++) {
+                strForm.append((i == 0 ? "" : ",") + formatters[i]);
+            }
+            StringBuilder strFormArgs = new StringBuilder("");
+            for (int i = 0; formattersArgs != null && i < formattersArgs.length; i++) {
+                strFormArgs.append((i == 0 ? "" : ",") + formattersArgs[i]);
+            }
+            return index + ",'" + fieldName + "'(" + ignore + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],[" + strForm + "],[" + strFormArgs + "],(" + comparator + ")";
         }
     }
 
@@ -947,7 +1018,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     }
                 }
                 Class<?> t = f.getTypes()[f.getTypes().length - 1];
-                if (!t.isInstance(value)) {
+                if (!t.isInstance(value) || value instanceof String) {
                     String[] convs = f.converters;
                     if (cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
                         convs = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER).split(",");
@@ -958,6 +1029,20 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                             value = con.convert(value, f.args);
                         } else {
                             throw new ConverterException("Converter named '" + convs[j] + "' not found.");
+                        }
+                    }
+                }
+                String[] formatters = f.formatters;
+                if (cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
+                    formatters = cell.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER).split(",");
+                }
+                if (formatters != null) {
+                    for (int j = 0; j < formatters.length; j++) {
+                        IFormatter form = SRServices.getFormatterManager().get(formatters[j]);
+                        if (form != null) {
+                            value = form.format(value, f.formattersArgs);
+                        } else {
+                            throw new ConverterException("Formatter named '" + formatters[j] + "' not found.");
                         }
                     }
                 }

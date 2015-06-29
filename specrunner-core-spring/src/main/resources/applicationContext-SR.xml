@@ -9,6 +9,7 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-i
   <bean class="org.specrunner.features.core.FeatureManagerImpl" />
   <bean class="org.specrunner.readers.core.ReaderManagerImpl" />
   <bean class="org.specrunner.converters.core.ConverterManagerImpl" />
+  <bean class="org.specrunner.formatters.core.FormatterManagerImpl" />
   <bean class="org.specrunner.comparators.core.ComparatorManagerImpl" />
   <bean class="org.specrunner.util.xom.core.PresenterManagerImpl" />
   <bean class="org.specrunner.parameters.core.AccessFactoryImpl" />
