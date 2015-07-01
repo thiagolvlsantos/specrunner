@@ -18,9 +18,11 @@
 package org.specrunner.converters;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -88,13 +90,22 @@ public final class UtilConverter {
      */
     public static void prepareMethodArguments(IContext context, Method method, List<Object> arguments) throws PluginException {
         Class<?>[] types = method.getParameterTypes();
-        if (types.length != arguments.size()) {
+        boolean isVarArgs = method.getParameterTypes().length == 1 && method.isVarArgs();
+        if (!isVarArgs && types.length != arguments.size()) {
             throw new PluginException(method + " has different number of arguments. Received arguments:" + arguments);
         }
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        for (int i = 0; i < types.length; i++) {
-            arguments.add(i, prepareArgument(context, method.toString(), parameterAnnotations[i], types[i], arguments.get(i)));
+        for (int i = 0; (!isVarArgs && i < types.length) || (isVarArgs && i < arguments.size()); i++) {
+            arguments.add(i, prepareArgument(context, method.toString(), isVarArgs ? parameterAnnotations[0] : parameterAnnotations[i], isVarArgs ? types[0] : types[i], arguments.get(i)));
             arguments.remove(i + 1);
+        }
+        if (isVarArgs) {
+            List<Object> group = new LinkedList<Object>(arguments);
+            arguments.clear();
+            if (!group.isEmpty()) {
+                Class<?> clazz = group.get(0).getClass();
+                arguments.add(group.toArray((Object[]) Array.newInstance(clazz, group.size())));
+            }
         }
     }
 
@@ -127,7 +138,8 @@ public final class UtilConverter {
             }
         }
         if (!type.isInstance(arg) || arg instanceof String) {
-            String simpleName = type.getSimpleName().toLowerCase();
+            String rawName = type.getSimpleName().toLowerCase();
+            String simpleName = rawName.replace("[]", "");
             IConverter converter = null;
             Object[] converterArguments = null;
             Converter annotation = getConverter(annotations);
@@ -172,7 +184,7 @@ public final class UtilConverter {
                         UtilLog.LOG.debug(converter + "(" + arg + "," + Arrays.toString(converterArguments) + ")");
                     }
                     Object tmp = converter.convert(arg, converterArguments);
-                    if (!type.isInstance(tmp)) {
+                    if (!rawName.contains("[]") && !type.isInstance(tmp)) {
                         throw new PluginException("Invalid parameter value [" + arg + "] in " + message + ". Expected " + type + ", received: " + tmp + " of type " + (tmp != null ? tmp.getClass() : "null"));
                     }
                     return tmp;

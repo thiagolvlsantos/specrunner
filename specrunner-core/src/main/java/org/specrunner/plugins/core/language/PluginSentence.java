@@ -184,19 +184,31 @@ public class PluginSentence extends AbstractPluginScoped {
                     UtilLog.LOG.debug("\t ARGS(" + i + "):" + tmp + " of type '" + (tmp != null ? tmp.getClass() : "null") + "'.");
                 }
             }
-            StringBuilder sb = new StringBuilder();
-            Class<?>[] expectedTypes = m.getParameterTypes();
-            for (int i = 0; i < expectedTypes.length; i++) {
-                Object arg = arguments.get(i);
-                if (arg != null && !UtilConverter.getWrapper(expectedTypes[i]).isInstance(arg)) {
-                    sb.append("Method '" + m + "' expected argument[" + i + "] of type '" + expectedTypes[i].getName() + "' received '" + arg + "' of type '" + (arg == null ? "null" : arg.getClass().getName()) + "'.\n");
+            boolean isVarArgs = m.getParameterTypes().length == 1 && m.isVarArgs();
+            if (!isVarArgs) {
+                StringBuilder sb = new StringBuilder();
+                Class<?>[] expectedTypes = m.getParameterTypes();
+                for (int i = 0; i < expectedTypes.length; i++) {
+                    Object arg = arguments.get(i);
+                    if (arg != null && !UtilConverter.getWrapper(expectedTypes[i]).isInstance(arg)) {
+                        sb.append("Method '" + m + "' expected argument[" + i + "] of type '" + expectedTypes[i].getName() + "' received '" + arg + "' of type '" + (arg == null ? "null" : arg.getClass().getName()) + "'.\n");
+                    }
+                }
+                if (sb.length() != 0) {
+                    sb.setLength(sb.length() - 1);
+                    throw new PluginException(sb.toString());
                 }
             }
-            if (sb.length() != 0) {
-                sb.setLength(sb.length() - 1);
-                throw new PluginException(sb.toString());
+            Object tmp = null;
+            if (isVarArgs) {
+                if (arguments.isEmpty()) {
+                    tmp = m.invoke(target, m.getParameterTypes()[0].cast(null));
+                } else {
+                    tmp = m.invoke(target, m.getParameterTypes()[0].cast(arguments.get(0)));
+                }
+            } else {
+                tmp = m.invoke(target, arguments.toArray());
             }
-            Object tmp = m.invoke(target, arguments.toArray());
             afterInvoke(m, context, tmp);
             result.addResult(Success.INSTANCE, context.peek());
         } catch (IllegalArgumentException e) {
@@ -501,6 +513,10 @@ public class PluginSentence extends AbstractPluginScoped {
         Method[] methods = clazz.getMethods();
         for (Method m : methods) {
             if (m.getName().equals(method) && m.getParameterTypes().length == args.size()) {
+                return m;
+            }
+            // selector for varargs
+            if (m.getName().equals(method) && m.getParameterTypes().length == 1 && m.isVarArgs()) {
                 return m;
             }
         }
