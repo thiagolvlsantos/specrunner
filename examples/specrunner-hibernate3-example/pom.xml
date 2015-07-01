@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.specrunner</groupId>
 	<artifactId>specrunner-hibernate3-example</artifactId>
-	<version>1.4.35</version>
+	<version>1.4.36</version>
 
 	<dependencies>
 		<dependency>
