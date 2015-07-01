@@ -197,8 +197,14 @@ Exemplo de report:
 
 </html>
 -----------------------------------------------------------
+1.4.36
+OK - Devolver o getMethods() do UtilAnnotations, no lugar do declared methods, ou fazer uma busca recursiva para os métodos;
+OK - Revisar todo o código do JUnit para remover os private;
+OK - Fazer o plugin sentence poder receber varargs. exemplo public void setCategorias (String... nomes){}
+OK - Adicionar a exceção gerada no caso de erro das invocações do PluginSentence como resultado apontado pelo 'name';
+	- Não será feito.
 
-1.4.35 - PENDENTE
+1.4.35
 OK - Bug de conversores de tempo que estava considerando apenas tempos futuros nos +/- alguma coisa;
 OK - verificar se tem como colocar o padrão datas +- algo nos preenchimentos de dados em interface gráfica; por exemplo nno compareDate, ou compareTable com data especificando apenas o formato de comparação, sem necessidade de 'plusDays(...)/etc'
 	- Observei que posso fazer isso usando o campo format, para usar apenas o conversor e transformar a data para string usando o formatador genérico do tipo com o formato definido em 'format', isso vai permitir o uso de coisas do tipo <td convert="t" type="date" format="dd/MM/yyyy HH:mm:ss">data atual + 10 min</td>;
