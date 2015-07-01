@@ -38,7 +38,7 @@ public class SRRunnerConcurrent extends ConcurrentRunner {
     /**
      * Fake method.
      */
-    private FrameworkMethod fakeMethod;
+    protected FrameworkMethod fakeMethod;
 
     /**
      * Basic constructor.

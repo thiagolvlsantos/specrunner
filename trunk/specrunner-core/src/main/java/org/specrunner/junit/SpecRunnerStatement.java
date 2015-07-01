@@ -50,26 +50,26 @@ public class SpecRunnerStatement extends Statement {
     /**
      * The test class.
      */
-    private TestClass test;
+    protected TestClass test;
     /**
      * The test instance.
      */
-    private Object instance;
+    protected Object instance;
 
     /**
      * The input file.
      */
-    private File input;
+    protected File input;
 
     /**
      * The output file.
      */
-    private File output;
+    protected File output;
 
     /**
      * Listener to activate.
      */
-    private List<INodeListener> listeners;
+    protected List<INodeListener> listeners;
 
     /**
      * The testing object.
@@ -216,7 +216,7 @@ public class SpecRunnerStatement extends Statement {
      * @return The adjusted name. ie. Excel (.xls,.xlsx) test files are
      *         transformed to HTML (.html).
      */
-    public static String getOutputName(String name) {
+    public String getOutputName(String name) {
         return JUnitUtils.getOutputName(name);
     }
 }

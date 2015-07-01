@@ -30,15 +30,15 @@ public class NamedFactory implements ThreadFactory {
     /**
      * Pool number.
      */
-    private final AtomicInteger poolNumber = new AtomicInteger(1);
+    protected final AtomicInteger poolNumber = new AtomicInteger(1);
     /**
      * Thread number.
      */
-    private final AtomicInteger threadNumber = new AtomicInteger(1);
+    protected final AtomicInteger threadNumber = new AtomicInteger(1);
     /**
      * Thread group.
      */
-    private final ThreadGroup group;
+    protected final ThreadGroup group;
 
     /**
      * Friendly constructor.
