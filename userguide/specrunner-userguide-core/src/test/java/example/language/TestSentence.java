@@ -2,6 +2,7 @@ package example.language;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -116,5 +117,24 @@ public class TestSentence {
     public void emptyName(String text) {
         System.out.println("CALLED.14:" + text);
         Assert.assertEquals("single argument", text);
+    }
+
+    public void callVar(String... numbers) {
+        System.out.println("CALLED.15.1:" + Arrays.toString(numbers));
+        Assert.assertArrayEquals(new String[] { "1", "2", "3" }, numbers);
+    }
+
+    public void callVarInt(Integer... numbers) {
+        System.out.println("CALLED.15.2:" + Arrays.toString(numbers));
+        Assert.assertArrayEquals(new Integer[] { 4, 5, 6 }, numbers);
+    }
+
+    public void callVarNull(String... numbers) {
+        System.out.println("CALLED.16:" + Arrays.toString(numbers));
+        Assert.assertArrayEquals(null, numbers);
+    }
+
+    public void callVarDate(@Converter(args = { "dd/MM/yyyy" }) DateTime... dates) {
+        System.out.println("CALLED.17:" + Arrays.toString(dates));
     }
 }
