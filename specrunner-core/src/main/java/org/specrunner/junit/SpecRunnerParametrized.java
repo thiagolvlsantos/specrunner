@@ -62,7 +62,7 @@ public abstract class SpecRunnerParametrized {
     /**
      * File entry.
      */
-    private final Entry entry;
+    protected final Entry entry;
 
     /**
      * Creates a instance by entry.

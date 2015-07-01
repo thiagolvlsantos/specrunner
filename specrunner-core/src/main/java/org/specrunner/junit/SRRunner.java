@@ -39,7 +39,7 @@ public class SRRunner extends BlockJUnit4ClassRunner {
     /**
      * Fake method.
      */
-    private FrameworkMethod fakeMethod;
+    protected FrameworkMethod fakeMethod;
 
     /**
      * Basic constructor.

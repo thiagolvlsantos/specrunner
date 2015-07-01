@@ -43,15 +43,15 @@ public class ConcurrentRunnerScheduler implements RunnerScheduler {
     /**
      * Executor service.
      */
-    private final ExecutorService executorService;
+    protected final ExecutorService executorService;
     /**
      * Completion service.
      */
-    private final CompletionService<Integer> completionService;
+    protected final CompletionService<Integer> completionService;
     /**
      * Future tasks.
      */
-    private final Queue<Future<Integer>> tasks = new LinkedList<Future<Integer>>();
+    protected final Queue<Future<Integer>> tasks = new LinkedList<Future<Integer>>();
 
     /**
      * Default constructor.
