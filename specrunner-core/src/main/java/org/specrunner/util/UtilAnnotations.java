@@ -20,8 +20,11 @@ package org.specrunner.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Utility Annotations class.
@@ -66,17 +69,52 @@ public final class UtilAnnotations {
     public static <T extends Annotation> List<Method> getAnnotatedMethods(Class<?> type, Class<T> annotation) {
         List<Method> candidates = new LinkedList<Method>();
         if (type != null) {
-            Method[] ms = type.getDeclaredMethods();
+            Set<Method> methods = new HashSet<Method>(getMethods(type));
+            List<Method> ms = getAllDeclaredMethods(type);
             for (Method m : ms) {
                 T c = m.getAnnotation(annotation);
                 if (c != null) {
                     if (!Modifier.isPublic(m.getModifiers())) {
                         throw new IllegalArgumentException("Method is not public. " + m);
                     }
-                    candidates.add(m);
+                    // select the most specific method to add.
+                    if (methods.contains(m)) {
+                        candidates.add(m);
+                    }
                 }
             }
         }
         return candidates;
+    }
+
+    /**
+     * Get public methods of a type.
+     * 
+     * @param type
+     *            A type.
+     * @return Methods list.
+     */
+    public static List<Method> getMethods(Class<?> type) {
+        if (type == null) {
+            return new LinkedList<Method>();
+        }
+        return Arrays.asList(type.getMethods());
+    }
+
+    /**
+     * Get all declared methods, from superclass to subclass in that order.
+     * 
+     * @param type
+     *            The method type.
+     * @return Methods list.
+     */
+    public static List<Method> getAllDeclaredMethods(Class<?> type) {
+        List<Method> ms = new LinkedList<Method>();
+        if (type == null) {
+            return ms;
+        }
+        ms.addAll(getAllDeclaredMethods(type.getSuperclass()));
+        ms.addAll(Arrays.asList(type.getDeclaredMethods()));
+        return ms;
     }
 }
