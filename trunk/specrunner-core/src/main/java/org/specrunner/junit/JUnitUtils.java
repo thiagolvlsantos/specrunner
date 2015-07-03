@@ -249,7 +249,7 @@ public final class JUnitUtils {
 
                 IScenarioListener[] annotationListeners = JUnitUtils.getScenarioListener(javaClass);
                 IScenarioListener[] fullListeners = Arrays.copyOf(annotationListeners, annotationListeners.length + 2);
-                fullListeners[fullListeners.length - 1] = new ScenarioCleanerListener();
+                fullListeners[fullListeners.length - 1] = getScenarioCleaner(javaClass);
                 final ScenarioFrameListener frameListener = new ScenarioFrameListener(title, execute, fullListeners) {
                     @Override
                     public Object getInstance() {
@@ -286,5 +286,17 @@ public final class JUnitUtils {
             throw new RuntimeException(e);
         }
         return methods;
+    }
+
+    /**
+     * Get scenario cleaner.
+     * 
+     * @param javaClass
+     *            Test class.
+     * 
+     * @return A cleaner.
+     */
+    protected static IScenarioListener getScenarioCleaner(Class<?> javaClass) {
+        return new ScenarioCleanerListener();
     }
 }
