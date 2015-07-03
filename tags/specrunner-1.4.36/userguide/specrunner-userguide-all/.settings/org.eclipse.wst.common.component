@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="specrunner-userguide-all">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="specrunner-core-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core/specrunner-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="specrunner-core-excel-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core-excel/specrunner-core-excel">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="specrunner-core-text-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-core-text/specrunner-core-text">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="specrunner-jetty-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-jetty/specrunner-jetty">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="specrunner-hibernate3-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-hibernate3/specrunner-hibernate3">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="specrunner-sql-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-sql/specrunner-sql">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="specrunner-webdriver-1.4.35.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/specrunner-webdriver/specrunner-webdriver">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="specrunner-userguide-all"/>
+        <property name="java-output-path" value="/specrunner-userguide-all/target/classes"/>
+    </wb-module>
+</project-modules>
