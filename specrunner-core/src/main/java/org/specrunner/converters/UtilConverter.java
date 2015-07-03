@@ -103,7 +103,7 @@ public final class UtilConverter {
             List<Object> group = new LinkedList<Object>(arguments);
             arguments.clear();
             if (!group.isEmpty()) {
-                Class<?> clazz = group.get(0).getClass();
+                Class<?> clazz = method.getParameterTypes()[0].getComponentType();
                 arguments.add(group.toArray((Object[]) Array.newInstance(clazz, group.size())));
             }
         }
