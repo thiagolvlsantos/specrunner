@@ -153,16 +153,10 @@ $(document).ready(function() {
     $("*[id*='_inc']").each(function(event) {
         //$(this).hide();
     });
-    $(".include:[id]").each(function() {
+    $(".include").each(function() {
         $(this).click(function(event){
             var name = "#" + $(this).attr("id") + "_inc";
             $(name).slideToggle();
-            event.preventDefault();
-        });
-    });
-    $(".include:not(.include:[id])").each(function() {
-        $(this).click(function(event){
-        	alert("Include inside macro not performed is not expansible.");
             event.preventDefault();
         });
     });

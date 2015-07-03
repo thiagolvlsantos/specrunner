@@ -197,15 +197,6 @@ Exemplo de report:
 
 </html>
 -----------------------------------------------------------
-1.4.37
-OK - Colocar ignore para os rows de um verifyRows, de forma que o header possa ter agrupamentos ou footers.
-OK - Porque não verifyRow com execução ao final (onEnd)?
-	- Não será feito para manter compatibilidade com verifyrows to concordion. Será que vale a pena mesmo manter essa compatibilidade?
-OK - No prepareMethodArguments considerar o caso onde o elemento (0) do método vararg é nulo (exemplo <span class="sentence">"@null"</span>).
-OK - Remover o 'ignore event' de include dentro de definição de macro.
-OK - Ajustando contagem de cenários 'skip'|'pending'.
-OK - Split de método para facilitar a troca do scenario listener de limpeza.
-
 1.4.36
 OK - Devolver o getMethods() do UtilAnnotations, no lugar do declared methods, ou fazer uma busca recursiva para os métodos;
 OK - Revisar todo o código do JUnit para remover os private;

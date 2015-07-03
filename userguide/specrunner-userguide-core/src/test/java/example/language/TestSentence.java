@@ -121,12 +121,7 @@ public class TestSentence {
 
     public void callVar(String... numbers) {
         System.out.println("CALLED.15.1:" + Arrays.toString(numbers));
-        if (numbers.length == 3) {
-            Assert.assertArrayEquals(new String[] { "1", "2", "3" }, numbers);
-        }
-        if (numbers.length == 1) {
-            Assert.assertArrayEquals(new String[] { "1" }, numbers);
-        }
+        Assert.assertArrayEquals(new String[] { "1", "2", "3" }, numbers);
     }
 
     public void callVarInt(Integer... numbers) {
@@ -141,13 +136,5 @@ public class TestSentence {
 
     public void callVarDate(@Converter(args = { "dd/MM/yyyy" }) DateTime... dates) {
         System.out.println("CALLED.17:" + Arrays.toString(dates));
-        if (dates != null) {
-            if (dates.length == 2) {
-                Assert.assertEquals(2, dates.length);
-            }
-            if (dates.length == 1) {
-                Assert.assertEquals(1, dates.length);
-            }
-        }
     }
 }
