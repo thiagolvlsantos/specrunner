@@ -271,7 +271,7 @@ public final class JUnitUtils {
                     public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending() || frameListener.isIgnored()) {
-                            runner.getNotifier().fireTestIgnored(description);
+                            // just to not perform other things
                         } else if (r == null || r.countErrors() == 0) {
                             runner.getNotifier().fireTestFinished(description);
                         } else {
