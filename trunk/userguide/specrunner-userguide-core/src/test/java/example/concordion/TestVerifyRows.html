@@ -29,9 +29,11 @@
     <p>Searching for "<b class="set" scope="div" name="searchString">arr</b>" will return:</p>
 
     <table class="verifyRows" name="username" value="$THIS.getSearchResultsFor(searchString)">
+        <tr ignore="true"><th>Ignore header</th></tr>
         <tr><th class="eq" value="username">Matching Usernames</th></tr>
         <tr><td>george.harrison</td></tr>
         <tr><td>ringo.starr</td></tr>
+        <tr ignore="true"><td>Ignore footer</td></tr>
     </table>
 
 </div>

@@ -65,10 +65,21 @@ public class PluginVerifyRows extends AbstractPluginValue {
         if (ns.size() == 0) {
             throw new PluginException("Missing rows.");
         }
-        Element head = (Element) ns.get(0);
+        Element head = null;
+        for (int i = 0; i < ns.size(); i++) {
+            Element tmp = (Element) ns.get(i);
+            if (UtilNode.isIgnore(tmp)) {
+                continue;
+            }
+            head = tmp;
+            break;
+        }
+        if (head == null) {
+            throw new PluginException("Missing table header candidate.");
+        }
         Nodes hs = head.query("descendant::th");
         if (hs.size() == 0) {
-            throw new PluginException("Missing header information.");
+            throw new PluginException("Missing header information (th's).");
         }
         UtilNode.setIgnore(head);
 
@@ -78,6 +89,9 @@ public class PluginVerifyRows extends AbstractPluginValue {
         boolean first = true;
         for (; i < ns.size(); i++) {
             Element row = (Element) ns.get(i);
+            if (UtilNode.isIgnore(row)) {
+                continue;
+            }
             Nodes cs = row.query("descendant::td");
             if (hs.size() != cs.size()) {
                 throw new PluginException("Number of headers (" + hs.size() + ") is different of columns (" + cs.size() + ").");
