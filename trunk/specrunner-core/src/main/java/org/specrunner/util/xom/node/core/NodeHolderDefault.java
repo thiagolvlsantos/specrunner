@@ -19,6 +19,7 @@ package org.specrunner.util.xom.node.core;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -26,7 +27,7 @@ import nu.xom.Node;
 import nu.xom.ParentNode;
 import nu.xom.Text;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -449,7 +450,11 @@ public class NodeHolderDefault implements INodeHolder {
                     Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
                     try {
                         String prop = str.substring(pos + 1);
-                        value = BeanUtils.getProperty(bean, prop);
+                        StringTokenizer st = new StringTokenizer(prop, ".");
+                        while (bean != null && st.hasMoreTokens()) {
+                            bean = PropertyUtils.getProperty(bean, st.nextToken());
+                        }
+                        value = bean;
                     } catch (Exception e) {
                         throw new PluginException(e);
                     }
