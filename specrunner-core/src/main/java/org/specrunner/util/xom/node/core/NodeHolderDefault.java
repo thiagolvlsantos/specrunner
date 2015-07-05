@@ -441,7 +441,7 @@ public class NodeHolderDefault implements INodeHolder {
                     UtilLog.LOG.trace("Evaluation ignored, value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
                 }
             } else {
-                if (hasAttribute(ATTRIBUTE_PROPERTY)) {
+                if (hasAttribute(ATTRIBUTE_PROPERTY) && !attributeEquals(ATTRIBUTE_FORCE_VALUE, "true")) {
                     String str = getAttribute(ATTRIBUTE_PROPERTY);
                     int pos = str.indexOf('.');
                     if (pos <= 0) {
