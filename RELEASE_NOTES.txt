@@ -197,6 +197,13 @@ Exemplo de report:
 
 </html>
 -----------------------------------------------------------
+1.4.38
+OK - Corrigir a conversão de parâmetros para aceitar nulo como resultado possível. Removendo o !type.instanceOf(valor) do if final pós-conversão no prepareArguments.
+OK - Fazer o código de verifyrows que acessa propriedades considerar nulo quando o path até uma propriedade simplesmente não existir,
+OK - Quando o 'pluginEquals' usar uma property e um pode-se obter o value usando converters, verificar via testes se é assim mesmo (provavelmente o problema do path null é resolvido aqui também);
+	- Colocar o eq para entender 'getObject', fazendo conversão e verificando nulos como <span class="eq" value="null">@null</span>
+	- Analisar o pluginEquals para comparação usando valores @null;
+
 1.4.37
 OK - Colocar ignore para os rows de um verifyRows, de forma que o header possa ter agrupamentos ou footers.
 OK - Porque não verifyRow com execução ao final (onEnd)?
