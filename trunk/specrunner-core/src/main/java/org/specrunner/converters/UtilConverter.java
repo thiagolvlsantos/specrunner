@@ -184,7 +184,7 @@ public final class UtilConverter {
                         UtilLog.LOG.debug(converter + "(" + arg + "," + Arrays.toString(converterArguments) + ")");
                     }
                     Object tmp = converter.convert(arg, converterArguments);
-                    if (!rawName.contains("[]") && !type.isInstance(tmp)) {
+                    if (tmp != null && !rawName.contains("[]") && !type.isInstance(tmp)) {
                         throw new PluginException("Invalid parameter value [" + arg + "] in " + message + ". Expected " + type + ", received: " + tmp + " of type " + (tmp != null ? tmp.getClass() : "null"));
                     }
                     return tmp;

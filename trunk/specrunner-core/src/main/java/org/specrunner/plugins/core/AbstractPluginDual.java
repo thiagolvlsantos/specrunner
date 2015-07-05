@@ -111,7 +111,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      *             On evaluation errors.
      */
     protected Object getObjectValue(IContext context, Node node) throws PluginException {
-        return isEval() ? SRServices.get(INodeHolderFactory.class).newHolder(node).getObject(context, true) : node.getValue();
+        return SRServices.get(INodeHolderFactory.class).newHolder(node).getObject(context, true);
     }
 
     /**
