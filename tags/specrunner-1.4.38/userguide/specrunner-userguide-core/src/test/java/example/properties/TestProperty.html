@@ -1,0 +1,63 @@
+<html>
+<head>
+<style type="text/css">
+table, td {
+  border: 1px dotted black;
+}
+</style>
+</head>
+
+<body>
+
+  Null test.
+  <table class="verifyRows" value="$THIS.full()" name="r">
+    <tr>
+      <th class="eq" property="r.address.number">Number (string)</th>
+      <th class="eq" property="r.address.number">Number (object)</th>
+    </tr>
+    <tr>
+      <td>null</td>
+      <td>@null</td>
+    </tr>
+  </table>
+
+  Full object.
+  <table class="verifyRows" value="$THIS.full()" name="r">
+    <tr ignore="true">
+      <th/>
+      <th colspan="2">Address</th>
+    </tr>
+    <tr>
+      <th class="eq" property="r.name">Name</th>
+      <th class="eq" property="r.expire" converter="dt" formatter="dt" for0="dd/MM/yyyy HH:mm">Expire</th>
+      <th class="eq" property="r.address.street">Street</th>
+      <th class="eq" property="r.address.number">Number</th>
+    </tr>
+    <tr>
+      <td>Me</td>
+      <td>current date + 10 days</td>
+      <td>Ocean</td>
+      <td>null</td>
+    </tr>
+  </table>
+
+  Partial objects.
+  <table class="verifyRows" value="$THIS.partial()" name="r">
+    <tr ignore="true">
+      <th/>
+      <th colspan="2">Address</th>
+    </tr>
+    <tr>
+      <th class="eq" property="r.name">Name</th>
+      <th class="eq" property="r.address.street">Street</th>
+      <th class="eq" property="r.address.number">Number</th>
+    </tr>
+    <tr>
+      <td>Myself</td>
+      <td>null</td>
+      <td>@null</td>
+    </tr>
+  </table>
+
+</body>
+</html>
