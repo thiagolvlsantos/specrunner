@@ -1,12 +1,15 @@
 package example.properties;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class Contact {
 
     private String name;
 
     private DateTime expire;
+
+    private LocalDate data;
 
     private Address address;
 
@@ -24,6 +27,14 @@ public class Contact {
 
     public void setExpire(DateTime expire) {
         this.expire = expire;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     public Address getAddress() {

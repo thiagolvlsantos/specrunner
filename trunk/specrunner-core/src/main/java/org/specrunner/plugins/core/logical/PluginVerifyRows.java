@@ -101,7 +101,14 @@ public class PluginVerifyRows extends AbstractPluginValue {
                 Element c = (Element) cs.get(j);
                 for (int k = 0; k < h.getAttributeCount(); k++) {
                     Attribute att = h.getAttribute(k);
-                    c.addAttribute((Attribute) att.copy());
+                    if (UtilNode.ATT_CSS.equals(att.getLocalName())) {
+                        UtilNode.appendCss(c, att.getValue());
+                    } else {
+                        Attribute tmp = c.getAttribute(att.getLocalName());
+                        if (tmp == null) {
+                            c.addAttribute((Attribute) att.copy());
+                        }
+                    }
                 }
             }
             context.push(context.newBlock(row, this));

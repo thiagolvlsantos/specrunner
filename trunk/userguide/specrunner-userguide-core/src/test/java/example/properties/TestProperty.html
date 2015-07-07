@@ -4,6 +4,10 @@
 table, td {
   border: 1px dotted black;
 }
+
+.red {
+  background-color: red;
+}
 </style>
 </head>
 
@@ -49,11 +53,19 @@ table, td {
     </tr>
     <tr>
       <th class="eq" property="r.name">Name</th>
+      <th class="eq" property="r.data" converter="ld">Data</th>
       <th class="eq" property="r.address.street">Street</th>
       <th class="eq" property="r.address.number">Number</th>
     </tr>
     <tr>
-      <td>Myself</td>
+      <td class="red">Myself</td>
+      <td converter="localDate" arg0="dd/MM/yyyy" eval="false">15/10/2015</td>
+      <td>null</td>
+      <td>@null</td>
+    </tr>
+    <tr>
+      <td>AndI</td>
+      <td>current date</td>
       <td>null</td>
       <td>@null</td>
     </tr>

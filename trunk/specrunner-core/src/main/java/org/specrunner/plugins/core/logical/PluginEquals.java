@@ -35,10 +35,11 @@ import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
 
 /**
- * Compare elements. Use class 'eq', there are two approaches:
+ * Compare elements. Use class 'eq', there are some approaches:
  * <ul>
  * <li>Add two classes with 'left' class to the first argument, and 'right'
- * class to the second argument.</li>
+ * class to the second argument;</li>
+ * <li>Property attribute is compared with value (tag or attribute);</li>
  * <li>Value attribute is compared with tag content.</li>
  * 
  * </ul>
@@ -67,7 +68,7 @@ public class PluginEquals extends AbstractPluginDual {
     }
 
     @Override
-    protected boolean operation(Object obj, IContext context) throws PluginException {
+    protected boolean operation(Object object, IContext context) throws PluginException {
         Node node = context.getNode();
         INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
         INodeHolder parent = holderFactory.newHolder(node);
@@ -81,12 +82,12 @@ public class PluginEquals extends AbstractPluginDual {
                     forceValue = true;
                 }
                 Object tmp = parent.getObject(context, forceValue);
-                if (obj != null && obj instanceof String) {
-                    objExpected = getNormalized(String.valueOf(obj));
-                    objReceived = getNormalized(String.valueOf(tmp));
+                if (object != null && object instanceof String) {
+                    objExpected = getNormalized(String.valueOf(tmp));
+                    objReceived = getNormalized(String.valueOf(object));
                 } else {
-                    objExpected = obj;
-                    objReceived = tmp;
+                    objExpected = tmp;
+                    objReceived = object;
                 }
             } else {
                 objExpected = holderFactory.newHolder(UtilNode.getLeft(node)).getObject(context, true);
@@ -122,7 +123,7 @@ public class PluginEquals extends AbstractPluginDual {
             if (expected instanceof String && received instanceof String) {
                 error = new DefaultAlignmentException(expected.toString(), received.toString());
             } else {
-                error = new PluginException("Values are different. Expected: '" + expected + "', Received: '" + received + "'. \n" + (context.hasNode() ? "Node:" + context.getNode().toXML() : "Plugin:" + context.getPlugin()));
+                error = new PluginException("Values are different. Expected: '" + expected + "' (" + (expected != null ? expected.getClass().getName() : "null") + "), Received: '" + received + "' (" + (received != null ? received.getClass().getName() : "null") + "). \n" + (context.hasNode() ? "Node:" + context.getNode().toXML() : "Plugin:" + context.getPlugin()));
             }
         }
         return result;
