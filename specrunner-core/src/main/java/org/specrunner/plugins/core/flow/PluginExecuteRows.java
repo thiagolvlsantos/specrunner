@@ -64,7 +64,14 @@ public class PluginExecuteRows extends PluginIterable {
                 Element c = (Element) cs.get(j);
                 for (int k = 0; k < h.getAttributeCount(); k++) {
                     Attribute att = h.getAttribute(k);
-                    c.addAttribute((Attribute) att.copy());
+                    if (UtilNode.ATT_CSS.equals(att.getLocalName())) {
+                        UtilNode.appendCss(c, att.getValue());
+                    } else {
+                        Attribute tmp = c.getAttribute(att.getLocalName());
+                        if (tmp == null) {
+                            c.addAttribute((Attribute) att.copy());
+                        }
+                    }
                 }
             }
             row.addAttribute(new Attribute("class", "execute"));

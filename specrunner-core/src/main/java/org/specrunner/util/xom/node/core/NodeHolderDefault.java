@@ -432,82 +432,24 @@ public class NodeHolderDefault implements INodeHolder {
             context.addMetadata();
         }
         try {
-            converter = getConverter(converter);
-            arguments = getArguments(arguments);
             Object value = null;
-            if (attributeEquals(ATTRIBUTE_EVALUATION, Boolean.FALSE.toString())) {
-                value = getValue();
-                if (UtilLog.LOG.isTraceEnabled()) {
-                    UtilLog.LOG.trace("Evaluation ignored, value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
-                }
+            if (isProperty()) {
+                value = getProperty(context, silent);
             } else {
-                if (hasAttribute(ATTRIBUTE_PROPERTY) && !attributeEquals(ATTRIBUTE_FORCE_VALUE, "true")) {
-                    String str = getAttribute(ATTRIBUTE_PROPERTY);
-                    int pos = str.indexOf('.');
-                    if (pos <= 0) {
-                        throw new PluginException("Bean name or property missing in property='" + str + "'.");
-                    }
-                    Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
-                    try {
-                        String prop = str.substring(pos + 1);
-                        StringTokenizer st = new StringTokenizer(prop, ".");
-                        while (bean != null && st.hasMoreTokens()) {
-                            bean = PropertyUtils.getProperty(bean, st.nextToken());
-                        }
-                        value = bean;
-                    } catch (Exception e) {
-                        throw new PluginException(e);
-                    }
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Bean property (" + str + ") value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
-                    }
-                } else {
-                    String tmp;
-                    if (hasAttribute(attributeValue)) {
-                        tmp = getAttribute(attributeValue);
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Attribute value present, value is '" + tmp + "'.");
-                        }
-                    } else {
-                        tmp = getValue();
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Content value is '" + tmp + "'.");
-                        }
-                    }
-                    value = UtilEvaluator.evaluate(tmp, context, silent);
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
-                    }
-                }
-                List<Object> objects = new LinkedList<Object>();
-                IFeatureManager fm = SRServices.getFeatureManager();
-                Boolean eval = (Boolean) fm.get(FEATURE_EVAL_ARGS, DEFAULT_EVAL_ARGS);
-                if (eval) {
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Eval args: " + arguments);
-                    }
-                    for (int i = 0; i < arguments.size(); i++) {
-                        objects.add(UtilEvaluator.evaluate(arguments.get(i), context, silent));
-                    }
-                } else {
-                    if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Not eval args: " + arguments);
-                    }
-                    objects.addAll(arguments);
-                }
-                Object convert;
+                value = getValue(context, silent);
+                IConverter converterLocal = getConverter(converter);
+                List<Object> argumentsLocal = getLocalArguments(context, silent, arguments);
                 try {
                     if (UtilLog.LOG.isTraceEnabled()) {
-                        UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converter + " with arguments: " + objects);
+                        UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converterLocal + " with arguments: " + argumentsLocal);
                     }
-                    convert = converter.convert(value, objects.toArray());
+                    value = converterLocal.convert(value, argumentsLocal.toArray());
                 } catch (Exception e) {
-                    throw new PluginException("Error on converter: " + converter + ". ERROR:" + e.getMessage(), e);
+                    throw new PluginException("Error on converter: " + converterLocal + ". ERROR:" + e.getMessage(), e);
                 }
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace("Converted value is '" + value + "' of type " + (value != null ? value.getClass() : " null"));
                 }
-                return convert;
             }
             return value;
         } finally {
@@ -515,6 +457,126 @@ public class NodeHolderDefault implements INodeHolder {
                 context.pop();
             }
         }
+    }
+
+    /**
+     * Is property value set.
+     * 
+     * @return true, if 'property' is set, and 'forceValue' is not true.
+     */
+    protected boolean isProperty() {
+        return hasAttribute(ATTRIBUTE_PROPERTY) && !attributeEquals(ATTRIBUTE_FORCE_VALUE, "true");
+    }
+
+    /**
+     * Get property value.
+     * 
+     * @param context
+     *            A context.
+     * @param silent
+     *            Silent evaluation flag.
+     * @return The property value (including null), or null if property path has
+     *         some null.
+     * @throws PluginException
+     *             On lookup errors.
+     */
+    protected Object getProperty(IContext context, boolean silent) throws PluginException {
+        Object property = null;
+        String str = getAttribute(ATTRIBUTE_PROPERTY);
+        int pos = str.indexOf('.');
+        if (pos <= 0) {
+            throw new PluginException("Bean name or property missing in property='" + str + "'.");
+        }
+        Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
+        try {
+            String prop = str.substring(pos + 1);
+            StringTokenizer st = new StringTokenizer(prop, ".");
+            while (bean != null && st.hasMoreTokens()) {
+                bean = PropertyUtils.getProperty(bean, st.nextToken());
+            }
+            property = bean;
+        } catch (Exception e) {
+            throw new PluginException(e);
+        }
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("Bean property (" + str + ") value is '" + property + "' of type " + (property != null ? property.getClass() : " null"));
+        }
+        return property;
+    }
+
+    /**
+     * Get value.
+     * 
+     * @param context
+     *            A context.
+     * @param silent
+     *            Silent evaluation flag.
+     * @return The tag value, evaluated (default is evaluate) or not (set
+     *         eval='false').
+     * @throws PluginException
+     *             On evaluation errors.
+     */
+    protected Object getValue(IContext context, boolean silent) throws PluginException {
+        String str;
+        if (hasAttribute(attributeValue)) {
+            str = getAttribute(attributeValue);
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Attribute value present, value is '" + str + "'.");
+            }
+        } else {
+            str = getValue();
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Content value is '" + str + "'.");
+            }
+        }
+        Object value = notEval() ? str : UtilEvaluator.evaluate(str, context, silent);
+        if (UtilLog.LOG.isTraceEnabled()) {
+            UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : "null"));
+        }
+        return value;
+    }
+
+    /**
+     * Is evaluation turned off. Default is false.
+     * 
+     * @return true, if evaluation flag set to 'false', false otherwise.
+     */
+    protected boolean notEval() {
+        return attributeEquals(ATTRIBUTE_EVALUATION, Boolean.FALSE.toString());
+    }
+
+    /**
+     * Get arguments for evaluation.
+     * 
+     * @param context
+     *            A context.
+     * @param silent
+     *            Silent evaluation flag.
+     * @param arguments
+     *            Value arguments.
+     * @return List of arguments.
+     * @throws PluginException
+     *             On evaluation errors.
+     */
+    protected List<Object> getLocalArguments(IContext context, boolean silent, List<String> arguments) throws PluginException {
+        List<Object> localArguments = new LinkedList<Object>();
+        IFeatureManager fm = SRServices.getFeatureManager();
+        Boolean eval = (Boolean) fm.get(FEATURE_EVAL_ARGS, DEFAULT_EVAL_ARGS);
+        List<String> argumentsLocal = getArguments(arguments);
+        if (eval) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Eval args: " + argumentsLocal);
+            }
+            for (int i = 0; i < argumentsLocal.size(); i++) {
+                localArguments.add(UtilEvaluator.evaluate(argumentsLocal.get(i), context, silent));
+            }
+        } else {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Not eval args: " + argumentsLocal);
+            }
+            localArguments.addAll(argumentsLocal);
+        }
+        return localArguments;
     }
 
     @Override

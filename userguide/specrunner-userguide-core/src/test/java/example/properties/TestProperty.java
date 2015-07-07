@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.SRRunner;
 
@@ -22,6 +23,10 @@ public class TestProperty {
     public List<Contact> partial() {
         Contact c = new Contact();
         c.setName("Myself");
-        return Arrays.asList(c);
+        c.setData(new LocalDate(2015, 10, 15));
+        Contact c2 = new Contact();
+        c2.setName("AndI");
+        c2.setData(LocalDate.now());
+        return Arrays.asList(c, c2);
     }
 }

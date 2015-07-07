@@ -90,8 +90,8 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      */
     protected ENext perform(IContext context, IResultSet result) throws PluginException {
         Node node = context.getNode();
-        Object obj = getObjectValue(context, node);
-        if (operation(obj, context)) {
+        Object object = getObjectValue(context, node);
+        if (operation(object, context)) {
             result.addResult(Success.INSTANCE, context.newBlock(node, this));
         } else {
             result.addResult(Failure.INSTANCE, context.newBlock(node, this), getError());
