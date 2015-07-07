@@ -197,6 +197,13 @@ Exemplo de report:
 
 </html>
 -----------------------------------------------------------
+1.4.39
+OK - Corrigir o NodeHolder;
+OK - Corrigir a ordem do received e expected no PluginEquals;
+OK - No plugin verify só sobrescrever atributos que não existam no td, e no caso de 'class' adicionar ao final caso exista;
+OK - Verificar a sobreposição de conversores em plugins do tipo 'eq', principalmente quando falamos de campos de data;
+OK - Correção do plugin attribute;
+
 1.4.38
 OK - Corrigir a conversão de parâmetros para aceitar nulo como resultado possível. Removendo o !type.instanceOf(valor) do if final pós-conversão no prepareArguments.
 OK - Fazer o código de verifyrows que acessa propriedades considerar nulo quando o path até uma propriedade simplesmente não existir,
