@@ -1,0 +1,19 @@
+<html>
+
+<body>
+    <div bean="new example.bean.BeanA($THIS.name())">
+        <p class="eq" value="$BEAN.name()">BeanA Working</p>
+        <div class="qualquer" bean="example.bean.BeanB">
+            <p class="eq" value="$BEAN.name()">BeanB</p>
+            <p class="eq" value="$_$BEAN.name()">BeanA Working</p>
+        </div>
+    </div>
+    
+    <div imports="example.bean">
+        <div bean="BeanB">
+            <p class="eq" value="$BEAN.name()">BeanB</p>
+            <p class="eq" value="$THIS.name()">Working</p>
+        </div>
+    </div>
+</body>
+</html>
