@@ -1,0 +1,27 @@
+<html>
+<head>
+	<style>
+	h1 {
+		background-color: #EEEEEE;
+	}
+	</style>
+</head>
+<body>
+	<h1>Increase</h1>
+	<a class="include" href="increase.html">first include relative in a &lt;A&gt; tag</a>
+	<p class="sentence">count is "1"</p>
+
+	<h1>Decrease</h1>
+	<p>Setting directory to "<local name="basedir" scope="body">src/test/java/example/include</local>".</p> 
+	<p class="include" dir="basedir" href="decrease.html">second include using ${dir} in a &lt;P&gt; tag</p>
+	<p class="sentence">count is "0"</p>
+
+	<h1>Increase with CSS</h1>
+	<p class="incr">quick increase</p>
+	<p class="sentence">count is "1"</p>
+	
+	<h1>Decrease with HTML element</h1>
+	<decr>quick decrease</decr>
+	<p class="sentence">count is "0"</p>
+</body>
+</html>
