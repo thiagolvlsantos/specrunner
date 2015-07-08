@@ -17,7 +17,6 @@
  */
 package org.specrunner.util.xom.node.core;
 
-import java.beans.PropertyDescriptor;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -439,7 +438,7 @@ public class NodeHolderDefault implements INodeHolder {
             } else {
                 value = getValue(context, silent);
                 IConverter converterLocal = getConverter(converter);
-                List<Object> argumentsLocal = getArgumentsLocal(context, silent, arguments);
+                List<Object> argumentsLocal = getLocalArguments(context, silent, arguments);
                 try {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converterLocal + " with arguments: " + argumentsLocal);
@@ -488,31 +487,14 @@ public class NodeHolderDefault implements INodeHolder {
         if (pos <= 0) {
             throw new PluginException("Bean name or property missing in property='" + str + "'.");
         }
-        String head = str.substring(0, pos);
-        Object bean = UtilEvaluator.evaluate(head, context, silent);
-        IFeatureManager fm = SRServices.getFeatureManager();
-        Boolean acceptNullPath = (Boolean) fm.get(FEATURE_PROPERTY_ACCEPT_NULL_PATH, DEFAULT_PROPERTY_ACCEPT_NULL_PATH);
-        Boolean invalidPathAsNull = (Boolean) fm.get(FEATURE_PROPERTY_INVALID_PATH_AS_NULL, DEFAULT_PROPERTY_INVALID_PATH_AS_NULL);
+        Object bean = UtilEvaluator.evaluate(str.substring(0, pos), context, silent);
         try {
-            StringTokenizer st = new StringTokenizer(str.substring(pos + 1), ".");
-            StringBuilder path = new StringBuilder(head);
+            String prop = str.substring(pos + 1);
+            StringTokenizer st = new StringTokenizer(prop, ".");
             while (bean != null && st.hasMoreTokens()) {
-                String part = st.nextToken();
-                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(bean, part);
-                if ((pd == null || pd.getReadMethod() == null) && invalidPathAsNull) {
-                    bean = null;
-                    break;
-                }
-                bean = PropertyUtils.getProperty(bean, part);
-                path.append('.');
-                path.append(part);
-                if (bean == null && !acceptNullPath && st.hasMoreElements()) {
-                    throw new PluginException("Invalid null value for part '" + path + "' of property '" + str + "'.");
-                }
+                bean = PropertyUtils.getProperty(bean, st.nextToken());
             }
             property = bean;
-        } catch (PluginException e) {
-            throw e;
         } catch (Exception e) {
             throw new PluginException(e);
         }
@@ -576,25 +558,25 @@ public class NodeHolderDefault implements INodeHolder {
      * @throws PluginException
      *             On evaluation errors.
      */
-    protected List<Object> getArgumentsLocal(IContext context, boolean silent, List<String> arguments) throws PluginException {
-        List<Object> result = new LinkedList<Object>();
+    protected List<Object> getLocalArguments(IContext context, boolean silent, List<String> arguments) throws PluginException {
+        List<Object> localArguments = new LinkedList<Object>();
         IFeatureManager fm = SRServices.getFeatureManager();
         Boolean eval = (Boolean) fm.get(FEATURE_EVAL_ARGS, DEFAULT_EVAL_ARGS);
-        List<String> local = getArguments(arguments);
+        List<String> argumentsLocal = getArguments(arguments);
         if (eval) {
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Eval args: " + local);
+                UtilLog.LOG.trace("Eval args: " + argumentsLocal);
             }
-            for (int i = 0; i < local.size(); i++) {
-                result.add(UtilEvaluator.evaluate(local.get(i), context, silent));
+            for (int i = 0; i < argumentsLocal.size(); i++) {
+                localArguments.add(UtilEvaluator.evaluate(argumentsLocal.get(i), context, silent));
             }
         } else {
             if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Not eval args: " + local);
+                UtilLog.LOG.trace("Not eval args: " + argumentsLocal);
             }
-            result.addAll(local);
+            localArguments.addAll(argumentsLocal);
         }
-        return result;
+        return localArguments;
     }
 
     @Override

@@ -6,20 +6,10 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.runner.RunWith;
-import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
-import org.specrunner.util.xom.node.INodeHolder;
 
 @RunWith(SRRunner.class)
 public class TestProperty {
-
-    @Configuration
-    public void config(IConfiguration cfg) {
-        cfg.add(INodeHolder.FEATURE_PROPERTY_INVALID_PATH_AS_NULL, Boolean.TRUE);
-        // cfg.add(INodeHolder.FEATURE_PROPERTY_ACCEPT_NULL_PATH,
-        // Boolean.FALSE);
-    }
 
     public List<Contact> full() {
         Contact c = new Contact();

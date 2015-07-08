@@ -34,24 +34,6 @@ public interface INodeHolder extends IAbstraction {
      */
     String ATTRIBUTE_PROPERTY = "property";
     /**
-     * Feature to accept children properties as null a parent object in path is
-     * null.
-     */
-    String FEATURE_PROPERTY_ACCEPT_NULL_PATH = INodeHolder.class.getName() + ".acceptNullPathProperty";
-    /**
-     * Default is to accept null paths as null.
-     */
-    Boolean DEFAULT_PROPERTY_ACCEPT_NULL_PATH = Boolean.TRUE;
-    /**
-     * Feature to accept invalid property paths as null.
-     */
-    String FEATURE_PROPERTY_INVALID_PATH_AS_NULL = INodeHolder.class.getName() + ".invalidPathAsNullProperty";
-    /**
-     * Default is to not accept invalid paths.
-     */
-    Boolean DEFAULT_PROPERTY_INVALID_PATH_AS_NULL = Boolean.FALSE;
-
-    /**
      * Attribute to force evaluation using 'attribute value' or 'tag
      * getValue()'.
      */
