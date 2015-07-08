@@ -4,7 +4,7 @@
 	<groupId>org.specrunner</groupId>
 	<artifactId>specrunner-jetty-example</artifactId>
 	<packaging>war</packaging>
-	<version>1.4.39</version>
+	<version>1.4.40</version>
 	<description></description>
 	<licenses>
 		<license>

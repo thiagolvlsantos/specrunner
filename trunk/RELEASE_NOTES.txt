@@ -197,6 +197,9 @@ Exemplo de report:
 
 </html>
 -----------------------------------------------------------
+1.4.40
+OK - Features para tratamentos de null e propriedades inválidas nos atributos 'property'.
+
 1.4.39
 OK - Corrigir o NodeHolder;
 OK - Corrigir a ordem do received e expected no PluginEquals;
