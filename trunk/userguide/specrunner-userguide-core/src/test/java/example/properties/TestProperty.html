@@ -16,10 +16,12 @@ table, td {
   Null test.
   <table class="verifyRows" value="$THIS.full()" name="r">
     <tr>
+      <th class="eq" property="r.anyfield">Invalid path</th>
       <th class="eq" property="r.address.number">Number (string)</th>
       <th class="eq" property="r.address.number">Number (object)</th>
     </tr>
     <tr>
+      <td>@null</td>
       <td>null</td>
       <td>@null</td>
     </tr>
