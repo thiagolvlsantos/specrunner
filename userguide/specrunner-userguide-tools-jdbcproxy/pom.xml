@@ -6,11 +6,11 @@
         <version>1.1.1-SNAPSHOT</version>
         <relativePath>../specrunner-userguide</relativePath>
     </parent>
-    <artifactId>specrunner-userguide-sql</artifactId>
+    <artifactId>specrunner-userguide-tools-jdbcproxy</artifactId>
     <dependencies>
         <dependency>
             <groupId>org.specrunner</groupId>
-            <artifactId>specrunner-jdbcproxy</artifactId>
+            <artifactId>specrunner-tools-jdbcproxy</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
