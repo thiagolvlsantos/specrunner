@@ -7,16 +7,19 @@ public class Main {
 
     static {
         try {
-            System.out.println("org.specrunner.jdbcproxy loading.");
+            System.out.println(Main.class + " loading.");
             // DriverManager.setLogWriter(new PrintWriter(System.err));
             SRServices.get().bind(IWrapperFactory.class, new WrapperFactoryExample());
             Class.forName(FactoryJdbcBuilder.class.getName());
-            System.out.println("org.specrunner.jdbcproxy loaded.");
+            System.out.println(Main.class + " loaded.");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        if (args.length > 0) {
+            Class.forName(args[0].trim());
+        }
     }
 }
