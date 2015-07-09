@@ -43,12 +43,10 @@
         <module>../specrunner-core-text</module>
         <!-- Spring integration -->
         <module>../specrunner-core-spring</module>
-        <!-- Concordion integration -->
-        <module>../specrunner-concordion-emulator</module>
-        <!-- Concordion extension -->
-        <!--module>../specrunner-concordion-extension</module-->
         <!-- ANT integration -->
         <module>../specrunner-ant</module>
+        <!-- Concordion integration -->
+        <module>../specrunner-concordion-emulator</module>
         <!-- Basic database support -->
         <module>../specrunner-sql</module>
         <module>../specrunner-sql-negative</module>
@@ -63,7 +61,6 @@
         <!-- Web clients support -->
         <module>../specrunner-htmlunit</module>
         <module>../specrunner-webdriver</module>
-        
 	</modules>
 
     <properties>
