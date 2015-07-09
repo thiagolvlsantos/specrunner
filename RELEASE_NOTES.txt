@@ -1,201 +1,3 @@
-CRÍTICAS:
-
-- Criar um filtro de pacotes para a impressão das exceções, para reduzir logs inúteis escondendo por exemplo os do próprio junit.runners.*/etc.
-
-- Adicionar a criação de subobjetos em cadastros de objetos com objins/etc:
-	por exemplo i) colocar um atributo que seja uma coleção de strings, e ii) depois uma coleção de sub-objetos
-?? - Adicionar a exceção gerada no caso de erro das invocações do PluginSentence como resultado apontado pelo 'name';
-	Precisa?
-- Colocar o access factory para PluginAbstractObject, e colocar field ou feature no campo a ser sensibilizado;
-- Colocar parâmetros na chamada de macro feito tem em includes;
-- Ver o verifyRows se tem como ficar + simples;
-- Ver se tem como remover a pilha de erros do trace o próprio JUnit. Provavelmente se não anexar a causa ele não vai colocar a pilha, ver se é possível para reduzir o log quando a quanidade de erros for muito grande, o que dá erro no surefire report;
-	
-- Disponibilizar o proxy de jdbc dentro do pacote specrunner tools;
-
-- Adicionar um modo DEBUG para o comparador de bases;
-
-SPRING-BOOT:
-- Ver as configurações do projeto para criar o spring boot sprunner que permitiria realizar testes automatizados usando trechos em HTML dispersos na aplicação
-	- Tipo não precisar de um contexto complexo para rodar apenas a preparação da base de dados lendo de arquivos, por exemplo.
-
-
-PRIORITÁRIAS:
-- Criar um listener para transpor uma tabela escrita no formato
-	<coluna><valor><valor>...
-        <coluna><valor><valor>....
-	para a coluna normal que temos hoje, e depois de rodar transpor de volta ao formato original para facilitar o debug.
-
-- Seria possível generalizar a estratégia dos args (usada em PluginSentence) para plugins como PluginEquals?
-
-- Encontrar formas de especificar condições de espera com coisas como tamanho de tabelas/etc [criar teste mostrando como fazer].
-
-- Melhorar o formatador de colunas para calcular os tamanhos dos campos corretamente;
-
-- Corrigir a referência para imagens/recursos que tenha espaço em branco no nome (fazer o URL enconding);
-
-
-ALTA:
-- Criar um conceito de objeto com atributos dinâmicos para gerar mapas de objetos (exemplo: um objeto onde os campos são na verdade um Map<Campo,Valor>)
-
-- Fazer um esquema para chamar REST e verificar a resposta;
-
-- Olhar o WaitPageToLoad (Selenesse);
-
-- Criar um PluginConnection/PluginRollback para colocar a conexão no modo de autofush 'false' e limpar a base ao final de cada cenário (fazer isso para cada cenário).
-
-- Criar cenários aninhados no JUnit runner;
-
-- Analisar o PluginInclude para saber se ele está chamando o código do saveLocal no contexto na posição certa dos dados incluídos, para evitar variáveis estranhas;
-
-- Colocar a lista de cenários no contexto, e se foi bem sucedido ou não. Para realizar o dump deles no relatório de saída TXT e HTML.
-
-- Normalizar o valor default caso seja null, nos demais casos considerar o valor recebido mesmo (colocar algo para ele saber se deve testar case sensitive ou não);
-
-- Criar um leitor de esquemas usando o SchemaCrawler, que gera um nu.xom.Document:
-	- Generalizar o leitor de Document para receber um document no load, será usado no SchemaLoaderXML e no SchemaLoaderBase(a ser criado);
-	- Criar um composite loader para usar a abordagem de realizar merge do que foi lido da base mais o que foi lido do arquivo, isso permitirá economizar escrita como os tipos básicos usados em cada coluna, campos de data, campos de chave, transformadores padrão, etc.
-
-- Testar a combinação de HTMLUnit com Wicket6 para resolver o problema definitivamente.
-	- Wicket 6 mudou o modelo de eventos e o JS do HtmlUnit se perdeu.
-
-- Criar um plugin que faça a verificação de todas opções de um select e que faça também a verificação dos selecionados;
-- Fazer o download do compare files no notepad++;
-
-MÉDIA:
-- Criar um modelo onde se possa definir os estados dos mocks no início e o estado deles no final para fazer escopo negativo de mocks também;
-
-- No plugin sentence usar o exemplo <sentence>vai<arg>0002</arg></sentence>, e ver o que acontece:
-	public void vai(String str) {
-		// deveria receber a string sem fazer avaliação
-	}
-- Fazer o leitor de esquema a partir da base.
-- Como fazer tabelas domínio? Como controlar o drop e create das tabelas sem precisar fazer isso com as tabelas domínio? Definir essa abordagem para economizar na execução dos testes.
-
-BAIXA:
-- Usar 'lazy creation' para tudo (principalmente os mapas).
-
-- Criar uma cache para os conversores de enumeração para minimizar tempo de execução;
-
-- Colocar o tipo SQL do campo no header relatório de comparar Base:
-	http://stackoverflow.com/questions/6437790/jdbc-get-the-sql-type-name-from-java-sql-type-code
-
-- Implementar um hbnsel para realizar select geral de objetos e ver se o conteúdo está lá completo;
-	- Criar uma consulta antes e depois sair removendo à medida que se encontra os objetos, isso vai evitar também tapear usando o mesmo elemento no resultado:
-		- Usar o HashBuilder nos campos para evitar pesquisar pelo mesmo elemento várias vezes;
-- Implementar um verifyAll para realizar o select completo de uma tabela:
-	- Fazer um select considerando campos de ordenação definidos na tabela: <table class="verifyAll" ...order="nome,telefone,data">...</table>
-
-- No caso de escopo negativo pintar os verify com status informativo, e não de sucesso? Fica bom?
-
-- Usar o TableReport para falhas no escopo positivo (compensa fazer? Pensando bem acho que não):
-	- Aqui pode-se usar o mesmo modelo de escopo positivo, a diferença é que testa-se apenas as tabelas que são informadas no por fim, apenas as perguntadas, usando-se inclusive a base auxiliar.
-	- Se usar o filter para ignorar demais tabelas lembrar de fazer um AND com os métodos do filtro já existente.
-
-- Criar o perfil specrunner-sql-select para fazer o teste final usando apenas os selects dos campos, sem necessidade de base extra, ou seja o que seria o ...-sql-positive hoje.
-	- Só fazer se for feita a de cima também.
-
-- criar o result que sempre aparece expandido de cara;
-
-- Baixar o jailer;
-
-- Trocar todos os UtilXXX por métodos não estáticos acessíveis a partir do SRServices, como foi feito com o IStringNormalizer.
-
-- Colocar para não realizar eval de expressões somente se eval for false, usar como exemplo um nome de arquivo, com ';';
-          ? Remover ou não as strings
-
-- Fazer o plugin sentence trabalhar com features e não apenas métodos;
-
-Exemplo de report:
------------------
-
-
-<html>
-
-<head>
-    < src="http://code.jquery.com/jquery-1.9.1.min.js"></>
-    <>
-	
-	$( document ).ready(function() {
-        $("body").click(function (e) {
-				var show = e.target == document.getElementById("componente") 
-					|| e.target.parentNode == document.getElementById("componente");
-				if(show) {
-					$("#componente").show();
-				} else {
-					show = e.target == document.getElementById("controle");
-					if(show) {
-						$("#componente").show();
-						$("#componente").offset($("#controle").offset());
-					} else {
-						$("#componente").hide();
-					}
-				}
-		});
-    });
-
-    </>
-</head>
-
-<style>
-.sr_frame_link_div {
-    background-color: white;
-    padding: 5px;
-    text-align: right;
-    font-weight: bold;
-    font-size: 10pt;
-    font-family: verdana;
-    /* always visible */
-    border: 1px solid #A2D9EF;
-	display: none;
-}
-</style>
-
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-<p> </p>
-
-<div style="text-align:center;">
-	<input type="button" id="controle" value="Mostrar"/>
-</div>
-
-
-<span class="sr_frame_link_div" id="componente">Estou <input type="radio" name="sex" value="male">AQUI<br></span>
-
-</html>
 -----------------------------------------------------------
 1.4.40
 OK - Features para tratamentos de null e propriedades inválidas nos atributos 'property'.
@@ -696,4 +498,205 @@ OK -Trocar os valores dos campos na especificação também para as telas, assim co
 OK - Fazer também no SQL depois que ele realizar a conversão, para melhorar a tela. 
 OK - MELHORAR O LEITOR DE  SQL; 
 
-Criar o conceito de composite action, para tarefas agrupadas, e o somatório ser segregado, bem com a exibição no relatório de debug. (Precisa?)
+
+----------------------
+CRÍTICAS:
+
+- Criar um filtro de pacotes para a impressão das exceções, para reduzir logs inúteis escondendo por exemplo os do próprio junit.runners.*/etc.
+
+- Adicionar a criação de subobjetos em cadastros de objetos com objins/etc:
+	por exemplo i) colocar um atributo que seja uma coleção de strings, e ii) depois uma coleção de sub-objetos
+?? - Adicionar a exceção gerada no caso de erro das invocações do PluginSentence como resultado apontado pelo 'name';
+	Precisa?
+- Colocar o access factory para PluginAbstractObject, e colocar field ou feature no campo a ser sensibilizado;
+- Colocar parâmetros na chamada de macro feito tem em includes;
+- Ver o verifyRows se tem como ficar + simples;
+- Ver se tem como remover a pilha de erros do trace o próprio JUnit. Provavelmente se não anexar a causa ele não vai colocar a pilha, ver se é possível para reduzir o log quando a quanidade de erros for muito grande, o que dá erro no surefire report;
+	
+- Disponibilizar o proxy de jdbc dentro do pacote specrunner tools;
+
+- Adicionar um modo DEBUG para o comparador de bases;
+
+SPRING-BOOT:
+- Ver as configurações do projeto para criar o spring boot sprunner que permitiria realizar testes automatizados usando trechos em HTML dispersos na aplicação
+	- Tipo não precisar de um contexto complexo para rodar apenas a preparação da base de dados lendo de arquivos, por exemplo.
+
+
+PRIORITÁRIAS:
+- Criar um listener para transpor uma tabela escrita no formato
+	<coluna><valor><valor>...
+        <coluna><valor><valor>....
+	para a coluna normal que temos hoje, e depois de rodar transpor de volta ao formato original para facilitar o debug.
+
+- Seria possível generalizar a estratégia dos args (usada em PluginSentence) para plugins como PluginEquals?
+
+- Encontrar formas de especificar condições de espera com coisas como tamanho de tabelas/etc [criar teste mostrando como fazer].
+
+- Melhorar o formatador de colunas para calcular os tamanhos dos campos corretamente;
+
+- Corrigir a referência para imagens/recursos que tenha espaço em branco no nome (fazer o URL enconding);
+
+
+ALTA:
+- Criar um conceito de objeto com atributos dinâmicos para gerar mapas de objetos (exemplo: um objeto onde os campos são na verdade um Map<Campo,Valor>)
+
+- Fazer um esquema para chamar REST e verificar a resposta;
+
+- Olhar o WaitPageToLoad (Selenesse);
+
+- Criar um PluginConnection/PluginRollback para colocar a conexão no modo de autofush 'false' e limpar a base ao final de cada cenário (fazer isso para cada cenário).
+
+- Criar cenários aninhados no JUnit runner;
+
+- Analisar o PluginInclude para saber se ele está chamando o código do saveLocal no contexto na posição certa dos dados incluídos, para evitar variáveis estranhas;
+
+- Colocar a lista de cenários no contexto, e se foi bem sucedido ou não. Para realizar o dump deles no relatório de saída TXT e HTML.
+
+- Normalizar o valor default caso seja null, nos demais casos considerar o valor recebido mesmo (colocar algo para ele saber se deve testar case sensitive ou não);
+
+- Criar um leitor de esquemas usando o SchemaCrawler, que gera um nu.xom.Document:
+	- Generalizar o leitor de Document para receber um document no load, será usado no SchemaLoaderXML e no SchemaLoaderBase(a ser criado);
+	- Criar um composite loader para usar a abordagem de realizar merge do que foi lido da base mais o que foi lido do arquivo, isso permitirá economizar escrita como os tipos básicos usados em cada coluna, campos de data, campos de chave, transformadores padrão, etc.
+
+- Testar a combinação de HTMLUnit com Wicket6 para resolver o problema definitivamente.
+	- Wicket 6 mudou o modelo de eventos e o JS do HtmlUnit se perdeu.
+
+- Criar um plugin que faça a verificação de todas opções de um select e que faça também a verificação dos selecionados;
+- Fazer o download do compare files no notepad++;
+
+MÉDIA:
+- Criar um modelo onde se possa definir os estados dos mocks no início e o estado deles no final para fazer escopo negativo de mocks também;
+
+- No plugin sentence usar o exemplo <sentence>vai<arg>0002</arg></sentence>, e ver o que acontece:
+	public void vai(String str) {
+		// deveria receber a string sem fazer avaliação
+	}
+- Fazer o leitor de esquema a partir da base.
+- Como fazer tabelas domínio? Como controlar o drop e create das tabelas sem precisar fazer isso com as tabelas domínio? Definir essa abordagem para economizar na execução dos testes.
+
+BAIXA:
+- Usar 'lazy creation' para tudo (principalmente os mapas).
+
+- Criar uma cache para os conversores de enumeração para minimizar tempo de execução;
+
+- Colocar o tipo SQL do campo no header relatório de comparar Base:
+	http://stackoverflow.com/questions/6437790/jdbc-get-the-sql-type-name-from-java-sql-type-code
+
+- Implementar um hbnsel para realizar select geral de objetos e ver se o conteúdo está lá completo;
+	- Criar uma consulta antes e depois sair removendo à medida que se encontra os objetos, isso vai evitar também tapear usando o mesmo elemento no resultado:
+		- Usar o HashBuilder nos campos para evitar pesquisar pelo mesmo elemento várias vezes;
+- Implementar um verifyAll para realizar o select completo de uma tabela:
+	- Fazer um select considerando campos de ordenação definidos na tabela: <table class="verifyAll" ...order="nome,telefone,data">...</table>
+
+- No caso de escopo negativo pintar os verify com status informativo, e não de sucesso? Fica bom?
+
+- Usar o TableReport para falhas no escopo positivo (compensa fazer? Pensando bem acho que não):
+	- Aqui pode-se usar o mesmo modelo de escopo positivo, a diferença é que testa-se apenas as tabelas que são informadas no por fim, apenas as perguntadas, usando-se inclusive a base auxiliar.
+	- Se usar o filter para ignorar demais tabelas lembrar de fazer um AND com os métodos do filtro já existente.
+
+- Criar o perfil specrunner-sql-select para fazer o teste final usando apenas os selects dos campos, sem necessidade de base extra, ou seja o que seria o ...-sql-positive hoje.
+	- Só fazer se for feita a de cima também.
+
+- criar o result que sempre aparece expandido de cara;
+
+- Baixar o jailer;
+
+- Trocar todos os UtilXXX por métodos não estáticos acessíveis a partir do SRServices, como foi feito com o IStringNormalizer.
+
+- Colocar para não realizar eval de expressões somente se eval for false, usar como exemplo um nome de arquivo, com ';';
+          ? Remover ou não as strings
+
+- Fazer o plugin sentence trabalhar com features e não apenas métodos;
+
+- Criar o conceito de composite action, para tarefas agrupadas, e o somatório ser segregado, bem com a exibição no relatório de debug. (Precisa?)
+
+Exemplo de report:
+-----------------
+
+
+<html>
+
+<head>
+    < src="http://code.jquery.com/jquery-1.9.1.min.js"></>
+    <>
+	
+	$( document ).ready(function() {
+        $("body").click(function (e) {
+				var show = e.target == document.getElementById("componente") 
+					|| e.target.parentNode == document.getElementById("componente");
+				if(show) {
+					$("#componente").show();
+				} else {
+					show = e.target == document.getElementById("controle");
+					if(show) {
+						$("#componente").show();
+						$("#componente").offset($("#controle").offset());
+					} else {
+						$("#componente").hide();
+					}
+				}
+		});
+    });
+
+    </>
+</head>
+
+<style>
+.sr_frame_link_div {
+    background-color: white;
+    padding: 5px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 10pt;
+    font-family: verdana;
+    /* always visible */
+    border: 1px solid #A2D9EF;
+	display: none;
+}
+</style>
+
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+<p> </p>
+
+<div style="text-align:center;">
+	<input type="button" id="controle" value="Mostrar"/>
+</div>
+
+
+<span class="sr_frame_link_div" id="componente">Estou <input type="radio" name="sex" value="male">AQUI<br></span>
+
+</html>
