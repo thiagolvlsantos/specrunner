@@ -57,6 +57,10 @@ public interface INodeHolder extends IAbstraction {
      */
     String ATTRIBUTE_FORCE_VALUE = "forceValue";
     /**
+     * Attribute to force evaluation using 'tag getValue()'.
+     */
+    String ATTRIBUTE_FORCE_CONTENT = "forceContent";
+    /**
      * Attribute for value.
      */
     String ATTRIBUTE_VALUE = "value";

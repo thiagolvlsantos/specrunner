@@ -75,11 +75,14 @@ public class PluginEquals extends AbstractPluginDual {
         Object objExpected = null;
         Object objReceived = null;
         if (node instanceof Element) {
-            if (parent.hasAttribute(INodeHolder.ATTRIBUTE_VALUE) || parent.hasAttribute(INodeHolder.ATTRIBUTE_PROPERTY)) {
+            if (parent.hasAttribute(INodeHolder.ATTRIBUTE_PROPERTY) || parent.hasAttribute(INodeHolder.ATTRIBUTE_VALUE)) {
                 boolean forceValue = false;
                 if (parent.hasAttribute(INodeHolder.ATTRIBUTE_PROPERTY)) {
                     parent.setAttribute(INodeHolder.ATTRIBUTE_FORCE_VALUE, String.valueOf(true));
                     forceValue = true;
+                }
+                if (parent.hasAttribute(INodeHolder.ATTRIBUTE_VALUE)) {
+                    parent.setAttribute(INodeHolder.ATTRIBUTE_FORCE_CONTENT, String.valueOf(true));
                 }
                 Object tmp = parent.getObject(context, forceValue);
                 if (object != null && object instanceof String) {
