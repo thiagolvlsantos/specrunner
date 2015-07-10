@@ -536,10 +536,18 @@ public class NodeHolderDefault implements INodeHolder {
      */
     protected Object getValue(IContext context, boolean silent) throws PluginException {
         String str;
-        if (hasAttribute(attributeValue) && !attributeEquals(ATTRIBUTE_FORCE_CONTENT, "true")) {
-            str = getAttribute(attributeValue);
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("Attribute value present, value is '" + str + "'.");
+        if (hasAttribute(attributeValue)) {
+            boolean forceContent = hasAttribute(ATTRIBUTE_FORCE_CONTENT);
+            if (forceContent) {
+                str = getValue();
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Forced content, value is '" + str + "'.");
+                }
+            } else {
+                str = getAttribute(attributeValue);
+                if (UtilLog.LOG.isTraceEnabled()) {
+                    UtilLog.LOG.trace("Attribute value present, value is '" + str + "'.");
+                }
             }
         } else {
             str = getValue();
