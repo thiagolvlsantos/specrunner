@@ -56,11 +56,11 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
     /**
      * Parent index.
      */
-    private static final int PARENT = 1;
+    protected static final int PARENT = 1;
     /**
      * Node index.
      */
-    private static final int CURRENT = 0;
+    protected static final int CURRENT = 0;
     /**
      * Queue of sources.
      */
@@ -277,6 +277,29 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             }
         }
         return null;
+    }
+
+    @Override
+    public boolean hasName(String name) {
+        int count = 0;
+        int begin = name != null ? name.indexOf(UPACCESS, 0) : -1;
+        while (name != null && begin >= 0) {
+            count++;
+            begin = name.indexOf(UPACCESS, begin + UPACCESS.length());
+        }
+        name = name != null ? name.replace(UPACCESS, "") : null;
+        for (int i = CURRENT; i < size(); i++) {
+            IBlock g = get(i);
+            if (g != null) {
+                if (g.getMap().containsKey(name)) {
+                    count--;
+                    if (count == -1) {
+                        break;
+                    }
+                }
+            }
+        }
+        return count == -1;
     }
 
     @Override

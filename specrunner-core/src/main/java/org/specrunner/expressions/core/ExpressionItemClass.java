@@ -21,6 +21,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.expressions.IExpressionItem;
+import org.specrunner.expressions.InvalidValueException;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -35,6 +36,7 @@ public class ExpressionItemClass implements IExpressionItem {
      * Thread safe instance.
      */
     private static ThreadLocal<IExpressionItem> instance = new ThreadLocal<IExpressionItem>() {
+        @Override
         protected IExpressionItem initialValue() {
             return new ExpressionItemClass();
         };
@@ -51,19 +53,19 @@ public class ExpressionItemClass implements IExpressionItem {
 
     @Override
     public Object eval(IExpressionFactory factory, String text, IContext context, boolean silent) throws ExpressionException {
-        Object value = null;
-        // check predefined classes
         Class<?> clazz = factory.getClasses().get(text);
         if (clazz != null) {
             try {
-                value = clazz.newInstance();
+                return clazz.newInstance();
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
                 }
-                throw new ExpressionException("Unable to evaluate predefined value:" + text, e);
+                if (!silent) {
+                    throw new ExpressionException("Unable to evaluate predefined class:" + text, e);
+                }
             }
         }
-        return value;
+        throw new InvalidValueException("Invalid class '" + text + "'.");
     }
 }

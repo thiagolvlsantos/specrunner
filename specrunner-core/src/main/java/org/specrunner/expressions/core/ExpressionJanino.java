@@ -33,6 +33,7 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.expressions.IExpressionItem;
 import org.specrunner.expressions.INullEmptyFeature;
 import org.specrunner.expressions.INullEmptyHandler;
+import org.specrunner.expressions.InvalidValueException;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
@@ -56,7 +57,7 @@ public class ExpressionJanino extends AbstractExpression {
     /**
      * The expression source.
      */
-    private Object source;
+    protected Object source;
 
     /**
      * Cache of expressions.
@@ -98,8 +99,13 @@ public class ExpressionJanino extends AbstractExpression {
         List<String> args = new LinkedList<String>();
         List<Object> values = new LinkedList<Object>();
         List<Class<?>> types = new LinkedList<Class<?>>();
-        Object r = arguments(context, expression, args, types, values, silent);
-        if (r == null) {
+        Object r;
+        try {
+            r = arguments(context, expression, args, types, values, silent);
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("DIRECT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
+            }
+        } catch (InvalidValueException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("EXPR>" + expression);
                 UtilLog.LOG.debug("ARGS>" + args);
@@ -109,10 +115,6 @@ public class ExpressionJanino extends AbstractExpression {
             r = eval(source, expression, args, types, values, silent);
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("JANINO(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
-            }
-        } else {
-            if (UtilLog.LOG.isTraceEnabled()) {
-                UtilLog.LOG.trace("DIRECT(" + (r != null ? r.getClass().getSimpleName() : "") + ")>" + r);
             }
         }
         return r;
@@ -162,11 +164,13 @@ public class ExpressionJanino extends AbstractExpression {
                 return expression;
             }
             for (String str : vars) {
-                Object value = getValue(context, str, silent);
-                if (value != null) {
+                try {
+                    Object value = getValue(context, str, silent);
                     args.add(str);
                     values.add(value);
-                    types.add(value.getClass());
+                    types.add(value == null ? null : value.getClass());
+                } catch (InvalidValueException e) {
+                    // ignore
                 }
                 // if the expression is itself a var, it has already been
                 // evaluated.
@@ -218,7 +222,7 @@ public class ExpressionJanino extends AbstractExpression {
             }
         }
         // if the heuristic fails, the expression has to be evaluated.
-        return null;
+        throw new InvalidValueException("Process expression.");
     }
 
     /**
@@ -235,20 +239,19 @@ public class ExpressionJanino extends AbstractExpression {
      *             On expression errors.
      */
     protected Object getValue(IContext context, String text, boolean silent) throws ExpressionException {
-        Object value = null;
         // set precedence according to the environment
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(IExpression.FEATURE_PRECEDENCE, this);
         // get current order
         IExpressionItem[] order = getPrecedence();
         for (int i = 0; i < order.length; i++) {
-            value = order[i].eval(getParent(), text, context, silent);
-            if (value != null) {
-                // on first value evaluation return
-                return value;
+            try {
+                return order[i].eval(getParent(), text, context, silent);
+            } catch (InvalidValueException e) {
+                // ignore
             }
         }
-        return value;
+        throw new InvalidValueException("Value not accepted as result.");
     }
 
     /**
