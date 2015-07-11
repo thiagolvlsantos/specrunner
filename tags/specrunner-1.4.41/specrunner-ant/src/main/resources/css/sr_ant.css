@@ -1,0 +1,16 @@
+.sr_antcall {
+    border: 1px dotted black;
+}
+
+.sr_antcall:after {
+    content: "ant";
+    padding: 2px;
+    font-size: x-small;
+    vertical-align: top;
+    background-color: white;
+}
+
+.sr_antlog {
+    background-color: #EEEEEE;
+    border: 1px dotted black;
+}
