@@ -1,4 +1,11 @@
 -----------------------------------------------------------
+1.4.41
+OK - Corrigir o plugin equals para caso ele não ter uma propriedade usar o campo value como base da comparação e o texto como esperado;
+	OK - É preciso analisar o contexto no getByName para pegar o valor dele com null caso exista perguntando primeiro e containsKey e se tiver pode ser se nulo o resultado;
+	OK - Depois disso analisar o que o avaliador de expressões faz quando a expressão é inválida para o analisador: deve-se lançar exceção dizendo que o valor não foi aceito pelo ExpressionItem e não retornando nulo, afinal nulo pode ser um valor válido pós avaliação, depois deve-se verificar que o os item de expressões não de deveriam lançar exceções quando o pedido de avaliação seja 'silent=true'.
+OK - Colocar a possibilidade de aceitar nulos como paths em feature, e também a possibilidade de não haver a propriedade como uma feature do NodeHolder;
+OK - Corrigir a nomenclatura das variáveis temporárias do getLocalArguments;
+
 1.4.40
 OK - Features para tratamentos de null e propriedades inválidas nos atributos 'property'.
 
