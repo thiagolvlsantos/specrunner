@@ -181,6 +181,15 @@ public interface IContext extends Deque<IBlock>, IBlock, IBlockFactory {
     IBlock getParentByPlugin(Class<? extends IPlugin> type);
 
     /**
+     * Check if name is present in context.
+     * 
+     * @param name
+     *            Context.
+     * @return true, if present, false, otherwise.
+     */
+    boolean hasName(String name);
+
+    /**
      * Search a value by its name, from the most restricted block to the
      * outermost (i.e. the root XML element).
      * 
