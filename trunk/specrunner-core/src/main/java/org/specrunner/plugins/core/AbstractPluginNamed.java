@@ -30,7 +30,7 @@ public abstract class AbstractPluginNamed extends AbstractPlugin {
     /**
      * The plugin instance name.
      */
-    private String name;
+    protected String name;
 
     /**
      * Name attribute.

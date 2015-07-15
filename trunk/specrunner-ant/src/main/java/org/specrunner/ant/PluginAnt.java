@@ -54,7 +54,8 @@ public class PluginAnt extends AbstractPlugin {
     /**
      * Serial for executions.
      */
-    private static ThreadLocal<Integer> serial = new ThreadLocal<Integer>() {
+    protected static ThreadLocal<Integer> serial = new ThreadLocal<Integer>() {
+        @Override
         protected Integer initialValue() {
             return 0;
         }
@@ -63,19 +64,19 @@ public class PluginAnt extends AbstractPlugin {
     /**
      * Build basedir.
      */
-    private String basedir;
+    protected String basedir;
     /**
      * Build file.
      */
-    private String file;
+    protected String file;
     /**
      * Build target.
      */
-    private String target;
+    protected String target;
     /**
      * Debug level.
      */
-    private Integer debug = Project.MSG_INFO;
+    protected Integer debug = Project.MSG_INFO;
 
     @Override
     public ActionType getActionType() {

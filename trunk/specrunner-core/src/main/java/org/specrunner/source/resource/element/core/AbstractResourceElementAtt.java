@@ -44,12 +44,12 @@ public abstract class AbstractResourceElementAtt extends AbstractResourceElement
     /**
      * The attribute where resource lies.
      */
-    private String attribute;
+    protected String attribute;
 
     /**
      * The log name.
      */
-    private String prefix;
+    protected String prefix;
 
     /**
      * Creates a resource.

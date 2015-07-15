@@ -28,7 +28,7 @@ public class ScenarioOutline extends Scenario {
     /**
      * The data table.
      */
-    private DataTable table = new DataTable();
+    protected DataTable table = new DataTable();
 
     /**
      * Create an outline with scenario.

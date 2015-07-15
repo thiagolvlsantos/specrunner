@@ -33,11 +33,11 @@ public class AntLogger extends DefaultLogger {
     /**
      * Log sink.
      */
-    private ByteArrayOutputStream out;
+    protected ByteArrayOutputStream out;
     /**
      * Stream.
      */
-    private PrintStream print;
+    protected PrintStream print;
 
     /**
      * Ant log.

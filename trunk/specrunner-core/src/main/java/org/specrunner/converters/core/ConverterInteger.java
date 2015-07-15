@@ -27,6 +27,7 @@ import org.specrunner.converters.ConverterException;
  */
 @SuppressWarnings("serial")
 public class ConverterInteger extends ConverterNotNullNotEmpty {
+
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {

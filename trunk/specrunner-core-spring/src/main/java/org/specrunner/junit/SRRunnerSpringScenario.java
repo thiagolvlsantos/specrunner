@@ -21,27 +21,27 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner implements I
     /**
      * The notifier.
      */
-    private RunNotifier notifier;
+    protected RunNotifier notifier;
 
     /**
      * The fake method.
      */
-    private FrameworkMethod fakeMethod;
+    protected FrameworkMethod fakeMethod;
 
     /**
      * Scenario listeners.
      */
-    private List<INodeListener> listeners;
+    protected List<INodeListener> listeners;
 
     /**
      * The fixture object, if it exists, null, otherwise.
      */
-    private Object instance;
+    protected Object instance;
 
     /**
      * Statement performed.
      */
-    private SpecRunnerStatement statement;
+    protected SpecRunnerStatement statement;
 
     /**
      * Basic constructor.

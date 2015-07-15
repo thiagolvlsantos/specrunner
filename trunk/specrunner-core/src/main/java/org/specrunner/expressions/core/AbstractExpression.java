@@ -39,12 +39,12 @@ public abstract class AbstractExpression implements IExpression {
     /**
      * The parent factory.
      */
-    private IExpressionFactory parent;
+    protected IExpressionFactory parent;
 
     /**
      * The enumeration order.
      */
-    private IExpressionItem[] precedence = DEFAULT_PRECEDENCE;
+    protected IExpressionItem[] precedence = DEFAULT_PRECEDENCE;
 
     /**
      * Basic constructor.

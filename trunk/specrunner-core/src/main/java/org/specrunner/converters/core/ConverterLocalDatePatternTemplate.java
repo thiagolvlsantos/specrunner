@@ -34,7 +34,7 @@ public class ConverterLocalDatePatternTemplate extends ConverterNotNullNotEmpty 
     /**
      * Parser instance.
      */
-    private DateTimeFormatter pattern;
+    protected DateTimeFormatter pattern;
 
     /**
      * Create a SimpleDateFormat using the given pattern.

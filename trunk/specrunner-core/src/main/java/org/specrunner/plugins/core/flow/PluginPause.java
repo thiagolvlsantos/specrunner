@@ -89,32 +89,32 @@ public class PluginPause extends AbstractPlugin {
     /**
      * Message frame screen ratio.
      */
-    private static final int RATIO = 4;
+    protected static final int RATIO = 4;
 
     /**
      * Screen font size.
      */
-    private static final int FONT_SIZE = 12;
+    protected static final int FONT_SIZE = 12;
 
     /**
      * Pause message.
      */
-    private String msg;
+    protected String msg;
 
     /**
      * Pause using a keyboard request.
      */
-    private Boolean enter;
+    protected Boolean enter;
 
     /**
      * Pause time.
      */
-    private Long time;
+    protected Long time;
 
     /**
      * Modal flag.
      */
-    private Boolean modal = DEFAULT_MODAL;
+    protected Boolean modal = DEFAULT_MODAL;
 
     /**
      * Get pause message.

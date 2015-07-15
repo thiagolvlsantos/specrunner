@@ -33,7 +33,8 @@ public class ExpressionItemVar implements IExpressionItem {
     /**
      * Thread safe instance.
      */
-    private static ThreadLocal<IExpressionItem> instance = new ThreadLocal<IExpressionItem>() {
+    protected static ThreadLocal<IExpressionItem> instance = new ThreadLocal<IExpressionItem>() {
+        @Override
         protected IExpressionItem initialValue() {
             return new ExpressionItemVar();
         };

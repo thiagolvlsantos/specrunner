@@ -54,7 +54,7 @@ public abstract class AbstractPluginTable extends AbstractPluginScoped {
      * @throws PluginException
      *             On creation errors.
      */
-    private TableAdapter getTableAdapter(IContext context) throws PluginException {
+    protected TableAdapter getTableAdapter(IContext context) throws PluginException {
         Node element = context.getNode();
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("ELEMENT>" + element);

@@ -30,7 +30,7 @@ public abstract class PluginIterable extends AbstractPluginScoped {
     /**
      * Iterator variable name.
      */
-    private String var = "item";
+    protected String var = "item";
 
     /**
      * The object variable name.

@@ -22,7 +22,7 @@ public class SRRunnerSpring extends SpringJUnit4ClassRunner {
     /**
      * Fake method.
      */
-    private FrameworkMethod fakeMethod;
+    protected FrameworkMethod fakeMethod;
 
     /**
      * Basic constructor.

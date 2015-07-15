@@ -31,7 +31,7 @@ public abstract class AbstractPluginScoped extends AbstractPluginNamed {
     /**
      * The plugin scope.
      */
-    private String scope;
+    protected String scope;
 
     /**
      * The scope value.

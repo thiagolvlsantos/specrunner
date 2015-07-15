@@ -414,6 +414,14 @@ table.included_file_args td {
     color: red;
 }
 
+table.compare {
+	border: 1px solid black;
+}
+
+.compare td, .compare th {
+	border: 1px dotted black;
+} 
+
 /* HTML REPORT */
 table.htmlreport {
     border: 1px solid black;

@@ -39,7 +39,7 @@ public abstract class AbstractPluginResource extends AbstractPlugin {
     /**
      * Set the save status.
      */
-    private Boolean save = null;
+    protected Boolean save = null;
 
     /**
      * Constructor.

@@ -31,19 +31,19 @@ public class Feature extends NamedSentences {
     /**
      * Keyword set.
      */
-    private Keywords keywords;
+    protected Keywords keywords;
     /**
      * List of background sentences.
      */
-    private List<Sentence> background = new LinkedList<Sentence>();
+    protected List<Sentence> background = new LinkedList<Sentence>();
     /**
      * List of ending sentences.
      */
-    private List<Sentence> finallys = new LinkedList<Sentence>();
+    protected List<Sentence> finallys = new LinkedList<Sentence>();
     /**
      * List of scenarios.
      */
-    private List<Scenario> scenarios = new LinkedList<Scenario>();
+    protected List<Scenario> scenarios = new LinkedList<Scenario>();
 
     /**
      * Default constructor.

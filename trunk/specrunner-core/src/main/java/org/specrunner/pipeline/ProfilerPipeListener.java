@@ -13,11 +13,11 @@ public class ProfilerPipeListener implements IPipeListener {
     /**
      * Time.
      */
-    private long time;
+    protected long time;
     /**
      * Total time.
      */
-    private long total;
+    protected long total;
 
     @Override
     public void onBeforeCheck(IChannel channel, IPipe source) {

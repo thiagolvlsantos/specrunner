@@ -42,17 +42,17 @@ public class PluginGroupImpl extends CompositeImpl<IPluginGroup, IPlugin> implem
     /**
      * The plugin parent factory.
      */
-    private IPluginFactory parent;
+    protected IPluginFactory parent;
 
     /**
      * Parameter holder.
      */
-    private IParameterDecorator parameters;
+    protected IParameterDecorator parameters;
 
     /**
      * Index of last children not skipped.
      */
-    private int index = 0;
+    protected int index = 0;
 
     /**
      * Default constructor.

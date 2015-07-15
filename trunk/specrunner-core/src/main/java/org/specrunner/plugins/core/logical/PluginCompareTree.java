@@ -139,7 +139,7 @@ public class PluginCompareTree extends AbstractPlugin {
      *            The root.
      * @return true, if leaf, false, otherwise.
      */
-    private boolean isLeaf(Node root) {
+    protected boolean isLeaf(Node root) {
         return (root instanceof Text) || (root instanceof Element && root.getChildCount() == 1 && root.getChild(0) instanceof Text);
     }
 }

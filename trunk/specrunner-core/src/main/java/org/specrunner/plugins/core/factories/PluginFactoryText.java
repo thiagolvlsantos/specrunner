@@ -42,7 +42,7 @@ public class PluginFactoryText implements IPluginFactory {
     /**
      * Concurrent instance of plugin.
      */
-    private static ThreadLocal<IPlugin> instance = new ThreadLocal<IPlugin>() {
+    protected static ThreadLocal<IPlugin> instance = new ThreadLocal<IPlugin>() {
         @Override
         protected IPlugin initialValue() {
             IPluginGroup group = new PluginGroupImpl();

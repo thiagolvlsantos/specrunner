@@ -28,15 +28,15 @@ public class Sentence implements IValidable {
     /**
      * The text of sentence.
      */
-    private String text;
+    protected String text;
     /**
      * The data of the sentence, if any.
      */
-    private DataTable data;
+    protected DataTable data;
     /**
      * The message of the sentence, if any.
      */
-    private String message;
+    protected String message;
 
     /**
      * Creates a sentence with a given text.

@@ -50,7 +50,7 @@ public class SourceImpl implements ISource {
     /**
      * Input source encoding.
      */
-    private String encoding;
+    protected String encoding;
     /**
      * The source as String.
      */

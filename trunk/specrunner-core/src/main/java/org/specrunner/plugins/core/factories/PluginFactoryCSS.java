@@ -50,7 +50,7 @@ public class PluginFactoryCSS extends PluginFactoryImpl {
     /**
      * Separator of name field.
      */
-    private static final char SEPARATOR = '-';
+    protected static final char SEPARATOR = '-';
 
     /**
      * Creates the factory loading file 'sr_plugins_css.properties'.

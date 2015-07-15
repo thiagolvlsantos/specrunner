@@ -36,7 +36,11 @@ public class ConverterCharacter extends ConverterNotNullNotEmpty {
             return obj;
         }
         try {
-            return Character.valueOf(String.valueOf(obj).charAt(0));
+            String str = String.valueOf(obj);
+            if (str.isEmpty()) {
+                throw new ConverterException("Converter '" + getClass() + "' must have at least one character.");
+            }
+            return Character.valueOf(str.charAt(0));
         } catch (NumberFormatException e) {
             throw new ConverterException(e);
         }

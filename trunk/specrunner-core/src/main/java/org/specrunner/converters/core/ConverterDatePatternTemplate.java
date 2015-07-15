@@ -36,7 +36,7 @@ public class ConverterDatePatternTemplate extends AbstractConverterTimezone<Date
     /**
      * Parser instance.
      */
-    private SimpleDateFormat pattern;
+    protected SimpleDateFormat pattern;
 
     /**
      * Create a SimpleDateFormat using the given pattern.

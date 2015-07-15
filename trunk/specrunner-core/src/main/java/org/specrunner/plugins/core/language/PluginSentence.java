@@ -74,17 +74,17 @@ public class PluginSentence extends AbstractPluginScoped {
     /**
      * The plugin type.
      */
-    private ActionType type = Undefined.INSTANCE;
+    protected ActionType type = Undefined.INSTANCE;
 
     /**
      * Method to call.
      */
-    private String method;
+    protected String method;
 
     /**
      * Flag to enable lookup method after arguments conversion.
      */
-    private Boolean after = Boolean.FALSE;
+    protected Boolean after = Boolean.FALSE;
 
     /**
      * Cache of type to methods annotated with sentence.

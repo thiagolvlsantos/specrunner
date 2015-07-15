@@ -44,7 +44,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
     /**
      * The object to be parameterized.
      */
-    private Object decorated;
+    protected Object decorated;
     /**
      * Hold information of already checked attributes.
      */
@@ -181,7 +181,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
      * @throws PluginException
      *             On processing errors.
      */
-    private Object prepareValue(Object value, IContext context, boolean eval, boolean silent) throws PluginException {
+    protected Object prepareValue(Object value, IContext context, boolean eval, boolean silent) throws PluginException {
         return eval ? UtilEvaluator.evaluate(String.valueOf(value), context, silent) : value;
     }
 

@@ -35,7 +35,7 @@ public class ConcordionAssertBoolean extends ConcordionProcessor {
     /**
      * Left expected value.
      */
-    private String left;
+    protected String left;
 
     /**
      * Default constructor.

@@ -39,7 +39,7 @@ public class ConverterEnum extends ConverterNotNullNotEmpty {
     /**
      * Expected arguments size.
      */
-    private static final int ARG_SIZE = 2;
+    protected static final int ARG_SIZE = 2;
 
     @SuppressWarnings("unchecked")
     @Override

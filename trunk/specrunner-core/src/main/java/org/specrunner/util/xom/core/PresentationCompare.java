@@ -60,11 +60,14 @@ public class PresentationCompare implements IPresentation {
         String expType = expected != null ? expected.getClass().getName() : "null";
         String recStr = String.valueOf(received);
         String recType = received != null ? received.getClass().getName() : "null";
-        int sizeStr = (int) Math.max(expStr.length(), recStr.length());
-        int sizeType = (int) Math.max(expType.length(), recType.length());
-        sb.append(String.format("(expected): '%" + sizeStr + "s' (%" + sizeType + "s)", expStr, expType));
+        int sizeStr = Math.max(expStr.length(), recStr.length());
+        int sizeType = Math.max(expType.length(), recType.length());
         sb.append('\n');
-        sb.append(String.format("(received): '%" + sizeStr + "s' (%" + sizeType + "s)", recStr, recType));
+        int gapExp = sizeStr - expStr.length();
+        sb.append(String.format("(expected): '%s'%" + (gapExp > 0 ? gapExp : "") + "s (%" + sizeType + "s)", expStr, "", expType));
+        sb.append('\n');
+        int gapRec = sizeStr - recStr.length();
+        sb.append(String.format("(received): '%s'%" + (gapRec > 0 ? gapRec : "") + "s (%" + sizeType + "s)", recStr, "", recType));
         return sb.toString();
     }
 
@@ -73,6 +76,22 @@ public class PresentationCompare implements IPresentation {
         Element table = new Element("table");
         table.addAttribute(new Attribute("class", "compare"));
         Element tr = new Element("tr");
+        table.appendChild(tr);
+        {
+            Element td = new Element("th");
+            tr.appendChild(td);
+            td.appendChild("");
+
+            td = new Element("th");
+            tr.appendChild(td);
+            td.appendChild("Value");
+
+            td = new Element("th");
+            tr.appendChild(td);
+            td.appendChild("Type");
+        }
+
+        tr = new Element("tr");
         table.appendChild(tr);
         {
             Element td = new Element("td");

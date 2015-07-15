@@ -47,7 +47,7 @@ public class PluginBean extends AbstractPluginNamed {
     /**
      * Bean instance.
      */
-    private Object bean;
+    protected Object bean;
 
     @Override
     public ActionType getActionType() {

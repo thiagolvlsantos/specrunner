@@ -41,7 +41,7 @@ public abstract class AbstractPluginDual extends AbstractPluginValue {
      * Adjust execution moment, if on start node or at the end. Default is
      * 'false', to perform on end.
      */
-    private Boolean onstart = Boolean.FALSE;
+    protected Boolean onstart = Boolean.FALSE;
 
     /**
      * Get if execute on start.

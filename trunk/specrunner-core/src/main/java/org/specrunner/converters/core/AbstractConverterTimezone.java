@@ -48,7 +48,7 @@ public abstract class AbstractConverterTimezone<T> extends ConverterNotNullNotEm
     /**
      * The date timezone for adjust.
      */
-    private String timezone;
+    protected String timezone;
 
     /**
      * Get current timezone set.

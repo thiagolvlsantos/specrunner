@@ -59,7 +59,7 @@ public abstract class AbstractSourceDumperFile extends EncodedImpl implements IS
     /**
      * Clean attribute.
      */
-    private Boolean clean = DEFAULT_CLEAN;
+    protected Boolean clean = DEFAULT_CLEAN;
     /**
      * Default output directory.
      */

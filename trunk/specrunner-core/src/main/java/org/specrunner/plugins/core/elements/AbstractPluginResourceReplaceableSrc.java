@@ -28,7 +28,7 @@ public abstract class AbstractPluginResourceReplaceableSrc extends AbstractPlugi
     /**
      * The source.
      */
-    private String src;
+    protected String src;
 
     /**
      * The source attribute.
