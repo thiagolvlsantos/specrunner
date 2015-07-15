@@ -26,6 +26,7 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
+import org.specrunner.plugins.core.flow.PluginPause;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.Status;
@@ -67,6 +68,19 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
      * Set true, to show a dialog.
      */
     protected Boolean showDialog = Boolean.FALSE;
+
+    /**
+     * Modal feature.
+     */
+    public static final String FEATURE_MODAL = PluginPause.class.getName() + ".modal";
+    /**
+     * Modal default value.
+     */
+    public static final Boolean DEFAULT_MODAL = Boolean.TRUE;
+    /**
+     * Modal flag.
+     */
+    protected Boolean modal = DEFAULT_MODAL;
 
     /**
      * Auxiliary frame.
@@ -145,11 +159,31 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
         this.showDialog = showDialog;
     }
 
+    /**
+     * Get modal information.
+     * 
+     * @return true, if modal, false, otherwise.
+     */
+    public Boolean getModal() {
+        return modal;
+    }
+
+    /**
+     * Set modal flag.
+     * 
+     * @param modal
+     *            Modal mode.
+     */
+    public void setModal(Boolean modal) {
+        this.modal = modal;
+    }
+
     @Override
     public void reset() {
         condition = true;
         pauseOnFailure = false;
         showDialog = false;
+        modal = DEFAULT_MODAL;
         okToAll = false;
     }
 
@@ -159,6 +193,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
         fm.set(FEATURE_CONDITION, this);
         fm.set(FEATURE_PAUSE_ON_FAILURE, this);
         fm.set(FEATURE_SHOW_DIALOG, this);
+        fm.set(FEATURE_MODAL, this);
         start = result.size();
         return ENext.DEEP;
     }
@@ -211,7 +246,7 @@ public class PauseOnFailureNodeListener extends AbstractNodeListener implements 
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Click one of the dialog buttons to move on.");
         }
-        frame.setVisible(sb);
+        frame.setVisible(sb, modal);
     }
 
     @Override

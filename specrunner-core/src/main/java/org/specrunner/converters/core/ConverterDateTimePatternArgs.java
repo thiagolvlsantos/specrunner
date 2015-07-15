@@ -51,6 +51,9 @@ public class ConverterDateTimePatternArgs extends AbstractConverterTimezone<Date
             return value;
         }
         try {
+            if (args.length < 1) {
+                throw new ConverterException("Converter '" + getClass() + "' missing pattern argument information (i.e. arg0=\"dd/MM/yyyy\").");
+            }
             String pattern = String.valueOf(args[0]);
             synchronized (cache) {
                 DateTimeFormatter formatter = cache.get(pattern);

@@ -154,10 +154,13 @@ public class ErrorFrame extends JFrame {
      * 
      * @param content
      *            The content.
+     * @param modal
+     *            The modal state of dialog.
      */
-    public void setVisible(Object content) {
+    public void setVisible(Object content, Boolean modal) {
         text.setText(String.valueOf(content));
         setVisible(true);
+        dialog.setModal(modal);
         dialog.setVisible(true);
     }
 }
