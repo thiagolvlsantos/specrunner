@@ -34,7 +34,7 @@ public abstract class AbstractResourceElement extends AbstractResource implement
     /**
      * The related element.
      */
-    private Element element;
+    protected Element element;
 
     /**
      * Creates a element resource.

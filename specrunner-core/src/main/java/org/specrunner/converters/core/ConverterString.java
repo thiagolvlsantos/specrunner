@@ -30,6 +30,9 @@ public class ConverterString extends ConverterDefault {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
         if (obj instanceof String) {
             return obj;
         }

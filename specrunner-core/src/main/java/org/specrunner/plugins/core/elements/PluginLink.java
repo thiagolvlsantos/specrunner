@@ -35,7 +35,7 @@ public class PluginLink extends AbstractPluginResourceReplaceable {
     /**
      * Location attribute.
      */
-    private String href;
+    protected String href;
 
     /**
      * Get location.

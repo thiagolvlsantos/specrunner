@@ -41,7 +41,7 @@ public class ConverterEnumValue extends ConverterNotNullNotEmpty implements ICon
     /**
      * Expected arguments size.
      */
-    private static final int ARG_SIZE = 3;
+    protected static final int ARG_SIZE = 3;
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {

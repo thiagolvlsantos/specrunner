@@ -48,11 +48,11 @@ public class PluginMacro extends AbstractPluginScoped {
     /**
      * Set if the macro should be called on creation time also.
      */
-    private boolean run;
+    protected boolean run;
     /**
      * Set if a macro should be global to the current specification.
      */
-    private boolean global;
+    protected boolean global;
 
     /**
      * Says if the macro must be execute on definition time. Default is 'false'.

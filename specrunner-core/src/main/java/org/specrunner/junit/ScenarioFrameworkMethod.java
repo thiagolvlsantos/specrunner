@@ -15,7 +15,7 @@ public class ScenarioFrameworkMethod extends FrameworkMethod {
     /**
      * A scenario name.
      */
-    private String name;
+    protected String name;
 
     /**
      * A scenario name.

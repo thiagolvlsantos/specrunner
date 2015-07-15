@@ -31,11 +31,11 @@ public class DataTable {
     /**
      * The parameter names.
      */
-    private List<String> names = new LinkedList<String>();
+    protected List<String> names = new LinkedList<String>();
     /**
      * The list of example elements.
      */
-    private List<List<String>> examples = new LinkedList<List<String>>();
+    protected List<List<String>> examples = new LinkedList<List<String>>();
 
     /**
      * Get the parameter names.

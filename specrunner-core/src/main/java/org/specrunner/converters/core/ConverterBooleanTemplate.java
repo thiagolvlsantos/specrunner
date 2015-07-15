@@ -31,11 +31,11 @@ public class ConverterBooleanTemplate extends ConverterNotNullNotEmpty {
     /**
      * String for '<code>TRUE</code>'.
      */
-    private String yes;
+    protected String yes;
     /**
      * String for '<code>FALSE</code>'.
      */
-    private String no;
+    protected String no;
 
     /**
      * Creates boolean converter using some strings for 'true'and 'false'.

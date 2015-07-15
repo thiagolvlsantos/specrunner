@@ -49,7 +49,7 @@ public class PluginMap extends AbstractPluginTable {
     /**
      * true, to resolve content before mapping, false, otherwise.
      */
-    private Boolean after = false;
+    protected Boolean after = false;
 
     /**
      * The order of mapping, before or after perform content.
@@ -104,7 +104,7 @@ public class PluginMap extends AbstractPluginTable {
      * @throws PluginException
      *             On execution errors.
      */
-    private void process(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+    protected void process(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         final List<Map<String, Node>> data = new LinkedList<Map<String, Node>>();
         if (tableAdapter.getRowCount() == 0) {
             throw new PluginException("Table must not be empty.");

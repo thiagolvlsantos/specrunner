@@ -46,7 +46,7 @@ public class SourceFactoryText extends AbstractSourceFactory {
     /**
      * Log gap.
      */
-    private static final int GAP = 4;
+    protected static final int GAP = 4;
 
     @Override
     protected Document fromTarget(URI uri, String target, String encoding) throws SourceException {

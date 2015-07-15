@@ -31,7 +31,7 @@ public class ParameterHolder implements IParameterHolder {
     /**
      * The parameters decorator.
      */
-    private IParameterDecorator parameters;
+    protected IParameterDecorator parameters;
 
     /**
      * Default constructor.

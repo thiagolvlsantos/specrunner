@@ -32,11 +32,11 @@ public abstract class AbstractPluginValue extends AbstractPluginScoped {
     /**
      * true, of value must be evaluated as expressions, false, otherwise.
      */
-    private boolean eval;
+    protected boolean eval;
     /**
      * Plugin value.
      */
-    private Object value;
+    protected Object value;
 
     /**
      * Says if the content must be evaluated as an expression.

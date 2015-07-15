@@ -28,7 +28,7 @@ public class Scenario extends NamedSentences {
     /**
      * The parent feature.
      */
-    private Feature parent;
+    protected Feature parent;
 
     /**
      * Create a scenario with a name.

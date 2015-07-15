@@ -33,15 +33,15 @@ public abstract class AbstractExpressionFactory implements IExpressionFactory {
     /**
      * The set of predefined values.
      */
-    private Map<String, Object> predefinedValues = new HashMap<String, Object>();
+    protected Map<String, Object> predefinedValues = new HashMap<String, Object>();
     /**
      * The set of predefined classes.
      */
-    private Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
+    protected Map<String, Class<?>> predefinedClasses = new HashMap<String, Class<?>>();
     /**
      * The set of predefined models.
      */
-    private Map<String, IModel<?>> predefinedModels = new HashMap<String, IModel<?>>();
+    protected Map<String, IModel<?>> predefinedModels = new HashMap<String, IModel<?>>();
 
     @Override
     public IExpressionFactory clearValues() {

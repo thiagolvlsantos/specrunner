@@ -30,31 +30,31 @@ public class Keywords {
     /**
      * Feature keyword.
      */
-    private static final String FEATURE = "feature";
+    protected static final String FEATURE = "feature";
     /**
      * Background keyword.
      */
-    private static final String BACKGROUND = "background";
+    protected static final String BACKGROUND = "background";
     /**
      * Finally keyword.
      */
-    private static final String FINALLY = "finally";
+    protected static final String FINALLY = "finally";
     /**
      * Scenario keyword.
      */
-    private static final String SCENARIO = "scenario";
+    protected static final String SCENARIO = "scenario";
     /**
      * Outline keyword.
      */
-    private static final String SCENARIO_OUTLINE = "outline";
+    protected static final String SCENARIO_OUTLINE = "outline";
     /**
      * Examples keyword.
      */
-    private static final String EXAMPLES = "examples";
+    protected static final String EXAMPLES = "examples";
     /**
      * Bundle.
      */
-    private ResourceBundle bundle;
+    protected ResourceBundle bundle;
 
     /**
      * Create a keyword set with a bundle.

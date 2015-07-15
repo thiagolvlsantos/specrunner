@@ -95,12 +95,12 @@ public class PluginImport extends AbstractPluginValue {
     /**
      * Set a import package names separated by ';'.
      */
-    private String imports;
+    protected String imports;
 
     /**
      * The packages set in imports.
      */
-    private String[] packages;
+    protected String[] packages;
 
     @Override
     public ActionType getActionType() {

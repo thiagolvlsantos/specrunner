@@ -43,7 +43,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
     /**
      * Separator of name field.
      */
-    private static final char SEPARATOR = '-';
+    protected static final char SEPARATOR = '-';
 
     /**
      * Attribute to create a element as another type. Use <code>as='type'</code>
@@ -59,7 +59,7 @@ public class PluginFactoryElement extends PluginFactoryImpl {
      * This construction allows convert select action which select items in a
      * verification of options in the specified select.
      */
-    private static final String ATT_AS = "as";
+    protected static final String ATT_AS = "as";
 
     /**
      * Creates a factory loading file 'sr_plugins_element.properties'.

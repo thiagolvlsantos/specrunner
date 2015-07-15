@@ -31,7 +31,7 @@ public abstract class ConverterEnumTemplate extends ConverterEnum {
     /**
      * Template parameters.
      */
-    private Object[] template;
+    protected Object[] template;
 
     /**
      * Conversion of specific types.

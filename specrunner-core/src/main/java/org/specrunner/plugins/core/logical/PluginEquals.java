@@ -31,6 +31,8 @@ import org.specrunner.plugins.core.AbstractPluginDual;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.core.PresentationCompare;
+import org.specrunner.util.xom.core.PresentationException;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
 
@@ -124,7 +126,7 @@ public class PluginEquals extends AbstractPluginDual {
             if (expected instanceof String && received instanceof String) {
                 error = new DefaultAlignmentException(expected.toString(), received.toString());
             } else {
-                error = new PluginException("Values are different. Expected: '" + expected + "' (" + (expected != null ? expected.getClass().getName() : "null") + "), Received: '" + received + "' (" + (received != null ? received.getClass().getName() : "null") + "). \n" + (context.hasNode() ? "Node:" + context.getNode().toXML() : "Plugin:" + context.getPlugin()));
+                error = new PresentationException(new PresentationCompare(expected, received));
             }
         }
         return result;

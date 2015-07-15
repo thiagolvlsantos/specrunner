@@ -24,7 +24,7 @@ public class ObjectSelector implements IObjectSelector<Session> {
     /**
      * Thread safe instance of <code>ObjectSelector</code>.
      */
-    private static ThreadLocal<ObjectSelector> instance = new ThreadLocal<ObjectSelector>() {
+    protected static ThreadLocal<ObjectSelector> instance = new ThreadLocal<ObjectSelector>() {
         @Override
         protected ObjectSelector initialValue() {
             return new ObjectSelector();

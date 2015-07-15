@@ -81,7 +81,7 @@ public class PluginFactoryAttribute extends PluginFactoryImpl {
      * @throws PluginException
      *             On plugin errors.
      */
-    private void byMapping(IContext context, IPluginGroup result, Element ele) throws PluginException {
+    protected void byMapping(IContext context, IPluginGroup result, Element ele) throws PluginException {
         for (Entry<String, IPlugin> e : templates.entrySet()) {
             Attribute att = ele.getAttribute(e.getKey());
             if (att != null) {

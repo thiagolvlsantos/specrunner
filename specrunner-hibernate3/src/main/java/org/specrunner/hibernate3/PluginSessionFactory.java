@@ -63,7 +63,7 @@ public class PluginSessionFactory extends AbstractPluginFactory {
     /**
      * The configuration name.
      */
-    private String configuration;
+    protected String configuration;
 
     /**
      * The session factory provider name.

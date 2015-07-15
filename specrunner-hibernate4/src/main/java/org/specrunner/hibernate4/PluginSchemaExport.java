@@ -46,27 +46,27 @@ public class PluginSchemaExport extends AbstractPlugin {
     /**
      * The configuration name.
      */
-    private String configuration;
+    protected String configuration;
     /**
      * The factory name.
      */
-    private String factory;
+    protected String factory;
     /**
      * The schema name.
      */
-    private String schema;
+    protected String schema;
     /**
      * To show/generate script.
      */
-    private boolean script = false;
+    protected boolean script = false;
     /**
      * To drop schema.
      */
-    private boolean drop = true;
+    protected boolean drop = true;
     /**
      * To export/update schema.
      */
-    private boolean export = true;
+    protected boolean export = true;
 
     /**
      * Name of configuration to be used.

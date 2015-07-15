@@ -33,7 +33,7 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
     /**
      * Thread safe instance.
      */
-    private static ThreadLocal<INullEmptyHandler> instance = new ThreadLocal<INullEmptyHandler>() {
+    protected static ThreadLocal<INullEmptyHandler> instance = new ThreadLocal<INullEmptyHandler>() {
         @Override
         protected INullEmptyHandler initialValue() {
             return new NullEmptyHandlerDefault();
@@ -57,7 +57,7 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
     /**
      * The empty string mark.
      */
-    private String nullVal = NULL;
+    protected String nullVal = NULL;
 
     /**
      * Default empty String markup.
@@ -67,7 +67,7 @@ public class NullEmptyHandlerDefault implements INullEmptyHandler {
     /**
      * The empty string mark.
      */
-    private String emptyVal = EMPTY;
+    protected String emptyVal = EMPTY;
 
     /**
      * Get null explicit representation.

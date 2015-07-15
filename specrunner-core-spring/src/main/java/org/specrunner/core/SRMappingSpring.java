@@ -33,7 +33,7 @@ public class SRMappingSpring implements ISRMapping {
     /**
      * Configuration.
      */
-    private ApplicationContext context;
+    protected ApplicationContext context;
 
     /**
      * Create a group of services provided by SpecRunner.
@@ -50,6 +50,7 @@ public class SRMappingSpring implements ISRMapping {
      *            The type.
      * @return The service object.
      */
+    @Override
     public <T> T getDefault(Class<T> type) {
         long time = System.currentTimeMillis();
         Object result = null;

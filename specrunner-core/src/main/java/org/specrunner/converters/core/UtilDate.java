@@ -60,7 +60,7 @@ public class UtilDate {
         }
     }
 
-    private static void add(Map<String, String> map, List<Properties> load) {
+    protected static void add(Map<String, String> map, List<Properties> load) {
         for (Properties p : load) {
             for (Entry<Object, Object> e : p.entrySet()) {
                 map.put(String.valueOf(e.getKey()), String.valueOf(e.getValue()));

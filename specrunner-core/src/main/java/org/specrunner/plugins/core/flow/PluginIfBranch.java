@@ -56,7 +56,7 @@ public abstract class PluginIfBranch extends AbstractPluginNamed {
     /**
      * Set hide on invalid branch.
      */
-    private Boolean hide;
+    protected Boolean hide;
 
     /**
      * Gets the hide status. Default is 'true'.

@@ -38,15 +38,15 @@ public class AccessImpl implements IAccess {
     /**
      * A filed access.
      */
-    private Field field;
+    protected Field field;
     /**
      * A bean access.
      */
-    private PropertyDescriptor property;
+    protected PropertyDescriptor property;
     /**
      * A method access.
      */
-    private Method method;
+    protected Method method;
 
     /**
      * Basic filed access constructor.
@@ -102,7 +102,7 @@ public class AccessImpl implements IAccess {
      * @throws PluginException
      *             On preparation errors.
      */
-    private Object[] prepare(Object[] args) throws PluginException {
+    protected Object[] prepare(Object[] args) throws PluginException {
         if (args == null) {
             return null;
         }
@@ -122,7 +122,7 @@ public class AccessImpl implements IAccess {
      * @throws PluginException
      *             On preparation errors.
      */
-    private Object prepare(Object object) throws PluginException {
+    protected Object prepare(Object object) throws PluginException {
         if (object == null) {
             return null;
         }

@@ -38,7 +38,7 @@ public abstract class AbstractConverterTimeTemplate<T> extends AbstractConverter
     /**
      * Strings that stand for 'current date'.
      */
-    private List<String> values;
+    protected List<String> values;
 
     /**
      * Constructor using strings.

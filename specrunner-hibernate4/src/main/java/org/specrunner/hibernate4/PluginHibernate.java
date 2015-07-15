@@ -35,7 +35,7 @@ public abstract class PluginHibernate extends AbstractPluginObject {
     /**
      * The configuration name.
      */
-    private String configuration;
+    protected String configuration;
 
     /**
      * The configuration name.

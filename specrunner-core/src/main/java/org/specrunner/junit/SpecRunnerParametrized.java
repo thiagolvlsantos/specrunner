@@ -84,15 +84,15 @@ public abstract class SpecRunnerParametrized {
         /**
          * Entry input.
          */
-        private final Object input;
+        protected final Object input;
         /**
          * Entry output.
          */
-        private final Object output;
+        protected final Object output;
         /**
          * Entry configuration.
          */
-        private final IConfiguration cfg;
+        protected final IConfiguration cfg;
 
         /**
          * Creates an entry.
@@ -104,7 +104,7 @@ public abstract class SpecRunnerParametrized {
          * @param cfg
          *            The configuration.
          */
-        private Entry(Object input, Object output, IConfiguration cfg) {
+        protected Entry(Object input, Object output, IConfiguration cfg) {
             this.input = input;
             this.output = output;
             this.cfg = cfg;
