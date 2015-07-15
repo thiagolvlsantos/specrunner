@@ -1,0 +1,9 @@
+<project name="failproject" default="test" basedir=".">
+	<target name="test" depends="messageK">
+		<echo message="Example fail" />
+	</target>
+
+	<target name="message">
+		<echo message="Current base: ${basedir}"/>
+	</target>
+</project>
