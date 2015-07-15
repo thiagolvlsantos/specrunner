@@ -78,6 +78,15 @@ public class PluginPause extends AbstractPlugin {
     public static final String FEATURE_TIME = PluginPause.class.getName() + ".time";
 
     /**
+     * Modal feature.
+     */
+    public static final String FEATURE_MODAL = PluginPause.class.getName() + ".modal";
+    /**
+     * Modal default value.
+     */
+    public static final Boolean DEFAULT_MODAL = Boolean.TRUE;
+
+    /**
      * Message frame screen ratio.
      */
     private static final int RATIO = 4;
@@ -101,6 +110,11 @@ public class PluginPause extends AbstractPlugin {
      * Pause time.
      */
     private Long time;
+
+    /**
+     * Modal flag.
+     */
+    private Boolean modal = DEFAULT_MODAL;
 
     /**
      * Get pause message.
@@ -179,6 +193,25 @@ public class PluginPause extends AbstractPlugin {
         this.time = time;
     }
 
+    /**
+     * Get modal information.
+     * 
+     * @return true, if modal, false, otherwise.
+     */
+    public Boolean getModal() {
+        return modal;
+    }
+
+    /**
+     * Set modal flag.
+     * 
+     * @param modal
+     *            Modal mode.
+     */
+    public void setModal(Boolean modal) {
+        this.modal = modal;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -195,6 +228,9 @@ public class PluginPause extends AbstractPlugin {
         }
         if (time == null) {
             fm.set(FEATURE_TIME, this);
+        }
+        if (modal == null) {
+            fm.set(FEATURE_MODAL, this);
         }
     }
 
@@ -238,6 +274,7 @@ public class PluginPause extends AbstractPlugin {
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         final JDialog dialog = new JDialog(frame, "Pause dialog");
+        dialog.setModal(modal);
         dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         dialog.setSize(screenSize.width / RATIO, screenSize.height / RATIO);

@@ -104,6 +104,12 @@ public final class UtilConverter {
             arguments.clear();
             if (!group.isEmpty()) {
                 Class<?> clazz = method.getParameterTypes()[0].getComponentType();
+                for (int i = 0; i < group.size(); i++) {
+                    Object o = group.get(i);
+                    if (o != null && !clazz.isInstance(o)) {
+                        throw new PluginException("Invalid argument[" + i + "]='" + o + "' of type '" + o.getClass() + "' for method: " + method + ".");
+                    }
+                }
                 arguments.add(group.toArray((Object[]) Array.newInstance(clazz, group.size())));
             }
         }
