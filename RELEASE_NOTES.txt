@@ -1,4 +1,10 @@
 -----------------------------------------------------------
+1.4.42
+OK - Monte de remoção de private;
+OK - Formatação comparativa de objetos de diferentes tipos acionada para o PluginEquals.
+OK - Verificar o caso onde se tem vararg mas não há conversor e se passa uma lista de valores não convertidos;
+OK - Após a remoção dos modais de plugin pause e plugin error o teste não está mais parando esperando continuar. Seria o caso de colocar uma features indicando se deveria ser modal ou não no dois casos? Parece que sim, com default em modal=true.
+
 1.4.41
 OK - Corrigir o plugin equals para caso ele não ter uma propriedade usar o campo value como base da comparação e o texto como esperado;
 	OK - É preciso analisar o contexto no getByName para pegar o valor dele com null caso exista perguntando primeiro e containsKey e se tiver pode ser se nulo o resultado;
