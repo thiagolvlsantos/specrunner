@@ -5,7 +5,7 @@ import java.io.FileFilter;
 import java.io.IOException;
 
 //CHECKSTYLE:OFF
-public class VersionSetup extends AbstractSetup {
+public class CopyrightSetup extends AbstractSetup {
 
     public static void main(String[] args) throws IOException {
         FileFilter filter = new FileFilter() {
@@ -14,10 +14,10 @@ public class VersionSetup extends AbstractSetup {
                 if (pathname.getAbsolutePath().contains("target" + File.separator)) {
                     return false;
                 }
-                return pathname.isDirectory() || pathname.getName().equalsIgnoreCase("pom.xml");
+                return pathname.isDirectory() || pathname.getName().endsWith(".java") || pathname.getName().endsWith(".properties");
             }
         };
-        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "version>1.4.41</", "version>1.4.42</");
+        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "Copyright (C) 2011-2014  Thiago Santos", "Copyright (C) 2011-2015  Thiago Santos");
     }
     // CHECKSTYLE:ON
 }
