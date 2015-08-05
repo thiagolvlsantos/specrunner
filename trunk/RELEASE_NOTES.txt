@@ -1,5 +1,6 @@
 -----------------------------------------------------------
 1.4.43
+- Ajuste do Copyright;
 - Criar um reader de arquivos, que aceiti referência relativa via href:
 	OK - GetValue deve receber o contexto para poder ser relativo;
 	OK - No processamento de banco de dados há uma substituição pelo valor a ser usado no node holder, deve-se ignorar isso, o reader deve dizer se deve-se ou não avaliar o conteúdo após a leitura, e se deve substituir a apresentação;
