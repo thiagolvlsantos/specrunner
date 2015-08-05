@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@
  */
 package org.specrunner.readers;
 
+import org.specrunner.context.IContext;
 import org.specrunner.util.reset.IResetable;
 
 /**
@@ -30,6 +31,8 @@ public interface IReader extends IResetable {
     /**
      * Read the content of an object as String.
      * 
+     * @param context
+     *            The test context.
      * @param obj
      *            An object reader.
      * @param args
@@ -38,5 +41,12 @@ public interface IReader extends IResetable {
      * @throws ReaderException
      *             On reading errors.
      */
-    String read(Object obj, Object[] args) throws ReaderException;
+    String read(IContext context, Object obj, Object[] args) throws ReaderException;
+
+    /**
+     * Says to replace content after reading.
+     * 
+     * @return true, if replace is enabled, false, otherwise.
+     */
+    boolean replaceContent();
 }

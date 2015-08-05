@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,12 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-import nu.xom.Text;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
@@ -47,6 +41,12 @@ import org.specrunner.readers.ReaderException;
 import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.node.INodeHolder;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 /**
  * Default implementation of element holder.
@@ -168,14 +168,14 @@ public class NodeHolderDefault implements INodeHolder {
     }
 
     @Override
-    public String getValue() {
-        return getValue(null);
+    public String getValue(IContext context) {
+        return getValue(context, null);
     }
 
     @Override
-    public String getValue(Object[] args) {
+    public String getValue(IContext context, Object[] args) {
         try {
-            return getReader().read(node, args);
+            return getReader().read(context, node, args);
         } catch (ReaderException e) {
             throw new IllegalArgumentException(e);
         }
@@ -539,7 +539,7 @@ public class NodeHolderDefault implements INodeHolder {
         if (hasAttribute(attributeValue)) {
             boolean forceContent = hasAttribute(ATTRIBUTE_FORCE_CONTENT);
             if (forceContent) {
-                str = getValue();
+                str = getValue(context);
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace("Forced content, value is '" + str + "'.");
                 }
@@ -550,7 +550,7 @@ public class NodeHolderDefault implements INodeHolder {
                 }
             }
         } else {
-            str = getValue();
+            str = getValue(context);
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace("Content value is '" + str + "'.");
             }

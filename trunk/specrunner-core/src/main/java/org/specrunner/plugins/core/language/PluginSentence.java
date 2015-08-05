@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Text;
 
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
@@ -53,6 +49,10 @@ import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Text;
 
 /**
  * A natural language plugin to perform pattern matching like
@@ -290,7 +290,7 @@ public class PluginSentence extends AbstractPluginScoped {
         if (!onlyText || annotation) {
             onlyArgs(context, node, annotation ? new StringBuilder() : methodName, arguments);
         } else {
-            onlyText(holder.getValue(), methodName, arguments);
+            onlyText(holder.getValue(context), methodName, arguments);
         }
         if (!annotation) {
             String tmp = UtilString.getNormalizer().camelCase(methodName.toString());

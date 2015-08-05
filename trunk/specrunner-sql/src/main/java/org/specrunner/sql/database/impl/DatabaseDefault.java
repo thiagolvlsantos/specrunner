@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -35,9 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -53,6 +50,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.formatters.FormatterException;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.readers.IReader;
 import org.specrunner.readers.ReaderException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
@@ -95,6 +93,9 @@ import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
 
 /**
  * Basic implementation of <code>IDatabase</code> using cached prepared
@@ -482,7 +483,7 @@ public class DatabaseDefault implements IDatabase {
         if (captions.isEmpty()) {
             throw new DatabaseException("Tables must have a caption. The caption must be part of this set: " + schema.getAliasToTables().keySet());
         }
-        String tAlias = captions.get(0).getValue();
+        String tAlias = captions.get(0).getValue(context);
         Table table = schema.getAlias(tAlias);
         if (table == null) {
             throw new DatabaseException("Table '" + tAlias + "' [as '" + UtilNames.normalize(tAlias) + "'] not found in schema " + schema.getAlias() + "(" + schema.getName() + "), available alias: " + schema.getAliasToTables().keySet() + ", available tables: " + schema.getNamesToTables().keySet());
@@ -627,13 +628,13 @@ public class DatabaseDefault implements IDatabase {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
             if (tds.isEmpty()) {
-                throw new DatabaseException("Empty lines are useless. Invalid row[" + i + "]:" + row.getValue());
+                throw new DatabaseException("Empty lines are useless. Invalid row[" + i + "]:" + row.getValue(context));
             }
             if (tds.size() != headers.size()) {
                 throw new DatabaseException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
             }
             int expectedCount = Integer.parseInt(row.getAttribute("count", "1"));
-            String type = tds.get(0).getValue();
+            String type = tds.get(0).getValue(context);
             CommandType command = CommandType.get(type);
             if (command == null) {
                 throw new DatabaseException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0). The first column is required for one of the following values: " + Arrays.toString(CommandType.values()));
@@ -780,7 +781,7 @@ public class DatabaseDefault implements IDatabase {
         Map<String, CellAdapter> found = new HashMap<String, CellAdapter>();
         for (int i = 0; i < headers.size(); i++) {
             CellAdapter cell = headers.get(i);
-            String cAlias = cell.getValue();
+            String cAlias = cell.getValue(context);
             columns[i] = table.getAlias(cAlias);
             Column column = columns[i];
             if (i > 0 && column == null) {
@@ -836,13 +837,17 @@ public class DatabaseDefault implements IDatabase {
      */
     protected String getAdjustContent(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, INodeHolder nh) throws DatabaseException {
         try {
-            String previous = column.getReader().read(nh, null);
-            String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
-            // if text has changed... adjust on screen.
-            if (previous != null && !previous.equals(value)) {
-                nh.setValue(value);
+            IReader reader = column.getReader();
+            String previous = reader.read(context, nh, null);
+            if (reader.replaceContent()) {
+                String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
+                // if text has changed... adjust on screen.
+                if (previous != null && !previous.equals(value)) {
+                    nh.setValue(value);
+                }
+                return value;
             }
-            return value;
+            return previous;
         } catch (ReaderException e) {
             throw new DatabaseException(e);
         } catch (PluginException e) {
@@ -1063,7 +1068,7 @@ public class DatabaseDefault implements IDatabase {
         idManager.clear();
 
         PreparedStatement pstmt = statementFactory.getInput(connection, wrapper.getSql(), table);
-        Map<Integer, Object> indexesToValues = prepareInputValues(table, register, namesToIndexes);
+        Map<Integer, Object> indexesToValues = prepareInputValues(context, table, register, namesToIndexes);
         for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
             pstmt.setObject(e.getKey(), e.getValue());
         }
@@ -1087,6 +1092,8 @@ public class DatabaseDefault implements IDatabase {
     /**
      * Prepare values to use in insert/update/delete.
      * 
+     * @param context
+     *            The test alias.
      * @param table
      *            A table.
      * @param register
@@ -1097,19 +1104,19 @@ public class DatabaseDefault implements IDatabase {
      * @throws DatabaseException
      *             On prepare errors.
      */
-    protected Map<Integer, Object> prepareInputValues(Table table, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException {
+    protected Map<Integer, Object> prepareInputValues(IContext context, Table table, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException {
         Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
         for (Value v : register) {
             Column column = v.getColumn();
             Integer index = namesToIndexes.get(column.getName());
             if (index != null) {
-                String tableOrAlias = register.getTableOrAlias(column);
+                String tableOrAlias = register.getTableOrAlias(context, column);
                 Object obj = v.getValue();
                 if (column.isVirtual()) {
                     obj = idManager.lookup(tableOrAlias, String.valueOf(obj));
                 }
                 if (column.isReference()) {
-                    idManager.append(table.getAlias(), v.getCell().getValue());
+                    idManager.append(table.getAlias(), v.getCell().getValue(context));
                 }
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("performIn.SET(" + index + "," + column.getName() + ") = " + obj);
@@ -1173,7 +1180,7 @@ public class DatabaseDefault implements IDatabase {
             UtilLog.LOG.debug(sql + ". MAP:" + namesToIndexes + ". values = " + register + ". indexes = " + namesToIndexes);
         }
         PreparedStatement pstmt = statementFactory.getOutput(connection, wrapper.getSql(), table);
-        Map<Integer, Object> indexesToValues = prepareSelectValues(connection, register, namesToIndexes);
+        Map<Integer, Object> indexesToValues = prepareSelectValues(context, connection, register, namesToIndexes);
         for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
             pstmt.setObject(e.getKey(), e.getValue());
         }
@@ -1216,7 +1223,7 @@ public class DatabaseDefault implements IDatabase {
      * @throws SQLException
      *             On database errors.
      */
-    protected Map<Integer, Object> prepareSelectValues(Connection connection, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException, SQLException {
+    protected Map<Integer, Object> prepareSelectValues(IContext context, Connection connection, IRegister register, Map<String, Integer> namesToIndexes) throws DatabaseException, SQLException {
         Map<Integer, Object> indexesToValues = new HashMap<Integer, Object>();
         for (Value v : register) {
             Column column = v.getColumn();
@@ -1224,7 +1231,7 @@ public class DatabaseDefault implements IDatabase {
             if (index != null) {
                 Object value = v.getValue();
                 if (column.isVirtual()) {
-                    value = idManager.find(register.getTableOrAlias(column), String.valueOf(value), column, connection, statementFactory);
+                    value = idManager.find(register.getTableOrAlias(context, column), String.valueOf(value), column, connection, statementFactory);
                 }
                 if (column.isDate()) {
                     IComparator comp = column.getComparator();
@@ -1284,9 +1291,9 @@ public class DatabaseDefault implements IDatabase {
                     UtilLog.LOG.debug("CHECK(" + v.getValue() + ") = " + received);
                 }
                 Object value = v.getValue();
-                String tableOrAlias = register.getTableOrAlias(column);
+                String tableOrAlias = register.getTableOrAlias(context, column);
                 if (column.isVirtual()) {
-                    value = idManager.find(register.getTableOrAlias(column), String.valueOf(value), column, connection, statementFactory);
+                    value = idManager.find(register.getTableOrAlias(context, column), String.valueOf(value), column, connection, statementFactory);
                 }
                 CellAdapter cell = v.getCell();
                 comparator.initialize();
@@ -1309,7 +1316,7 @@ public class DatabaseDefault implements IDatabase {
                     result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
                 } else {
                     String str = String.valueOf(value);
-                    if (!str.equals(cell.getValue())) {
+                    if (!str.equals(cell.getValue(context))) {
                         cell.append(" {" + str + "}");
                     }
                 }

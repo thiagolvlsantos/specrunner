@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,11 +17,12 @@
  */
 package org.specrunner.readers.core;
 
-import nu.xom.Node;
-
+import org.specrunner.context.IContext;
 import org.specrunner.readers.IReader;
 import org.specrunner.readers.ReaderException;
 import org.specrunner.util.xom.node.INodeHolder;
+
+import nu.xom.Node;
 
 /**
  * Reader default.
@@ -37,13 +38,18 @@ public class ReaderDefault implements IReader {
     }
 
     @Override
-    public String read(Object obj, Object[] args) throws ReaderException {
+    public String read(IContext context, Object obj, Object[] args) throws ReaderException {
         if (obj instanceof Node) {
             return ((Node) obj).getValue();
         }
         if (obj instanceof INodeHolder) {
-            return ((INodeHolder) obj).getValue();
+            return ((INodeHolder) obj).getValue(context);
         }
         return String.valueOf(obj);
+    }
+
+    @Override
+    public boolean replaceContent() {
+        return true;
     }
 }

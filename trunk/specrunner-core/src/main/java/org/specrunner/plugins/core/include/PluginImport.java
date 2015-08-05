@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,8 +20,6 @@ package org.specrunner.plugins.core.include;
 import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -35,6 +33,8 @@ import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
 
+import nu.xom.Node;
+
 /**
  * Add package information as SLIM import tables. Imports can also be performed
  * simply by adding attribute 'imports' to any element.
@@ -42,8 +42,7 @@ import org.specrunner.util.xom.node.UtilTable;
  * <p>
  * Imports can be performed:
  * <ul>
- * <li>
- * in blocks, i.e.
+ * <li>in blocks, i.e.
  * 
  * <pre>
  * &lt;.. imports="package1;package2;...;packageN"/&gt;
@@ -138,7 +137,7 @@ public class PluginImport extends AbstractPluginValue {
             List<RowAdapter> rows = tableAdapter.getRows();
             for (RowAdapter r : rows) {
                 for (CellAdapter c : r.getCells()) {
-                    list.add(c.getValue());
+                    list.add(c.getValue(context));
                     result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
                 }
             }

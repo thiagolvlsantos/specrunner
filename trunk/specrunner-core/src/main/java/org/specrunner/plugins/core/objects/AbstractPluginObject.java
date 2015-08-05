@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,11 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Nodes;
-
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
@@ -57,6 +52,11 @@ import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
+
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Nodes;
 
 /**
  * Generic object plugin. To write object plugins override method
@@ -446,7 +446,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         for (CellAdapter cell : row.getCells()) {
             boolean ignore = Boolean.parseBoolean(cell.getAttribute("ignore", "false"));
 
-            String fieldName = UtilString.getNormalizer().camelCase(cell.getValue());
+            String fieldName = UtilString.getNormalizer().camelCase(cell.getValue(context));
             String name = cell.getAttribute("field", fieldName);
             Field f = headerToFields.get(fieldName);
             if (f == null) {
@@ -1009,7 +1009,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("ON>" + f.getFullName());
                 }
-                String text = cell.getValue();
+                String text = cell.getValue(context);
                 Object value = text;
                 if (text.isEmpty()) {
                     value = UtilEvaluator.evaluate(f.def, context, true);

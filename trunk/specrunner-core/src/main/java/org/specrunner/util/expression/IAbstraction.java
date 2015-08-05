@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,19 +50,23 @@ public interface IAbstraction {
     /**
      * Get element value.
      * 
+     * @param context
+     *            The test context.
      * @return Element value.
      */
-    String getValue();
+    String getValue(IContext context);
 
     /**
      * Get element value.
      * 
+     * @param context
+     *            The test context.
      * @param args
      *            Arguments to return value.
      * 
      * @return Element value.
      */
-    String getValue(Object[] args);
+    String getValue(IContext context, Object[] args);
 
     /**
      * Get reader object.
