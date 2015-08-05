@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -355,5 +356,29 @@ public final class UtilIO {
         output.println("(" + cm.getThread() + ") read keybord (press 'Enter' to go on)...");
         System.in.read(new byte[READ_SIZE]);
         output.println("(" + cm.getThread() + ") done...");
+    }
+
+    public static String readFile(String filename) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        File file = new File(filename);
+        FileReader fr = null;
+        BufferedReader br = null;
+        try {
+            fr = new FileReader(file);
+            br = new BufferedReader(fr);
+            String input;
+            while ((input = br.readLine()) != null) {
+                sb.append(input);
+                sb.append('\n');
+            }
+        } finally {
+            if (fr != null) {
+                fr.close();
+            }
+            if (br != null) {
+                br.close();
+            }
+        }
+        return sb.toString();
     }
 }

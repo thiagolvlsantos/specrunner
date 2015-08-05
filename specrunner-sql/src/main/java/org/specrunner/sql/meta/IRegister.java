@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package org.specrunner.sql.meta;
 
 import java.util.Set;
 
+import org.specrunner.context.IContext;
 import org.specrunner.sql.database.DatabaseException;
 
 /**
@@ -38,13 +39,15 @@ public interface IRegister extends Set<Value> {
     /**
      * Get the table which is referred by the column.
      * 
+     * @param context
+     *            The test context.
      * @param column
      *            Base column.
      * @return The table or alias.
      * @throws DatabaseException
      *             On table resolution error.
      */
-    String getTableOrAlias(Column column) throws DatabaseException;
+    String getTableOrAlias(IContext context, Column column) throws DatabaseException;
 
     /**
      * Get a value by its name.

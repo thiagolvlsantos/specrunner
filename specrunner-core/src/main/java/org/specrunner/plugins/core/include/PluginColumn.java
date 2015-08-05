@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -188,7 +188,7 @@ public class PluginColumn extends AbstractPluginTable {
         }
         if (captions.size() > 0) {
             // captions must use imports to set packages.
-            String className = UtilString.getNormalizer().camelCase(captions.get(0).getValue(), true);
+            String className = UtilString.getNormalizer().camelCase(captions.get(0).getValue(context), true);
             for (String pkg : PluginImport.getPackages(context)) {
                 try {
                     instance = newInstance(Class.forName(pkg + "." + className), tableAdapter);
@@ -258,7 +258,7 @@ public class PluginColumn extends AbstractPluginTable {
      */
     protected void extractFeatures(IContext context, RowAdapter header, List<String> features, List<IConverter> converters, List<List<String>> args) throws ConverterException, PluginException {
         for (CellAdapter h : header.getCells()) {
-            features.add(feature(h));
+            features.add(feature(context, h));
             converters.add(h.getConverter());
             args.add(h.getArguments());
         }
@@ -267,12 +267,15 @@ public class PluginColumn extends AbstractPluginTable {
     /**
      * Get a feature name.
      * 
+     * @param context
+     *            The test context.
+     * 
      * @param h
      *            The element.
      * @return The name.
      */
-    protected String feature(CellAdapter h) {
-        String value = h.getValue();
+    protected String feature(IContext context, CellAdapter h) {
+        String value = h.getValue(context);
         String feature = UtilString.getNormalizer().camelCase(h.getAttribute("feature", value));
         if (value != null && value.trim().endsWith("?")) {
             feature = feature + "?";

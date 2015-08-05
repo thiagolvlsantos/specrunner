@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ package org.specrunner.sql.database.impl;
 
 import java.util.TreeSet;
 
+import org.specrunner.context.IContext;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.meta.Column;
 import org.specrunner.sql.meta.IRegister;
@@ -34,7 +35,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos.
  */
 @SuppressWarnings("serial")
-public class RegisterDefault extends TreeSet<Value> implements IRegister {
+public class RegisterDefault extends TreeSet<Value>implements IRegister {
 
     /**
      * Parent table.
@@ -57,14 +58,14 @@ public class RegisterDefault extends TreeSet<Value> implements IRegister {
     }
 
     @Override
-    public String getTableOrAlias(Column column) throws DatabaseException {
+    public String getTableOrAlias(IContext context, Column column) throws DatabaseException {
         String alias = column.getTableOrAlias();
         String pointer = column.getPointer();
         if (pointer != null) {
             alias = null;
             for (Value vp : this) {
                 if (pointer.equals(vp.getColumn().getAlias())) {
-                    alias = UtilNames.normalize(vp.getCell().getValue());
+                    alias = UtilNames.normalize(vp.getCell().getValue(context));
                     break;
                 }
             }

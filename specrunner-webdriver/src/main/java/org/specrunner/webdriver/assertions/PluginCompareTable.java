@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2014  Thiago Santos
+    Copyright (C) 2011-2015  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,6 @@ package org.specrunner.webdriver.assertions;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -47,6 +43,10 @@ import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
 import org.specrunner.webdriver.AbstractPluginFindSingle;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Nodes;
 
 /**
  * Compare tables.
@@ -300,9 +300,9 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             return compareTable(context, result, client, received, expected.getNode());
         } else if (PluginCompareDate.isDate(expected)) {
             PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, (Element) expected.getNode(), true);
-            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
+            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(context), compare.isEval(), context);
             String exp = String.valueOf(tmp);
-            if (!expected.getValue().equals(exp)) {
+            if (!expected.getValue(context).equals(exp)) {
                 expected.append("{" + exp + "}");
             }
             String rec = received.getText();
@@ -312,9 +312,9 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);
         } else {
             PluginCompareText compare = UtilPlugin.create(context, PluginCompareText.class, (Element) expected.getNode(), true);
-            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(), compare.isEval(), context);
+            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(context), compare.isEval(), context);
             String exp = String.valueOf(tmp);
-            if (!expected.getValue().equals(exp)) {
+            if (!expected.getValue(context).equals(exp)) {
                 expected.append("{" + exp + "}");
             }
             String rec = received.getText();

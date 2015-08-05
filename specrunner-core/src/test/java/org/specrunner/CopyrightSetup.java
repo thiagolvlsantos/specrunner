@@ -14,10 +14,11 @@ public class CopyrightSetup extends AbstractSetup {
                 if (pathname.getAbsolutePath().contains("target" + File.separator)) {
                     return false;
                 }
-                return pathname.isDirectory() || pathname.getName().endsWith(".java") || pathname.getName().endsWith(".properties");
+                String name = pathname.getName();
+                return pathname.isDirectory() || name.endsWith(".java") || name.endsWith(".properties") || name.endsWith(".txt");
             }
         };
-        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "Copyright (C) 2011-2014  Thiago Santos", "Copyright (C) 2011-2015  Thiago Santos");
+        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "Copyright (C) 2011-2015  Thiago Santos", "Copyright (C) 2011-2015  Thiago Santos");
     }
     // CHECKSTYLE:ON
 }
