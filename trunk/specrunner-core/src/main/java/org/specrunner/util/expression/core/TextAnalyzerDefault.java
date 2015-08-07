@@ -24,6 +24,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.util.expression.IPlaceholder;
 import org.specrunner.util.expression.IProcessor;
 import org.specrunner.util.expression.ITextAnalyzer;
+import org.specrunner.util.expression.TextAnalyzerException;
 
 /**
  * Default analyzer implementation.
@@ -33,7 +34,7 @@ import org.specrunner.util.expression.ITextAnalyzer;
 public class TextAnalyzerDefault implements ITextAnalyzer {
 
     @Override
-    public String replace(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent) {
+    public String replace(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent) throws TextAnalyzerException {
         if (content == null) {
             return null;
         }
@@ -85,7 +86,7 @@ public class TextAnalyzerDefault implements ITextAnalyzer {
     }
 
     @Override
-    public Object evaluate(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent) {
+    public Object evaluate(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent) throws TextAnalyzerException {
         return processor.process(replace(content, placeholder, processor, context, silent), context, silent);
     }
 }

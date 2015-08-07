@@ -61,14 +61,14 @@ public final class UtilExpression {
      *             On evaluation errors.
      */
     public static Object evaluate(String text, IContext context, boolean silent) throws PluginException {
-        IPlaceholder tokens = SRServices.get(IPlaceholder.class);
+        IPlaceholder placeholder = SRServices.get(IPlaceholder.class);
         ITextAnalyzer analyser = SRServices.get(ITextAnalyzer.class);
         IProcessor processor = SRServices.get(IProcessor.class);
-        return analyser.evaluate(text, tokens, processor, context, silent);
+        return analyser.evaluate(text, placeholder, processor, context, silent);
     }
 
     /**
-     * Replace ids in text.
+     * Replace placeholders in text.
      * 
      * @param text
      *            The text to be replaced.
@@ -81,9 +81,9 @@ public final class UtilExpression {
      *             On replacing errors.
      */
     public static String replace(String text, IContext context, boolean silent) throws PluginException {
-        IPlaceholder tokens = SRServices.get(IPlaceholder.class);
+        IPlaceholder placeholder = SRServices.get(IPlaceholder.class);
         ITextAnalyzer analyser = SRServices.get(ITextAnalyzer.class);
         IProcessor processor = SRServices.get(IProcessor.class);
-        return analyser.replace(text, tokens, processor, context, silent);
+        return analyser.replace(text, placeholder, processor, context, silent);
     }
 }
