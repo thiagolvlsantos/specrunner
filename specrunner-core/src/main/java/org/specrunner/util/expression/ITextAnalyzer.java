@@ -41,8 +41,10 @@ public interface ITextAnalyzer {
      * @param silent
      *            true, silent mode on, false, silent mode off.
      * @return Replaced string.
+     * @throws TextAnalyzerException
+     *             On processing errors.
      */
-    String replace(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent);
+    String replace(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent) throws TextAnalyzerException;
 
     /**
      * Get the evaluation of a given text.
@@ -58,6 +60,8 @@ public interface ITextAnalyzer {
      * @param silent
      *            true, silent mode on, false, silent mode off.
      * @return Result value.
+     * @throws TextAnalyzerException
+     *             On processing errors.
      */
-    Object evaluate(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent);
+    Object evaluate(String content, IPlaceholder placeholder, IProcessor processor, IContext context, boolean silent) throws TextAnalyzerException;
 }

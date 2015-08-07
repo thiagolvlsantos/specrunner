@@ -23,6 +23,7 @@ import org.specrunner.context.IContext;
 import org.specrunner.expressions.IExpression;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.IProcessor;
+import org.specrunner.util.expression.TextAnalyzerException;
 
 /**
  * Default processor implementation.
@@ -33,7 +34,7 @@ import org.specrunner.util.expression.IProcessor;
 public class ProcessorDefault implements IProcessor {
 
     @Override
-    public Object process(String content, IContext context, boolean silent) {
+    public Object process(String content, IContext context, boolean silent) throws TextAnalyzerException {
         if (content == null) {
             return null;
         }
@@ -47,7 +48,7 @@ public class ProcessorDefault implements IProcessor {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);
             }
-            throw new RuntimeException(e);
+            throw new TextAnalyzerException(e);
         }
     }
 }

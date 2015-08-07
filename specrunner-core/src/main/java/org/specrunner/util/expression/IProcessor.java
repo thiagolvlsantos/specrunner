@@ -36,6 +36,8 @@ public interface IProcessor {
      * @param silent
      *            true, if silent evaluation, false, otherwise.
      * @return Expression result value.
+     * @throws TextAnalyzerException
+     *             On processing errors.
      */
-    Object process(String content, IContext context, boolean silent);
+    Object process(String content, IContext context, boolean silent) throws TextAnalyzerException;
 }
