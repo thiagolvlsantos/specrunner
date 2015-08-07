@@ -38,8 +38,8 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.IReader;
 import org.specrunner.readers.IReaderManager;
 import org.specrunner.readers.ReaderException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.node.INodeHolder;
 
 import nu.xom.Attribute;
@@ -489,7 +489,7 @@ public class NodeHolderDefault implements INodeHolder {
             throw new PluginException("Bean name or property missing in property='" + str + "'.");
         }
         String head = str.substring(0, pos);
-        Object bean = UtilEvaluator.evaluate(head, context, silent);
+        Object bean = UtilExpression.evaluate(head, context, silent);
         IFeatureManager fm = SRServices.getFeatureManager();
         Boolean acceptNullPath = (Boolean) fm.get(FEATURE_PROPERTY_ACCEPT_NULL_PATH, DEFAULT_PROPERTY_ACCEPT_NULL_PATH);
         Boolean invalidPathAsNull = (Boolean) fm.get(FEATURE_PROPERTY_INVALID_PATH_AS_NULL, DEFAULT_PROPERTY_INVALID_PATH_AS_NULL);
@@ -555,7 +555,7 @@ public class NodeHolderDefault implements INodeHolder {
                 UtilLog.LOG.trace("Content value is '" + str + "'.");
             }
         }
-        Object value = notEval() ? str : UtilEvaluator.evaluate(str, context, silent);
+        Object value = notEval() ? str : UtilExpression.evaluate(str, context, silent);
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : "null"));
         }
@@ -594,7 +594,7 @@ public class NodeHolderDefault implements INodeHolder {
                 UtilLog.LOG.trace("Eval args: " + local);
             }
             for (int i = 0; i < local.size(); i++) {
-                result.add(UtilEvaluator.evaluate(local.get(i), context, silent));
+                result.add(UtilExpression.evaluate(local.get(i), context, silent));
             }
         } else {
             if (UtilLog.LOG.isTraceEnabled()) {

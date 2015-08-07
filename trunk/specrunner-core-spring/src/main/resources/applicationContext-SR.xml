@@ -1,6 +1,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-2.5.xsd" default-lazy-init="true">
   <bean class="org.specrunner.util.xom.node.core.TableFactoryDefault"/>
+  <bean class="org.specrunner.util.expression.core.ProcessorDefault"/>
+  <bean class="org.specrunner.util.expression.core.TextTokensDefault"/>
+  <bean class="org.specrunner.util.expression.core.TextAnalyserDefault"/>
   <bean class="org.specrunner.util.xom.node.core.NodeHolderFactoryDefault" />
   <bean class="org.specrunner.util.string.core.StringNormalizerDefault" />
   <bean class="org.specrunner.util.resources.ResourceFinder" />

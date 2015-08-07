@@ -19,7 +19,7 @@ package org.specrunner.plugins.core;
 
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.UtilEvaluator;
+import org.specrunner.util.expression.UtilExpression;
 
 /**
  * Stand for a plugin with a value attribute, or a value which must be calculate
@@ -95,9 +95,9 @@ public abstract class AbstractPluginValue extends AbstractPluginScoped {
         Object val = value != null ? value : str;
         if (val instanceof String) {
             if (eval && evaluate) {
-                obj = UtilEvaluator.evaluate((String) val, context, true);
+                obj = UtilExpression.evaluate((String) val, context, true);
             } else {
-                obj = UtilEvaluator.replace((String) val, context, true);
+                obj = UtilExpression.replace((String) val, context, true);
             }
         } else {
             obj = val;

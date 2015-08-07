@@ -44,8 +44,8 @@ import org.specrunner.result.status.Warning;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.source.SourceException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.INodeHolder;
@@ -514,7 +514,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 int i = 0;
                 List<Object> args = new LinkedList<Object>();
                 while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i)) {
-                    args.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i), context, true));
+                    args.add(UtilExpression.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i), context, true));
                     i++;
                 }
                 if (f.getArgs() == null || !args.isEmpty()) {
@@ -530,7 +530,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 int j = 0;
                 List<Object> formArgs = new LinkedList<Object>();
                 while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j)) {
-                    formArgs.add(UtilEvaluator.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j), context, true));
+                    formArgs.add(UtilExpression.evaluate(cell.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j), context, true));
                     j++;
                 }
                 if (f.getFormattersArgs() == null || !formArgs.isEmpty()) {
@@ -1012,7 +1012,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 String text = cell.getValue(context);
                 Object value = text;
                 if (text.isEmpty()) {
-                    value = UtilEvaluator.evaluate(f.def, context, true);
+                    value = UtilExpression.evaluate(f.def, context, true);
                     if (UtilLog.LOG.isDebugEnabled()) {
                         UtilLog.LOG.debug("USING_DEFAULT>" + value);
                     }

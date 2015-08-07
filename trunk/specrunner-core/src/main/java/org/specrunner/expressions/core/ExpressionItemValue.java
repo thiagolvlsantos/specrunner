@@ -22,8 +22,8 @@ import org.specrunner.expressions.ExpressionException;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.expressions.IExpressionItem;
 import org.specrunner.expressions.InvalidValueException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 
 /**
  * An expression evaluation item.
@@ -58,7 +58,7 @@ public class ExpressionItemValue implements IExpressionItem {
         // if value is itself an expression should be evaluated
         if (value instanceof String) {
             try {
-                return UtilEvaluator.evaluate((String) value, context, silent);
+                return UtilExpression.evaluate((String) value, context, silent);
             } catch (Exception e) {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace(e.getMessage(), e);

@@ -78,13 +78,13 @@ import org.specrunner.sql.meta.UtilNames;
 import org.specrunner.sql.meta.Value;
 import org.specrunner.sql.meta.impl.DataFilterDefault;
 import org.specrunner.sql.meta.impl.UtilSchema;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.UtilSql;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
 import org.specrunner.util.collections.ReverseIterable;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.core.PresentationCompare;
@@ -839,8 +839,8 @@ public class DatabaseDefault implements IDatabase {
         try {
             IReader reader = column.getReader();
             String previous = reader.read(context, nh, null);
-            if (reader.replaceContent()) {
-                String value = UtilEvaluator.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
+            if (reader.isReplacer()) {
+                String value = UtilExpression.replace(nh.getAttribute(INodeHolder.ATTRIBUTE_VALUE, previous), context, true);
                 // if text has changed... adjust on screen.
                 if (previous != null && !previous.equals(value)) {
                     nh.setValue(value);

@@ -50,7 +50,7 @@ public class ReaderXml implements IReader {
     }
 
     @Override
-    public boolean replaceContent() {
+    public boolean isReplacer() {
         return true;
     }
 }

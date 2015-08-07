@@ -30,8 +30,8 @@ import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.objects.IObjectManager;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 
 /**
  * Converter utilities.
@@ -138,7 +138,7 @@ public final class UtilConverter {
         }
         type = getWrapper(type);
         if (arg instanceof String) {
-            Object tmp = UtilEvaluator.evaluate((String) arg, context, true);
+            Object tmp = UtilExpression.evaluate((String) arg, context, true);
             if (tmp == null || type.isInstance(tmp)) {
                 return tmp;
             }

@@ -41,8 +41,8 @@ import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -493,7 +493,7 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             @Override
             public Object getObject(IContext context) throws SpecRunnerException {
                 try {
-                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, true);
+                    return UtilExpression.evaluate(block.getNode().getValue(), context, true);
                 } catch (Exception e) {
                     throw new SpecRunnerException(e);
                 }
@@ -505,7 +505,7 @@ public class ContextImpl extends LinkedList<IBlock> implements IContext {
             @Override
             public Object getObject(IContext context) throws SpecRunnerException {
                 try {
-                    return UtilEvaluator.evaluate(block.getNode().getValue(), context, false);
+                    return UtilExpression.evaluate(block.getNode().getValue(), context, false);
                 } catch (Exception e) {
                     throw new SpecRunnerException(e);
                 }

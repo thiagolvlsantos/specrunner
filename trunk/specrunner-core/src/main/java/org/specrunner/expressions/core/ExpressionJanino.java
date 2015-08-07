@@ -84,17 +84,17 @@ public class ExpressionJanino extends AbstractExpression {
         if (nullEmpty == null) {
             nullEmpty = NullEmptyHandlerDefault.get();
         }
-        if (nullEmpty.isEmpty(EMode.OUTPUT, expression)) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug("EMPTY VALUE(" + expression + ")");
-            }
-            return "";
-        }
         if (nullEmpty.isNull(EMode.OUTPUT, expression)) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("NULL VALUE(" + expression + ")");
             }
             return null;
+        }
+        if (nullEmpty.isEmpty(EMode.OUTPUT, expression)) {
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("EMPTY VALUE(" + expression + ")");
+            }
+            return "";
         }
         List<String> args = new LinkedList<String>();
         List<Object> values = new LinkedList<Object>();
