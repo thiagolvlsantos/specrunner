@@ -37,8 +37,8 @@ import org.specrunner.result.status.Success;
 import org.specrunner.reuse.IReusable;
 import org.specrunner.reuse.IReuseManager;
 import org.specrunner.reuse.core.AbstractReusable;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.Cache;
@@ -486,7 +486,7 @@ public class PluginBrowser extends AbstractPluginScoped {
 
             BrowserVersion bVersion = null;
             try {
-                bVersion = (BrowserVersion) UtilEvaluator.evaluate(BrowserVersion.class.getName() + "." + version, context, false);
+                bVersion = (BrowserVersion) UtilExpression.evaluate(BrowserVersion.class.getName() + "." + version, context, false);
             } catch (Exception e) {
                 throw new PluginException("The plugin version " + version + " is invalid.", e);
             }

@@ -30,8 +30,8 @@ import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.parameters.IParameterDecorator;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 
 /**
  * Generic implementation of a parameter sensible object.
@@ -182,7 +182,7 @@ public class ParameterDecoratorImpl implements IParameterDecorator {
      *             On processing errors.
      */
     protected Object prepareValue(Object value, IContext context, boolean eval, boolean silent) throws PluginException {
-        return eval ? UtilEvaluator.evaluate(String.valueOf(value), context, silent) : value;
+        return eval ? UtilExpression.evaluate(String.valueOf(value), context, silent) : value;
     }
 
     /**

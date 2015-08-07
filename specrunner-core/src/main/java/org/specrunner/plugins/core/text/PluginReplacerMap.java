@@ -19,19 +19,19 @@ package org.specrunner.plugins.core.text;
 
 import java.util.Map;
 
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.ParentNode;
-import nu.xom.Text;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPlugin;
+import org.specrunner.plugins.core.data.PluginMap;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilEvaluator;
+
+import nu.xom.Node;
+import nu.xom.Nodes;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 /**
  * Replace mapped elements.
@@ -81,8 +81,8 @@ public class PluginReplacerMap extends AbstractPlugin {
     public Nodes replaceMap(String text, Map<String, Node> map) throws PluginException {
         Nodes nodes = new Nodes();
         int pos1 = 0;
-        int pos2 = text.indexOf(UtilEvaluator.START_DATA);
-        int pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
+        int pos2 = text.indexOf(PluginMap.START_DATA);
+        int pos3 = text.indexOf(PluginMap.END_DATA, pos2 + PluginMap.START_DATA.length() + 1);
         while (pos2 >= 0 & pos3 > pos2) {
             nodes.append(new Text(text.substring(pos1, pos2)));
             String name = text.substring(pos2, pos3 + 1);
@@ -100,8 +100,8 @@ public class PluginReplacerMap extends AbstractPlugin {
                 nodes.append(new Text(text.substring(pos2, pos3)));
             }
             pos1 = pos3 + 1;
-            pos2 = text.indexOf(UtilEvaluator.START_DATA, pos1);
-            pos3 = text.indexOf(UtilEvaluator.END, pos2 + UtilEvaluator.START_DATA.length() + 1);
+            pos2 = text.indexOf(PluginMap.START_DATA, pos1);
+            pos3 = text.indexOf(PluginMap.END_DATA, pos2 + PluginMap.START_DATA.length() + 1);
         }
         if (pos1 != text.length() + 1) {
             nodes.append(new Text(text.substring(pos1, text.length())));

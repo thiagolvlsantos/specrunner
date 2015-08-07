@@ -19,10 +19,6 @@ package org.specrunner.source.text;
 
 import java.util.List;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.plugins.IPluginFactory;
@@ -32,9 +28,14 @@ import org.specrunner.plugins.core.flow.PluginIterator;
 import org.specrunner.plugins.core.language.PluginSentence;
 import org.specrunner.plugins.core.macro.PluginCall;
 import org.specrunner.plugins.core.macro.PluginMacro;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.IPresenter;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Perform conversion of an object <code>Feature</code> to a <code>Node</code>.
@@ -358,7 +359,7 @@ public class FeaturePresenter implements IPresenter {
      */
     protected void dumpCall(Element root, String name) {
         Element h4 = new Element("h4");
-        h4.appendChild("Example ${index+1}:");
+        h4.appendChild("Example " + UtilExpression.asExpression("index+1") + ":");
         root.appendChild(h4);
         {
             Element quo = new Element("blockquote");

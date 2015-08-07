@@ -21,8 +21,8 @@ import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 
 /**
  * A model with a object source. This model is evaluated only on runtime.
@@ -72,7 +72,7 @@ public class LazyExpressionModel<T> implements IModel<T> {
     @Override
     public T getObject(IContext context) throws ContextException {
         try {
-            return (T) UtilEvaluator.evaluate(String.valueOf(source), context, true);
+            return (T) UtilExpression.evaluate(String.valueOf(source), context, true);
         } catch (PluginException e) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug(e.getMessage(), e);

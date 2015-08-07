@@ -366,10 +366,13 @@ public final class UtilIO {
         try {
             fr = new FileReader(file);
             br = new BufferedReader(fr);
-            String input;
-            while ((input = br.readLine()) != null) {
+            String input = br.readLine();
+            while (input != null) {
                 sb.append(input);
-                sb.append('\n');
+                input = br.readLine();
+                if (input != null) {
+                    sb.append('\n');
+                }
             }
         } finally {
             if (fr != null) {

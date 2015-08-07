@@ -17,9 +17,6 @@
  */
 package org.specrunner.plugins.core.text;
 
-import nu.xom.Node;
-import nu.xom.Text;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -27,16 +24,19 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
+
+import nu.xom.Node;
+import nu.xom.Text;
 
 /**
  * Replace text elements by their evaluated expressions.
  * <p>
  * Example: <br>
- * <blockquote> Current time in miliseconds is ${System.currentTimeMilis()}.
- * </blockquote> Will be evaluated as: <blockquote> Current time in miliseconds
- * is 90999384384747. </blockquote>
+ * <blockquote> Current time in miliseconds is
+ * ${System.currentTimeMilis()}. </blockquote> Will be evaluated as:
+ * <blockquote> Current time in miliseconds is 90999384384747. </blockquote>
  * 
  * @author Thiago Santos
  * 
@@ -52,7 +52,7 @@ public class PluginReplacer extends AbstractPlugin {
         Node e = context.getNode();
         if (e instanceof Text) {
             String text = e.getValue();
-            String replaced = UtilEvaluator.replace(text, context, false);
+            String replaced = UtilExpression.replace(text, context, false);
             if (UtilLog.LOG.isDebugEnabled() && !text.equals(replaced)) {
                 UtilLog.LOG.debug("replacer_before>" + text);
                 UtilLog.LOG.debug("replacer_after>" + replaced + "." + replaced.getClass());

@@ -48,5 +48,5 @@ public interface IReader extends IResetable {
      * 
      * @return true, if replace is enabled, false, otherwise.
      */
-    boolean replaceContent();
+    boolean isReplacer();
 }

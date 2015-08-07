@@ -54,6 +54,9 @@ import org.specrunner.transformer.ITransformerManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.IStringAlignerFactory;
 import org.specrunner.util.cache.ICacheFactory;
+import org.specrunner.util.expression.IPlaceholder;
+import org.specrunner.util.expression.IProcessor;
+import org.specrunner.util.expression.ITextAnalyzer;
 import org.specrunner.util.output.IOutputFactory;
 import org.specrunner.util.resources.ResourceFinder;
 import org.specrunner.util.string.IStringNormalizer;
@@ -82,9 +85,14 @@ public class SRMappingDefault implements ISRMapping {
      * Create a group of services provided by SpecRunner.
      */
     public SRMappingDefault() {
+        { // micro services
+            types.put(IProcessor.class, "org.specrunner.util.expression.core.ProcessorDefault");
+            types.put(IPlaceholder.class, "org.specrunner.util.expression.core.PlaceholderDefault");
+            types.put(ITextAnalyzer.class, "org.specrunner.util.expression.core.TextAnalyzerDefault");
+            types.put(IStringNormalizer.class, "org.specrunner.util.string.core.StringNormalizerDefault");
+        }
         types.put(INodeHolderFactory.class, "org.specrunner.util.xom.node.core.NodeHolderFactoryDefault");
         types.put(ITableFactory.class, "org.specrunner.util.xom.node.core.TableFactoryDefault");
-        types.put(IStringNormalizer.class, "org.specrunner.util.string.core.StringNormalizerDefault");
         types.put(ResourceFinder.class, "org.specrunner.util.resources.ResourceFinder");
         types.put(IPropertyLoader.class, "org.specrunner.properties.core.PropertyLoaderImpl");
         types.put(IConfigurationFactory.class, "org.specrunner.configuration.core.ConfigurationFactoryImpl");

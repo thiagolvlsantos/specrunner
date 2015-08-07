@@ -56,8 +56,8 @@ import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.transformer.ITransformer;
 import org.specrunner.transformer.ITransformerManager;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.UtilNode;
 
 /**
@@ -598,7 +598,7 @@ public class PluginInclude extends AbstractPlugin {
                     String value = URLDecoder.decode(st.nextToken(), "UTF-8");
                     try {
                         String var = key;
-                        Object obj = UtilEvaluator.evaluate(value, context, true);
+                        Object obj = UtilExpression.evaluate(value, context, true);
                         context.saveLocal(var, obj);
                         Element tr = new Element("tr");
                         args.appendChild(tr);

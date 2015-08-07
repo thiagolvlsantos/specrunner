@@ -29,8 +29,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritableFactoryManager;
 import org.specrunner.result.status.Failure;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.string.IStringProvider;
 import org.specrunner.webdriver.AbstractPluginUrlAware;
 
@@ -85,7 +85,7 @@ public class PluginStartIn extends AbstractPluginUrlAware {
         String u = null;
         if (provider == null) {
             u = getUrl() != null ? getUrl() : node.getValue();
-            u = String.valueOf(UtilEvaluator.evaluate(u, context, true));
+            u = String.valueOf(UtilExpression.evaluate(u, context, true));
         } else {
             try {
                 if (UtilLog.LOG.isInfoEnabled()) {

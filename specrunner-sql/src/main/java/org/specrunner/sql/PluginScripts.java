@@ -40,9 +40,6 @@ import java.util.StringTokenizer;
 
 import javax.sql.DataSource;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
@@ -58,10 +55,13 @@ import org.specrunner.result.status.Success;
 import org.specrunner.result.status.Warning;
 import org.specrunner.source.ISource;
 import org.specrunner.sql.util.StringUtil;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
+import org.specrunner.util.expression.UtilExpression;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
 
 /**
  * This plugin specifies the scripts to be performed. Scripts are specification
@@ -487,7 +487,7 @@ public class PluginScripts extends AbstractPluginValue {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace("Command  before: " + line);
                     }
-                    line = UtilEvaluator.replace(line, context, true);
+                    line = UtilExpression.replace(line, context, true);
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace("Command   after: " + line);
                     }

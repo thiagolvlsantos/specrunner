@@ -49,7 +49,7 @@ public class ReaderDefault implements IReader {
     }
 
     @Override
-    public boolean replaceContent() {
+    public boolean isReplacer() {
         return true;
     }
 }

@@ -30,8 +30,8 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
 import org.specrunner.runner.RunnerException;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.expression.UtilExpression;
 
 /**
  * Performs a conditional loop.
@@ -168,7 +168,7 @@ public class PluginWhile extends AbstractPluginValue {
      *             On evaluation errors.
      */
     protected boolean checkCondition(String test, IContext context) throws PluginException {
-        Object tmp = UtilEvaluator.evaluate(test, context, true);
+        Object tmp = UtilExpression.evaluate(test, context, true);
         return tmp instanceof Boolean && (Boolean) tmp;
     }
 }

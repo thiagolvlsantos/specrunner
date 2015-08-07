@@ -152,7 +152,7 @@ public class ReaderFile implements IReader {
     }
 
     @Override
-    public boolean replaceContent() {
+    public boolean isReplacer() {
         return false;
     }
 }

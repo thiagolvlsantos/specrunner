@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -33,10 +31,11 @@ import org.specrunner.plugins.core.AbstractPluginTable;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
-import org.specrunner.util.UtilEvaluator;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
+
+import nu.xom.Node;
 
 /**
  * Creates a memory map.
@@ -45,6 +44,15 @@ import org.specrunner.util.xom.node.TableAdapter;
  * 
  */
 public class PluginMap extends AbstractPluginTable {
+
+    /**
+     * Start code replacement.
+     */
+    public static final String START_DATA = "#{";
+    /**
+     * Start code replacement.
+     */
+    public static final String END_DATA = "}";
 
     /**
      * true, to resolve content before mapping, false, otherwise.
@@ -125,8 +133,8 @@ public class PluginMap extends AbstractPluginTable {
             data.add(line);
             for (int j = 0; j < tds.size(); j++) {
                 Node e = tds.get(j).getNode();
-                line.put(UtilEvaluator.START_DATA + j + UtilEvaluator.END, e);
-                line.put(UtilEvaluator.START_DATA + names.get(j) + UtilEvaluator.END, e);
+                line.put(START_DATA + j + END_DATA, e);
+                line.put(START_DATA + names.get(j) + END_DATA, e);
             }
         }
         IDataMap<Node> map = new IDataMap<Node>() {
