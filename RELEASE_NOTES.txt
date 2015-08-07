@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.44
+OK - Rever o scape de $ para ter certeza que a saída é apenas o $ mantido - o comportamento esperado é que ao substituir devemos ter sempre o original caso não haja execução bem sucedida da expressão interna;
+OK - Refactoring to processador de String para substituir expressões dentro de '${}'
+
 1.4.43
 - Ajuste do Copyright;
 - Criar um reader de arquivos, que aceiti referência relativa via href:
