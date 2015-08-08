@@ -45,9 +45,11 @@ public class TextAnalyzerDefault implements ITextAnalyzer {
         int begin = 0;
         int start = content.indexOf(placeholder.getStart(), begin);
         int end = content.indexOf(placeholder.getEnd(), start + 1);
+        boolean found = false;
         boolean escape = false;
         Map<String, Object> cache = new HashMap<String, Object>();
         while (start >= 0 && end > start) {
+            found = true;
             escape = start > placeholder.getStart().length() && content.charAt(start - placeholder.getStart().length() + 1) == placeholder.getEscape();
             if (!escape) {
                 String exp = content.substring(start + placeholder.getStart().length(), end);
@@ -74,7 +76,7 @@ public class TextAnalyzerDefault implements ITextAnalyzer {
                 end = content.indexOf(placeholder.getEnd(), start + 1);
             }
         }
-        if (end != -1) {
+        if (found && end != -1) {
             sb.append(content.substring(end + 1));
         } else {
             if (begin == 0) {
