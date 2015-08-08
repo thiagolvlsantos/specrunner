@@ -24,5 +24,11 @@ public class Main {
         System.out.println("'" + te.evaluate("", t, e, ctx, true) + "'");
         SRServices.getExpressionFactory().bindValue("n", 1);
         System.out.println("'" + te.evaluate("2 + ${n}", t, e, ctx, true) + "'");
+
+        System.out.println("'" + te.evaluate("2 + {n} + 4", t, e, ctx, true) + "'");
+
+        System.out.println("'" + te.evaluate("2 + n} + 4", t, e, ctx, true) + "'");
+
+        System.out.println("'" + te.evaluate("2 + {n + 4", t, e, ctx, true) + "'");
     }
 }
