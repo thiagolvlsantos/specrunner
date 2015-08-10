@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.45 PENDENTE
+OK - Bug fix de expressões;
+
 1.4.44
 OK - Rever o scape de $ para ter certeza que a saída é apenas o $ mantido - o comportamento esperado é que ao substituir devemos ter sempre o original caso não haja execução bem sucedida da expressão interna;
 OK - Refactoring to processador de String para substituir expressões dentro de '${}'
