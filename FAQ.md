@@ -1,0 +1,13 @@
+
+
+# Como executar uma especificação? #
+
+# Como modificar o diretório de saída do resultado? #
+
+# Como habilitar o LOG? #
+
+# Como criar um plugin novo? #
+
+# O que é uma `feature` gerenciada pelo IFeatureManager? #
+
+# Qual a diferença entre `feature` e IConfiguration? #
