@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <version>1.4.45</version>
     <name>SpecRunner (multi-module).</name>
-    <url>http://github.com/thiagolvlsantos/specrunner</url>
+    <url>http://www.specrunner.org</url>
     <description>Acceptance Test Driven Development tool</description>
     <developers>
         <developer>
