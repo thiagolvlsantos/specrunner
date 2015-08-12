@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <version>1.4.45</version>
     <name>SpecRunner (multi-module).</name>
-    <url>http://code.google.com/p/specrunner</url>
+    <url>http://github.com/thiagolvlsantos/specrunner</url>
     <description>Acceptance Test Driven Development tool</description>
     <developers>
         <developer>
@@ -28,12 +28,12 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:svn:http://specrunner.googlecode.com/svn/trunk</connection>
-        <developerConnection>scm:svn:https://specrunner.googlecode.com/svn/trunk</developerConnection>
-        <url>https://code.google.com/p/specrunner/source/browse</url>
+        <connection>scm:git:git@github.com:thiagolvlsantos/specrunner.git</connection>
+        <developerConnection>scm:git:git@github.com:thiagolvlsantos/specrunner.git</developerConnection>
+        <url>git@github.com:thiagolvlsantos/specrunner.git</url>
     </scm>
     <issueManagement>
-        <url>http://code.google.com/p/specrunner/issues/list</url>
+        <url>https://github.com/thiagolvlsantos/specrunner/issues</url>
     </issueManagement>
 
     <modules>
