@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.46
+OK - Correçao do verifyRows para ser somente no primeiro nível de tr e th/tds;
+OK - Bug fix do leitor de arquivos para não ter problemas em ambientes Linux.
+
 1.4.45
 OK - Bug fix de expressões;
 
