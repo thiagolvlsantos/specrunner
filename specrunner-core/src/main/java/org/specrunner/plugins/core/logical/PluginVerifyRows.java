@@ -2,11 +2,6 @@ package org.specrunner.plugins.core.logical;
 
 import java.util.Iterator;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
@@ -22,6 +17,11 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Nodes;
 
 /**
  * Perform table verifications.
@@ -61,7 +61,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
         Iterator<?> ite = ((Iterable<?>) value).iterator();
 
         Node node = context.getNode();
-        Nodes ns = node.query("descendant::tr");
+        Nodes ns = node.query("child::tr | child::thead/tr | child::tbody/tr");
         if (ns.size() == 0) {
             throw new PluginException("Missing rows.");
         }
@@ -77,7 +77,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
         if (head == null) {
             throw new PluginException("Missing table header candidate.");
         }
-        Nodes hs = head.query("descendant::th");
+        Nodes hs = head.query("child::th");
         if (hs.size() == 0) {
             throw new PluginException("Missing header information (th's).");
         }
@@ -92,7 +92,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
             if (UtilNode.isIgnore(row)) {
                 continue;
             }
-            Nodes cs = row.query("descendant::td");
+            Nodes cs = row.query("child::td");
             if (hs.size() != cs.size()) {
                 throw new PluginException("Number of headers (" + hs.size() + ") is different of columns (" + cs.size() + ").");
             }

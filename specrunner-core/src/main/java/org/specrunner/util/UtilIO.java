@@ -22,8 +22,8 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -358,14 +358,15 @@ public final class UtilIO {
         output.println("(" + cm.getThread() + ") done...");
     }
 
-    public static String readFile(String filename) throws IOException {
+    public static String readFile(File file) throws IOException {
         StringBuilder sb = new StringBuilder();
-        File file = new File(filename);
-        FileReader fr = null;
+        FileInputStream fr = null;
+        InputStreamReader isr = null;
         BufferedReader br = null;
         try {
-            fr = new FileReader(file);
-            br = new BufferedReader(fr);
+            fr = new FileInputStream(file);
+            isr = new InputStreamReader(fr, UtilEncoding.getEncoding());
+            br = new BufferedReader(isr);
             String input = br.readLine();
             while (input != null) {
                 sb.append(input);
@@ -377,6 +378,9 @@ public final class UtilIO {
         } finally {
             if (fr != null) {
                 fr.close();
+            }
+            if (isr != null) {
+                isr.close();
             }
             if (br != null) {
                 br.close();

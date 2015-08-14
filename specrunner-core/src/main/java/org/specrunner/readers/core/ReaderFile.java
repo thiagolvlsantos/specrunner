@@ -102,8 +102,12 @@ public class ReaderFile implements IReader {
                 URI newHref = uri.resolve(file);
                 updateHref(element, newHref);
                 file = newHref.getPath();
-                file = file.substring(1);
-                sb.append(UtilIO.readFile(file));
+                File f = new File(file);
+                if (!f.exists()) {
+                    file = file.substring(1);
+                    f = new File(file);
+                }
+                sb.append(UtilIO.readFile(f));
             } catch (Exception e) {
                 throw new ReaderException(e);
             }
