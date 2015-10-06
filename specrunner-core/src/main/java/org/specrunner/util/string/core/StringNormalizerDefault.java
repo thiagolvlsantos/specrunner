@@ -85,6 +85,9 @@ public class StringNormalizerDefault implements IStringNormalizer {
 
     @Override
     public String clean(String str) {
+        if (str == null) {
+            return str;
+        }
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
     }
 }
