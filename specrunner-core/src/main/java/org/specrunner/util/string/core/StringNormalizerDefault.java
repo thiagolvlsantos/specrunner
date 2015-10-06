@@ -30,6 +30,9 @@ public class StringNormalizerDefault implements IStringNormalizer {
 
     @Override
     public String normalize(String str) {
+        if (str == null) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         char c;
         for (int i = 0; i < str.length(); i++) {
