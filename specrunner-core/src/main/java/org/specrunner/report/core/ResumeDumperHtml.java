@@ -26,12 +26,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Attribute;
-import nu.xom.DocType;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Serializer;
-
 import org.joda.time.DateTime;
 import org.specrunner.SRServices;
 import org.specrunner.dumper.core.ConstantsDumperFile;
@@ -46,6 +40,12 @@ import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
 import org.specrunner.util.resources.ResourceFinder;
 import org.specrunner.util.string.IStringNormalizer;
+
+import nu.xom.Attribute;
+import nu.xom.DocType;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Serializer;
 
 /**
  * Basic HTML dumper implementation.
@@ -241,7 +241,7 @@ public class ResumeDumperHtml implements IResumeDumper {
         appendResources(services, output);
         write(services, doc, outputName);
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
-        out.println(services.getThreadName() + ": HTML resume at '" + outputName.getAbsolutePath() + "'.");
+        out.println(services.getThreadName() + " : HTML resume at -> " + outputName.getAbsolutePath());
     }
 
     /**

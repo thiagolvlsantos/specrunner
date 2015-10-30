@@ -23,11 +23,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.core.UtilEncoding;
@@ -37,6 +32,11 @@ import org.specrunner.source.resource.positional.EPlace;
 import org.specrunner.source.resource.positional.Position;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Nodes;
 
 /**
  * Default resource to be written in header part.
@@ -108,7 +108,9 @@ public abstract class AbstractResourceHeader extends AbstractResourcePositional 
                         String protocol = url.getProtocol();
                         if (protocol != null && !protocol.toLowerCase().startsWith("http")) {
                             String file = url.toString();
-                            String name = file.substring(file.lastIndexOf('/') + 1) + "_res_" + serialNumber.get();
+                            String strName = file.substring(file.lastIndexOf('/') + 1);
+                            int pos = strName.lastIndexOf('.');
+                            String name = (pos > 0 ? strName.substring(0, pos) : strName) + "_r_" + serialNumber.get();
                             serialNumber.set(serialNumber.get() + 1);
                             Element tag = getHeaderTag(output, name);
                             File resFile = getFile(output, name);

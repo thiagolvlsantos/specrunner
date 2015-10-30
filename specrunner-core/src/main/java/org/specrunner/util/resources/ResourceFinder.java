@@ -19,6 +19,7 @@ package org.specrunner.util.resources;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -80,9 +81,11 @@ public class ResourceFinder {
      *            The resource name.
      * @return The corresponding default resource name.
      */
-    public String getDefault(String resource) {
+    public List<String> getDefault(String resource) {
         int pos = resource.lastIndexOf('.');
-        return resource.substring(0, pos) + "_default" + resource.substring(pos);
+        String default_short = resource.substring(0, pos) + "_df" + resource.substring(pos);
+        String default_long = resource.substring(0, pos) + "_default" + resource.substring(pos);
+        return Arrays.asList(default_short, default_long);
     }
 
     /**
@@ -136,8 +139,8 @@ public class ResourceFinder {
                 return filter(sort(new LinkedList<URL>(files)));
             }
             files = new LinkedList<URL>();
-            String standard = getDefault(resource);
-            files.addAll(getResources(standard));
+            List<String> standard = getDefault(resource);
+            files.addAll(getResources(standard.toArray(new String[0])));
             files.addAll(getResources(resource));
             if (UtilLog.LOG.isTraceEnabled()) {
                 log("Resource list:", files);
@@ -179,11 +182,15 @@ public class ResourceFinder {
      * @throws IOException
      *             On loading list errors.
      */
-    public List<URL> getResources(String resource) throws IOException {
+    public List<URL> getResources(String... resources) throws IOException {
         List<URL> result = new LinkedList<URL>();
-        Enumeration<URL> urls = ClassLoader.getSystemResources(resource);
-        while (urls.hasMoreElements()) {
-            result.add(urls.nextElement());
+        if (resources != null) {
+            for (String resource : resources) {
+                Enumeration<URL> urls = ClassLoader.getSystemResources(resource);
+                while (urls.hasMoreElements()) {
+                    result.add(urls.nextElement());
+                }
+            }
         }
         return result;
     }
