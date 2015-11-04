@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.48
+OK - Reduzir o nome dos arquivos de recursos usados (de specrunner.css,... para sr.css) e (specrunner_default.css para sr_d.css)... ;
+OK - Colocar o mapping de objetos para ter herança (i.e. supermapping="file.hml") busca o pai para carregar antes do filho;
+
 1.4.47
 OK - No StringNormalizerDefault corrigir o normalize para fica nullsafe.
 
