@@ -70,6 +70,10 @@ import nu.xom.Nodes;
 public abstract class AbstractPluginObject extends AbstractPluginTable {
 
     /**
+     * Super type of object.
+     */
+    protected String supermapping;
+    /**
      * Object class name.
      */
     protected String type;
@@ -121,6 +125,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * Mapping of identifiers to object instances.
      */
     protected Map<String, Object> instances = new HashMap<String, Object>();
+
+    /**
+     * Get super class mapping.
+     * 
+     * @return A super class mapping.
+     */
+    public String getSupermapping() {
+        return supermapping;
+    }
+
+    /**
+     * Set mapping for superclass object.
+     * 
+     * @param supermapping
+     *            A super mapping.
+     */
+    public void setSupermapping(String supermapping) {
+        this.supermapping = supermapping;
+    }
 
     /**
      * The object type of the plugin. i.e.
@@ -276,7 +299,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     public void initialize(IContext context, TableAdapter table) throws PluginException {
         super.initialize(context, table);
         if (mapping != null) {
-            loadMapping(context, table);
+            loadMapping(context, table, mapping);
         } else {
             setObjectInformation();
         }
@@ -292,14 +315,14 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @throws PluginException
      *             On mapping errors.
      */
-    protected void loadMapping(IContext context, TableAdapter table) throws PluginException {
+    protected void loadMapping(IContext context, TableAdapter table, String map) throws PluginException {
         try {
             if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Loading object mapping>" + mapping);
+                UtilLog.LOG.info("Loading object mapping>" + map);
             }
-            URL file = AbstractPluginObject.class.getResource(mapping);
+            URL file = AbstractPluginObject.class.getResource(map);
             if (file == null) {
-                throw new PluginException("The object mapping file '" + mapping + "' not found.");
+                throw new PluginException("The object mapping file '" + map + "' not found.");
             }
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Loading object mapping file>" + file);
@@ -317,8 +340,17 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             RowAdapter information = ta.getRow(0);
 
+            supermapping = null;
+
             // set table properties such as type/separator/id/etc.
             UtilParametrized.setProperties(context, this, n);
+
+            if (supermapping != null) {
+                loadMapping(context, table, supermapping);
+
+                // set table properties such as type/separator/id/etc.
+                UtilParametrized.setProperties(context, this, n);
+            }
 
             // to replace specific settings back.
             UtilParametrized.setProperties(context, this, (Element) table.getNode());
