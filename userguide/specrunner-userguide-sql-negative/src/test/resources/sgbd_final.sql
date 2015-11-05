@@ -6,4 +6,5 @@ create table ORD.customers (
 	date VARCHAR(255) not null,
 	genre VARCHAR(1),
 	description VARCHAR(255),
+    data clob,
 		primary key (id))

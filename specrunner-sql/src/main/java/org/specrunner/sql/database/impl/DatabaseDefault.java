@@ -48,6 +48,7 @@ import org.specrunner.expressions.INullEmptyHandler;
 import org.specrunner.expressions.core.NullEmptyHandlerDefault;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.formatters.FormatterException;
+import org.specrunner.formatters.IFormatter;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.IReader;
@@ -668,6 +669,9 @@ public class DatabaseDefault implements IDatabase {
                 } catch (ConverterException e) {
                     result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), new PluginException("Convertion error at row: " + i + ", cell: " + j + ".", e));
                     continue;
+                } catch (FormatterException e) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(td.getNode(), context.getPlugin()), new PluginException("Formatter error at row: " + i + ", cell: " + j + ".", e));
+                    continue;
                 }
             }
             if (!afilter.accept(mode, register)) {
@@ -877,12 +881,14 @@ public class DatabaseDefault implements IDatabase {
      *             On conversion errors.
      * @throws DatabaseException
      *             On default value.
+     * @throws FormatterException
+     *             On format errors.
      */
-    protected Value getValue(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, CellAdapter td, String content) throws ConverterException, DatabaseException {
+    protected Value getValue(IContext context, EMode mode, CommandType command, Column column, IDataFilter afilter, CellAdapter td, String content) throws ConverterException, DatabaseException, FormatterException {
         boolean isNull = nullEmptyHandler.isNull(mode, content);
         boolean isEmpty = nullEmptyHandler.isEmpty(mode, content);
         boolean isVirtual = column.isVirtual();
-        IConverter converter = column.getConverter();
+        IConverter converter = td.getConverter(column.getConverter());
         if (isNull || isEmpty || isVirtual || converter.accept(content)) {
             Object obj = null;
             if (isNull) {
@@ -892,8 +898,13 @@ public class DatabaseDefault implements IDatabase {
             } else if (isVirtual) {
                 obj = content;
             } else {
-                List<String> args = column.getArguments();
+                List<String> args = td.getArguments(column.getArguments());
                 obj = converter.convert(content, args.isEmpty() ? null : args.toArray());
+            }
+            IFormatter formatter = td.getFormatter(column.getFormatter());
+            if (formatter != null) {
+                List<String> args = td.getFormatterArguments(column.getFormatterArguments());
+                obj = formatter.format(obj, args.isEmpty() ? null : args.toArray());
             }
             if (!afilter.accept(mode, column, obj)) {
                 if (UtilLog.LOG.isInfoEnabled()) {
