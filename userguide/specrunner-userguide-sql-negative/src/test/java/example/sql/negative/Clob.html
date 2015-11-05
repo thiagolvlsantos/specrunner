@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+</style>
+<title>Example of clob</title>
+</head>
+<body>
+    <h2>Clob</h2>
+    <dbms />
+
+    <h1>Prepare two bases.</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td converter="tc" formatter="tc" for0="dd/MM/yyyy">current date + 1 day</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>current date + 1 year</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td for0="HH:mm:ss">current date + 10 year</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <compareBase />
+</body>
+</html>
