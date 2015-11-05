@@ -34,6 +34,7 @@ import org.specrunner.report.core.comparators.IndexComparator;
 import org.specrunner.report.core.comparators.StatusComparator;
 import org.specrunner.report.core.comparators.TimeComparator;
 import org.specrunner.source.core.UtilEncoding;
+import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.output.IOutput;
@@ -241,7 +242,7 @@ public class ResumeDumperHtml implements IResumeDumper {
         appendResources(services, output);
         write(services, doc, outputName);
         IOutput out = services.lookup(IOutputFactory.class).currentOutput();
-        out.println(services.getThreadName() + " : HTML resume at -> " + outputName.getAbsolutePath());
+        out.println(services.getThreadName() + ": HTML resume at " + outputName.getAbsolutePath());
     }
 
     /**
@@ -255,7 +256,7 @@ public class ResumeDumperHtml implements IResumeDumper {
     public void appendResources(SRServices services, File dir) {
         try {
             List<URL> all = new LinkedList<URL>();
-            for (String s : Arrays.asList("css/specrunner.css", "js/jquery.js", "js/specrunner.js")) {
+            for (String s : Arrays.asList("css/" + IResourceManager.DEFAULT_CSS, "js/jquery.js", "js/" + IResourceManager.DEFAULT_JS)) {
                 all.addAll(services.lookup(ResourceFinder.class).getAllResources(s));
             }
             for (URL url : all) {

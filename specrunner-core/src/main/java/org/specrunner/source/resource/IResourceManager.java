@@ -31,6 +31,21 @@ import org.specrunner.source.resource.positional.Position;
 public interface IResourceManager extends List<IResource> {
 
     /**
+     * Default CSS reference.
+     */
+    String DEFAULT_CSS = "sr.css";
+
+    /**
+     * Default debug CSS reference.
+     */
+    String DEFAULT_DEBUG_CSS = "sr_debug.css";
+
+    /**
+     * Default JS reference.
+     */
+    String DEFAULT_JS = "sr.js";
+
+    /**
      * Add resources (i.e. specrunner.js and specrunner.css) to final result.
      */
     String FEATURE_ADD_RESOURCES = IResourceManager.class + ".save";

@@ -37,7 +37,7 @@ import org.specrunner.util.UtilLog;
  * 
  */
 @SuppressWarnings("serial")
-public class ResourceManagerImpl extends LinkedList<IResource>implements IResourceManager {
+public class ResourceManagerImpl extends LinkedList<IResource> implements IResourceManager {
 
     /**
      * The parent source.
@@ -71,16 +71,16 @@ public class ResourceManagerImpl extends LinkedList<IResource>implements IResour
 
     @Override
     public void addDefaultCss() throws ResourceException {
-        addCss("css/sr.css", true, EType.BINARY, Position.HEAD_START);
+        addCss("css/" + DEFAULT_CSS, true, EType.BINARY, Position.HEAD_START);
         if (UtilLog.LOG.isDebugEnabled() || (Boolean) SRServices.getFeatureManager().get(FEATURE_ADD_DEBUG_CSS, DEFAULT_ADD_DEBUG_CSS)) {
-            addCss("css/sr_debug.css", true, EType.BINARY, Position.HEAD_START);
+            addCss("css/" + DEFAULT_DEBUG_CSS, true, EType.BINARY, Position.HEAD_START);
         }
     }
 
     @Override
     public void addDefaultJs() throws ResourceException {
         addJs("js/jquery.js", true, EType.BINARY, Position.HEAD_END);
-        addJs("js/sr.js", true, EType.BINARY, Position.HEAD_END);
+        addJs("js/" + DEFAULT_JS, true, EType.BINARY, Position.HEAD_END);
     }
 
     @Override
