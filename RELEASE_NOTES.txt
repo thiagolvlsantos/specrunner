@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.49
+OK - Corrigir o estilo do 'ResumeDumperHtml' linha 258;
+OK - Adicionar o conceito de formatter no DatabaseDefault no método protected Value getValue(...), na colunas do banco, foi setado na coluna mas não foi usado para formatar;
+
 1.4.48
 OK - Reduzir o nome dos arquivos de recursos usados (de specrunner.css,... para sr.css) e (specrunner_default.css para sr_d.css)... ;
 OK - Colocar o mapping de objetos para ter herança (i.e. supermapping="file.hml") busca o pai para carregar antes do filho;
