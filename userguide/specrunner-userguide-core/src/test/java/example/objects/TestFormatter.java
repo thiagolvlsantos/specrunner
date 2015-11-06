@@ -9,4 +9,8 @@ public class TestFormatter {
     public void call(DateObject date) {
         System.out.println(date);
     }
+
+    public void callString(String date) {
+        System.out.println(date);
+    }
 }
