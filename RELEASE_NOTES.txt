@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.51
+OK - Colocar os PluginDbms/etc para aceitar na conexões a class do provider, ou instancias de datasource providers.
+
 1.4.50
 OK - Criar o formatter template de datas/jodatime;
 

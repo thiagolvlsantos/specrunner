@@ -26,6 +26,7 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.sql.AbstractPluginDatabase;
+import org.specrunner.sql.IDataSourceProvider;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;
 import org.specrunner.sql.PluginFilter;
@@ -71,6 +72,24 @@ public class PluginDbms extends PluginGroupImpl {
      * The system datasource.
      */
     private String system = "org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TEST_INIT|sa|";
+
+    /**
+     * Feature for system datasource provider name.
+     */
+    public static final String FEATURE_SYSTEM_PROVIDER = PluginDbms.class.getName() + ".systemProvider";
+    /**
+     * The system datasource provider.
+     */
+    private String systemProvider;
+
+    /**
+     * Feature for system datasource provider instance.
+     */
+    public static final String FEATURE_SYSTEM_PROVIDER_INSTANCE = PluginDbms.class.getName() + ".systemProviderInstance";
+    /**
+     * The system datasource provider instace.
+     */
+    private IDataSourceProvider systemProviderInstance;
 
     public PluginDbms() {
         IFeatureManager fm = SRServices.getFeatureManager();
@@ -165,6 +184,44 @@ public class PluginDbms extends PluginGroupImpl {
         this.system = system;
     }
 
+    /**
+     * System database provider name.
+     * 
+     * @return The database name.
+     */
+    public String getSystemProvider() {
+        return systemProvider;
+    }
+
+    /**
+     * Set system provider class name.
+     * 
+     * @param systemProvider
+     *            A classname.
+     */
+    public void setSystemProvider(String systemProvider) {
+        this.systemProvider = systemProvider;
+    }
+
+    /**
+     * Get data source provider instance.
+     * 
+     * @return A data source provider instance.
+     */
+    public IDataSourceProvider getSystemProviderInstance() {
+        return systemProviderInstance;
+    }
+
+    /**
+     * Set the system data source provider instance.
+     * 
+     * @param systemProviderInstance
+     *            A data source provider.
+     */
+    public void setSystemProviderInstance(IDataSourceProvider systemProviderInstance) {
+        this.systemProviderInstance = systemProviderInstance;
+    }
+
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
@@ -183,6 +240,8 @@ public class PluginDbms extends PluginGroupImpl {
             // system base
             PluginConnection systemConnection = new PluginConnection();
             systemConnection.setConnection(system);
+            systemConnection.setProvider(systemProvider);
+            systemConnection.setProviderInstance(systemProviderInstance);
             systemConnection.setName("systemConnection");
             add(systemConnection);
             PluginDatabase systemDatabase = new PluginDatabase();
