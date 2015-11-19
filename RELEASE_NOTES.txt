@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.52
+OK - Bug fix dos providers de conexões.
+
 1.4.51
 OK - Colocar os PluginDbms/etc para aceitar na conexões a class do provider, ou instancias de datasource providers.
 
