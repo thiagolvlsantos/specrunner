@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="SYS" alias="System">
+    <table name="USR_USER" alias="Users">
+        <column name="USR_ID" alias="ID" key="true" converter="notNullOrEmpty" />
+        <column name="USR_NAME" alias="Name" converter="notNullOrEmpty"/>
+        <column name="USR_BIRTHDAY" alias="Birthday" date="true" converter="date" arg0="dd/MM/yyyy" comparator="time"/>
+    </table>
+</schema>

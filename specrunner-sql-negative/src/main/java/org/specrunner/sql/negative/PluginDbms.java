@@ -320,7 +320,11 @@ public class PluginDbms extends PluginGroupImpl {
     public void initialize(IContext context) throws PluginException {
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(FEATURE_SYSTEM, this);
+        fm.set(FEATURE_SYSTEM_PROVIDER, this);
+        fm.set(FEATURE_SYSTEM_PROVIDER_INSTANCE, this);
         fm.set(FEATURE_REFERENCE, this);
+        fm.set(FEATURE_REFERENCE_PROVIDER, this);
+        fm.set(FEATURE_REFERENCE_PROVIDER_INSTANCE, this);
         {
             // database schema
             add(new PluginSchemaLoader());
