@@ -53,7 +53,7 @@ public class PluginDbms extends PluginGroupImpl {
     /**
      * The database schema loader class.
      */
-    private Class<? extends ISchemaLoader> schemaLoader = SchemaLoaderXOM.class;
+    protected Class<? extends ISchemaLoader> schemaLoader = SchemaLoaderXOM.class;
 
     /**
      * Feature for database implementation.
@@ -62,7 +62,7 @@ public class PluginDbms extends PluginGroupImpl {
     /**
      * The database class.
      */
-    private Class<? extends IDatabase> database = DatabaseDefault.class;
+    protected Class<? extends IDatabase> database = DatabaseDefault.class;
 
     /**
      * Feature for system datasource name.
@@ -71,7 +71,7 @@ public class PluginDbms extends PluginGroupImpl {
     /**
      * The system datasource.
      */
-    private String system = "org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TEST_INIT|sa|";
+    protected String system = "org.hsqldb.jdbcDriver|jdbc:hsqldb:mem:TEST_INIT|sa|";
 
     /**
      * Feature for system datasource provider name.
@@ -80,7 +80,7 @@ public class PluginDbms extends PluginGroupImpl {
     /**
      * The system datasource provider.
      */
-    private String systemProvider;
+    protected String systemProvider;
 
     /**
      * Feature for system datasource provider instance.
@@ -89,7 +89,7 @@ public class PluginDbms extends PluginGroupImpl {
     /**
      * The system datasource provider instace.
      */
-    private IDataSourceProvider systemProviderInstance;
+    protected IDataSourceProvider systemProviderInstance;
 
     public PluginDbms() {
         IFeatureManager fm = SRServices.getFeatureManager();

@@ -17,9 +17,6 @@
  */
 package org.specrunner.plugins.core.macro;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -29,6 +26,9 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Warning;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * The plugin which creates a macro. To defined a macro just add the class
@@ -52,7 +52,7 @@ public class PluginMacro extends AbstractPluginScoped {
     /**
      * Set if a macro should be global to the current specification.
      */
-    protected boolean global;
+    protected boolean global = true;
 
     /**
      * Says if the macro must be execute on definition time. Default is 'false'.
@@ -75,7 +75,7 @@ public class PluginMacro extends AbstractPluginScoped {
 
     /**
      * Says is the plugin should be placed in global context or local context.
-     * Default value is 'false'.
+     * Default value is 'true'.
      * 
      * @return True, of global, false, otherwise.
      */

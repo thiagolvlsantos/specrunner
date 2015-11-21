@@ -30,6 +30,7 @@ import org.specrunner.pipeline.IChannel;
 import org.specrunner.pipeline.IChannelFactory;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.PipelineException;
+import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.readers.IReaderManager;
 import org.specrunner.util.UtilLog;
 
@@ -50,7 +51,7 @@ public final class SRServices {
     /**
      * Set if SRServices is thread-safe or not.
      */
-    private static boolean threadSafe = Boolean.valueOf(System.getProperty("sr.threadsafe", "true"));
+    public static boolean threadSafe;
 
     /**
      * Instance global.
@@ -81,6 +82,7 @@ public final class SRServices {
      * Create a group of services provided by SpecRunner.
      */
     private SRServices() {
+        threadSafe = Boolean.valueOf(System.getProperty("sr.threadsafe", "false"));
         String str = System.getProperty("sr.mapping", "org.specrunner.core.SRMappingDefault");
         try {
             mapping = (ISRMapping) Class.forName(str).newInstance();
@@ -270,6 +272,15 @@ public final class SRServices {
      */
     public static IComparatorManager getComparatorManager() {
         return get(IComparatorManager.class);
+    }
+
+    /**
+     * Shortcut method to feature manager.
+     * 
+     * @return The object manager.
+     */
+    public static IObjectManager getObjectManager() {
+        return get(IObjectManager.class);
     }
 
     /**
