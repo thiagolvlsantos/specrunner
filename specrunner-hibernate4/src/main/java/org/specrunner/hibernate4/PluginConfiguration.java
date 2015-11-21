@@ -20,10 +20,6 @@ package org.specrunner.hibernate4;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.mapping.PersistentClass;
@@ -33,10 +29,13 @@ import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
-import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Success;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Creates/recovers a configuration instance and add it to the global context.
@@ -128,12 +127,12 @@ public class PluginConfiguration extends AbstractPluginFactory {
             context.saveGlobal(str, cfg);
             result.addResult(Success.INSTANCE, context.peek());
 
-            SRServices.get(IObjectManager.class).clear();
+            SRServices.getObjectManager().clear();
             for (Iterator<?> ite = cfg.getClassMappings(); ite.hasNext();) {
                 PersistentClass persistent = (PersistentClass) ite.next();
                 PluginInsert pin = new PluginInsert();
                 pin.setTypeInstance(Class.forName(persistent.getClassName()));
-                SRServices.get(IObjectManager.class).bind(pin);
+                SRServices.getObjectManager().bind(pin);
             }
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

@@ -49,6 +49,10 @@ import org.specrunner.util.UtilLog;
 public final class SRServices {
 
     /**
+     * Constant of property which enables multiple SRServices (one per thread).
+     */
+    public static final String SR_THREAD_SAFE = "sr.threadsafe";
+    /**
      * Set if SRServices is thread-safe or not.
      */
     public static boolean threadSafe;
@@ -69,6 +73,11 @@ public final class SRServices {
     private final Map<Class<?>, Object> servicePool = new HashMap<Class<?>, Object>();
 
     /**
+     * Constant of property which which sets the default implementation for
+     * services lookup.
+     */
+    public static final String SR_MAPPING = "sr.mapping";
+    /**
      * Configuration.
      */
     private ISRMapping mapping;
@@ -82,8 +91,8 @@ public final class SRServices {
      * Create a group of services provided by SpecRunner.
      */
     private SRServices() {
-        threadSafe = Boolean.valueOf(System.getProperty("sr.threadsafe", "false"));
-        String str = System.getProperty("sr.mapping", "org.specrunner.core.SRMappingDefault");
+        threadSafe = Boolean.valueOf(System.getProperty(SR_THREAD_SAFE, "false"));
+        String str = System.getProperty(SR_MAPPING, "org.specrunner.core.SRMappingDefault");
         try {
             mapping = (ISRMapping) Class.forName(str).newInstance();
         } catch (InstantiationException e) {

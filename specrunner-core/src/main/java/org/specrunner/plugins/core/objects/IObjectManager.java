@@ -56,7 +56,7 @@ public interface IObjectManager {
      * @throws PluginException
      *             On lookup errors.
      */
-    Collection<Object> lookup(Class<?> clazz) throws PluginException;
+    <T> Collection<T> lookup(Class<T> clazz) throws PluginException;
 
     /**
      * Lookup for a object of a given type, with the given key.
@@ -69,7 +69,7 @@ public interface IObjectManager {
      * @throws PluginException
      *             On lookup errors.
      */
-    Object lookup(Class<?> clazz, String key) throws PluginException;
+    <T> T lookup(Class<T> clazz, String key) throws PluginException;
 
     /**
      * The mapping of all entities.

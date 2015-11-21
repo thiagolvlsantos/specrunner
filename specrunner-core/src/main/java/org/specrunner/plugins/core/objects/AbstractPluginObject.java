@@ -401,7 +401,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     @Override
     public void doEnd(IContext context, IResultSet result, TableAdapter table) throws PluginException {
         if (isMapped()) {
-            SRServices.get(IObjectManager.class).bind(this);
+            SRServices.getObjectManager().bind(this);
         }
         readHeader(context, result, table);
         readData(context, result, table);
@@ -1154,7 +1154,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 setFloat(instance, f, value);
             } else if (st == double.class || st == Double.class) {
                 setDouble(instance, f, value);
-            } else if (SRServices.get(IObjectManager.class).isBound(st)) {
+            } else if (SRServices.getObjectManager().isBound(st)) {
                 setEntity(instance, f, value);
             } else {
                 setObject(instance, f, value);
@@ -1291,7 +1291,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("LOOKUP(" + f.getSpecificType() + ")");
         }
-        Object obj = SRServices.get(IObjectManager.class).lookup(f.getSpecificType(), String.valueOf(value));
+        Object obj = SRServices.getObjectManager().lookup(f.getSpecificType(), String.valueOf(value));
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("FOUND(" + obj + ")");
         }

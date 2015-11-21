@@ -63,22 +63,23 @@ public class ObjectManagerDefault implements IObjectManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Collection<Object> lookup(Class<?> clazz) throws PluginException {
+    public <T> Collection<T> lookup(Class<T> clazz) throws PluginException {
         AbstractPluginObject map = entities.get(clazz);
         if (map == null) {
             throw new PluginException("Object mapping for type " + clazz.getName() + " not found.");
         }
-        return map.getObjects();
+        return (Collection<T>) map.getObjects();
     }
 
     @Override
-    public Object lookup(Class<?> clazz, String key) throws PluginException {
+    public <T> T lookup(Class<T> clazz, String key) throws PluginException {
         AbstractPluginObject map = entities.get(clazz);
         if (map == null) {
             throw new PluginException("Object mapping for type " + clazz.getName() + " not found.");
         }
-        return map.getObject(key);
+        return clazz.cast(map.getObject(key));
     }
 
     @Override
