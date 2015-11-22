@@ -52,10 +52,6 @@ public final class SRServices {
      * Constant of property which enables multiple SRServices (one per thread).
      */
     public static final String SR_THREAD_SAFE = "sr.threadsafe";
-    /**
-     * Set if SRServices is thread-safe or not.
-     */
-    public static boolean threadSafe;
 
     /**
      * Instance global.
@@ -91,7 +87,6 @@ public final class SRServices {
      * Create a group of services provided by SpecRunner.
      */
     private SRServices() {
-        threadSafe = Boolean.valueOf(System.getProperty(SR_THREAD_SAFE, "false"));
         String str = System.getProperty(SR_MAPPING, "org.specrunner.core.SRMappingDefault");
         try {
             mapping = (ISRMapping) Class.forName(str).newInstance();
@@ -205,12 +200,12 @@ public final class SRServices {
      * @return The services instance.
      */
     public static SRServices get() {
-        if (threadSafe) {
+        if (Boolean.valueOf(System.getProperty(SR_THREAD_SAFE, "false"))) {
             if (instance.get() == null) {
                 SRServices service = new SRServices();
                 addHook(service);
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Instance is thread-safe: " + service);
+                    UtilLog.LOG.debug("Thread-safe instance: " + service);
                 }
                 instance.set(service);
             }
@@ -220,7 +215,7 @@ public final class SRServices {
                 global = new SRServices();
                 addHook(global);
                 if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Instance is global: " + global);
+                    UtilLog.LOG.debug("Global instance: " + global);
                 }
             }
             return global;
