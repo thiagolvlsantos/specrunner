@@ -17,14 +17,16 @@
  */
 package org.specrunner.plugins.core.objects.core;
 
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.plugins.core.objects.IObjectManager;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.functions.IPredicate;
 
 /**
  * Manages the set of AbstractPluginObject created on a given specification.
@@ -65,21 +67,45 @@ public class ObjectManagerDefault implements IObjectManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> Collection<T> lookup(Class<T> clazz) throws PluginException {
+    public <T> List<T> all(Class<T> clazz) throws PluginException {
         AbstractPluginObject map = entities.get(clazz);
         if (map == null) {
             throw new PluginException("Object mapping for type " + clazz.getName() + " not found.");
         }
-        return (Collection<T>) map.getObjects();
+        return (List<T>) map.getObjects();
     }
 
     @Override
-    public <T> T lookup(Class<T> clazz, String key) throws PluginException {
+    public <T> List<T> select(Class<T> clazz, IPredicate<T> filter) throws PluginException {
+        List<T> tmp = all(clazz);
+        List<T> result = new LinkedList<T>();
+        for (T t : tmp) {
+            if (filter.apply(t)) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public <T> T get(Class<T> clazz, String key) throws PluginException {
         AbstractPluginObject map = entities.get(clazz);
         if (map == null) {
             throw new PluginException("Object mapping for type " + clazz.getName() + " not found.");
         }
         return clazz.cast(map.getObject(key));
+    }
+
+    @Override
+    public <T> T get(Class<T> clazz, IPredicate<T> filter) throws PluginException {
+        List<T> tmp = select(clazz, filter);
+        if (tmp.isEmpty()) {
+            return null;
+        }
+        if (tmp.size() > 1) {
+            throw new PluginException("Multiple elements for " + clazz.getName() + " and filter " + filter + ".");
+        }
+        return tmp.get(0);
     }
 
     @Override

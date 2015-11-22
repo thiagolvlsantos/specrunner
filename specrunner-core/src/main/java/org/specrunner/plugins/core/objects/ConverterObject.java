@@ -24,7 +24,7 @@ public class ConverterObject extends ConverterNotNullNotEmpty {
         }
         Class<?> type = (Class<?>) args[0];
         try {
-            return SRServices.getObjectManager().lookup(type, String.valueOf(value));
+            return SRServices.getObjectManager().get(type, String.valueOf(value));
         } catch (PluginException e) {
             throw new ConverterException(e);
         }

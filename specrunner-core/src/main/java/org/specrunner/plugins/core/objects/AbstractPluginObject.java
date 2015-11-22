@@ -20,7 +20,6 @@ package org.specrunner.plugins.core.objects;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -1291,7 +1290,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("LOOKUP(" + f.getSpecificType() + ")");
         }
-        Object obj = SRServices.getObjectManager().lookup(f.getSpecificType(), String.valueOf(value));
+        Object obj = SRServices.getObjectManager().get(f.getSpecificType(), String.valueOf(value));
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("FOUND(" + obj + ")");
         }
@@ -1404,8 +1403,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * 
      * @return A collection of object under control.
      */
-    public Collection<Object> getObjects() {
-        return instances.values();
+    public List<Object> getObjects() {
+        return new LinkedList<Object>(instances.values());
     }
 
     /**

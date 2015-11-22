@@ -19,7 +19,6 @@ package org.specrunner.plugins.core.objects.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -65,9 +64,9 @@ public class ObjectSelector implements IObjectSelector<IObjectManager> {
     }
 
     @Override
-    public Collection<Object> all(AbstractPluginObject caller, IContext context, IResultSet result) throws Exception {
+    public List<Object> all(AbstractPluginObject caller, IContext context, IResultSet result) throws Exception {
         try {
-            Collection<?> lookup = SRServices.getObjectManager().lookup(caller.getTypeInstance());
+            List<?> lookup = SRServices.getObjectManager().all(caller.getTypeInstance());
             return new ArrayList<Object>(lookup);
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -80,7 +79,7 @@ public class ObjectSelector implements IObjectSelector<IObjectManager> {
     @Override
     public List<Object> select(AbstractPluginObject caller, IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
         try {
-            Object lookup = getSource(caller, context).lookup(instance.getClass(), caller.makeKey(instance));
+            Object lookup = getSource(caller, context).get(instance.getClass(), caller.makeKey(instance));
             return Arrays.asList(lookup);
         } catch (Exception e) {
             if (UtilLog.LOG.isDebugEnabled()) {

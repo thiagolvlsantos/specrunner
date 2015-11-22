@@ -17,10 +17,11 @@
  */
 package org.specrunner.plugins.core.objects;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.specrunner.plugins.PluginException;
+import org.specrunner.util.functions.IPredicate;
 
 /**
  * Defined a repository of objects.
@@ -56,7 +57,20 @@ public interface IObjectManager {
      * @throws PluginException
      *             On lookup errors.
      */
-    <T> Collection<T> lookup(Class<T> clazz) throws PluginException;
+    <T> List<T> all(Class<T> clazz) throws PluginException;
+
+    /**
+     * Lookup for a object of a given type, filtered by a predicate.
+     * 
+     * @param clazz
+     *            The object type.
+     * @param filter
+     *            The filter predicate.
+     * @return All filtered objects, if exists, null, otherwise.
+     * @throws PluginException
+     *             On lookup errors.
+     */
+    <T> List<T> select(Class<T> clazz, IPredicate<T> filter) throws PluginException;
 
     /**
      * Lookup for a object of a given type, with the given key.
@@ -69,7 +83,22 @@ public interface IObjectManager {
      * @throws PluginException
      *             On lookup errors.
      */
-    <T> T lookup(Class<T> clazz, String key) throws PluginException;
+    <T> T get(Class<T> clazz, String key) throws PluginException;
+
+    /**
+     * Lookup for a object of a given type, with the given filter. Avoid filters
+     * on keys, since they can be virtual.
+     * 
+     * @param clazz
+     *            The object type.
+     * @param filter
+     *            The filter predicate.
+     * @return The object if exists, null, otherwise.
+     * @throws PluginException
+     *             On lookup errors, i.e. more than 1 element returned by
+     *             filter.
+     */
+    <T> T get(Class<T> clazz, IPredicate<T> filter) throws PluginException;
 
     /**
      * The mapping of all entities.
