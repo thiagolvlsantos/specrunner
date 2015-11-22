@@ -1,8 +1,9 @@
 -----------------------------------------------------------
-1.4.53
+1.4.53 - Pendente
 OK - Valor default para 'sr.threadsafe' passou para false, para minimizar problemas rodando teste web multi-thread.
 OK - Macros passam a ser globais por padrão.
 OK - ObjectManagerCleaner adicionado.
+OK - Interface do IObjectManager modificado para facilitar utilização em Stubs de sistema.
 
 1.4.52
 OK - Bug fix dos providers de conexões.
