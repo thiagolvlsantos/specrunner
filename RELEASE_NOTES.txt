@@ -1,5 +1,5 @@
 -----------------------------------------------------------
-1.4.53 - Pendente
+1.4.53
 OK - Valor default para 'sr.threadsafe' passou para false, para minimizar problemas rodando teste web multi-thread.
 OK - Macros passam a ser globais por padrão.
 OK - ObjectManagerCleaner adicionado.
