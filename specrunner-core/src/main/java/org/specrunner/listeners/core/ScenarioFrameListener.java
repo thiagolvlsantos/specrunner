@@ -17,10 +17,6 @@
  */
 package org.specrunner.listeners.core;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
@@ -34,6 +30,10 @@ import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Monitor for scenarios frames.

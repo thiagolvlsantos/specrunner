@@ -64,7 +64,7 @@ public abstract class AbstractPluginObjectCompareAll<T> extends AbstractPluginOb
         for (int i = 1; i < table.getRowCount(); i++) {
             RowAdapter row = table.getRow(i);
             try {
-                Object instance = processLine(context, row, result);
+                Object instance = processLine(context, table, row, result);
                 List<Object> selected = selector.select(this, context, instance, row, result);
                 if (selected.isEmpty()) {
                     throw new PluginException("Element at line '" + (i - 1) + "' not found in general collection.");

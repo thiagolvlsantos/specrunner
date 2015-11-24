@@ -17,7 +17,9 @@
  */
 package org.specrunner.plugins.core.objects;
 
+import org.specrunner.context.IContext;
 import org.specrunner.util.xom.node.RowAdapter;
+import org.specrunner.util.xom.node.TableAdapter;
 
 /**
  * Based on object type creates an instance of it, using another row information
@@ -31,13 +33,18 @@ public interface IObjectCreator {
     /**
      * Creates a instance of the given type.
      * 
-     * @param type
-     *            The object type.
+     * @param context
+     *            The test context.
+     * @param table
+     *            The table.
      * @param row
      *            The row with all informations.
+     * @param type
+     *            The object type.
+     * 
      * @return A new object instance, or null.
      * @throws Exception
      *             On object creation error.
      */
-    Object create(Class<?> type, RowAdapter row) throws Exception;
+    Object create(IContext context, TableAdapter table, RowAdapter row, Class<?> type) throws Exception;
 }

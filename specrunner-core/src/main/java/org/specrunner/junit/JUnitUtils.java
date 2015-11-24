@@ -27,9 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import nu.xom.Node;
-import nu.xom.Nodes;
-
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runners.model.FrameworkMethod;
@@ -48,6 +45,9 @@ import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Node;
+import nu.xom.Nodes;
 
 /**
  * JUnit useful functions.

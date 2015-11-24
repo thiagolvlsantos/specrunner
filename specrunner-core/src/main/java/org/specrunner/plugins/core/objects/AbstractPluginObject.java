@@ -46,6 +46,7 @@ import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.string.UtilString;
+import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.RowAdapter;
@@ -450,7 +451,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         for (int i = 1; i < table.getRowCount(); i++) {
             RowAdapter row = table.getRow(i);
             try {
-                processLine(context, row, result);
+                processLine(context, table, row, result);
             } catch (Exception e) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug(e.getMessage(), e);
@@ -475,10 +476,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
-            boolean ignore = Boolean.parseBoolean(cell.getAttribute("ignore", "false"));
+            boolean ignore = Boolean.parseBoolean(cell.getAttribute(UtilNode.IGNORE, "false"));
 
+            String field = cell.hasAttribute("field") ? cell.getAttribute("field") : null;
             String fieldName = UtilString.getNormalizer().camelCase(cell.getValue(context));
-            String name = cell.getAttribute("field", fieldName);
+            String name = field != null ? (field.endsWith(".") ? field + fieldName : field) : fieldName;
             Field f = headerToFields.get(fieldName);
             if (f == null) {
                 f = fieldToFields.get(name);
@@ -930,6 +932,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * 
      * @param context
      *            The context.
+     * @param table
+     *            The table.
      * @param row
      *            The row.
      * @param result
@@ -938,12 +942,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @throws Exception
      *             On processing errors.
      */
-    protected Object processLine(IContext context, RowAdapter row, IResultSet result) throws Exception {
-        Object instance = create(row);
+    protected Object processLine(IContext context, TableAdapter table, RowAdapter row, IResultSet result) throws Exception {
+        Object instance = create(context, table, row);
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("CREATE:" + instance);
         }
-        if (populate(instance, context, row, result)) {
+        if (populate(context, table, row, result, instance)) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("POPULATE:" + instance);
             }
@@ -985,19 +989,23 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     /**
      * Create the object based on a row.
      * 
+     * @param context
+     *            The test context.
+     * @param table
+     *            The table.
      * @param row
      *            The row.
      * @return The object corresponding to the row.
      * @throws Exception
      *             On creation errors.
      */
-    protected Object create(RowAdapter row) throws Exception {
+    protected Object create(IContext context, TableAdapter table, RowAdapter row) throws Exception {
         Object result = null;
         if (creator != null) {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("CREATOR_ROW(" + row + ")");
             }
-            result = creatorInstance.create(typeInstance, row);
+            result = creatorInstance.create(context, table, row, typeInstance);
         }
         if (result == null) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -1015,6 +1023,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      *            The object instance.
      * @param context
      *            The test context.
+     * @param header
+     *            The table header.
      * @param row
      *            The row with attribute informations.
      * @param result
@@ -1023,7 +1033,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @throws Exception
      *             On population errors.
      */
-    protected boolean populate(Object instance, IContext context, RowAdapter row, IResultSet result) throws Exception {
+    protected boolean populate(IContext context, TableAdapter table, RowAdapter row, IResultSet result, Object instance) throws Exception {
         boolean ok = true;
         for (int i = 0; i < fields.size(); i++) {
             if (row.getCellsCount() != fields.size()) {
@@ -1080,7 +1090,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("VALUE>" + value);
                 }
-                setValue(row, instance, f, value);
+                setValue(context, table, row, instance, f, value);
                 String out = String.valueOf(value);
                 if (text != null && !text.equals(out)) {
                     cell.append("{" + out + "}");
@@ -1108,6 +1118,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     /**
      * Set the field with the given value.
      * 
+     * @param context
+     *            The test context.
+     * @param table
+     *            The table.
      * @param row
      *            The row corresponding to the object.
      * @param instance
@@ -1117,16 +1131,16 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @param value
      *            The value to be set in instance for field 'f'.
      * @throws Exception
-     *             On set value erros.
+     *             On set value errors.
      */
-    protected void setValue(RowAdapter row, Object instance, Field f, Object value) throws Exception {
+    protected void setValue(IContext context, TableAdapter table, RowAdapter row, Object instance, Field f, Object value) throws Exception {
         // populate inner objects
         Object current = instance;
         for (int i = 0; i < f.names.length - 1; i++) {
             Object tmp = PropertyUtils.getProperty(current, f.names[i]);
             if (tmp == null) {
                 if (creator != null) {
-                    tmp = creatorInstance.create(f.types[i], row);
+                    tmp = creatorInstance.create(context, table, row, f.types[i]);
                 }
                 if (tmp == null) {
                     tmp = f.types[i].newInstance();
