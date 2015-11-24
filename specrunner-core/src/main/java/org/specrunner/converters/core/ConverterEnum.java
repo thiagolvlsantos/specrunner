@@ -28,7 +28,8 @@ import org.specrunner.converters.ConverterException;
  * Two arguments are required:
  * <ul>
  * <li>The enumeration class type, or enumeration class name;</li>
- * <li>The method name to be used as reference for convertion, i.e. "ordinal".</li>
+ * <li>The method name to be used as reference for convertion, i.e. "ordinal".
+ * </li>
  * </ul>
  * 
  * @author Thiago Santos.
@@ -41,7 +42,6 @@ public class ConverterEnum extends ConverterNotNullNotEmpty {
      */
     protected static final int ARG_SIZE = 2;
 
-    @SuppressWarnings("unchecked")
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
         if (obj == null) {
@@ -50,9 +50,23 @@ public class ConverterEnum extends ConverterNotNullNotEmpty {
         if (args == null || args.length < ARG_SIZE) {
             throw new ConverterException("Converter requires two arguments: 0) the enum class type (class object or name); 1) enum method name passed to compare values.");
         }
+        return convertData(obj, args);
+    }
+
+    protected Object convertData(Object obj, Object[] args) throws ConverterException {
+        Class<? extends Enum<?>> clazz = recoverType(args[0]);
         Object result = null;
+        try {
+            result = recoverValue(obj, args[1], clazz);
+        } catch (Exception e) {
+            throw new ConverterException(e);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Class<? extends Enum<?>> recoverType(Object type) throws ConverterException {
         Class<?> clazz = null;
-        Object type = args[0];
         try {
             if (type instanceof Class) {
                 clazz = (Class<?>) type;
@@ -65,21 +79,21 @@ public class ConverterEnum extends ConverterNotNullNotEmpty {
         if (!clazz.isEnum()) {
             throw new ConverterException("Class '" + clazz.getName() + "' is not an enumeration.");
         }
-        try {
-            Class<? extends Enum<?>> enumType = (Class<? extends Enum<?>>) clazz;
-            String name = String.valueOf(args[1]);
-            Method method = enumType.getMethod(name);
-            String current = String.valueOf(obj);
-            Enum<?>[] values = enumType.getEnumConstants();
-            for (Enum<?> e : values) {
-                Object base = method.invoke(e);
-                if (current.equalsIgnoreCase(String.valueOf(base))) {
-                    result = e;
-                    break;
-                }
+        return (Class<? extends Enum<?>>) clazz;
+    }
+
+    protected Object recoverValue(Object obj, Object methodName, Class<? extends Enum<?>> enumType) throws Exception {
+        Object result = null;
+        String name = String.valueOf(methodName);
+        Method method = enumType.getMethod(name);
+        String current = String.valueOf(obj);
+        Enum<?>[] values = enumType.getEnumConstants();
+        for (Enum<?> e : values) {
+            Object base = method.invoke(e);
+            if (current.equalsIgnoreCase(String.valueOf(base))) {
+                result = e;
+                break;
             }
-        } catch (Exception e) {
-            throw new ConverterException(e);
         }
         return result;
     }
