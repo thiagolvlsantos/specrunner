@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.55
+OK - correção do conversor 'do' para ignorar hora/minuto/segundo.
+
 1.4.54
 OK - Adicionar o contexto do teste ao IObjectCreator, e também o header da tabela de onde está se trabalhando, colocando métodos de busca indexada por nome de coluna, se for o caso;
 	(Sem métodos indexados pelos strings, por enquanto.)
