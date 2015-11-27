@@ -1067,7 +1067,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     for (int j = 0; j < convs.length; j++) {
                         IConverter con = SRServices.getConverterManager().get(convs[j]);
                         if (con != null) {
-                            value = con.convert(value, f.args);
+                            List<String> args = cell.getArguments(f.args != null ? Arrays.asList(f.args) : new LinkedList<String>());
+                            value = con.convert(value, args.toArray(new Object[0]));
                         } else {
                             throw new ConverterException("Converter named '" + convs[j] + "' not found.");
                         }
@@ -1081,7 +1082,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     for (int j = 0; j < formatters.length; j++) {
                         IFormatter form = SRServices.getFormatterManager().get(formatters[j]);
                         if (form != null) {
-                            value = form.format(value, f.formattersArgs);
+                            List<String> args = cell.getArguments(f.formattersArgs != null ? Arrays.asList(f.formattersArgs) : new LinkedList<String>());
+                            value = form.format(value, args.toArray(new Object[0]));
                         } else {
                             throw new ConverterException("Formatter named '" + formatters[j] + "' not found.");
                         }

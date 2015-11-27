@@ -37,6 +37,7 @@ import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.listeners.core.ScenarioCleanerListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
@@ -217,7 +218,7 @@ public final class JUnitUtils {
 
             // read scenario entries
             File input = JUnitUtils.getFile(javaClass);
-            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
+            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString(), false);
             Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
             List<INodeListener> listeners = new LinkedList<INodeListener>();
             runner.setListeners(listeners);
@@ -236,8 +237,10 @@ public final class JUnitUtils {
             }
             for (int i = 0; i < scenarios.size(); i++) {
                 Node sc = scenarios.get(i);
-                String title = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE).getValue();
-                title = UtilString.getNormalizer().camelCase(title, true);
+                Node nt = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE);
+                String title = getPath(nt);
+                INodeHolder ntHolder = SRServices.get(INodeHolderFactory.class).newHolder(nt);
+                ntHolder.setAttribute(ScenarioFrameListener.ATT_SR_TITLE, title);
                 if (titles.contains(title)) {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
                 }
@@ -286,6 +289,21 @@ public final class JUnitUtils {
             throw new RuntimeException(e);
         }
         return methods;
+    }
+
+    private static String getPath(Node nt) throws PluginException {
+        Nodes query = nt.query("ancestor::*[contains(@class,'" + ScenarioFrameListener.CSS_SCENARIO + "')]");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < query.size(); i++) {
+            Node n = query.get(i);
+            String title = UtilNode.getCssNodeOrElement(n, ScenarioFrameListener.CSS_TITLE).getValue();
+            title = UtilString.getNormalizer().camelCase(title, true);
+            sb.append(UtilString.getNormalizer().camelCase(title, true) + "_");
+        }
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString();
     }
 
     /**

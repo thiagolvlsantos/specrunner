@@ -1,4 +1,15 @@
 -----------------------------------------------------------
+1.4.54
+OK - Adicionar o contexto do teste ao IObjectCreator, e também o header da tabela de onde está se trabalhando, colocando métodos de busca indexada por nome de coluna, se for o caso;
+	(Sem métodos indexados pelos strings, por enquanto.)
+OK - Na propriedades de uma coluna caso o campo 'field' exista e termine por ponto (.) colocar o conteúdo da coluna como sufixo do campo;
+OK - Quebrar os métodos de conversão de enumeração para facilitar reuso e criar um que use o name como referência;
+OK - Verificar o aninhamento de cenário para pegar o nome completo morro acima;
+OK - ajustar o date only p sumir com os milisegundos;
+OK - testar lombok;
+	- Funcionando.
+OK - Bugs fix para argumentos de conversores e formatadores no plugin de objetos.
+
 1.4.53
 OK - Valor default para 'sr.threadsafe' passou para false, para minimizar problemas rodando teste web multi-thread.
 OK - Macros passam a ser globais por padrão.

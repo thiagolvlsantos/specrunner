@@ -1,6 +1,7 @@
 package example.converters;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -13,6 +14,10 @@ public class TestConverters {
 
     public void printDate(Date date) {
         System.out.println("DATE: " + date);
+    }
+
+    public void printDateString(Date date) {
+        System.out.println("DATE_FORMAT: " + new SimpleDateFormat("HH:mm:ss.SSS").format(date));
     }
 
     public void printTime(Timestamp date) {

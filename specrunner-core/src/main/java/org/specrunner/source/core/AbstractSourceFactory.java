@@ -23,11 +23,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import nu.xom.DocType;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.XPathContext;
-
 import org.specrunner.SRServices;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
@@ -39,6 +34,11 @@ import org.specrunner.source.namespace.core.NamespaceInfoDefault;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
+
+import nu.xom.DocType;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.XPathContext;
 
 /**
  * Abstraction to readers.
@@ -65,6 +65,11 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
 
     @Override
     public ISource newSource(Object source) throws SourceException {
+        return newSource(source, true);
+    }
+
+    @Override
+    public ISource newSource(Object source, final boolean copy) throws SourceException {
         String strTmp = String.valueOf(source);
         URI uriTmp = null;
         try {
@@ -90,7 +95,9 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
                         cache.put(target, result);
                     }
                 }
-                result = (Document) result.copy();
+                if (copy) {
+                    result = (Document) result.copy();
+                }
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Load time " + (System.currentTimeMillis() - time) + " ms for: " + target);
                 }

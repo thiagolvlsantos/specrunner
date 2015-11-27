@@ -17,6 +17,8 @@
  */
 package org.specrunner.converters.core;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,6 +34,12 @@ import org.specrunner.util.UtilIO;
 @SuppressWarnings("serial")
 public class ConverterDateOnly extends ConverterDateCurrentTemplate {
 
+    private ThreadLocal<SimpleDateFormat> formatter = new ThreadLocal<SimpleDateFormat>() {
+        protected SimpleDateFormat initialValue() {
+            return new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        };
+    };
+
     /**
      * Basic data converter.
      * 
@@ -45,7 +53,13 @@ public class ConverterDateOnly extends ConverterDateCurrentTemplate {
     @Override
     protected Date instance() {
         Calendar c = getCalendar();
-        c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        return c.getTime();
+        String tmp = formatter.get().format(c.getTime());
+        try {
+            Date parse = formatter.get().parse(tmp);
+            c.setTime(parse);
+            return c.getTime();
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }

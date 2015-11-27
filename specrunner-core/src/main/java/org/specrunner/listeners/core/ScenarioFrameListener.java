@@ -26,7 +26,6 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
-import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
@@ -76,6 +75,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      * Expected style for scenario titles.
      */
     public static final String CSS_TITLE = "title";
+    /**
+     * Expected style for scenario titles.
+     */
+    public static final String ATT_SR_TITLE = "sr_title";
     /**
      * Expected style for scenario execute priority.
      */
@@ -175,7 +178,8 @@ public abstract class ScenarioFrameListener implements INodeListener {
         if (CSS_SCENARIO.equals(holder.getQualifiedName()) || holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
             try {
                 Node sub = UtilNode.getCssNodeOrElement(node, CSS_TITLE);
-                String str = UtilString.getNormalizer().camelCase(sub.getValue(), true);
+                INodeHolder nhSub = SRServices.get(INodeHolderFactory.class).newHolder(sub);
+                String str = nhSub.getAttribute(ATT_SR_TITLE);
                 if (name.equals(str)) {
                     scenario = node;
                     title = sub;

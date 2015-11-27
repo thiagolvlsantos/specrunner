@@ -38,4 +38,16 @@ public interface ISourceFactoryManager extends IMappingManager<ISourceFactory> {
      */
     ISource newSource(Object source) throws SourceException;
 
+    /**
+     * Get an instance of a source factory compatible with the given source.
+     * 
+     * @param source
+     *            The specification source object.
+     * @param copy
+     *            If expected value is a copy.
+     * @return A source factory.
+     * @throws SourceException
+     *             If a reader for source cannot be found.
+     */
+    ISource newSource(Object source, boolean copy) throws SourceException;
 }
