@@ -36,7 +36,7 @@ public class ConverterDateOnly extends ConverterDateCurrentTemplate {
 
     private ThreadLocal<SimpleDateFormat> formatter = new ThreadLocal<SimpleDateFormat>() {
         protected SimpleDateFormat initialValue() {
-            return new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+            return new SimpleDateFormat("MM/dd/yyyy");
         };
     };
 

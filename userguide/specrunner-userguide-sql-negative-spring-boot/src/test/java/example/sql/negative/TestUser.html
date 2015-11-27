@@ -1,0 +1,22 @@
+<html>
+
+<div class="scenario">
+	<h1 class="title">Basic scenario.</h1>
+	<table class="objins" type="example.sql.negative.service.User"
+		reference="id">
+		<caption>Users</caption>
+		<tr>
+			<th>ID</th>
+			<th>Name</th>
+			<th>Birthday</th>
+		</tr>
+		<tr>
+			<td>1</td>
+			<td>Thiago</td>
+			<td converter="date" arg0="dd/MM/yyyy">01/07/1978</td>
+		</tr>
+	</table>
+
+	<span class="sentence">call user "1"</span>
+</div>
+</html>
