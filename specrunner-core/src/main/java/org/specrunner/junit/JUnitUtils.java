@@ -298,7 +298,7 @@ public final class JUnitUtils {
             Node n = query.get(i);
             String title = UtilNode.getCssNodeOrElement(n, ScenarioFrameListener.CSS_TITLE).getValue();
             title = UtilString.getNormalizer().camelCase(title, true);
-            sb.append(UtilString.getNormalizer().camelCase(title, true) + "_");
+            sb.append(title + "_");
         }
         if (sb.length() > 0) {
             sb.setLength(sb.length() - 1);

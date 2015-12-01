@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.56 Pendente
+OK - Ajuste nos nomes dos subcenários;
+
 1.4.55
 OK - correção do conversor 'do' para ignorar hora/minuto/segundo.
 
