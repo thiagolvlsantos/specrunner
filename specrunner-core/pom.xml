@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner</artifactId>
-    <version>1.4.55</version>
+    <version>1.4.56</version>
     <relativePath>../specrunner</relativePath>
   </parent>
   <artifactId>specrunner-core</artifactId>

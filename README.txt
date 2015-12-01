@@ -1,6 +1,8 @@
 -----------------------------------------------------------
 1.4.56 Pendente
 OK - Ajuste nos nomes dos subcenários;
+OK - Usar um método como <value='$THIS.getValor(;...)'> e tentar não avaliar o conteúdo do <td> para long ao usar o eval='false';
+	- Criado o atributo 'ceval' para indicar nos casos de 'forceContent=true' se deve-se ou não avaliar o conteúdo.
 
 1.4.55
 OK - correção do conversor 'do' para ignorar hora/minuto/segundo.
