@@ -536,6 +536,7 @@ public class NodeHolderDefault implements INodeHolder {
      */
     protected Object getValue(IContext context, boolean silent) throws PluginException {
         String str;
+        Object value;
         if (hasAttribute(attributeValue)) {
             boolean forceContent = hasAttribute(ATTRIBUTE_FORCE_CONTENT);
             if (forceContent) {
@@ -543,19 +544,21 @@ public class NodeHolderDefault implements INodeHolder {
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace("Forced content, value is '" + str + "'.");
                 }
+                value = notCeval() ? str : UtilExpression.evaluate(str, context, silent);
             } else {
                 str = getAttribute(attributeValue);
                 if (UtilLog.LOG.isTraceEnabled()) {
                     UtilLog.LOG.trace("Attribute value present, value is '" + str + "'.");
                 }
+                value = notEval() ? str : UtilExpression.evaluate(str, context, silent);
             }
         } else {
             str = getValue(context);
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace("Content value is '" + str + "'.");
             }
+            value = notEval() ? str : UtilExpression.evaluate(str, context, silent);
         }
-        Object value = notEval() ? str : UtilExpression.evaluate(str, context, silent);
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("Evaluated value is '" + value + "' of type " + (value != null ? value.getClass() : "null"));
         }
@@ -569,6 +572,15 @@ public class NodeHolderDefault implements INodeHolder {
      */
     protected boolean notEval() {
         return attributeEquals(ATTRIBUTE_EVALUATION, Boolean.FALSE.toString());
+    }
+
+    /**
+     * Is content evaluation turned off. Default is false.
+     * 
+     * @return true, if content evaluation flag set to 'false', false otherwise.
+     */
+    protected boolean notCeval() {
+        return attributeEquals(ATTRIBUTE_CEVALUATION, Boolean.FALSE.toString());
     }
 
     /**

@@ -17,9 +17,9 @@
  */
 package org.specrunner.util.xom.node;
 
-import nu.xom.Node;
-
 import org.specrunner.util.expression.IAbstraction;
+
+import nu.xom.Node;
 
 /**
  * Stands for any object which hold an element.
@@ -72,6 +72,10 @@ public interface INodeHolder extends IAbstraction {
      * Attribute for value evaluation.
      */
     String ATTRIBUTE_EVALUATION = "eval";
+    /**
+     * Attribute for content evaluation on force content scenarios.
+     */
+    String ATTRIBUTE_CEVALUATION = "ceval";
     /**
      * Attribute for reader.
      */
