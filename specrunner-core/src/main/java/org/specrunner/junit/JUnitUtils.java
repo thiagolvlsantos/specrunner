@@ -241,6 +241,7 @@ public final class JUnitUtils {
                 Node sc = scenarios.get(i);
                 Node nt = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE);
                 String title = getPath(nt);
+                final int level = level(title);
                 INodeHolder ntHolder = SRServices.get(INodeHolderFactory.class).newHolder(nt);
                 ntHolder.setAttribute(ScenarioFrameListener.ATT_SR_TITLE, title);
                 if (titles.contains(title)) {
@@ -290,7 +291,11 @@ public final class JUnitUtils {
                         }
                         time = System.currentTimeMillis() - time;
                         IOutput out = SRServices.get(IOutputFactory.class).currentOutput();
-                        out.printf("\tScenario (%5d ms): %s -> '%s'\n", time, title, (!ignored ? r.asString() : "Ignored or pending"));
+                        StringBuilder tmp = new StringBuilder();
+                        for (int j = 0; j < level; j++) {
+                            tmp.append('\t');
+                        }
+                        out.printf(tmp + "Scenario (%5d ms): %s -> '%s'\n", time, title, (!ignored ? r.asString() : "Ignored or pending"));
                     }
                 };
                 listeners.add(frameListener);
@@ -314,6 +319,16 @@ public final class JUnitUtils {
             sb.setLength(sb.length() - 1);
         }
         return sb.toString();
+    }
+
+    private static int level(String title) {
+        int level = 1;
+        for (int i = 0; i < title.length(); i++) {
+            if (title.charAt(i) == '_') {
+                level++;
+            }
+        }
+        return level;
     }
 
     /**
