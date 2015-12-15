@@ -1,5 +1,5 @@
 -----------------------------------------------------------
-1.4.57
+1.4.57 - PENDING
 OK - Create a <jetty/> plugin. #6 https://github.com/thiagolvlsantos/specrunner/issues/6
 	- done.
 OK - sysout - on scenario boundaries #3 https://github.com/thiagolvlsantos/specrunner/issues/3
