@@ -1,4 +1,12 @@
 -----------------------------------------------------------
+1.4.57
+OK - Create a <jetty/> plugin. #6 https://github.com/thiagolvlsantos/specrunner/issues/6
+	- done.
+OK - sysout - on scenario boundaries #3 https://github.com/thiagolvlsantos/specrunner/issues/3
+	- INFO level output for scenarios.
+OK - Add minimize icon to JFrame dialogs. #4 https://github.com/thiagolvlsantos/specrunner/issues/4
+	- Set resize added.
+
 1.4.56
 OK - Ajuste nos nomes dos subcenários;
 OK - Usar um método como <value='$THIS.getValor(;...)'> e tentar não avaliar o conteúdo do <td> para long ao usar o eval='false';

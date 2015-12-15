@@ -42,6 +42,8 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.output.IOutput;
+import org.specrunner.util.output.IOutputFactory;
 import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
@@ -260,8 +262,11 @@ public final class JUnitUtils {
                     }
                 };
                 fullListeners[fullListeners.length - 2] = new IScenarioListener() {
+                    private long time;
+
                     @Override
                     public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
+                        time = System.currentTimeMillis();
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending() || frameListener.isIgnored()) {
                             runner.getNotifier().fireTestIgnored(description);
@@ -272,15 +277,20 @@ public final class JUnitUtils {
 
                     @Override
                     public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
+                        boolean ignored = false;
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending() || frameListener.isIgnored()) {
                             // just to not perform other things
+                            ignored = true;
                         } else if (r == null || r.countErrors() == 0) {
                             runner.getNotifier().fireTestFinished(description);
                         } else {
                             String msg = "OUTPUT: " + runner.getStatement().getOutput().getAbsoluteFile() + "\n" + r.asString();
                             runner.getNotifier().fireTestFailure(new Failure(description, new Exception(msg)));
                         }
+                        time = System.currentTimeMillis() - time;
+                        IOutput out = SRServices.get(IOutputFactory.class).currentOutput();
+                        out.printf("\tScenario (%5d ms): %s -> '%s'\n", time, title, (!ignored ? r.asString() : "Ignored or pending"));
                     }
                 };
                 listeners.add(frameListener);

@@ -271,6 +271,7 @@ public class PluginPause extends AbstractPlugin {
      */
     protected void showMessage(String message) {
         final JFrame frame = new JFrame("Pause frame.");
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         final JDialog dialog = new JDialog(frame, "Pause dialog");
@@ -280,6 +281,7 @@ public class PluginPause extends AbstractPlugin {
         dialog.setSize(screenSize.width / RATIO, screenSize.height / RATIO);
         dialog.setLocation(screenSize.width / 2, screenSize.height / 2);
         dialog.setLayout(new BorderLayout());
+        dialog.setResizable(true);
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {

@@ -72,6 +72,7 @@ public class ErrorFrame extends JFrame {
     public ErrorFrame(final ErrorFrameListener listener) {
         super("Error messages");
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        setResizable(true);
         createText();
         createDialog(listener);
         createButtons(listener);
@@ -111,6 +112,7 @@ public class ErrorFrame extends JFrame {
                 dialog.setVisible(false);
             }
         });
+        dialog.setResizable(true);
         dialog.setSize(screenSize.width / 2, screenSize.height / 2);
         dialog.setLocation(screenSize.width / 2, (screenSize.height / 2) - HEIGHT_TASK_BAR);
         dialog.setLayout(new BorderLayout(GAPS, GAPS));
