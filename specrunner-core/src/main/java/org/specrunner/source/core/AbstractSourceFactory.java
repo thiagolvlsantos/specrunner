@@ -65,11 +65,6 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
 
     @Override
     public ISource newSource(Object source) throws SourceException {
-        return newSource(source, true);
-    }
-
-    @Override
-    public ISource newSource(Object source, final boolean copy) throws SourceException {
         String strTmp = String.valueOf(source);
         URI uriTmp = null;
         try {
@@ -95,9 +90,7 @@ public abstract class AbstractSourceFactory extends EncodedImpl implements ISour
                         cache.put(target, result);
                     }
                 }
-                if (copy) {
-                    result = (Document) result.copy();
-                }
+                result = (Document) result.copy();
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Load time " + (System.currentTimeMillis() - time) + " ms for: " + target);
                 }

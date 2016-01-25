@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.util.exceptions.UnstackedException;
 import org.specrunner.util.xom.IPresentation;
 
 /**
@@ -48,7 +49,7 @@ public final class UtilException {
      * @return The error String representation.
      */
     public static String toString(Throwable exception, Boolean fullTrace) {
-        if (!fullTrace) {
+        if (!fullTrace || exception instanceof UnstackedException) {
             return exception.getMessage();
         }
         StringWriter sw = null;

@@ -1,5 +1,9 @@
 -----------------------------------------------------------
-1.4.57 - PENDING
+1.4.57
+OK - Remove title atribute setttings (refactoring of getPath(...)) for scenarios. #17 https://github.com/thiagolvlsantos/specrunner/issues/17
+OK - Define a tag interface to exceptions where stack traces are irrelevant to error undestanding #20 https://github.com/thiagolvlsantos/specrunner/issues/20
+	- UnstackedException interface created.
+OK - Cache settings on AbstractCacheFactory #18 https://github.com/thiagolvlsantos/specrunner/issues/18
 OK - Create a <jetty/> plugin. #6 https://github.com/thiagolvlsantos/specrunner/issues/6
 	- done.
 OK - sysout - on scenario boundaries #3 https://github.com/thiagolvlsantos/specrunner/issues/3

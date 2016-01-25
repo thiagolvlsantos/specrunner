@@ -37,17 +37,4 @@ public interface ISourceFactory extends IEncoded, IResetable {
      *             On creation errors.
      */
     ISource newSource(Object source) throws SourceException;
-
-    /**
-     * Creates a source from a String.
-     * 
-     * @param source
-     *            The source of specification.
-     * @param copy
-     *            True if a copy is expected, false, otherwise.
-     * @return The source.
-     * @throws SourceException
-     *             On creation errors.
-     */
-    ISource newSource(Object source, boolean copy) throws SourceException;
 }

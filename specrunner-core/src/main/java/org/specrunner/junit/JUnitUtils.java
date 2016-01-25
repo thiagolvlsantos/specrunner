@@ -22,9 +22,11 @@ import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.runner.Description;
@@ -37,14 +39,12 @@ import org.specrunner.listeners.INodeListener;
 import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.listeners.core.ScenarioCleanerListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
-import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
-import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
@@ -220,7 +220,7 @@ public final class JUnitUtils {
 
             // read scenario entries
             File input = JUnitUtils.getFile(javaClass);
-            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString(), false);
+            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
             Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
             List<INodeListener> listeners = new LinkedList<INodeListener>();
             runner.setListeners(listeners);
@@ -237,13 +237,13 @@ public final class JUnitUtils {
                     execute = true;
                 }
             }
+            final Map<String, List<Description>> parentToChild = new HashMap<String, List<Description>>();
+            final String txtIgnored = "IGNORED|PENDING ->";
             for (int i = 0; i < scenarios.size(); i++) {
                 Node sc = scenarios.get(i);
                 Node nt = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE);
-                String title = getPath(nt);
-                final int level = level(title);
-                INodeHolder ntHolder = SRServices.get(INodeHolderFactory.class).newHolder(nt);
-                ntHolder.setAttribute(ScenarioFrameListener.ATT_SR_TITLE, title);
+                String title = ScenarioFrameListener.getScenarioPath(nt);
+                final int level = ScenarioFrameListener.getScenarioLevel(title);
                 if (titles.contains(title)) {
                     throw new RuntimeException("Scenario named '" + title + "' already exists. Scenarios must have different names.");
                 }
@@ -262,6 +262,15 @@ public final class JUnitUtils {
                         return runner.getInstance();
                     }
                 };
+                if (level > 1) {
+                    String tmp = title.substring(0, title.lastIndexOf(ScenarioFrameListener.TITLE_TREE_SEPARATOR));
+                    List<Description> children = parentToChild.get(tmp);
+                    if (children == null) {
+                        children = new LinkedList<Description>();
+                        parentToChild.put(tmp, children);
+                    }
+                    children.add(description);
+                }
                 fullListeners[fullListeners.length - 2] = new IScenarioListener() {
                     private long time;
 
@@ -271,6 +280,13 @@ public final class JUnitUtils {
                         IResultSet r = frameListener.getResult();
                         if (frameListener.isPending() || frameListener.isIgnored()) {
                             runner.getNotifier().fireTestIgnored(description);
+                            List<Description> list = parentToChild.get(title);
+                            if (list != null) {
+                                for (Description l : list) {
+                                    runner.getNotifier().fireTestIgnored(l);
+                                }
+                                list.clear();
+                            }
                         } else if (r == null || r.countErrors() == 0) {
                             runner.getNotifier().fireTestStarted(description);
                         }
@@ -295,7 +311,7 @@ public final class JUnitUtils {
                         for (int j = 0; j < level; j++) {
                             tmp.append('\t');
                         }
-                        out.printf(tmp + "Scenario (%5d ms): %s -> '%s'\n", time, title, (!ignored ? r.asString() : "Ignored or pending"));
+                        out.printf(tmp + "Scenario (%5d ms): %-" + txtIgnored.length() + "s '%s'\n", time, (!ignored ? (r.countErrors() > 0 ? "FAIL ------------>" : "SUCCESS --------->") : txtIgnored), title);
                     }
                 };
                 listeners.add(frameListener);
@@ -304,31 +320,6 @@ public final class JUnitUtils {
             throw new RuntimeException(e);
         }
         return methods;
-    }
-
-    private static String getPath(Node nt) throws PluginException {
-        Nodes query = nt.query("ancestor::*[contains(@class,'" + ScenarioFrameListener.CSS_SCENARIO + "')]");
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < query.size(); i++) {
-            Node n = query.get(i);
-            String title = UtilNode.getCssNodeOrElement(n, ScenarioFrameListener.CSS_TITLE).getValue();
-            title = UtilString.getNormalizer().camelCase(title, true);
-            sb.append(title + "_");
-        }
-        if (sb.length() > 0) {
-            sb.setLength(sb.length() - 1);
-        }
-        return sb.toString();
-    }
-
-    private static int level(String title) {
-        int level = 1;
-        for (int i = 0; i < title.length(); i++) {
-            if (title.charAt(i) == '_') {
-                level++;
-            }
-        }
-        return level;
     }
 
     /**

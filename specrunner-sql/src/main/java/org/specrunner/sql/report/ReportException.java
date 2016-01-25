@@ -17,10 +17,11 @@
  */
 package org.specrunner.sql.report;
 
+import org.specrunner.util.exceptions.UnstackedException;
+import org.specrunner.util.xom.IPresentation;
+
 import nu.xom.Element;
 import nu.xom.Node;
-
-import org.specrunner.util.xom.IPresentation;
 
 /**
  * Exception for schema reports.
@@ -29,21 +30,16 @@ import org.specrunner.util.xom.IPresentation;
  * 
  */
 @SuppressWarnings("serial")
-public class ReportException extends Exception implements IPresentation {
-
-    /**
-     * Exception report.
-     */
-    private SchemaReport report;
+public class ReportException extends Exception implements IPresentation, UnstackedException {
 
     /**
      * Cache of string representation.
      */
-    private String stringCache;
+    private String txt;
     /**
      * Cache of node representation.
      */
-    private Node nodeCache;
+    private Node xml;
 
     /**
      * Constructor.
@@ -52,7 +48,11 @@ public class ReportException extends Exception implements IPresentation {
      *            The report.
      */
     public ReportException(SchemaReport report) {
-        this.report = report;
+        txt = report.asString();
+        Element error = new Element("span");
+        error.appendChild("System database errors:\n");
+        error.appendChild(report.asNode());
+        xml = error;
     }
 
     @Override
@@ -62,22 +62,11 @@ public class ReportException extends Exception implements IPresentation {
 
     @Override
     public String asString() {
-        if (stringCache == null) {
-            stringCache = report.asString();
-        }
-        return "System database errors:\n" + stringCache;
+        return "System database errors:\n" + txt;
     }
 
     @Override
     public Node asNode() {
-        if (nodeCache == null) {
-            Element error = new Element("span");
-            error.appendChild("System database errors:\n");
-            error.appendChild(report.asNode());
-            nodeCache = error;
-            // return to avoid create clone for first access
-            return nodeCache;
-        }
-        return nodeCache.copy();
+        return xml;
     }
 }

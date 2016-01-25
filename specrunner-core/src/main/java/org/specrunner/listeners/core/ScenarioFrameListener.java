@@ -26,6 +26,7 @@ import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
+import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
@@ -33,6 +34,7 @@ import org.specrunner.util.xom.node.INodeHolderFactory;
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
+import nu.xom.Nodes;
 
 /**
  * Monitor for scenarios frames.
@@ -76,9 +78,9 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     public static final String CSS_TITLE = "title";
     /**
-     * Expected style for scenario titles.
+     * Separator for sub scenario names.
      */
-    public static final String ATT_SR_TITLE = "sr_title";
+    public static final String TITLE_TREE_SEPARATOR = "_";
     /**
      * Expected style for scenario execute priority.
      */
@@ -166,6 +168,47 @@ public abstract class ScenarioFrameListener implements INodeListener {
         return name;
     }
 
+    /**
+     * Get full pathname for scenario.
+     * 
+     * @param nt
+     *            The child node.
+     * @return The fully qualified scenario name.
+     * @throws PluginException
+     *             On lookup errors.
+     */
+    public static String getScenarioPath(Node nt) throws PluginException {
+        Nodes query = nt.query("ancestor::*[contains(@class,'" + CSS_SCENARIO + "')]");
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < query.size(); i++) {
+            Node n = query.get(i);
+            String title = UtilNode.getCssNodeOrElement(n, CSS_TITLE).getValue();
+            title = UtilString.getNormalizer().camelCase(title, true);
+            sb.append(title + TITLE_TREE_SEPARATOR);
+        }
+        if (sb.length() > 0) {
+            sb.setLength(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Get scenario level based on its title.
+     * 
+     * @param title
+     *            A title.
+     * @return A title.
+     */
+    public static int getScenarioLevel(String title) {
+        int level = 1;
+        for (int i = 0; i < title.length(); i++) {
+            if (title.charAt(i) == '_') {
+                level++;
+            }
+        }
+        return level;
+    }
+
     @Override
     public ENext onBefore(Node node, IContext context, IResultSet result) {
         long time = System.currentTimeMillis();
@@ -178,8 +221,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
         if (CSS_SCENARIO.equals(holder.getQualifiedName()) || holder.attributeContains(UtilNode.ATT_CSS, CSS_SCENARIO)) {
             try {
                 Node sub = UtilNode.getCssNodeOrElement(node, CSS_TITLE);
-                INodeHolder nhSub = SRServices.get(INodeHolderFactory.class).newHolder(sub);
-                String str = nhSub.getAttribute(ATT_SR_TITLE);
+                String str = getScenarioPath(sub);
                 if (name.equals(str)) {
                     scenario = node;
                     title = sub;

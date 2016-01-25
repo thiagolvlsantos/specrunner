@@ -15,26 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.source;
-
-import org.specrunner.util.mapping.IMappingManager;
+package org.specrunner.util.exceptions;
 
 /**
- * A source factory manager.
+ * Exception where stack traces are useless.
  * 
  * @author Thiago Santos
  * 
  */
-public interface ISourceFactoryManager extends IMappingManager<ISourceFactory> {
-
-    /**
-     * Get an instance of a source factory compatible with the given source.
-     * 
-     * @param source
-     *            The specification source object.
-     * @return A source factory.
-     * @throws SourceException
-     *             If a reader for source cannot be found.
-     */
-    ISource newSource(Object source) throws SourceException;
+public interface UnstackedException {
 }

@@ -50,11 +50,6 @@ public class SourceFactoryManagerImpl extends MappingManagerImpl<ISourceFactory>
 
     @Override
     public ISource newSource(Object source) throws SourceException {
-        return newSource(source, true);
-    }
-
-    @Override
-    public ISource newSource(Object source, boolean copy) throws SourceException {
         initialize();
         if (source != null) {
             String name = String.valueOf(source);
@@ -62,7 +57,7 @@ public class SourceFactoryManagerImpl extends MappingManagerImpl<ISourceFactory>
             if (pos >= 0) {
                 ISourceFactory sf = get(name.substring(pos + 1).toLowerCase().trim());
                 if (sf != null) {
-                    return sf.newSource(source, copy);
+                    return sf.newSource(source);
                 }
             }
         }
