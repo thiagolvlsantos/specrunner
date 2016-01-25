@@ -302,8 +302,11 @@ public final class JUnitUtils {
                         } else if (r == null || r.countErrors() == 0) {
                             runner.getNotifier().fireTestFinished(description);
                         } else {
-                            String msg = "OUTPUT: " + runner.getStatement().getOutput().getAbsoluteFile() + "\n" + r.asString();
-                            runner.getNotifier().fireTestFailure(new Failure(description, new Exception(msg)));
+                            StringBuilder msg = new StringBuilder("OUTPUT: ");
+                            msg.append(runner.getStatement().getOutput().getAbsoluteFile());
+                            msg.append('\n');
+                            msg.append(r.asString());
+                            runner.getNotifier().fireTestFailure(new Failure(description, new Exception(msg.toString())));
                         }
                         time = System.currentTimeMillis() - time;
                         IOutput out = SRServices.get(IOutputFactory.class).currentOutput();

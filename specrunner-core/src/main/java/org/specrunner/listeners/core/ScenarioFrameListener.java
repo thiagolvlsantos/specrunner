@@ -93,7 +93,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
     /**
      * Check if execute should be prioritized.
      */
-    private Boolean execute;
+    protected Boolean execute;
     /**
      * Scenario listeners.
      */
