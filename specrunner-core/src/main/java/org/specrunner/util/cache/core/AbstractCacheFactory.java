@@ -33,7 +33,7 @@ public abstract class AbstractCacheFactory implements ICacheFactory {
 
     @Override
     public <K, T> ICache<K, T> newCache(String name) {
-        return create(name, new ICacheCleaner<T>() {
+        return newCache(name, new ICacheCleaner<T>() {
             @Override
             public void destroy(T obj) {
                 // do nothing.
