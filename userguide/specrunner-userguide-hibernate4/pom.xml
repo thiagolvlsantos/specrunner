@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.specrunner</groupId>
 		<artifactId>specrunner-userguide</artifactId>
-		<version>1.4.57</version>
+		<version>1.4.58</version>
 		<relativePath>../specrunner-userguide</relativePath>
 	</parent>
 	<artifactId>specrunner-userguide-hibernate4</artifactId>

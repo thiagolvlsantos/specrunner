@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.58
+OK - Add 'ignore' to prepare/verify plugins. #22 https://github.com/thiagolvlsantos/specrunner/issues/22
+
 1.4.57
 OK - Make 'execute' protected in scenario listener. #21 https://github.com/thiagolvlsantos/specrunner/issues/21
 OK - Remove title atribute setttings (refactoring of getPath(...)) for scenarios. #17 https://github.com/thiagolvlsantos/specrunner/issues/17
