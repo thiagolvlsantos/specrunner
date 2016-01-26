@@ -644,6 +644,10 @@ public class DatabaseDefault implements IDatabase {
             Map<String, CellAdapter> missing = new HashMap<String, CellAdapter>();
             IRegister register = new RegisterDefault(table);
             for (int j = 1; j < tds.size(); j++) {
+                if (columns[j] == null) {
+                    // ignored column;
+                    continue;
+                }
                 Column column = columns[j].copy();
                 CellAdapter td = tds.get(j);
                 try {
@@ -789,7 +793,9 @@ public class DatabaseDefault implements IDatabase {
             columns[i] = table.getAlias(cAlias);
             Column column = columns[i];
             if (i > 0 && column == null) {
-                throw new DatabaseException("Column '" + cAlias + "' [as '" + UtilNames.normalize(cAlias) + "'] not found in alias: " + table.getAliasToColumns().keySet() + " or in names: " + table.getNamesToColumns().keySet());
+                if (!UtilNode.isIgnore(cell.getNode())) {
+                    throw new DatabaseException("Column '" + cAlias + "' [as '" + UtilNames.normalize(cAlias) + "'] not found in alias: " + table.getAliasToColumns().keySet() + " or in names: " + table.getNamesToColumns().keySet());
+                }
             }
             // update to specific header adjusts
             if (column != null) {
