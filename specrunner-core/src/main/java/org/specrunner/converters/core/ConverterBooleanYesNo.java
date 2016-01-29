@@ -24,12 +24,12 @@ package org.specrunner.converters.core;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterBoolean extends ConverterBooleanTemplate {
+public class ConverterBooleanYesNo extends ConverterBooleanTemplate {
 
     /**
-     * Constructor using 'true' and 'false'.
+     * Constructor using 'Yes' and 'No'.
      */
-    public ConverterBoolean() {
-        super(Boolean.TRUE.toString(), Boolean.FALSE.toString());
+    public ConverterBooleanYesNo() {
+        super("Yes", "No");
     }
 }
