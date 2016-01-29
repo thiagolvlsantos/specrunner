@@ -106,6 +106,9 @@ public class PluginColumn extends AbstractPluginTable {
                 continue;
             }
             for (int j = 0; j < features.size(); j++) {
+                if (UtilNode.isIgnore(header.getCell(j).getNode())) {
+                    continue;
+                }
                 CellAdapter c = r.getCell(j);
                 if (UtilNode.isIgnore(c.getNode())) {
                     result.addResult(Ignored.INSTANCE, context.newBlock(r.getNode(), this), "Ignored cell.");
