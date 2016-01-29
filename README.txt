@@ -1,4 +1,10 @@
 -----------------------------------------------------------
+1.4.59
+OK - Add more boolean converters enhancement #28 https://github.com/thiagolvlsantos/specrunner/issues/28
+OK - Add 'ignore=true' feature to plugin column. enhancement #26 https://github.com/thiagolvlsantos/specrunner/issues/26
+OK - Adjust time information. #25 https://github.com/thiagolvlsantos/specrunner/issues/25
+OK - Add release method to IStatementFactory interface to perform after pstmt usage #24 https://github.com/thiagolvlsantos/specrunner/issues/24
+
 1.4.58
 OK - Add 'ignore' to prepare/verify plugins. #22 https://github.com/thiagolvlsantos/specrunner/issues/22
 
