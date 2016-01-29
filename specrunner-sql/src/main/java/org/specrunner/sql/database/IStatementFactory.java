@@ -82,6 +82,16 @@ public interface IStatementFactory {
     void putOutput(String sql, PreparedStatement pstmt);
 
     /**
+     * Release an individual statement.
+     * 
+     * @param pstmt
+     *            The statement to be free.
+     * @throws SQLException
+     *             On release errors.
+     */
+    void release(PreparedStatement pstmt) throws SQLException;
+
+    /**
      * Release database resources.
      * 
      * @throws PluginException

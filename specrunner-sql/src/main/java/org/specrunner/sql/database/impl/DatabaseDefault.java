@@ -1084,26 +1084,33 @@ public class DatabaseDefault implements IDatabase {
         }
         idManager.clear();
 
-        PreparedStatement pstmt = statementFactory.getInput(connection, wrapper.getSql(), table);
-        Map<Integer, Object> indexesToValues = prepareInputValues(context, table, register, namesToIndexes);
-        for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
-            pstmt.setObject(e.getKey(), e.getValue());
-        }
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = statementFactory.getInput(connection, wrapper.getSql(), table);
+            Map<Integer, Object> indexesToValues = prepareInputValues(context, table, register, namesToIndexes);
+            for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
+                pstmt.setObject(e.getKey(), e.getValue());
+            }
 
-        int count = pstmt.executeUpdate();
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
-        }
-        if (wrapper.getExpectedCount() != Integer.MAX_VALUE && wrapper.getExpectedCount() != count) {
-            throw new DatabaseException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
-        }
+            int count = pstmt.executeUpdate();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("[" + count + "]=" + wrapper.getSql());
+            }
+            if (wrapper.getExpectedCount() != Integer.MAX_VALUE && wrapper.getExpectedCount() != count) {
+                throw new DatabaseException("The expected count (" + wrapper.getExpectedCount() + ") does not match, received = " + count + ".\n\tSQL: " + wrapper.getSql() + "\n\tARGS: " + register);
+            }
 
-        DatabaseMetaData meta = connection.getMetaData();
-        if (idManager.hasKeys() && meta.supportsGetGeneratedKeys()) {
-            idManager.readKeys(pstmt);
-        }
+            DatabaseMetaData meta = connection.getMetaData();
+            if (idManager.hasKeys() && meta.supportsGetGeneratedKeys()) {
+                idManager.readKeys(pstmt);
+            }
 
-        fireRegisterIn(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
+            fireRegisterIn(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
+        } finally {
+            if (pstmt != null) {
+                statementFactory.release(pstmt);
+            }
+        }
     }
 
     /**
@@ -1196,33 +1203,40 @@ public class DatabaseDefault implements IDatabase {
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug(sql + ". MAP:" + namesToIndexes + ". values = " + register + ". indexes = " + namesToIndexes);
         }
-        PreparedStatement pstmt = statementFactory.getOutput(connection, wrapper.getSql(), table);
-        Map<Integer, Object> indexesToValues = prepareSelectValues(context, connection, register, namesToIndexes);
-        for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
-            pstmt.setObject(e.getKey(), e.getValue());
-        }
-        ResultSet rs = null;
+        PreparedStatement pstmt = null;
         try {
-            rs = pstmt.executeQuery();
-            if (wrapper.getExpectedCount() == 1) {
-                if (!rs.next()) {
-                    throw new DatabaseException("None register found with the given conditions: " + sql + " and values: [" + register + "]");
+            pstmt = statementFactory.getOutput(connection, wrapper.getSql(), table);
+            Map<Integer, Object> indexesToValues = prepareSelectValues(context, connection, register, namesToIndexes);
+            for (Entry<Integer, Object> e : indexesToValues.entrySet()) {
+                pstmt.setObject(e.getKey(), e.getValue());
+            }
+            ResultSet rs = null;
+            try {
+                rs = pstmt.executeQuery();
+                if (wrapper.getExpectedCount() == 1) {
+                    if (!rs.next()) {
+                        throw new DatabaseException("None register found with the given conditions: " + sql + " and values: [" + register + "]");
+                    }
+                    compareRegister(context, result, connection, register, namesToIndexes, rs);
+                    if (rs.next()) {
+                        throw new DatabaseException("More than one register satisfy the condition: " + sql + "[" + register + "]\n" + dumpRs("Extra itens:", rs));
+                    }
+                } else {
+                    if (rs.next()) {
+                        throw new DatabaseException("A result for " + sql + "[" + register + "] was not expected.\n" + dumpRs("Unexpected items:", rs));
+                    }
                 }
-                compareRegister(context, result, connection, register, namesToIndexes, rs);
-                if (rs.next()) {
-                    throw new DatabaseException("More than one register satisfy the condition: " + sql + "[" + register + "]\n" + dumpRs("Extra itens:", rs));
-                }
-            } else {
-                if (rs.next()) {
-                    throw new DatabaseException("A result for " + sql + "[" + register + "] was not expected.\n" + dumpRs("Unexpected items:", rs));
+            } finally {
+                if (rs != null) {
+                    rs.close();
                 }
             }
+            fireRegisterOut(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
         } finally {
-            if (rs != null) {
-                rs.close();
+            if (pstmt != null) {
+                statementFactory.release(pstmt);
             }
         }
-        fireRegisterOut(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
     }
 
     /**
