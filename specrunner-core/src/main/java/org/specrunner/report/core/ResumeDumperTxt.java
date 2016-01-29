@@ -20,7 +20,6 @@ package org.specrunner.report.core;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 import org.specrunner.SRServices;
 import org.specrunner.plugins.ActionType;
@@ -77,7 +76,11 @@ public class ResumeDumperTxt implements IResumeDumper {
         sb.append("\n");
 
         sb.append(gap);
-        sb.append(String.format(format + "%d ms [ %02d:%02d:%02d.%03d (HH:mm:ss.SSS) ]", "TOTAL TIME", parent.getTotal(), TimeUnit.MILLISECONDS.toHours(parent.getTotal()), TimeUnit.MILLISECONDS.toMinutes(parent.getTotal()), TimeUnit.MILLISECONDS.toSeconds(parent.getTotal()), parent.getTotal() % SECOND));
+        int seconds = (int) (parent.getTotal() / 1000) % 60;
+        int minutes = (int) ((parent.getTotal() / (1000 * 60)) % 60);
+        int hours = (int) ((parent.getTotal() / (1000 * 60 * 60)) % 24);
+        // int days = (int) (parent.getTotal() / (1000 * 60 * 60 * 24));
+        sb.append(String.format(format + "%d ms [ %02d:%02d:%02d.%03d (HH:mm:ss.SSS) ]", "TOTAL TIME", parent.getTotal(), hours, minutes, seconds, parent.getTotal() % SECOND));
         sb.append("\n");
 
         sb.append(gap);
