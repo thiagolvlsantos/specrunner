@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.60
+OK - Add converter to 'LocalDateTime' type. #29 https://github.com/thiagolvlsantos/specrunner/issues/29
+
 1.4.59
 OK - Add more boolean converters enhancement #28 https://github.com/thiagolvlsantos/specrunner/issues/28
 OK - Add 'ignore=true' feature to plugin column. enhancement #26 https://github.com/thiagolvlsantos/specrunner/issues/26
