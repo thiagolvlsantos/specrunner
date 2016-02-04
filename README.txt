@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.61
+OK - Create a blob comparator #30 https://github.com/thiagolvlsantos/specrunner/issues/30
+OK - Create a bytes converter #32 https://github.com/thiagolvlsantos/specrunner/issues/32
+
 1.4.60
 OK - Add converter to 'LocalDateTime' type. #29 https://github.com/thiagolvlsantos/specrunner/issues/29
 
