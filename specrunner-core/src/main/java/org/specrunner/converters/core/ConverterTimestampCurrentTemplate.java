@@ -18,15 +18,7 @@
 package org.specrunner.converters.core;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.regex.Pattern;
-
-import org.specrunner.converters.ConverterException;
 
 /**
  * Create current date (in timestamp).
@@ -35,11 +27,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterTimestampCurrentTemplate extends AbstractConverterTimeTemplate<Timestamp> {
-
-    protected Map<String, String> aliasToField = new HashMap<String, String>();
-    protected Map<String, Integer> fieldToMethod = new HashMap<String, Integer>();
-    protected Pattern pattern;
+public class ConverterTimestampCurrentTemplate extends AbstractConverterJvmTimeCurrentTemplate<Timestamp> {
 
     /**
      * See superclass.
@@ -49,27 +37,6 @@ public class ConverterTimestampCurrentTemplate extends AbstractConverterTimeTemp
      */
     public ConverterTimestampCurrentTemplate(List<String> values) {
         super(values);
-        pattern = extractPattern(bindAliases(aliasToField).keySet());
-        bindPatterns(fieldToMethod);
-    }
-
-    protected Map<String, String> bindAliases(Map<String, String> map) {
-        UtilDate.bindAliases(map);
-        return map;
-    }
-
-    protected Map<String, Integer> bindPatterns(Map<String, Integer> map) {
-        UtilDate.bindPatterns(map);
-        return map;
-    }
-
-    protected Pattern extractPattern(Set<String> values) {
-        return UtilDate.extractPattern(values);
-    }
-
-    @Override
-    protected boolean testValue(String str, String value) {
-        return str.startsWith(value);
     }
 
     @Override
@@ -77,28 +44,9 @@ public class ConverterTimestampCurrentTemplate extends AbstractConverterTimeTemp
         return new Timestamp(getCalendar().getTimeInMillis());
     }
 
-    /**
-     * Get a calendar object based on timestamp.
-     * 
-     * @return A calendar.
-     */
-    protected Calendar getCalendar() {
-        Calendar calendar = null;
-        TimeZone timeZone = getZone();
-        if (timeZone == null) {
-            calendar = Calendar.getInstance();
-        } else {
-            calendar = Calendar.getInstance(timeZone);
-        }
-        return calendar;
-    }
-
     @Override
-    public Object convert(Object value, Object[] args) throws ConverterException {
-        if (value instanceof Timestamp) {
-            return value;
-        }
-        return super.convert(value, args);
+    protected Class<Timestamp> type() {
+        return Timestamp.class;
     }
 
     @Override

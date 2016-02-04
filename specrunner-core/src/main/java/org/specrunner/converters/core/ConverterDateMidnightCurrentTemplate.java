@@ -17,14 +17,9 @@
  */
 package org.specrunner.converters.core;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.joda.time.DateMidnight;
-import org.specrunner.converters.ConverterException;
 
 /**
  * Create current date.
@@ -33,11 +28,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateMidnightCurrentTemplate extends AbstractConverterTimeTemplate<DateMidnight> {
-
-    protected Map<String, String> aliasToField = new HashMap<String, String>();
-    protected Map<String, String> fieldToMethod = new HashMap<String, String>();
-    protected Pattern pattern;
+public class ConverterDateMidnightCurrentTemplate extends AbstractConverterJodatimeCurrentTemplate<DateMidnight> {
 
     /**
      * See superclass.
@@ -47,28 +38,6 @@ public class ConverterDateMidnightCurrentTemplate extends AbstractConverterTimeT
      */
     public ConverterDateMidnightCurrentTemplate(List<String> values) {
         super(values);
-        pattern = extractPattern(bindAliases(aliasToField).keySet());
-        bindPatterns(fieldToMethod);
-    }
-
-    protected Map<String, String> bindAliases(Map<String, String> map) {
-        UtilDate.bindAliases(map);
-        return map;
-    }
-
-    protected Map<String, String> bindPatterns(Map<String, String> map) {
-        UtilJodatime.bindDatePatterns(map);
-        UtilJodatime.bindTimePatterns(map);
-        return map;
-    }
-
-    protected Pattern extractPattern(Set<String> set) {
-        return UtilDate.extractPattern(set);
-    }
-
-    @Override
-    protected boolean testValue(String str, String value) {
-        return str.startsWith(value);
     }
 
     @Override
@@ -76,12 +45,8 @@ public class ConverterDateMidnightCurrentTemplate extends AbstractConverterTimeT
         return new DateMidnight();
     }
 
-    @Override
-    public Object convert(Object value, Object[] args) throws ConverterException {
-        if (value instanceof DateMidnight) {
-            return value;
-        }
-        return super.convert(value, args);
+    protected Class<DateMidnight> type() {
+        return DateMidnight.class;
     }
 
     @Override

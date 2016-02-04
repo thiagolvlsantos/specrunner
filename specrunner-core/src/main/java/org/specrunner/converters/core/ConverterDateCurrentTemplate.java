@@ -17,16 +17,8 @@
  */
 package org.specrunner.converters.core;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.regex.Pattern;
-
-import org.specrunner.converters.ConverterException;
 
 /**
  * Create current date.
@@ -35,11 +27,7 @@ import org.specrunner.converters.ConverterException;
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<Date> {
-
-    protected Map<String, String> aliasToField = new HashMap<String, String>();
-    protected Map<String, Integer> fieldToMethod = new HashMap<String, Integer>();
-    protected Pattern pattern;
+public class ConverterDateCurrentTemplate extends AbstractConverterJvmTimeCurrentTemplate<Date> {
 
     /**
      * See superclass.
@@ -49,27 +37,6 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
      */
     public ConverterDateCurrentTemplate(List<String> values) {
         super(values);
-        pattern = extractPattern(bindAliases(aliasToField).keySet());
-        bindPatterns(fieldToMethod);
-    }
-
-    protected Map<String, String> bindAliases(Map<String, String> map) {
-        UtilDate.bindAliases(map);
-        return map;
-    }
-
-    protected Map<String, Integer> bindPatterns(Map<String, Integer> map) {
-        UtilDate.bindPatterns(map);
-        return map;
-    }
-
-    protected Pattern extractPattern(Set<String> values) {
-        return UtilDate.extractPattern(values);
-    }
-
-    @Override
-    protected boolean testValue(String str, String value) {
-        return str.startsWith(value);
     }
 
     @Override
@@ -77,28 +44,9 @@ public class ConverterDateCurrentTemplate extends AbstractConverterTimeTemplate<
         return getCalendar().getTime();
     }
 
-    /**
-     * Get a calendar object based on timestamp.
-     * 
-     * @return A calendar.
-     */
-    protected Calendar getCalendar() {
-        Calendar calendar = null;
-        TimeZone timeZone = getZone();
-        if (timeZone == null) {
-            calendar = Calendar.getInstance();
-        } else {
-            calendar = Calendar.getInstance(timeZone);
-        }
-        return calendar;
-    }
-
     @Override
-    public Object convert(Object value, Object[] args) throws ConverterException {
-        if (value instanceof Date) {
-            return value;
-        }
-        return super.convert(value, args);
+    protected Class<Date> type() {
+        return Date.class;
     }
 
     @Override

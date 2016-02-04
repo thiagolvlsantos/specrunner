@@ -18,6 +18,7 @@
 package org.specrunner.readers.core;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import org.specrunner.SRServices;
@@ -107,7 +108,7 @@ public class ReaderFile implements IReader {
                     file = file.substring(1);
                     f = new File(file);
                 }
-                sb.append(UtilIO.readFile(f));
+                sb.append(getContent(f));
             } catch (Exception e) {
                 throw new ReaderException(e);
             }
@@ -153,6 +154,19 @@ public class ReaderFile implements IReader {
         ISource newSource = getSource(newHref);
         URI link = resolver.resolve(f.toURI(), newSource.getURI());
         element.addAttribute(new Attribute("href", link.toString()));
+    }
+
+    /**
+     * Get contents of a file.
+     * 
+     * @param file
+     *            A file.
+     * @return String representation of a file.
+     * @throws IOException
+     *             On reading errors.
+     */
+    protected String getContent(File file) throws IOException {
+        return UtilIO.readFile(file);
     }
 
     @Override

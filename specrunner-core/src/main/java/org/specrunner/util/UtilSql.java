@@ -51,8 +51,8 @@ public final class UtilSql {
     }
 
     /**
-     * Get string representation of value. If the object is a Blob get its
-     * String representation.
+     * Get string representation of value. If the object is a Clob get its
+     * String representation, if it is a Blob get 'MD5' of it.
      * 
      * @param obj
      *            The object to stringfy.

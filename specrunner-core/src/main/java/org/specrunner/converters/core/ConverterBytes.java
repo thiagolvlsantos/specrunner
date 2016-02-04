@@ -17,41 +17,26 @@
  */
 package org.specrunner.converters.core;
 
-import java.util.List;
-
-import org.joda.time.DateTime;
+import org.specrunner.converters.ConverterException;
 
 /**
- * Create current date.
+ * Convert any object to String using <code>String.valueOf(...)</code> then
+ * <code>getBytes()<code/>.
  * 
- * @author Thiago Santos
+ * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterDateTimeCurrentTemplate extends AbstractConverterJodatimeCurrentTemplate<DateTime> {
-
-    /**
-     * See superclass.
-     * 
-     * @param values
-     *            Value.
-     */
-    public ConverterDateTimeCurrentTemplate(List<String> values) {
-        super(values);
-    }
+public class ConverterBytes extends ConverterDefault {
 
     @Override
-    protected DateTime instance() {
-        return new DateTime();
-    }
-
-    @Override
-    protected Class<DateTime> type() {
-        return DateTime.class;
-    }
-
-    @Override
-    protected DateTime postProcess(Object value, Object[] args, DateTime result) {
-        return UtilJodatime.postProcess(value, args, result, pattern, aliasToField, fieldToMethod);
+    public Object convert(Object obj, Object[] args) throws ConverterException {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof String) {
+            return ((String) obj).getBytes();
+        }
+        return String.valueOf(obj).getBytes();
     }
 }
