@@ -136,9 +136,13 @@ public final class UtilConverter {
             return null;
         }
         type = getWrapper(type);
+        Converter annotation = getConverter(annotations);
         if (arg instanceof String) {
             Object tmp = UtilExpression.evaluate((String) arg, context, true);
-            if (tmp == null || type.isInstance(tmp)) {
+            if (tmp == null) {
+                return null;
+            }
+            if (annotation == null && type.isInstance(tmp)) {
                 return tmp;
             }
         }
@@ -147,7 +151,6 @@ public final class UtilConverter {
             String simpleName = rawName.replace("[]", "");
             IConverter converter = null;
             Object[] converterArguments = null;
-            Converter annotation = getConverter(annotations);
             IConverterManager cm = SRServices.getConverterManager();
             if (annotation != null) {
                 String name = annotation.name();

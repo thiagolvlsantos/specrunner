@@ -150,4 +150,8 @@ public class TestSentence {
             }
         }
     }
+
+    public boolean converterAlphaToBeta(@Converter(type = AlphaToBeta.class) String beta) {
+        return "beta".equals(beta);
+    }
 }
