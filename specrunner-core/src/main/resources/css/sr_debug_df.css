@@ -201,14 +201,46 @@
     content: "SUCCESS";
 }
 
+tr.scenarioSuccess:before {
+    content: none;  
+}
+
+tr.scenarioSuccess td:nth-of-type(1)::before {
+  content: "SUCCESS";
+}
+
 .scenarioFailure::before {
     content: "FAILURE";
+}
+
+tr.scenarioFailure:before {
+    content: none;  
+}
+
+tr.scenarioFailure td:nth-of-type(1)::before {
+  content: "FAILURE";
 }
 
 .scenarioPending::before {
     content: "PENDING";
 }
 
+tr.scenarioPending:before {
+    content: none;  
+}
+
+tr.scenarioPending td:nth-of-type(1)::before {
+  content: "PENDING";
+}
+
 .scenarioIgnored::before {
     content: "IGNORED";
+}
+
+tr.scenarioIgnored:before {
+    content: none;  
+}
+
+tr.scenarioIgnored td:nth-of-type(1)::before {
+  content: "IGNORED";
 }
