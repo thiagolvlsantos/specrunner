@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.62
+OK - Allow converters from same type to same type #34 https://github.com/thiagolvlsantos/specrunner/issues/34
+OK - Adjust debug styles for scenarios. #33 https://github.com/thiagolvlsantos/specrunner/issues/33
+
 1.4.61
 OK - Create a blob comparator #30 https://github.com/thiagolvlsantos/specrunner/issues/30
 OK - Create a bytes converter #32 https://github.com/thiagolvlsantos/specrunner/issues/32
