@@ -59,7 +59,7 @@ public class PluginEntityManager extends AbstractPluginObject {
     }
 
     @Override
-    protected boolean isMapped() {
+    public boolean isMapped() {
         return true;
     }
 

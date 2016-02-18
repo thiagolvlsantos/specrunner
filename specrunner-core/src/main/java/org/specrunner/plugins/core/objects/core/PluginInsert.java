@@ -33,14 +33,14 @@ import org.specrunner.util.xom.node.RowAdapter;
  */
 public class PluginInsert extends AbstractPluginObject {
 
-    @Override
-    public ActionType getActionType() {
-        return Command.INSTANCE;
+    public PluginInsert() {
+        // by default is mapped but if mapped set to false do not map.
+        setMapped(true);
     }
 
     @Override
-    protected boolean isMapped() {
-        return true;
+    public ActionType getActionType() {
+        return Command.INSTANCE;
     }
 
     @Override

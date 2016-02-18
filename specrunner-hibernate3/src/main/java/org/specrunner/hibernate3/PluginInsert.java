@@ -40,7 +40,7 @@ public class PluginInsert extends PluginHibernate {
     }
 
     @Override
-    protected boolean isMapped() {
+    public boolean isMapped() {
         return true;
     }
 

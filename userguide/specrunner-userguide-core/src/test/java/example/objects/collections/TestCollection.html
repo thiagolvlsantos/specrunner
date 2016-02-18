@@ -1,0 +1,84 @@
+<style>
+<!--
+table, th, td {
+  border: 1px solid black;
+}
+-->
+</style>
+
+<table class="objins" type="example.objects.collections.Phone"
+	reference="number">
+	<caption>Phones</caption>
+	<tr>
+		<th>Number</th>
+	</tr>
+	<tr>
+		<td>12345</td>
+	</tr>
+	<tr>
+		<td>54321</td>
+	</tr>
+</table>
+
+<table class="objins" type="example.objects.collections.User"
+	reference="name">
+	<caption>Users</caption>
+	<tr>
+		<th>Name</th>
+        <th>Aliases</th>
+        <th>Ids</th>
+		<th>Contacts</th>
+	</tr>
+	<tr>
+		<td>Thiago</td>
+        <td>
+            <table class="objcol" type="java.lang.String" mapped="false">
+                <tr>
+                    <td>james</td>
+                </tr>
+                <tr>
+                    <td>diego</td>
+                </tr>
+            </table>
+        </td>
+        <td>
+            <table class="objcol" type="example.objects.collections.Id" mapped="false">
+                <tr>
+                    <td>CPF</td>
+                </tr>
+                <tr>
+                    <td>RGJ</td>
+                </tr>
+            </table>
+        </td>
+		<td>
+			<table class="objcol" type="example.objects.collections.Contact"
+				reference="email" mapped="true">
+				<tr>
+					<th>Email</th>
+					<th>Phones</th>
+				</tr>
+				<tr>
+					<td>thiago.lvl.santos@gmail.com</td>
+					<td>
+						<table class="objcol" type="example.objects.collections.Phone"
+							reference="number" mapped="false">
+							<tr>
+								<th>Number</th>
+							</tr>
+							<tr>
+								<td>12345</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+
+<p class="sentence">show user "Thiago".</p>
+
+<p class="sentence">show contact "thiago.lvl.santos@gmail.com".</p>
+
+<p class="sentence">show phone "12345".</p>

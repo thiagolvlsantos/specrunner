@@ -17,15 +17,15 @@
  */
 package org.specrunner.plugins.core.var;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginDual;
 import org.specrunner.plugins.type.Command;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Defines variables.

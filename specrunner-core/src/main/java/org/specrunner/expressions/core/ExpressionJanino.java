@@ -297,6 +297,7 @@ public class ExpressionJanino extends AbstractExpression {
                     }
                 } catch (Exception e) {
                     if (UtilLog.LOG.isTraceEnabled()) {
+                        UtilLog.LOG.trace("tryObject (Object.class...) failed: " + e.getMessage(), e);
                         UtilLog.LOG.trace("tryObject (Object.class...) failed: " + (System.currentTimeMillis() - time));
                     }
                     r = tryObject(void.class, expression, arrayArgs, arrayValues, arrayTypes);

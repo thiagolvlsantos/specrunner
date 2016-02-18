@@ -17,6 +17,7 @@
  */
 package org.specrunner.plugins.core.objects;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
@@ -49,6 +50,7 @@ import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
@@ -56,6 +58,7 @@ import org.specrunner.util.xom.node.UtilTable;
 import nu.xom.Attribute;
 import nu.xom.Document;
 import nu.xom.Element;
+import nu.xom.Node;
 import nu.xom.Nodes;
 
 /**
@@ -117,6 +120,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * List of fields.
      */
     protected List<Field> fields = new LinkedList<Field>();
+    /**
+     * Flag if the created objects are expected to be mapped in memory by
+     * default.
+     */
+    protected boolean mapped = false;
     /**
      * Mapping of key before processing to the ones after processing.
      */
@@ -358,6 +366,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             // set type objects.
             setObjectInformation();
 
+            if (isSpecial()) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Primitive types, enums and String are not to be loaded by fields. RECEIVED:" + typeInstance);
+                }
+                return;
+            }
             // load fields.
             List<Field> general = new LinkedList<Field>();
             loadFields(context, information, general);
@@ -398,12 +412,23 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
     }
 
+    /**
+     * Checks if the instance is primitive, enum or string.
+     * 
+     * @return true, if yes, false, otherwise.
+     */
+    protected boolean isSpecial() {
+        return typeInstance.isPrimitive() || typeInstance.isEnum() || typeInstance == String.class;
+    }
+
     @Override
     public void doEnd(IContext context, IResultSet result, TableAdapter table) throws PluginException {
         if (isMapped()) {
             SRServices.getObjectManager().bind(this);
         }
-        readHeader(context, result, table);
+        if (!isSpecial()) {
+            readHeader(context, result, table);
+        }
         readData(context, result, table);
     }
 
@@ -448,7 +473,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      *             On read errors.
      */
     protected void readData(IContext context, IResultSet result, TableAdapter table) throws PluginException {
-        for (int i = 1; i < table.getRowCount(); i++) {
+        for (int i = (isSpecial() ? 0 : 1); i < table.getRowCount(); i++) {
             RowAdapter row = table.getRow(i);
             try {
                 processLine(context, table, row, result);
@@ -890,6 +915,15 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             return types[types.length - 1];
         }
 
+        /**
+         * Check if an attribute is a list.
+         * 
+         * @return true, if yes, false, otherwise.
+         */
+        public boolean isList() {
+            return List.class.isAssignableFrom(getSpecificType());
+        }
+
         @Override
         public String toString() {
             StringBuilder strNames = new StringBuilder("");
@@ -921,11 +955,23 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     }
 
     /**
+     * Flag is an object is mapped or not.
+     * 
+     * @param mapped
+     *            true, to be mapped, false, otherwise.
+     */
+    public void setMapped(boolean mapped) {
+        this.mapped = mapped;
+    }
+
+    /**
      * Says if the instance show be mapped or not.
      * 
      * @return true, to map, false, otherwise.
      */
-    protected abstract boolean isMapped();
+    public boolean isMapped() {
+        return mapped;
+    }
 
     /**
      * Process a given row.
@@ -946,6 +992,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         Object instance = create(context, table, row);
         if (UtilLog.LOG.isDebugEnabled()) {
             UtilLog.LOG.debug("CREATE:" + instance);
+        }
+        if (isSpecial()) {
+            action(context, instance, row, result);
+            result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), this));
+            return instance;
         }
         if (populate(context, table, row, result, instance)) {
             if (UtilLog.LOG.isDebugEnabled()) {
@@ -979,8 +1030,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         UtilLog.LOG.debug("SAVE:" + keysBefore);
                         UtilLog.LOG.debug("INST:" + instances);
                     }
-                    result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), this));
                 }
+                result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), this));
             }
         }
         return instance;
@@ -1011,7 +1062,18 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (UtilLog.LOG.isDebugEnabled()) {
                 UtilLog.LOG.debug("NEW_INSTANCE_ROW(" + row + ")");
             }
-            result = typeInstance.newInstance();
+            if (isSpecial()) {
+                CellAdapter cell = row.getCell(0);
+                if (typeInstance.isEnum()) {
+                    result = cell.getObject(context, true);
+                } else {
+                    Constructor<?> constructor = typeInstance.getConstructor(String.class);
+                    Object tmp = cell.getObject(context, true);
+                    result = constructor.newInstance(tmp);
+                }
+            } else {
+                result = typeInstance.newInstance();
+            }
         }
         return result;
     }
@@ -1050,47 +1112,56 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("ON>" + f.getFullName());
                 }
-                String text = cell.getValue(context);
-                Object value = text;
-                if (text.isEmpty()) {
-                    value = UtilExpression.evaluate(f.def, context, true);
+                String text = null;
+                Object value = null;
+                if (f.isList()) {
+                    Node node = cell.getNode();
+                    Nodes childs = node.query("descendant::table");
+                    INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(childs.get(0));
+                    value = context.getByName(holder.getAttribute("collection"));
+                } else {
+                    text = cell.getValue(context);
+                    value = text;
+                    if (text.isEmpty()) {
+                        value = UtilExpression.evaluate(f.def, context, true);
+                        if (UtilLog.LOG.isDebugEnabled()) {
+                            UtilLog.LOG.debug("USING_DEFAULT>" + value);
+                        }
+                    }
+                    Class<?> t = f.getTypes()[f.getTypes().length - 1];
+                    if (!t.isInstance(value) || value instanceof String) {
+                        String[] convs = f.converters;
+                        if (cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
+                            convs = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER).split(",");
+                        }
+                        for (int j = 0; j < convs.length; j++) {
+                            IConverter con = SRServices.getConverterManager().get(convs[j]);
+                            if (con != null) {
+                                List<String> args = cell.getArguments(f.args != null ? Arrays.asList(f.args) : new LinkedList<String>());
+                                value = con.convert(value, args.toArray(new Object[0]));
+                            } else {
+                                throw new ConverterException("Converter named '" + convs[j] + "' not found.");
+                            }
+                        }
+                    }
+                    String[] formatters = f.formatters;
+                    if (cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
+                        formatters = cell.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER).split(",");
+                    }
+                    if (formatters != null) {
+                        for (int j = 0; j < formatters.length; j++) {
+                            IFormatter form = SRServices.getFormatterManager().get(formatters[j]);
+                            if (form != null) {
+                                List<String> args = cell.getArguments(f.formattersArgs != null ? Arrays.asList(f.formattersArgs) : new LinkedList<String>());
+                                value = form.format(value, args.toArray(new Object[0]));
+                            } else {
+                                throw new ConverterException("Formatter named '" + formatters[j] + "' not found.");
+                            }
+                        }
+                    }
                     if (UtilLog.LOG.isDebugEnabled()) {
-                        UtilLog.LOG.debug("USING_DEFAULT>" + value);
+                        UtilLog.LOG.debug("VALUE>" + value);
                     }
-                }
-                Class<?> t = f.getTypes()[f.getTypes().length - 1];
-                if (!t.isInstance(value) || value instanceof String) {
-                    String[] convs = f.converters;
-                    if (cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
-                        convs = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER).split(",");
-                    }
-                    for (int j = 0; j < convs.length; j++) {
-                        IConverter con = SRServices.getConverterManager().get(convs[j]);
-                        if (con != null) {
-                            List<String> args = cell.getArguments(f.args != null ? Arrays.asList(f.args) : new LinkedList<String>());
-                            value = con.convert(value, args.toArray(new Object[0]));
-                        } else {
-                            throw new ConverterException("Converter named '" + convs[j] + "' not found.");
-                        }
-                    }
-                }
-                String[] formatters = f.formatters;
-                if (cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
-                    formatters = cell.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER).split(",");
-                }
-                if (formatters != null) {
-                    for (int j = 0; j < formatters.length; j++) {
-                        IFormatter form = SRServices.getFormatterManager().get(formatters[j]);
-                        if (form != null) {
-                            List<String> args = cell.getArguments(f.formattersArgs != null ? Arrays.asList(f.formattersArgs) : new LinkedList<String>());
-                            value = form.format(value, args.toArray(new Object[0]));
-                        } else {
-                            throw new ConverterException("Formatter named '" + formatters[j] + "' not found.");
-                        }
-                    }
-                }
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("VALUE>" + value);
                 }
                 setValue(context, table, row, instance, f, value);
                 String out = String.valueOf(value);
@@ -1145,7 +1216,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     tmp = creatorInstance.create(context, table, row, f.types[i]);
                 }
                 if (tmp == null) {
-                    tmp = f.types[i].newInstance();
+                    if (f.types[i] == List.class) {
+                        tmp = new LinkedList<Object>();
+                    } else {
+                        tmp = f.types[i].newInstance();
+                    }
                 }
                 PropertyUtils.setProperty(current, f.names[i], tmp);
             }

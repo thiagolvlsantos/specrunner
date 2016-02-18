@@ -17,23 +17,19 @@
  */
 package org.specrunner.plugins.core.var;
 
-import org.specrunner.context.IContext;
-import org.specrunner.util.UtilLog;
+import org.specrunner.expressions.Unsilent;
 
 /**
- * Defines a local variable.
+ * Defines a global variable in unsilent evaluation mode.
  * 
  * @author Thiago Santos
  * 
  */
-public class PluginDefineLocal extends AbstractPluginDefine {
+public class PluginSet extends PluginDefineGlobal {
 
     @Override
-    protected boolean operation(Object obj, IContext context) {
-        if (UtilLog.LOG.isDebugEnabled()) {
-            UtilLog.LOG.debug("Bind_local(" + getName() + ")->" + obj + "(" + (obj != null ? obj.getClass() : "null") + ")");
-        }
-        saveLocal(context, getName(), obj);
-        return super.operation(obj, context);
+    @Unsilent
+    public void setValue(Object value) {
+        super.setValue(value);
     }
 }
