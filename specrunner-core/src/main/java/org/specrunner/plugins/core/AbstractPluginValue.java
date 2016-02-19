@@ -37,10 +37,6 @@ public abstract class AbstractPluginValue extends AbstractPluginScoped {
      * Plugin value.
      */
     protected Object value;
-    /**
-     * A flag to show that value has already been computed.
-     */
-    protected boolean valueDone;
 
     /**
      * Says if the content must be evaluated as an expression.
@@ -78,26 +74,6 @@ public abstract class AbstractPluginValue extends AbstractPluginScoped {
      */
     public void setValue(Object value) {
         this.value = value;
-        setValueDone(true);
-    }
-
-    /**
-     * Flag if a value is set.
-     * 
-     * @return true, if set, false, otherwise.
-     */
-    public boolean isValueDone() {
-        return valueDone;
-    }
-
-    /**
-     * Set value flag status.
-     * 
-     * @param valueDone
-     *            true, to set, false, otherwise.
-     */
-    public void setValueDone(boolean valueDone) {
-        this.valueDone = valueDone;
     }
 
     /**

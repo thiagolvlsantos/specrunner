@@ -17,9 +17,10 @@
  */
 package org.specrunner.util.xom.core;
 
-import nu.xom.Node;
-
+import org.specrunner.util.exceptions.UnstackedException;
 import org.specrunner.util.xom.IPresentation;
+
+import nu.xom.Node;
 
 /**
  * Generic presentation wrapper of exceptions.
@@ -28,7 +29,7 @@ import org.specrunner.util.xom.IPresentation;
  * 
  */
 @SuppressWarnings("serial")
-public class PresentationException extends Exception implements IPresentation {
+public class PresentationException extends Exception implements IPresentation, UnstackedException {
 
     /**
      * The presentation object.

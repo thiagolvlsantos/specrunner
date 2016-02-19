@@ -17,14 +17,15 @@
  */
 package org.specrunner.util.aligner.core;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.util.aligner.AlignmentException;
 import org.specrunner.util.aligner.IStringAligner;
 import org.specrunner.util.aligner.IStringAlignerFactory;
+import org.specrunner.util.exceptions.UnstackedException;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * A alignment exception. Useful exception to be raised on string comparison
@@ -34,7 +35,7 @@ import org.specrunner.util.aligner.IStringAlignerFactory;
  * 
  */
 @SuppressWarnings("serial")
-public class DefaultAlignmentException extends AlignmentException {
+public class DefaultAlignmentException extends AlignmentException implements UnstackedException {
 
     /**
      * Creates a exception with two strings.

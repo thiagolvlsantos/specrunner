@@ -9,6 +9,7 @@ import org.specrunner.expressions.Unsilent;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
+import org.specrunner.plugins.UnstackedPluginException;
 import org.specrunner.plugins.core.AbstractPluginValue;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
@@ -53,17 +54,17 @@ public class PluginVerifyRows extends AbstractPluginValue {
     public ENext doStart(IContext context, IResultSet result) throws PluginException {
         Object value = getValue();
         if (value == null) {
-            throw new PluginException("Value is null or not found.");
+            throw new UnstackedPluginException("Value is null or not found.");
         }
         if (!(value instanceof Iterable)) {
-            throw new PluginException("Value has an invalid type (should be an Iterable). Current type is '" + (value != null ? value.getClass().getName() : "null") + "'.");
+            throw new UnstackedPluginException("Value has an invalid type (should be an Iterable). Current type is '" + (value != null ? value.getClass().getName() : "null") + "'.");
         }
         Iterator<?> ite = ((Iterable<?>) value).iterator();
 
         Node node = context.getNode();
         Nodes ns = node.query("child::tr | child::thead/tr | child::tbody/tr");
         if (ns.size() == 0) {
-            throw new PluginException("Missing rows.");
+            throw new UnstackedPluginException("Missing rows.");
         }
         Element head = null;
         for (int i = 0; i < ns.size(); i++) {
@@ -75,11 +76,11 @@ public class PluginVerifyRows extends AbstractPluginValue {
             break;
         }
         if (head == null) {
-            throw new PluginException("Missing table header candidate.");
+            throw new UnstackedPluginException("Missing table header candidate.");
         }
         Nodes hs = head.query("child::th");
         if (hs.size() == 0) {
-            throw new PluginException("Missing header information (th's).");
+            throw new UnstackedPluginException("Missing header information (th's).");
         }
         UtilNode.setIgnore(head);
 
@@ -94,7 +95,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
             }
             Nodes cs = row.query("child::td");
             if (hs.size() != cs.size()) {
-                throw new PluginException("Number of headers (" + hs.size() + ") is different of columns (" + cs.size() + ").");
+                throw new UnstackedPluginException("Number of headers (" + hs.size() + ") is different of columns (" + cs.size() + ").");
             }
             for (int j = 0; j < cs.size(); j++) {
                 Element h = (Element) hs.get(j);
@@ -119,7 +120,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
                     UtilPlugin.performChildren(row, context, result);
                 } else {
                     if (first) {
-                        result.addResult(Failure.INSTANCE, block, new PluginException("Returned enumeration missing itens."));
+                        result.addResult(Failure.INSTANCE, block, new UnstackedPluginException("Returned enumeration missing itens."));
                         first = false;
                     }
                 }
@@ -134,7 +135,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
         first = true;
         while (ite.hasNext()) {
             if (first) {
-                result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Returned enumeration has more elements than expected."));
+                result.addResult(Failure.INSTANCE, context.peek(), new UnstackedPluginException("Returned enumeration has more elements than expected."));
                 first = false;
             }
             try {

@@ -18,6 +18,7 @@
 package org.specrunner.plugins.core.var;
 
 import org.specrunner.context.IContext;
+import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPluginDual;
@@ -43,6 +44,12 @@ public abstract class AbstractPluginDefine extends AbstractPluginDual {
     @Override
     public boolean isEval() {
         return true;
+    }
+
+    @Override
+    @DontEval
+    public void setValue(Object value) {
+        super.setValue(value);
     }
 
     @Override

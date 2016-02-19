@@ -17,7 +17,13 @@
  */
 package org.specrunner.plugins.core.var;
 
+import org.specrunner.SRServices;
+import org.specrunner.context.IContext;
 import org.specrunner.expressions.Unsilent;
+import org.specrunner.plugins.PluginException;
+import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Node;
 
 /**
  * Defines a global variable in unsilent evaluation mode.
@@ -27,9 +33,19 @@ import org.specrunner.expressions.Unsilent;
  */
 public class PluginSet extends PluginDefineGlobal {
 
+    private boolean set = false;
+
     @Override
     @Unsilent
     public void setValue(Object value) {
         super.setValue(value);
+        set = true;
+    }
+
+    protected Object getObjectValue(IContext context, Node node) throws PluginException {
+        if (set) {
+            return getValue();
+        }
+        return SRServices.get(INodeHolderFactory.class).newHolder(node).getObject(context, true);
     }
 }
