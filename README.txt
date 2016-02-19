@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.63
+OK - Double calling on attribute value for 'variables' (global|local|execute|set) #35 https://github.com/thiagolvlsantos/specrunner/issues/35
+OK - Better error support for errors inside callings to 'value=...' #36 https://github.com/thiagolvlsantos/specrunner/issues/36
+
 1.4.62
 OK - Allow converters from same type to same type #34 https://github.com/thiagolvlsantos/specrunner/issues/34
 OK - Adjust debug styles for scenarios. #33 https://github.com/thiagolvlsantos/specrunner/issues/33
