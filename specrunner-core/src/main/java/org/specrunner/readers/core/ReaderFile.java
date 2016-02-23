@@ -33,10 +33,7 @@ import org.specrunner.plugins.core.include.ResolverDefault;
 import org.specrunner.readers.IReader;
 import org.specrunner.readers.ReaderException;
 import org.specrunner.source.ISource;
-import org.specrunner.source.ISourceFactoryManager;
-import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilIO;
-import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.node.INodeHolder;
 
 import nu.xom.Attribute;
@@ -102,40 +99,12 @@ public class ReaderFile implements IReader {
                 URI uri = source.getURI();
                 URI newHref = uri.resolve(file);
                 updateHref(element, newHref);
-                file = newHref.getPath();
-                File f = new File(file);
-                if (!f.exists()) {
-                    file = file.substring(1);
-                    f = new File(file);
-                }
-                sb.append(getContent(f));
+                getURI(sb, newHref);
             } catch (Exception e) {
                 throw new ReaderException(e);
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * Get source from a URI.
-     * 
-     * @param newHref
-     *            The URI.
-     * @return The corresponding source.
-     * @throws PluginException
-     *             On reading errors.
-     */
-    protected ISource getSource(URI newHref) throws PluginException {
-        ISource newSource = null;
-        try {
-            newSource = SRServices.get(ISourceFactoryManager.class).newSource(newHref.toString());
-        } catch (SourceException e) {
-            if (UtilLog.LOG.isDebugEnabled()) {
-                UtilLog.LOG.debug(e.getMessage(), e);
-            }
-            throw new PluginException(e);
-        }
-        return newSource;
     }
 
     /**
@@ -151,9 +120,28 @@ public class ReaderFile implements IReader {
     protected void updateHref(Element element, URI newHref) throws PluginException {
         IConfiguration cfg = SRServices.getFeatureManager().getConfiguration();
         File f = new File((File) cfg.get(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY), (String) cfg.get(ConstantsDumperFile.FEATURE_OUTPUT_NAME));
-        ISource newSource = getSource(newHref);
-        URI link = resolver.resolve(f.toURI(), newSource.getURI());
+        URI link = resolver.resolve(f.toURI(), newHref);
         element.addAttribute(new Attribute("href", link.toString()));
+    }
+
+    /**
+     * Get URI data.
+     * 
+     * @param sb
+     *            String information.
+     * @param newHref
+     *            The reference.
+     * @throws IOException
+     *             On reading errors.
+     */
+    protected void getURI(StringBuilder sb, URI newHref) throws IOException {
+        String href = newHref.getPath();
+        File file = new File(href);
+        if (!file.exists()) {
+            href = href.substring(1);
+            file = new File(href);
+        }
+        sb.append(getContent(file));
     }
 
     /**
