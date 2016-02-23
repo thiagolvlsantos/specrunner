@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -214,7 +216,7 @@ public final class UtilIO {
      * 
      * @param url
      *            The url.
-     * @return The stream.
+     * @return A stream.
      * @throws IOException
      *             On load errors.
      */
@@ -267,6 +269,67 @@ public final class UtilIO {
                 }
             }
             return new ByteArrayInputStream(data);
+        }
+    }
+
+    /**
+     * Get Reader for a given URL.
+     * 
+     * @param url
+     *            The url.
+     * @return A reader.
+     * @throws IOException
+     *             On load errors.
+     */
+    public static Reader getReader(URL url) throws IOException {
+        synchronized (cache) {
+            byte[] data = cache.get(url);
+            if (data != null) {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream reused for: " + url);
+                }
+                return new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(UtilEncoding.getEncoding()));
+            }
+            InputStream in = null;
+            ByteArrayOutputStream out = null;
+            try {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream open: " + url);
+                }
+                in = url.openStream();
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream loaded: " + in);
+                }
+                out = new ByteArrayOutputStream(in.available());
+                writeTo(in, out);
+                data = out.toByteArray();
+                cache.put(url, data);
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Reader with '" + data.length + "' bytes cached for: " + url);
+                }
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Closing " + in, e);
+                        }
+                        throw e;
+                    }
+                }
+                if (out != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        if (UtilLog.LOG.isTraceEnabled()) {
+                            UtilLog.LOG.trace("Closing " + in, e);
+                        }
+                        throw e;
+                    }
+                }
+            }
+            return new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(UtilEncoding.getEncoding()));
         }
     }
 

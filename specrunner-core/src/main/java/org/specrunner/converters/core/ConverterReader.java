@@ -25,13 +25,13 @@ import org.specrunner.converters.ConverterException;
 import org.specrunner.util.UtilIO;
 
 /**
- * Convert URI references to InputStreams.
+ * Convert URI references to Readers.
  * 
  * @author Thiago Santos.
  * 
  */
 @SuppressWarnings("serial")
-public class ConverterInputStream extends ConverterDefault {
+public class ConverterReader extends ConverterDefault {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
@@ -39,7 +39,7 @@ public class ConverterInputStream extends ConverterDefault {
             return null;
         }
         try {
-            return UtilIO.getStream((new URI(String.valueOf(obj)).toURL()));
+            return UtilIO.getReader((new URI(String.valueOf(obj)).toURL()));
         } catch (IOException e) {
             throw new ConverterException(e);
         } catch (URISyntaxException e) {
