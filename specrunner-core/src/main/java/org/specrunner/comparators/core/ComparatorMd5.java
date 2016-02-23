@@ -17,6 +17,8 @@
  */
 package org.specrunner.comparators.core;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,7 +40,7 @@ public class ComparatorMd5 extends ComparatorString {
 
     @Override
     public Class<?> getType() {
-        return Blob.class;
+        return InputStream.class;
     }
 
     @Override
@@ -52,7 +54,17 @@ public class ComparatorMd5 extends ComparatorString {
         }
         digester.reset();
         byte[] bytes = null;
-        if (obj instanceof Blob) {
+        if (byte[].class.isInstance(obj)) {
+            bytes = (byte[]) obj;
+        } else if (obj instanceof InputStream) {
+            InputStream is = (InputStream) obj;
+            try {
+                bytes = new byte[is.available()];
+                is.read(bytes, 0, bytes.length);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (obj instanceof Blob) {
             Blob blob = (Blob) obj;
             try {
                 bytes = blob.getBytes(1L, (int) blob.length());
