@@ -39,7 +39,7 @@ public class ConverterInputStream extends ConverterDefault {
             return null;
         }
         try {
-            return UtilIO.getStream((new URI(String.valueOf(obj)).toURL()));
+            return UtilIO.getStream((new URI(String.valueOf(obj))));
         } catch (IOException e) {
             throw new ConverterException(e);
         } catch (URISyntaxException e) {

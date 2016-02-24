@@ -29,7 +29,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
@@ -61,7 +64,7 @@ public final class UtilIO {
     /**
      * Reading buffer size.
      */
-    public static final int BUFFER_SIZE = 1024;
+    public static final int BUFFER_SIZE = 16 * 1024;
     /**
      * Temp reading.
      */
@@ -212,10 +215,23 @@ public final class UtilIO {
     }
 
     /**
+     * Get stream for a given URI.
+     * 
+     * @param uri
+     *            An uri.
+     * @return A stream.
+     * @throws IOException
+     *             On load errors.
+     */
+    public static InputStream getStream(URI uri) throws IOException {
+        return getStream(uri.toURL());
+    }
+
+    /**
      * Get stream for a given URL.
      * 
      * @param url
-     *            The url.
+     *            An url.
      * @return A stream.
      * @throws IOException
      *             On load errors.
@@ -223,49 +239,18 @@ public final class UtilIO {
     public static InputStream getStream(URL url) throws IOException {
         synchronized (cache) {
             byte[] data = cache.get(url);
-            if (data != null) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Stream reused for: " + url);
-                }
-                return new ByteArrayInputStream(data);
-            }
-            InputStream in = null;
-            ByteArrayOutputStream out = null;
-            try {
+            if (data == null) {
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Stream open: " + url);
                 }
-                in = url.openStream();
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Stream loaded: " + in);
-                }
-                out = new ByteArrayOutputStream(in.available());
-                writeTo(in, out);
-                data = out.toByteArray();
+                data = getBytes(url.openStream());
                 cache.put(url, data);
                 if (UtilLog.LOG.isDebugEnabled()) {
                     UtilLog.LOG.debug("Stream with '" + data.length + "' bytes cached for: " + url);
                 }
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Closing " + in, e);
-                        }
-                        throw e;
-                    }
-                }
-                if (out != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Closing " + in, e);
-                        }
-                        throw e;
-                    }
+            } else {
+                if (UtilLog.LOG.isDebugEnabled()) {
+                    UtilLog.LOG.debug("Stream reused for: " + url);
                 }
             }
             return new ByteArrayInputStream(data);
@@ -273,64 +258,29 @@ public final class UtilIO {
     }
 
     /**
+     * Get Reader for a given URI.
+     * 
+     * @param uri
+     *            An uri.
+     * @return A reader.
+     * @throws IOException
+     *             On load errors.
+     */
+    public static Reader getReader(URI uri) throws IOException {
+        return getReader(uri.toURL());
+    }
+
+    /**
      * Get Reader for a given URL.
      * 
      * @param url
-     *            The url.
+     *            An url.
      * @return A reader.
      * @throws IOException
      *             On load errors.
      */
     public static Reader getReader(URL url) throws IOException {
-        synchronized (cache) {
-            byte[] data = cache.get(url);
-            if (data != null) {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Stream reused for: " + url);
-                }
-                return new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(UtilEncoding.getEncoding()));
-            }
-            InputStream in = null;
-            ByteArrayOutputStream out = null;
-            try {
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Stream open: " + url);
-                }
-                in = url.openStream();
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Stream loaded: " + in);
-                }
-                out = new ByteArrayOutputStream(in.available());
-                writeTo(in, out);
-                data = out.toByteArray();
-                cache.put(url, data);
-                if (UtilLog.LOG.isDebugEnabled()) {
-                    UtilLog.LOG.debug("Reader with '" + data.length + "' bytes cached for: " + url);
-                }
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Closing " + in, e);
-                        }
-                        throw e;
-                    }
-                }
-                if (out != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        if (UtilLog.LOG.isTraceEnabled()) {
-                            UtilLog.LOG.trace("Closing " + in, e);
-                        }
-                        throw e;
-                    }
-                }
-            }
-            return new InputStreamReader(new ByteArrayInputStream(data), Charset.forName(UtilEncoding.getEncoding()));
-        }
+        return new InputStreamReader(getStream(url), Charset.forName(UtilEncoding.getEncoding()));
     }
 
     /**
@@ -345,6 +295,25 @@ public final class UtilIO {
      */
     public static void writeTo(InputStream in, OutputStream out) throws IOException {
         byte[] buffer = new byte[BUFFER_SIZE];
+        int size = 0;
+        while ((size = in.read(buffer)) > 0) {
+            out.write(buffer, 0, size);
+        }
+        out.flush();
+    }
+
+    /**
+     * Write a reader to a writer.
+     * 
+     * @param in
+     *            The input.
+     * @param out
+     *            The output.
+     * @throws IOException
+     *             On writing errors.
+     */
+    public static void writeTo(Reader in, Writer out) throws IOException {
+        char[] buffer = new char[BUFFER_SIZE];
         int size = 0;
         while ((size = in.read(buffer)) > 0) {
             out.write(buffer, 0, size);
@@ -450,5 +419,50 @@ public final class UtilIO {
             }
         }
         return sb.toString();
+    }
+
+    public static String getString(Reader in) throws IOException {
+        if (in == null) {
+            return null;
+        }
+        String result = null;
+        try {
+            StringWriter out = new StringWriter();
+            try {
+                writeTo(in, out);
+                result = out.toString();
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
+        return result;
+    }
+
+    public static byte[] getBytes(Reader in, Charset charset) throws IOException {
+        if (in == null) {
+            return null;
+        }
+        return getString(in).getBytes(charset);
+    }
+
+    public static byte[] getBytes(InputStream in) throws IOException {
+        if (in == null) {
+            return null;
+        }
+        byte[] result = null;
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try {
+                writeTo(in, out);
+                result = out.toByteArray();
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
+        return result;
     }
 }

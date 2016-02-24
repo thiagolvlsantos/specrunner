@@ -20,7 +20,9 @@ package org.specrunner.comparators.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
@@ -28,7 +30,7 @@ import java.sql.Clob;
 import java.sql.SQLException;
 
 import org.specrunner.source.core.UtilEncoding;
-import org.specrunner.util.UtilSql;
+import org.specrunner.util.UtilIO;
 
 /**
  * Compare two objects using MD5 value.
@@ -62,70 +64,41 @@ public class ComparatorMd5 extends ComparatorString {
         } else if (obj instanceof InputStream) {
             InputStream in = (InputStream) obj;
             try {
-                bytes = new byte[in.available()];
-                in.read(bytes, 0, bytes.length);
+                bytes = UtilIO.getBytes(in);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        } else if (obj instanceof Reader) {
-            Reader in = (Reader) obj;
-            try {
-                StringBuilder builder = new StringBuilder();
-                char[] charBuffer = new char[32 * 1024];
-                int numCharsRead;
-                while ((numCharsRead = in.read(charBuffer, 0, charBuffer.length)) != -1) {
-                    builder.append(charBuffer, 0, numCharsRead);
-                }
-                bytes = builder.toString().getBytes(UtilEncoding.getEncoding());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
             }
         } else if (obj instanceof Blob) {
             Blob blob = (Blob) obj;
             try {
-                bytes = blob.getBytes(1L, (int) blob.length());
+                bytes = UtilIO.getBytes(blob.getBinaryStream());
             } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else if (obj instanceof Reader) {
+            Reader in = (Reader) obj;
+            try {
+                bytes = UtilIO.getBytes(in, Charset.forName(UtilEncoding.getEncoding()));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else if (obj instanceof Clob) {
             Clob clob = (Clob) obj;
             try {
-                InputStream in = clob.getAsciiStream();
-                try {
-                    bytes = new byte[in.available()];
-                    in.read(bytes, 0, bytes.length);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } finally {
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
+                bytes = UtilIO.getBytes(clob.getCharacterStream(), Charset.forName(UtilEncoding.getEncoding()));
             } catch (SQLException e) {
+                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            String tmp = UtilSql.toString(obj);
+            String tmp = String.valueOf(obj);
             bytes = tmp != null ? tmp.getBytes() : null;
         }
         if (bytes == null) {

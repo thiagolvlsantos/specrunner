@@ -39,7 +39,7 @@ public class ConverterReader extends ConverterDefault {
             return null;
         }
         try {
-            return UtilIO.getReader((new URI(String.valueOf(obj)).toURL()));
+            return UtilIO.getReader((new URI(String.valueOf(obj))));
         } catch (IOException e) {
             throw new ConverterException(e);
         } catch (URISyntaxException e) {

@@ -17,8 +17,6 @@
  */
 package org.specrunner.util;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.sql.Clob;
 
 /**
@@ -36,7 +34,7 @@ public final class UtilSql {
     }
 
     /**
-     * Get string representation of value. If the object is a Blob get its
+     * Get string representation of value. If the object is a Clob get its
      * String representation.
      * 
      * @param obj
@@ -52,7 +50,7 @@ public final class UtilSql {
 
     /**
      * Get string representation of value. If the object is a Clob get its
-     * String representation, if it is a Blob get 'MD5' of it.
+     * String representation.
      * 
      * @param obj
      *            The object to stringfy.
@@ -61,27 +59,10 @@ public final class UtilSql {
     public static String toString(Object obj) {
         if (obj instanceof Clob) {
             Clob clob = (Clob) obj;
-            Reader in = null;
             try {
-                in = clob.getCharacterStream();
-                if (in != null) {
-                    StringBuilder sb = new StringBuilder();
-                    int i;
-                    while ((i = in.read()) != -1) {
-                        sb.append((char) i);
-                    }
-                    return sb.toString();
-                }
+                return UtilIO.getString(clob.getCharacterStream());
             } catch (Exception e) {
                 throw new RuntimeException(e);
-            } finally {
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
             }
         }
         return String.valueOf(obj);
