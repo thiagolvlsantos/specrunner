@@ -1,4 +1,9 @@
 -----------------------------------------------------------
+1.4.64
+OK - Create a clob converter #37 https://github.com/thiagolvlsantos/specrunner/issues/37
+OK - Create a blob converter #38 https://github.com/thiagolvlsantos/specrunner/issues/38
+OK - Create a reader of URL #40 https://github.com/thiagolvlsantos/specrunner/issues/40
+
 1.4.63
 OK - Double calling on attribute value for 'variables' (global|local|execute|set) #35 https://github.com/thiagolvlsantos/specrunner/issues/35
 OK - Better error support for errors inside callings to 'value=...' #36 https://github.com/thiagolvlsantos/specrunner/issues/36
