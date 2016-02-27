@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+    border: 1px solid black;
+}
+
+td {
+    border: 1px dotted gray;
+}
+
+.prepare:before {
+    content: "PREPARE";
+}
+.verify:before {
+    content: "VERIFY";
+}
+</style>
+<title>Example of update in virtual fiels</title>
+</head>
+<body>
+    <h2>Updates</h2>
+    <dbms />
+
+    <h1>Prepare two bases.</h1>
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td converter="tc" formatter="tc" for0="dd/MM/yyyy">current date + 1 day</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>2</td>
+                <td>Luiz</td>
+                <td>current date + 1 year</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>3</td>
+                <td>Vieira</td>
+                <td for0="HH:mm:ss">current date + 10 year</td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="prepare">
+        <caption>Orders</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Item</th>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Paper</td>
+                <td>Thiago</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Update using SQL (simulate system actions)</h1>
+
+    Run on <a class="scripts" name="systemConnection" href="suvUpdate.sql" value="href" failsafe="true">system base.</a>
+
+
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>1</td>
+                <td>Lima</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="verify">
+        <caption>Orders</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Item</th>
+                <th>Customer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>1</td>
+                <td>Paper</td>
+                <td>Lima</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <compareBase />
+</body>
+</html>

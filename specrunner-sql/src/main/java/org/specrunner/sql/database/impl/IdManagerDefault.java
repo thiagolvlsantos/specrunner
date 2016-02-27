@@ -34,9 +34,12 @@ import org.specrunner.converters.ConverterException;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.IIdManager;
 import org.specrunner.sql.database.IStatementFactory;
+import org.specrunner.sql.database.SqlWrapper;
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IRegister;
 import org.specrunner.sql.meta.Schema;
 import org.specrunner.sql.meta.Table;
+import org.specrunner.sql.meta.Value;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -86,28 +89,34 @@ public class IdManagerDefault implements IIdManager {
         return table != null;
     }
 
-    /**
-     * Read generated keys.
-     * 
-     * @param pstmt
-     *            The statement.
-     * @throws SQLException
-     *             On reading errors.
-     */
-    public void readKeys(PreparedStatement pstmt) throws SQLException {
-        ResultSet rs = null;
-        try {
-            rs = pstmt.getGeneratedKeys();
-            ResultSetMetaData metaData = rs.getMetaData();
-            while (rs.next()) {
-                for (int j = 1; j < metaData.getColumnCount() + 1; j++) {
-                    bind(rs.getObject(j));
+    @Override
+    public void readKeys(SqlWrapper wrapper, Table table, IRegister register, PreparedStatement pstmt) throws SQLException {
+        switch (wrapper.getType()) {
+        case INSERT:
+            ResultSet rs = null;
+            try {
+                rs = pstmt.getGeneratedKeys();
+                ResultSetMetaData metaData = rs.getMetaData();
+                while (rs.next()) {
+                    for (int j = 1; j < metaData.getColumnCount() + 1; j++) {
+                        bind(rs.getObject(j));
+                    }
+                }
+            } finally {
+                if (rs != null) {
+                    rs.close();
                 }
             }
-        } finally {
-            if (rs != null) {
-                rs.close();
+            break;
+        case UPDATE:
+            for (Value value : register) {
+                if (value.getColumn().isKey()) {
+                    bind(value.getValue());
+                }
             }
+            break;
+        case DELETE:
+            break;
         }
     }
 

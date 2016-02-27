@@ -1,0 +1,145 @@
+<html>
+<head>
+<meta charset="ISO-8859-1" />
+<style type="text/css">
+table {
+	border: 1px solid black;
+}
+
+td {
+	border: 1px dotted gray;
+}
+
+.prepare:before {
+    content: "PREPARE";
+}
+.verify:before {
+    content: "VERIFY";
+}
+</style>
+</head>
+<body>
+    <p>
+        With a <span class="connection">connection</span> <a class="scripts" href="drop.sql" value="href"
+            failsafe="true">re</a> <a class="scripts" href="create.sql" value="href" failsafe=true>build</a> schema.
+    </p>
+    <p>
+        With <span class="schemaloader">a schema loader</span> load <span class="schema">schema</span>, and set up <span
+            class="database">commands executor</span>.
+    </p>
+
+    <h1>Check virtual keys information.</h1>
+
+    BEFORE
+
+    <table class="prepare">
+        <caption>Contact</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>thiagolvlsantos@gmail.com</td>
+                <td>+558199999999</td>
+            </tr>
+            <tr>
+                <td>I</td>
+                <td>2</td>
+                <td>thiago@gmail.com</td>
+                <td>+558188888888</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="prepare">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>thiagolvlsantos@gmail.com</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>I</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>thiagolvlsantos@gmail.com</td>
+            </tr>
+        </tbody>
+    </table>
+
+    AFTER
+    
+    <a class="scripts" href="update.sql" value="href" failsafe=true>update</a>
+
+    <!--table class="verify">
+        <caption>Contact</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>1</td>
+                <td>tlvls@gmail.com</td>
+            </tr>
+        </tbody>
+    </table-->
+
+
+    <table class="verify">
+        <caption>Customer</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>U</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>thiago@gmail.com</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

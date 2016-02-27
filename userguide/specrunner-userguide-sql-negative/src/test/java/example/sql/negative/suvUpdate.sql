@@ -1,0 +1,1 @@
+update ORD.customers set name = 'Lima' where name = 'Thiago';

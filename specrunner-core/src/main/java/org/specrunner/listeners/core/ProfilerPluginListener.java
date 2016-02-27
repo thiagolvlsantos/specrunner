@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
@@ -34,6 +31,9 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
 
 /**
  * Logging profiler implementation.
@@ -107,6 +107,9 @@ public class ProfilerPluginListener implements IPluginListener {
 
     @Override
     public void onAfterInit(IPlugin plugin, IContext context, IResultSet result) {
+        if (timeInit.isEmpty()) {
+            return;
+        }
         lastInit = (System.currentTimeMillis() - timeInit.pop());
         if (UtilLog.LOG.isDebugEnabled() && lastInit > TRESHOLD) {
             UtilLog.LOG.debug("initialize(): " + lastInit + "mls. On " + context.getPlugin());

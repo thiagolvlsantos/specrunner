@@ -22,6 +22,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import org.specrunner.sql.meta.Column;
+import org.specrunner.sql.meta.IRegister;
+import org.specrunner.sql.meta.Table;
 
 /**
  * An identity manager.
@@ -65,12 +67,19 @@ public interface IIdManager {
     /**
      * Read keys from a prepared statement.
      * 
+     * @param wrapper
+     *            A wrapper.
+     * @param table
+     *            A table.
+     * @param register
+     *            A register.
      * @param pstmt
      *            A statement.
+     * 
      * @throws SQLException
      *             On reading errors.
      */
-    void readKeys(PreparedStatement pstmt) throws SQLException;
+    void readKeys(SqlWrapper wrapper, Table table, IRegister register, PreparedStatement pstmt) throws SQLException;
 
     /**
      * Lookup for a ID based on a reference.

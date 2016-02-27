@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="ORD" alias="Orders">
+
+  <table name="contact">
+    <column name="id" key="true" converter="long"/>
+    <column name="email" reference="true" converter="notNullOrEmpty"/>
+    <column name="phone" converter="notNullOrEmpty"/>
+  </table>
+
+  <table name="customer" >
+    <column name="id" key="true" converter="long"/>
+    <column name="name" converter="notNullOrEmpty"/>
+    <column name="contact_id" alias="contact" virtual="true" converter="notNullOrEmpty"/>
+  </table>
+</schema>

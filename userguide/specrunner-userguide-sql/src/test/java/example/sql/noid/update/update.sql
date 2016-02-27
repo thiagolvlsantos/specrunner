@@ -1,0 +1,1 @@
+update ord.customer set contact_id = 2 where id=1;

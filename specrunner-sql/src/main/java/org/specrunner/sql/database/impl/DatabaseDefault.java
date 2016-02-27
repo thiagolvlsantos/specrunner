@@ -1102,7 +1102,7 @@ public class DatabaseDefault implements IDatabase {
 
             DatabaseMetaData meta = connection.getMetaData();
             if (idManager.hasKeys() && meta.supportsGetGeneratedKeys()) {
-                idManager.readKeys(pstmt);
+                idManager.readKeys(wrapper, table, register, pstmt);
             }
 
             fireRegisterIn(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));

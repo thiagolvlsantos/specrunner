@@ -8,4 +8,11 @@
 		<column name="id" alias="ID" key="true" converter="long" />
 		<column name="genre" alias="genre" converter="enumValue" arg0="example.sql.negative.EnumGenre" arg1="getDescription" arg2="getCode" />
 	</table>
+
+    <table name="orders" alias="orders">
+        <column name="id" alias="ID" key="true" converter="long" />
+        <column name="item" alias="item" converter="notNullOrEmpty" />
+        <column name="customer_id" alias="customer" virtual="true" converter="notNullOrEmpty" />
+    </table>
+
 </schema>
