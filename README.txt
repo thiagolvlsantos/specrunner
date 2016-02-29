@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.65
+OK - Update idmanager on 'updates' #42 https://github.com/thiagolvlsantos/specrunner/issues/42
+
 1.4.64
 OK - Create a clob converter #37 https://github.com/thiagolvlsantos/specrunner/issues/37
 OK - Create a blob converter #38 https://github.com/thiagolvlsantos/specrunner/issues/38
