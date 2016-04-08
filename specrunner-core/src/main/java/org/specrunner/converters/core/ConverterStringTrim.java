@@ -30,6 +30,10 @@ public class ConverterStringTrim extends ConverterString {
 
     @Override
     public Object convert(Object obj, Object[] args) throws ConverterException {
-        return ((String) super.convert(obj, args)).trim();
+        Object str = super.convert(obj, args);
+        if (str == null) {
+            return null;
+        }
+        return ((String) str).trim();
     }
 }
