@@ -30,9 +30,6 @@ import java.util.StringTokenizer;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
-import org.specrunner.converters.ConverterException;
-import org.specrunner.converters.IConverter;
-import org.specrunner.formatters.IFormatter;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.parameters.core.UtilParametrized;
 import org.specrunner.plugins.PluginException;
@@ -1120,43 +1117,34 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(childs.get(0));
                     value = context.getByName(holder.getAttribute("collection"));
                 } else {
-                    text = cell.getValue(context);
-                    value = text;
+                    if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
+                        String[] converters = f.converters;
+                        if (converters != null && converters.length > 0) {
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, converters[0]);
+                            for (int j = 0; f.args != null && j < f.args.length; j++) {
+                                if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j)) {
+                                    cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j, f.args[j]);
+                                }
+                            }
+                        }
+                    }
+                    if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
+                        String[] formatters = f.formatters;
+                        if (formatters != null && formatters.length > 0) {
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, formatters[0]);
+                            for (int j = 0; f.formattersArgs != null && j < f.formattersArgs.length; j++) {
+                                if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j)) {
+                                    cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j, f.formattersArgs[j]);
+                                }
+                            }
+                        }
+                    }
+                    value = cell.getObject(context, true);
+                    text = String.valueOf(value);
                     if (text.isEmpty()) {
                         value = UtilExpression.evaluate(f.def, context, true);
                         if (UtilLog.LOG.isDebugEnabled()) {
                             UtilLog.LOG.debug("USING_DEFAULT>" + value);
-                        }
-                    }
-                    Class<?> t = f.getTypes()[f.getTypes().length - 1];
-                    if (!t.isInstance(value) || value instanceof String) {
-                        String[] convs = f.converters;
-                        if (cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
-                            convs = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER).split(",");
-                        }
-                        for (int j = 0; j < convs.length; j++) {
-                            IConverter con = SRServices.getConverterManager().get(convs[j]);
-                            if (con != null) {
-                                List<String> args = cell.getArguments(f.args != null ? Arrays.asList(f.args) : new LinkedList<String>());
-                                value = con.convert(value, args.toArray(new Object[0]));
-                            } else {
-                                throw new ConverterException("Converter named '" + convs[j] + "' not found.");
-                            }
-                        }
-                    }
-                    String[] formatters = f.formatters;
-                    if (cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
-                        formatters = cell.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER).split(",");
-                    }
-                    if (formatters != null) {
-                        for (int j = 0; j < formatters.length; j++) {
-                            IFormatter form = SRServices.getFormatterManager().get(formatters[j]);
-                            if (form != null) {
-                                List<String> args = cell.getArguments(f.formattersArgs != null ? Arrays.asList(f.formattersArgs) : new LinkedList<String>());
-                                value = form.format(value, args.toArray(new Object[0]));
-                            } else {
-                                throw new ConverterException("Formatter named '" + formatters[j] + "' not found.");
-                            }
                         }
                     }
                     if (UtilLog.LOG.isDebugEnabled()) {

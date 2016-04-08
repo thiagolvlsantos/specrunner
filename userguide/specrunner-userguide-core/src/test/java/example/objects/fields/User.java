@@ -4,6 +4,7 @@ public class User {
 
     private String name;
     private Contact contact;
+    private String anything;
 
     public String getName() {
         return name;
@@ -21,8 +22,16 @@ public class User {
         this.contact = contact;
     }
 
+    public String getAnything() {
+        return anything;
+    }
+
+    public void setAnything(String anything) {
+        this.anything = anything;
+    }
+
     @Override
     public String toString() {
-        return "User [name=" + name + ", contact=" + contact + "]";
+        return "User [name=" + name + ", contact=" + contact + ", anything=" + anything + "]";
     }
 }
