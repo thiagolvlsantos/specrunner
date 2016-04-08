@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.66
+OK - String converters family extension #44 https://github.com/thiagolvlsantos/specrunner/issues/44
+OK - Enable @null, @empty for objins family plugin. #43 https://github.com/thiagolvlsantos/specrunner/issues/43
+
 1.4.65
 OK - Update idmanager on 'updates' #42 https://github.com/thiagolvlsantos/specrunner/issues/42
 
