@@ -561,11 +561,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 }
 
                 String converter = cell.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER, null);
-                String[] converters = converter != null ? converter.split(",") : new String[0];
-                if (f.getConverters() == null || converters.length > 0) {
-                    f.setConverters(converters);
+                if (converter != null) {
+                    f.setConverter(converter);
                 }
-
                 int i = 0;
                 List<Object> args = new LinkedList<Object>();
                 while (cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i)) {
@@ -577,9 +575,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 }
 
                 String formatter = cell.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER, null);
-                String[] formatters = formatter != null ? formatter.split(",") : new String[0];
-                if (f.getFormatters() == null || formatters.length > 0) {
-                    f.setFormatters(formatters);
+                if (formatter != null) {
+                    f.setFormatter(formatter);
                 }
 
                 int j = 0;
@@ -643,7 +640,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         /**
          * Converters.
          */
-        private String[] converters;
+        private String converter;
         /**
          * Arguments for converters.
          */
@@ -651,7 +648,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         /**
          * Formatters.
          */
-        private String[] formatters;
+        private String formatter;
         /**
          * Arguments for formatters.
          */
@@ -799,18 +796,18 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          * 
          * @return The converters.
          */
-        public String[] getConverters() {
-            return converters;
+        public String getConverter() {
+            return converter;
         }
 
         /**
-         * Set converters.
+         * Set converter.
          * 
-         * @param converters
-         *            The converters.
+         * @param converter
+         *            The converter.
          */
-        public void setConverters(String[] converters) {
-            this.converters = converters == null ? null : Arrays.copyOf(converters, converters.length);
+        public void setConverter(String converter) {
+            this.converter = converter;
         }
 
         /**
@@ -833,22 +830,22 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
 
         /**
-         * Get formatters.
+         * Get formatter.
          * 
-         * @return The formatters.
+         * @return The formatter.
          */
-        public String[] getFormatters() {
-            return formatters;
+        public String getFormatter() {
+            return formatter;
         }
 
         /**
-         * Set formatters.
+         * Set formatter.
          * 
-         * @param formatters
-         *            The formatters.
+         * @param formatter
+         *            The formatter.
          */
-        public void setFormatters(String[] formatters) {
-            this.formatters = formatters == null ? null : Arrays.copyOf(formatters, formatters.length);
+        public void setFormatter(String formatter) {
+            this.formatter = formatter;
         }
 
         /**
@@ -931,18 +928,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             for (int i = 0; types != null && i < types.length; i++) {
                 strTypes.append((i == 0 ? "" : ",") + types[i]);
             }
-            StringBuilder strConvs = new StringBuilder("");
-            for (int i = 0; converters != null && i < converters.length; i++) {
-                strConvs.append((i == 0 ? "" : ",") + converters[i]);
-            }
+            StringBuilder strConvs = new StringBuilder(converter);
             StringBuilder strArgs = new StringBuilder("");
             for (int i = 0; args != null && i < args.length; i++) {
                 strArgs.append((i == 0 ? "" : ",") + args[i]);
             }
-            StringBuilder strForm = new StringBuilder("");
-            for (int i = 0; formatters != null && i < formatters.length; i++) {
-                strForm.append((i == 0 ? "" : ",") + formatters[i]);
-            }
+            StringBuilder strForm = new StringBuilder(formatter);
             StringBuilder strFormArgs = new StringBuilder("");
             for (int i = 0; formattersArgs != null && i < formattersArgs.length; i++) {
                 strFormArgs.append((i == 0 ? "" : ",") + formattersArgs[i]);
@@ -1118,9 +1109,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     value = context.getByName(holder.getAttribute("collection"));
                 } else {
                     if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
-                        String[] converters = f.converters;
-                        if (converters != null && converters.length > 0) {
-                            cell.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, converters[0]);
+                        String converter = f.converter;
+                        if (converter != null) {
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, converter);
                             for (int j = 0; f.args != null && j < f.args.length; j++) {
                                 if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j)) {
                                     cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j, f.args[j]);
@@ -1129,9 +1120,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                         }
                     }
                     if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
-                        String[] formatters = f.formatters;
-                        if (formatters != null && formatters.length > 0) {
-                            cell.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, formatters[0]);
+                        String formatter = f.formatter;
+                        if (formatter != null) {
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, formatter);
                             for (int j = 0; f.formattersArgs != null && j < f.formattersArgs.length; j++) {
                                 if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j)) {
                                     cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j, f.formattersArgs[j]);

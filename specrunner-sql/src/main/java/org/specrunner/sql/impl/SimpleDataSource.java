@@ -89,7 +89,9 @@ public class SimpleDataSource implements IDataSourceProvider, DataSource {
     @Override
     public void release() {
         try {
-            connection.close();
+            if (connection != null) {
+                connection.close();
+            }
             if (UtilLog.LOG.isInfoEnabled()) {
                 UtilLog.LOG.info("Connection " + connection + " closed.");
             }

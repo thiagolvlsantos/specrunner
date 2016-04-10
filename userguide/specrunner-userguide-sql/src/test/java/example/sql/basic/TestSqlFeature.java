@@ -40,6 +40,10 @@ public class TestSqlFeature {
     private static final String INCOME = "src/test/resources/income/clean/";
     private static final String OUTCOME = "src/test/resources/outcome/clean/";
 
+    static {
+        System.setProperty(SRServices.SR_THREAD_SAFE, "true");
+    }
+
     private void run(String in, String out) {
         SpecRunnerJUnit.defaultRun(INCOME + in, OUTCOME + out);
     }
