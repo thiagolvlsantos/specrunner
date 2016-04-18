@@ -252,7 +252,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             references.clear();
             String[] refs = reference.split(",");
             for (String s : refs) {
-                references.add(s);
+                references.add(s.trim());
             }
         }
     }
@@ -1419,6 +1419,13 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
         for (int i = 0; i < references.size(); i++) {
             str.append((i == 0 ? "" : separator) + PropertyUtils.getProperty(instance, references.get(i)));
+        }
+        if (references.isEmpty()) {
+            String key = "fake_" + System.currentTimeMillis() + "_" + System.nanoTime();
+            if (UtilLog.LOG.isDebugEnabled()) {
+                UtilLog.LOG.debug("FAKE_KEY>" + key);
+            }
+            str.append(key);
         }
         return str.toString();
     }
