@@ -498,8 +498,6 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
-            boolean ignore = Boolean.parseBoolean(cell.getAttribute(UtilNode.IGNORE, "false"));
-
             String field = cell.hasAttribute("field") ? cell.getAttribute("field") : null;
             String fieldName = UtilString.getNormalizer().camelCase(cell.getValue(context));
             String name = field != null ? (field.endsWith(".") ? field + fieldName : field) : fieldName;
@@ -519,7 +517,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
             f.setReference(references.contains(name));
 
+            boolean ignore = Boolean.parseBoolean(cell.getAttribute(UtilNode.IGNORE, "false"));
             f.setIgnore(ignore);
+
+            boolean eval = Boolean.parseBoolean(cell.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
+            f.setEval(eval);
             if (!ignore) {
                 StringTokenizer st = new StringTokenizer(name, ".");
                 String[] names = new String[st.countTokens()];
@@ -618,6 +620,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         private boolean ignore;
         /**
+         * Eval column field. Default is true.
+         */
+        private boolean eval = true;
+        /**
          * Is reference column.
          */
         private boolean reference;
@@ -694,6 +700,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          */
         public void setIgnore(boolean ignore) {
             this.ignore = ignore;
+        }
+
+        /**
+         * Check if eval is enabled. Default is true.
+         * 
+         * @return true, to eval, false,otherwise.
+         */
+        public boolean isEval() {
+            return eval;
+        }
+
+        /**
+         * Set eval status.
+         * 
+         * @param eval
+         *            true, to eval, false, otherwise.
+         */
+        public void setEval(boolean eval) {
+            this.eval = eval;
         }
 
         /**
@@ -938,7 +963,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             for (int i = 0; formattersArgs != null && i < formattersArgs.length; i++) {
                 strFormArgs.append((i == 0 ? "" : ",") + formattersArgs[i]);
             }
-            return index + ",'" + fieldName + "'(" + ignore + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],[" + strForm + "],[" + strFormArgs + "],(" + comparator + ")";
+            return index + ",'" + fieldName + "'(" + ignore + "," + eval + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],[" + strForm + "],[" + strFormArgs + "],(" + comparator + ")";
         }
     }
 
@@ -1108,26 +1133,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(childs.get(0));
                     value = context.getByName(holder.getAttribute("collection"));
                 } else {
-                    if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
-                        String converter = f.converter;
-                        if (converter != null) {
-                            cell.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, converter);
-                            for (int j = 0; f.args != null && j < f.args.length; j++) {
-                                if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j)) {
-                                    cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j, f.args[j]);
-                                }
-                            }
+                    if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION)) {
+                        if(!f.eval){
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_EVALUATION, String.valueOf(f.eval));
                         }
                     }
-                    if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
-                        String formatter = f.formatter;
-                        if (formatter != null) {
-                            cell.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, formatter);
-                            for (int j = 0; f.formattersArgs != null && j < f.formattersArgs.length; j++) {
-                                if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j)) {
-                                    cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j, f.formattersArgs[j]);
-                                }
-                            }
+                    if (f.converter != null && !cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
+                        cell.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, f.converter);
+                    }
+                    for (int j = 0; f.args != null && j < f.args.length; j++) {
+                        if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j)) {
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + j, f.args[j]);
+                        }
+                    }
+                    if (f.formatter != null && !cell.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
+                        cell.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, f.formatter);
+                    }
+                    for (int j = 0; f.formattersArgs != null && j < f.formattersArgs.length; j++) {
+                        if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j)) {
+                            cell.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + j, f.formattersArgs[j]);
                         }
                     }
                     value = cell.getObject(context, true);
