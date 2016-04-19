@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.4.67
+OK - On object plugins copy information of other header attributes. #46 https://github.com/thiagolvlsantos/specrunner/issues/46
+OK - Allow objins without reference="" #45 https://github.com/thiagolvlsantos/specrunner/issues/45
+
 1.4.66
 OK - String converters family extension #44 https://github.com/thiagolvlsantos/specrunner/issues/44
 OK - Enable @null, @empty for objins family plugin. #43 https://github.com/thiagolvlsantos/specrunner/issues/43
