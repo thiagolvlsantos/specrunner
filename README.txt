@@ -1,5 +1,6 @@
 -----------------------------------------------------------
 1.4.67
+OK - Add plugin 'repeat' for tables to replicate data from header fields to lines #48 https://github.com/thiagolvlsantos/specrunner/issues/48
 OK - On object plugins copy information of other header attributes. #46 https://github.com/thiagolvlsantos/specrunner/issues/46
 OK - Allow objins without reference="" #45 https://github.com/thiagolvlsantos/specrunner/issues/45
 
