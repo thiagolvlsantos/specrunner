@@ -953,12 +953,12 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             for (int i = 0; types != null && i < types.length; i++) {
                 strTypes.append((i == 0 ? "" : ",") + types[i]);
             }
-            StringBuilder strConvs = new StringBuilder(converter);
+            StringBuilder strConvs = new StringBuilder(String.valueOf(converter));
             StringBuilder strArgs = new StringBuilder("");
             for (int i = 0; args != null && i < args.length; i++) {
                 strArgs.append((i == 0 ? "" : ",") + args[i]);
             }
-            StringBuilder strForm = new StringBuilder(formatter);
+            StringBuilder strForm = new StringBuilder(String.valueOf(formatter));
             StringBuilder strFormArgs = new StringBuilder("");
             for (int i = 0; formattersArgs != null && i < formattersArgs.length; i++) {
                 strFormArgs.append((i == 0 ? "" : ",") + formattersArgs[i]);
@@ -1134,7 +1134,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     value = context.getByName(holder.getAttribute("collection"));
                 } else {
                     if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION)) {
-                        if(!f.eval){
+                        if (!f.eval) {
                             cell.setAttribute(INodeHolder.ATTRIBUTE_EVALUATION, String.valueOf(f.eval));
                         }
                     }

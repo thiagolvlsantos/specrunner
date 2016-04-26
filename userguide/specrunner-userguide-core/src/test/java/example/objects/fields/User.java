@@ -1,10 +1,13 @@
 package example.objects.fields;
 
+import org.joda.time.LocalDate;
+
 public class User {
 
     private String name;
     private Contact contact;
     private String anything;
+    private LocalDate birthday;
 
     public String getName() {
         return name;
@@ -30,8 +33,16 @@ public class User {
         this.anything = anything;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
     @Override
     public String toString() {
-        return "User [name=" + name + ", contact=" + contact + ", anything=" + anything + "]";
+        return "User [name=" + name + ", contact=" + contact + ", anything=" + anything + ", birthday=" + birthday + "]";
     }
 }

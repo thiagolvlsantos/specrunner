@@ -444,7 +444,9 @@ public class NodeHolderDefault implements INodeHolder {
                     if (UtilLog.LOG.isTraceEnabled()) {
                         UtilLog.LOG.trace("Trying to convert '" + value + "' of type " + (value != null ? value.getClass() : " null") + " using " + converterLocal + " with arguments: " + argumentsLocal);
                     }
-                    value = converterLocal.convert(value, argumentsLocal.toArray());
+                    if (converterLocal.accept(value)) {
+                        value = converterLocal.convert(value, argumentsLocal.toArray());
+                    }
                 } catch (Exception e) {
                     throw new PluginException("Error on converter: " + converterLocal + ". ERROR:" + e.getMessage(), e);
                 }

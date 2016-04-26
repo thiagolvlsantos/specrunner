@@ -20,6 +20,7 @@ public class TestField {
 
     public void getUser(@Converter(type = ConvGet.class) User user) {
         System.out.println(user);
+        SRServices.getObjectManager().clear();
     }
 
     public static class ConvGet extends ConverterDefault {
