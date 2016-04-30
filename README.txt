@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.69
+OK - On AbstractPluginObject load of fields, check if eval is enabled. #50 https://github.com/thiagolvlsantos/specrunner/issues/50
+
 1.4.68
 OK - Make data parsers return null when empty string is passed #49 https://github.com/thiagolvlsantos/specrunner/issues/49
 

@@ -517,11 +517,20 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
 
             f.setReference(references.contains(name));
 
-            boolean ignore = Boolean.parseBoolean(cell.getAttribute(UtilNode.IGNORE, "false"));
-            f.setIgnore(ignore);
-
-            boolean eval = Boolean.parseBoolean(cell.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
-            f.setEval(eval);
+            boolean ignore = f.ignore;
+            if (cell.hasAttribute(UtilNode.IGNORE)) {
+                boolean tmp = Boolean.parseBoolean(cell.getAttribute(UtilNode.IGNORE));
+                if (tmp != ignore) {
+                    ignore = tmp;
+                    f.setIgnore(ignore);
+                }
+            }
+            if (cell.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION)) {
+                boolean eval = Boolean.parseBoolean(cell.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION));
+                if (eval != f.eval) {
+                    f.setEval(eval);
+                }
+            }
             if (!ignore) {
                 StringTokenizer st = new StringTokenizer(name, ".");
                 String[] names = new String[st.countTokens()];

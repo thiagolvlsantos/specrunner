@@ -6,6 +6,7 @@ public class User {
 
     private String login;
     private int position;
+    private String extra;
     private LocalDate date;
 
     public String getLogin() {
@@ -22,6 +23,14 @@ public class User {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 
     public LocalDate getDate() {
