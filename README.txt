@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.4.70
+OK - Repository update failed on previous release.
+
 1.4.69
 OK - On AbstractPluginObject load of fields, check if eval is enabled. #50 https://github.com/thiagolvlsantos/specrunner/issues/50
 
