@@ -1,6 +1,6 @@
 -----------------------------------------------------------
 1.5.01 
-OK - Upgrade schemacrawler to java7 version. #51 https://github.com/thiagolvlsantos/specrunner/issues/7
+OK - Upgrade schemacrawler to java7 version. #51 https://github.com/thiagolvlsantos/specrunner/issues/51
 
 1.5.00
 OK - Upgrade to jdk1.7 #7 https://github.com/thiagolvlsantos/specrunner/issues/7
