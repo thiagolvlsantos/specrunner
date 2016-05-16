@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -171,5 +173,10 @@ public class SimpleDataSource implements IDataSourceProvider, DataSource {
     @Override
     public String toString() {
         return SimpleDataSource.class.getSimpleName() + "(" + driver + "|" + url + "|" + user + "|" + password + ")";
+    }
+
+    @Override
+    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+        return null;
     }
 }

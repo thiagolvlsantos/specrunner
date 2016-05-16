@@ -19,6 +19,10 @@ import org.specrunner.plugins.core.AbstractPlugin;
 @Concurrent(threads = 3)
 public class TestHibernate {
 
+    static {
+        SRServices.setThreadSafe(true);
+    }
+
     @Before
     public void setUpConverters() {
         IConverterManager cf = SRServices.getConverterManager();

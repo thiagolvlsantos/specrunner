@@ -1086,4 +1086,24 @@ public class CallableStatementWrapper extends AbstractFactoryJdbcAware<CallableS
     public void setNClob(String parameterName, Reader reader) throws SQLException {
         original.setNClob(parameterName, reader);
     }
+
+    @Override
+    public <T> T getObject(int parameterIndex, Class<T> type) throws SQLException {
+        return original.getObject(parameterIndex, type);
+    }
+
+    @Override
+    public <T> T getObject(String parameterName, Class<T> type) throws SQLException {
+        return original.getObject(parameterName, type);
+    }
+
+    @Override
+    public void closeOnCompletion() throws SQLException {
+        original.closeOnCompletion();
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        return original.isCloseOnCompletion();
+    }
 }

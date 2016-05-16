@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -545,14 +545,14 @@ public class HtmlUnitDriverLocal extends HtmlUnitDriver implements IHtmlUnitDriv
                 }
                 cacheLocal = new Cache() {
                     @Override
-                    protected boolean isDynamicContent(WebResponse response) {
+                    protected boolean isCacheableContent(WebResponse response) {
                         String type = response.getContentType();
-                        boolean dynamic = ("".equals(type) || "text/html".equals(type)) && super.isDynamicContent(response);
+                        boolean dynamic = ("".equals(type) || "text/html".equals(type)) && !super.isCacheableContent(response);
                         if (UtilLog.LOG.isInfoEnabled()) {
                             String url = response.getWebRequest().getUrl().toString();
                             UtilLog.LOG.info("Dynamic '" + type + "' = " + dynamic + ", loaded in " + response.getLoadTime() + "mls, URL: " + url + ".");
                         }
-                        return dynamic;
+                        return !dynamic;
                     }
                 };
             } else {

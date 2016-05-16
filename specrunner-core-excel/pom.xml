@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner</artifactId>
-    <version>1.4.70</version>
+    <version>1.5.00</version>
     <relativePath>../specrunner</relativePath>
   </parent>
   <artifactId>specrunner-core-excel</artifactId>
@@ -31,12 +31,12 @@
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi</artifactId>
-      <version>3.12</version>
+      <version>3.14</version>
     </dependency>
     <dependency>
       <groupId>org.apache.poi</groupId>
       <artifactId>poi-ooxml</artifactId>
-      <version>3.12</version>
+      <version>3.14</version>
     </dependency>
   </dependencies>
 </project>

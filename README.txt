@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.00
+OK - Upgrade to jdk1.7 #7 https://github.com/thiagolvlsantos/specrunner/issues/7
+
 1.4.70
 OK - Repository update failed on previous release.
 

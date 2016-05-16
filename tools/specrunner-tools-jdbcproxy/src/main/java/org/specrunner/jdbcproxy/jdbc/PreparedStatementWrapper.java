@@ -532,4 +532,14 @@ public class PreparedStatementWrapper extends AbstractFactoryJdbcAware<PreparedS
     public void setNClob(int parameterIndex, Reader reader) throws SQLException {
         original.setNClob(parameterIndex, reader);
     }
+
+    @Override
+    public void closeOnCompletion() throws SQLException {
+        original.closeOnCompletion();
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        return original.isCloseOnCompletion();
+    }
 }

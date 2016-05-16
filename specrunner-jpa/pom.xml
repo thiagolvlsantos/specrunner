@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner</artifactId>
-        <version>1.4.70</version>
+        <version>1.5.00</version>
         <relativePath>../specrunner</relativePath>
     </parent>
     <artifactId>specrunner-jpa</artifactId>
@@ -25,7 +25,7 @@
         </repositories -->
 
     <properties>
-        <hibernate.version>4.3.1.Final</hibernate.version>
+        <hibernate.version>5.1.0.Final</hibernate.version>
     </properties>
 
     <dependencies>

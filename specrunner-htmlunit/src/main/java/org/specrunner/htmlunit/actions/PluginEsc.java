@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
  */
 package org.specrunner.htmlunit.actions;
 
-import java.io.IOException;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
@@ -27,7 +25,7 @@ import org.specrunner.result.status.Success;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.javascript.host.KeyboardEvent;
+import com.gargoylesoftware.htmlunit.javascript.host.event.KeyboardEvent;
 
 /**
  * Press/Release TAB key.
@@ -39,11 +37,7 @@ public class PluginEsc extends AbstractPluginKeys {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        try {
-            element.type(KeyboardEvent.DOM_VK_ESCAPE);
-            result.addResult(Success.INSTANCE, context.peek());
-        } catch (IOException e) {
-            throw new PluginException("Error on TAB command.", e);
-        }
+        element.type(KeyboardEvent.DOM_VK_ESCAPE);
+        result.addResult(Success.INSTANCE, context.peek());
     }
 }

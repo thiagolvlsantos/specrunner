@@ -9,6 +9,6 @@ public class TestAllConcurrent extends TestAllSequential {
 
     @BeforeClass
     public static void set() {
-        System.setProperty(SRServices.SR_THREAD_SAFE, String.valueOf(true));
+        SRServices.setThreadSafe(true);
     }
 }

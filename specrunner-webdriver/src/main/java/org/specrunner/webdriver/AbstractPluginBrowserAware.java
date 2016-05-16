@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,10 +24,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.openqa.selenium.WebDriver;
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
@@ -48,6 +44,10 @@ import com.gargoylesoftware.htmlunit.UnexpectedPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
 import com.gargoylesoftware.htmlunit.WebWindow;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * A generic plugin that acts over a webdriver.
@@ -268,11 +268,7 @@ public abstract class AbstractPluginBrowserAware extends AbstractPluginValue {
                         e.appendChild(span);
                     }
                 }
-                try {
-                    window.getHistory().back();
-                } catch (IOException e) {
-                    throw new PluginException(e);
-                }
+                window.getHistory().back();
             }
         }
     }

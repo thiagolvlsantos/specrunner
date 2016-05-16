@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -80,7 +80,7 @@ public class FeatureReaderImpl implements IFeatureReader {
                 lang = "en";
             }
             if (UtilLog.LOG.isInfoEnabled()) {
-                UtilLog.LOG.info("Language " + (found ? "not found" : "found") + " setting to " + lang);
+                UtilLog.LOG.info("Language " + (found ? "found" : "not found") + " setting to " + lang);
             }
             Keywords keywords = null;
             synchronized (cacheKeywords) {

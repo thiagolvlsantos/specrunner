@@ -13,5 +13,6 @@ public class JettyMain {
         config.close();
         Server server = (Server) configuration.configure();
         server.start();
+        System.out.println("ready.");
     }
 }

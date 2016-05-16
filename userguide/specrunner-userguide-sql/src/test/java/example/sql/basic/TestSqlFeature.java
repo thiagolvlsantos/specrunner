@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public class TestSqlFeature {
     private static final String OUTCOME = "src/test/resources/outcome/clean/";
 
     static {
-        System.setProperty(SRServices.SR_THREAD_SAFE, "true");
+        SRServices.get().setThreadSafe(true);
     }
 
     private void run(String in, String out) {

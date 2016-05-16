@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner</artifactId>
-        <version>1.4.70</version>
+        <version>1.5.00</version>
         <relativePath>../specrunner</relativePath>
     </parent>
     <artifactId>specrunner-tomcat</artifactId>
@@ -22,8 +22,8 @@
     </distributionManagement>
 
     <properties>
-        <org.apache.tomcat.embed.version>7.0.62</org.apache.tomcat.embed.version>
-        <org.eclipse.jdt.core.compiler.version>4.2.1</org.eclipse.jdt.core.compiler.version>
+        <org.apache.tomcat.embed.version>8.5.0</org.apache.tomcat.embed.version>
+        <org.eclipse.jdt.core.compiler.version>4.5.1</org.eclipse.jdt.core.compiler.version>
     </properties>
 
     <dependencies>

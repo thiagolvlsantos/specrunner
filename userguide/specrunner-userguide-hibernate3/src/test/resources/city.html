@@ -3,8 +3,8 @@
     <tr>
         <th>ID</th>
         <th field="name">Nome</th>
-        <th field="foundation" default='new java.util.Date()' converter="date" arg0="dd/MM/yyyy">Data de fundação</th>
-        <th field="status" converter="yesNo">Ativa</th>
+        <th eval="false" field="foundation" default='new java.util.Date()' converter="date" arg0="dd/MM/yyyy">Data de fundação</th>
+        <th field="status" converter="simNao">Ativa</th>
         <th field="lastUpdate" converter="dateCurrent">Última atualização</th>
     </tr>
 </table>

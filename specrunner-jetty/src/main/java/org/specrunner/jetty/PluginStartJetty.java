@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ import java.util.Map;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.ShutdownHandler;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.session.HashSessionManager;
 import org.eclipse.jetty.server.session.SessionHandler;
 import org.eclipse.jetty.util.log.Log;
@@ -376,8 +376,8 @@ public class PluginStartJetty extends AbstractPluginScoped {
      */
     protected void getPortFromServer(final Server server) {
         for (Connector c : server.getConnectors()) {
-            if (c instanceof SelectChannelConnector) {
-                port = c.getPort();
+            if (c instanceof ServerConnector) {
+                port = ((ServerConnector) c).getPort();
                 break;
             }
         }
@@ -468,8 +468,8 @@ public class PluginStartJetty extends AbstractPluginScoped {
             UtilLog.LOG.info("Jetty port '" + port + "' available.");
         }
         for (Connector c : server.getConnectors()) {
-            if (c instanceof SelectChannelConnector) {
-                c.setPort(port);
+            if (c instanceof ServerConnector) {
+                ((ServerConnector) c).setPort(port);
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Jetty port set to '" + port + "'.");
                 }
@@ -523,10 +523,11 @@ public class PluginStartJetty extends AbstractPluginScoped {
      * 
      */
     private final class LocalSessionManager extends HashSessionManager {
+
         @Override
-        public void invalidateSessions() {
+        public void shutdownSessions() {
             try {
-                super.invalidateSessions();
+                super.shutdownSessions();
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Sessions removed.");
                 }
@@ -577,15 +578,15 @@ public class PluginStartJetty extends AbstractPluginScoped {
                 UtilLog.LOG.info("Jetty recycling '" + getObject() + "'.");
             }
             for (Connector c : getObject().getConnectors()) {
-                if (c instanceof SelectChannelConnector) {
+                if (c instanceof ServerConnector) {
                     if (UtilLog.LOG.isInfoEnabled()) {
-                        UtilLog.LOG.info("Jetty port listening on '" + c.getPort() + "'.");
+                        UtilLog.LOG.info("Jetty port listening on '" + ((ServerConnector) c).getPort() + "'.");
                     }
                     break;
                 }
             }
             if (sessionManager != null) {
-                sessionManager.invalidateSessions();
+                sessionManager.shutdownSessions();
             }
             getObject().clearAttributes();
             if (UtilLog.LOG.isInfoEnabled()) {

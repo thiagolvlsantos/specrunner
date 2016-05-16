@@ -238,4 +238,14 @@ public class StatementWrapper extends AbstractFactoryJdbcAware<Statement> implem
     public boolean isPoolable() throws SQLException {
         return original.isPoolable();
     }
+
+    @Override
+    public void closeOnCompletion() throws SQLException {
+        original.closeOnCompletion();
+    }
+
+    @Override
+    public boolean isCloseOnCompletion() throws SQLException {
+        return original.isCloseOnCompletion();
+    }
 }

@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ package org.specrunner.jetty;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.ServerConnector;
 import org.specrunner.SRServices;
 import org.specrunner.context.ContextException;
 import org.specrunner.context.IContext;
@@ -75,8 +75,8 @@ public class JettyStringProvider implements IStringProvider {
             final int defaultPort = 8080;
             int port = defaultPort;
             for (Connector c : server.getConnectors()) {
-                if (c instanceof SelectChannelConnector) {
-                    port = c.getPort();
+                if (c instanceof ServerConnector) {
+                    port = ((ServerConnector) c).getPort();
                     break;
                 }
             }

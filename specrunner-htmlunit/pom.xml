@@ -3,7 +3,7 @@
 	<parent>
         <groupId>org.specrunner</groupId>
         <artifactId>specrunner</artifactId>
-        <version>1.4.70</version>
+        <version>1.5.00</version>
         <relativePath>../specrunner</relativePath>
 	</parent>
 	<artifactId>specrunner-htmlunit</artifactId>
@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
 			<artifactId>htmlunit</artifactId>
-			<version>2.15</version> 
+			<version>2.21</version> 
 		</dependency>
 		<!-- Maven requires -->
 		<dependency>

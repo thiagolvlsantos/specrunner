@@ -17,6 +17,7 @@ import java.sql.Statement;
 import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 import org.specrunner.jdbcproxy.AbstractFactoryJdbcAware;
 import org.specrunner.jdbcproxy.IFactoryJdbc;
@@ -284,5 +285,30 @@ public class ConnectionWrapper extends AbstractFactoryJdbcAware<Connection> impl
     @Override
     public Struct createStruct(String typeName, Object[] attributes) throws SQLException {
         return original.createStruct(typeName, attributes);
+    }
+
+    @Override
+    public void setSchema(String schema) throws SQLException {
+        original.setSchema(schema);
+    }
+
+    @Override
+    public String getSchema() throws SQLException {
+        return original.getSchema();
+    }
+
+    @Override
+    public void abort(Executor executor) throws SQLException {
+        original.abort(executor);
+    }
+
+    @Override
+    public void setNetworkTimeout(Executor executor, int milliseconds) throws SQLException {
+        original.setNetworkTimeout(executor, milliseconds);
+    }
+
+    @Override
+    public int getNetworkTimeout() throws SQLException {
+        return original.getNetworkTimeout();
     }
 }

@@ -989,4 +989,14 @@ public class ResultSetWrapper extends AbstractFactoryJdbcAware<ResultSet> implem
     public void updateNClob(String columnLabel, Reader reader) throws SQLException {
         original.updateNClob(columnLabel, reader);
     }
+
+    @Override
+    public <T> T getObject(int columnIndex, Class<T> type) throws SQLException {
+        return original.getObject(columnIndex, type);
+    }
+
+    @Override
+    public <T> T getObject(String columnLabel, Class<T> type) throws SQLException {
+        return original.getObject(columnLabel, type);
+    }
 }

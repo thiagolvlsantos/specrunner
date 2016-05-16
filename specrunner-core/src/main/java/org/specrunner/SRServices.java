@@ -1,6 +1,6 @@
 /*
     SpecRunner - Acceptance Test Driven Development Tool
-    Copyright (C) 2011-2015  Thiago Santos
+    Copyright (C) 2011-2016  Thiago Santos
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -97,6 +97,10 @@ public final class SRServices {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void setThreadSafe(boolean isTheadSafe) {
+        System.setProperty(SR_THREAD_SAFE, String.valueOf(isTheadSafe));
     }
 
     /**
