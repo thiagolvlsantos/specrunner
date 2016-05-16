@@ -21,7 +21,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import schemacrawler.schema.Database;
+import schemacrawler.schema.Catalog;
+import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schemacrawler.InclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaInfoLevel;
@@ -35,21 +36,23 @@ import schemacrawler.utility.SchemaCrawlerUtility;
 public class ConnectionDatabase {
 
     private Connection connection;
-    private Database database;
+    private Catalog catalog;
+    private DatabaseInfo database;
 
     public ConnectionDatabase(ConnectionInfo ci) throws Exception {
         SchemaCrawlerOptions options = new SchemaCrawlerOptions();
         prepareOptions(options, ci);
         Class.forName(ci.getDriver());
         connection = DriverManager.getConnection(ci.getUrl(), ci.getUser(), ci.getPassword());
-        database = SchemaCrawlerUtility.getDatabase(connection, options);
+        catalog = SchemaCrawlerUtility.getCatalog(connection, options);
+        database = catalog.getDatabaseInfo();
     }
 
     @SuppressWarnings("serial")
     protected void prepareOptions(SchemaCrawlerOptions options, final ConnectionInfo ci) {
         options.setSchemaInclusionRule(new InclusionRule() {
             @Override
-            public boolean include(String text) {
+            public boolean test(String text) {
                 return text.equalsIgnoreCase(ci.getSchema());
             }
         });
@@ -60,7 +63,11 @@ public class ConnectionDatabase {
         return connection;
     }
 
-    public Database getDatabase() {
+    public Catalog getCatalog() {
+        return catalog;
+    }
+
+    public DatabaseInfo getDatabase() {
         return database;
     }
 

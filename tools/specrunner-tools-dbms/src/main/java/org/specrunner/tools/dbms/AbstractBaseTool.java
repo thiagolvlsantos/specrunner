@@ -35,8 +35,8 @@ import org.specrunner.tools.dbms.core.PairingDefault;
 import org.specrunner.tools.dbms.listeners.IColumnListener;
 import org.specrunner.tools.dbms.listeners.ITableListener;
 
+import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
-import schemacrawler.schema.Database;
 import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
 
@@ -56,10 +56,10 @@ public abstract class AbstractBaseTool {
         ConnectionDatabase pairCurrent = null;
         try {
             pairOld = newConnectionDatabase(old);
-            Database databaseOld = pairOld.getDatabase();
+            Catalog databaseOld = pairOld.getCatalog();
 
             pairCurrent = newConnectionDatabase(current);
-            Database databaseCurrent = pairCurrent.getDatabase();
+            Catalog databaseCurrent = pairCurrent.getCatalog();
 
             StringBuilder sb = process(databaseOld, databaseOld.getSchema(old.getSchema()), databaseCurrent, databaseCurrent.getSchema(current.getSchema()), fileTableListeners, fileColumnListeners);
             if (sb.length() > 0) {
@@ -81,7 +81,7 @@ public abstract class AbstractBaseTool {
         return new ConnectionDatabase(ci);
     }
 
-    protected StringBuilder process(Database database1, Schema schema1, Database database2, Schema schema2, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) {
+    protected StringBuilder process(Catalog database1, Schema schema1, Catalog database2, Schema schema2, ConfigurationFiles fileTableListeners, ConfigurationFiles fileColumnListeners) {
         List<ITableListener> tableListeners = getTableListeners(fileTableListeners);
         List<IColumnListener> columnListeners = getColumnListeners(fileColumnListeners);
 
@@ -193,7 +193,7 @@ public abstract class AbstractBaseTool {
         return result;
     }
 
-    protected List<Table> children(Database database, Schema schema) {
+    protected List<Table> children(Catalog database, Schema schema) {
         if (database == null || schema == null) {
             return new LinkedList<Table>();
         }
