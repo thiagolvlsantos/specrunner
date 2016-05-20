@@ -20,10 +20,8 @@ package org.specrunner.plugins.core;
 import java.util.Arrays;
 import java.util.List;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
@@ -41,6 +39,9 @@ import org.specrunner.runner.RunnerException;
 import org.specrunner.runner.core.BlockFilterDefault;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Plugins utility class.
@@ -294,10 +295,14 @@ public final class UtilPlugin {
      */
     public static void compare(Node node, IPlugin plugin, IResultSet result, IComparator comparator, Object expected, Object received) throws PluginException {
         comparator.initialize();
-        if (comparator.match(expected, received)) {
-            result.addResult(Success.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin));
-        } else {
-            result.addResult(Failure.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+        try {
+            if (comparator.match(expected, received)) {
+                result.addResult(Success.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin));
+            } else {
+                result.addResult(Failure.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+            }
+        } catch (ComparatorException e) {
+            result.addResult(Failure.INSTANCE, SRServices.get(IBlockFactory.class).newBlock(node, plugin), e);
         }
     }
 }

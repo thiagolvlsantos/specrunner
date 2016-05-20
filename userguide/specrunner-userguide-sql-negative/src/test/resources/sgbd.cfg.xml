@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema name="ORD" alias="Orders">
 	<table name="customers" alias="customer">
-		<column name="date" alias="date" date="true" converter="date" arg0="dd/MM/yyyy" comparator="time" default="new java.util.Date()"/>
+		<column name="date" alias="date" date="true" converter="timestamp" arg0="dd/MM/yyyy" comparator="time" default="new java.util.Date()"/>
 		<column name="description" alias="description" converter="notNullOrEmpty" />
         <column name="data" alias="data" converter="dt" formatter="dt" for0="HHmmss dd/MM/yyyy" comparator="clobTrim"/>
 		<column name="name" alias="name" reference="true" converter="notNullOrEmpty" />

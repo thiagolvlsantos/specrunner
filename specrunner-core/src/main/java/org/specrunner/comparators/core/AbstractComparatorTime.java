@@ -18,6 +18,7 @@
 package org.specrunner.comparators.core;
 
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
 import org.specrunner.features.IFeatureManager;
 
 /**
@@ -65,7 +66,7 @@ public abstract class AbstractComparatorTime extends ComparatorDefault {
     }
 
     @Override
-    public boolean match(Object expected, Object received) {
+    public boolean match(Object expected, Object received) throws ComparatorException {
         Long left = getMillis(expected);
         Long right = getMillis(received);
         return compare(left, right);
@@ -77,8 +78,10 @@ public abstract class AbstractComparatorTime extends ComparatorDefault {
      * @param obj
      *            The time object.
      * @return The time in milliseconds corresponding to the object.
+     * @throws ComparatorException
+     *             On comparator exceptions.
      */
-    protected abstract Long getMillis(Object obj);
+    protected abstract Long getMillis(Object obj) throws ComparatorException;
 
     /**
      * Compare the expected and received.
@@ -96,6 +99,10 @@ public abstract class AbstractComparatorTime extends ComparatorDefault {
 
     @Override
     public int compare(Object o1, Object o2) {
-        return getMillis(o1).compareTo(getMillis(o2));
+        try {
+            return getMillis(o1).compareTo(getMillis(o2));
+        } catch (ComparatorException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

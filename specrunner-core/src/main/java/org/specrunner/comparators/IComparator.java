@@ -43,7 +43,9 @@ public interface IComparator extends IResetable, Comparator<Object> {
      *            The expected value.
      * @param received
      *            The received value.
+     * @throws ComparatorException
+     *             On comparison errors.
      * @return true, if they are equal, false, otherwise.
      */
-    boolean match(Object expected, Object received);
+    boolean match(Object expected, Object received) throws ComparatorException;
 }

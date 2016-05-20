@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.5.02
+OK - Fire events objects only if there are listeners #53 https://github.com/thiagolvlsantos/specrunner/issues/53
+OK - Fix ComparatorTime to work with LocalDateTime class family #52 https://github.com/thiagolvlsantos/specrunner/issues/52
+
 1.5.01 
 OK - Upgrade schemacrawler to java7 version. #51 https://github.com/thiagolvlsantos/specrunner/issues/51
 

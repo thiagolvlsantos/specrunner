@@ -19,6 +19,8 @@ package org.specrunner.comparators.core;
 
 import java.util.Date;
 
+import org.specrunner.comparators.ComparatorException;
+
 /**
  * Comparator of dates.
  * 
@@ -34,10 +36,13 @@ public class ComparatorDate extends AbstractComparatorTime {
     }
 
     @Override
-    protected Long getMillis(Object obj) {
+    protected Long getMillis(Object obj) throws ComparatorException {
+        if (obj == null) {
+            return 0L;
+        }
         if (obj instanceof Date) {
             return ((Date) obj).getTime();
         }
-        return 0L;
+        throw new ComparatorException("Invalid object type for time comparison. " + obj.getClass() + " -> " + obj);
     }
 }

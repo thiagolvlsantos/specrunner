@@ -17,6 +17,7 @@
  */
 package org.specrunner.comparators.core;
 
+import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 
 /**
@@ -39,7 +40,7 @@ public class ComparatorDefault implements IComparator {
     }
 
     @Override
-    public boolean match(Object expected, Object received) {
+    public boolean match(Object expected, Object received) throws ComparatorException {
         if (expected instanceof Number && received instanceof Number) {
             return ((Number) expected).doubleValue() == ((Number) received).doubleValue();
         }

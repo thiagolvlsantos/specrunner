@@ -623,7 +623,9 @@ public class DatabaseDefault implements IDatabase {
         fireInitialize();
 
         // start using listeners
-        fireTableIn(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
+        if (!listeners.isEmpty()) {
+            fireTableIn(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
+        }
 
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
@@ -736,7 +738,9 @@ public class DatabaseDefault implements IDatabase {
             }
         }
 
-        fireTableOut(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
+        if (!listeners.isEmpty()) {
+            fireTableOut(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
+        }
     }
 
     /**
@@ -1105,7 +1109,9 @@ public class DatabaseDefault implements IDatabase {
                 idManager.readKeys(wrapper, table, register, pstmt);
             }
 
-            fireRegisterIn(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
+            if (!listeners.isEmpty()) {
+                fireRegisterIn(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
+            }
         } finally {
             if (pstmt != null) {
                 statementFactory.release(pstmt);
@@ -1231,7 +1237,9 @@ public class DatabaseDefault implements IDatabase {
                     rs.close();
                 }
             }
-            fireRegisterOut(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
+            if (!listeners.isEmpty()) {
+                fireRegisterOut(new DatabaseRegisterEvent(context, result, this, connection, table, register, wrapper, indexesToValues));
+            }
         } finally {
             if (pstmt != null) {
                 statementFactory.release(pstmt);
@@ -1328,28 +1336,34 @@ public class DatabaseDefault implements IDatabase {
                 }
                 CellAdapter cell = v.getCell();
                 comparator.initialize();
-                if (!comparator.match(value, received)) {
-                    Object expected = v.getValue();
-                    if (column.isVirtual()) {
-                        received = idManager.lookup(tableOrAlias, String.valueOf(received));
-                    }
-                    String expStr = UtilSql.toString(value(v.getColumn(), expected));
-                    String recStr = UtilSql.toString(value(v.getColumn(), received));
-                    shortView(cell, expected, expStr, recStr);
-                    IPresentation error = null;
-                    if (expStr.equals(recStr)) {
-                        // same string representation but different object types
-                        error = new PresentationCompare(expected, received);
+                try {
+                    boolean notMatch = !comparator.match(value, received);
+                    if (notMatch) {
+                        Object expected = v.getValue();
+                        if (column.isVirtual()) {
+                            received = idManager.lookup(tableOrAlias, String.valueOf(received));
+                        }
+                        String expStr = UtilSql.toString(value(v.getColumn(), expected));
+                        String recStr = UtilSql.toString(value(v.getColumn(), received));
+                        shortView(cell, expected, expStr, recStr);
+                        IPresentation error = null;
+                        if (expStr.equals(recStr)) {
+                            // same string representation but different object
+                            // types
+                            error = new PresentationCompare(expected, received);
+                        } else {
+                            // equal object types.
+                            error = new DefaultAlignmentException("Values are different.", expStr, recStr);
+                        }
+                        result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
                     } else {
-                        // equal object types.
-                        error = new DefaultAlignmentException("Values are different.", expStr, recStr);
+                        String str = String.valueOf(value);
+                        if (!str.equals(cell.getValue(context))) {
+                            cell.append(" {" + str + "}");
+                        }
                     }
-                    result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), new PresentationException(error));
-                } else {
-                    String str = String.valueOf(value);
-                    if (!str.equals(cell.getValue(context))) {
-                        cell.append(" {" + str + "}");
-                    }
+                } catch (ComparatorException e) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(cell.getNode(), context.getPlugin()), e);
                 }
             }
         }

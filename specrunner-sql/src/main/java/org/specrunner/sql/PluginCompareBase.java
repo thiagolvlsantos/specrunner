@@ -25,6 +25,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.EMode;
@@ -504,9 +505,13 @@ public class PluginCompareBase extends AbstractPluginValue implements INullEmpty
                     }
                     IComparator comparator = c.getComparator();
                     comparator.initialize();
-                    boolean match = comparator.match(objExp, objRec);
-                    if (!c.isKey() && !match) {
-                        lr.add(c, index++, objExp, objRec);
+                    try {
+                        boolean match = comparator.match(objExp, objRec);
+                        if (!c.isKey() && !match) {
+                            lr.add(c, index++, objExp, objRec);
+                        }
+                    } catch (ComparatorException e) {
+                        throw new SQLException("Error on comparison of values.", e);
                     }
                 }
                 if (!lr.isEmpty()) {

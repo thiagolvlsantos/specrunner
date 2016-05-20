@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
+import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunnerScenario;
@@ -27,6 +28,7 @@ public abstract class AbstractTest {
     @Configuration
     public void configureCache(IConfiguration cfg) {
         cfg.add(IDatabase.FEATURE_REUSE_SCRIPTS, true);
+        cfg.add(AbstractComparatorTime.FEATURE_TOLERANCE, 1000L);
     }
 
     @Configuration

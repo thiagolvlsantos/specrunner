@@ -18,6 +18,7 @@
 package org.specrunner.comparators.core;
 
 import org.joda.time.ReadableInstant;
+import org.specrunner.comparators.ComparatorException;
 
 /**
  * Comparator of <code>ReadableInstant</code>s.
@@ -34,10 +35,13 @@ public class ComparatorJodatime extends AbstractComparatorTime {
     }
 
     @Override
-    protected Long getMillis(Object obj) {
+    protected Long getMillis(Object obj) throws ComparatorException {
+        if (obj == null) {
+            return 0L;
+        }
         if (obj instanceof ReadableInstant) {
             return ((ReadableInstant) obj).getMillis();
         }
-        return 0L;
+        throw new ComparatorException("Invalid object type for time comparison. " + obj.getClass() + " -> " + obj);
     }
 }

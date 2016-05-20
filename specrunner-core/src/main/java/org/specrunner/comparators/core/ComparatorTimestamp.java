@@ -19,6 +19,8 @@ package org.specrunner.comparators.core;
 
 import java.sql.Timestamp;
 
+import org.specrunner.comparators.ComparatorException;
+
 /**
  * Comparator of timestamps.
  * 
@@ -34,10 +36,13 @@ public class ComparatorTimestamp extends AbstractComparatorTime {
     }
 
     @Override
-    protected Long getMillis(Object obj) {
+    protected Long getMillis(Object obj) throws ComparatorException {
+        if (obj == null) {
+            return 0L;
+        }
         if (obj instanceof Timestamp) {
             return ((Timestamp) obj).getTime();
         }
-        return 0L;
+        throw new ComparatorException("Invalid object type for time comparison. " + obj.getClass() + " -> " + obj);
     }
 }
