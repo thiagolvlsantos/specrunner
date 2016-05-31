@@ -22,6 +22,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.htmlunit.AbstractPluginFindSingle;
 import org.specrunner.plugins.ActionType;
@@ -292,7 +294,14 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
                 expected.append("{" + exp + "}");
             }
             String rec = received.asText();
-            return PluginCompareUtils.compareDate(compare, exp, rec, context.newBlock(expected.getNode(), plugin), context, result, null);
+            IComparator comparator;
+            try {
+                comparator = expected.getComparator(SRServices.getComparatorManager().get("time"));
+            } catch (ComparatorException e) {
+                result.addResult(Failure.INSTANCE, context.newBlock(expected.getNode(), this), e);
+                return false;
+            }
+            return PluginCompareUtils.compareDate(compare, exp, rec, comparator, context.newBlock(expected.getNode(), plugin), context, result, null);
         } else if (PluginCompareNode.isNode(expected)) {
             PluginCompareNode compare = UtilPlugin.create(context, PluginCompareNode.class, (Element) expected.getNode(), true);
             return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);

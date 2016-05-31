@@ -25,6 +25,8 @@ import org.joda.time.ReadablePartial;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
@@ -109,17 +111,31 @@ public class PluginCompareDate extends PluginCompareText {
 
     @Override
     protected void process(IContext context, IResultSet result, WebDriver client, WebElement element) throws PluginException {
-        String expected = getExpected(context);
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        if (getFormat() == null) {
+            setFormat(nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0));
+        }
         if (getFormat() == null) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
+        String expected = getExpected(nh, context);
         String received = getText(element);
-        PluginCompareUtils.compareDate(this, expected, received, context.newBlock(context.getNode(), this), context, result, client);
+        IComparator comparator;
+        try {
+            comparator = nh.getComparator(SRServices.getComparatorManager().get("time"));
+        } catch (ComparatorException e) {
+            result.addResult(Failure.INSTANCE, context.peek(), e);
+            return;
+        }
+        PluginCompareUtils.compareDate(this, expected, received, comparator, context.newBlock(context.getNode(), this), context, result, client);
     }
 
     /**
      * Get expected value for comparison.
+     * 
+     * @param nh
+     *            A node holder.
      * 
      * @param context
      *            A context.
@@ -127,16 +143,11 @@ public class PluginCompareDate extends PluginCompareText {
      * @throws PluginException
      *             On plugin error.
      */
-    protected String getExpected(IContext context) throws PluginException {
-        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
-        if (getFormat() == null) {
-            setFormat(nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0));
-        }
+    protected String getExpected(INodeHolder nh, IContext context) throws PluginException {
         Object tmp = nh.getObject(context, true);
         String expected = null;
         if (tmp instanceof Date || tmp instanceof ReadableInstant || tmp instanceof ReadablePartial) {
-            DateTime time = new DateTime(tmp);
-            expected = time.toString(getFormat());
+            expected = new DateTime(tmp).toString(getFormat());
         } else {
             expected = String.valueOf(tmp);
         }

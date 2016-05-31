@@ -48,6 +48,15 @@ public interface IAbstraction {
     Boolean DEFAULT_EVAL_ARGS = Boolean.FALSE;
 
     /**
+     * Feature to eval formatter arguments.
+     */
+    String FEATURE_EVAL_FORMATTER_ARGS = IAbstraction.class.getName() + ".evalFormaterArgs";
+    /**
+     * Default is not eval formatter arguments.
+     */
+    Boolean DEFAULT_EVAL_FORMATTER_ARGS = Boolean.FALSE;
+
+    /**
      * Get element value.
      * 
      * @param context

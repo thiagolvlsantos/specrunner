@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.5.03
+OK - Enable evaluation of formatter parameters #54 https://github.com/thiagolvlsantos/specrunner/issues/54
+OK - Enable type="date" in web profiles compare using comparators #55 https://github.com/thiagolvlsantos/specrunner/issues/55
+
 1.5.02
 OK - Fire events objects only if there are listeners #53 https://github.com/thiagolvlsantos/specrunner/issues/53
 OK - Fix ComparatorTime to work with LocalDateTime class family #52 https://github.com/thiagolvlsantos/specrunner/issues/52

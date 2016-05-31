@@ -23,6 +23,8 @@ import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
 import org.joda.time.ReadablePartial;
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
@@ -113,13 +115,24 @@ public class PluginCompareDate extends PluginCompareText {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        String expected = getExpected(context);
-        if (format == null) {
+        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
+        if (getFormat() == null) {
+            setFormat(nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0));
+        }
+        if (getFormat() == null) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
+        String expected = getExpected(context);
         String received = element.asText();
-        PluginCompareUtils.compareDate(this, expected, received, context.newBlock(context.getNode(), this), context, result, page);
+        IComparator comparator;
+        try {
+            comparator = nh.getComparator(SRServices.getComparatorManager().get("time"));
+        } catch (ComparatorException e) {
+            result.addResult(Failure.INSTANCE, context.peek(), e);
+            return;
+        }
+        PluginCompareUtils.compareDate(this, expected, received, comparator, context.newBlock(context.getNode(), this), context, result, page);
     }
 
     /**

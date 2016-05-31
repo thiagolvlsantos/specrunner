@@ -20,14 +20,11 @@ package org.specrunner.htmlunit.assertions;
 import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Nodes;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.specrunner.SRServices;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.PluginException;
@@ -44,6 +41,10 @@ import com.gargoylesoftware.htmlunit.Page;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.html.DomNode;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Nodes;
 
 /**
  * Comparison utilities.
@@ -131,6 +132,8 @@ public final class PluginCompareUtils {
      *            The expected value.
      * @param received
      *            The received value.
+     * @param comparator
+     *            A comparator.
      * @param block
      *            The block.
      * @param context
@@ -143,7 +146,7 @@ public final class PluginCompareUtils {
      * @throws PluginException
      *             On comparison errors.
      */
-    public static boolean compareDate(PluginCompareDate compare, String expected, String received, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
+    public static boolean compareDate(PluginCompareDate compare, String expected, String received, IComparator comparator, IBlock block, IContext context, IResultSet result, SgmlPage page) throws PluginException {
         boolean res = true;
         DateTimeFormatter fmt = null;
         try {
@@ -159,7 +162,7 @@ public final class PluginCompareUtils {
             try {
                 DateTime dtExpected = fmt.parseDateTime(expected);
                 DateTime dtReceived = fmt.parseDateTime(received);
-                if (Math.abs(dtExpected.getMillis() - dtReceived.getMillis()) <= compare.getTolerance()) {
+                if (comparator.match(dtExpected, dtReceived)) {
                     result.addResult(Success.INSTANCE, block);
                 } else {
                     addError(expected, received, block, context, result, page);

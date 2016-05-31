@@ -415,7 +415,8 @@ public class NodeHolderDefault implements INodeHolder {
         try {
             IFormatter formatter = getFormatter();
             if (formatter != null) {
-                return formatter.format(local, getFormatterArguments().toArray());
+                List<Object> formatterArgumentsLocal = getFormatterArgumentsLocal(context, silent, getFormatterArguments());
+                return formatter.format(local, formatterArgumentsLocal.toArray());
             }
         } catch (FormatterException e) {
             throw new PluginException(e);
@@ -613,6 +614,40 @@ public class NodeHolderDefault implements INodeHolder {
         } else {
             if (UtilLog.LOG.isTraceEnabled()) {
                 UtilLog.LOG.trace("Not eval args: " + local);
+            }
+            result.addAll(local);
+        }
+        return result;
+    }
+
+    /**
+     * Get arguments for formatter evaluation.
+     * 
+     * @param context
+     *            A context.
+     * @param silent
+     *            Silent evaluation flag.
+     * @param arguments
+     *            Value arguments.
+     * @return List of arguments.
+     * @throws PluginException
+     *             On evaluation errors.
+     */
+    protected List<Object> getFormatterArgumentsLocal(IContext context, boolean silent, List<String> arguments) throws PluginException {
+        List<Object> result = new LinkedList<Object>();
+        IFeatureManager fm = SRServices.getFeatureManager();
+        Boolean eval = (Boolean) fm.get(FEATURE_EVAL_FORMATTER_ARGS, DEFAULT_EVAL_FORMATTER_ARGS);
+        List<String> local = getFormatterArguments(arguments);
+        if (eval) {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Eval formatter args: " + local);
+            }
+            for (int i = 0; i < local.size(); i++) {
+                result.add(UtilExpression.evaluate(local.get(i), context, silent));
+            }
+        } else {
+            if (UtilLog.LOG.isTraceEnabled()) {
+                UtilLog.LOG.trace("Not eval formatter args: " + local);
             }
             result.addAll(local);
         }

@@ -19,10 +19,9 @@ package org.specrunner.comparators.core;
 
 import java.util.Date;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
+import org.joda.time.DateTime;
 import org.joda.time.ReadableInstant;
+import org.joda.time.ReadablePartial;
 import org.specrunner.comparators.ComparatorException;
 
 /**
@@ -50,14 +49,8 @@ public class ComparatorTime extends AbstractComparatorTime {
         if (obj instanceof ReadableInstant) {
             return ((ReadableInstant) obj).getMillis();
         }
-        if (obj instanceof LocalDate) {
-            return ((LocalDate) obj).toDateTimeAtStartOfDay().getMillis();
-        }
-        if (obj instanceof LocalDateTime) {
-            return ((LocalDateTime) obj).toDateTime().getMillis();
-        }
-        if (obj instanceof LocalTime) {
-            return ((LocalTime) obj).toDateTimeToday().getMillis();
+        if (obj instanceof ReadablePartial) {
+            return new DateTime((ReadablePartial) obj).getMillis();
         }
         throw new ComparatorException("Invalid object type for time comparison. " + obj.getClass() + " -> " + obj);
     }
