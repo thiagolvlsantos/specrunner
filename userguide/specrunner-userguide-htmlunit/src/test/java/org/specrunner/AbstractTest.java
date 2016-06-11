@@ -2,9 +2,9 @@ package org.specrunner;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.expressions.IExpressionFactory;
-import org.specrunner.htmlunit.assertions.PluginCompareDate;
 import org.specrunner.htmlunit.impl.FinderXPath;
 import org.specrunner.junit.Configuration;
 
@@ -23,7 +23,7 @@ public class AbstractTest {
         ef.bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class);
 
         // longer tolerance
-        SRServices.getFeatureManager().add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        SRServices.getFeatureManager().add(AbstractComparatorTime.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";

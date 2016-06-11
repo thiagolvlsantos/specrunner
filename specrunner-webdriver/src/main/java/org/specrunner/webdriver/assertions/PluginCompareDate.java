@@ -51,17 +51,6 @@ public class PluginCompareDate extends PluginCompareText {
     private String format;
 
     /**
-     * Feature to set tolerance on time comparison.
-     */
-    public static final String FEATURE_TOLERANCE = PluginCompareDate.class.getName() + ".tolerance";
-    /** Date tolerance, default 1s. */
-    private static final Long DEFAULT_TOLERANCE = 1000L;
-    /**
-     * The time tolerance.
-     */
-    private Long tolerance = DEFAULT_TOLERANCE;
-
-    /**
      * The date format.
      * 
      * @return The date format.
@@ -80,25 +69,6 @@ public class PluginCompareDate extends PluginCompareText {
         this.format = format;
     }
 
-    /**
-     * Gets the time tolerance.
-     * 
-     * @return The time tolerance.
-     */
-    public Long getTolerance() {
-        return tolerance;
-    }
-
-    /**
-     * Sets the time tolerance.
-     * 
-     * @param tolerance
-     *            The time tolerance.
-     */
-    public void setTolerance(Long tolerance) {
-        this.tolerance = tolerance;
-    }
-
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
@@ -106,7 +76,6 @@ public class PluginCompareDate extends PluginCompareText {
         if (format == null) {
             fm.set(FEATURE_FORMAT, this);
         }
-        fm.set(FEATURE_TOLERANCE, this);
     }
 
     @Override
@@ -147,7 +116,8 @@ public class PluginCompareDate extends PluginCompareText {
         Object tmp = nh.getObject(context, true);
         String expected = null;
         if (tmp instanceof Date || tmp instanceof ReadableInstant || tmp instanceof ReadablePartial) {
-            expected = new DateTime(tmp).toString(getFormat());
+            DateTime time = new DateTime(tmp);
+            expected = time.toString(getFormat());
         } else {
             expected = String.valueOf(tmp);
         }

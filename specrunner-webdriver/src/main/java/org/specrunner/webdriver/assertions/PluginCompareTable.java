@@ -41,6 +41,7 @@ import org.specrunner.util.math.Range;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.util.xom.node.INodeHolderFactory;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
@@ -302,8 +303,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             return compareTable(context, result, client, received, expected.getNode());
         } else if (PluginCompareDate.isDate(expected)) {
             PluginCompareDate compare = UtilPlugin.create(context, PluginCompareDate.class, (Element) expected.getNode(), true);
-            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(context), compare.isEval(), context);
-            String exp = String.valueOf(tmp);
+            String exp = compare.getExpected(SRServices.get(INodeHolderFactory.class).newHolder(expected.getNode()), context);
             if (!expected.getValue(context).equals(exp)) {
                 expected.append("{" + exp + "}");
             }
@@ -321,7 +321,7 @@ public class PluginCompareTable extends AbstractPluginFindSingle {
             return PluginCompareUtils.compareNode(compare, (Element) expected.getNode(), received, context.newBlock(expected.getNode(), plugin), context, result);
         } else {
             PluginCompareText compare = UtilPlugin.create(context, PluginCompareText.class, (Element) expected.getNode(), true);
-            Object tmp = getValue(compare.getValue() != null ? compare.getValue() : expected.getValue(context), compare.isEval(), context);
+            Object tmp = expected.getObject(context, true);
             String exp = String.valueOf(tmp);
             if (!expected.getValue(context).equals(exp)) {
                 expected.append("{" + exp + "}");

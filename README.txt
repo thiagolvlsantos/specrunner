@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.04
+OK -  Remove calls to getValue() #59 https://github.com/thiagolvlsantos/specrunner/issues/59
+
 1.5.03
 OK - Enable evaluation of formatter parameters #54 https://github.com/thiagolvlsantos/specrunner/issues/54
 OK - Enable type="date" in web profiles compare using comparators #55 https://github.com/thiagolvlsantos/specrunner/issues/55

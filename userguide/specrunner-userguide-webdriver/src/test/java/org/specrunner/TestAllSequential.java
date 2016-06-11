@@ -15,7 +15,6 @@ import org.specrunner.webdriver.IWait;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
 import org.specrunner.webdriver.impl.WaitDefault;
-import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
 import org.specrunner.webdriver.impl.WebDriverFactoryHtmlUnit;
 import org.specrunner.webdriver.impl.htmlunit.WebConnectionFile;
 
@@ -31,7 +30,8 @@ public class TestAllSequential extends AbstractTest {
     protected void run(String name, String out) {
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
 
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
+        // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
+        // WebDriverFactoryChrome.class.getName());
         // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
         // WebDriverFactoryHtmlUnit.class.getName());
 

@@ -53,17 +53,6 @@ public class PluginCompareDate extends PluginCompareText {
     private String format;
 
     /**
-     * Feature to set tolerance on time comparison.
-     */
-    public static final String FEATURE_TOLERANCE = PluginCompareDate.class.getName() + ".tolerance";
-    /** Date tolerance, default 1s. */
-    private static final Long DEFAULT_TOLERANCE = 1000L;
-    /**
-     * The time tolerance.
-     */
-    private Long tolerance = DEFAULT_TOLERANCE;
-
-    /**
      * The date format.
      * 
      * @return The date format.
@@ -82,34 +71,12 @@ public class PluginCompareDate extends PluginCompareText {
         this.format = format;
     }
 
-    /**
-     * Gets the time tolerance.
-     * 
-     * @return The time tolerance.
-     */
-    public long getTolerance() {
-        return tolerance;
-    }
-
-    /**
-     * Sets the time tolerance.
-     * 
-     * @param tolerance
-     *            The time tolerance.
-     */
-    public void setTolerance(long tolerance) {
-        this.tolerance = tolerance;
-    }
-
     @Override
     public void initialize(IContext context) throws PluginException {
         super.initialize(context);
         IFeatureManager fm = SRServices.getFeatureManager();
         if (format == null) {
             fm.set(FEATURE_FORMAT, this);
-        }
-        if (tolerance == null) {
-            fm.set(FEATURE_TOLERANCE, this);
         }
     }
 
@@ -123,7 +90,7 @@ public class PluginCompareDate extends PluginCompareText {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
             return;
         }
-        String expected = getExpected(context);
+        String expected = getExpected(nh, context);
         String received = element.asText();
         IComparator comparator;
         try {
@@ -137,18 +104,16 @@ public class PluginCompareDate extends PluginCompareText {
 
     /**
      * Get expected value for comparison.
-     * 
+     * @param nh
+     *            A node holder.
      * @param context
      *            A context.
+     * 
      * @return The string for expected value.
      * @throws PluginException
      *             On plugin error.
      */
-    protected String getExpected(IContext context) throws PluginException {
-        INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
-        if (getFormat() == null) {
-            setFormat(nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0));
-        }
+    public String getExpected(INodeHolder nh, IContext context) throws PluginException {
         Object tmp = nh.getObject(context, true);
         String expected = null;
         if (tmp instanceof Date || tmp instanceof ReadableInstant || tmp instanceof ReadablePartial) {

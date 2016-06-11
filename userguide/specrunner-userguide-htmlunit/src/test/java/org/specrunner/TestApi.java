@@ -2,6 +2,7 @@ package org.specrunner;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
+import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
 import org.specrunner.htmlunit.PluginBrowser;
@@ -69,7 +70,7 @@ public class TestApi {
         PluginCompareDate date = new PluginCompareDate();
         IFeatureManager fm = SRServices.getFeatureManager();
         long MINUTE_PLUS_1_SECOND = 61 * 1000L;
-        fm.add(PluginCompareDate.FEATURE_TOLERANCE, MINUTE_PLUS_1_SECOND);
+        fm.add(AbstractComparatorTime.FEATURE_TOLERANCE, MINUTE_PLUS_1_SECOND);
         date.setEval(true);
         date.setFormat("HH:mm:ss");
         date.setValue("dt.toString(pattern)");

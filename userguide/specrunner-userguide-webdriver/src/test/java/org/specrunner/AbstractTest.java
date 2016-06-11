@@ -2,14 +2,13 @@ package org.specrunner;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.junit.Configuration;
 import org.specrunner.webdriver.PluginBrowser;
-import org.specrunner.webdriver.assertions.PluginCompareDate;
 import org.specrunner.webdriver.impl.FinderXPath;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;
-import org.specrunner.webdriver.impl.WebDriverFactoryChrome;
 import org.specrunner.webdriver.impl.WebDriverFactoryHtmlUnit;
 import org.specrunner.webdriver.impl.htmlunit.WebConnectionFile;
 
@@ -17,9 +16,9 @@ public class AbstractTest {
 
     @Configuration
     public void onConfigure(IConfiguration cfg) {
-        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryChrome.class.getName());
         // cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY,
-        // WebDriverFactoryHtmlUnit.class.getName());
+        // WebDriverFactoryChrome.class.getName());
+        cfg.add(PluginBrowser.FEATURE_WEBDRIVER_FACTORY, WebDriverFactoryHtmlUnit.class.getName());
 
         cfg.add(PluginBrowser.FEATURE_REUSE, true);
         cfg.add(WebDriverFactoryHtmlUnit.FEATURE_REUSE, true);
@@ -38,7 +37,7 @@ public class AbstractTest {
         ef.bindValue("pattern", "HH:mm:ss").bindClass("dt", DateTime.class);
 
         // longer tolerance
-        SRServices.getFeatureManager().add(PluginCompareDate.FEATURE_TOLERANCE, 60000L);
+        SRServices.getFeatureManager().add(AbstractComparatorTime.FEATURE_TOLERANCE, 60000L);
 
         // XPATH search strategy example
         String args0 = "//*[starts-with(@id,'{0}')] | //*[starts-with(@name,'{0}')] | //*[starts-with(@value,'{0}')]";

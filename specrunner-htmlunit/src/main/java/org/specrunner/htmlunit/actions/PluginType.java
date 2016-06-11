@@ -31,7 +31,9 @@ import org.specrunner.util.xom.node.INodeHolderFactory;
 import com.gargoylesoftware.htmlunit.SgmlPage;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.Keyboard;
 import com.gargoylesoftware.htmlunit.html.impl.SelectableTextInput;
+import com.gargoylesoftware.htmlunit.javascript.host.event.KeyboardEvent;
 
 /**
  * ActionType a text in a given element.
@@ -138,10 +140,28 @@ public class PluginType extends AbstractPluginKeys {
                 }
             }
             if (shiftkey != null || ctrlkey != null || altkey != null) {
-                if (value.length() == 1) {
-                    element.type(value.charAt(0), shiftkey != null ? shiftkey : false, ctrlkey != null ? ctrlkey : false, altkey != null ? altkey : false);
-                } else {
-                    element.type(value, shiftkey != null ? shiftkey : false, ctrlkey != null ? ctrlkey : false, altkey != null ? altkey : false);
+                Keyboard keyboard = new Keyboard();
+                if (shiftkey) {
+                    keyboard.press(KeyboardEvent.SHIFT_MASK);
+                }
+                if (ctrlkey) {
+                    keyboard.press(KeyboardEvent.CONTROL_MASK);
+                }
+                if (altkey) {
+                    keyboard.press(KeyboardEvent.ALT_MASK);
+                }
+                for (int i = 0; i < value.length(); i++) {
+                    keyboard.type(value.charAt(i));
+                }
+                element.type(keyboard);
+                if (shiftkey) {
+                    keyboard.release(KeyboardEvent.SHIFT_MASK);
+                }
+                if (ctrlkey) {
+                    keyboard.release(KeyboardEvent.CONTROL_MASK);
+                }
+                if (altkey) {
+                    keyboard.release(KeyboardEvent.ALT_MASK);
                 }
             } else {
                 if (value.length() == 1) {

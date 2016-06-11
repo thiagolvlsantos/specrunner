@@ -74,8 +74,7 @@ public class PluginCheckAtt extends AbstractPluginFindSingle {
 
     @Override
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
-        String attRaw = element.getAttribute(String.valueOf(attribute));
-        Object attName = getValue(attRaw, true, context);
+        Object attName = getValue(attribute, true, context);
         String attValue = element.getAttribute(String.valueOf(attName));
         INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
         Object value = nh.getObject(context, true);
