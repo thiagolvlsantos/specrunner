@@ -30,6 +30,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.status.Failure;
+import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
 
@@ -84,7 +85,10 @@ public class PluginCompareDate extends PluginCompareText {
     protected void process(IContext context, IResultSet result, WebClient client, SgmlPage page, HtmlElement element) throws PluginException {
         INodeHolder nh = SRServices.get(INodeHolderFactory.class).newHolder(context.getNode());
         if (getFormat() == null) {
-            setFormat(nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0));
+            String attribute = nh.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + 0);
+            if (attribute != null) {
+                setFormat(String.valueOf(UtilExpression.evaluate(attribute, context, true)));
+            }
         }
         if (getFormat() == null) {
             result.addResult(Failure.INSTANCE, context.peek(), new PluginException("Date comparison missing 'format' attribute."));
@@ -104,6 +108,7 @@ public class PluginCompareDate extends PluginCompareText {
 
     /**
      * Get expected value for comparison.
+     * 
      * @param nh
      *            A node holder.
      * @param context
