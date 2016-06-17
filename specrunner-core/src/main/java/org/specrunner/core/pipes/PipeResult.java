@@ -61,6 +61,7 @@ public class PipeResult implements IPipe {
         IResultSet result = SRServices.get(IResultFactory.class).newResult();
         IFeatureManager fm = SRServices.getFeatureManager();
         fm.set(IResultSet.FEATURE_FULL_TRACE, result);
+        fm.set(IResultSet.FEATURE_ERROR_MAX_SIZE, result);
         fm.set(IResultSet.FEATURE_RESULT_FILTER, result);
         fm.set(IResultSet.FEATURE_RECORD_SUCCESS, result);
         fm.set(IResultSet.FEATURE_EXPECTED_MESSAGES, result);

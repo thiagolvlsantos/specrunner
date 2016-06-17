@@ -37,6 +37,10 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      */
     String FEATURE_FULL_TRACE = IResultSet.class.getName() + ".fullTrace";
     /**
+     * Feature for limit quantity of errors in toString(). Default value is 50.
+     */
+    String FEATURE_ERROR_MAX_SIZE = IResultSet.class.getName() + ".errorMaxSize";
+    /**
      * Feature for result filter.
      */
     String FEATURE_RESULT_FILTER = IResultSet.class.getName() + ".resultFilter";
@@ -75,6 +79,22 @@ public interface IResultSet extends List<IResult>, IStatus, IPresentation {
      * @return true, if full trace is enabled, false, otherwise.
      */
     Boolean getFullTrace();
+
+    /**
+     * Set max quantity of erros in toString().
+     * 
+     * @param fullTrace
+     *            true, to show full trace, false, otherwise. Default is
+     *            'Integer.MAX'.
+     */
+    void setErrorMaxSize(Integer size);
+
+    /**
+     * Set max size of error list in toString()
+     * 
+     * @return Max size.
+     */
+    Integer getErrorMaxSize();
 
     /**
      * Set result filter.

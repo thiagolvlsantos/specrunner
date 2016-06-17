@@ -66,6 +66,17 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
     }
 
     @Override
+    public boolean containsKey(Object key) {
+        // search local configuration
+        boolean result = getConfiguration() != null ? getConfiguration().containsKey(key) : false;
+        if (!result) {
+            // then search global configuration.
+            result = super.containsKey(key);
+        }
+        return result;
+    }
+
+    @Override
     public Object get(Object key) {
         // search local configuration
         Object result = getConfiguration() != null ? getConfiguration().get(key) : null;
@@ -89,8 +100,8 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
 
     @Override
     public void setStrict(String feature, Object target) throws FeatureManagerException {
-        Object value = get(feature);
-        if (value != null) {
+        if (containsKey(feature)) {
+            Object value = get(feature);
             String name = getField(feature);
             IAccess access = SRServices.get(IAccessFactory.class).newAccess(target, name);
             if (access == null) {

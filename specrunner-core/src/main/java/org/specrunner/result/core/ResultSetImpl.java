@@ -24,11 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
@@ -44,6 +39,11 @@ import org.specrunner.result.status.Success;
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+
 /**
  * Default result set implementation.
  * 
@@ -54,9 +54,18 @@ import org.specrunner.source.SourceException;
 public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
 
     /**
+     * Default message for errors limit.
+     */
+    private static final String ERROR_SIZE_MSG = "...\n[More than '%d' errors. Set IResultSet.FEATURE_ERROR_MAX_SIZE to null to see them all.]\n";
+
+    /**
      * Full trace status.
      */
     private Boolean fullTrace = true;
+    /**
+     * Error size limit. Default: 50.
+     */
+    private Integer errorMaxSize = 0;
     /**
      * The result filter.
      */
@@ -87,6 +96,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
     @Override
     public void setFullTrace(Boolean fullTrace) {
         this.fullTrace = fullTrace;
+    }
+
+    @Override
+    public Integer getErrorMaxSize() {
+        return errorMaxSize;
+    }
+
+    @Override
+    public void setErrorMaxSize(Integer errorMaxSize) {
+        this.errorMaxSize = errorMaxSize;
     }
 
     @Override
@@ -488,12 +507,18 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         StringBuilder sb = new StringBuilder();
         sb.append(getName(getStatus()) + "(total:" + size() + details(this) + ")\n");
         List<IResult> filter;
-        for (Status s : availableStatus()) {
+        int count = 0;
+        loop: for (Status s : availableStatus()) {
             filter = filterByStatus(s);
             sb.append("  " + getName(s) + "(" + countStatus(s) + details(filter) + ")\n");
             if (s.isError()) {
                 for (IResult i : filter) {
+                    if (errorMaxSize != null && errorMaxSize > 0 && count > errorMaxSize) {
+                        sb.append(String.format(ERROR_SIZE_MSG, errorMaxSize));
+                        break loop;
+                    }
                     sb.append("    " + i + "\n");
+                    count++;
                 }
             }
         }
@@ -558,11 +583,16 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
         if (!errors.isEmpty()) {
             sb.append("\n");
             List<IResult> filter;
-            for (Status status : errors) {
+            int count = 0;
+            loop: for (Status status : errors) {
                 int index = 0;
                 filter = filterByStatus(status);
                 sb.append("\t" + getName(status) + " (" + filter.size() + details(filter) + "):\n");
                 for (IResult r : filter) {
+                    if (errorMaxSize != null && errorMaxSize > 0 && count >= errorMaxSize) {
+                        sb.append(String.format(ERROR_SIZE_MSG, errorMaxSize));
+                        break loop;
+                    }
                     sb.append("\t\t[" + (++index));
                     r.setFullTrace(fullTrace);
                     String msg = r.asString();
@@ -570,6 +600,7 @@ public class ResultSetImpl extends LinkedList<IResult> implements IResultSet {
                         msg = msg.replace("\n", "\n\t\t\t");
                     }
                     sb.append("]=" + msg + "\n");
+                    count++;
                 }
             }
         }
