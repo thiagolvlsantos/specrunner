@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.05
+OK -  Limit to string errors in JUnit getMessage() #58 https://github.com/thiagolvlsantos/specrunner/issues/58
+
 1.5.04
 OK -  Remove calls to getValue() #59 https://github.com/thiagolvlsantos/specrunner/issues/59
 

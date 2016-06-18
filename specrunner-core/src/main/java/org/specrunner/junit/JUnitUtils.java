@@ -42,6 +42,7 @@ import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
+import org.specrunner.util.UtilAnnotations;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
@@ -218,12 +219,25 @@ public final class JUnitUtils {
             methods.add(fakeMethod);
             runner.setFakeMethod(fakeMethod);
 
-            // read scenario entries
-            File input = JUnitUtils.getFile(javaClass);
-            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
-            Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
             List<INodeListener> listeners = new LinkedList<INodeListener>();
             runner.setListeners(listeners);
+
+            // read scenario entries
+            File input = JUnitUtils.getFile(javaClass);
+
+            // hierarchical conditions to perform scenarios
+            List<SRCondition> conditions = UtilAnnotations.scanAnnotations(javaClass, SRCondition.class);
+            boolean condition = true;
+            for (SRCondition c : conditions) {
+                IRunnerCondition runnerCondition = c.value().newInstance();
+                condition = condition && runnerCondition.execute(input);
+            }
+            if (!condition) {
+                return methods;
+            }
+
+            ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
+            Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
             Set<String> titles = new HashSet<String>();
             Boolean execute = null;
             for (int i = 0; i < scenarios.size(); i++) {

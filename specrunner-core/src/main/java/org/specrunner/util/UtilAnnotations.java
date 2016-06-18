@@ -41,6 +41,40 @@ public final class UtilAnnotations {
     }
 
     /**
+     * Get full list annotation values of a given type. If annotation has an
+     * attribute 'inherit' to declare if full hierarchy tree should be
+     * considered, when 'inherit=false' bottom up search for annotations is
+     * aborted.
+     * 
+     * @param type
+     *            A type.
+     * @return A list of annotation for the given type, in order, from top most
+     *         class to bottom class.
+     */
+    public static <T extends Annotation> List<T> scanAnnotations(Class<?> source, Class<T> type) {
+        List<T> scan = new LinkedList<T>();
+        try {
+            Class<?> tmp = source;
+            while (tmp != Object.class) {
+                T local = tmp.getAnnotation(type);
+                if (local != null) {
+                    scan.add(0, local);
+                    Method method = type.getMethod("inherit");
+                    if (method != null) {
+                        if (!(boolean) method.invoke(local)) {
+                            break;
+                        }
+                    }
+                }
+                tmp = tmp.getSuperclass();
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+        return scan;
+    }
+
+    /**
      * Get annotations of a given object.
      * 
      * @param <T>
