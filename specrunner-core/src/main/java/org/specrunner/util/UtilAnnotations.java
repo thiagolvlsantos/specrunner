@@ -47,24 +47,33 @@ public final class UtilAnnotations {
      * aborted.
      * 
      * @param type
-     *            A type.
+     *            Object type.
+     * @param annotationType
+     *            A annotation type..
+     * @param inherited
+     *            If super type should be scanned also.
      * @return A list of annotation for the given type, in order, from top most
      *         class to bottom class.
      */
-    public static <T extends Annotation> List<T> scanAnnotations(Class<?> source, Class<T> type) {
+    public static <T extends Annotation> List<T> getAnnotations(Class<?> type, Class<T> annotationType, boolean inherited) {
         List<T> scan = new LinkedList<T>();
         try {
-            Class<?> tmp = source;
+            Class<?> tmp = type;
             while (tmp != Object.class) {
-                T local = tmp.getAnnotation(type);
+                T local = tmp.getAnnotation(annotationType);
                 if (local != null) {
                     scan.add(0, local);
-                    Method method = type.getMethod("inherit");
-                    if (method != null) {
+                    try {
+                        Method method = annotationType.getMethod("inherit");
                         if (!(boolean) method.invoke(local)) {
                             break;
                         }
+                    } catch (NoSuchMethodException e) {
+                        // move on
                     }
+                }
+                if (!inherited) {
+                    break;
                 }
                 tmp = tmp.getSuperclass();
             }

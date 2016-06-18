@@ -22,11 +22,14 @@ import java.io.File;
 public interface IRunnerCondition {
 
     /**
-     * Perform a test condition verification.
+     * Perform a test condition verification, return true to execute test,
+     * false, otherwise.
      * 
-     * @param file
-     *            The test file.
+     * @param input
+     *            The input test file.
+     * @param output
+     *            The output test file.
      * @return true, to execute, false, otherwise.
      */
-    boolean execute(File file);
+    boolean condition(File input, File output);
 }

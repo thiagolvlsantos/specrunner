@@ -153,7 +153,7 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner implements IRun
             return super.methodInvoker(method, test);
         } else {
             instance = test;
-            statement = new SpecRunnerStatement(getTestClass(), test, listeners);
+            statement = new SpecRunnerStatement(getTestClass(), notifier, listeners);
             return statement;
         }
     }

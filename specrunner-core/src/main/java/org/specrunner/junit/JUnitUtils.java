@@ -133,6 +133,29 @@ public final class JUnitUtils {
     }
 
     /**
+     * Check if conditions to a class execution are satisfied.
+     * 
+     * @param javaClass
+     *            Test class.
+     * @param input
+     *            The input file.
+     * @return true, if execution of file is allowed, false, otherwise.
+     * @throws Exception
+     *             On errors.
+     */
+    public static boolean conditions(Class<?> javaClass, File input) throws Exception {
+        File output = JUnitUtils.getOutput(javaClass, input);
+        // hierarchical conditions to perform scenarios
+        List<SRCondition> conditions = UtilAnnotations.getAnnotations(javaClass, SRCondition.class, true);
+        boolean condition = true;
+        for (SRCondition c : conditions) {
+            IRunnerCondition runnerCondition = c.value().newInstance();
+            condition = condition && runnerCondition.condition(input, output);
+        }
+        return condition;
+    }
+
+    /**
      * Get the output name adjusted.
      * 
      * @param name
@@ -224,15 +247,7 @@ public final class JUnitUtils {
 
             // read scenario entries
             File input = JUnitUtils.getFile(javaClass);
-
-            // hierarchical conditions to perform scenarios
-            List<SRCondition> conditions = UtilAnnotations.scanAnnotations(javaClass, SRCondition.class);
-            boolean condition = true;
-            for (SRCondition c : conditions) {
-                IRunnerCondition runnerCondition = c.value().newInstance();
-                condition = condition && runnerCondition.execute(input);
-            }
-            if (!condition) {
+            if (!conditions(javaClass, input)) {
                 return methods;
             }
 

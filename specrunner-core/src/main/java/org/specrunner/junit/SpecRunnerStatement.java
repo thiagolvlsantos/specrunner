@@ -18,7 +18,6 @@
 package org.specrunner.junit;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -121,8 +120,22 @@ public class SpecRunnerStatement extends Statement {
         return output;
     }
 
+    public boolean execute() throws Exception {
+        // filter for conditions
+        List<SRCondition> conditions = UtilAnnotations.getAnnotations(test.getJavaClass(), SRCondition.class, true);
+        boolean condition = true;
+        for (SRCondition c : conditions) {
+            IRunnerCondition runnerCondition = c.value().newInstance();
+            condition = condition && runnerCondition.condition(input, output);
+        }
+        return condition;
+    }
+
     @Override
     public void evaluate() throws Throwable {
+        if (!execute()) {
+            return;
+        }
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         IListenerManager lm = SRServices.get(IListenerManager.class);
         for (ISpecRunnerListener s : listeners) {
@@ -157,13 +170,8 @@ public class SpecRunnerStatement extends Statement {
      * @return The list of error messages.
      */
     protected ExpectedMessages getMessages() {
-        Annotation[] ans = test.getAnnotations();
-        for (Annotation an : ans) {
-            if (an instanceof ExpectedMessages) {
-                return (ExpectedMessages) an;
-            }
-        }
-        return null;
+        List<ExpectedMessages> exp = UtilAnnotations.getAnnotations(test.getJavaClass(), ExpectedMessages.class, false);
+        return exp.isEmpty() ? null : exp.get(0);
     }
 
     /**
@@ -176,12 +184,9 @@ public class SpecRunnerStatement extends Statement {
      *             On configuration errors.
      */
     protected IConfiguration configure(IConfiguration cfg) throws Throwable {
-        Annotation[] ans = instance.getClass().getAnnotations();
-        for (Annotation a : ans) {
-            if (a instanceof SRRunnerOptions) {
-                SRRunnerOptions options = (SRRunnerOptions) a;
-                cfg.add(SpecRunnerPipelineUtils.PIPELINE_FILENAME, options.pipeline());
-            }
+        List<SRRunnerOptions> options = UtilAnnotations.getAnnotations(instance.getClass(), SRRunnerOptions.class, true);
+        for (SRRunnerOptions o : options) {
+            cfg.add(SpecRunnerPipelineUtils.PIPELINE_FILENAME, o.pipeline());
         }
         cfg.add(PluginHtml.BEAN_NAME, instance);
         cfg.add(ConstantsDumperFile.FEATURE_OUTPUT_DIRECTORY, output.getParentFile());

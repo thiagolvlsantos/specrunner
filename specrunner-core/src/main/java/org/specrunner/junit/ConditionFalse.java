@@ -22,7 +22,7 @@ import java.io.File;
 public class ConditionFalse implements IRunnerCondition {
 
     @Override
-    public boolean execute(File file) {
+    public boolean condition(File input, File output) {
         return false;
     }
 }
