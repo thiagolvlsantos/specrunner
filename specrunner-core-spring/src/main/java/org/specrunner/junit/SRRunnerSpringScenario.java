@@ -25,7 +25,6 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
 import org.specrunner.listeners.INodeListener;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * SpecRunner Spring executor.
@@ -33,17 +32,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Thiago Santos
  * 
  */
-public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner implements IRunnerScenario {
+public class SRRunnerSpringScenario extends SRSpringJUnit4ClassRunner implements IRunnerScenario {
 
     /**
      * The notifier.
      */
     protected RunNotifier notifier;
-
-    /**
-     * The fake method.
-     */
-    protected FrameworkMethod fakeMethod;
 
     /**
      * Scenario listeners.
@@ -133,8 +127,8 @@ public class SRRunnerSpringScenario extends SpringJUnit4ClassRunner implements I
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
         if (method == fakeMethod) {
             super.runChild(method, notifier);
-            free();
         }
+        free();
     }
 
     /**

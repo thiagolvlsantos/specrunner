@@ -15,22 +15,28 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.annotations;
 
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This tag informa if a method is a configuration method. Each configuration
- * method should receive 1 argument of type <code>IConfiguratio</code>.
+ * Runner parameters options.
  * 
  * @author Thiago Santos
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ METHOD })
-public @interface Configuration {
+@Target({ TYPE })
+@Inherited
+public @interface SRRunnerOptions {
+
+    /**
+     * Pipeline specification file.
+     */
+    String pipeline() default "specrunner.xml";
 }

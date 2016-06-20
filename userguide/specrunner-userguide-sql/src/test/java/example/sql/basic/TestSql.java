@@ -18,13 +18,15 @@
 package example.sql.basic;
 
 import org.joda.time.DateTime;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
 import org.specrunner.expressions.IExpressionFactory;
-import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.junit.concurrent.ConcurrentRunner;
 
 //CHECKSTYLE:OFF
 @RunWith(ConcurrentRunner.class)
@@ -35,6 +37,16 @@ public class TestSql {
 
     private void run(String name) {
         SpecRunnerJUnit.defaultRun(INCOME + name, OUTCOME + name);
+    }
+
+    @BeforeClass
+    public static void beforeClass() {
+        SRServices.setThreadSafe(true);
+    }
+
+    @AfterClass
+    public static void after() {
+        SRServices.setThreadSafe(false);
     }
 
     @Before

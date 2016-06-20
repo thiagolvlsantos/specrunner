@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.junit.concurrent;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -25,15 +25,16 @@ import org.junit.runner.Description;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.specrunner.junit.SpecRunnerStatement;
 import org.specrunner.listeners.INodeListener;
 
 /**
- * SpecRunner Spring executor.
+ * SpecRunner concurrent executor.
  * 
  * @author Thiago Santos
  * 
  */
-public class SRRunnerSpring extends SRSpringJUnit4ClassRunner {
+public class SRRunnerConcurrent extends ConcurrentRunner {
 
     /**
      * Basic constructor.
@@ -43,7 +44,7 @@ public class SRRunnerSpring extends SRSpringJUnit4ClassRunner {
      * @throws InitializationError
      *             On initialization errors.
      */
-    public SRRunnerSpring(Class<?> clazz) throws InitializationError {
+    public SRRunnerConcurrent(Class<?> clazz) throws InitializationError {
         super(clazz);
     }
 

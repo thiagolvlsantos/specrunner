@@ -34,15 +34,18 @@ import org.junit.runner.notification.Failure;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.TestClass;
 import org.specrunner.SRServices;
+import org.specrunner.annotations.IRunnerCondition;
+import org.specrunner.annotations.IScenarioListener;
+import org.specrunner.annotations.SRRunnerCondition;
+import org.specrunner.annotations.SRScenarioListeners;
+import org.specrunner.annotations.UtilAnnotations;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.listeners.core.ScenarioCleanerListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
 import org.specrunner.source.ISourceFactoryManager;
-import org.specrunner.util.UtilAnnotations;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
@@ -73,6 +76,52 @@ public final class JUnitUtils {
     }
 
     /**
+     * Check if a test class has to be skipped.
+     * 
+     * @param javaClass
+     *            The fixture class.
+     * @return true, to skip, false, otherwise.
+     */
+    public static boolean skip(Class<?> javaClass) {
+        return skip(javaClass, null);
+    }
+
+    /**
+     * Check if a test class has to be skipped.
+     * 
+     * @param javaClass
+     *            The fixture class.
+     * @param in
+     *            The input file/resource.
+     * @return true, to execute false, otherwise.
+     */
+    public static boolean skip(Class<?> javaClass, File in) {
+        List<SRRunnerCondition> conditions = UtilAnnotations.getAnnotations(javaClass, SRRunnerCondition.class, true);
+        boolean skip = false;
+        File input = in;
+        File output = null;
+        for (SRRunnerCondition c : conditions) {
+            if (input == null) {
+                input = getFile(javaClass, false);
+            }
+            if (input != null && output == null) {
+                output = getOutput(javaClass, input);
+            }
+            IRunnerCondition runnerCondition;
+            try {
+                runnerCondition = c.value().newInstance();
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+            skip = runnerCondition.skip(javaClass, input, output);
+            if (skip) {
+                break;
+            }
+        }
+        return skip;
+    }
+
+    /**
      * Get the HTML file corresponding to the Java.
      * 
      * @param clazz
@@ -80,7 +129,7 @@ public final class JUnitUtils {
      * 
      * @return The input HTML file.
      */
-    public static File getFile(Class<?> clazz) {
+    public static File getFile(Class<?> clazz, boolean throwError) {
         URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
         String str;
         try {
@@ -116,7 +165,10 @@ public final class JUnitUtils {
                 return tmp;
             }
         }
-        throw new RuntimeException("File with one of extensions '" + extensions + "' to " + exact + " not found!");
+        if (throwError) {
+            throw new RuntimeException("File with one of extensions '" + extensions + "' to " + exact + " not found!");
+        }
+        return null;
     }
 
     /**
@@ -130,29 +182,6 @@ public final class JUnitUtils {
      */
     public static File getOutput(Class<?> clazz, File input) {
         return new File(new File(PATH + clazz.getPackage().getName().replace('.', File.separatorChar)).getAbsoluteFile(), input.getName());
-    }
-
-    /**
-     * Check if conditions to a class execution are satisfied.
-     * 
-     * @param javaClass
-     *            Test class.
-     * @param input
-     *            The input file.
-     * @return true, if execution of file is allowed, false, otherwise.
-     * @throws Exception
-     *             On errors.
-     */
-    public static boolean conditions(Class<?> javaClass, File input) throws Exception {
-        File output = JUnitUtils.getOutput(javaClass, input);
-        // hierarchical conditions to perform scenarios
-        List<SRCondition> conditions = UtilAnnotations.getAnnotations(javaClass, SRCondition.class, true);
-        boolean condition = true;
-        for (SRCondition c : conditions) {
-            IRunnerCondition runnerCondition = c.value().newInstance();
-            condition = condition && runnerCondition.condition(input, output);
-        }
-        return condition;
     }
 
     /**
@@ -246,11 +275,10 @@ public final class JUnitUtils {
             runner.setListeners(listeners);
 
             // read scenario entries
-            File input = JUnitUtils.getFile(javaClass);
-            if (!conditions(javaClass, input)) {
+            File input = JUnitUtils.getFile(javaClass, true);
+            if (skip(javaClass, input)) {
                 return methods;
             }
-
             ISource source = SRServices.get(ISourceFactoryManager.class).newSource(input.toString());
             Nodes scenarios = UtilNode.getCssNodesOrElements(source.getDocument(), ScenarioFrameListener.CSS_SCENARIO);
             Set<String> titles = new HashSet<String>();

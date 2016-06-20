@@ -3,12 +3,12 @@ package example.slim;
 import java.util.Date;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.ConditionTrue;
-import org.specrunner.junit.SRCondition;
+import org.specrunner.annotations.SRRunnerCondition;
+import org.specrunner.annotations.core.SkipTrue;
 import org.specrunner.junit.SRRunnerScenario;
 
 @RunWith(SRRunnerScenario.class)
-@SRCondition(ConditionTrue.class)
+@SRRunnerCondition(SkipTrue.class)
 public class TestColumn {
 
     public int a;

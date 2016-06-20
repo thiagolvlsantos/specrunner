@@ -15,14 +15,24 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.annotations;
 
 import java.io.File;
 
-public class ConditionTrue implements IRunnerCondition {
+public interface IRunnerCondition {
 
-    @Override
-    public boolean condition(File input, File output) {
-        return true;
-    }
+    /**
+     * Perform a test condition verification, return true to skip test, false,
+     * otherwise.
+     * 
+     * @param javaClass
+     *            Fixture type, if exist, null, otherwise.
+     * @param input
+     *            Input resource, if exists.
+     * @param runner
+     *            Output resource, if exists.
+     * 
+     * @return true, to execute, false, otherwise.
+     */
+    boolean skip(Class<?> javaClass, File input, File output);
 }

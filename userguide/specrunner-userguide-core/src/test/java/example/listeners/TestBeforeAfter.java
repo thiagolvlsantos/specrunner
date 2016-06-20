@@ -4,10 +4,10 @@ import nu.xom.Node;
 
 import org.junit.runner.RunWith;
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotations.IScenarioListener;
+import org.specrunner.annotations.SRScenarioListeners;
 import org.specrunner.context.IContext;
 import org.specrunner.junit.SRRunnerScenario;
-import org.specrunner.junit.SRScenarioListeners;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.result.IResultSet;
 
 import example.listeners.TestBeforeAfter.ListenerNull;

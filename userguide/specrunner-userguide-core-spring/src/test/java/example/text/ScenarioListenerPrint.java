@@ -2,8 +2,8 @@ package example.text;
 
 import nu.xom.Node;
 
+import org.specrunner.annotations.IScenarioListener;
 import org.specrunner.context.IContext;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.result.IResultSet;
 
 public class ScenarioListenerPrint implements IScenarioListener {

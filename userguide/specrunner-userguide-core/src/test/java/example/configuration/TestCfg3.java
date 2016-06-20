@@ -2,8 +2,8 @@ package example.configuration;
 
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.plugins.core.var.PluginBean;
 

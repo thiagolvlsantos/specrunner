@@ -1,9 +1,9 @@
 package example.sql.log;
 
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;

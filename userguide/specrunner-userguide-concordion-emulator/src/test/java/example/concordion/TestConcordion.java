@@ -1,10 +1,10 @@
 package example.concordion;
 
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
+import org.specrunner.annotations.SRRunnerOptions;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
-import org.specrunner.junit.SRRunnerOptions;
 import org.specrunner.plugins.core.elements.AbstractPluginResource;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.resource.IResourceManager;

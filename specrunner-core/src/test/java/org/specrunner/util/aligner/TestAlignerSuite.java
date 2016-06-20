@@ -2,8 +2,8 @@ package org.specrunner.util.aligner;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
-import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ConcurrentSuite;
+import org.specrunner.junit.concurrent.Concurrent;
+import org.specrunner.junit.concurrent.ConcurrentSuite;
 
 /**
  * Testing.

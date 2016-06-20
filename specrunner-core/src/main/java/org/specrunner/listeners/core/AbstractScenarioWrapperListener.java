@@ -24,8 +24,8 @@ import nu.xom.ParentNode;
 
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotations.IScenarioListener;
 import org.specrunner.context.IContext;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;

@@ -19,8 +19,8 @@ package org.specrunner.plugins.core.objects.core;
 
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotations.IScenarioListener;
 import org.specrunner.context.IContext;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.result.IResultSet;
 
 import nu.xom.Node;

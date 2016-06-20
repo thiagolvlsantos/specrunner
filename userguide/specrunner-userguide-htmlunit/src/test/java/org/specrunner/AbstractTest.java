@@ -2,11 +2,11 @@ package org.specrunner;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.htmlunit.impl.FinderXPath;
-import org.specrunner.junit.Configuration;
 
 public class AbstractTest {
 

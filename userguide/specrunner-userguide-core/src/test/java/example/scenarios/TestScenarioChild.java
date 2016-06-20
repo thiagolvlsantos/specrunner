@@ -1,7 +1,7 @@
 package example.scenarios;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.BeforeScenario;
+import org.specrunner.annotations.BeforeScenario;
 import org.specrunner.junit.SRRunnerScenario;
 
 @RunWith(SRRunnerScenario.class)

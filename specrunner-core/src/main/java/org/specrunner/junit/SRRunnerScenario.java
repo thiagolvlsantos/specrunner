@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.junit.runner.Description;
 import org.junit.runner.notification.RunNotifier;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
@@ -33,17 +32,12 @@ import org.specrunner.listeners.INodeListener;
  * @author Thiago Santos
  * 
  */
-public class SRRunnerScenario extends BlockJUnit4ClassRunner implements IRunnerScenario {
+public class SRRunnerScenario extends SRBlockJUnit4ClassRunner implements IRunnerScenario {
 
     /**
      * The notifier.
      */
     protected RunNotifier notifier;
-
-    /**
-     * The fake method.
-     */
-    protected FrameworkMethod fakeMethod;
 
     /**
      * Scenario listeners.
@@ -133,8 +127,8 @@ public class SRRunnerScenario extends BlockJUnit4ClassRunner implements IRunnerS
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
         if (method == fakeMethod) {
             super.runChild(method, notifier);
-            free();
         }
+        free();
     }
 
     /**

@@ -26,9 +26,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.specrunner.SRServices;
+import org.specrunner.annotations.ExpectedMessage;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.UtilConverter;
-import org.specrunner.junit.ExpectedMessage;
 import org.specrunner.parameters.DontEval;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;

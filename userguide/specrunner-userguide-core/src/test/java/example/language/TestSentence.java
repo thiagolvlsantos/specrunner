@@ -11,14 +11,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
+import org.specrunner.annotations.ExpectedMessage;
+import org.specrunner.annotations.ExpectedMessages;
 import org.specrunner.converters.Converter;
 import org.specrunner.converters.core.AbstractConverterTimezone;
 import org.specrunner.converters.core.ConverterDatePatternArgs;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ExpectedMessage;
-import org.specrunner.junit.ExpectedMessages;
-import org.specrunner.junit.SRRunnerConcurrent;
+import org.specrunner.junit.concurrent.Concurrent;
+import org.specrunner.junit.concurrent.SRRunnerConcurrent;
 import org.specrunner.listeners.core.PauseOnFailureNodeListener;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 

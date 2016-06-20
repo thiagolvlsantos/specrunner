@@ -15,32 +15,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.junit.concurrent;
 
-import static java.lang.annotation.ElementType.TYPE;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-import org.specrunner.listeners.IScenarioListener;
+import org.junit.runners.model.InitializationError;
+import org.specrunner.junit.SRBlockJUnit4ClassRunner;
 
 /**
- * Provides scenario listeners.
- * 
- * @author Thiago Santos
+ * @author Mathieu Carbou (mathieu.carbou@gmail.com)
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ TYPE })
-public @interface SRScenarioListeners {
+public class ConcurrentRunner extends SRBlockJUnit4ClassRunner {
 
     /**
-     * List of scenario classes.
+     * Creates a concurrent runner.
+     * 
+     * @param klass
+     *            The class.
+     * @throws InitializationError
+     *             On initialization error.
      */
-    Class<? extends IScenarioListener>[] value() default {};
-
-    /**
-     * Inherit listeners from superclass.
-     */
-    boolean inheritListeners() default true;
+    public ConcurrentRunner(final Class<?> klass) throws InitializationError {
+        super(klass);
+        setScheduler(new ConcurrentRunnerScheduler(klass));
+    }
 }

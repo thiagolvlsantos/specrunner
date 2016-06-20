@@ -25,6 +25,10 @@ import org.junit.runners.model.Statement;
 import org.junit.runners.model.TestClass;
 import org.specrunner.ISpecRunner;
 import org.specrunner.SRServices;
+import org.specrunner.annotations.Configuration;
+import org.specrunner.annotations.ExpectedMessages;
+import org.specrunner.annotations.SRRunnerOptions;
+import org.specrunner.annotations.UtilAnnotations;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.core.SpecRunnerPipelineUtils;
@@ -35,7 +39,6 @@ import org.specrunner.listeners.ISpecRunnerListener;
 import org.specrunner.listeners.core.ScenarioFrameListener;
 import org.specrunner.plugins.core.elements.PluginHtml;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilAnnotations;
 import org.specrunner.util.UtilLog;
 
 /**
@@ -97,7 +100,7 @@ public class SpecRunnerStatement extends Statement {
      * @return The corresponding file name.
      */
     protected File getInput(Class<?> clazz) {
-        return JUnitUtils.getFile(clazz);
+        return JUnitUtils.getFile(clazz, true);
     }
 
     /**
@@ -120,22 +123,8 @@ public class SpecRunnerStatement extends Statement {
         return output;
     }
 
-    public boolean execute() throws Exception {
-        // filter for conditions
-        List<SRCondition> conditions = UtilAnnotations.getAnnotations(test.getJavaClass(), SRCondition.class, true);
-        boolean condition = true;
-        for (SRCondition c : conditions) {
-            IRunnerCondition runnerCondition = c.value().newInstance();
-            condition = condition && runnerCondition.condition(input, output);
-        }
-        return condition;
-    }
-
     @Override
     public void evaluate() throws Throwable {
-        if (!execute()) {
-            return;
-        }
         IConfiguration cfg = SRServices.get(IConfigurationFactory.class).newConfiguration();
         IListenerManager lm = SRServices.get(IListenerManager.class);
         for (ISpecRunnerListener s : listeners) {

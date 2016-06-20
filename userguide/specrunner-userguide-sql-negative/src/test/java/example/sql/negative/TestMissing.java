@@ -1,6 +1,6 @@
 package example.sql.negative;
 
-import org.specrunner.junit.ExpectedMessages;
+import org.specrunner.annotations.ExpectedMessages;
 import org.specrunner.result.core.StringTestContains;
 
 @ExpectedMessages(value = { "missing" }, sorted = true, criteria = StringTestContains.class)

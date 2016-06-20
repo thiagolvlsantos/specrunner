@@ -15,27 +15,20 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.annotations;
 
-import java.lang.annotation.ElementType;
+import static java.lang.annotation.ElementType.METHOD;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Mathieu Carbou (mathieu.carbou@gmail.com)
+ * Annotation for scenario after actions.
+ * 
+ * @author Thiago Santos
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
-public @interface Concurrent {
-
-    /**
-     * Default number of threads.
-     */
-    int THREADS = 5;
-
-    /**
-     * Number of threads.
-     */
-    int threads() default THREADS;
+@Target({ METHOD })
+public @interface AfterScenario {
 }

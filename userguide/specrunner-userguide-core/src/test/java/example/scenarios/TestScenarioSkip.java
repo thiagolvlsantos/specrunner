@@ -1,11 +1,16 @@
 package example.scenarios;
 
+import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.specrunner.junit.ConditionFalse;
-import org.specrunner.junit.SRCondition;
-import org.specrunner.junit.SRRunnerScenario;
+import org.specrunner.annotations.SRRunnerCondition;
+import org.specrunner.annotations.core.SkipTrue;
+import org.specrunner.junit.SRRunner;
 
-@RunWith(SRRunnerScenario.class)
-@SRCondition(ConditionFalse.class)
+@RunWith(SRRunner.class)
+@SRRunnerCondition(SkipTrue.class)
 public class TestScenarioSkip extends TestScenarioParent {
+
+    @Before
+    public void done() {
+    }
 }

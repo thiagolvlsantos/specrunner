@@ -2,10 +2,10 @@ package org.specrunner;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.expressions.IExpressionFactory;
-import org.specrunner.junit.Configuration;
 import org.specrunner.webdriver.PluginBrowser;
 import org.specrunner.webdriver.impl.FinderXPath;
 import org.specrunner.webdriver.impl.HtmlUnitDriverLocal;

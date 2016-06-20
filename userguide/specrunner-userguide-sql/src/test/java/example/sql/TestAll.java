@@ -2,7 +2,7 @@ package example.sql;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
-import org.specrunner.junit.ConcurrentSuite;
+import org.specrunner.junit.concurrent.ConcurrentSuite;
 
 import example.sql.basic.AllBasic;
 import example.sql.dbms.AllDbms;

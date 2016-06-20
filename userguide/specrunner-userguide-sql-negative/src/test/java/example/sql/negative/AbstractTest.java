@@ -5,11 +5,11 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
+import org.specrunner.annotations.SRScenarioListeners;
 import org.specrunner.comparators.core.AbstractComparatorTime;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunnerScenario;
-import org.specrunner.junit.SRScenarioListeners;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultFilter;
 import org.specrunner.result.IResultSet;

@@ -17,23 +17,24 @@
  */
 package org.specrunner.junit;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.junit.runner.Description;
+import org.junit.runner.notification.RunNotifier;
+import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
-import org.specrunner.listeners.INodeListener;
 
 /**
- * SpecRunner Spring executor.
+ * SpecRunner executor.
  * 
  * @author Thiago Santos
  * 
  */
-public class SRRunnerSpring extends SRSpringJUnit4ClassRunner {
+public class SRBlockJUnit4ClassRunner extends BlockJUnit4ClassRunner {
+
+    /**
+     * Fake method.
+     */
+    protected FrameworkMethod fakeMethod;
 
     /**
      * Basic constructor.
@@ -43,34 +44,34 @@ public class SRRunnerSpring extends SRSpringJUnit4ClassRunner {
      * @throws InitializationError
      *             On initialization errors.
      */
-    public SRRunnerSpring(Class<?> clazz) throws InitializationError {
+    public SRBlockJUnit4ClassRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
     }
 
     @Override
-    protected List<FrameworkMethod> computeTestMethods() {
-        try {
-            fakeMethod = new FrameworkMethod(getTestClass().getJavaClass().getMethod("toString"));
-            return Arrays.asList(fakeMethod);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    protected Statement classBlock(RunNotifier notifier) {
+        if (skip()) {
+            for (FrameworkMethod fm : computeTestMethods()) {
+                notifier.fireTestIgnored(describeChild(fm));
+            }
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    // nothing
+                }
+            };
         }
+        return super.classBlock(notifier);
     }
 
-    @Override
-    protected Description describeChild(FrameworkMethod method) {
-        if (method != fakeMethod) {
-            return super.describeChild(method);
-        }
-        return Description.createSuiteDescription(getTestClass().getJavaClass());
-    }
-
-    @Override
-    protected Statement methodInvoker(FrameworkMethod method, final Object test) {
-        if (method != fakeMethod) {
-            return super.methodInvoker(method, test);
-        } else {
-            return new SpecRunnerStatement(getTestClass(), test, new LinkedList<INodeListener>());
-        }
+    /**
+     * Check if method has to be skipped.
+     * 
+     * @return true, to skip, false, otherwise.
+     * @throws Exception
+     *             On verification errors.
+     */
+    protected boolean skip() {
+        return JUnitUtils.skip(getTestClass().getJavaClass());
     }
 }

@@ -1,7 +1,9 @@
 package example.employee;
 
 import org.joda.time.DateTime;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
@@ -10,17 +12,23 @@ import org.specrunner.converters.IConverterManager;
 import org.specrunner.converters.core.ConverterBooleanTemplate;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.junit.concurrent.Concurrent;
+import org.specrunner.junit.concurrent.ConcurrentRunner;
 import org.specrunner.plugins.core.AbstractPlugin;
 
 @RunWith(ConcurrentRunner.class)
 @Concurrent(threads = 3)
 public class TestHibernate {
 
-    static {
+    @BeforeClass
+    public static void before() {
         SRServices.setThreadSafe(true);
+    }
+
+    @AfterClass
+    public static void after() {
+        SRServices.setThreadSafe(false);
     }
 
     @Before

@@ -1,9 +1,9 @@
 package example.language;
 
 import org.junit.runner.RunWith;
-import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ExpectedMessage;
-import org.specrunner.junit.SRRunnerConcurrent;
+import org.specrunner.annotations.ExpectedMessage;
+import org.specrunner.junit.concurrent.Concurrent;
+import org.specrunner.junit.concurrent.SRRunnerConcurrent;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)

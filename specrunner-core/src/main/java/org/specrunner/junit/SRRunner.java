@@ -22,7 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.runner.Description;
-import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
@@ -34,12 +33,7 @@ import org.specrunner.listeners.INodeListener;
  * @author Thiago Santos
  * 
  */
-public class SRRunner extends BlockJUnit4ClassRunner {
-
-    /**
-     * Fake method.
-     */
-    protected FrameworkMethod fakeMethod;
+public class SRRunner extends SRBlockJUnit4ClassRunner {
 
     /**
      * Basic constructor.

@@ -6,8 +6,8 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.util.xom.node.INodeHolder;
 

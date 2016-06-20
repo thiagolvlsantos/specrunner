@@ -1,13 +1,13 @@
 package example.sql.nullhandler;
 
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
+import org.specrunner.annotations.ExpectedMessages;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.expressions.EMode;
 import org.specrunner.expressions.INullEmptyFeature;
 import org.specrunner.expressions.core.NullEmptyHandlerDefault;
-import org.specrunner.junit.Configuration;
-import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginDatabase;

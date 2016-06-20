@@ -24,12 +24,12 @@ import java.lang.reflect.Method;
 import nu.xom.Node;
 
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotations.AfterScenario;
+import org.specrunner.annotations.BeforeScenario;
+import org.specrunner.annotations.IScenarioListener;
+import org.specrunner.annotations.UtilAnnotations;
 import org.specrunner.context.IContext;
-import org.specrunner.junit.AfterScenario;
-import org.specrunner.junit.BeforeScenario;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.result.IResultSet;
-import org.specrunner.util.UtilAnnotations;
 
 /**
  * Cleaner for scenarios considering @BeforeScenario and @AfterScenario as

@@ -3,11 +3,11 @@ package example.sql.filter;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.context.IContext;
 import org.specrunner.expressions.EMode;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunnerScenario;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.sql.PluginConnection;

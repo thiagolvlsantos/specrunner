@@ -15,27 +15,22 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.annotations;
 
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Expected message on test execution.
+ * This tag informa if a method is a configuration method. Each configuration
+ * method should receive 1 argument of type <code>IConfiguratio</code>.
  * 
  * @author Thiago Santos
  * 
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ TYPE, METHOD })
-public @interface ExpectedMessage {
-
-    /**
-     * List of messages.
-     */
-    String value() default "";
+@Target({ METHOD })
+public @interface Configuration {
 }

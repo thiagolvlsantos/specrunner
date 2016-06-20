@@ -15,14 +15,26 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.annotations;
 
-import java.io.File;
+import static java.lang.annotation.ElementType.TYPE;
 
-public class ConditionFalse implements IRunnerCondition {
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    @Override
-    public boolean condition(File input, File output) {
-        return false;
-    }
+import org.specrunner.annotations.core.SkipTrue;
+
+/**
+ * Provides scenario filters.
+ * 
+ * @author Thiago Santos
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ TYPE })
+public @interface SRRunnerCondition {
+
+    Class<? extends IRunnerCondition> value() default SkipTrue.class;
+
+    boolean inherit() default true;
 }

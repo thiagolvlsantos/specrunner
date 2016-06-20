@@ -3,13 +3,16 @@ package example.objects;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
-import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.ExpectedMessages;
-import org.specrunner.junit.SRRunnerConcurrent;
+import org.specrunner.annotations.ExpectedMessages;
+import org.specrunner.annotations.SRRunnerCondition;
+import org.specrunner.annotations.core.SkipFalse;
+import org.specrunner.junit.concurrent.Concurrent;
+import org.specrunner.junit.concurrent.SRRunnerConcurrent;
 import org.specrunner.plugins.core.language.Sentence;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
+@SRRunnerCondition(SkipFalse.class)
 @ExpectedMessages({ "Instance 'cama|admin' of 'example.objects.Authorization' not found.", "Instance 'tlvls' of 'example.objects.User' not found." })
 public class TestObjects {
 

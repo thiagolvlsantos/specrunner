@@ -1,8 +1,8 @@
 package example.sql.negative;
 
+import org.specrunner.annotations.Configuration;
+import org.specrunner.annotations.ExpectedMessages;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
-import org.specrunner.junit.ExpectedMessages;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.core.StringTestContainsParts;
 

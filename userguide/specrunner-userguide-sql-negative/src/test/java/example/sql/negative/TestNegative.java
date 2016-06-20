@@ -1,7 +1,7 @@
 package example.sql.negative;
 
+import org.specrunner.annotations.Configuration;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.sql.database.DatabaseException;
 import org.specrunner.sql.database.DatabaseTableEvent;
 import org.specrunner.sql.database.impl.DatabaseDefault;

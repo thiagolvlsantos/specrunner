@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.context.IContext;
 import org.specrunner.context.IModel;
@@ -12,7 +13,6 @@ import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.expressions.IExpressionItem;
 import org.specrunner.expressions.core.ExpressionItemModel;
 import org.specrunner.expressions.core.ExpressionItemVar;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 
 @RunWith(SRRunner.class)

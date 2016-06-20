@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.Arrays;
 
 import org.junit.runner.RunWith;
+import org.specrunner.annotations.Configuration;
 import org.specrunner.comparators.core.ComparatorDate;
 import org.specrunner.configuration.IConfiguration;
-import org.specrunner.junit.Configuration;
 import org.specrunner.junit.SRRunner;
 import org.specrunner.listeners.core.PauseOnFailureNodeListener;
 import org.specrunner.result.IResult;

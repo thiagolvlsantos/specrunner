@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.junit.concurrent;
 
 import java.util.List;
 
@@ -24,6 +24,10 @@ import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.Statement;
+import org.specrunner.junit.IRunnerScenario;
+import org.specrunner.junit.JUnitUtils;
+import org.specrunner.junit.ScenarioFrameworkMethod;
+import org.specrunner.junit.SpecRunnerStatement;
 import org.specrunner.listeners.INodeListener;
 
 /**
@@ -38,11 +42,6 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner implements IRun
      * The notifier.
      */
     protected RunNotifier notifier;
-
-    /**
-     * The fake method.
-     */
-    protected FrameworkMethod fakeMethod;
 
     /**
      * Scenario listeners.
@@ -132,8 +131,8 @@ public class SRRunnerConcurrentScenario extends ConcurrentRunner implements IRun
     protected void runChild(FrameworkMethod method, RunNotifier notifier) {
         if (method == fakeMethod) {
             super.runChild(method, notifier);
-            free();
         }
+        free();
     }
 
     /**

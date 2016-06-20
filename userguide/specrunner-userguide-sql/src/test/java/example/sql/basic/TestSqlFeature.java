@@ -18,7 +18,9 @@
 package example.sql.basic;
 
 import org.joda.time.DateTime;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.specrunner.SRServices;
@@ -26,8 +28,8 @@ import org.specrunner.configuration.IConfiguration;
 import org.specrunner.configuration.IConfigurationFactory;
 import org.specrunner.expressions.IExpressionFactory;
 import org.specrunner.features.IFeatureManager;
-import org.specrunner.junit.ConcurrentRunner;
 import org.specrunner.junit.SpecRunnerJUnit;
+import org.specrunner.junit.concurrent.ConcurrentRunner;
 import org.specrunner.sql.PluginConnection;
 import org.specrunner.sql.PluginScripts;
 
@@ -40,8 +42,14 @@ public class TestSqlFeature {
     private static final String INCOME = "src/test/resources/income/clean/";
     private static final String OUTCOME = "src/test/resources/outcome/clean/";
 
-    static {
-        SRServices.get().setThreadSafe(true);
+    @BeforeClass
+    public static void beforeClass() {
+        SRServices.setThreadSafe(true);
+    }
+
+    @AfterClass
+    public static void after() {
+        SRServices.setThreadSafe(false);
     }
 
     private void run(String in, String out) {

@@ -15,26 +15,27 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
-package org.specrunner.junit;
+package org.specrunner.annotations;
 
-import org.junit.runners.BlockJUnit4ClassRunner;
-import org.junit.runners.model.InitializationError;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @author Mathieu Carbou (mathieu.carbou@gmail.com)
+ * Expected message on test execution.
+ * 
+ * @author Thiago Santos
+ * 
  */
-public class ConcurrentRunner extends BlockJUnit4ClassRunner {
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ TYPE, METHOD })
+public @interface ExpectedMessage {
 
     /**
-     * Creates a concurrent runner.
-     * 
-     * @param klass
-     *            The class.
-     * @throws InitializationError
-     *             On initialization error.
+     * List of messages.
      */
-    public ConcurrentRunner(final Class<?> klass) throws InitializationError {
-        super(klass);
-        setScheduler(new ConcurrentRunnerScheduler(klass));
-    }
+    String value() default "";
 }

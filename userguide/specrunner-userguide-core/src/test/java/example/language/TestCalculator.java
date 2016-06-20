@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 
 import org.junit.Assert;
 import org.junit.runner.RunWith;
-import org.specrunner.junit.Concurrent;
-import org.specrunner.junit.SRRunnerConcurrent;
+import org.specrunner.junit.concurrent.Concurrent;
+import org.specrunner.junit.concurrent.SRRunnerConcurrent;
 import org.specrunner.plugins.core.language.Sentence;
 import org.specrunner.plugins.core.language.Synonyms;
 

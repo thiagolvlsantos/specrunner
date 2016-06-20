@@ -19,9 +19,9 @@ package org.specrunner.listeners.core;
 
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
+import org.specrunner.annotations.IScenarioListener;
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
-import org.specrunner.listeners.IScenarioListener;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
