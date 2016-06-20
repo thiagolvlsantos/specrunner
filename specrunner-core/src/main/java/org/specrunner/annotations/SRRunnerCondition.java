@@ -23,7 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.specrunner.annotations.core.SkipTrue;
+import org.specrunner.annotations.core.SkipFalse;
 
 /**
  * Provides scenario filters.
@@ -34,7 +34,7 @@ import org.specrunner.annotations.core.SkipTrue;
 @Target({ TYPE })
 public @interface SRRunnerCondition {
 
-    Class<? extends IRunnerCondition> value() default SkipTrue.class;
+    Class<? extends IRunnerCondition> value() default SkipFalse.class;
 
     boolean inherit() default true;
 }
