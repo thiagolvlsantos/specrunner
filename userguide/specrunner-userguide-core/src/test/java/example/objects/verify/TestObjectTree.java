@@ -21,8 +21,8 @@ public class TestObjectTree {
         u = new User("Thiago", Arrays.asList("thiago@yahoo.com", null, "", ""), new Address[] { new Address("Recife") }, Arrays.asList(result.get(0), result.get(1)));
         result.add(u);
 
-        // u = new User("Thiago2", null, null, null);
-        // result.add(u);
+        u = new User("", null, null, null);
+        result.add(u);
 
         return result;
     }
