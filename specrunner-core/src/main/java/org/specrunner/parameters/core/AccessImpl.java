@@ -22,7 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.converters.UtilConverter;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.plugins.PluginException;
@@ -86,7 +86,7 @@ public class AccessImpl implements IAccess {
         if (field != null) {
             field.set(target, prepare(args[0]));
         } else if (property != null) {
-            BeanUtils.setProperty(target, name, prepare(args[0]));
+            PropertyUtils.setProperty(target, name, prepare(args[0]));
         } else if (method != null) {
             method.invoke(target, prepare(args));
         }
@@ -170,7 +170,7 @@ public class AccessImpl implements IAccess {
         if (field != null) {
             return field.get(target);
         } else if (property != null) {
-            return BeanUtils.getProperty(target, name);
+            return PropertyUtils.getProperty(target, name);
         } else if (method != null) {
             return method.invoke(target, args);
         }
@@ -179,7 +179,7 @@ public class AccessImpl implements IAccess {
 
     @Override
     public boolean valid(Object target, String name, Object... args) {
-        Class<?>[] types = expected(target, name, args);
+        Class<?>[] types = accepted(target, name, args);
         boolean valid = true;
         for (int i = 0; valid && args != null && i < types.length && i < args.length; i++) {
             valid = valid && (args[i] == null || types[i].isAssignableFrom(args[i].getClass()));
@@ -188,7 +188,19 @@ public class AccessImpl implements IAccess {
     }
 
     @Override
-    public Class<?>[] expected(Object target, String name, Object... args) {
+    public Class<?> expected(Object target, String name, Object... args) {
+        if (field != null) {
+            return field.getType();
+        } else if (property != null) {
+            return property.getPropertyType();
+        } else if (method != null) {
+            return method.getReturnType();
+        }
+        return null;
+    }
+
+    @Override
+    public Class<?>[] accepted(Object target, String name, Object... args) {
         if (field != null) {
             return new Class<?>[] { field.getType() };
         } else if (property != null) {

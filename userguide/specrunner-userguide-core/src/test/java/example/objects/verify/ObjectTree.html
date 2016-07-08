@@ -1,0 +1,130 @@
+<html>
+
+<style>
+.verifyObjects, th, td {
+	border: 1px solid black;
+	vertical-align: top;
+}
+
+th {
+	background-color: gray;
+}
+</style>
+
+<table class="verifyObjects" type="example.objects.verify.User"
+	value="$THIS.users()">
+	<caption>Users</caption>
+	<tr>
+		<th>name</th>
+		<th>emails</th>
+		<th type="example.objects.verify.Address">addresses</th>
+		<th type="example.objects.verify.User">parents</th>
+	</tr>
+	<tr>
+		<td>Sérgio</td>
+		<td>
+			<table>
+				<tr>
+					<td>sergio@yahoo.com</td>
+				</tr>
+				<tr>
+					<td>sls@gmail.com</td>
+				</tr>
+			</table>
+		</td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Auricélia</td>
+		<td>
+			<table>
+			</table>
+		</td>
+		<td>
+			<table>
+				<tr>
+					<th>description</th>
+				</tr>
+				<tr>
+					<td>Condado</td>
+				</tr>
+			</table>
+		</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td>Thiago</td>
+		<td>
+			<table>
+				<tr>
+					<td>thiago@yahoo.com</td>
+				</tr>
+				<tr>
+					<td>@null</td>
+				</tr>
+				<tr>
+					<td>@empty</td>
+				</tr>
+				<tr>
+					<td></td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			<table>
+				<tr>
+					<th>description</th>
+				</tr>
+				<tr>
+					<td>Recife</td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			<table>
+				<tr>
+					<th field="name">"Noun"</th>
+					<th property="emails">Em.</th>
+					<th type="example.objects.verify.Address">addresses</th>
+				</tr>
+				<tr>
+					<td>Sérgio</td>
+					<td>
+						<table>
+							<tr>
+								<td ignore="true">IGNORE</td>
+							</tr>
+							<tr>
+								<td comparator="true">comparator true</td>
+							</tr>
+						</table>
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>Auricélia</td>
+					<td><table>
+						</table></td>
+					<td><table>
+							<tr>
+								<th feature="description">Descr.</th>
+							</tr>
+							<tr>
+								<td>Condado</td>
+							</tr>
+						</table></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+
+	<tr ignore="true">
+		<td>IGNOREd LINE</td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</table>
+
+</html>

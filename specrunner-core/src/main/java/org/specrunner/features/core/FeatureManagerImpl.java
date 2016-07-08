@@ -114,7 +114,7 @@ public class FeatureManagerImpl extends HashMap<String, Object> implements IFeat
                 UtilLog.LOG.trace("Access '" + access + "'.");
             }
             if (!access.valid(target, name, value)) {
-                Class<?>[] types = access.expected(target, name, value);
+                Class<?>[] types = access.accepted(target, name, value);
                 StringBuilder sb = new StringBuilder();
                 for (Class<?> c : types) {
                     sb.append(String.valueOf(c));

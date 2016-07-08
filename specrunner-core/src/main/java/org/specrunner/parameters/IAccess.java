@@ -79,9 +79,22 @@ public interface IAccess {
      *            The feature reference.
      * @param args
      *            The arguments.
+     * @return Type encapsulated by access.
+     */
+    Class<?> expected(Object target, String name, Object... args);
+
+    /**
+     * Get the accepted type(s) for a feature assignment or arguments.
+     * 
+     * @param target
+     *            The target object.
+     * @param name
+     *            The feature reference.
+     * @param args
+     *            The arguments.
      * @return true, if compatible, false, otherwise.
      */
-    Class<?>[] expected(Object target, String name, Object... args);
+    Class<?>[] accepted(Object target, String name, Object... args);
 
     /**
      * Check if access has feature associated or null.
