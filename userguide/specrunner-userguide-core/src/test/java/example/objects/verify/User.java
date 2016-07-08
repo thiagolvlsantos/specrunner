@@ -3,16 +3,20 @@ package example.objects.verify;
 import java.util.Collection;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 public class User {
 
     private String name;
+    private LocalDate birthday;
     private Collection<String> emails;
     private Address[] addresses;
     private List<User> parents;
 
-    public User(String name, Collection<String> emails, Address[] addresses, List<User> parents) {
+    public User(String name, LocalDate birthday, Collection<String> emails, Address[] addresses, List<User> parents) {
         super();
         this.name = name;
+        this.birthday = birthday;
         this.emails = emails;
         this.addresses = addresses;
         this.parents = parents;
@@ -24,6 +28,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public Collection<String> getEmails() {

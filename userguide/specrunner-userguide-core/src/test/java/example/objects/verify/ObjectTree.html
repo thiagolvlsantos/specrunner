@@ -16,12 +16,14 @@ th {
 	<caption>Users</caption>
 	<tr>
 		<th>name</th>
+		<th>birthday</th>
 		<th>emails</th>
 		<th type="example.objects.verify.Address">addresses</th>
 		<th type="example.objects.verify.User">parents</th>
 	</tr>
 	<tr>
 		<td>Sérgio</td>
+		<td converter="localDate" arg0="dd/MM/yyyy" eval="false">20/03/1954</td>
 		<td>
 			<table>
 				<tr>
@@ -37,6 +39,7 @@ th {
 	</tr>
 	<tr>
 		<td>Auricélia</td>
+		<td converter="localDate" arg0="dd/MM/yyyy" eval="false">23/12/1953</td>
 		<td>
 			<table>
 			</table>
@@ -55,6 +58,7 @@ th {
 	</tr>
 	<tr>
 		<td>Thiago</td>
+		<td converter="ldc">current day</td>
 		<td>
 			<table>
 				<tr>
@@ -120,13 +124,14 @@ th {
 	</tr>
 
 	<tr ignore="true">
-		<td>IGNOREd LINE</td>
+		<td>IGNORED LINE</td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 	<tr>
 		<td></td>
+		<td>@null</td>
 		<td></td>
 		<td></td>
 		<td></td>

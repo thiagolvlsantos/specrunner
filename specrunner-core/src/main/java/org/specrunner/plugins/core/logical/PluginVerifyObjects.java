@@ -103,6 +103,10 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             if (UtilNode.isIgnore(r.getNode())) {
                 continue;
             }
+            if (header.getCellsCount() != r.getCellsCount()) {
+                result.addResult(Failure.INSTANCE, context.newBlock(r.getCell(0).getNode(), this), new UnstackedPluginException("Number of cells '" + r.getCellsCount() + "' different of headers '" + header.getCellsCount() + "'."));
+                continue;
+            }
             if (!iterator.hasNext()) {
                 for (int j = i; j < rows.size(); j++) {
                     r = rows.get(j);
