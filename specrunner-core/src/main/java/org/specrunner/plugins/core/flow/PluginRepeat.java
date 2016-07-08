@@ -66,6 +66,10 @@ public class PluginRepeat extends AbstractPluginTable {
                 String localName = att.getLocalName();
                 if (!row.hasAttribute(localName)) {
                     row.setAttribute(localName, node.getAttributeValue(localName));
+                } else {
+                    if (UtilNode.ATT_CSS.equals(localName)) {
+                        row.setAttribute(localName, row.getAttribute(localName) + " " + node.getAttributeValue(localName));
+                    }
                 }
             }
             List<CellAdapter> values = row.getCells();
@@ -81,6 +85,10 @@ public class PluginRepeat extends AbstractPluginTable {
                         String localName = att.getLocalName();
                         if (!cellTd.hasAttribute(localName)) {
                             cellTd.setAttribute(localName, th.getAttributeValue(localName));
+                        } else {
+                            if (UtilNode.ATT_CSS.equals(localName)) {
+                                cellTd.setAttribute(localName, cellTd.getAttribute(localName) + " " + th.getAttributeValue(localName));
+                            }
                         }
                     }
                 }
