@@ -86,11 +86,23 @@ public class PluginVerifyObjects extends AbstractPluginTable {
         }
     }
 
+    /**
+     * Convert an object to a list, if it is an array.
+     * 
+     * @param received
+     *            The object.
+     * @return The object as list, if array, the corresponding list, if not
+     *         null.
+     */
     protected List<Object> objectToList(Object received) {
-        List<Object> collection = new LinkedList<Object>();
+        List<Object> collection = null;
         for (int k = 0; k < Integer.MAX_VALUE; k++) {
             try {
-                collection.add(Array.get(received, k));
+                Object object = Array.get(received, k);
+                if (collection == null) {
+                    collection = new LinkedList<Object>();
+                }
+                collection.add(object);
             } catch (ArrayIndexOutOfBoundsException e) { // ended
                 break;
             }
