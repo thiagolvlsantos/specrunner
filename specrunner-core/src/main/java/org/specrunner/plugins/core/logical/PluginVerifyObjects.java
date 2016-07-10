@@ -121,11 +121,13 @@ public class PluginVerifyObjects extends AbstractPluginTable {
      *            A table adapter.
      * @param iterator
      *            An iterable object.
-     * @throws Exception
-     *             On comparison errors.
+     * @throws PluginException
+     *             On expected value recovery error.
+     * @throws ComparatorException
+     *             On comparisons processing errors.
      */
     @SuppressWarnings("rawtypes")
-    protected void process(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws Exception {
+    protected void process(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, ComparatorException {
         if (tableAdapter.hasAttribute(ATT_ITERABLE)) {
             processIterable(context, result, tableAdapter, iterator);
         } else {
@@ -144,9 +146,13 @@ public class PluginVerifyObjects extends AbstractPluginTable {
      *            A table adapter.
      * @param iterator
      *            An iterable object.
+     * @throws PluginException
+     *             On expected value recovery error.
+     * @throws ComparatorException
+     *             On comparisons processing errors.
      */
     @SuppressWarnings("rawtypes")
-    protected void processTerminal(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) {
+    protected void processTerminal(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, ComparatorException {
         List<RowAdapter> rows = tableAdapter.getRows();
         for (int i = 0; i < rows.size(); i++) {
             RowAdapter r = rows.get(i);
@@ -162,11 +168,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             if (UtilNode.isIgnore(c.getNode())) {
                 continue;
             }
-            try {
-                compare(context, result, c.getComparator(), null, c, received);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            compare(context, result, false, c.getComparator(), null, c, received);
         }
         return;
     }
@@ -214,7 +216,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
      * @throws ComparatorException
      *             On comparisons processing errors.
      */
-    protected void compare(IContext context, IResultSet result, IComparator comparator, CellAdapter headerExpected, CellAdapter cellExpected, Object received) throws PluginException, ComparatorException {
+    protected void compare(IContext context, IResultSet result, boolean collection, IComparator comparator, CellAdapter headerExpected, CellAdapter cellExpected, Object received) throws PluginException, ComparatorException {
         boolean eval = cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION);
         if (eval) {
             eval = Boolean.valueOf(cellExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
@@ -251,6 +253,9 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             }
         }
         Object expected = cellExpected.getObject(context, true);
+        if (collection && "".equals(expected)) {
+            expected = null;
+        }
         Exception e = verify(context, comparator, expected, received);
         if (e != null) {
             result.addResult(Failure.INSTANCE, context.newBlock(cellExpected.getNode(), this), e);
@@ -283,11 +288,11 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 return new PresentationException(new PresentationCompare(expected, received));
             }
         }
-        return null;//
+        return null;
     }
 
     @SuppressWarnings("rawtypes")
-    protected void processIterable(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, Exception, ComparatorException {
+    protected void processIterable(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, ComparatorException {
         IAccessFactory factory = SRServices.get(IAccessFactory.class);
         List<RowAdapter> rows = tableAdapter.getRows();
         RowAdapter header = rows.get(0);
@@ -331,34 +336,31 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                     } else {
                         Node node = nodes.get(0);
                         TableAdapter subtable = new TableAdapter((Element) node);
-                        if (h.hasAttribute(ATT_ITERABLE)) {
-                            subtable.setAttribute(ATT_ITERABLE, h.getAttribute(ATT_ITERABLE));
-                        }
+                        Iterable collection = null;
                         if (attType.isArray()) {
-                            List<Object> collection = objectToList(received);
-                            if (subtable.getRowCount() == 0) {
-                                if (received == null || !collection.isEmpty()) {
-                                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected @empty, received:" + received));
-                                } else {
-                                    result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
-                                }
+                            collection = objectToList(received);
+                        } else {
+                            collection = (Iterable) received;
+                        }
+                        if (subtable.getRowCount() == 0) {
+                            if (collection == null || collection.iterator().hasNext()) {
+                                result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected @empty, received:" + collection));
                             } else {
-                                process(context, result, subtable, collection.iterator());
+                                result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
                             }
                         } else {
-                            if (subtable.getRowCount() == 0) {
-                                if (received == null || !((Iterable) received).iterator().hasNext()) {
-                                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected @empty, received:" + received));
-                                } else {
-                                    result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
-                                }
+                            if (collection == null) {
+                                result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected not null, received:" + collection));
                             } else {
-                                process(context, result, subtable, ((Iterable) received).iterator());
+                                if (h.hasAttribute(ATT_ITERABLE)) {
+                                    subtable.setAttribute(ATT_ITERABLE, h.getAttribute(ATT_ITERABLE));
+                                }
+                                process(context, result, subtable, collection.iterator());
                             }
                         }
                     }
                 } else {
-                    compare(context, result, c.getComparator(h.getComparator()), h, c, received);
+                    compare(context, result, true, c.getComparator(h.getComparator()), h, c, received);
                 }
             }
         }
