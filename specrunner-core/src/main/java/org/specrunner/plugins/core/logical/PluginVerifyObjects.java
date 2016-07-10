@@ -65,6 +65,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             if (!(value instanceof Iterable)) {
                 result.addResult(Failure.INSTANCE, context, "'value' attribute should be an instance of iterable.");
             }
+            tableAdapter.setAttribute(ATT_ITERABLE, "true");
             // TODO if first level is an array.
             process(context, result, tableAdapter, ((Iterable) value).iterator());
         } catch (Exception e) {
