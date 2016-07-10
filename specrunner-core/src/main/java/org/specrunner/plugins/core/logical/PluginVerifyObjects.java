@@ -283,7 +283,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 return new PresentationException(new PresentationCompare(expected, received));
             }
         }
-        return null;
+        return null;//
     }
 
     @SuppressWarnings("rawtypes")
