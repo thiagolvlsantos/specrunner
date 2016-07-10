@@ -9,15 +9,15 @@ import org.junit.runner.RunWith;
 import org.specrunner.annotations.Configuration;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.junit.SRRunner;
-import org.specrunner.util.xom.node.INodeHolder;
+import org.specrunner.parameters.IAccessFactory;
 
 @RunWith(SRRunner.class)
 public class TestProperty {
 
     @Configuration
     public void config(IConfiguration cfg) {
-        cfg.add(INodeHolder.FEATURE_PROPERTY_INVALID_PATH_AS_NULL, Boolean.TRUE);
-        // cfg.add(INodeHolder.FEATURE_PROPERTY_ACCEPT_NULL_PATH,
+        cfg.add(IAccessFactory.FEATURE_PROPERTY_INVALID_PATH_AS_NULL, Boolean.TRUE);
+        // cfg.add(IAccessFactory.FEATURE_PROPERTY_ACCEPT_NULL_PATH,
         // Boolean.FALSE);
     }
 

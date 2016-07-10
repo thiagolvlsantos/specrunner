@@ -17,6 +17,8 @@
  */
 package org.specrunner.parameters;
 
+import org.specrunner.plugins.PluginException;
+
 /**
  * Defines a factory of feature access information.
  * 
@@ -24,6 +26,24 @@ package org.specrunner.parameters;
  * 
  */
 public interface IAccessFactory {
+
+    /**
+     * Feature to accept children properties as null a parent object in path is
+     * null.
+     */
+    String FEATURE_PROPERTY_ACCEPT_NULL_PATH = IAccessFactory.class.getName() + ".acceptNullPathProperty";
+    /**
+     * Default is to accept null paths as null.
+     */
+    Boolean DEFAULT_PROPERTY_ACCEPT_NULL_PATH = Boolean.TRUE;
+    /**
+     * Feature to accept invalid property paths as null.
+     */
+    String FEATURE_PROPERTY_INVALID_PATH_AS_NULL = IAccessFactory.class.getName() + ".invalidPathAsNullProperty";
+    /**
+     * Default is to not accept invalid paths.
+     */
+    Boolean DEFAULT_PROPERTY_INVALID_PATH_AS_NULL = Boolean.FALSE;
 
     /**
      * Create access information for a given object and a given feature.
@@ -35,4 +55,17 @@ public interface IAccessFactory {
      * @return The access abstraction.
      */
     IAccess newAccess(Object target, String name);
+
+    /**
+     * Get the object value for <code>str</code> path in <code>object</code>.
+     * 
+     * @param object
+     *            A object to inspect.
+     * @param property
+     *            A property path.
+     * @throws PluginException
+     *             On lookup errors.
+     * @return null, depending on property accept features, false, otherwise.
+     */
+    Object getProperty(Object object, String property) throws PluginException;
 }

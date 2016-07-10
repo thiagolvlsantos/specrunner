@@ -10,14 +10,16 @@ public class User {
     private String name;
     private LocalDate birthday;
     private Collection<String> emails;
+    private Address workplace;
     private Address[] addresses;
     private List<User> parents;
 
-    public User(String name, LocalDate birthday, Collection<String> emails, Address[] addresses, List<User> parents) {
+    public User(String name, LocalDate birthday, Collection<String> emails, Address workplace, Address[] addresses, List<User> parents) {
         super();
         this.name = name;
         this.birthday = birthday;
         this.emails = emails;
+        this.workplace = workplace;
         this.addresses = addresses;
         this.parents = parents;
     }
@@ -44,6 +46,14 @@ public class User {
 
     public void setEmails(Collection<String> emails) {
         this.emails = emails;
+    }
+
+    public Address getWorkplace() {
+        return workplace;
+    }
+
+    public void setWorkplace(Address workplace) {
+        this.workplace = workplace;
     }
 
     public Address[] getAddresses() {

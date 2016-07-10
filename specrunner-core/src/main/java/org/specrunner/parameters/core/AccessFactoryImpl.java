@@ -21,11 +21,14 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.StringTokenizer;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
+import org.specrunner.features.IFeatureManager;
 import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
+import org.specrunner.plugins.PluginException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
@@ -160,5 +163,37 @@ public class AccessFactoryImpl implements IAccessFactory {
             }
         }
         return access;
+    }
+
+    @Override
+    public Object getProperty(Object source, String str) throws PluginException {
+        Object bean = source;
+        IFeatureManager fm = SRServices.getFeatureManager();
+        Boolean acceptNullPath = (Boolean) fm.get(FEATURE_PROPERTY_ACCEPT_NULL_PATH, DEFAULT_PROPERTY_ACCEPT_NULL_PATH);
+        Boolean invalidPathAsNull = (Boolean) fm.get(FEATURE_PROPERTY_INVALID_PATH_AS_NULL, DEFAULT_PROPERTY_INVALID_PATH_AS_NULL);
+        try {
+            StringTokenizer st = new StringTokenizer(str, ".");
+            StringBuilder path = new StringBuilder();
+            IAccessFactory factory = SRServices.get(IAccessFactory.class);
+            while (bean != null && st.hasMoreTokens()) {
+                String part = st.nextToken();
+                IAccess access = factory.newAccess(bean, part);
+                if ((access == null || !access.hasFeature()) && invalidPathAsNull) {
+                    bean = null;
+                    break;
+                }
+                bean = access.get(bean, part);
+                path.append('.');
+                path.append(part);
+                if (bean == null && !acceptNullPath && st.hasMoreElements()) {
+                    throw new PluginException("Invalid null value for part '" + path + "' of property '" + str + "'.");
+                }
+            }
+            return bean;
+        } catch (PluginException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new PluginException(e);
+        }
     }
 }

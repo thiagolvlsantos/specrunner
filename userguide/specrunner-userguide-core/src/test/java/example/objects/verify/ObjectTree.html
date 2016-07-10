@@ -11,15 +11,16 @@ th {
 }
 </style>
 
-<table class="verifyObjects" type="example.objects.verify.User"
+<table class="verifyObjects" iterable="true"
 	value="$THIS.users()">
 	<caption>Users</caption>
 	<tr>
 		<th>name</th>
 		<th>birthday</th>
 		<th>emails</th>
-		<th type="example.objects.verify.Address">addresses</th>
-		<th type="example.objects.verify.User">parents</th>
+		<th property="workplace.description">workplace name</th>
+		<th iterable="true">addresses</th>
+		<th iterable="true">parents</th>
 	</tr>
 	<tr>
 		<td>Sérgio</td>
@@ -34,6 +35,7 @@ th {
 				</tr>
 			</table>
 		</td>
+		<td>Condado</td>
 		<td></td>
 		<td></td>
 	</tr>
@@ -44,6 +46,7 @@ th {
 			<table>
 			</table>
 		</td>
+		<td></td>
 		<td>
 			<table>
 				<tr>
@@ -75,6 +78,7 @@ th {
 				</tr>
 			</table>
 		</td>
+		<td>Recife</td>
 		<td>
 			<table>
 				<tr>
@@ -90,7 +94,7 @@ th {
 				<tr>
 					<th field="name">"Noun"</th>
 					<th property="emails">Em.</th>
-					<th type="example.objects.verify.Address">addresses</th>
+					<th iterable="true">addresses</th>
 				</tr>
 				<tr>
 					<td>Sérgio</td>
@@ -132,6 +136,7 @@ th {
 	<tr>
 		<td></td>
 		<td>@null</td>
+		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>

@@ -17,12 +17,9 @@
  */
 package org.specrunner.util.xom.node.core;
 
-import java.beans.PropertyDescriptor;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -34,6 +31,7 @@ import org.specrunner.features.IFeatureManager;
 import org.specrunner.formatters.FormatterException;
 import org.specrunner.formatters.IFormatter;
 import org.specrunner.formatters.IFormatterManager;
+import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.readers.IReader;
 import org.specrunner.readers.IReaderManager;
@@ -485,7 +483,6 @@ public class NodeHolderDefault implements INodeHolder {
      *             On lookup errors.
      */
     protected Object getProperty(IContext context, boolean silent) throws PluginException {
-        Object property = null;
         String str = getAttribute(ATTRIBUTE_PROPERTY);
         int pos = str.indexOf('.');
         if (pos <= 0) {
@@ -493,32 +490,7 @@ public class NodeHolderDefault implements INodeHolder {
         }
         String head = str.substring(0, pos);
         Object bean = UtilExpression.evaluate(head, context, silent);
-        IFeatureManager fm = SRServices.getFeatureManager();
-        Boolean acceptNullPath = (Boolean) fm.get(FEATURE_PROPERTY_ACCEPT_NULL_PATH, DEFAULT_PROPERTY_ACCEPT_NULL_PATH);
-        Boolean invalidPathAsNull = (Boolean) fm.get(FEATURE_PROPERTY_INVALID_PATH_AS_NULL, DEFAULT_PROPERTY_INVALID_PATH_AS_NULL);
-        try {
-            StringTokenizer st = new StringTokenizer(str.substring(pos + 1), ".");
-            StringBuilder path = new StringBuilder(head);
-            while (bean != null && st.hasMoreTokens()) {
-                String part = st.nextToken();
-                PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(bean, part);
-                if ((pd == null || pd.getReadMethod() == null) && invalidPathAsNull) {
-                    bean = null;
-                    break;
-                }
-                bean = PropertyUtils.getProperty(bean, part);
-                path.append('.');
-                path.append(part);
-                if (bean == null && !acceptNullPath && st.hasMoreElements()) {
-                    throw new PluginException("Invalid null value for part '" + path + "' of property '" + str + "'.");
-                }
-            }
-            property = bean;
-        } catch (PluginException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new PluginException(e);
-        }
+        Object property = SRServices.get(IAccessFactory.class).getProperty(bean, str.substring(pos + 1));
         if (UtilLog.LOG.isTraceEnabled()) {
             UtilLog.LOG.trace("Bean property (" + str + ") value is '" + property + "' of type " + (property != null ? property.getClass() : " null"));
         }

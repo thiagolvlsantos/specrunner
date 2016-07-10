@@ -18,14 +18,14 @@
 package org.specrunner.plugins.core.logical;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.specrunner.SRServices;
+import org.specrunner.comparators.ComparatorException;
+import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
-import org.specrunner.parameters.IAccess;
 import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
@@ -38,6 +38,8 @@ import org.specrunner.result.status.Success;
 import org.specrunner.util.aligner.core.DefaultAlignmentException;
 import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
+import org.specrunner.util.xom.core.PresentationCompare;
+import org.specrunner.util.xom.core.PresentationException;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
@@ -49,7 +51,7 @@ import nu.xom.Nodes;
 
 public class PluginVerifyObjects extends AbstractPluginTable {
 
-    private static final String ATT_TYPE = "type";
+    private static final String ATT_ITERABLE = "iterable";
 
     public ActionType getActionType() {
         return Assertion.INSTANCE;
@@ -63,39 +65,133 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             if (!(value instanceof Iterable)) {
                 result.addResult(Failure.INSTANCE, context, "'value' attribute should be an instance of iterable.");
             }
+            // TODO if first level is an array.
             process(context, result, tableAdapter, ((Iterable) value).iterator());
         } catch (Exception e) {
             throw new PluginException(e);
         }
     }
 
+    /**
+     * Perform recursive comparison.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param tableAdapter
+     *            A table adapter.
+     * @param iterator
+     *            An iterable object.
+     * @throws Exception
+     *             On comparison errors.
+     */
+    @SuppressWarnings("rawtypes")
     protected void process(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws Exception {
-        String type = tableAdapter.getAttribute(ATT_TYPE);
-        if (type == null) {
-            List<RowAdapter> rows = tableAdapter.getRows();
-            for (int i = 0; i < rows.size(); i++) {
-                RowAdapter r = rows.get(i);
-                if (UtilNode.isIgnore(r.getNode())) {
-                    continue;
-                }
-                Object received = iterator.next();
-                CellAdapter c = r.getCell(0);
-                if (UtilNode.isIgnore(c.getNode())) {
-                    continue;
-                }
-                try {
-                    Object expected = c.getObject(context, true);
-                    if (!c.getComparator().match(expected, received)) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
-                    } else {
-                        result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            return;
+        if (tableAdapter.hasAttribute(ATT_ITERABLE)) {
+            processIterable(context, result, tableAdapter, iterator);
+        } else {
+            processTerminal(context, result, tableAdapter, iterator);
         }
+    }
+
+    /**
+     * Process terminal values.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param tableAdapter
+     *            A table adapter.
+     * @param iterator
+     *            An iterable object.
+     */
+    @SuppressWarnings("rawtypes")
+    protected void processTerminal(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) {
+        List<RowAdapter> rows = tableAdapter.getRows();
+        for (int i = 0; i < rows.size(); i++) {
+            RowAdapter r = rows.get(i);
+            if (UtilNode.isIgnore(r.getNode())) {
+                continue;
+            }
+            if (!iterator.hasNext()) {
+                missingItems(context, result, tableAdapter, i);
+                break;
+            }
+            Object received = iterator.next();
+            CellAdapter c = r.getCell(0);
+            if (UtilNode.isIgnore(c.getNode())) {
+                continue;
+            }
+            try {
+                Object expected = c.getObject(context, true);
+                Exception e = verify(context, c.getComparator(), expected, received);
+                if (e != null) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), e);
+                } else {
+                    result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return;
+    }
+
+    /**
+     * Add information of missing object or terminal items.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param tableAdapter
+     *            A table adapter.
+     * @param start
+     *            Starting position of missing items.
+     */
+    protected void missingItems(IContext context, IResultSet result, TableAdapter tableAdapter, int start) {
+        List<RowAdapter> rows = tableAdapter.getRows();
+        for (int i = start; i < rows.size(); i++) {
+            RowAdapter r = rows.get(i);
+            if (UtilNode.isIgnore(r.getNode())) {
+                continue;
+            }
+            result.addResult(Failure.INSTANCE, context.newBlock(r.getCellsCount() == 0 ? r.getNode() : r.getCell(0).getNode(), this), new UnstackedPluginException("Missing row."));
+        }
+    }
+
+    /**
+     * Check if expected and received values are equal.
+     * 
+     * @param context
+     *            A context.
+     * @param comparator
+     *            A comparator.
+     * @param expected
+     *            The expected value.
+     * @param received
+     *            The received value.
+     * @return An exception if expected and received do not match.
+     * @throws ComparatorException
+     *             On comparison errors.
+     */
+    protected Exception verify(IContext context, IComparator comparator, Object expected, Object received) throws ComparatorException {
+        comparator.initialize();
+        if (!comparator.match(expected, received)) {
+            if (expected instanceof String && received instanceof String) {
+                return new DefaultAlignmentException(expected.toString(), received.toString());
+            } else {
+                return new PresentationException(new PresentationCompare(expected, received));
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected void processIterable(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, Exception, ComparatorException {
+        IAccessFactory factory = SRServices.get(IAccessFactory.class);
         List<RowAdapter> rows = tableAdapter.getRows();
         RowAdapter header = rows.get(0);
         for (int i = 1; i < rows.size(); i++) {
@@ -108,13 +204,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 continue;
             }
             if (!iterator.hasNext()) {
-                for (int j = i; j < rows.size(); j++) {
-                    r = rows.get(j);
-                    if (UtilNode.isIgnore(r.getNode())) {
-                        continue;
-                    }
-                    result.addResult(Failure.INSTANCE, context.newBlock(r.getCell(0).getNode(), this), new UnstackedPluginException("Missing row."));
-                }
+                missingItems(context, result, tableAdapter, i);
                 break;
             }
             Object current = iterator.next();
@@ -128,13 +218,12 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                     continue;
                 }
                 String str = h.getValue(context);
-                String att = h.getAttribute("feature", h.getAttribute("field", h.getAttribute("property", str)));
-                String field = UtilString.getNormalizer().camelCase(att);
-                IAccess access = SRServices.get(IAccessFactory.class).newAccess(current, field);
-                Class<?> attType = access.expected(current, field);
-                Object received = access.get(current, field);
-                if (attType.isArray() || Collection.class.isAssignableFrom(attType)) {
-                    Nodes nodes = c.getNode().query("child::table");
+                String feature = h.getAttribute("feature", h.getAttribute("field", h.getAttribute("property", str)));
+                String field = h.hasAttribute("property") ? feature : UtilString.getNormalizer().camelCase(feature);
+                Object received = factory.getProperty(current, field);
+                Class<?> attType = received != null ? received.getClass() : null;
+                if (attType != null && (attType.isArray() || Iterable.class.isAssignableFrom(attType))) {
+                    Nodes nodes = c.getNode().query(getIterableXPath());
                     if (nodes.size() == 0) {
                         if (received != null) {
                             result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected @null, received:" + received));
@@ -145,8 +234,8 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                     } else {
                         Node node = nodes.get(0);
                         TableAdapter subtable = new TableAdapter((Element) node);
-                        if (h.hasAttribute(ATT_TYPE)) {
-                            subtable.setAttribute(ATT_TYPE, h.getAttribute(ATT_TYPE));
+                        if (h.hasAttribute(ATT_ITERABLE)) {
+                            subtable.setAttribute(ATT_ITERABLE, h.getAttribute(ATT_ITERABLE));
                         }
                         if (attType.isArray()) {
                             List<Object> collection = new LinkedList<Object>();
@@ -168,20 +257,21 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                             }
                         } else {
                             if (subtable.getRowCount() == 0) {
-                                if (received == null || !((Collection) received).isEmpty()) {
+                                if (received == null || !((Iterable) received).iterator().hasNext()) {
                                     result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected @empty, received:" + received));
                                 } else {
                                     result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
                                 }
                             } else {
-                                process(context, result, subtable, ((Collection) received).iterator());
+                                process(context, result, subtable, ((Iterable) received).iterator());
                             }
                         }
                     }
                 } else {
                     Object expected = c.getObject(context, true);
-                    if (!c.getComparator(h.getComparator()).match(expected, received)) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new DefaultAlignmentException(String.valueOf(expected), String.valueOf(received)));
+                    Exception e = verify(context, c.getComparator(h.getComparator()), expected, received);
+                    if (e != null) {
+                        result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), e);
                     } else {
                         result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
                     }
@@ -204,7 +294,16 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 td.appendChild(String.valueOf(current));
             }
             tableAdapter.append(tr);
-            result.addResult(Failure.INSTANCE, context.newBlock(tableAdapter.getNode(), this), new UnstackedPluginException("Collection has '" + count + "' unexpected " + (count == 1 ? "item" : "items") + "."));
+            result.addResult(Failure.INSTANCE, context.newBlock(tableAdapter.getNode(), this), new UnstackedPluginException("Iterable has '" + count + "' unexpected " + (count == 1 ? "item" : "items") + "."));
         }
+    }
+
+    /**
+     * Return the XPath expression for object attributes of type 'iterable'.
+     * 
+     * @return The xpath to select sublists/tables.
+     */
+    protected String getIterableXPath() {
+        return "child::table";
     }
 }
