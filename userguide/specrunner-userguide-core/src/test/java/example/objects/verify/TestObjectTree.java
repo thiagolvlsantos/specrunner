@@ -27,4 +27,8 @@ public class TestObjectTree {
 
         return result;
     }
+
+    public User[] call() {
+        return new User[] { users().get(0) };
+    }
 }

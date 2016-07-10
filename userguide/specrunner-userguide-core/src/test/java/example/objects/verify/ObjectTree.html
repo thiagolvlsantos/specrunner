@@ -11,11 +11,14 @@ th {
 }
 </style>
 
+<h1>Example of collections of objects</h1>
+Attributes are primitive, convertible dates, a lot of ignores and
+reference to fields as feature/field/property.
 <table class="verifyObjects" value="$THIS.users()">
 	<caption>Users</caption>
 	<tr>
 		<th>name</th>
-		<th>birthday</th>
+		<th converter="localDate" arg0="dd/MM/yyyy" eval="false">birthday</th>
 		<th>emails</th>
 		<th property="workplace.description">workplace name</th>
 		<th iterable="true">addresses</th>
@@ -23,7 +26,7 @@ th {
 	</tr>
 	<tr>
 		<td>Sérgio</td>
-		<td converter="localDate" arg0="dd/MM/yyyy" eval="false">20/03/1954</td>
+		<td>20/03/1954</td>
 		<td>
 			<table>
 				<tr>
@@ -40,7 +43,7 @@ th {
 	</tr>
 	<tr>
 		<td>Auricélia</td>
-		<td converter="localDate" arg0="dd/MM/yyyy" eval="false">23/12/1953</td>
+		<td>23/12/1953</td>
 		<td>
 			<table>
 			</table>
@@ -134,12 +137,47 @@ th {
 	</tr>
 	<tr>
 		<td></td>
-		<td>@null</td>
+		<td eval="true">@null</td>
 		<td></td>
 		<td></td>
 		<td></td>
 		<td></td>
 	</tr>
 </table>
+
+<h1>Example of arrays</h1>
+Same as before, but result value calling an array stored in variable 'v' after a
+'sentence'
+<span class="sentence" name="v">call</span>.
+
+<table class="verifyObjects" value="v">
+	<caption>Users</caption>
+	<tr>
+		<th>name</th>
+		<th converter="localDate" arg0="dd/MM/yyyy" eval="false">birthday</th>
+		<th>emails</th>
+		<th property="workplace.description">workplace name</th>
+		<th iterable="true">addresses</th>
+		<th iterable="true">parents</th>
+	</tr>
+	<tr>
+		<td>Sérgio</td>
+		<td>20/03/1954</td>
+		<td>
+			<table>
+				<tr>
+					<td>sergio@yahoo.com</td>
+				</tr>
+				<tr>
+					<td>sls@gmail.com</td>
+				</tr>
+			</table>
+		</td>
+		<td>Condado</td>
+		<td>@null</td>
+		<td>@null</td>
+	</tr>
+</table>
+
 
 </html>

@@ -18,6 +18,7 @@
 package org.specrunner.plugins.core.logical;
 
 import java.lang.reflect.Array;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.core.PresentationCompare;
 import org.specrunner.util.xom.core.PresentationException;
 import org.specrunner.util.xom.node.CellAdapter;
+import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.RowAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 
@@ -62,15 +64,38 @@ public class PluginVerifyObjects extends AbstractPluginTable {
     public void doEnd(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
         try {
             Object value = tableAdapter.getObject(context, false);
-            if (!(value instanceof Iterable)) {
-                result.addResult(Failure.INSTANCE, context, "'value' attribute should be an instance of iterable.");
+            if (value == null) {
+                process(context, result, tableAdapter, Collections.emptyIterator());
+            } else {
+                Class<? extends Object> clazz = value.getClass();
+                if (clazz.isArray() || (value instanceof Iterable)) {
+                    tableAdapter.setAttribute(ATT_ITERABLE, "true");
+                    Iterable collection = null;
+                    if (clazz.isArray()) {
+                        collection = objectToList(value);
+                    } else {
+                        collection = (Iterable) value;
+                    }
+                    process(context, result, tableAdapter, collection.iterator());
+                } else {
+                    result.addResult(Failure.INSTANCE, context.newBlock(tableAdapter.getNode(), this), "'value' attribute should be an instance of iterable or an array. Received: " + clazz.getName());
+                }
             }
-            tableAdapter.setAttribute(ATT_ITERABLE, "true");
-            // TODO if first level is an array.
-            process(context, result, tableAdapter, ((Iterable) value).iterator());
         } catch (Exception e) {
             throw new PluginException(e);
         }
+    }
+
+    protected List<Object> objectToList(Object received) {
+        List<Object> collection = new LinkedList<Object>();
+        for (int k = 0; k < Integer.MAX_VALUE; k++) {
+            try {
+                collection.add(Array.get(received, k));
+            } catch (ArrayIndexOutOfBoundsException e) { // ended
+                break;
+            }
+        }
+        return collection;
     }
 
     /**
@@ -126,13 +151,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 continue;
             }
             try {
-                Object expected = c.getObject(context, true);
-                Exception e = verify(context, c.getComparator(), expected, received);
-                if (e != null) {
-                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), e);
-                } else {
-                    result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
-                }
+                compare(context, result, c.getComparator(), null, c, received);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -160,6 +179,71 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 continue;
             }
             result.addResult(Failure.INSTANCE, context.newBlock(r.getCellsCount() == 0 ? r.getNode() : r.getCell(0).getNode(), this), new UnstackedPluginException("Missing row."));
+        }
+    }
+
+    /**
+     * Compare terminal elements.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param comparator
+     *            A comparator.
+     * @param cellExpected
+     *            The expected cell adapter.
+     * @param received
+     *            The received value.
+     * @param eval
+     *            true, to perform evaluation on cell content, false, otherwise.
+     * @throws PluginException
+     *             On expected value recovery error.
+     * @throws ComparatorException
+     *             On comparisons processing errors.
+     */
+    protected void compare(IContext context, IResultSet result, IComparator comparator, CellAdapter headerExpected, CellAdapter cellExpected, Object received) throws PluginException, ComparatorException {
+        boolean eval = cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION);
+        if (eval) {
+            eval = Boolean.valueOf(cellExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
+        } else {
+            eval = headerExpected == null ? true : Boolean.valueOf(headerExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
+        }
+        if (!eval) {
+            cellExpected.setAttribute(INodeHolder.ATTRIBUTE_EVALUATION, String.valueOf(false));
+        }
+        if (headerExpected != null) {
+            if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
+                cellExpected.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER));
+            }
+            int i = 0;
+            while (true) {
+                if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i)) {
+                    cellExpected.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i));
+                } else {
+                    break;
+                }
+                i++;
+            }
+            if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
+                cellExpected.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER));
+            }
+            i = 0;
+            while (true) {
+                if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i)) {
+                    cellExpected.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i));
+                } else {
+                    break;
+                }
+                i++;
+            }
+        }
+        Object expected = cellExpected.getObject(context, true);
+        Exception e = verify(context, comparator, expected, received);
+        if (e != null) {
+            result.addResult(Failure.INSTANCE, context.newBlock(cellExpected.getNode(), this), e);
+        } else {
+            result.addResult(Success.INSTANCE, context.newBlock(cellExpected.getNode(), this));
         }
     }
 
@@ -239,14 +323,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                             subtable.setAttribute(ATT_ITERABLE, h.getAttribute(ATT_ITERABLE));
                         }
                         if (attType.isArray()) {
-                            List<Object> collection = new LinkedList<Object>();
-                            for (int k = 0; k < Integer.MAX_VALUE; k++) {
-                                try {
-                                    collection.add(Array.get(received, k));
-                                } catch (ArrayIndexOutOfBoundsException e) { // ended
-                                    break;
-                                }
-                            }
+                            List<Object> collection = objectToList(received);
                             if (subtable.getRowCount() == 0) {
                                 if (received == null || !collection.isEmpty()) {
                                     result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected @empty, received:" + received));
@@ -269,16 +346,36 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                         }
                     }
                 } else {
-                    Object expected = c.getObject(context, true);
-                    Exception e = verify(context, c.getComparator(h.getComparator()), expected, received);
-                    if (e != null) {
-                        result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), e);
-                    } else {
-                        result.addResult(Success.INSTANCE, context.newBlock(c.getNode(), this));
-                    }
+                    compare(context, result, c.getComparator(h.getComparator()), h, c, received);
                 }
             }
         }
+        extraItems(context, result, tableAdapter, iterator);
+    }
+
+    /**
+     * Return the XPath expression for object attributes of type 'iterable'.
+     * 
+     * @return The xpath to select sublists/tables.
+     */
+    protected String getIterableXPath() {
+        return "child::table";
+    }
+
+    /**
+     * Add error for extra items in enumeration.
+     * 
+     * @param context
+     *            A context.
+     * @param result
+     *            A result.
+     * @param tableAdapter
+     *            A table adapter.
+     * @param iterator
+     *            An iterator.
+     */
+    @SuppressWarnings("rawtypes")
+    protected void extraItems(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) {
         if (iterator.hasNext()) {
             int count = 0;
             Element tr = new Element("tr");
@@ -297,14 +394,5 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             tableAdapter.append(tr);
             result.addResult(Failure.INSTANCE, context.newBlock(tableAdapter.getNode(), this), new UnstackedPluginException("Iterable has '" + count + "' unexpected " + (count == 1 ? "item" : "items") + "."));
         }
-    }
-
-    /**
-     * Return the XPath expression for object attributes of type 'iterable'.
-     * 
-     * @return The xpath to select sublists/tables.
-     */
-    protected String getIterableXPath() {
-        return "child::table";
     }
 }
