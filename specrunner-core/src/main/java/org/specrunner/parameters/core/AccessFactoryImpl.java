@@ -84,7 +84,7 @@ public class AccessFactoryImpl implements IAccessFactory {
         try {
             PropertyDescriptor pd = PropertyUtils.getPropertyDescriptor(target, name);
             if (pd != null) {
-                if (pd.getWriteMethod() != null) {
+                if (pd.getReadMethod() != null) {
                     access = new AccessImpl(pd);
                 }
             }
@@ -174,10 +174,9 @@ public class AccessFactoryImpl implements IAccessFactory {
         try {
             StringTokenizer st = new StringTokenizer(str, ".");
             StringBuilder path = new StringBuilder();
-            IAccessFactory factory = SRServices.get(IAccessFactory.class);
             while (bean != null && st.hasMoreTokens()) {
                 String part = st.nextToken();
-                IAccess access = factory.newAccess(bean, part);
+                IAccess access = newAccess(bean, part);
                 if ((access == null || !access.hasFeature()) && invalidPathAsNull) {
                     bean = null;
                     break;

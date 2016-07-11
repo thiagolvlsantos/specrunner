@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.06
+OK - Create a plugin to verify objects hierachies #61 https://github.com/thiagolvlsantos/specrunner/issues/58
+
 1.5.05
 OK -  Limit to string errors in JUnit getMessage() #58 https://github.com/thiagolvlsantos/specrunner/issues/58
 OK -  Add an annotation with condicional for test executions #60 https://github.com/thiagolvlsantos/specrunner/issues/60
