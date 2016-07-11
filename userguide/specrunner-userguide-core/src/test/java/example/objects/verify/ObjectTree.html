@@ -16,13 +16,19 @@ Attributes are primitive, convertible dates, a lot of ignores and
 reference to fields as feature/field/property.
 <table class="verifyObjects" value="$THIS.users()">
 	<caption>Users</caption>
+	<tr ignore="true">
+		<th colspan="2">Primitives</th>
+		<th>List of primitives</th>
+		<th>Sub property</th>
+		<th colspan="2">Lists of objects</th>
+	</tr>
 	<tr>
 		<th>name</th>
 		<th converter="localDate" arg0="dd/MM/yyyy" eval="false">birthday</th>
 		<th>emails</th>
 		<th property="workplace.description">workplace name</th>
-		<th iterable="true">addresses</th>
-		<th iterable="true">parents</th>
+		<th>addresses</th>
+		<th>parents</th>
 	</tr>
 	<tr>
 		<td>Sérgio</td>
@@ -93,10 +99,14 @@ reference to fields as feature/field/property.
 		</td>
 		<td>
 			<table>
+				<tr ignore="true">
+					<th colspan="2">Attributes for properties</th>
+					<th>List</th>
+				</tr>
 				<tr>
 					<th field="name">"Noun"</th>
 					<th property="emails">Em.</th>
-					<th iterable="true">addresses</th>
+					<th>addresses</th>
 				</tr>
 				<tr>
 					<td>Sérgio</td>
@@ -147,7 +157,8 @@ reference to fields as feature/field/property.
 
 <h1>Example of arrays</h1>
 Same as before, but result value stored in variable 'v' after a
-'sentence' <span class="sentence" name="v">call</span>.
+'sentence'
+<span class="sentence" name="v">call</span>.
 
 <table class="verifyObjects" value="v">
 	<caption>Users</caption>
@@ -156,8 +167,8 @@ Same as before, but result value stored in variable 'v' after a
 		<th converter="localDate" arg0="dd/MM/yyyy" eval="false">birthday</th>
 		<th>emails</th>
 		<th property="workplace.description">workplace name</th>
-		<th iterable="true">addresses</th>
-		<th iterable="true">parents</th>
+		<th>addresses</th>
+		<th>parents</th>
 	</tr>
 	<tr>
 		<td>Sérgio</td>

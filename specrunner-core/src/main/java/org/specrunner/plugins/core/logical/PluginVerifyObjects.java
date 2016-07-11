@@ -132,11 +132,38 @@ public class PluginVerifyObjects extends AbstractPluginTable {
      */
     @SuppressWarnings("rawtypes")
     protected void process(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, ComparatorException {
-        if (tableAdapter.hasAttribute(ATT_ITERABLE)) {
+        if (hasHeader(tableAdapter)) {
             processIterable(context, result, tableAdapter, iterator);
         } else {
             processTerminal(context, result, tableAdapter, iterator);
         }
+    }
+
+    /**
+     * Check if the given table has a header or not.
+     * 
+     * @param tableAdapter
+     *            A table adapter.
+     * @return true, if exist header, false, otherwise.
+     */
+    protected boolean hasHeader(TableAdapter tableAdapter) {
+        List<RowAdapter> rows = tableAdapter.getRows();
+        for (int i = 0; i < rows.size(); i++) {
+            RowAdapter r = rows.get(i);
+            if (UtilNode.isIgnore(r.getNode())) {
+                continue;
+            }
+            List<CellAdapter> cells = r.getCells();
+            for (CellAdapter c : cells) {
+                if (UtilNode.isIgnore(r.getNode())) {
+                    continue;
+                }
+                if ("th".equals(c.getQualifiedName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -308,8 +335,16 @@ public class PluginVerifyObjects extends AbstractPluginTable {
     protected void processIterable(IContext context, IResultSet result, TableAdapter tableAdapter, Iterator iterator) throws PluginException, ComparatorException {
         IAccessFactory factory = SRServices.get(IAccessFactory.class);
         List<RowAdapter> rows = tableAdapter.getRows();
-        RowAdapter header = rows.get(0);
-        for (int i = 1; i < rows.size(); i++) {
+        int i = 0;
+        RowAdapter header = null;
+        while (i < rows.size()) {
+            RowAdapter tmp = rows.get(i++);
+            if (!UtilNode.isIgnore(tmp.getNode())) {
+                header = tmp;
+                break;
+            }
+        }
+        for (; i < rows.size(); i++) {
             RowAdapter r = rows.get(i);
             if (UtilNode.isIgnore(r.getNode())) {
                 continue;
