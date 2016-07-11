@@ -27,6 +27,10 @@ import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
 import org.specrunner.context.IContext;
+import org.specrunner.expressions.EMode;
+import org.specrunner.expressions.INullEmptyFeature;
+import org.specrunner.expressions.INullEmptyHandler;
+import org.specrunner.expressions.core.NullEmptyHandlerDefault;
 import org.specrunner.parameters.IAccessFactory;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
@@ -168,7 +172,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             if (UtilNode.isIgnore(c.getNode())) {
                 continue;
             }
-            compare(context, result, false, c.getComparator(), null, c, received);
+            compare(context, result, c.getComparator(), null, c, received);
         }
         return;
     }
@@ -216,45 +220,54 @@ public class PluginVerifyObjects extends AbstractPluginTable {
      * @throws ComparatorException
      *             On comparisons processing errors.
      */
-    protected void compare(IContext context, IResultSet result, boolean collection, IComparator comparator, CellAdapter headerExpected, CellAdapter cellExpected, Object received) throws PluginException, ComparatorException {
-        boolean eval = cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION);
-        if (eval) {
-            eval = Boolean.valueOf(cellExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
-        } else {
-            eval = headerExpected == null ? true : Boolean.valueOf(headerExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
+    protected void compare(IContext context, IResultSet result, IComparator comparator, CellAdapter headerExpected, CellAdapter cellExpected, Object received) throws PluginException, ComparatorException {
+        String str = cellExpected.getValue(context);
+        Object expected = null;
+        INullEmptyHandler nullEmpty = (INullEmptyHandler) SRServices.getFeatureManager().get(INullEmptyFeature.FEATURE_NULL_EMPTY_HANDLER);
+        if (nullEmpty == null) {
+            nullEmpty = NullEmptyHandlerDefault.get();
         }
-        if (!eval) {
-            cellExpected.setAttribute(INodeHolder.ATTRIBUTE_EVALUATION, String.valueOf(false));
-        }
-        if (headerExpected != null) {
-            if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
-                cellExpected.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER));
-            }
-            int i = 0;
-            while (true) {
-                if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i)) {
-                    cellExpected.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i));
-                } else {
-                    break;
-                }
-                i++;
-            }
-            if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
-                cellExpected.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER));
-            }
-            i = 0;
-            while (true) {
-                if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i)) {
-                    cellExpected.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i));
-                } else {
-                    break;
-                }
-                i++;
-            }
-        }
-        Object expected = cellExpected.getObject(context, true);
-        if (collection && "".equals(expected)) {
+        if (nullEmpty.isNull(EMode.OUTPUT, str)) {
             expected = null;
+        } else if (nullEmpty.isEmpty(EMode.OUTPUT, str) || "".equals(str)) {
+            expected = "";
+        } else {
+            boolean eval = cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION);
+            if (eval) {
+                eval = Boolean.valueOf(cellExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
+            } else {
+                eval = headerExpected == null ? true : Boolean.valueOf(headerExpected.getAttribute(INodeHolder.ATTRIBUTE_EVALUATION, "true"));
+            }
+            if (!eval) {
+                cellExpected.setAttribute(INodeHolder.ATTRIBUTE_EVALUATION, String.valueOf(false));
+            }
+            if (headerExpected != null) {
+                if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER)) {
+                    cellExpected.setAttribute(INodeHolder.ATTRIBUTE_CONVERTER, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_CONVERTER));
+                }
+                int i = 0;
+                while (true) {
+                    if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i)) {
+                        cellExpected.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_CONVERTER_PREFIX + i));
+                    } else {
+                        break;
+                    }
+                    i++;
+                }
+                if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_FORMATTER)) {
+                    cellExpected.setAttribute(INodeHolder.ATTRIBUTE_FORMATTER, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_FORMATTER));
+                }
+                i = 0;
+                while (true) {
+                    if (!cellExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i) && headerExpected.hasAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i)) {
+                        cellExpected.setAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i, headerExpected.getAttribute(INodeHolder.ATTRIBUTE_ARGUMENT_FORMATTER_PREFIX + i));
+                    } else {
+                        break;
+                    }
+                    i++;
+                }
+            }
+            expected = cellExpected.getObject(context, true);
         }
         Exception e = verify(context, comparator, expected, received);
         if (e != null) {
@@ -360,7 +373,7 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                         }
                     }
                 } else {
-                    compare(context, result, true, c.getComparator(h.getComparator()), h, c, received);
+                    compare(context, result, c.getComparator(h.getComparator()), h, c, received);
                 }
             }
         }

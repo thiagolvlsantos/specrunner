@@ -19,7 +19,7 @@ public class TestObjectTree {
         u = new User("Auricélia", new LocalDate(1953, 12, 23), new LinkedList<String>(), null, new Address[] { new Address("Condado") }, null);
         result.add(u);
 
-        u = new User("Thiago", new LocalDate(), Arrays.asList("thiago@yahoo.com", null, "", ""), new Address("Recife"), new Address[] { new Address("Recife") }, Arrays.asList(result.get(0), result.get(1)));
+        u = new User("Thiago", new LocalDate(), Arrays.asList("thiago@yahoo.com", null, "", null), new Address("Recife"), new Address[] { new Address("Recife") }, Arrays.asList(result.get(0), result.get(1)));
         result.add(u);
 
         u = new User("", null, null, null, null, null);
