@@ -57,8 +57,6 @@ import nu.xom.Nodes;
 
 public class PluginVerifyObjects extends AbstractPluginTable {
 
-    private static final String ATT_ITERABLE = "iterable";
-
     public ActionType getActionType() {
         return Assertion.INSTANCE;
     }
@@ -73,7 +71,6 @@ public class PluginVerifyObjects extends AbstractPluginTable {
             } else {
                 Class<? extends Object> clazz = value.getClass();
                 if (clazz.isArray() || (value instanceof Iterable)) {
-                    tableAdapter.setAttribute(ATT_ITERABLE, "true");
                     Iterable collection = null;
                     if (clazz.isArray()) {
                         collection = objectToList(value);
@@ -400,9 +397,6 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                             if (collection == null) {
                                 result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), new Exception("Expected not null, received:" + collection));
                             } else {
-                                if (h.hasAttribute(ATT_ITERABLE)) {
-                                    subtable.setAttribute(ATT_ITERABLE, h.getAttribute(ATT_ITERABLE));
-                                }
                                 process(context, result, subtable, collection.iterator());
                             }
                         }
