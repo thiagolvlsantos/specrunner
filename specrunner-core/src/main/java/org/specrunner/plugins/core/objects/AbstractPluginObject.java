@@ -498,7 +498,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
     protected void loadFields(IContext context, RowAdapter row, List<Field> list) throws PluginException {
         int index = 0;
         for (CellAdapter cell : row.getCells()) {
-            String field = cell.hasAttribute("field") ? cell.getAttribute("field") : null;
+            String field = cell.getAttribute("feature", cell.getAttribute("field", cell.getAttribute("property", null)));
             String fieldName = UtilString.getNormalizer().camelCase(cell.getValue(context));
             String name = field != null ? (field.endsWith(".") ? field + fieldName : field) : fieldName;
             Field f = headerToFields.get(fieldName);

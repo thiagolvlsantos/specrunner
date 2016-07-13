@@ -279,7 +279,8 @@ public class PluginColumn extends AbstractPluginTable {
      */
     protected String feature(IContext context, CellAdapter h) {
         String value = h.getValue(context);
-        String feature = UtilString.getNormalizer().camelCase(h.getAttribute("feature", value));
+        String tmp = h.getAttribute("feature", h.getAttribute("field", h.getAttribute("property", value)));
+        String feature = h.hasAttribute("property") ? tmp : UtilString.getNormalizer().camelCase(tmp);
         if (value != null && value.trim().endsWith("?")) {
             feature = feature + "?";
         }
