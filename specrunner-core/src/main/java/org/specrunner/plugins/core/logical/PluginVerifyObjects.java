@@ -367,7 +367,13 @@ public class PluginVerifyObjects extends AbstractPluginTable {
                 String str = h.getValue(context);
                 String feature = h.getAttribute("feature", h.getAttribute("field", h.getAttribute("property", str)));
                 String field = h.hasAttribute("property") ? feature : UtilString.getNormalizer().camelCase(feature);
-                Object received = factory.getProperty(current, field);
+                Object received = null;
+                try {
+                    received = factory.getProperty(current, field);
+                } catch (Exception e) {
+                    result.addResult(Failure.INSTANCE, context.newBlock(c.getNode(), this), e);
+                    continue;
+                }
                 Class<?> attType = received != null ? received.getClass() : null;
                 if (attType != null && (attType.isArray() || Iterable.class.isAssignableFrom(attType))) {
                     Nodes nodes = c.getNode().query(getIterableXPath());

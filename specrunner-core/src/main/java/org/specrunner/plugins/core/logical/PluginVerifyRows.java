@@ -22,12 +22,11 @@ import java.util.Iterator;
 import org.specrunner.SRServices;
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IContext;
-import org.specrunner.expressions.Unsilent;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.UnstackedPluginException;
-import org.specrunner.plugins.core.AbstractPluginValue;
+import org.specrunner.plugins.core.AbstractPluginTable;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Assertion;
 import org.specrunner.result.IResultSet;
@@ -35,6 +34,7 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+import org.specrunner.util.xom.node.TableAdapter;
 
 import nu.xom.Attribute;
 import nu.xom.Element;
@@ -47,7 +47,7 @@ import nu.xom.Nodes;
  * @author Thiago Santos
  * 
  */
-public class PluginVerifyRows extends AbstractPluginValue {
+public class PluginVerifyRows extends AbstractPluginTable {
 
     /**
      * Default constructor.
@@ -57,19 +57,13 @@ public class PluginVerifyRows extends AbstractPluginValue {
     }
 
     @Override
-    @Unsilent
-    public void setValue(Object value) {
-        super.setValue(value);
-    }
-
-    @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
     }
 
     @Override
-    public ENext doStart(IContext context, IResultSet result) throws PluginException {
-        Object value = getValue();
+    public ENext doStart(IContext context, IResultSet result, TableAdapter tableAdapter) throws PluginException {
+        Object value = tableAdapter.getObject(context, false);
         if (value == null) {
             throw new UnstackedPluginException("Value is null or not found.");
         }
@@ -78,7 +72,7 @@ public class PluginVerifyRows extends AbstractPluginValue {
         }
         Iterator<?> ite = ((Iterable<?>) value).iterator();
 
-        Node node = context.getNode();
+        Node node = tableAdapter.getNode();
         Nodes ns = node.query("child::tr | child::thead/tr | child::tbody/tr");
         if (ns.size() == 0) {
             throw new UnstackedPluginException("Missing rows.");

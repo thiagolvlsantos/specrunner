@@ -181,9 +181,12 @@ public class AccessFactoryImpl implements IAccessFactory {
                     bean = null;
                     break;
                 }
-                bean = access.get(bean, part);
-                path.append('.');
+                path.append(path.length() > 0 ? "." : "");
                 path.append(part);
+                if (access == null && !invalidPathAsNull) {
+                    throw new PluginException("Invalid property '" + part + "' in path:'" + path + "' of property '" + str + "'.");
+                }
+                bean = access.get(bean, part);
                 if (bean == null && !acceptNullPath && st.hasMoreElements()) {
                     throw new PluginException("Invalid null value for part '" + path + "' of property '" + str + "'.");
                 }
