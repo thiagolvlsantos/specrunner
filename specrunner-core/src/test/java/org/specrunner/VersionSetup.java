@@ -17,7 +17,7 @@ public class VersionSetup extends AbstractSetup {
                 return pathname.isDirectory() || pathname.getName().equalsIgnoreCase("pom.xml");
             }
         };
-        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "version>1.5.05</", "version>1.5.06</");
+        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "version>1.5.06</", "version>1.5.07</");
     }
     // CHECKSTYLE:ON
 }

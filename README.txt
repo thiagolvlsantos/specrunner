@@ -1,5 +1,9 @@
 -----------------------------------------------------------
 1.5.06
+OK - Make verifyRows behave as verifyObject on 'value' recover. #62 https://github.com/thiagolvlsantos/specrunner/issues/62
+OK - verifyObject NullPointer on invalid feature names. #63 https://github.com/thiagolvlsantos/specrunner/issues/63
+
+1.5.06
 OK - Create a plugin to verify objects hierachies #61 https://github.com/thiagolvlsantos/specrunner/issues/58
 
 1.5.05
