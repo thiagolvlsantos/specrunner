@@ -1,10 +1,14 @@
 -----------------------------------------------------------
-1.5.06
+1.5.08
+ÒK - Add 'ignore=true' options for AbstractPluginObject #73 https://github.com/thiagolvlsantos/specrunner/issues/73
+OK - On object creation specify collection type or enable use of 'Collection' #71 https://github.com/thiagolvlsantos/specrunner/issues/71
+
+1.5.07
 OK - Make verifyRows behave as verifyObject on 'value' recover. #62 https://github.com/thiagolvlsantos/specrunner/issues/62
 OK - verifyObject NullPointer on invalid feature names. #63 https://github.com/thiagolvlsantos/specrunner/issues/63
 
 1.5.06
-OK - Create a plugin to verify objects hierachies #61 https://github.com/thiagolvlsantos/specrunner/issues/58
+OK - Create a plugin to verify objects hierachies #61 https://github.com/thiagolvlsantos/specrunner/issues/61
 
 1.5.05
 OK -  Limit to string errors in JUnit getMessage() #58 https://github.com/thiagolvlsantos/specrunner/issues/58

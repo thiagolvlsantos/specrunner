@@ -17,10 +17,12 @@
  */
 package org.specrunner.plugins.core.objects;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -596,6 +598,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                     f.setTypes(types);
                 }
 
+                String coltype = cell.getAttribute("coltype", null);
+                if (coltype != null) {
+                    f.setColtype(coltype);
+                }
+
                 String def = cell.getAttribute("default", null);
                 if (def != null) {
                     f.setDef(def);
@@ -682,6 +689,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
          * Default value.
          */
         private String def;
+        /**
+         * Collection type.
+         */
+        private String coltype;
         /**
          * Converters.
          */
@@ -856,6 +867,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
 
         /**
+         * Get collection type information.
+         * 
+         * @return Collection type.
+         */
+        public String getColtype() {
+            return coltype;
+        }
+
+        /**
+         * Set collection type.
+         * 
+         * @param coltype
+         *            The type of collection.
+         */
+        public void setColtype(String coltype) {
+            this.coltype = coltype;
+        }
+
+        /**
          * Get converters.
          * 
          * @return The converters.
@@ -974,12 +1004,21 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         }
 
         /**
-         * Check if an attribute is a list.
+         * Check if an attribute is a collection.
          * 
          * @return true, if yes, false, otherwise.
          */
-        public boolean isList() {
-            return List.class.isAssignableFrom(getSpecificType());
+        public boolean isCollection() {
+            return Collection.class.isAssignableFrom(getSpecificType());
+        }
+
+        /**
+         * Check if an attribute is an array.
+         * 
+         * @return true, if yes, false, otherwise.
+         */
+        public boolean isArray() {
+            return getSpecificType().isArray();
         }
 
         @Override
@@ -1002,7 +1041,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             for (int i = 0; formattersArgs != null && i < formattersArgs.length; i++) {
                 strFormArgs.append((i == 0 ? "" : ",") + formattersArgs[i]);
             }
-            return index + ",'" + fieldName + "'(" + ignore + "," + eval + ")," + strNames + "( default '" + def + "')," + strTypes + ",[" + strConvs + "],[" + strArgs + "],[" + strForm + "],[" + strFormArgs + "],(" + comparator + ")";
+            return index + ",'" + fieldName + "'(" + ignore + "," + eval + ")," + strNames + "( default '" + def + "'), coltype[" + coltype + "], " + strTypes + ",[" + strConvs + "],[" + strArgs + "],[" + strForm + "],[" + strFormArgs + "],(" + comparator + ")";
         }
     }
 
@@ -1166,11 +1205,25 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 }
                 String text = null;
                 Object value = null;
-                if (f.isList()) {
+                if (f.isCollection() || f.isArray()) {
                     Node node = cell.getNode();
                     Nodes childs = node.query("descendant::table");
                     INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(childs.get(0));
                     value = context.getByName(holder.getAttribute("collection"));
+                    if (f.isCollection()) {
+                        String str = holder.getAttribute("coltype", f.coltype);
+                        if (str != null) {
+                            Class<?> coltype = Class.forName(str);
+                            Collection<Object> collection = (Collection<Object>) coltype.newInstance();
+                            collection.addAll((Collection<?>) value);
+                            value = collection;
+                        }
+                    } else if (f.isArray()) {
+                        List<?> tmp = (List<?>) value;
+                        Class<?> type = f.getSpecificType().getComponentType();
+                        Object target = Array.newInstance(type, tmp.size());
+                        value = tmp.toArray((Object[]) target);
+                    }
                 } else {
                     if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION)) {
                         if (!f.eval) {
