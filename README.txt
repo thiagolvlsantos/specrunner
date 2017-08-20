@@ -1,6 +1,6 @@
 -----------------------------------------------------------
 1.5.08
-“K - Add 'ignore=true' options for AbstractPluginObject #73 https://github.com/thiagolvlsantos/specrunner/issues/73
+√íK - Add 'ignore=true' options for AbstractPluginObject #73 https://github.com/thiagolvlsantos/specrunner/issues/73
 OK - On object creation specify collection type or enable use of 'Collection' #71 https://github.com/thiagolvlsantos/specrunner/issues/71
 
 1.5.07
@@ -95,19 +95,19 @@ OK - Add minimize icon to JFrame dialogs. #4 https://github.com/thiagolvlsantos/
 	- Set resize added.
 
 1.4.56
-OK - Ajuste nos nomes dos subcen·rios;
-OK - Usar um mÈtodo como <value='$THIS.getValor(;...)'> e tentar n„o avaliar o conte˙do do <td> para long ao usar o eval='false';
-	- Criado o atributo 'ceval' para indicar nos casos de 'forceContent=true' se deve-se ou n„o avaliar o conte˙do.
+OK - Ajuste nos nomes dos subcen√°rios;
+OK - Usar um m√©todo como <value='$THIS.getValor(;...)'> e tentar n√£o avaliar o conte√∫do do <td> para long ao usar o eval='false';
+	- Criado o atributo 'ceval' para indicar nos casos de 'forceContent=true' se deve-se ou n√£o avaliar o conte√∫do.
 
 1.4.55
-OK - correÁ„o do conversor 'do' para ignorar hora/minuto/segundo.
+OK - corre√ß√£o do conversor 'do' para ignorar hora/minuto/segundo.
 
 1.4.54
-OK - Adicionar o contexto do teste ao IObjectCreator, e tambÈm o header da tabela de onde est· se trabalhando, colocando mÈtodos de busca indexada por nome de coluna, se for o caso;
-	(Sem mÈtodos indexados pelos strings, por enquanto.)
-OK - Na propriedades de uma coluna caso o campo 'field' exista e termine por ponto (.) colocar o conte˙do da coluna como sufixo do campo;
-OK - Quebrar os mÈtodos de convers„o de enumeraÁ„o para facilitar reuso e criar um que use o name como referÍncia;
-OK - Verificar o aninhamento de cen·rio para pegar o nome completo morro acima;
+OK - Adicionar o contexto do teste ao IObjectCreator, e tamb√©m o header da tabela de onde est√° se trabalhando, colocando m√©todos de busca indexada por nome de coluna, se for o caso;
+	(Sem m√©todos indexados pelos strings, por enquanto.)
+OK - Na propriedades de uma coluna caso o campo 'field' exista e termine por ponto (.) colocar o conte√∫do da coluna como sufixo do campo;
+OK - Quebrar os m√©todos de convers√£o de enumera√ß√£o para facilitar reuso e criar um que use o name como refer√™ncia;
+OK - Verificar o aninhamento de cen√°rio para pegar o nome completo morro acima;
 OK - ajustar o date only p sumir com os milisegundos;
 OK - testar lombok;
 	- Funcionando.
@@ -115,211 +115,211 @@ OK - Bugs fix para argumentos de conversores e formatadores no plugin de objetos
 
 1.4.53
 OK - Valor default para 'sr.threadsafe' passou para false, para minimizar problemas rodando teste web multi-thread.
-OK - Macros passam a ser globais por padr„o.
+OK - Macros passam a ser globais por padr√£o.
 OK - ObjectManagerCleaner adicionado.
-OK - Interface do IObjectManager modificado para facilitar utilizaÁ„o em Stubs de sistema.
+OK - Interface do IObjectManager modificado para facilitar utiliza√ß√£o em Stubs de sistema.
 
 1.4.52
-OK - Bug fix dos providers de conexıes.
+OK - Bug fix dos providers de conex√µes.
 
 1.4.51
-OK - Colocar os PluginDbms/etc para aceitar na conexıes a class do provider, ou instancias de datasource providers.
+OK - Colocar os PluginDbms/etc para aceitar na conex√µes a class do provider, ou instancias de datasource providers.
 
 1.4.50
 OK - Criar o formatter template de datas/jodatime;
 
 1.4.49
 OK - Corrigir o estilo do 'ResumeDumperHtml' linha 258;
-OK - Adicionar o conceito de formatter no DatabaseDefault no mÈtodo protected Value getValue(...), na colunas do banco, foi setado na coluna mas n„o foi usado para formatar;
+OK - Adicionar o conceito de formatter no DatabaseDefault no m√©todo protected Value getValue(...), na colunas do banco, foi setado na coluna mas n√£o foi usado para formatar;
 
 1.4.48
 OK - Reduzir o nome dos arquivos de recursos usados (de specrunner.css,... para sr.css) e (specrunner_default.css para sr_d.css)... ;
-OK - Colocar o mapping de objetos para ter heranÁa (i.e. supermapping="file.hml") busca o pai para carregar antes do filho;
+OK - Colocar o mapping de objetos para ter heran√ßa (i.e. supermapping="file.hml") busca o pai para carregar antes do filho;
 
 1.4.47
 OK - No StringNormalizerDefault corrigir o normalize para fica nullsafe.
 
 1.4.46
-OK - CorreÁao do verifyRows para ser somente no primeiro nÌvel de tr e th/tds;
-OK - Bug fix do leitor de arquivos para n„o ter problemas em ambientes Linux.
+OK - Corre√ßao do verifyRows para ser somente no primeiro n√≠vel de tr e th/tds;
+OK - Bug fix do leitor de arquivos para n√£o ter problemas em ambientes Linux.
 
 1.4.45
-OK - Bug fix de expressıes;
+OK - Bug fix de express√µes;
 
 1.4.44
-OK - Rever o scape de $ para ter certeza que a saÌda È apenas o $ mantido - o comportamento esperado È que ao substituir devemos ter sempre o original caso n„o haja execuÁ„o bem sucedida da express„o interna;
-OK - Refactoring to processador de String para substituir expressıes dentro de '${}'
+OK - Rever o scape de $ para ter certeza que a sa√≠da √© apenas o $ mantido - o comportamento esperado √© que ao substituir devemos ter sempre o original caso n√£o haja execu√ß√£o bem sucedida da express√£o interna;
+OK - Refactoring to processador de String para substituir express√µes dentro de '${}'
 
 1.4.43
 - Ajuste do Copyright;
-- Criar um reader de arquivos, que aceiti referÍncia relativa via href:
+- Criar um reader de arquivos, que aceiti refer√™ncia relativa via href:
 	OK - GetValue deve receber o contexto para poder ser relativo;
-	OK - No processamento de banco de dados h· uma substituiÁ„o pelo valor a ser usado no node holder, deve-se ignorar isso, o reader deve dizer se deve-se ou n„o avaliar o conte˙do apÛs a leitura, e se deve substituir a apresentaÁ„o;
+	OK - No processamento de banco de dados h√° uma substitui√ß√£o pelo valor a ser usado no node holder, deve-se ignorar isso, o reader deve dizer se deve-se ou n√£o avaliar o conte√∫do ap√≥s a leitura, e se deve substituir a apresenta√ß√£o;
 
 1.4.42
-OK - Monte de remoÁ„o de private;
-OK - FormataÁ„o comparativa de objetos de diferentes tipos acionada para o PluginEquals.
-OK - Verificar o caso onde se tem vararg mas n„o h· conversor e se passa uma lista de valores n„o convertidos;
-OK - ApÛs a remoÁ„o dos modais de plugin pause e plugin error o teste n„o est· mais parando esperando continuar. Seria o caso de colocar uma features indicando se deveria ser modal ou n„o no dois casos? Parece que sim, com default em modal=true.
+OK - Monte de remo√ß√£o de private;
+OK - Formata√ß√£o comparativa de objetos de diferentes tipos acionada para o PluginEquals.
+OK - Verificar o caso onde se tem vararg mas n√£o h√° conversor e se passa uma lista de valores n√£o convertidos;
+OK - Ap√≥s a remo√ß√£o dos modais de plugin pause e plugin error o teste n√£o est√° mais parando esperando continuar. Seria o caso de colocar uma features indicando se deveria ser modal ou n√£o no dois casos? Parece que sim, com default em modal=true.
 
 1.4.41
-OK - Corrigir o plugin equals para caso ele n„o ter uma propriedade usar o campo value como base da comparaÁ„o e o texto como esperado;
-	OK - … preciso analisar o contexto no getByName para pegar o valor dele com null caso exista perguntando primeiro e containsKey e se tiver pode ser se nulo o resultado;
-	OK - Depois disso analisar o que o avaliador de expressıes faz quando a express„o È inv·lida para o analisador: deve-se lanÁar exceÁ„o dizendo que o valor n„o foi aceito pelo ExpressionItem e n„o retornando nulo, afinal nulo pode ser um valor v·lido pÛs avaliaÁ„o, depois deve-se verificar que o os item de expressıes n„o de deveriam lanÁar exceÁıes quando o pedido de avaliaÁ„o seja 'silent=true'.
-OK - Colocar a possibilidade de aceitar nulos como paths em feature, e tambÈm a possibilidade de n„o haver a propriedade como uma feature do NodeHolder;
-OK - Corrigir a nomenclatura das vari·veis tempor·rias do getLocalArguments;
+OK - Corrigir o plugin equals para caso ele n√£o ter uma propriedade usar o campo value como base da compara√ß√£o e o texto como esperado;
+	OK - √â preciso analisar o contexto no getByName para pegar o valor dele com null caso exista perguntando primeiro e containsKey e se tiver pode ser se nulo o resultado;
+	OK - Depois disso analisar o que o avaliador de express√µes faz quando a express√£o √© inv√°lida para o analisador: deve-se lan√ßar exce√ß√£o dizendo que o valor n√£o foi aceito pelo ExpressionItem e n√£o retornando nulo, afinal nulo pode ser um valor v√°lido p√≥s avalia√ß√£o, depois deve-se verificar que o os item de express√µes n√£o de deveriam lan√ßar exce√ß√µes quando o pedido de avalia√ß√£o seja 'silent=true'.
+OK - Colocar a possibilidade de aceitar nulos como paths em feature, e tamb√©m a possibilidade de n√£o haver a propriedade como uma feature do NodeHolder;
+OK - Corrigir a nomenclatura das vari√°veis tempor√°rias do getLocalArguments;
 
 1.4.40
-OK - Features para tratamentos de null e propriedades inv·lidas nos atributos 'property'.
+OK - Features para tratamentos de null e propriedades inv√°lidas nos atributos 'property'.
 
 1.4.39
 OK - Corrigir o NodeHolder;
 OK - Corrigir a ordem do received e expected no PluginEquals;
-OK - No plugin verify sÛ sobrescrever atributos que n„o existam no td, e no caso de 'class' adicionar ao final caso exista;
-OK - Verificar a sobreposiÁ„o de conversores em plugins do tipo 'eq', principalmente quando falamos de campos de data;
-OK - CorreÁ„o do plugin attribute;
+OK - No plugin verify s√≥ sobrescrever atributos que n√£o existam no td, e no caso de 'class' adicionar ao final caso exista;
+OK - Verificar a sobreposi√ß√£o de conversores em plugins do tipo 'eq', principalmente quando falamos de campos de data;
+OK - Corre√ß√£o do plugin attribute;
 
 1.4.38
-OK - Corrigir a convers„o de par‚metros para aceitar nulo como resultado possÌvel. Removendo o !type.instanceOf(valor) do if final pÛs-convers„o no prepareArguments.
-OK - Fazer o cÛdigo de verifyrows que acessa propriedades considerar nulo quando o path atÈ uma propriedade simplesmente n„o existir,
-OK - Quando o 'pluginEquals' usar uma property e um pode-se obter o value usando converters, verificar via testes se È assim mesmo (provavelmente o problema do path null È resolvido aqui tambÈm);
-	- Colocar o eq para entender 'getObject', fazendo convers„o e verificando nulos como <span class="eq" value="null">@null</span>
-	- Analisar o pluginEquals para comparaÁ„o usando valores @null;
+OK - Corrigir a convers√£o de par√¢metros para aceitar nulo como resultado poss√≠vel. Removendo o !type.instanceOf(valor) do if final p√≥s-convers√£o no prepareArguments.
+OK - Fazer o c√≥digo de verifyrows que acessa propriedades considerar nulo quando o path at√© uma propriedade simplesmente n√£o existir,
+OK - Quando o 'pluginEquals' usar uma property e um pode-se obter o value usando converters, verificar via testes se √© assim mesmo (provavelmente o problema do path null √© resolvido aqui tamb√©m);
+	- Colocar o eq para entender 'getObject', fazendo convers√£o e verificando nulos como <span class="eq" value="null">@null</span>
+	- Analisar o pluginEquals para compara√ß√£o usando valores @null;
 
 1.4.37
 OK - Colocar ignore para os rows de um verifyRows, de forma que o header possa ter agrupamentos ou footers.
-OK - Porque n„o verifyRow com execuÁ„o ao final (onEnd)?
-	- N„o ser· feito para manter compatibilidade com verifyrows to concordion. Ser· que vale a pena mesmo manter essa compatibilidade?
-OK - No prepareMethodArguments considerar o caso onde o elemento (0) do mÈtodo vararg È nulo (exemplo <span class="sentence">"@null"</span>).
-OK - Remover o 'ignore event' de include dentro de definiÁ„o de macro.
-OK - Ajustando contagem de cen·rios 'skip'|'pending'.
-OK - Split de mÈtodo para facilitar a troca do scenario listener de limpeza.
+OK - Porque n√£o verifyRow com execu√ß√£o ao final (onEnd)?
+	- N√£o ser√° feito para manter compatibilidade com verifyrows to concordion. Ser√° que vale a pena mesmo manter essa compatibilidade?
+OK - No prepareMethodArguments considerar o caso onde o elemento (0) do m√©todo vararg √© nulo (exemplo <span class="sentence">"@null"</span>).
+OK - Remover o 'ignore event' de include dentro de defini√ß√£o de macro.
+OK - Ajustando contagem de cen√°rios 'skip'|'pending'.
+OK - Split de m√©todo para facilitar a troca do scenario listener de limpeza.
 
 1.4.36
-OK - Devolver o getMethods() do UtilAnnotations, no lugar do declared methods, ou fazer uma busca recursiva para os mÈtodos;
-OK - Revisar todo o cÛdigo do JUnit para remover os private;
+OK - Devolver o getMethods() do UtilAnnotations, no lugar do declared methods, ou fazer uma busca recursiva para os m√©todos;
+OK - Revisar todo o c√≥digo do JUnit para remover os private;
 OK - Fazer o plugin sentence poder receber varargs. exemplo public void setCategorias (String... nomes){}
-OK - Adicionar a exceÁ„o gerada no caso de erro das invocaÁıes do PluginSentence como resultado apontado pelo 'name';
-	- N„o ser· feito.
+OK - Adicionar a exce√ß√£o gerada no caso de erro das invoca√ß√µes do PluginSentence como resultado apontado pelo 'name';
+	- N√£o ser√° feito.
 
 1.4.35
 OK - Bug de conversores de tempo que estava considerando apenas tempos futuros nos +/- alguma coisa;
-OK - verificar se tem como colocar o padr„o datas +- algo nos preenchimentos de dados em interface gr·fica; por exemplo nno compareDate, ou compareTable com data especificando apenas o formato de comparaÁ„o, sem necessidade de 'plusDays(...)/etc'
-	- Observei que posso fazer isso usando o campo format, para usar apenas o conversor e transformar a data para string usando o formatador genÈrico do tipo com o formato definido em 'format', isso vai permitir o uso de coisas do tipo <td convert="t" type="date" format="dd/MM/yyyy HH:mm:ss">data atual + 10 min</td>;
-OK - LanÁar erro quando se usar uma anotaÁ„o associada a mÈtodos que n„o s„o p˙blicos;
-OK - Colocar o eval para o pluginSentece de forma que ele n„o converta automaticamente os valores strings caso n„o seja de interesse (default È analisar);
-	- N„o ser· feito.
-OK - Colocar os @null e @empty como parte dos valores de expressıes;
-OK - Corrigir o PluginAtt, est· errado ele est· pegando o valor da propriedade no campo attribute e n„o o nome do campo;
-	- reteste mostrou funcionamento correto sem precisar alterar o cÛdigo.
+OK - verificar se tem como colocar o padr√£o datas +- algo nos preenchimentos de dados em interface gr√°fica; por exemplo nno compareDate, ou compareTable com data especificando apenas o formato de compara√ß√£o, sem necessidade de 'plusDays(...)/etc'
+	- Observei que posso fazer isso usando o campo format, para usar apenas o conversor e transformar a data para string usando o formatador gen√©rico do tipo com o formato definido em 'format', isso vai permitir o uso de coisas do tipo <td convert="t" type="date" format="dd/MM/yyyy HH:mm:ss">data atual + 10 min</td>;
+OK - Lan√ßar erro quando se usar uma anota√ß√£o associada a m√©todos que n√£o s√£o p√∫blicos;
+OK - Colocar o eval para o pluginSentece de forma que ele n√£o converta automaticamente os valores strings caso n√£o seja de interesse (default √© analisar);
+	- N√£o ser√° feito.
+OK - Colocar os @null e @empty como parte dos valores de express√µes;
+OK - Corrigir o PluginAtt, est√° errado ele est√° pegando o valor da propriedade no campo attribute e n√£o o nome do campo;
+	- reteste mostrou funcionamento correto sem precisar alterar o c√≥digo.
 OK - Remover o modal do ErroFrame;
 OK - Colocar como Monospaced a fonte;
 
 1.4.34
-OK - Suporte ‡ escolha do leitor usado para obter o conte˙do a se usado como base para os conversores, agora È possÌvel usar o reader='<algo>' para descrever como deve ser lido o texto, por exemplo, reader='xml' vai retornar o conte˙do XML da cÈlula para uso pelos conversor.
-OK - Ajuste dos PluginDbms para terem features que permitam trocar a classe que implementa o IDatabase e assim permitir a redefiniÁ„o simples dessas classes mesmo nos cen·rios de escopo negativo e positivo.
+OK - Suporte √† escolha do leitor usado para obter o conte√∫do a se usado como base para os conversores, agora √© poss√≠vel usar o reader='<algo>' para descrever como deve ser lido o texto, por exemplo, reader='xml' vai retornar o conte√∫do XML da c√©lula para uso pelos conversor.
+OK - Ajuste dos PluginDbms para terem features que permitam trocar a classe que implementa o IDatabase e assim permitir a redefini√ß√£o simples dessas classes mesmo nos cen√°rios de escopo negativo e positivo.
 
 1.4.33
-OK - definido um extensor autom·tico de condiÁ„o de espera que adiciona um ' and @version=<X>' nas condiÁıes de espera de um componente em tela, isso permite que o desenvolvedor ao realizar uma interaÁ„o Ajax que mude a renderizaÁ„o do componente na tela possa perguntar qual vers„o È essa apresentada e assim conseguir esperar pela vers„o correta.
+OK - definido um extensor autom√°tico de condi√ß√£o de espera que adiciona um ' and @version=<X>' nas condi√ß√µes de espera de um componente em tela, isso permite que o desenvolvedor ao realizar uma intera√ß√£o Ajax que mude a renderiza√ß√£o do componente na tela possa perguntar qual vers√£o √© essa apresentada e assim conseguir esperar pela vers√£o correta.
 
 1.4.32
 OK - Corrigindo listeners, sempre chamando before e after.
-OK - Colocar o ajuste de timezone para os conversores de ConverterDateTimePatternArgs tambÈm, hoje somente para os que extendem o AbstractConverterTimezone;
+OK - Colocar o ajuste de timezone para os conversores de ConverterDateTimePatternArgs tamb√©m, hoje somente para os que extendem o AbstractConverterTimezone;
 
 1.4.31
-OK - Listeners chamando o afterScenario sem fazer o beforeScenario quando tem execute="true". Mudar para rodar o final apenas se o comeÁo foi feito tambÈm;
-OK - Melhorar o suporte para internacionalizaÁ„o dos conversores: i.e. criar arquivos properties por cada tipo com texto em inglÍs/portuguÍs/etc.
-OK - Arquivos de propriedades para os conversores de tempo: sr_converters_date.txt para padrıes de data e sr_converters_time.txt para padrıes de tempo;
-OK - Arquivos de propriedades para os campos +- de data, agora os incrementos ou decrementos de tempo podem ser feitos de forma customizavel atravÈs de arquivos de propriedades;
+OK - Listeners chamando o afterScenario sem fazer o beforeScenario quando tem execute="true". Mudar para rodar o final apenas se o come√ßo foi feito tamb√©m;
+OK - Melhorar o suporte para internacionaliza√ß√£o dos conversores: i.e. criar arquivos properties por cada tipo com texto em ingl√™s/portugu√™s/etc.
+OK - Arquivos de propriedades para os conversores de tempo: sr_converters_date.txt para padr√µes de data e sr_converters_time.txt para padr√µes de tempo;
+OK - Arquivos de propriedades para os campos +- de data, agora os incrementos ou decrementos de tempo podem ser feitos de forma customizavel atrav√©s de arquivos de propriedades;
 OK - Corrigir o StringNormalizer: whitespace = false;
-OK - Colocar o esquema de data +- algo para todos os conversores de 'data atual', sÛ est· para o de DateTime e LocalDate por enquanto;
+OK - Colocar o esquema de data +- algo para todos os conversores de 'data atual', s√≥ est√° para o de DateTime e LocalDate por enquanto;
 
 1.4.30
 OK - conversores +- tempo para DateTime e LocalDate criados.
 
 1.4.29
 OK - Criar conversores de data com templates para coisas como 'data atual ((+|-) 30 (dias|meses|anos|horas|minutos|segundos|...)+' [criar teste mostrando como fazer];
-OK - Colocar o plugin sentence para salvar uma vari·vel global com o resultado da execuÁ„o, caso se defina um 'name' nela, isso permitir· fazer asserts mais facilmente no resultado recebido (estender o AbstractPluginScoped e fazer bind caso global caso n„o haja escopo definido) - [criar teste mostrando como fazer];
-OK - LanÁar erro quando uma coluna for repetida no Input/Output do banco de dados, para evitar erro do desenvolvedor ao colocar a coluna repetida;
+OK - Colocar o plugin sentence para salvar uma vari√°vel global com o resultado da execu√ß√£o, caso se defina um 'name' nela, isso permitir√° fazer asserts mais facilmente no resultado recebido (estender o AbstractPluginScoped e fazer bind caso global caso n√£o haja escopo definido) - [criar teste mostrando como fazer];
+OK - Lan√ßar erro quando uma coluna for repetida no Input/Output do banco de dados, para evitar erro do desenvolvedor ao colocar a coluna repetida;
 
 1.4.28
-OK - Verificar o PluginColumn quando tem o assert com final ?, em atributos javabeans, p˙blico funciona, mÈtodo tambÈm;
-OK - No plugin Column Permitir incluir linhas que s„o apenas meta-descriÁıes (como agrupadores de colunas, usando ignore);
-OK - Na comparaÁ„o de bases ver que o ˙ltimo registro de expected n„o est· sendo mostrado com pendente quando n„o h· conformidade da base com o esperado;
-OK - Quando a coluna È uma enumeraÁ„o, deve-se considerar o valor 'inverso' (textual) como base para o tamanho da coluna, ou coloca-se o cÛdigo seguido da descriÁ„o textual limitada ao tamanho conhecido e com '...';
+OK - Verificar o PluginColumn quando tem o assert com final ?, em atributos javabeans, p√∫blico funciona, m√©todo tamb√©m;
+OK - No plugin Column Permitir incluir linhas que s√£o apenas meta-descri√ß√µes (como agrupadores de colunas, usando ignore);
+OK - Na compara√ß√£o de bases ver que o √∫ltimo registro de expected n√£o est√° sendo mostrado com pendente quando n√£o h√° conformidade da base com o esperado;
+OK - Quando a coluna √© uma enumera√ß√£o, deve-se considerar o valor 'inverso' (textual) como base para o tamanho da coluna, ou coloca-se o c√≥digo seguido da descri√ß√£o textual limitada ao tamanho conhecido e com '...';
 OK- Corrigir o load do URLResolver (retornar ao modelo original);
-OK - Corrigir um bug que no escopo negativo que È quando um campo tem valor default, mas o usu·rio quer ajust·-lo para null, ou seja, na base gabarito deveria ir null, mas est· indo o valor default setado no arquivo de configuraÁ„o do mapeamento.
+OK - Corrigir um bug que no escopo negativo que √© quando um campo tem valor default, mas o usu√°rio quer ajust√°-lo para null, ou seja, na base gabarito deveria ir null, mas est√° indo o valor default setado no arquivo de configura√ß√£o do mapeamento.
 
 1.4.27 
-OK - Corrigir o rows/cols do plugin table, est· erradamente pulando ranges;
-OK - Criar um waitfor com m˙ltiplas condiÁıes de espera. Sugest„o separados por ';', ou separador customizado (features). Seria possÌvel uma linguagem de expressıes? Ou fazer features com prefixo/sufixo, ao invÈs de absolutas?
+OK - Corrigir o rows/cols do plugin table, est√° erradamente pulando ranges;
+OK - Criar um waitfor com m√∫ltiplas condi√ß√µes de espera. Sugest√£o separados por ';', ou separador customizado (features). Seria poss√≠vel uma linguagem de express√µes? Ou fazer features com prefixo/sufixo, ao inv√©s de absolutas?
 		- Implementado apenas com AND.
-OK - Fazer o PluginInclude ter os links dos arquivos originais de forma relativa ‡ pasta de saÌda;
-OK - Colocar fundo e fonte fixos no tempo dos cen·rios;
+OK - Fazer o PluginInclude ter os links dos arquivos originais de forma relativa √† pasta de sa√≠da;
+OK - Colocar fundo e fonte fixos no tempo dos cen√°rios;
 OK - Colocar mensagens de timezone para o escopo de trace;
 	 R: Mantido em info, mas reduzida a quantidade, colocado apenas no momento do getZone() para colocar na cache.
-OK - Definir uma forma de chamar o mÈtodo pelo nome usando o locat no webdriver wait. … possÌvel fazer a chamada de qualquer mÈtodo est·tico de ExpectedConditions que receba um 'By' como par‚metros facilmente.
-OK - Realizar uma implementaÁ„o prÛpria de URLResolver para resolver mais que 12 nÌveis;
-	?? testes com 20 nÌveis funcionaram sem problemas.
+OK - Definir uma forma de chamar o m√©todo pelo nome usando o locat no webdriver wait. √â poss√≠vel fazer a chamada de qualquer m√©todo est√°tico de ExpectedConditions que receba um 'By' como par√¢metros facilmente.
+OK - Realizar uma implementa√ß√£o pr√≥pria de URLResolver para resolver mais que 12 n√≠veis;
+	?? testes com 20 n√≠veis funcionaram sem problemas.
 
 1.4.26
-OK - Corrigir o pause on failure listener, ele est· se perdendo quando se trata de um include com falhas, colocar todos atributos como protected;
-OK - Alterar o cÛdigo do IListenerManager para fazer a remoÁ„o usando o getName() como referÍncia,e n„o o equals do Java;
+OK - Corrigir o pause on failure listener, ele est√° se perdendo quando se trata de um include com falhas, colocar todos atributos como protected;
+OK - Alterar o c√≥digo do IListenerManager para fazer a remo√ß√£o usando o getName() como refer√™ncia,e n√£o o equals do Java;
 OK - Usar http://stackoverflow.com/questions/10797663/removing-tail-of-x-elements-from-a-list para remover os elementos do final da lista de resultado;
 
 1.4.25
-OK - Fazer o analisador e comparador de bases retornarem o relatÛrio como string n„o fazer System.out;
-OK - Colocar o campo de 'nome da base' no evento de listener do banco, isso permite fazer um printlistener que filtre apenas as aÁıes de uma base no sql-negative;
+OK - Fazer o analisador e comparador de bases retornarem o relat√≥rio como string n√£o fazer System.out;
+OK - Colocar o campo de 'nome da base' no evento de listener do banco, isso permite fazer um printlistener que filtre apenas as a√ß√µes de uma base no sql-negative;
 	OK - Adicionar um getName na fonte de dados.
-OK - Aumentar o tamanho do campo 'status' no relatÛrio para xx.xxx
-OK - Na apresentaÁ„o de erro, verificar se existe o unwrap seria interessante, tem muita mensagem em volta dos errors.
-OK - Verificar se o valor est· no range de Ìndices. Colocado uma verificaÁ„o de o n˙mero de colunas em tabelas de objetos È correspondente ‡ quantidade de headers.
+OK - Aumentar o tamanho do campo 'status' no relat√≥rio para xx.xxx
+OK - Na apresenta√ß√£o de erro, verificar se existe o unwrap seria interessante, tem muita mensagem em volta dos errors.
+OK - Verificar se o valor est√° no range de √≠ndices. Colocado uma verifica√ß√£o de o n√∫mero de colunas em tabelas de objetos √© correspondente √† quantidade de headers.
 OK - de private static final int TO_SECONDS = 1000; para protected;
-OK - Colocar o evento de click do navegador de erros para fazer o offset do erro ficar na posiÁ„o esquerda e no topo da tela;
-OK - Colocar uma feature no include para remover o conte˙do incluÌdo apÛs a execuÁ„o com sucesso de forma que a tela de resultado fique mais barata de ser exibida, deixando apenas o link para o arquivo original incluÌdo efetivamente, isso acelera a execuÁ„o dos testes, com menos dados para escrever na saÌda e tambÈm a visualizaÁ„o dos erros no arquivo de saÌda;
-	- Default È n„o injetar.
-OK - Colocar o initialize no pluginfactory, expor na interface o initialize(); Chamar o mÈtodo no momento do getClass(alias);
+OK - Colocar o evento de click do navegador de erros para fazer o offset do erro ficar na posi√ß√£o esquerda e no topo da tela;
+OK - Colocar uma feature no include para remover o conte√∫do inclu√≠do ap√≥s a execu√ß√£o com sucesso de forma que a tela de resultado fique mais barata de ser exibida, deixando apenas o link para o arquivo original inclu√≠do efetivamente, isso acelera a execu√ß√£o dos testes, com menos dados para escrever na sa√≠da e tamb√©m a visualiza√ß√£o dos erros no arquivo de sa√≠da;
+	- Default √© n√£o injetar.
+OK - Colocar o initialize no pluginfactory, expor na interface o initialize(); Chamar o m√©todo no momento do getClass(alias);
 OK - No PluginInclude colocar success na mensagem de que tudo foi bem sucedido;
 
 1.4.24
 OK - criar o subgrupo specrunner-tools;
 OK - mudar o nome de specrunner-dbms para specrunner-tools-dbms;
-OK - Fixar o formato da data no header e colocar o tempo total de execuÁ„o no final;
-OK - separar a criaÁ„o do COnnectionDatabase em um mÈtodo para permitir a redefiniÁ„o de mÈtodos;
-	- Deixar mais reutiliz·vel.
+OK - Fixar o formato da data no header e colocar o tempo total de execu√ß√£o no final;
+OK - separar a cria√ß√£o do COnnectionDatabase em um m√©todo para permitir a redefini√ß√£o de m√©todos;
+	- Deixar mais reutiliz√°vel.
 OK - Validar arquivos de regras antes de executar o emparelhamento/carga dos bancos de dados;
-OK - Deixar dois mÈtodos compare e dois mÈtodos analyse para usar os arquivos de configuraÁ„o padr„o quando n„o forem fornecidos os listeners de tabela ou de coluna;
-OK - Criar abstraÁıes para receber listas de arquivos de listeners, cada listener pode ter nomes e ser sobrescrito, desta forma podemos ter listeners redefinindo apenas o que for necess·rio
-	- Nesse caso o mÈtodo compare/analyse refebe algo como TableFiles(....) e ColumnFiles(....), ou o mesmo tipo DbmsFiles(...).
-OK - Trocar o isOptional por isMandatory() a sem‚ntica est· invertida;
-OK - Remover o '	shade' da ferramenta, deixar ela como API mesmo, n„o precisa ser execut·vel;
-OK - Colocar o base comparator para receber os arquivos de configuraÁ„o dos listeners de tabelas e colunas (procurar diretamente e depois via classpath);
-OK - Criar dois perfis um de impress„o completo e um de an·lise;
-OK - Finalizar os modelos de listeners em hierarquia com dump apenas se necess·rio;
+OK - Deixar dois m√©todos compare e dois m√©todos analyse para usar os arquivos de configura√ß√£o padr√£o quando n√£o forem fornecidos os listeners de tabela ou de coluna;
+OK - Criar abstra√ß√µes para receber listas de arquivos de listeners, cada listener pode ter nomes e ser sobrescrito, desta forma podemos ter listeners redefinindo apenas o que for necess√°rio
+	- Nesse caso o m√©todo compare/analyse refebe algo como TableFiles(....) e ColumnFiles(....), ou o mesmo tipo DbmsFiles(...).
+OK - Trocar o isOptional por isMandatory() a sem√¢ntica est√° invertida;
+OK - Remover o '	shade' da ferramenta, deixar ela como API mesmo, n√£o precisa ser execut√°vel;
+OK - Colocar o base comparator para receber os arquivos de configura√ß√£o dos listeners de tabelas e colunas (procurar diretamente e depois via classpath);
+OK - Criar dois perfis um de impress√£o completo e um de an√°lise;
+OK - Finalizar os modelos de listeners em hierarquia com dump apenas se necess√°rio;
 OK - testar tamanho apenas se forem campos de texto;
 OK - Criar o comparador de base e o extrator de esquema no perfil dbms usando o schemacrawler;
-	- Usar um modelo de listeners para geraÁ„o de reports customizados, por exemplo, no banco analisar que todo campo ID È chave estrangeira, que todo campo DH È timestamp, que todo campo IB deveria ser smallint, que todo campo campo DT È date;
-	- Criar um jar execut·vel que lÍ arquivo de configuraÁ„o para carregar os listeners de relatÛrio (isso vai permitir estender a ferramenta out of box);
+	- Usar um modelo de listeners para gera√ß√£o de reports customizados, por exemplo, no banco analisar que todo campo ID √© chave estrangeira, que todo campo DH √© timestamp, que todo campo IB deveria ser smallint, que todo campo campo DT √© date;
+	- Criar um jar execut√°vel que l√™ arquivo de configura√ß√£o para carregar os listeners de relat√≥rio (isso vai permitir estender a ferramenta out of box);
 	- Colocar o javasource para 1.7;
 
 1.4.23
 Refactorings.
 	
 1.4.22
-OK - Colocar uma feature para permitir usar ou n„o o execute="true", isso permitir· deix·-lo habilitado apenas nas execuÁıes dos desenvolvedores, n„o na integraÁ„o contÌnua;
+OK - Colocar uma feature para permitir usar ou n√£o o execute="true", isso permitir√° deix√°-lo habilitado apenas nas execu√ß√µes dos desenvolvedores, n√£o na integra√ß√£o cont√≠nua;
 OK - PluginSentence linha 274, verificar se o startText != null;
 
 1.4.21
-OK - Colocar o conversor de EnumeraÁıes no comando 'not equals' foi feito para o resto mais o not equals n„o foi;
-	- Na verdade o problema È no mÈtodo revert(....) da classe de template, que deve usar o array de template e n„o os args reais :)
-	- Fazer o campo de template ser protected e n„o private.
-OK - Adicionando suporte ‡ convers„o reversa no Database select report.
+OK - Colocar o conversor de Enumera√ß√µes no comando 'not equals' foi feito para o resto mais o not equals n√£o foi;
+	- Na verdade o problema √© no m√©todo revert(....) da classe de template, que deve usar o array de template e n√£o os args reais :)
+	- Fazer o campo de template ser protected e n√£o private.
+OK - Adicionando suporte √† convers√£o reversa no Database select report.
 
 1.4.20
-OK - Criar uma interface reversable converter e no caso do relatÛrio de erros no compareTable usar a interface para fazer a convers„o reversa quando for exibir o registro diferente;
-	- Isso vai deixar o relatÛrio final muito ninja para os tipos enumerados.
-	- Incluidas tambÈm marcaÁıes para os campos key, reference, virtual, sequence, e date.
-OK - Colocar um boolean para definir se deve-se mostrar o stacktrace completo no resultado (isso agiliza bastante a exibiÁ„o dos resultados);
+OK - Criar uma interface reversable converter e no caso do relat√≥rio de erros no compareTable usar a interface para fazer a convers√£o reversa quando for exibir o registro diferente;
+	- Isso vai deixar o relat√≥rio final muito ninja para os tipos enumerados.
+	- Incluidas tamb√©m marca√ß√µes para os campos key, reference, virtual, sequence, e date.
+OK - Colocar um boolean para definir se deve-se mostrar o stacktrace completo no resultado (isso agiliza bastante a exibi√ß√£o dos resultados);
 	- Deixar como default exibir tudo.
 
 
@@ -329,27 +329,27 @@ OK - Trocar o comando de click() pelo comando:
         	Point location = tmp.getLocation();
 	        ((JavaExecutor) client).execute("window.scrollTo(" + location.getX() + "," + location.getY() + ")");
 	    }
-	Usar uma interface para definir como qualquer elemento ser· preparado para uso antes da aÁ„o acontecer e colocar isso no pluginfind.
+	Usar uma interface para definir como qualquer elemento ser√° preparado para uso antes da a√ß√£o acontecer e colocar isso no pluginfind.
 
 1.4.18
-OK - Na cache de s deve-se perguntar se o SQL È n„o vazio;
-N√O - fazer o reuso do connection/statement no database.
+OK - Na cache de s deve-se perguntar se o SQL √© n√£o vazio;
+N√ÉO - fazer o reuso do connection/statement no database.
 OK - Resolver os bugs do isDisplayed() no WebDriver.
-	Fiz o comparador clicar nos ths/tds antes de perguntar se isDisplayed(), no Chorme isso se mostrou eficaz para realizar o scroll autom·tico, se n„o funcionar ser· necess·rio usar a posiÁ„o X,Y do component e mandar o WebDriver executar um script de scrollTo.
+	Fiz o comparador clicar nos ths/tds antes de perguntar se isDisplayed(), no Chorme isso se mostrou eficaz para realizar o scroll autom√°tico, se n√£o funcionar ser√° necess√°rio usar a posi√ß√£o X,Y do component e mandar o WebDriver executar um script de scrollTo.
 
 1.4.17
-OK - Colocar initialize() nos IComparator de PluginCompareBase. Isso valor para toda vez que se quiser fazer qualquer comparaÁ„o deve-se chamar o initialize antes.
-OK - Fazer o @BeforeScenario e @AfterScenario poderem chamar mÈtodo com o contexto, e contexto e resultado;
-OK - Criar o listener que verifica o banco de dados no final apenas ou apenas no comeÁo;
-OK - Criar uma cache de  SQL para o mesmo contexto - Lembrar que nesse caso n„o se pode ter dados bin·rios e tambÈm que deve-se ter uma toler‚ncia de tempo maior.
-	- Pode-se usar um MD5 para o texto da tabela para verificar se ela j· foi calculada alguma vez, se sim usa-se a cache para executar o  associado. 
-		Essa cache presente no DatabaseDefault deve ser limpa entre contextos diferentes de execuÁ„o.
-	Implementada usando o toXML() para ser a chave do mapeamento, se isso for muito caro pode-se usar o MD5 no lugar, isso foi apenas para economizar custo de processamento, com objetivo de deixar mais r·pido em detrimento ‡ memÛria. 
-         Tanto a cache quanto o md5 est„o desabilitados de cara, sendo necess·rio habilitar, na vers„o 2.0 pode ser que isso seja padr„o, depende dos testes em cen·rios reais.
+OK - Colocar initialize() nos IComparator de PluginCompareBase. Isso valor para toda vez que se quiser fazer qualquer compara√ß√£o deve-se chamar o initialize antes.
+OK - Fazer o @BeforeScenario e @AfterScenario poderem chamar m√©todo com o contexto, e contexto e resultado;
+OK - Criar o listener que verifica o banco de dados no final apenas ou apenas no come√ßo;
+OK - Criar uma cache de  SQL para o mesmo contexto - Lembrar que nesse caso n√£o se pode ter dados bin√°rios e tamb√©m que deve-se ter uma toler√¢ncia de tempo maior.
+	- Pode-se usar um MD5 para o texto da tabela para verificar se ela j√° foi calculada alguma vez, se sim usa-se a cache para executar o  associado. 
+		Essa cache presente no DatabaseDefault deve ser limpa entre contextos diferentes de execu√ß√£o.
+	Implementada usando o toXML() para ser a chave do mapeamento, se isso for muito caro pode-se usar o MD5 no lugar, isso foi apenas para economizar custo de processamento, com objetivo de deixar mais r√°pido em detrimento √† mem√≥ria. 
+         Tanto a cache quanto o md5 est√£o desabilitados de cara, sendo necess√°rio habilitar, na vers√£o 2.0 pode ser que isso seja padr√£o, depende dos testes em cen√°rios reais.
 
 1.4.16
-OK - Baixar o memory analyzer Java (RCP ou dentro do Luna), e ver a quest„o de criaÁ„o de clones das especificaÁıes, conferir que todos os resultados est„o sendo liberados ao longo das execuÁıes, sem manutenÁ„o completa em memÛria para n„o detonar a heap;
-	O problema È executor que est· guardando referÍncias para os listeners, deve-se liberar as referÍncias apÛs a execuÁ„o dos testes.
+OK - Baixar o memory analyzer Java (RCP ou dentro do Luna), e ver a quest√£o de cria√ß√£o de clones das especifica√ß√µes, conferir que todos os resultados est√£o sendo liberados ao longo das execu√ß√µes, sem manuten√ß√£o completa em mem√≥ria para n√£o detonar a heap;
+	O problema √© executor que est√° guardando refer√™ncias para os listeners, deve-se liberar as refer√™ncias ap√≥s a execu√ß√£o dos testes.
 		@Override
 		protected void runChild(FrameworkMethod method, RunNotifier notifier) {
 			if (method == fakeMethod) {
@@ -365,52 +365,52 @@ OK - Baixar o memory analyzer Java (RCP ou dentro do Luna), e ver a quest„o de c
 			instance = null;
 			statement = null;
 		}
-OK - Definir um 'execute="true"'' que ser· colocado como prioridade em relaÁ„o aos pending, ou seja, se houver algo com execute 'true' ent„o os demais devem ser considerados pending='true' automagicamente, de forma a rodar apenas 1 cen·rio selecionado;
+OK - Definir um 'execute="true"'' que ser√° colocado como prioridade em rela√ß√£o aos pending, ou seja, se houver algo com execute 'true' ent√£o os demais devem ser considerados pending='true' automagicamente, de forma a rodar apenas 1 cen√°rio selecionado;
 
 1.4.15
-OK - No header do HTML colocar a quantidade de testes com status igual ao status geral da execuÁ„o.
-OK - Nos plugin de objetcs sÛ colocar title="X" se o texto dentro dos tds n„o for "X" (reduz a quantidade de dados na saÌda);
-NO - Adicionar um title 'CEN¡RIO IGNORADO' quando for o caso
-	Denecess·rio.
-OK - Testar melhor o valor de campo quando preenchido com property='x.atributo' ao invÈs de value, tem que ser mais esperta a resoluÁ„o;
+OK - No header do HTML colocar a quantidade de testes com status igual ao status geral da execu√ß√£o.
+OK - Nos plugin de objetcs s√≥ colocar title="X" se o texto dentro dos tds n√£o for "X" (reduz a quantidade de dados na sa√≠da);
+NO - Adicionar um title 'CEN√ÅRIO IGNORADO' quando for o caso
+	Denecess√°rio.
+OK - Testar melhor o valor de campo quando preenchido com property='x.atributo' ao inv√©s de value, tem que ser mais esperta a resolu√ß√£o;
 
 1.4.14
-OK - Ajuste do bug de relatÛrio HTML final;
+OK - Ajuste do bug de relat√≥rio HTML final;
 OK - Realizar update em bloco;
-OK - remover o coment·rio de onTableIn no DatabasePrintListener
-OK - Fazer o lookup de tabelas e campos ser realizado em duas etapas, primeiro pelo alias, se n„o achar procupar pelo name da entidade no banco, isso permite usar alias ou names nas especificaÁıes sem problemas;
-OK - remover tambÈm os acentos dos nomes das tabelas normalizadas no esquema para evitar problemas bestas de acentuaÁ„o;
-OK - Jogar sempre os js e css de saÌda na saÌda, sen„o os updates da ferramenta n„o ter„o efeito visual. A menos que seja feito sempre o clean da pasta de saida no build do projeto, por exemplo, se a pasta for o target do maven deveria ser sempre removida;
+OK - remover o coment√°rio de onTableIn no DatabasePrintListener
+OK - Fazer o lookup de tabelas e campos ser realizado em duas etapas, primeiro pelo alias, se n√£o achar procupar pelo name da entidade no banco, isso permite usar alias ou names nas especifica√ß√µes sem problemas;
+OK - remover tamb√©m os acentos dos nomes das tabelas normalizadas no esquema para evitar problemas bestas de acentua√ß√£o;
+OK - Jogar sempre os js e css de sa√≠da na sa√≠da, sen√£o os updates da ferramenta n√£o ter√£o efeito visual. A menos que seja feito sempre o clean da pasta de saida no build do projeto, por exemplo, se a pasta for o target do maven deveria ser sempre removida;
 OK - Ajustar o verify rows para mostrar os valores excedentes recebidos nas consultas.
 
 1.4.13
-OK - Criar o relatÛrio de resumo das execuÁıes dos testes (fazer por thread de execuÁ„o, se for 'main' n„o precisa colocar sufixo no nome do relatÛrio)
-	Criar a tabela com todos os testes executados e seus respectivos resultados (vers„o HTML do relatÛrio textual que È gerado atualmente), tudo linkado
-	OK: tem que ser relativo sen„o n„o funciona no Jenkins/etc.
+OK - Criar o relat√≥rio de resumo das execu√ß√µes dos testes (fazer por thread de execu√ß√£o, se for 'main' n√£o precisa colocar sufixo no nome do relat√≥rio)
+	Criar a tabela com todos os testes executados e seus respectivos resultados (vers√£o HTML do relat√≥rio textual que √© gerado atualmente), tudo linkado
+	OK: tem que ser relativo sen√£o n√£o funciona no Jenkins/etc.
 
-OK - Quando realizar deleÁıes em bloco n„o precisa ter campos id e(ou) quantitativo, afinal pode-se querer apagar todos os registros de uma tabela.
+OK - Quando realizar dele√ß√µes em bloco n√£o precisa ter campos id e(ou) quantitativo, afinal pode-se querer apagar todos os registros de uma tabela.
 
 1.4.12
-OK - Cen·rios com ignore=true s„o tratados adequadamente.
-OK - RelatÛrio HTML implementado, saÌda em 'target/output'.
+OK - Cen√°rios com ignore=true s√£o tratados adequadamente.
+OK - Relat√≥rio HTML implementado, sa√≠da em 'target/output'.
 
 1.4.11
 OK - Criar um tableadapter/rowadapter/celladapter factory;
-OK - Melhoras de performance escrevendo menos arquivos na saÌda.
+OK - Melhoras de performance escrevendo menos arquivos na sa√≠da.
 
 1.4.10
-OK - Criar uma abstraÁ„o que tenha valor, conversor/etc para usar no Column e n„o amarrar ao INodeHolder.
-OK - Colocar getObject(...,true) no reset de colunas, deve ser silenciosa a avaliaÁ„o do campo 'value'.
-OK - Fazer o initialize do schema refazer o c·lculo somente se mudar o objeto contexto (guardar o contexto velho no momento da chamada ao initialize, para evitar atributo desnecess·rio no cÛdigo de Column);
+OK - Criar uma abstra√ß√£o que tenha valor, conversor/etc para usar no Column e n√£o amarrar ao INodeHolder.
+OK - Colocar getObject(...,true) no reset de colunas, deve ser silenciosa a avalia√ß√£o do campo 'value'.
+OK - Fazer o initialize do schema refazer o c√°lculo somente se mudar o objeto contexto (guardar o contexto velho no momento da chamada ao initialize, para evitar atributo desnecess√°rio no c√≥digo de Column);
 
 1.4.09
-OK- Colocar um boolean para saber se o default value È calculado no comeÁo ou a cada uso (implicaÁıes de performance);
+OK- Colocar um boolean para saber se o default value √© calculado no come√ßo ou a cada uso (implica√ß√µes de performance);
 	Colocado para realizar reset dos valores default de um esquema toda as vezes que houver o reuso do schema;
-OK - No caso de registros extra ou faltando pode-se omitir as colunas cujo valor esperado seja nullo (por convenÁ„o) isso reduz a quantidade de elementos na tela e facilita a leitura.
-OK - Colocar o nome da coluna em outra linha no relatÛrio textual e no web (alinhados ‡ esquerda);
-OK- Colocar um boolean para dizer se deve-se avaliar os argumentos fornecidos no getObject(), para usar no momento do getDefaultValue como uma feature, evitando assim avaliaÁ„o desnecess·ria de expressıes;
+OK - No caso de registros extra ou faltando pode-se omitir as colunas cujo valor esperado seja nullo (por conven√ß√£o) isso reduz a quantidade de elementos na tela e facilita a leitura.
+OK - Colocar o nome da coluna em outra linha no relat√≥rio textual e no web (alinhados √† esquerda);
+OK- Colocar um boolean para dizer se deve-se avaliar os argumentos fornecidos no getObject(), para usar no momento do getDefaultValue como uma feature, evitando assim avalia√ß√£o desnecess√°ria de express√µes;
 OK - Criar um nodeholder factory;
-OK - CÛdigo estranho convertendo os argumentos e depois n„o usando eles:
+OK - C√≥digo estranho convertendo os argumentos e depois n√£o usando eles:
 	Object[] args = new Object[arguments.size()];
                 for (int i = 0; i < arguments.size(); i++) {
                     args[i] = UtilEvaluator.evaluate(arguments.get(i), context, silent);
@@ -426,8 +426,8 @@ OK - CÛdigo estranho convertendo os argumentos e depois n„o usando eles:
                 }
 
 1.4.08
-OK - Imprimir a vers„o textual do relatÛrio de n„o conformidades
-	TODO: ajustar legibilidade do cÛdigo, o c·lculo do tamanho das colunas est· obscuro.
+OK - Imprimir a vers√£o textual do relat√≥rio de n√£o conformidades
+	TODO: ajustar legibilidade do c√≥digo, o c√°lculo do tamanho das colunas est√° obscuro.
 OK - Performance continuada dos perfis positive e negative;
 	- Colocar 
 	fm.add(PluginConnection.REUSE,true)
@@ -437,112 +437,112 @@ OK - ajustar estilo para
 		color: black;
 		white-space: nowrap;
 	}
-OK - Fazer um listener de cen·rio que faÁa sempre o compareBase no final, e o que limpa pode ser uma extens„o dele, isso ser· usado para os testes de pesquisa ou detalhamento, por exemplo;
-OK - Calcular o valor default apenas quando for o momento de usar, isso tem impactado em testes de longa duraÁ„o com esquema reusado.
+OK - Fazer um listener de cen√°rio que fa√ßa sempre o compareBase no final, e o que limpa pode ser uma extens√£o dele, isso ser√° usado para os testes de pesquisa ou detalhamento, por exemplo;
+OK - Calcular o valor default apenas quando for o momento de usar, isso tem impactado em testes de longa dura√ß√£o com esquema reusado.
 
 1.4.07
-OK - Resolver os @ScenarioListener incluindos os da super classe, busca recursiva atÈ o object;
-OK - Alinhar o caption do compareBase ‡ esquerda;
-OK - No relatÛrio de erro mostrar apenas as colunas conflitantes;
-OK - Isolar o filtro do prepare/verify do filter do compareBase sen„o n„o È possÌvel popular a base com campos que devem ser desconsiderados na comparaÁ„o final
-	Obs: isso pode ser feito colocando-se o modo como parte da assinatura dos mÈtodos filtrados, ou seja, se for modo input, output e compare j· resolve.
-OK - ExpectedMessages aumentado para aceitar substring de mensagens para validaÁ„o, usar sempre com sorted='true' para funcionar o atributo 'criteria'.
-OK - Criar os mÛdulos de configuraÁ„o padr„o para os testes que queiram:
-	1- Fazer testes sem escopo negativo - sem validaÁ„o de counts; -> specrunner-sql-positive
-	2- Fazer testes sem escopo negativo - com validaÁ„o de counts; -> specrunner-sql-positive com o DatabaseCountListener
+OK - Resolver os @ScenarioListener incluindos os da super classe, busca recursiva at√© o object;
+OK - Alinhar o caption do compareBase √† esquerda;
+OK - No relat√≥rio de erro mostrar apenas as colunas conflitantes;
+OK - Isolar o filtro do prepare/verify do filter do compareBase sen√£o n√£o √© poss√≠vel popular a base com campos que devem ser desconsiderados na compara√ß√£o final
+	Obs: isso pode ser feito colocando-se o modo como parte da assinatura dos m√©todos filtrados, ou seja, se for modo input, output e compare j√° resolve.
+OK - ExpectedMessages aumentado para aceitar substring de mensagens para valida√ß√£o, usar sempre com sorted='true' para funcionar o atributo 'criteria'.
+OK - Criar os m√≥dulos de configura√ß√£o padr√£o para os testes que queiram:
+	1- Fazer testes sem escopo negativo - sem valida√ß√£o de counts; -> specrunner-sql-positive
+	2- Fazer testes sem escopo negativo - com valida√ß√£o de counts; -> specrunner-sql-positive com o DatabaseCountListener
 	3- Fazer testes com escopo negativo.                           -> specrunner-sql-negative
 	
 1.4.06
 OK - trocar a cor do alien;
-OK - Listener do mÛdulo SQL que limpa a base e compara a base para cada cenario.
+OK - Listener do m√≥dulo SQL que limpa a base e compara a base para cada cenario.
 OK - Fazer mais exemplos de escopo negativo, com tabelas distintas e campos faltando;
-OK - N„o colocar 'order by' no compareBanco se n„o houver campos chave ou campo reference, usar somente se houver;
+OK - N√£o colocar 'order by' no compareBanco se n√£o houver campos chave ou campo reference, usar somente se houver;
 OK - Colocar o failsafe no segundo grupo
 
 1.4.05
-OK - Simplificar a verificaÁ„o com escopo negativo (desenvolvedores sÛ conseguem resolver de fato implementaÁ„o com escopo negativo);
-OK - Permitir usar tabelas vazias nos prepare e verify, para que o strict funcione verificando que a tabela est· vazia;
-OK - Rever a implementaÁ„o do IWait que n„o ficou com a espera autom·tica de campos em tela, tem algo errado no refactoring;
+OK - Simplificar a verifica√ß√£o com escopo negativo (desenvolvedores s√≥ conseguem resolver de fato implementa√ß√£o com escopo negativo);
+OK - Permitir usar tabelas vazias nos prepare e verify, para que o strict funcione verificando que a tabela est√° vazia;
+OK - Rever a implementa√ß√£o do IWait que n√£o ficou com a espera autom√°tica de campos em tela, tem algo errado no refactoring;
 
 1.4.04
-OK - Colocar tabelas com ignore em colunas ou linha no teste web, de forma que se possa ter na aplicaÁ„o uma tabela mais complexa que o desejado, e o teste se limitar a ver apenas um grupo de dados:
-	- Isso tambÈm pode ser conseguido colocando-se o n˙mero de linha que se deseja verificar, de preferÍncia por ranges de valores como na impress„o de p·ginas
+OK - Colocar tabelas com ignore em colunas ou linha no teste web, de forma que se possa ter na aplica√ß√£o uma tabela mais complexa que o desejado, e o teste se limitar a ver apenas um grupo de dados:
+	- Isso tamb√©m pode ser conseguido colocando-se o n√∫mero de linha que se deseja verificar, de prefer√™ncia por ranges de valores como na impress√£o de p√°ginas
 	- Exemplos:
 		<table class="compareTable"></table> pega tudo
-		<table class="compareTable" rows="1" cols="1;5..."></table> sÛ a primeira linha da tabela desejada
+		<table class="compareTable" rows="1" cols="1;5..."></table> s√≥ a primeira linha da tabela desejada
 		<table class="compareTable" rows="1;6"></table> a primeira e a sexta linha
-		<table class="compareTable" rows="1-3;6"></table> da 1 ‡ 3 e da 6;
-		<table class="compareTable" rows="1-3;6-8"></table> da 1 ‡ 3 e da 6 ‡ 8;
-		<table class="compareTable" rows="1-3;6..."></table> da 1 ‡ 3 e da 6 ao final;
-		<table class="compareTable" rows="...3;6..."></table> do inÌcio ‡ 3 e da 6 ao final;
+		<table class="compareTable" rows="1-3;6"></table> da 1 √† 3 e da 6;
+		<table class="compareTable" rows="1-3;6-8"></table> da 1 √† 3 e da 6 √† 8;
+		<table class="compareTable" rows="1-3;6..."></table> da 1 √† 3 e da 6 ao final;
+		<table class="compareTable" rows="...3;6..."></table> do in√≠cio √† 3 e da 6 ao final;
 
 1.4.03
-OK - Usar o IFilter na execuÁ„o dos prepare/verify n„o apenas no compare base. Isso vai permitir postergar a implementaÁ„o de requisitos complexos como logs.
+OK - Usar o IFilter na execu√ß√£o dos prepare/verify n√£o apenas no compare base. Isso vai permitir postergar a implementa√ß√£o de requisitos complexos como logs.
 	 - Filtrado e pintado.
 
-OK - Corrigir o inglÍs: Number of itens (10) in content is different from expected ones (9).
-   - ITEMS... in field... È melhor.
+OK - Corrigir o ingl√™s: Number of itens (10) in content is different from expected ones (9).
+   - ITEMS... in field... √© melhor.
 
-OK - Trocar o mÈtodo getNormalized(....) por um normalizador delegado tambÈm, enfim tudo que puder ser delegado e transformado em feature È flexibilidade desejada.
-     Criada a interface IStringNormalizer e o mÈtodo UtilString.normalize deixou de ser est·tico.
+OK - Trocar o m√©todo getNormalized(....) por um normalizador delegado tamb√©m, enfim tudo que puder ser delegado e transformado em feature √© flexibilidade desejada.
+     Criada a interface IStringNormalizer e o m√©todo UtilString.normalize deixou de ser est√°tico.
 
-OK - Criar uma interface IWait para generalizar a espera pelo webdriver, isso permitir· usar diferentes estratÈgias sem precisar editar o cÛdigo da superclasse.
-    - DelegaÁ„o ao invÈs de heranÁa!
+OK - Criar uma interface IWait para generalizar a espera pelo webdriver, isso permitir√° usar diferentes estrat√©gias sem precisar editar o c√≥digo da superclasse.
+    - Delega√ß√£o ao inv√©s de heran√ßa!
 
 1.4.02
-OK - Bug fix nas aÁıes web aninhadas.
+OK - Bug fix nas a√ß√µes web aninhadas.
 
 1.4.01
-OK - Cada cen·rio chama @BeforeScenario e @AfterScenario antes e depois de executado.
+OK - Cada cen√°rio chama @BeforeScenario e @AfterScenario antes e depois de executado.
 
 1.4.00
-OK - CriaÁ„o de tags: scenario e title dentro de <scenario> para os tÌtulos;
+OK - Cria√ß√£o de tags: scenario e title dentro de <scenario> para os t√≠tulos;
 OK - Upgrade de bibliotecas;
-OK - Colocar o campo nome do elemento HTML para reduzir digitaÁ„o
+OK - Colocar o campo nome do elemento HTML para reduzir digita√ß√£o
 	- Exemplo:  <set-valor>dado necessario</set-valor>
-OK - Colocar o campo nome junto do css para reduzir digitaÁ„o
+OK - Colocar o campo nome junto do css para reduzir digita√ß√£o
 	- Exemplo:  <span class="set-valor">dado necessario</span>
 OK - Fazer o controle de quantidade final de registros na base de dados usando contadores com dado que e por fim;
 	R: Usar o DatabaseCountListener
-OK - Colocar um destruidor de recursos que È realizado sempre que um contexto È dropado ou finalizado, isso permite por exemplo finalizar as sessionfactories que s„o usadas em apenas um teste ou fechar browsers abertos que foram esquecidos pelo testador. Lembrar de n„o fechar aqueles que s„o reusados.
+OK - Colocar um destruidor de recursos que √© realizado sempre que um contexto √© dropado ou finalizado, isso permite por exemplo finalizar as sessionfactories que s√£o usadas em apenas um teste ou fechar browsers abertos que foram esquecidos pelo testador. Lembrar de n√£o fechar aqueles que s√£o reusados.
 	R: adicionados listeners de contexto e de bloco.
-OK - Context populator È um listener de contexto;
+OK - Context populator √© um listener de contexto;
 	R: populator removido e criado como listener
 
 1.3.40
-OK - Colocar uma opÁ„o para adicionar o estilo de debug mesmo sem rodar no modo debug, se o cÛdigo gerar os tempos de qualquer forma do contr·rio n„o serve para nada;
-OK - A ordem de execuÁ„o dos listeners nos eventos finais (onEnd) deve ser feita na ordem reversa da inicializaÁ„o (onStart).
+OK - Colocar uma op√ß√£o para adicionar o estilo de debug mesmo sem rodar no modo debug, se o c√≥digo gerar os tempos de qualquer forma do contr√°rio n√£o serve para nada;
+OK - A ordem de execu√ß√£o dos listeners nos eventos finais (onEnd) deve ser feita na ordem reversa da inicializa√ß√£o (onStart).
 OK - Ajustando headers para 2014.
 
 1.3.39
-OK - Colocar a verificaÁ„o de que h· duplicaÁ„o de nomes/alias de tabelas e de nomes/alias e colunas;
-	R: restriÁ„o adicionada
-OK - Criar uma alias para poder usar por exemplo uma tabela 'Customers' mas na referÍncia usar 'Customer'. :)
-	R: para usar outro nome na coluna È sÛ colocar o atributo 'table=<nome da tabela>'.
+OK - Colocar a verifica√ß√£o de que h√° duplica√ß√£o de nomes/alias de tabelas e de nomes/alias e colunas;
+	R: restri√ß√£o adicionada
+OK - Criar uma alias para poder usar por exemplo uma tabela 'Customers' mas na refer√™ncia usar 'Customer'. :)
+	R: para usar outro nome na coluna √© s√≥ colocar o atributo 'table=<nome da tabela>'.
 OK - Ajustar o tratamento de objects no mapeamento usando 'mapping';
-	R: redefiniÁ„o de campos corrigida vide exemplo TestRedefinition.java
+	R: redefini√ß√£o de campos corrigida vide exemplo TestRedefinition.java
 OK - Layout de scenarios modificado:
-	R: usando padr„o Concordion Plus.
+	R: usando padr√£o Concordion Plus.
 
 1.3.38
-OK - Ajustes de aÁıes de press/release key, criaÁ„o de esc, tab e blur.
-OK - Adicionado listener de tempo para os cen·rios.
+OK - Ajustes de a√ß√µes de press/release key, cria√ß√£o de esc, tab e blur.
+OK - Adicionado listener de tempo para os cen√°rios.
 
 1.3.37
-OK - Criar um mecanismo autom·tico para o waitfor ser injetado automaticamente antes de qualquer aÁ„o/comando a ser realizado em tela;
-	R: Default È sempre esperar agora quando o driver n„o È HtmlUnit
+OK - Criar um mecanismo autom√°tico para o waitfor ser injetado automaticamente antes de qualquer a√ß√£o/comando a ser realizado em tela;
+	R: Default √© sempre esperar agora quando o driver n√£o √© HtmlUnit
 OK - Colocar caption: FinderXPath.get().addStrategy("legenda", "//table/caption[contains(text(),'{0}')]/..");
 	R: Adicionando 'caption' ao webdriver e ao htmlunit
-OK - Colocar para o teste raiz desconsiderar as janelas relacionadas aos erros dentro de cen·rios;
-	R: Agora os erros externos est„o segregados dos cen·rios
+OK - Colocar para o teste raiz desconsiderar as janelas relacionadas aos erros dentro de cen√°rios;
+	R: Agora os erros externos est√£o segregados dos cen√°rios
 
 1.3.36
-OK - No Database deve-se verificar se os valores (vazios) est„o com null na base de dados, ou seja no modo output deve-se verificar as colunas com valores 'null'. Considerar o caso onde se deseja realmente verificar se o valor È String vazia. 
+OK - No Database deve-se verificar se os valores (vazios) est√£o com null na base de dados, ou seja no modo output deve-se verificar as colunas com valores 'null'. Considerar o caso onde se deseja realmente verificar se o valor √© String vazia. 
 	* Para vazio usar @e
 
 1.3.35
-OK - O reuso de browser est· criando sempre novas conexıes WebConnectionFile, desta forma a cache de arquivos n„o È reutilizada entre testes, apenas dentro do mesmo teste, o que n„o gera o ganho de performance geral desejado, corrigir.
-OK - ver se os pending est„o sendo notificados corretamente pelos listeners de execuÁ„o junit.
+OK - O reuso de browser est√° criando sempre novas conex√µes WebConnectionFile, desta forma a cache de arquivos n√£o √© reutilizada entre testes, apenas dentro do mesmo teste, o que n√£o gera o ganho de performance geral desejado, corrigir.
+OK - ver se os pending est√£o sendo notificados corretamente pelos listeners de execu√ß√£o junit.
 OK - Colocar 4 caracteres nos valores de status:
 +---------------- TXT (STATUS ORDER)---------------------+
                       # |  TIME (ms) |       % | ON                       | STATUS          | ASSERTS    | INPUT <-> OUTPUT
@@ -550,81 +550,81 @@ OK - Colocar 4 caracteres nos valores de status:
 
 
 1.3.34
-OK - Rever necessidade de gerar screenshoot de cada cÈlula de uma tabela inv·lida, afinal a tabela È a mesma, sÛ est· custando mais gerar os arquivos.
-OK - Integrar a execuÁ„o via HTML unit com suas otimizaÁıes (i.e. cache de arquivos) dentro do perfil do webdriver quando ele usar o HTMLUnit;
+OK - Rever necessidade de gerar screenshoot de cada c√©lula de uma tabela inv√°lida, afinal a tabela √© a mesma, s√≥ est√° custando mais gerar os arquivos.
+OK - Integrar a execu√ß√£o via HTML unit com suas otimiza√ß√µes (i.e. cache de arquivos) dentro do perfil do webdriver quando ele usar o HTMLUnit;
 
 1.3.33
-OK - Corrigir o timeout padr„o do webdriver, o maxwait È dado em segundos e n„o em milisegundos;
-OK - Colocar uns fire listeners nos cen·rios JUnit a medida que forem passando (falhando).
+OK - Corrigir o timeout padr√£o do webdriver, o maxwait √© dado em segundos e n√£o em milisegundos;
+OK - Colocar uns fire listeners nos cen√°rios JUnit a medida que forem passando (falhando).
 
 1.3.32
-OK - Criar um "cuspidor de SQL" para gerar avulsos a partir dos testes (por exemplo, o de par‚metros de sistema);
-OK - BUG: nos plugins que estendem AbstractPluginFind h· falso positivo quando os elementos desejados n„o s„o encontrados, por exemplo, um enabled/disabled de um checkbox que n„o existe na tela.
-	Ou seja, nos elementos que permitem aÁıes sobre m˙ltiplos componentes deve-se verificar se foi encontrado pelo menos 1, do contr·rio lanÁar erro.
+OK - Criar um "cuspidor de SQL" para gerar avulsos a partir dos testes (por exemplo, o de par√¢metros de sistema);
+OK - BUG: nos plugins que estendem AbstractPluginFind h√° falso positivo quando os elementos desejados n√£o s√£o encontrados, por exemplo, um enabled/disabled de um checkbox que n√£o existe na tela.
+	Ou seja, nos elementos que permitem a√ß√µes sobre m√∫ltiplos componentes deve-se verificar se foi encontrado pelo menos 1, do contr√°rio lan√ßar erro.
 OK - CSS: Colocar fundo branco no grupo de detalhamento do resultado;
-OK - JS: Colocar para a exceÁ„o fazer scroll para a posiÁ„o dela na tela, e no canto esquerdo.
+OK - JS: Colocar para a exce√ß√£o fazer scroll para a posi√ß√£o dela na tela, e no canto esquerdo.
 
 1.3.31
-OK - colocar uma campo de mensagem nas anotaÁıes pause, exemplos:
+OK - colocar uma campo de mensagem nas anota√ß√µes pause, exemplos:
 	<pause msg="parei aqui"/>, <span class="pause" msg="parei aqui"/>, <span pause="parei aqui"/>.
-OK - Transformar o pause em um frame independente feito o errors messages, para ele aparecer independentemente do Eclipse, o que facilita a vis„o do option.
+OK - Transformar o pause em um frame independente feito o errors messages, para ele aparecer independentemente do Eclipse, o que facilita a vis√£o do option.
 
 1.3.30
-OK - Fazer os campos de select selecionarem, ou verificarem os itens de forma normalizada (mas podendo escolher se n„o normaliza, default sempre normaliza), isso evita muito falso negativo;
+OK - Fazer os campos de select selecionarem, ou verificarem os itens de forma normalizada (mas podendo escolher se n√£o normaliza, default sempre normaliza), isso evita muito falso negativo;
 
 1.3.29
-OK - quando houver erro no plugin sentence, mostrar sempre a exceÁ„o encapsulada que tiver o tipo diferente de runtime, ou que seja do tipo IPresentation;
-OK - o Runner sÛ deve fazer sleep/wait para aÁıes que n„o s„o 'nop';
+OK - quando houver erro no plugin sentence, mostrar sempre a exce√ß√£o encapsulada que tiver o tipo diferente de runtime, ou que seja do tipo IPresentation;
+OK - o Runner s√≥ deve fazer sleep/wait para a√ß√µes que n√£o s√£o 'nop';
 
 1.3.28
-OK - Ver a quest„o do assert de tela ser feito usando os prÛprios componentes visuais (exemplo: select) - usado estratÈgia do 'as=<tipo>';
-OK - Corrigir o cÛdigo de URI.resolve para aceitar mais que 12 nÌveis de '../' (http://www.ietf.org/rfc/rfc2396.txt  - SeÁ„o 5.2);
-    Nesse ponto adicionei um IResolver para usar a estratÈgia que quiser alÈm do URI.resolve(...);
+OK - Ver a quest√£o do assert de tela ser feito usando os pr√≥prios componentes visuais (exemplo: select) - usado estrat√©gia do 'as=<tipo>';
+OK - Corrigir o c√≥digo de URI.resolve para aceitar mais que 12 n√≠veis de '../' (http://www.ietf.org/rfc/rfc2396.txt  - Se√ß√£o 5.2);
+    Nesse ponto adicionei um IResolver para usar a estrat√©gia que quiser al√©m do URI.resolve(...);
 
 1.3.27
-OK - Melhorando a estratÈgia de JOINED com nomes de tabelas, CSS e tratamento de erro instrutivo.
+OK - Melhorando a estrat√©gia de JOINED com nomes de tabelas, CSS e tratamento de erro instrutivo.
 
 1.3.26
-OK - Criar uma estratÈgia para representar tabelas JOINED do hibernate usando apenas uma tabela ˙nica, agregando nela todos os atributos das demais tabelas, na verdade È fazer algo como o secondary table funcionar no nÌvel da especificaÁ„o. (usar a combinaÁ„o de colgroup com transformador).
+OK - Criar uma estrat√©gia para representar tabelas JOINED do hibernate usando apenas uma tabela √∫nica, agregando nela todos os atributos das demais tabelas, na verdade √© fazer algo como o secondary table funcionar no n√≠vel da especifica√ß√£o. (usar a combina√ß√£o de colgroup com transformador).
 
 1.3.25
-OK - Adicionar uma feature para ignorar determinados status ou comand types, por exemplo, ignorar os warnings no anotador de saÌda.
+OK - Adicionar uma feature para ignorar determinados status ou comand types, por exemplo, ignorar os warnings no anotador de sa√≠da.
 OK - Adicionar o navegador de errors na tela. (Java).
-OK - Melhor deixar (colocar sÛ um title?)! - Colocar o warning para n„o gerar bot„o de expans„o; -> Decidi permitir filtrar os IResult direto no result set.
+OK - Melhor deixar (colocar s√≥ um title?)! - Colocar o warning para n√£o gerar bot√£o de expans√£o; -> Decidi permitir filtrar os IResult direto no result set.
 
 1.3.24
-OK - No momento que der erro de comparaÁ„o com os dados da base, mostrar dentro do parÍnteses o valor que veio da base, e n„o o valor j· da tela, 
-OK - Bem como no caso de clobs mostrar a comparaÁ„o com strings e n„o to toString() do clob para se saber qual o conte˙do.
+OK - No momento que der erro de compara√ß√£o com os dados da base, mostrar dentro do par√™nteses o valor que veio da base, e n√£o o valor j√° da tela, 
+OK - Bem como no caso de clobs mostrar a compara√ß√£o com strings e n√£o to toString() do clob para se saber qual o conte√∫do.
 
 1.3.23.
-OK - FormataÁ„o e numeraÁ„o dos botıes de acordo com o tipo da aÁ„o.
+OK - Formata√ß√£o e numera√ß√£o dos bot√µes de acordo com o tipo da a√ß√£o.
 
 1.3.22
-OK - Quando os valores de comparaÁ„o de base n„o coincidirem colocar os tipos ao lado para facilitar a identificaÁ„o dos erros;
-OK - No relatÛrio de escopo negativo transformar os clobs em texto para exibiÁ„o (colocar um boolean para indicar se deve ser assim ou n„o, pois pode haver sistemas que tenha clobs realmente grandes que n„o devem ser exibidos);
-OK - No relatÛrio de escopo negativo usar texto ao invÈs de title e css para mostrar os campos das tabelas;
-OK - Corrigir o "protected void performUpdate(", ele deve sempre ter ou key ou reference para usar no WHERE, quando n„o tiver lancar um erro (n„o precisa, vai haver um update com set e where idÍnticos, aÌ aponta o erro de id/references);
-OK - Aumentar o nÌvel de log para trace no "2014-04-14 13:24:24,144 [main] DEBUG on [FeatureManagerImpl.java,163] - Feature 'org.specrunner.listeners.core.PauseOnFailureNodeListener.condition' set to object 'org";
+OK - Quando os valores de compara√ß√£o de base n√£o coincidirem colocar os tipos ao lado para facilitar a identifica√ß√£o dos erros;
+OK - No relat√≥rio de escopo negativo transformar os clobs em texto para exibi√ß√£o (colocar um boolean para indicar se deve ser assim ou n√£o, pois pode haver sistemas que tenha clobs realmente grandes que n√£o devem ser exibidos);
+OK - No relat√≥rio de escopo negativo usar texto ao inv√©s de title e css para mostrar os campos das tabelas;
+OK - Corrigir o "protected void performUpdate(", ele deve sempre ter ou key ou reference para usar no WHERE, quando n√£o tiver lancar um erro (n√£o precisa, vai haver um update com set e where id√™nticos, a√≠ aponta o erro de id/references);
+OK - Aumentar o n√≠vel de log para trace no "2014-04-14 13:24:24,144 [main] DEBUG on [FeatureManagerImpl.java,163] - Feature 'org.specrunner.listeners.core.PauseOnFailureNodeListener.condition' set to object 'org";
 
 1.3.21
 OK - Testar escopo negativo apenas com reference;
-OK - Ver o enumerador de resultset, est· dando falso positivo no escopo negativo.
+OK - Ver o enumerador de resultset, est√° dando falso positivo no escopo negativo.
 OK - Verificar se o virtual do comparador de bases funciona mesmo com update.
-OK - Parametrizar o PluginObjectManager para ser ThreadLocal ou n„o, isso È necess·rio nos testes envolvendo o Jetty que cria threads especÌficos para cada requisiÁ„o.
-OK - Criar o conceito de listeners por cen·rios, para, por exemplo, limpar os objetos em memÛria.
+OK - Parametrizar o PluginObjectManager para ser ThreadLocal ou n√£o, isso √© necess√°rio nos testes envolvendo o Jetty que cria threads espec√≠ficos para cada requisi√ß√£o.
+OK - Criar o conceito de listeners por cen√°rios, para, por exemplo, limpar os objetos em mem√≥ria.
 OK - Resolver o problema de timestamp Vs date na base de dados. Coloquei uma feature para timezone nos conversores date/timestamp.
-OK - Colocar o pause failure listener para ter o mesmo modelo de pausa condicionada de forna a n„o travar integraÁ„o contÌnua;
-OK - Verificar o plugin sentence que n„o est· aceitando apenas o argumento como texto;
-OK - Criar um comparador de tempo que aceite qualquer combinaÁ„o de tipos date/timestamp/jodatime.
+OK - Colocar o pause failure listener para ter o mesmo modelo de pausa condicionada de forna a n√£o travar integra√ß√£o cont√≠nua;
+OK - Verificar o plugin sentence que n√£o est√° aceitando apenas o argumento como texto;
+OK - Criar um comparador de tempo que aceite qualquer combina√ß√£o de tipos date/timestamp/jodatime.
 OK - Criar um comparator de strings com trim e um normalizado para uso com o banco de dados;
-OK - Ver se È possÌvel manter os valores de campos enumerados no resultado para facilitar a visualizaÁ„o
-OK - Ver uma estratÈgia para resolver registros de log de auditoria;
-OK - Colocar uma feature para habilitar ou n„o a pausa, de forma que no Linux, por exemplo, a pausa nunca seja executada p/n„o travar a integraÁ„o contÌnua;
+OK - Ver se √© poss√≠vel manter os valores de campos enumerados no resultado para facilitar a visualiza√ß√£o
+OK - Ver uma estrat√©gia para resolver registros de log de auditoria;
+OK - Colocar uma feature para habilitar ou n√£o a pausa, de forma que no Linux, por exemplo, a pausa nunca seja executada p/n√£o travar a integra√ß√£o cont√≠nua;
 OK - Fazer o plugindatabase poder escolher entre doStart e doEnd (in e out); Usando o doEnd;
-OK - LanÁar erros quando cen·rios tiverem os mesmos nomes;
-OK - Reduzir o log do reuso de imagens no resultado para nÌvel 'trace';
-OK - No uso de imagens idÍnticas no mesmo arquivo usar uma cache com o nome do gerado para economizar cÛpias na saÌda;
-OK - Ver porque que as imagens dentro de tables n„o n„o est„o sendo copiadas para o destino dentro de compareTable;
+OK - Lan√ßar erros quando cen√°rios tiverem os mesmos nomes;
+OK - Reduzir o log do reuso de imagens no resultado para n√≠vel 'trace';
+OK - No uso de imagens id√™nticas no mesmo arquivo usar uma cache com o nome do gerado para economizar c√≥pias na sa√≠da;
+OK - Ver porque que as imagens dentro de tables n√£o n√£o est√£o sendo copiadas para o destino dentro de compareTable;
 
 OK - targets ajustados para Linux
 ------
@@ -636,14 +636,14 @@ URI:file:/opt/java/hudson/workspace/disin.autran/web/target/test-classes/br/gov/
 TARGET:/opt/java/hudson/workspace/disin.autran/web/target/test-classes/br/gov/bcb/autran/web/crt2/login/login.html
 ------
 
-- Delegar a criaÁ„o de:
+- Delegar a cria√ß√£o de:
 	1- PageListeners;
         2-WritablePages  - OK feito!
-para poder substituir quando quiser, o uso de heranÁa inviabiliza a substituiÁ„o.
+para poder substituir quando quiser, o uso de heran√ßa inviabiliza a substitui√ß√£o.
 
-OK - O renaming de arquivos no Linux n„o funciona direito, substituir pelo cÛdigo: FileUtils.moveDirectory(from, to); 
+OK - O renaming de arquivos no Linux n√£o funciona direito, substituir pelo c√≥digo: FileUtils.moveDirectory(from, to); 
 
-Corrigir todo ponto de "file:" para deixar esperto o suficiente para funcionar em Linux (sources, includes, runners, etc) - unificar cÛdigo para facilitar manutenÁ„o.
+Corrigir todo ponto de "file:" para deixar esperto o suficiente para funcionar em Linux (sources, includes, runners, etc) - unificar c√≥digo para facilitar manuten√ß√£o.
 USAR como exemplo:
 -      URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
         String str;
@@ -662,123 +662,123 @@ USAR como exemplo:
 -------------------------------------------------------------------------
 OK
 
-OK - Corrigir os links do recursos (screen/source) para serem relativos ao arquivo de saÌda.
-OK - Colocar todas as caches de objetos como no mÌnimo protected para permitir reuso. 
-OK -Trocar os valores dos campos na especificaÁ„o tambÈm para as telas, assim com foi feito para o SQL, melhora a depuraÁ„o; 
-OK - Fazer tambÈm no SQL depois que ele realizar a convers„o, para melhorar a tela. 
+OK - Corrigir os links do recursos (screen/source) para serem relativos ao arquivo de sa√≠da.
+OK - Colocar todas as caches de objetos como no m√≠nimo protected para permitir reuso. 
+OK -Trocar os valores dos campos na especifica√ß√£o tamb√©m para as telas, assim com foi feito para o SQL, melhora a depura√ß√£o; 
+OK - Fazer tamb√©m no SQL depois que ele realizar a convers√£o, para melhorar a tela. 
 OK - MELHORAR O LEITOR DE  SQL; 
 
 
 ----------------------
-CRÕTICAS:
+CR√çTICAS:
 
-- Criar um filtro de pacotes para a impress„o das exceÁıes, para reduzir logs in˙teis escondendo por exemplo os do prÛprio junit.runners.*/etc.
+- Criar um filtro de pacotes para a impress√£o das exce√ß√µes, para reduzir logs in√∫teis escondendo por exemplo os do pr√≥prio junit.runners.*/etc.
 
-- Adicionar a criaÁ„o de subobjetos em cadastros de objetos com objins/etc:
-	por exemplo i) colocar um atributo que seja uma coleÁ„o de strings, e ii) depois uma coleÁ„o de sub-objetos
-?? - Adicionar a exceÁ„o gerada no caso de erro das invocaÁıes do PluginSentence como resultado apontado pelo 'name';
+- Adicionar a cria√ß√£o de subobjetos em cadastros de objetos com objins/etc:
+	por exemplo i) colocar um atributo que seja uma cole√ß√£o de strings, e ii) depois uma cole√ß√£o de sub-objetos
+?? - Adicionar a exce√ß√£o gerada no caso de erro das invoca√ß√µes do PluginSentence como resultado apontado pelo 'name';
 	Precisa?
 - Colocar o access factory para PluginAbstractObject, e colocar field ou feature no campo a ser sensibilizado;
-- Colocar par‚metros na chamada de macro feito tem em includes;
+- Colocar par√¢metros na chamada de macro feito tem em includes;
 - Ver o verifyRows se tem como ficar + simples;
-- Ver se tem como remover a pilha de erros do trace o prÛprio JUnit. Provavelmente se n„o anexar a causa ele n„o vai colocar a pilha, ver se È possÌvel para reduzir o log quando a quanidade de erros for muito grande, o que d· erro no surefire report;
+- Ver se tem como remover a pilha de erros do trace o pr√≥prio JUnit. Provavelmente se n√£o anexar a causa ele n√£o vai colocar a pilha, ver se √© poss√≠vel para reduzir o log quando a quanidade de erros for muito grande, o que d√° erro no surefire report;
 	
 - Disponibilizar o proxy de jdbc dentro do pacote specrunner tools;
 
 - Adicionar um modo DEBUG para o comparador de bases;
 
 SPRING-BOOT:
-- Ver as configuraÁıes do projeto para criar o spring boot sprunner que permitiria realizar testes automatizados usando trechos em HTML dispersos na aplicaÁ„o
-	- Tipo n„o precisar de um contexto complexo para rodar apenas a preparaÁ„o da base de dados lendo de arquivos, por exemplo.
+- Ver as configura√ß√µes do projeto para criar o spring boot sprunner que permitiria realizar testes automatizados usando trechos em HTML dispersos na aplica√ß√£o
+	- Tipo n√£o precisar de um contexto complexo para rodar apenas a prepara√ß√£o da base de dados lendo de arquivos, por exemplo.
 
 
-PRIORIT¡RIAS:
+PRIORIT√ÅRIAS:
 - Criar um listener para transpor uma tabela escrita no formato
 	<coluna><valor><valor>...
         <coluna><valor><valor>....
 	para a coluna normal que temos hoje, e depois de rodar transpor de volta ao formato original para facilitar o debug.
 
-- Seria possÌvel generalizar a estratÈgia dos args (usada em PluginSentence) para plugins como PluginEquals?
+- Seria poss√≠vel generalizar a estrat√©gia dos args (usada em PluginSentence) para plugins como PluginEquals?
 
-- Encontrar formas de especificar condiÁıes de espera com coisas como tamanho de tabelas/etc [criar teste mostrando como fazer].
+- Encontrar formas de especificar condi√ß√µes de espera com coisas como tamanho de tabelas/etc [criar teste mostrando como fazer].
 
 - Melhorar o formatador de colunas para calcular os tamanhos dos campos corretamente;
 
-- Corrigir a referÍncia para imagens/recursos que tenha espaÁo em branco no nome (fazer o URL enconding);
+- Corrigir a refer√™ncia para imagens/recursos que tenha espa√ßo em branco no nome (fazer o URL enconding);
 
 
 ALTA:
-- Criar um conceito de objeto com atributos din‚micos para gerar mapas de objetos (exemplo: um objeto onde os campos s„o na verdade um Map<Campo,Valor>)
+- Criar um conceito de objeto com atributos din√¢micos para gerar mapas de objetos (exemplo: um objeto onde os campos s√£o na verdade um Map<Campo,Valor>)
 
 - Fazer um esquema para chamar REST e verificar a resposta;
 
 - Olhar o WaitPageToLoad (Selenesse);
 
-- Criar um PluginConnection/PluginRollback para colocar a conex„o no modo de autofush 'false' e limpar a base ao final de cada cen·rio (fazer isso para cada cen·rio).
+- Criar um PluginConnection/PluginRollback para colocar a conex√£o no modo de autofush 'false' e limpar a base ao final de cada cen√°rio (fazer isso para cada cen√°rio).
 
-- Criar cen·rios aninhados no JUnit runner;
+- Criar cen√°rios aninhados no JUnit runner;
 
-- Analisar o PluginInclude para saber se ele est· chamando o cÛdigo do saveLocal no contexto na posiÁ„o certa dos dados incluÌdos, para evitar vari·veis estranhas;
+- Analisar o PluginInclude para saber se ele est√° chamando o c√≥digo do saveLocal no contexto na posi√ß√£o certa dos dados inclu√≠dos, para evitar vari√°veis estranhas;
 
-- Colocar a lista de cen·rios no contexto, e se foi bem sucedido ou n„o. Para realizar o dump deles no relatÛrio de saÌda TXT e HTML.
+- Colocar a lista de cen√°rios no contexto, e se foi bem sucedido ou n√£o. Para realizar o dump deles no relat√≥rio de sa√≠da TXT e HTML.
 
-- Normalizar o valor default caso seja null, nos demais casos considerar o valor recebido mesmo (colocar algo para ele saber se deve testar case sensitive ou n„o);
+- Normalizar o valor default caso seja null, nos demais casos considerar o valor recebido mesmo (colocar algo para ele saber se deve testar case sensitive ou n√£o);
 
 - Criar um leitor de esquemas usando o SchemaCrawler, que gera um nu.xom.Document:
-	- Generalizar o leitor de Document para receber um document no load, ser· usado no SchemaLoaderXML e no SchemaLoaderBase(a ser criado);
-	- Criar um composite loader para usar a abordagem de realizar merge do que foi lido da base mais o que foi lido do arquivo, isso permitir· economizar escrita como os tipos b·sicos usados em cada coluna, campos de data, campos de chave, transformadores padr„o, etc.
+	- Generalizar o leitor de Document para receber um document no load, ser√° usado no SchemaLoaderXML e no SchemaLoaderBase(a ser criado);
+	- Criar um composite loader para usar a abordagem de realizar merge do que foi lido da base mais o que foi lido do arquivo, isso permitir√° economizar escrita como os tipos b√°sicos usados em cada coluna, campos de data, campos de chave, transformadores padr√£o, etc.
 
-- Testar a combinaÁ„o de HTMLUnit com Wicket6 para resolver o problema definitivamente.
+- Testar a combina√ß√£o de HTMLUnit com Wicket6 para resolver o problema definitivamente.
 	- Wicket 6 mudou o modelo de eventos e o JS do HtmlUnit se perdeu.
 
-- Criar um plugin que faÁa a verificaÁ„o de todas opÁıes de um select e que faÁa tambÈm a verificaÁ„o dos selecionados;
+- Criar um plugin que fa√ßa a verifica√ß√£o de todas op√ß√µes de um select e que fa√ßa tamb√©m a verifica√ß√£o dos selecionados;
 - Fazer o download do compare files no notepad++;
 
-M…DIA:
-- Criar um modelo onde se possa definir os estados dos mocks no inÌcio e o estado deles no final para fazer escopo negativo de mocks tambÈm;
+M√âDIA:
+- Criar um modelo onde se possa definir os estados dos mocks no in√≠cio e o estado deles no final para fazer escopo negativo de mocks tamb√©m;
 
 - No plugin sentence usar o exemplo <sentence>vai<arg>0002</arg></sentence>, e ver o que acontece:
 	public void vai(String str) {
-		// deveria receber a string sem fazer avaliaÁ„o
+		// deveria receber a string sem fazer avalia√ß√£o
 	}
 - Fazer o leitor de esquema a partir da base.
-- Como fazer tabelas domÌnio? Como controlar o drop e create das tabelas sem precisar fazer isso com as tabelas domÌnio? Definir essa abordagem para economizar na execuÁ„o dos testes.
+- Como fazer tabelas dom√≠nio? Como controlar o drop e create das tabelas sem precisar fazer isso com as tabelas dom√≠nio? Definir essa abordagem para economizar na execu√ß√£o dos testes.
 
 BAIXA:
 - Usar 'lazy creation' para tudo (principalmente os mapas).
 
-- Criar uma cache para os conversores de enumeraÁ„o para minimizar tempo de execuÁ„o;
+- Criar uma cache para os conversores de enumera√ß√£o para minimizar tempo de execu√ß√£o;
 
-- Colocar o tipo SQL do campo no header relatÛrio de comparar Base:
+- Colocar o tipo SQL do campo no header relat√≥rio de comparar Base:
 	http://stackoverflow.com/questions/6437790/jdbc-get-the-sql-type-name-from-java-sql-type-code
 
-- Implementar um hbnsel para realizar select geral de objetos e ver se o conte˙do est· l· completo;
-	- Criar uma consulta antes e depois sair removendo ‡ medida que se encontra os objetos, isso vai evitar tambÈm tapear usando o mesmo elemento no resultado:
-		- Usar o HashBuilder nos campos para evitar pesquisar pelo mesmo elemento v·rias vezes;
+- Implementar um hbnsel para realizar select geral de objetos e ver se o conte√∫do est√° l√° completo;
+	- Criar uma consulta antes e depois sair removendo √† medida que se encontra os objetos, isso vai evitar tamb√©m tapear usando o mesmo elemento no resultado:
+		- Usar o HashBuilder nos campos para evitar pesquisar pelo mesmo elemento v√°rias vezes;
 - Implementar um verifyAll para realizar o select completo de uma tabela:
-	- Fazer um select considerando campos de ordenaÁ„o definidos na tabela: <table class="verifyAll" ...order="nome,telefone,data">...</table>
+	- Fazer um select considerando campos de ordena√ß√£o definidos na tabela: <table class="verifyAll" ...order="nome,telefone,data">...</table>
 
-- No caso de escopo negativo pintar os verify com status informativo, e n„o de sucesso? Fica bom?
+- No caso de escopo negativo pintar os verify com status informativo, e n√£o de sucesso? Fica bom?
 
-- Usar o TableReport para falhas no escopo positivo (compensa fazer? Pensando bem acho que n„o):
-	- Aqui pode-se usar o mesmo modelo de escopo positivo, a diferenÁa È que testa-se apenas as tabelas que s„o informadas no por fim, apenas as perguntadas, usando-se inclusive a base auxiliar.
-	- Se usar o filter para ignorar demais tabelas lembrar de fazer um AND com os mÈtodos do filtro j· existente.
+- Usar o TableReport para falhas no escopo positivo (compensa fazer? Pensando bem acho que n√£o):
+	- Aqui pode-se usar o mesmo modelo de escopo positivo, a diferen√ßa √© que testa-se apenas as tabelas que s√£o informadas no por fim, apenas as perguntadas, usando-se inclusive a base auxiliar.
+	- Se usar o filter para ignorar demais tabelas lembrar de fazer um AND com os m√©todos do filtro j√° existente.
 
 - Criar o perfil specrunner-sql-select para fazer o teste final usando apenas os selects dos campos, sem necessidade de base extra, ou seja o que seria o ...-sql-positive hoje.
-	- SÛ fazer se for feita a de cima tambÈm.
+	- S√≥ fazer se for feita a de cima tamb√©m.
 
 - criar o result que sempre aparece expandido de cara;
 
 - Baixar o jailer;
 
-- Trocar todos os UtilXXX por mÈtodos n„o est·ticos acessÌveis a partir do SRServices, como foi feito com o IStringNormalizer.
+- Trocar todos os UtilXXX por m√©todos n√£o est√°ticos acess√≠veis a partir do SRServices, como foi feito com o IStringNormalizer.
 
-- Colocar para n„o realizar eval de expressıes somente se eval for false, usar como exemplo um nome de arquivo, com ';';
-          ? Remover ou n„o as strings
+- Colocar para n√£o realizar eval de express√µes somente se eval for false, usar como exemplo um nome de arquivo, com ';';
+          ? Remover ou n√£o as strings
 
-- Fazer o plugin sentence trabalhar com features e n„o apenas mÈtodos;
+- Fazer o plugin sentence trabalhar com features e n√£o apenas m√©todos;
 
-- Criar o conceito de composite action, para tarefas agrupadas, e o somatÛrio ser segregado, bem com a exibiÁ„o no relatÛrio de debug. (Precisa?)
+- Criar o conceito de composite action, para tarefas agrupadas, e o somat√≥rio ser segregado, bem com a exibi√ß√£o no relat√≥rio de debug. (Precisa?)
 
 Exemplo de report:
 -----------------
@@ -825,42 +825,42 @@ Exemplo de report:
 }
 </style>
 
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
-<p>†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
+<p>¬†</p>
 
 <div style="text-align:center;">
 	<input type="button" id="controle" value="Mostrar"/>
