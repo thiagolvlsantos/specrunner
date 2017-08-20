@@ -48,7 +48,7 @@ public abstract class AbstractPluginObjectCompareAll<T> extends AbstractPluginOb
     }
 
     @Override
-    protected void readData(IContext context, IResultSet result, TableAdapter table) throws PluginException {
+    protected void readData(int readPosition, IContext context, IResultSet result, TableAdapter table) throws PluginException {
         List<Object> objects = null;
         try {
             objects = new ArrayList<Object>(selector.all(this, context, result));

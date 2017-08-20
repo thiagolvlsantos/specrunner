@@ -338,12 +338,31 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             if (ns.size() == 0) {
                 throw new PluginException("The mapping file must have a table element with fields information.");
             }
-            Element n = (Element) ns.get(0);
-            TableAdapter ta = UtilTable.newTable(n);
-            if (ta.getRowCount() == 0) {
-                throw new PluginException("The mapping file might have at least one row (usually a header) with the generic field information.");
+            Element n = null;
+            for (int i = 0; i < ns.size(); i++) {
+                Element tmp = (Element) ns.get(i);
+                if (UtilNode.isIgnore(tmp)) {
+                    continue;
+                }
+                n = tmp;
+                break;
             }
-            RowAdapter information = ta.getRow(0);
+            if (n == null) {
+                throw new PluginException("The mapping file might have at least one table with a row (usually a header) of generic field information.");
+            }
+            TableAdapter ta = UtilTable.newTable(n);
+            RowAdapter information = null;
+            for (int i = 0; i < ta.getRowCount(); i++) {
+                RowAdapter tmp = ta.getRow(i);
+                if (UtilNode.isIgnore(tmp.getNode())) {
+                    continue;
+                }
+                information = tmp;
+                break;
+            }
+            if (information == null) {
+                throw new PluginException("The mapping file might have at least one (not ignored) row in a (not ignored) table.");
+            }
 
             supermapping = null;
 
@@ -423,10 +442,11 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
         if (isMapped()) {
             SRServices.getObjectManager().bind(this);
         }
+        int pos = 0;
         if (!isSpecial()) {
-            readHeader(context, result, table);
+            pos = readHeader(context, result, table);
         }
-        readData(context, result, table);
+        readData(pos, context, result, table);
     }
 
     /**
@@ -441,11 +461,20 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @throws PluginException
      *             On read errors.
      */
-    protected void readHeader(IContext context, IResultSet result, TableAdapter table) throws PluginException {
-        if (table.getRowCount() < 1) {
+    protected int readHeader(IContext context, IResultSet result, TableAdapter table) throws PluginException {
+        int index = 0;
+        RowAdapter row = null;
+        for (; index < table.getRowCount(); index++) {
+            RowAdapter tmp = table.getRow(index);
+            if (UtilNode.isIgnore(tmp.getNode())) {
+                continue;
+            }
+            row = tmp;
+            break;
+        }
+        if (row == null) {
             throw new PluginException("Table should have at least header information.");
         }
-        RowAdapter row = table.getRow(0);
         try {
             loadFields(context, row, fields);
             result.addResult(Success.INSTANCE, context.newBlock(row.getNode(), this));
@@ -455,6 +484,7 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             }
             result.addResult(Failure.INSTANCE, context.newBlock(row.getNode(), this), e);
         }
+        return index + 1;
     }
 
     /**
@@ -469,8 +499,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
      * @throws PluginException
      *             On read errors.
      */
-    protected void readData(IContext context, IResultSet result, TableAdapter table) throws PluginException {
-        for (int i = (isSpecial() ? 0 : 1); i < table.getRowCount(); i++) {
+    protected void readData(int readPosition, IContext context, IResultSet result, TableAdapter table) throws PluginException {
+        for (int i = (isSpecial() ? 0 : readPosition); i < table.getRowCount(); i++) {
             RowAdapter row = table.getRow(i);
             try {
                 processLine(context, table, row, result);
