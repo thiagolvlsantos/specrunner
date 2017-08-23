@@ -82,3 +82,42 @@ table, th, td {
 <p class="sentence">show contact "thiago.lvl.santos@gmail.com".</p>
 
 <p class="sentence">show phone "12345".</p>
+
+<p>
+Example of 'null' collections.
+</p>
+<table class="objins" type="example.objects.collections.User"
+	reference="name">
+	<caption>Users</caption>
+	<tr>
+		<th>Name</th>
+        <th>Aliases</th>
+	</tr>
+	<tr>
+		<td>Fulano</td>
+        <td></td>
+	</tr>
+</table>
+
+<p class="sentence">show user "Fulano".</p>
+
+<p>
+Example of 'empty' collections.
+</p>
+<table class="objins" type="example.objects.collections.User"
+	reference="name">
+	<caption>Users</caption>
+	<tr>
+		<th>Name</th>
+        <th>Aliases</th>
+	</tr>
+	<tr>
+		<td>Cicrano</td>
+        <td>
+            <table class="objcol" type="java.lang.String" mapped="false">
+            </table>
+        </td>
+	</tr>
+</table>
+
+<p class="sentence">show user "Cicrano".</p>

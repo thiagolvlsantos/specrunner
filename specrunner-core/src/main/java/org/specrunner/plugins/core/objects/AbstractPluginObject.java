@@ -1208,21 +1208,27 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 if (f.isCollection() || f.isArray()) {
                     Node node = cell.getNode();
                     Nodes childs = node.query("descendant::table");
-                    INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(childs.get(0));
-                    value = context.getByName(holder.getAttribute("collection"));
-                    if (f.isCollection()) {
-                        String str = holder.getAttribute("coltype", f.coltype);
-                        if (str != null) {
-                            Class<?> coltype = Class.forName(str);
-                            Collection<Object> collection = (Collection<Object>) coltype.newInstance();
-                            collection.addAll((Collection<?>) value);
-                            value = collection;
+                    if (childs.size() > 0) {
+                        Node collectionNode = childs.get(0);
+                        INodeHolder holder = SRServices.get(INodeHolderFactory.class).newHolder(collectionNode);
+                        String collectionName = holder.getAttribute("collection");
+                        value = context.getByName(collectionName);
+                        if (value != null) {
+                            if (f.isCollection()) {
+                                String str = holder.getAttribute("coltype", f.coltype);
+                                if (str != null) {
+                                    Class<?> coltype = Class.forName(str);
+                                    Collection<Object> collection = (Collection<Object>) coltype.newInstance();
+                                    collection.addAll((Collection<?>) value);
+                                    value = collection;
+                                }
+                            } else if (f.isArray()) {
+                                List<?> tmp = (List<?>) value;
+                                Class<?> type = f.getSpecificType().getComponentType();
+                                Object target = Array.newInstance(type, tmp.size());
+                                value = tmp.toArray((Object[]) target);
+                            }
                         }
-                    } else if (f.isArray()) {
-                        List<?> tmp = (List<?>) value;
-                        Class<?> type = f.getSpecificType().getComponentType();
-                        Object target = Array.newInstance(type, tmp.size());
-                        value = tmp.toArray((Object[]) target);
                     }
                 } else {
                     if (!cell.hasAttribute(INodeHolder.ATTRIBUTE_EVALUATION)) {

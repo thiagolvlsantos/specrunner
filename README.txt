@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.09
+OK - ArrayIndexOutOfRange in AbstractPluginObject line 1211 #74 https://github.com/thiagolvlsantos/specrunner/issues/74
+
 1.5.08
 OK - Add 'ignore=true' options for AbstractPluginObject #73 https://github.com/thiagolvlsantos/specrunner/issues/73
 OK - On object creation specify collection type or enable use of 'Collection' #71 https://github.com/thiagolvlsantos/specrunner/issues/71
