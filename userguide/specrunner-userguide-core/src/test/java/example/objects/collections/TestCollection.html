@@ -121,3 +121,39 @@ Example of 'empty' collections.
 </table>
 
 <p class="sentence">show user "Cicrano".</p>
+
+<p>
+Example with converter and default separator ';'.
+</p>
+<table class="objins" type="example.objects.collections.User"
+	reference="name">
+	<caption>Users</caption>
+	<tr>
+		<th>Name</th>
+        <th converter="toList">Aliases</th>
+	</tr>
+	<tr>
+		<td>Beltrano</td>
+        <td>i@com; me@br; myself@com.br</td>
+	</tr>
+</table>
+
+<p class="sentence">show user "Beltrano".</p>
+
+<p>
+Example with converter and default separator ','.
+</p>
+<table class="objins" type="example.objects.collections.User"
+	reference="name">
+	<caption>Users</caption>
+	<tr>
+		<th>Name</th>
+        <th>Aliases</th>
+	</tr>
+	<tr>
+		<td>Ultrano</td>
+        <td converter="toList" arg0=",">me@com, you@br</td>
+	</tr>
+</table>
+
+<p class="sentence">show user "Ultrano".</p>

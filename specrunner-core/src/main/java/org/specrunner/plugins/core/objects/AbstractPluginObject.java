@@ -1205,7 +1205,9 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                 }
                 String text = null;
                 Object value = null;
-                if (f.isCollection() || f.isArray()) {
+                boolean hasConverter = f.converter != null || cell.hasAttribute(INodeHolder.ATTRIBUTE_CONVERTER);
+                // converter prevails over any type inference
+                if (!hasConverter && (f.isCollection() || f.isArray())) {
                     Node node = cell.getNode();
                     Nodes childs = node.query("descendant::table");
                     if (childs.size() > 0) {
@@ -1222,7 +1224,8 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
                                     collection.addAll((Collection<?>) value);
                                     value = collection;
                                 }
-                            } else if (f.isArray()) {
+                            }
+                            if (f.isArray()) {
                                 List<?> tmp = (List<?>) value;
                                 Class<?> type = f.getSpecificType().getComponentType();
                                 Object target = Array.newInstance(type, tmp.size());

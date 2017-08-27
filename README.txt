@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.10
+OK - Converter priority over any type information #75 https://github.com/thiagolvlsantos/specrunner/issues/75
+
 1.5.09
 OK - ArrayIndexOutOfRange in AbstractPluginObject line 1211 #74 https://github.com/thiagolvlsantos/specrunner/issues/74
 
