@@ -1,5 +1,5 @@
 -----------------------------------------------------------
-1.5.10
+1.5.10 
 OK - Converter priority over any type information #75 https://github.com/thiagolvlsantos/specrunner/issues/75
 
 1.5.09
