@@ -627,6 +627,7 @@ public class DatabaseDefault implements IDatabase {
             fireTableIn(new DatabaseTableEvent(context, result, adapter, this, connection, table, mode));
         }
 
+        String defaultType = adapter.getAttribute("action");
         for (int i = 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
@@ -637,7 +638,7 @@ public class DatabaseDefault implements IDatabase {
                 throw new DatabaseException("Invalid number of cells at row: " + i + ". Expected " + headers.size() + " columns, received " + tds.size() + ".\n\t ROW:" + row);
             }
             int expectedCount = Integer.parseInt(row.getAttribute("count", "1"));
-            String type = tds.get(0).getValue(context);
+            String type = defaultType != null ? defaultType : tds.get(0).getValue(context);
             CommandType command = CommandType.get(type);
             if (command == null) {
                 throw new DatabaseException("Invalid command type. '" + type + "' at (row: " + i + ", cell: 0). The first column is required for one of the following values: " + Arrays.toString(CommandType.values()));
@@ -645,7 +646,7 @@ public class DatabaseDefault implements IDatabase {
             Map<String, Value> filled = new HashMap<String, Value>();
             Map<String, CellAdapter> missing = new HashMap<String, CellAdapter>();
             IRegister register = new RegisterDefault(table);
-            for (int j = 1; j < tds.size(); j++) {
+            for (int j = (defaultType != null ? 0 : 1); j < tds.size(); j++) {
                 if (columns[j] == null) {
                     // ignored column;
                     continue;
