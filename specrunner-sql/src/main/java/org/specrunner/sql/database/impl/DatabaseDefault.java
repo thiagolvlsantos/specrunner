@@ -480,11 +480,14 @@ public class DatabaseDefault implements IDatabase {
             UtilNode.appendCss(adapter.getNode(), IDataFilter.CSS_SCHEMA);
             return;
         }
-        List<CellAdapter> captions = adapter.getCaptions();
-        if (captions.isEmpty()) {
-            throw new DatabaseException("Tables must have a caption. The caption must be part of this set: " + schema.getAliasToTables().keySet());
+        String tAlias = adapter.getAttribute("caption");
+        if (tAlias == null) {
+            List<CellAdapter> captions = adapter.getCaptions();
+            if (captions.isEmpty()) {
+                throw new DatabaseException("Tables must have a caption. The caption must be part of this set: " + schema.getAliasToTables().keySet());
+            }
+            tAlias = captions.get(0).getValue(context);
         }
-        String tAlias = captions.get(0).getValue(context);
         Table table = schema.getAlias(tAlias);
         if (table == null) {
             throw new DatabaseException("Table '" + tAlias + "' [as '" + UtilNames.normalize(tAlias) + "'] not found in schema " + schema.getAlias() + "(" + schema.getName() + "), available alias: " + schema.getAliasToTables().keySet() + ", available tables: " + schema.getNamesToTables().keySet());
@@ -613,8 +616,21 @@ public class DatabaseDefault implements IDatabase {
         if (rows.isEmpty()) {
             throw new DatabaseException("A valid table should have at least 1 row for headers (th's).");
         }
-        // headers are in the first row.
-        RowAdapter header = rows.get(0);
+        // headers
+        RowAdapter header = null;
+        int headerIndex = 0;
+        for (int i = 0; i < adapter.getRowCount(); i++) {
+            headerIndex = i;
+            RowAdapter tmp = adapter.getRow(i);
+            if (!UtilNode.isIgnore(tmp.getNode())) {
+                header = tmp;
+                break;
+            }
+        }
+        if (header == null) {
+            throw new DatabaseException(".");
+        }
+
         List<CellAdapter> headers = header.getCells();
         Column[] columns = new Column[headers.size()];
         readHeadersColumns(context, mode, table, headers, columns, afilter);
@@ -628,7 +644,7 @@ public class DatabaseDefault implements IDatabase {
         }
 
         String defaultType = adapter.getAttribute("action");
-        for (int i = 1; i < rows.size(); i++) {
+        for (int i = headerIndex + 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
             List<CellAdapter> tds = row.getCells();
             if (tds.isEmpty()) {

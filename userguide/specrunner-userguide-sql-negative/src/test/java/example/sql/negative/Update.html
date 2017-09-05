@@ -99,9 +99,14 @@ td {
         </tbody>
     </table>
 
-    <table class="verify">
-        <caption>Orders</caption>
+	Hidden caption 'Orders' plus comments in header.
+    <table class="verify" caption="Orders">
         <thead>
+        	<tr ignore="true">
+        		<th colspan="4" style="background-color: yellow;">
+        			Informative header
+        		</th>
+        	</tr>
             <tr>
                 <th>Action</th>
                 <th>ID</th>

@@ -343,11 +343,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             Element n = null;
             for (int i = 0; i < ns.size(); i++) {
                 Element tmp = (Element) ns.get(i);
-                if (UtilNode.isIgnore(tmp)) {
-                    continue;
+                if (!UtilNode.isIgnore(tmp)) {
+                    n = tmp;
+                    break;
                 }
-                n = tmp;
-                break;
             }
             if (n == null) {
                 throw new PluginException("The mapping file might have at least one table with a row (usually a header) of generic field information.");
@@ -356,11 +355,10 @@ public abstract class AbstractPluginObject extends AbstractPluginTable {
             RowAdapter information = null;
             for (int i = 0; i < ta.getRowCount(); i++) {
                 RowAdapter tmp = ta.getRow(i);
-                if (UtilNode.isIgnore(tmp.getNode())) {
-                    continue;
+                if (!UtilNode.isIgnore(tmp.getNode())) {
+                    information = tmp;
+                    break;
                 }
-                information = tmp;
-                break;
             }
             if (information == null) {
                 throw new PluginException("The mapping file might have at least one (not ignored) row in a (not ignored) table.");
