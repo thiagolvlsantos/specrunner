@@ -646,6 +646,9 @@ public class DatabaseDefault implements IDatabase {
         String defaultType = adapter.getAttribute("action");
         for (int i = headerIndex + 1; i < rows.size(); i++) {
             RowAdapter row = rows.get(i);
+            if(UtilNode.isIgnore(row.getNode())) {
+                continue;
+            }
             List<CellAdapter> tds = row.getCells();
             if (tds.isEmpty()) {
                 throw new DatabaseException("Empty lines are useless. Invalid row[" + i + "]:" + row.getValue(context));
