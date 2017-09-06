@@ -1,4 +1,11 @@
 -----------------------------------------------------------
+1.5.11
+OK - Support to 'caption' attributes to tables #80 https://github.com/thiagolvlsantos/specrunner/issues/80
+OK - Disable @Sentence required to use @Synonyms and not accept "" (empty string) as pattern #79 https://github.com/thiagolvlsantos/specrunner/issues/79
+OK - Support enable or disable scenario listeners in HTML #78 https://github.com/thiagolvlsantos/specrunner/issues/78
+OK - Support ignore="true" in database actions #77 https://github.com/thiagolvlsantos/specrunner/issues/77
+OK - Support for default actions in databases information #76 https://github.com/thiagolvlsantos/specrunner/issues/76
+
 1.5.10 
 OK - Converter priority over any type information #75 https://github.com/thiagolvlsantos/specrunner/issues/75
 
