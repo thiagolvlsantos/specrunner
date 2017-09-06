@@ -368,7 +368,13 @@ public class PluginSentence extends AbstractPluginScoped {
                 synchronized (cachePatterns) {
                     pattern = cachePatterns.get(str);
                     if (pattern == null) {
-                        pattern = Pattern.compile(str, i == 0 || sm == null ? s.options() : sm.options());
+                        int options;
+                        if(i == 0 && s != null) {
+                            options = s.options();
+                        } else {
+                            options = sm.options();
+                        }
+                        pattern = Pattern.compile(str, options);
                         cachePatterns.put(str, pattern);
                         if (UtilLog.LOG.isTraceEnabled()) {
                             UtilLog.LOG.trace("New pattern for '" + str + "' created.");
