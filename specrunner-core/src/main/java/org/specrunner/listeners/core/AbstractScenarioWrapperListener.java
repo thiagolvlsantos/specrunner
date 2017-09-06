@@ -17,11 +17,6 @@
  */
 package org.specrunner.listeners.core;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.ParentNode;
-
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.annotations.IScenarioListener;
@@ -31,6 +26,12 @@ import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Nodes;
+import nu.xom.ParentNode;
 
 /**
  * Wrapp a scenario with a start tag, and an end tag, i.e. clean database (dbms)
@@ -47,7 +48,9 @@ public abstract class AbstractScenarioWrapperListener implements IScenarioListen
     }
 
     /**
-     * Append a start and and tag to a scenario.
+     * Append a start and and tag to a scenario. If 'before' attribute is set to
+     * 'false' none listener will be added on begin, if 'after' attribute is set
+     * to 'false' none listener will be added on end.
      * 
      * @param node
      *            Scenario node.
@@ -65,6 +68,18 @@ public abstract class AbstractScenarioWrapperListener implements IScenarioListen
      *             On processing errors.
      */
     protected void append(Node node, IContext context, IResultSet result, Class<? extends IPlugin> type, String message, boolean onStart) throws PluginException {
+        if (node instanceof Element) {
+            Element element = (Element) node;
+            Attribute before = element.getAttribute(BEFORE);
+            if (before != null && onStart && !Boolean.valueOf(before.getValue())) {
+                return;
+            }
+            Attribute after = element.getAttribute(AFTER);
+            if (after != null && !onStart && !Boolean.valueOf(after.getValue())) {
+                return;
+            }
+        }
+
         Node n = null;
         Nodes ns = node.query("child::td");
         if (ns.size() == 0) {

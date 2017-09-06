@@ -305,7 +305,7 @@ public abstract class ScenarioFrameListener implements INodeListener {
             if (show) {
                 Element span = new Element("span");
                 span.addAttribute(new Attribute("class", "scenarioTime"));
-                span.appendChild((System.currentTimeMillis() - startTime) + " ms");
+                span.appendChild((System.currentTimeMillis() - startTime) + " ms ");
                 SRServices.get(INodeHolderFactory.class).newHolder(title).prepend(span);
             }
         }

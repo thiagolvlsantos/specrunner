@@ -331,6 +331,10 @@ public class PluginSentence extends AbstractPluginScoped {
                     if (s != null) {
                         ms.add(m);
                     }
+                    Synonyms sn = m.getAnnotation(Synonyms.class);
+                    if (sn != null && !ms.contains(m)) {
+                        ms.add(m);
+                    }
                 }
                 cacheMethods.put(clazz, ms);
                 if (UtilLog.LOG.isTraceEnabled()) {
@@ -343,13 +347,17 @@ public class PluginSentence extends AbstractPluginScoped {
             }
         }
         for (Method m : ms) {
-            Sentence s = m.getAnnotation(Sentence.class);
             List<String> strs = new LinkedList<String>();
-            strs.add(s.value());
+            Sentence s = m.getAnnotation(Sentence.class);
+            if(s != null && !"".equals(s.value())){
+                strs.add(s.value());
+            }
             Synonyms sm = m.getAnnotation(Synonyms.class);
             if (sm != null) {
                 for (String syn : sm.value()) {
-                    strs.add(syn);
+                    if(!"".equals(syn)){
+                        strs.add(syn);
+                    }
                 }
             }
             boolean found = false;

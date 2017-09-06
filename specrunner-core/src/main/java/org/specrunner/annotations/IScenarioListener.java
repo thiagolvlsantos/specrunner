@@ -32,6 +32,18 @@ import org.specrunner.result.IResultSet;
 public interface IScenarioListener {
 
     /**
+     * Information on node to provide information if before action has to be performed.
+     * Default is <code>true</code>.
+     */
+    String BEFORE = "before";
+
+    /**
+     * Information on node to provide information if before action has to be performed.
+     * Default is <code>true</code>.
+     */
+    String AFTER = "after";
+    
+    /**
      * Perform something before each scenario.
      * 
      * @param title
