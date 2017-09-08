@@ -12,6 +12,6 @@ public class DatabaseScenarioDbmsListener extends AbstractScenarioWrapperBeforeL
 
     @Override
     protected String getOnStartMessage() {
-        return "Database cleanup.";
+        return "DB_Clean";
     }
 }

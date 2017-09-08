@@ -13,6 +13,6 @@ public class DatabaseScenarioCompareListener extends AbstractScenarioWrapperAfte
 
     @Override
     protected String getOnEndMessage() {
-        return "Database checkup.";
+        return "DB_Check";
     }
 }
