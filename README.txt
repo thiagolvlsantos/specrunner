@@ -1,4 +1,5 @@
 -----------------------------------------------------------
+
 1.5.11
 OK - Support to 'caption' attributes to tables #80 https://github.com/thiagolvlsantos/specrunner/issues/80
 OK - Disable @Sentence required to use @Synonyms and not accept "" (empty string) as pattern #79 https://github.com/thiagolvlsantos/specrunner/issues/79
