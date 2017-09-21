@@ -87,7 +87,7 @@ public abstract class AbstractScenarioWrapperListener implements IScenarioListen
         } else {
             n = ns.get(onStart ? 0 : ns.size() - 1);
         }
-        Element s = createElement(type, message);
+        Element s = createElement(type, message, onStart);
         if (n instanceof Element) {
             Element element = (Element) n;
             if (onStart) {
@@ -140,14 +140,16 @@ public abstract class AbstractScenarioWrapperListener implements IScenarioListen
      *            Plugin type.
      * @param message
      *            A message.
+     * @param onStart
+     *            If it is start or end.
      * @return An element.
      * @throws PluginException
      *             O creation errors.
      */
-    protected Element createElement(Class<? extends IPlugin> type, String message) throws PluginException {
+    protected Element createElement(Class<? extends IPlugin> type, String message, boolean onStart) throws PluginException {
         Element s = new Element("span");
         UtilNode.appendCss(s, SRServices.get(IPluginFactory.class).getAlias(type));
-        s.appendChild("{" + message + "}");
+        s.appendChild("[" + message + "]");
         return s;
     }
 

@@ -13,7 +13,7 @@ public class DatabaseScenarioListener extends AbstractScenarioWrapperListener {
 
     @Override
     protected String getOnStartMessage() {
-        return "Database cleanup.";
+        return "DB_Clean";
     }
 
     @Override
@@ -23,6 +23,6 @@ public class DatabaseScenarioListener extends AbstractScenarioWrapperListener {
 
     @Override
     protected String getOnEndMessage() {
-        return "Database checkup.";
+        return "DB_Check";
     }
 }
