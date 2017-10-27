@@ -36,7 +36,7 @@ td {
             <col span="3" style="background-color:gray;"/>
             <col style="background-color:red;" caption="Customer"/>
             <col style="background-color:green;" caption="Customer extended"/>
-            <col span="2" style="background-color:blue;" caption="Customer clob"/>
+            <col span="2" style="background-color:yellow;" caption="Customer clob"/>
         </colgroup>
         <caption>Any name</caption>
         <thead>
@@ -62,6 +62,67 @@ td {
             </tr>
         </tbody>
     </table>
+
+	Another example, without captions or explicit actions.
+    <table class="joined">
+        <colgroup action="I">
+            <col span="3" style="background-color:gray;"/>
+            <col style="background-color:red;" caption="Customer"/>
+            <col style="background-color:green;" caption="Customer extended" action="U"/>
+            <col span="2" style="background-color:yellow;" caption="Customer clob" action="D"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ANY</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>ANY</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
+
+	Another example, with caption and action into 'table' tag.
+    <table class="joined" action="I">
+        <colgroup>
+            <col span="3" style="background-color:gray;"/>
+            <col style="background-color:red;" caption="Customer"/>
+            <col style="background-color:green;" caption="Customer extended" action="U"/>
+            <col span="2" style="background-color:yellow;" caption="Customer clob" action="D"/>
+        </colgroup>
+        <caption>Full data</caption>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>ANY</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>ANY</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
     
     <p>
     Perform insert:
@@ -71,7 +132,7 @@ td {
             <col span="2" style="background-color:gray;"/>
             <col style="background-color:red;" caption="Customer"/>
             <col style="background-color:green;" caption="Customer extended"/>
-            <col span="2" style="background-color:blue;"/>
+            <col span="2" style="background-color:yellow;"/>
         </colgroup>
         <caption>Customer clob</caption>
         <thead>
@@ -98,17 +159,16 @@ td {
     <p>
     This table performs verification.
     </p>
-    <table class="joined verify">
+    <table class="joined verify" action="I">
         <colgroup>
-            <col span="2" style="background-color:gray;"/>
+            <col style="background-color:gray;"/>
             <col style="background-color:red" caption="Customer"/>
             <col style="background-color:green" caption="Customer extended"/>
-            <col span="2" style="background-color:blue" >
+            <col span="2" style="background-color:yellow">
         </colgroup>
         <caption>Customer clob</caption>
         <thead>
             <tr>
-                <th>Action</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Description</th>
@@ -118,7 +178,6 @@ td {
         </thead>
         <tbody>
             <tr>
-                <td>I</td>
                 <td>1</td>
                 <td>Thiago</td>
                 <td>Testing</td>
