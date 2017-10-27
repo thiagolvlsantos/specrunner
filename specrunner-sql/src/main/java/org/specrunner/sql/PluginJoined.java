@@ -17,10 +17,6 @@
  */
 package org.specrunner.sql;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
@@ -34,6 +30,10 @@ import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.CellAdapter;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * Split database tables in parts like Hibernate JOINED strategy. The order of
@@ -56,6 +56,10 @@ public class PluginJoined extends AbstractPlugin {
      * Constant for &lt;col&gt; caption attribute.
      */
     public static final String ATTR_CAPTION = "caption";
+    /**
+     * Constant for &lt;action&gt; action attribute.
+     */
+    public static final String ATTR_ACTION = "action";
 
     @Override
     public ActionType getActionType() {
@@ -82,8 +86,12 @@ public class PluginJoined extends AbstractPlugin {
         for (CellAdapter c : table.getCols()) {
             int span = Integer.parseInt(c.getAttribute(ATTR_SPAN, "1"));
             if (colIndex == 0) {
-                if (span < 2) {
-                    throw new PluginException("First col must specify the number of fixed columns, which should be greater than 1, one column for Action type and the others like ID should be repeated.");
+                if (span < 1) {
+                    throw new PluginException("First column must specify the number of fixed columns, " + //
+                            "which should be equals or greater than 1, " //
+                            + " if 'action' attribute is not part of table " //
+                            + "(one column for Action type and the others like ID should be repeated), " //
+                            + "or greater or equals to 1.");
                 }
                 fixed = span;
                 colIndex++;
@@ -95,11 +103,27 @@ public class PluginJoined extends AbstractPlugin {
             copy.setAttribute(UtilNode.ATT_CSS, table.getAttribute(UtilNode.ATT_CSS).replace(alias, ""));
             if (colIndex < table.getColsCount() - 1) {
                 if (!c.hasAttribute(ATTR_CAPTION)) {
-                    throw new PluginException("Colgroup item (" + colIndex + ") '" + c.toXML() + "' missing caption attribute. Caption is used to define the expanded table column name. i.e. caption=\"Customers\"");
+                    throw new PluginException("Colgroup item (" + colIndex + ") '" + c.toXML() + "' missing caption attribute. " + "Caption is used to define the expanded table column name. i.e. caption=\"Customers\"");
                 }
             }
             if (c.hasAttribute(ATTR_CAPTION)) {
-                copy.getCaption(0).setValue(c.getAttribute(ATTR_CAPTION));
+                if (!copy.getCaptions().isEmpty()) {
+                    copy.getCaption(0).setValue(c.getAttribute(ATTR_CAPTION));
+                } else {
+                    copy.setAttribute(ATTR_CAPTION, c.getAttribute(ATTR_CAPTION));
+                }
+            }
+            if (c.hasAttribute(ATTR_ACTION)) {
+                copy.setAttribute(ATTR_ACTION, c.getAttribute(ATTR_ACTION));
+            } else {
+                Element e = (Element) c.getNode().getParent();
+                if (e.getAttribute(ATTR_ACTION) != null) {
+                    copy.setAttribute(ATTR_ACTION, e.getAttributeValue(ATTR_ACTION));
+                } else {
+                    if (table.hasAttribute(ATTR_ACTION)) {
+                        copy.setAttribute(ATTR_ACTION, table.getAttribute(ATTR_ACTION));
+                    }
+                }
             }
             td.appendChild(copy.getNode());
             copy.select(fixed - 1, colIndex, columnIndex, span);
