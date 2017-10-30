@@ -1,4 +1,9 @@
 -----------------------------------------------------------
+1.5.13
+	Workaround on Maven repository problems:
+		404 - Not Found
+		The path /org/specrunner/specrunner-core/1.5.12/specrunner-core-1.5.12.jar is cached until 2017-10-31T02:30:32.073Z as not found in repository M2Repository(id=central-proxy)
+
 1.5.12
 OK - Add log information to property comparisons to discriminate objects under analysis. #83
 	Bug was related to ICache, and was fixed. Extended log is not required anymore.
