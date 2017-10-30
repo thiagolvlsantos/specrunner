@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
@@ -35,6 +33,8 @@ import org.specrunner.source.resource.IResource;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.resources.ResourceFinder;
+
+import nu.xom.Node;
 
 /**
  * Partial resource implementation.

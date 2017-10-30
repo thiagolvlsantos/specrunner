@@ -17,10 +17,6 @@
  */
 package org.specrunner.annotator.core;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
@@ -28,6 +24,10 @@ import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.result.IWritable;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Add/Append title with result information.

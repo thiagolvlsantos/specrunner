@@ -17,9 +17,9 @@
  */
 package org.specrunner.util.xom;
 
-import nu.xom.Node;
-
 import org.specrunner.util.reset.IResetable;
+
+import nu.xom.Node;
 
 /**
  * Create a Node representation of any object.

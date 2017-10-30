@@ -20,9 +20,9 @@ package org.specrunner.source.namespace.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import nu.xom.XPathContext;
-
 import org.specrunner.source.namespace.INamespaceInfo;
+
+import nu.xom.XPathContext;
 
 /**
  * Default namespace info extractor.

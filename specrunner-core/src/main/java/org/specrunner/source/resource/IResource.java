@@ -19,10 +19,10 @@ package org.specrunner.source.resource;
 
 import java.util.List;
 
-import nu.xom.Node;
-
 import org.specrunner.source.ISource;
 import org.specrunner.util.xom.IPresentation;
+
+import nu.xom.Node;
 
 /**
  * A resource is something attached somehow to the source. For example, CSSs,

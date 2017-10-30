@@ -19,9 +19,6 @@ package org.specrunner.plugins.core.elements;
 
 import java.io.File;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.dumper.core.ConstantsDumperFile;
@@ -36,6 +33,9 @@ import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.cache.ICache;
 import org.specrunner.util.cache.ICacheFactory;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
 
 /**
  * Plugin to replace resources.

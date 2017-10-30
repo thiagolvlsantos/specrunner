@@ -116,15 +116,6 @@ public interface ICache<K, T> {
     ICache<K, T> setClean(long clean);
 
     /**
-     * Says if a key is mapped.
-     * 
-     * @param key
-     *            The key.
-     * @return true, if mapped, false, otherwise.
-     */
-    boolean contains(K key);
-
-    /**
      * Get a cache object.
      * 
      * @param key

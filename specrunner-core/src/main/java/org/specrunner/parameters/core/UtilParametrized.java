@@ -20,9 +20,6 @@ package org.specrunner.parameters.core;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.context.IContext;
@@ -31,6 +28,9 @@ import org.specrunner.parameters.IParameterHolder;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
 
 /**
  * Helper class for setting parametrized objects.

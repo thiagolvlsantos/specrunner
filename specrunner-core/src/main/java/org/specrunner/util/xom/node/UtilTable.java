@@ -17,11 +17,11 @@
  */
 package org.specrunner.util.xom.node;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Table utility class.

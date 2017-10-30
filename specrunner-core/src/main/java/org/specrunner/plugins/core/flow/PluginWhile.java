@@ -17,10 +17,6 @@
  */
 package org.specrunner.plugins.core.flow;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -32,6 +28,10 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.runner.RunnerException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.UtilExpression;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * Performs a conditional loop.

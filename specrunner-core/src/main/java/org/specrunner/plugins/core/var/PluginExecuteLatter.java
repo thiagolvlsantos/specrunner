@@ -1,9 +1,5 @@
 package org.specrunner.plugins.core.var;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.parameters.DontEval;
@@ -15,6 +11,10 @@ import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Perform child actions before assertions.

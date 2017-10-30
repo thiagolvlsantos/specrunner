@@ -21,11 +21,11 @@ import java.io.File;
 import java.net.URI;
 import java.util.List;
 
-import nu.xom.Document;
-import nu.xom.Element;
-
 import org.specrunner.source.namespace.INamespaceInfo;
 import org.specrunner.source.resource.IResourceManager;
+
+import nu.xom.Document;
+import nu.xom.Element;
 
 /**
  * Stand for the source of specifications.

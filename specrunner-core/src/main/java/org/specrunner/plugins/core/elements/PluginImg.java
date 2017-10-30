@@ -17,11 +17,11 @@
  */
 package org.specrunner.plugins.core.elements;
 
-import nu.xom.Element;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.element.core.ImageResource;
+
+import nu.xom.Element;
 
 /**
  * Plugin to add image resources.

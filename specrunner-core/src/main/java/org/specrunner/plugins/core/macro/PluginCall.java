@@ -17,11 +17,6 @@
  */
 package org.specrunner.plugins.core.macro;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.ENext;
@@ -30,6 +25,11 @@ import org.specrunner.plugins.core.AbstractPluginNamed;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * A plugin which calls a macro by its name.

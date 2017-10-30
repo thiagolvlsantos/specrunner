@@ -21,8 +21,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import nu.xom.Node;
-
 import org.specrunner.SpecRunnerException;
 import org.specrunner.annotations.AfterScenario;
 import org.specrunner.annotations.BeforeScenario;
@@ -30,6 +28,8 @@ import org.specrunner.annotations.IScenarioListener;
 import org.specrunner.annotations.UtilAnnotations;
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
+
+import nu.xom.Node;
 
 /**
  * Cleaner for scenarios considering @BeforeScenario and @AfterScenario as

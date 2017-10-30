@@ -17,15 +17,15 @@
  */
 package org.specrunner.util;
 
-import nu.xom.Document;
-import nu.xom.Node;
-import nu.xom.Nodes;
-import nu.xom.ParentNode;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.source.resource.ResourceException;
 import org.specrunner.source.resource.positional.IResourcePositional;
+
+import nu.xom.Document;
+import nu.xom.Node;
+import nu.xom.Nodes;
+import nu.xom.ParentNode;
 
 /**
  * Resources utilities.

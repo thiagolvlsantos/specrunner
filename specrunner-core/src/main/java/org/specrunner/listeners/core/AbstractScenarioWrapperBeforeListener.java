@@ -17,12 +17,12 @@
  */
 package org.specrunner.listeners.core;
 
-import nu.xom.Node;
-
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
+
+import nu.xom.Node;
 
 /**
  * Wrapp a scenario with a start tag.

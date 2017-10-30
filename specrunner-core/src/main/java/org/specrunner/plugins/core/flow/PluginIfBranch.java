@@ -17,10 +17,6 @@
  */
 package org.specrunner.plugins.core.flow;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -31,6 +27,10 @@ import org.specrunner.plugins.core.AbstractPluginNamed;
 import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * Performs the branch selection.

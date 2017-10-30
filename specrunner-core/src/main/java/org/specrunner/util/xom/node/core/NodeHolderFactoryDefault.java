@@ -17,10 +17,10 @@
  */
 package org.specrunner.util.xom.node.core;
 
-import nu.xom.Node;
-
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Node;
 
 /**
  * Default implementation of a node holder creator.

@@ -22,10 +22,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.ContextException;
@@ -44,6 +40,10 @@ import org.specrunner.source.ISource;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * Default context implementation.

@@ -17,12 +17,12 @@
  */
 package org.specrunner.listeners.core;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Node;
 
 /**
  * Listener to ignore nodes.

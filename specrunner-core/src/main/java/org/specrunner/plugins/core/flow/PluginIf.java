@@ -17,10 +17,6 @@
  */
 package org.specrunner.plugins.core.flow;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ActionType;
@@ -31,6 +27,10 @@ import org.specrunner.plugins.type.Command;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Create a condition execution.

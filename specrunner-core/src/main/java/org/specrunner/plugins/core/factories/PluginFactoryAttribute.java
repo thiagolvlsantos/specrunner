@@ -19,10 +19,6 @@ package org.specrunner.plugins.core.factories;
 
 import java.util.Map.Entry;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginGroup;
@@ -31,6 +27,10 @@ import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.plugins.core.UtilPlugin;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * An implementation which uses a attribute to return the plugin. To map a

@@ -20,10 +20,10 @@ package org.specrunner.util.xom.node;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.specrunner.util.xom.node.core.NodeHolderDefault;
+
 import nu.xom.Element;
 import nu.xom.Nodes;
-
-import org.specrunner.util.xom.node.core.NodeHolderDefault;
 
 /**
  * A row abstraction.

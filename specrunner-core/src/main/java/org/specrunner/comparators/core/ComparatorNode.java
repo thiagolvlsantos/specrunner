@@ -17,10 +17,10 @@
  */
 package org.specrunner.comparators.core;
 
-import nu.xom.Node;
-
 import org.specrunner.util.string.UtilString;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Node;
 
 /**
  * A default node comparator. Compare each node: text-by-text and attribute by

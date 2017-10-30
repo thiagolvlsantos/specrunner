@@ -29,13 +29,13 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.HashMap;
 
-import nu.xom.Builder;
-import nu.xom.Document;
-
 import org.specrunner.SRServices;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Builder;
+import nu.xom.Document;
 
 /**
  * The default implementation. Uses a NekoHTML parser under XOM to read the

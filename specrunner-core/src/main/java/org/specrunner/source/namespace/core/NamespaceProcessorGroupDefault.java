@@ -17,12 +17,12 @@
  */
 package org.specrunner.source.namespace.core;
 
-import nu.xom.Document;
-
 import org.specrunner.source.namespace.INamespaceInfo;
 import org.specrunner.source.namespace.INamespaceProcessor;
 import org.specrunner.source.namespace.INamespaceProcessorGroup;
 import org.specrunner.util.composite.core.CompositeImpl;
+
+import nu.xom.Document;
 
 /**
  * Default group of processors.

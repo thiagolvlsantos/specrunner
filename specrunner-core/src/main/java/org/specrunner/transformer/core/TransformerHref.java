@@ -17,13 +17,13 @@
  */
 package org.specrunner.transformer.core;
 
-import nu.xom.Document;
-import nu.xom.Nodes;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.transformer.ITransformer;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Document;
+import nu.xom.Nodes;
 
 /**
  * Useful transformer to set all links in specification as included resources

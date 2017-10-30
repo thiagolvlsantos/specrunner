@@ -21,13 +21,6 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.Map;
 
-import nu.xom.Attribute;
-import nu.xom.DocType;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Nodes;
-
 import org.specrunner.context.IBlock;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResult;
@@ -38,6 +31,13 @@ import org.specrunner.source.resource.IResource;
 import org.specrunner.source.resource.positional.core.CSSResource;
 import org.specrunner.source.resource.positional.core.JSResource;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.DocType;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Nodes;
 
 /**
  * Dumps the report details in a separate file.

@@ -20,11 +20,11 @@ package org.specrunner.context;
 import java.util.Deque;
 import java.util.Map;
 
-import nu.xom.Node;
-
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.runner.IRunner;
 import org.specrunner.source.ISource;
+
+import nu.xom.Node;
 
 /**
  * Stands for the plugin/test runtime environment.

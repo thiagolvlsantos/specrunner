@@ -1,4 +1,9 @@
 -----------------------------------------------------------
+1.5.12
+OK - Add log information to property comparisons to discriminate objects under analysis. #83
+	Bug was related to ICache, and was fixed. Extended log is not required anymore.
+OK - Update PluginJoined to comply with 'caption' and 'action' patterns of database actions. #82
+OK - Change 'include' style 'collapse' to avoid Bootstrap conflicts #81
 
 1.5.11
 OK - Support to 'caption' attributes to tables #80 https://github.com/thiagolvlsantos/specrunner/issues/80

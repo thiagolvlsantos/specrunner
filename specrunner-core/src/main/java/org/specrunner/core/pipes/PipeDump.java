@@ -20,8 +20,8 @@ package org.specrunner.core.pipes;
 import java.io.File;
 import java.util.Map;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;

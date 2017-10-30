@@ -17,17 +17,17 @@
  */
 package org.specrunner.annotator.core;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-import nu.xom.Text;
-
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
 import org.specrunner.result.IResult;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 /**
  * Add CSS style related to result status. For each result node add the

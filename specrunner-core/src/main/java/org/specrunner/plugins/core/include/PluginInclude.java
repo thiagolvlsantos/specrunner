@@ -25,13 +25,6 @@ import java.net.URLDecoder;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-import nu.xom.Text;
-
 import org.specrunner.SRServices;
 import org.specrunner.configuration.IConfiguration;
 import org.specrunner.context.IContext;
@@ -59,6 +52,13 @@ import org.specrunner.transformer.ITransformerManager;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.expression.UtilExpression;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 /**
  * Allow a file inclusion.
@@ -95,6 +95,14 @@ public class PluginInclude extends AbstractPlugin {
      * Style added to content file.
      */
     public static final String CSS_INCLUDED_CONTENT = "included_content";
+    /**
+     * Style added for expanded.
+     */
+    public static final String CSS_EXPANDED = "sr_expanded";
+    /**
+     * Style added for collapsed.
+     */
+    public static final String CSS_COLLAPSED = "sr_collapsed";
 
     /**
      * Input directory file.
@@ -465,11 +473,11 @@ public class PluginInclude extends AbstractPlugin {
             }
 
             if (failCount > 0) {
-                UtilNode.appendCss(ele, "expanded");
+                UtilNode.appendCss(ele, CSS_EXPANDED);
                 result.addResult(Warning.INSTANCE, context.newBlock(node, this), "Included file failed: " + path);
             } else {
                 if (expanded == null || !expanded) {
-                    UtilNode.appendCss(ele, "collapse");
+                    UtilNode.appendCss(ele, CSS_COLLAPSED);
                 }
                 result.addResult(Success.INSTANCE, context.newBlock(node, this));
             }

@@ -17,11 +17,11 @@
  */
 package org.specrunner.listeners;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.result.IResultSet;
+
+import nu.xom.Node;
 
 /**
  * Generic node listener. Performs actions before and after plugin

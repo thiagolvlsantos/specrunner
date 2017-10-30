@@ -17,13 +17,13 @@
  */
 package org.specrunner.listeners.core;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.listeners.INodeListener;
 import org.specrunner.plugins.ENext;
 import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Node;
 
 /**
  * Helper for node listeners.

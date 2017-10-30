@@ -20,8 +20,6 @@ package org.specrunner.listeners.core;
 import java.io.IOException;
 import java.util.List;
 
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.features.IFeatureManager;
@@ -34,6 +32,8 @@ import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
+
+import nu.xom.Node;
 
 /**
  * Listener to pause execution on errors.

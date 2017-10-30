@@ -56,10 +56,11 @@ public class AccessFactoryImpl implements IAccessFactory {
         if (cache == null) {
             cache = SRServices.get(ICacheFactory.class).newCache(AccessFactoryImpl.class.getSimpleName());
         }
-        if (cache.contains(key)) {
-            return cache.get(key);
+        IAccess access = cache.get(key);
+        if (access != null) {
+            return access;
         }
-        IAccess access = lookupBean(target, name);
+        access = lookupBean(target, name);
         if (access == null) {
             access = lookupField(c, name);
         }
@@ -174,9 +175,15 @@ public class AccessFactoryImpl implements IAccessFactory {
         try {
             StringTokenizer st = new StringTokenizer(str, ".");
             StringBuilder path = new StringBuilder();
+            if (UtilLog.LOG.isInfoEnabled()) {
+                UtilLog.LOG.info("Searching '" + str + "' on " + source);
+            }
             while (bean != null && st.hasMoreTokens()) {
                 String part = st.nextToken();
                 IAccess access = newAccess(bean, part);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Part '" + part + "', bean='" + bean + "'(" + (bean != null ? bean.getClass() : "null") + ") access='" + access + "'");
+                }
                 if ((access == null || !access.hasFeature()) && invalidPathAsNull) {
                     bean = null;
                     break;
@@ -184,11 +191,19 @@ public class AccessFactoryImpl implements IAccessFactory {
                 path.append(path.length() > 0 ? "." : "");
                 path.append(part);
                 if (access == null && !invalidPathAsNull) {
-                    throw new PluginException("Invalid property '" + part + "' in path:'" + path + "' of property '" + str + "'.");
+                    StringBuilder sb = new StringBuilder("Invalid property '" + part + "' in path:'" + path + "' of property '" + str + "'.");
+                    PluginException tmp = new PluginException(sb.toString());
+                    tmp.printStackTrace();
+                    throw tmp;
                 }
                 bean = access.get(bean, part);
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Bean '" + path + "' = '" + bean + "'");
+                }
                 if (bean == null && !acceptNullPath && st.hasMoreElements()) {
-                    throw new PluginException("Invalid null value for part '" + path + "' of property '" + str + "'.");
+                    PluginException tmp = new PluginException("Invalid null value for part '" + path + "' of property '" + str + "'.");
+                    tmp.printStackTrace();
+                    throw tmp;
                 }
             }
             return bean;

@@ -17,12 +17,12 @@
  */
 package org.specrunner.plugins.core.elements;
 
-import nu.xom.Element;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.element.core.JavaScriptResource;
 import org.specrunner.source.resource.element.core.StylesheetResource;
+
+import nu.xom.Element;
 
 /**
  * Add resources of 'link' tags.

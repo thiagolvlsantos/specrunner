@@ -17,9 +17,6 @@
  */
 package org.specrunner.plugins.core;
 
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.PluginException;
@@ -27,6 +24,9 @@ import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.xom.node.TableAdapter;
 import org.specrunner.util.xom.node.UtilTable;
+
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * Adapter for plugins on tables.

@@ -17,12 +17,12 @@
  */
 package org.specrunner.util.xom.core;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.util.composite.core.CompositeImpl;
 import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.IPresentationGroup;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * A presentation group.

@@ -17,8 +17,8 @@
  */
 package org.specrunner.core.pipes;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.annotator.IAnnotatorFactory;

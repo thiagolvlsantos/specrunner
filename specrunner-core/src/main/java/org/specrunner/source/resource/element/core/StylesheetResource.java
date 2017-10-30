@@ -17,10 +17,10 @@
  */
 package org.specrunner.source.resource.element.core;
 
-import nu.xom.Element;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
+
+import nu.xom.Element;
 
 /**
  * A stylesheet resource.

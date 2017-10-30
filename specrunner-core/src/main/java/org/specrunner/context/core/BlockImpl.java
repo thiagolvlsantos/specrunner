@@ -19,11 +19,11 @@ package org.specrunner.context.core;
 
 import java.util.Map;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IBlock;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.core.PluginNop;
+
+import nu.xom.Node;
 
 /**
  * Default block implementation.

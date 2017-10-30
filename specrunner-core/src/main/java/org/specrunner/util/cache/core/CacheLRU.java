@@ -120,11 +120,6 @@ public class CacheLRU<K, T> implements ICache<K, T> {
     }
 
     @Override
-    public boolean contains(K key) {
-        return items.containsKey(key);
-    }
-
-    @Override
     public T get(K key) {
         CacheEntry<K, T> item = items.get(key);
         if (item != null) {

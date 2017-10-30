@@ -20,12 +20,6 @@ package org.specrunner.annotator.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-
 import org.specrunner.annotator.AnnotatorException;
 import org.specrunner.annotator.IAnnotator;
 import org.specrunner.context.IBlock;
@@ -35,6 +29,12 @@ import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
 import org.specrunner.util.xom.IPresentation;
 import org.specrunner.util.xom.UtilNode;
+
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
 
 /**
  * Add stack traces to nodes with errors.

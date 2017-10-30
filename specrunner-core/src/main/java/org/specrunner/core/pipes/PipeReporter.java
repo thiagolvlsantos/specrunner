@@ -17,8 +17,8 @@
  */
 package org.specrunner.core.pipes;
 
-import org.specrunner.SpecRunnerException;
 import org.specrunner.SRServices;
+import org.specrunner.SpecRunnerException;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.pipeline.AbortException;
 import org.specrunner.pipeline.IChannel;

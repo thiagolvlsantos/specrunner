@@ -17,12 +17,12 @@
  */
 package org.specrunner.source.resource.element.core;
 
-import nu.xom.Element;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.core.AbstractResource;
 import org.specrunner.source.resource.element.IResourceElement;
+
+import nu.xom.Element;
 
 /**
  * Abstract implementation of a resource with a Element counterpart.

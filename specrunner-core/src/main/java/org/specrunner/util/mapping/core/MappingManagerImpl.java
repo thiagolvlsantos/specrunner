@@ -3,7 +3,6 @@ package org.specrunner.util.mapping.core;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 

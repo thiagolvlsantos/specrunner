@@ -28,9 +28,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import nu.xom.Document;
-import nu.xom.Serializer;
-
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.dumper.ISourceDumper;
@@ -42,6 +39,9 @@ import org.specrunner.result.ResultException;
 import org.specrunner.source.ISource;
 import org.specrunner.source.core.EncodedImpl;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Document;
+import nu.xom.Serializer;
 
 /**
  * A partial dumper which writes data to files.

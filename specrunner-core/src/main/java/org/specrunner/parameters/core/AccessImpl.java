@@ -93,7 +93,7 @@ public class AccessImpl implements IAccess {
     }
 
     /**
-     * Prepare an array of arguments. In this caso the only changed value is the
+     * Prepare an array of arguments. In this case the only changed value is the
      * first one.
      * 
      * @param args

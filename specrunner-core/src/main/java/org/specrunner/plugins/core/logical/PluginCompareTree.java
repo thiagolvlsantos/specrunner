@@ -19,10 +19,6 @@ package org.specrunner.plugins.core.logical;
 
 import java.util.List;
 
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.Text;
-
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
@@ -42,6 +38,10 @@ import org.specrunner.result.status.Failure;
 import org.specrunner.util.xom.UtilNode;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.Text;
 
 /**
  * Perform a comparison of nodes.

@@ -17,13 +17,13 @@
  */
 package org.specrunner.source.namespace.core;
 
+import org.specrunner.source.namespace.INamespaceInfo;
+import org.specrunner.source.namespace.INamespaceProcessor;
+
 import nu.xom.Document;
 import nu.xom.Node;
 import nu.xom.Nodes;
 import nu.xom.XPathContext;
-
-import org.specrunner.source.namespace.INamespaceInfo;
-import org.specrunner.source.namespace.INamespaceProcessor;
 
 /**
  * Basic processor.

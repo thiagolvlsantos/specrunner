@@ -19,9 +19,9 @@ package org.specrunner.context;
 
 import java.util.Map;
 
-import nu.xom.Node;
-
 import org.specrunner.plugins.IPlugin;
+
+import nu.xom.Node;
 
 /**
  * Block factory.

@@ -5,16 +5,16 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import nu.xom.Builder;
-import nu.xom.Document;
-import nu.xom.Nodes;
-
 import org.specrunner.SRServices;
 import org.specrunner.pipeline.IPipe;
 import org.specrunner.pipeline.IPipeListener;
 import org.specrunner.pipeline.IPipeline;
 import org.specrunner.pipeline.PipelineException;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Builder;
+import nu.xom.Document;
+import nu.xom.Nodes;
 
 /**
  * Default implementation of a pipeline factory using XOM.

@@ -23,9 +23,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
@@ -36,6 +33,9 @@ import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.plugins.core.UtilPlugin;
 import org.specrunner.properties.IPropertyLoader;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Partial plugin factory implementation.

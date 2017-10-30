@@ -17,9 +17,6 @@
  */
 package org.specrunner.plugins.core.factories;
 
-import nu.xom.Node;
-import nu.xom.Text;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
@@ -30,6 +27,9 @@ import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.plugins.core.text.PluginReplacer;
 import org.specrunner.plugins.core.text.PluginReplacerMap;
+
+import nu.xom.Node;
+import nu.xom.Text;
 
 /**
  * A factory for Text elements.

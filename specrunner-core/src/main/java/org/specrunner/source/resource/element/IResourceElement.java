@@ -17,9 +17,9 @@
  */
 package org.specrunner.source.resource.element;
 
-import nu.xom.Element;
-
 import org.specrunner.source.resource.IResource;
+
+import nu.xom.Element;
 
 /**
  * A resource related to a given element. i.e. a image already part of the

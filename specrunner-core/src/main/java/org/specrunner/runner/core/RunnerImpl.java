@@ -19,9 +19,6 @@ package org.specrunner.runner.core;
 
 import java.util.List;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IBlock;
@@ -53,6 +50,9 @@ import org.specrunner.source.ISource;
 import org.specrunner.source.SourceException;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.collections.ReverseIterable;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Default runner implementation.

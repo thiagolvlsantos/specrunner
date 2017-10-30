@@ -17,10 +17,10 @@
  */
 package org.specrunner.util.xom.node.core;
 
-import nu.xom.Element;
-
 import org.specrunner.util.xom.node.ITableFactory;
 import org.specrunner.util.xom.node.TableAdapter;
+
+import nu.xom.Element;
 
 /**
  * Default implementation of a table creator.

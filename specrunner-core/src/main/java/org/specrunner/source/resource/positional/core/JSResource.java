@@ -19,13 +19,13 @@ package org.specrunner.source.resource.positional.core;
 
 import java.io.File;
 
-import nu.xom.Attribute;
-import nu.xom.Comment;
-import nu.xom.Element;
-
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
 import org.specrunner.source.resource.positional.Position;
+
+import nu.xom.Attribute;
+import nu.xom.Comment;
+import nu.xom.Element;
 
 /**
  * A JavaScript resource.

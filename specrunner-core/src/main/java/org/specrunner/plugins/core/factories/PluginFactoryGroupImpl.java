@@ -17,8 +17,6 @@
  */
 package org.specrunner.plugins.core.factories;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.IPluginFactory;
@@ -28,6 +26,8 @@ import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.core.PluginGroupImpl;
 import org.specrunner.util.composite.core.CompositeImpl;
+
+import nu.xom.Node;
 
 /**
  * Default factory group implementation.

@@ -17,9 +17,6 @@
  */
 package org.specrunner.result.core;
 
-import nu.xom.Node;
-import nu.xom.Text;
-
 import org.specrunner.context.IBlock;
 import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.IPlugin;
@@ -29,6 +26,9 @@ import org.specrunner.result.IWritable;
 import org.specrunner.result.Status;
 import org.specrunner.util.UtilException;
 import org.specrunner.util.xom.IPresentation;
+
+import nu.xom.Node;
+import nu.xom.Text;
 
 /**
  * Default result implementation.

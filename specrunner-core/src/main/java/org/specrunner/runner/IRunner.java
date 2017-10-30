@@ -17,12 +17,12 @@
  */
 package org.specrunner.runner;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.result.IResultSet;
 import org.specrunner.source.ISource;
+
+import nu.xom.Node;
 
 /**
  * Perform a specification.

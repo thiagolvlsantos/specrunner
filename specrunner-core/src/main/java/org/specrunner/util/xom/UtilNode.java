@@ -17,12 +17,12 @@
  */
 package org.specrunner.util.xom;
 
+import org.specrunner.plugins.PluginException;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
 import nu.xom.Nodes;
-
-import org.specrunner.plugins.PluginException;
 
 /**
  * Node utility class.

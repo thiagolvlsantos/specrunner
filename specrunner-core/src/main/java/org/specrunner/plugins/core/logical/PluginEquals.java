@@ -17,9 +17,6 @@
  */
 package org.specrunner.plugins.core.logical;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.SpecRunnerException;
 import org.specrunner.comparators.IComparator;
@@ -35,6 +32,9 @@ import org.specrunner.util.xom.core.PresentationCompare;
 import org.specrunner.util.xom.core.PresentationException;
 import org.specrunner.util.xom.node.INodeHolder;
 import org.specrunner.util.xom.node.INodeHolderFactory;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Compare elements. Use class 'eq', there are some approaches:

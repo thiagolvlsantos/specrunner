@@ -17,11 +17,11 @@
  */
 package org.specrunner.annotations;
 
-import nu.xom.Node;
-
 import org.specrunner.SpecRunnerException;
 import org.specrunner.context.IContext;
 import org.specrunner.result.IResultSet;
+
+import nu.xom.Node;
 
 /**
  * Listeners for scenarios.

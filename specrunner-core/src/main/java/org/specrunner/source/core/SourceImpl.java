@@ -24,10 +24,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Nodes;
-
 import org.specrunner.SRServices;
 import org.specrunner.source.IDocumentLoader;
 import org.specrunner.source.ISource;
@@ -38,6 +34,10 @@ import org.specrunner.source.namespace.INamespaceLoader;
 import org.specrunner.source.resource.IResourceManager;
 import org.specrunner.source.resource.IResourceManagerFactory;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Nodes;
 
 /**
  * The default implementation.

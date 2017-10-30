@@ -21,12 +21,6 @@ import java.io.File;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-import nu.xom.ParentNode;
-import nu.xom.Text;
-
 import org.specrunner.context.IBlock;
 import org.specrunner.dumper.SourceDumperException;
 import org.specrunner.result.IResult;
@@ -35,6 +29,12 @@ import org.specrunner.result.IWritable;
 import org.specrunner.result.ResultException;
 import org.specrunner.source.ISource;
 import org.specrunner.util.UtilLog;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
+import nu.xom.ParentNode;
+import nu.xom.Text;
 
 /**
  * Dumps the writables associated to the result set.

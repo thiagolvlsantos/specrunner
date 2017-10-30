@@ -20,11 +20,6 @@ package org.specrunner.dumper.core;
 import java.io.File;
 import java.util.Map;
 
-import nu.xom.Attribute;
-import nu.xom.Document;
-import nu.xom.Element;
-import nu.xom.Nodes;
-
 import org.specrunner.SRServices;
 import org.specrunner.concurrency.IConcurrentMapping;
 import org.specrunner.dumper.SourceDumperException;
@@ -36,6 +31,11 @@ import org.specrunner.source.resource.positional.Position;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.output.IOutput;
 import org.specrunner.util.output.IOutputFactory;
+
+import nu.xom.Attribute;
+import nu.xom.Document;
+import nu.xom.Element;
+import nu.xom.Nodes;
 
 /**
  * Dump the central part of the result report (the 'center' element of the

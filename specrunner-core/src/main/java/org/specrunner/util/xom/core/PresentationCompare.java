@@ -17,11 +17,11 @@
  */
 package org.specrunner.util.xom.core;
 
+import org.specrunner.util.xom.IPresentation;
+
 import nu.xom.Attribute;
 import nu.xom.Element;
 import nu.xom.Node;
-
-import org.specrunner.util.xom.IPresentation;
 
 /**
  * Presents two objects with their types.

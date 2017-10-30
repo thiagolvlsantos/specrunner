@@ -20,11 +20,6 @@ package org.specrunner.source.resource.element.core;
 import java.io.File;
 import java.net.URL;
 
-import nu.xom.Attribute;
-import nu.xom.Comment;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.SRServices;
 import org.specrunner.source.ISource;
 import org.specrunner.source.resource.EType;
@@ -32,6 +27,11 @@ import org.specrunner.source.resource.ResourceException;
 import org.specrunner.util.UtilIO;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.resources.ResourceFinder;
+
+import nu.xom.Attribute;
+import nu.xom.Comment;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * A resource.

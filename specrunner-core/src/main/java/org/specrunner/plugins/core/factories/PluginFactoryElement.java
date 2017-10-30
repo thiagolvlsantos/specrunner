@@ -17,16 +17,16 @@
  */
 package org.specrunner.plugins.core.factories;
 
-import nu.xom.Attribute;
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.plugins.core.UtilPlugin;
+
+import nu.xom.Attribute;
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Creates a plugin by element. To bind an element add a '

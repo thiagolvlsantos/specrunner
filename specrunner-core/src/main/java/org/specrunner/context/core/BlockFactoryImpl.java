@@ -20,11 +20,11 @@ package org.specrunner.context.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IBlock;
 import org.specrunner.context.IBlockFactory;
 import org.specrunner.plugins.IPlugin;
+
+import nu.xom.Node;
 
 /**
  * Default block factory implementation.

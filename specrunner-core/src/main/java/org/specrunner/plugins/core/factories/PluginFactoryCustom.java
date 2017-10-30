@@ -17,15 +17,15 @@
  */
 package org.specrunner.plugins.core.factories;
 
-import nu.xom.Element;
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
 import org.specrunner.plugins.IPlugin;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.PluginKind;
 import org.specrunner.plugins.core.PluginNop;
 import org.specrunner.plugins.core.UtilPlugin;
+
+import nu.xom.Element;
+import nu.xom.Node;
 
 /**
  * Returns a plugin based on a 'custom' attribute.

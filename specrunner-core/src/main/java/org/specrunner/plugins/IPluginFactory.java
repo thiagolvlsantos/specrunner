@@ -17,9 +17,9 @@
  */
 package org.specrunner.plugins;
 
-import nu.xom.Node;
-
 import org.specrunner.context.IContext;
+
+import nu.xom.Node;
 
 /**
  * Stands for a plugin factory.

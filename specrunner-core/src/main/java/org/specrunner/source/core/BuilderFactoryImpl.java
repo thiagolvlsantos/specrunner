@@ -20,12 +20,12 @@ package org.specrunner.source.core;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import nu.xom.Builder;
-
 import org.apache.xerces.parsers.AbstractSAXParser;
 import org.cyberneko.html.HTMLConfiguration;
 import org.specrunner.source.IBuilderFactory;
 import org.specrunner.source.SourceException;
+
+import nu.xom.Builder;
 
 /**
  * Default builder implementation.
