@@ -5,10 +5,10 @@
 		The path /org/specrunner/specrunner-core/1.5.12/specrunner-core-1.5.12.jar is cached until 2017-10-31T02:30:32.073Z as not found in repository M2Repository(id=central-proxy)
 
 1.5.12
-OK - Add log information to property comparisons to discriminate objects under analysis. #83
+OK - Add log information to property comparisons to discriminate objects under analysis. #83 https://github.com/thiagolvlsantos/specrunner/issues/83
 	Bug was related to ICache, and was fixed. Extended log is not required anymore.
-OK - Update PluginJoined to comply with 'caption' and 'action' patterns of database actions. #82
-OK - Change 'include' style 'collapse' to avoid Bootstrap conflicts #81
+OK - Update PluginJoined to comply with 'caption' and 'action' patterns of database actions. #82 https://github.com/thiagolvlsantos/specrunner/issues/82
+OK - Change 'include' style 'collapse' to avoid Bootstrap conflicts #81 https://github.com/thiagolvlsantos/specrunner/issues/81
 
 1.5.11
 OK - Support to 'caption' attributes to tables #80 https://github.com/thiagolvlsantos/specrunner/issues/80
