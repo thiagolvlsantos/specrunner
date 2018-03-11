@@ -3,6 +3,8 @@
 OK - compareTree should not require include to be 'expanded' should expand automatically #85 https://github.com/thiagolvlsantos/specrunner/issues/85
 OK - compareTree bug on local parameters for inclusion #84 https://github.com/thiagolvlsantos/specrunner/issues/84
 	Behavior as expected.
+OK - Enable joined plugin to accept, for example, deletions in reverse order #86 https://github.com/thiagolvlsantos/specrunner/issues/86
+	When using 'joined' the attribute 'reverse' can be set to true to expand tables in reverse order.
 
 1.5.13
 	Workaround on Maven repository problems:
