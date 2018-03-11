@@ -1,4 +1,9 @@
 -----------------------------------------------------------
+1.5.14
+OK - compareTree should not require include to be 'expanded' should expand automatically #85 https://github.com/thiagolvlsantos/specrunner/issues/85
+OK - compareTree bug on local parameters for inclusion #84 https://github.com/thiagolvlsantos/specrunner/issues/84
+	Behavior as expected.
+
 1.5.13
 	Workaround on Maven repository problems:
 		404 - Not Found
