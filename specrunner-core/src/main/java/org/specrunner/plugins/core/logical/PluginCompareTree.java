@@ -22,10 +22,12 @@ import java.util.List;
 import org.specrunner.SRServices;
 import org.specrunner.comparators.ComparatorException;
 import org.specrunner.comparators.IComparator;
+import org.specrunner.configuration.IConfiguration;
 import org.specrunner.context.IContext;
 import org.specrunner.converters.ConverterException;
 import org.specrunner.converters.IConverter;
 import org.specrunner.plugins.ActionType;
+import org.specrunner.plugins.ENext;
 import org.specrunner.plugins.IPluginFactory;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.AbstractPlugin;
@@ -51,25 +53,44 @@ import nu.xom.Text;
  */
 public class PluginCompareTree extends AbstractPlugin {
 
+    private boolean oldExpanded;
+    private boolean oldInjected;
+
     @Override
     public ActionType getActionType() {
         return Assertion.INSTANCE;
     }
 
     @Override
+    public ENext doStart(IContext context, IResultSet result) throws PluginException {
+        IConfiguration cfg = SRServices.getFeatureManager().getConfiguration();
+        oldExpanded = (boolean) cfg.get(PluginInclude.FEATURE_EXPANDED, false);
+        oldInjected = (boolean) cfg.get(PluginInclude.FEATURE_INJECTED, false);
+        cfg.add(PluginInclude.FEATURE_EXPANDED, true);
+        cfg.add(PluginInclude.FEATURE_INJECTED, true);
+        return super.doStart(context, result);
+    }
+
+    @Override
     public void doEnd(IContext context, IResultSet result) throws PluginException {
-        Node node = context.getNode();
-        Node received = UtilNode.getLeft(node);
-        Node expected = UtilNode.getRight(node);
-        String alias = SRServices.get(IPluginFactory.class).getAlias(PluginInclude.class);
-        INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
-        if (received instanceof Element && holderFactory.newHolder(received).attributeContains("class", alias)) {
-            received = received.getParent().getChild(received.getParent().indexOf(received) + 1);
+        try {
+            Node node = context.getNode();
+            Node received = UtilNode.getLeft(node);
+            Node expected = UtilNode.getRight(node);
+            String alias = SRServices.get(IPluginFactory.class).getAlias(PluginInclude.class);
+            INodeHolderFactory holderFactory = SRServices.get(INodeHolderFactory.class);
+            if (received instanceof Element && holderFactory.newHolder(received).attributeContains("class", alias)) {
+                received = received.getParent().getChild(received.getParent().indexOf(received) + 1);
+            }
+            if (expected instanceof Element && holderFactory.newHolder(expected).attributeContains("class", alias)) {
+                expected = expected.getParent().getChild(expected.getParent().indexOf(expected) + 1);
+            }
+            compare(context, result, received, expected);
+        } finally {
+            IConfiguration cfg = SRServices.getFeatureManager().getConfiguration();
+            cfg.add(PluginInclude.FEATURE_EXPANDED, oldExpanded);
+            cfg.add(PluginInclude.FEATURE_INJECTED, oldInjected);
         }
-        if (expected instanceof Element && holderFactory.newHolder(expected).attributeContains("class", alias)) {
-            expected = expected.getParent().getChild(expected.getParent().indexOf(expected) + 1);
-        }
-        compare(context, result, received, expected);
     }
 
     /**

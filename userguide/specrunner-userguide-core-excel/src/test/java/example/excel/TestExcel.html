@@ -11,6 +11,11 @@ td {
 th {
     border: 1px solid black;
 }
+
+.hide {
+	display: none;
+	visibility: hidden;
+}
 </style>
 
 <body>
@@ -33,10 +38,18 @@ th {
             <td><a class="right include" href="2007/Excel2007.xlsx">2007</a></td>
         </tr>
     </table>
+    
+    <p>Compare tables but user only see the 2007 on specification:
+    <span class="compareTree">
+		<a class="left include hide" href="Excel97.xls">97</a>
+		<a class="right include" href="2007/Excel2007.xlsx">2007</a>
+    </span>
 
     <p>
-        Compare in spans: 
-        <span class="compareTree">Files <a class="left include" href="Excel97.xls?other=TEST">97</a> and 
+        Compare in spans inherit its context with local/global/passed variables: 
+        compare receive to <span class="compareTree">
+	      <span class="local" name="value" value="works"></span>
+	      <a class="left include hide" href="Excel97.xls?other=TEST">97</a>
           <a class="right include" href="2007/Excel2007.xlsx?other=TEST">2007</a>.
         </span>
     </p>
