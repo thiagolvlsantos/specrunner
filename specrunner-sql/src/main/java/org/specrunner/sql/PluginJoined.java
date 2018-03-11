@@ -60,10 +60,34 @@ public class PluginJoined extends AbstractPlugin {
      * Constant for &lt;action&gt; action attribute.
      */
     public static final String ATTR_ACTION = "action";
+    /**
+     * Revert order of joined expansion in order to allow, for example,
+     * specification of joined deletes.
+     */
+    public boolean reverse = false; // normal order
 
     @Override
     public ActionType getActionType() {
         return Command.INSTANCE;
+    }
+
+    /**
+     * Is reverse order.
+     * 
+     * @return true, if yes, false, otherwise.
+     */
+    public boolean isReverse() {
+        return reverse;
+    }
+
+    /**
+     * Set joind order reverse or not.
+     * 
+     * @param reverse
+     *            true, to revert joined order, false, otherwise.
+     */
+    public void setReverse(boolean reverse) {
+        this.reverse = reverse;
     }
 
     @Override
@@ -125,7 +149,11 @@ public class PluginJoined extends AbstractPlugin {
                     }
                 }
             }
-            td.appendChild(copy.getNode());
+            if (reverse) {
+                td.insertChild(copy.getNode(), 0);
+            } else {
+                td.appendChild(copy.getNode());
+            }
             copy.select(fixed - 1, colIndex, columnIndex, span);
             colIndex++;
             columnIndex += span;

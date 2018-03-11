@@ -63,6 +63,39 @@ td {
         </tbody>
     </table>
 
+    Show the transformation in <strong>reverse order</strong> (i.e. for joind tables deletion):
+    <table class="joined" reverse="true">
+        <colgroup>
+            <col span="3" style="background-color:gray;"/>
+            <col style="background-color:red;" caption="Customer"/>
+            <col style="background-color:green;" caption="Customer extended"/>
+            <col span="2" style="background-color:yellow;" caption="Customer clob"/>
+        </colgroup>
+        <caption>Any name</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>ANY</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>1</td>
+                <td>ANY</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
+
 	Another example, without captions or explicit actions.
     <table class="joined">
         <colgroup action="I">
@@ -187,5 +220,69 @@ td {
         </tbody>
     </table>
     <p></p>
+    
+    
+        <p>
+    Perform an exclusion (example of 'reverse' usage):
+    </p>
+    <table class="joined prepare" reverse="true">
+        <colgroup>
+            <col span="2" style="background-color:gray;"/>
+            <col style="background-color:red;" caption="Customer"/>
+            <col style="background-color:green;" caption="Customer extended"/>
+            <col span="2" style="background-color:yellow;"/>
+        </colgroup>
+        <caption>Customer clob</caption>
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>D</td>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>
+    This table performs verification of deletions.
+    </p>
+    <table class="joined verify" action="D">
+        <colgroup>
+            <col style="background-color:gray;"/>
+            <col style="background-color:red" caption="Customer"/>
+            <col style="background-color:green" caption="Customer extended"/>
+            <col span="2" style="background-color:yellow">
+        </colgroup>
+        <caption>Customer clob</caption>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Number</th>
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Thiago</td>
+                <td>Testing</td>
+                <td>1</td>
+                <td>Long text</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>
