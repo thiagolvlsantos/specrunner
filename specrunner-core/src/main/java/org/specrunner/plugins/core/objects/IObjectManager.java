@@ -49,6 +49,18 @@ public interface IObjectManager {
     void bind(AbstractPluginObject input);
 
     /**
+     * Bind an object into memory repository.
+     * 
+     * @param clazz
+     *            The object type.
+     * @param key
+     *            The object key.
+     * @param instance
+     *            The instance to be bound.
+     */
+    <T> void bind(Class<T> clazz, String key, T instance);
+
+    /**
      * Lookup for a object of a given type, with the given key.
      * 
      * @param clazz

@@ -81,7 +81,7 @@ public class PluginJoined extends AbstractPlugin {
     }
 
     /**
-     * Set joind order reverse or not.
+     * Set joined order reverse or not.
      * 
      * @param reverse
      *            true, to revert joined order, false, otherwise.

@@ -17,7 +17,7 @@
  */
 package org.specrunner.sql.database.impl;
 
-import java.util.TreeSet;
+import java.util.LinkedList;
 
 import org.specrunner.context.IContext;
 import org.specrunner.sql.database.DatabaseException;
@@ -35,7 +35,7 @@ import org.specrunner.util.UtilLog;
  * @author Thiago Santos.
  */
 @SuppressWarnings("serial")
-public class RegisterDefault extends TreeSet<Value>implements IRegister {
+public class RegisterDefault extends LinkedList<Value> implements IRegister {
 
     /**
      * Parent table.

@@ -22,11 +22,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.specrunner.context.IContext;
+import org.specrunner.plugins.ActionType;
 import org.specrunner.plugins.PluginException;
 import org.specrunner.plugins.core.objects.AbstractPluginObject;
 import org.specrunner.plugins.core.objects.IObjectManager;
+import org.specrunner.plugins.type.Command;
+import org.specrunner.result.IResultSet;
 import org.specrunner.util.UtilLog;
 import org.specrunner.util.functions.IPredicate;
+import org.specrunner.util.xom.node.RowAdapter;
 
 /**
  * Manages the set of AbstractPluginObject created on a given specification.
@@ -62,6 +67,30 @@ public class ObjectManagerDefault implements IObjectManager {
         }
         if (UtilLog.LOG.isInfoEnabled()) {
             UtilLog.LOG.info("Plugin of " + input.getTypeInstance() + " bound.");
+        }
+    }
+
+    @Override
+    public <T> void bind(Class<T> clazz, String key, T instance) {
+        AbstractPluginObject old = entities.get(clazz);
+        if (old == null) {
+            old = new AbstractPluginObject() {
+                @Override
+                public ActionType getActionType() {
+                    return Command.INSTANCE;
+                }
+
+                @Override
+                protected void action(IContext context, Object instance, RowAdapter row, IResultSet result) throws Exception {
+                    // for this method only in-memory saving.
+                }
+            };
+            old.setTypeInstance(clazz);
+            bind(old);
+        }
+        old.mapObject(instance, key, key);
+        if (UtilLog.LOG.isDebugEnabled()) {
+            UtilLog.LOG.debug("Bound (" + key + "," + instance + ")");
         }
     }
 

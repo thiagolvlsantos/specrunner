@@ -17,7 +17,7 @@
  */
 package org.specrunner.sql.meta;
 
-import java.util.Set;
+import java.util.List;
 
 import org.specrunner.context.IContext;
 import org.specrunner.sql.database.DatabaseException;
@@ -27,7 +27,7 @@ import org.specrunner.sql.database.DatabaseException;
  * 
  * @author Thiago Santos
  */
-public interface IRegister extends Set<Value> {
+public interface IRegister extends List<Value> {
 
     /**
      * Parent table.
