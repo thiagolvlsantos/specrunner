@@ -1,4 +1,8 @@
 -----------------------------------------------------------
+1.5.15
+OK - Register should not reorder columns for IIdGenerator keys #87 https://github.com/thiagolvlsantos/specrunner/issues/87
+OK - Add bind(clazz,key,instance) to IObjectManager #91 https://github.com/thiagolvlsantos/specrunner/issues/91
+
 1.5.14
 OK - compareTree should not require include to be 'expanded' should expand automatically #85 https://github.com/thiagolvlsantos/specrunner/issues/85
 OK - compareTree bug on local parameters for inclusion #84 https://github.com/thiagolvlsantos/specrunner/issues/84
