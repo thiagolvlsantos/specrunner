@@ -8,8 +8,10 @@ import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.specrunner.junit.concurrent.Concurrent;
 import org.specrunner.junit.concurrent.SRRunnerConcurrent;
-import org.specrunner.plugins.core.language.Sentence;
+import org.specrunner.plugins.core.language.Given;
 import org.specrunner.plugins.core.language.Synonyms;
+import org.specrunner.plugins.core.language.Then;
+import org.specrunner.plugins.core.language.When;
 
 @RunWith(SRRunnerConcurrent.class)
 @Concurrent(threads = 4)
@@ -18,19 +20,19 @@ public class TestCalculator {
     private List<Double> list = new LinkedList<Double>();
     private String operation;
 
-    @Sentence("input (-?\\d+.?\\d+?)")
+    @Given("input (-?\\d+.?\\d+?)")
     @Synonyms({ "type (-?\\d+.?\\d+?)", "write (-?\\d+.?\\d+?)" })
     public void arg(Double value) {
         list.add(value);
     }
 
-    @Sentence("press (.+)")
+    @When("press (.+)")
     @Synonyms(value = { "type OPeration (.+)" }, options = Pattern.MULTILINE)
     public void action(String act) {
         operation = act;
     }
 
-    @Sentence("result is (\\d+.?\\d+?)")
+    @Then("result is (\\d+.?\\d+?)")
     @Synonyms({ "expected value (-?\\d+.?\\d+?)" })
     public boolean result(Double value) {
         Double d = null;

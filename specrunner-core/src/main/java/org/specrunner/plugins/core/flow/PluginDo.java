@@ -18,12 +18,12 @@
 package org.specrunner.plugins.core.flow;
 
 /**
- * The 'then' side of a conditional test.
+ * The 'do' side of a conditional test.
  * 
  * @author Thiago Santos.
  * 
  */
-public class PluginThen extends PluginIfBranch {
+public class PluginDo extends PluginIfBranch {
 
     @Override
     protected boolean expected() {

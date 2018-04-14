@@ -49,19 +49,18 @@ import nu.xom.Node;
  * 
  * <pre>
  *  Consider &lt;span class="if" value="${x > 0}"&gt;x is positive&lt;span&gt; 
- *      the message is "&lt;span class="then"&gt;Positive&lt;span&gt;" 
+ *      the message is "&lt;span class="do"&gt;Positive&lt;span&gt;" 
  *      else something different happens and the message is "&lt;span class="else"&gt;Negative&lt;span&gt;".
  * </pre>
  * 
  * With complex descriptions, the order can be different and the group of
- * 'if'/'then'/'else' can be named to avoid interferences of others
- * if/then/else.
+ * 'if'/'do'/'else' can be named to avoid interferences of others if/do/else.
  * <p>
  * Example1:
  * 
  * <pre>
  *  Consider &lt;span class="if" value="${x > 0}" name="test1"&gt;x is positive&lt;span&gt; 
- *      the message is "&lt;span class="then" name="test1"&gt;Positive&lt;span&gt;" 
+ *      the message is "&lt;span class="do" name="test1"&gt;Positive&lt;span&gt;" 
  *      else something different happens and the message is "&lt;span class="else" name="test1"&gt;Negative&lt;span&gt;".
  * </pre>
  * 
@@ -71,8 +70,8 @@ import nu.xom.Node;
  *  Consider &lt;span class="if" value="${x > 0}" &gt;x is positive&lt;span&gt; 
  *  Consider &lt;span class="if" value="${y > 0}" name="testY"&gt;y is negative&lt;span&gt;
  *      
- *  the message for x is "&lt;span class="then" name="test1"&gt;Positive&lt;span&gt;" 
- *  the message for y is "&lt;span class="then" name="testY"&gt;Positive&lt;span&gt;" 
+ *  the message for x is "&lt;span class="do" name="test1"&gt;Positive&lt;span&gt;" 
+ *  the message for y is "&lt;span class="do" name="testY"&gt;Positive&lt;span&gt;" 
  *  else something different happens and the message for x is "&lt;span class="else"&gt;Negative&lt;span&gt;".
  *  else something different happens and the message for y is "&lt;span class="else" name="testY"&gt;Negative&lt;span&gt;".
  * </pre>

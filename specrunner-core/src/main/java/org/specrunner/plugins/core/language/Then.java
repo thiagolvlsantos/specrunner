@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD })
-public @interface Sentence {
+public @interface Then {
 
     /**
      * Regular expression.

@@ -17,8 +17,10 @@
  */
 package org.specrunner.plugins.core.language;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -70,6 +72,11 @@ import nu.xom.Text;
  * 
  */
 public class PluginSentence extends AbstractPluginScoped {
+
+    /**
+     * List of annotations considered as commands/asserts.
+     */
+    private static List<Class<? extends Annotation>> annotations = Arrays.asList(Sentence.class, Given.class, When.class, Then.class);
 
     /**
      * The plugin type.
@@ -327,9 +334,11 @@ public class PluginSentence extends AbstractPluginScoped {
             if (ms == null) {
                 ms = new LinkedList<Method>();
                 for (Method m : clazz.getMethods()) {
-                    Sentence s = m.getAnnotation(Sentence.class);
-                    if (s != null) {
-                        ms.add(m);
+                    for (Class<? extends Annotation> a : annotations) {
+                        Annotation s = m.getAnnotation(a);
+                        if (s != null) {
+                            ms.add(m);
+                        }
                     }
                     Synonyms sn = m.getAnnotation(Synonyms.class);
                     if (sn != null && !ms.contains(m)) {
@@ -348,14 +357,31 @@ public class PluginSentence extends AbstractPluginScoped {
         }
         for (Method m : ms) {
             List<String> strs = new LinkedList<String>();
-            Sentence s = m.getAnnotation(Sentence.class);
-            if(s != null && !"".equals(s.value())){
-                strs.add(s.value());
+            Integer options = null;
+            for (Class<? extends Annotation> a : annotations) {
+                Annotation s = m.getAnnotation(a);
+                String str = null;
+                if (s instanceof Sentence && s != null && !"".equals(((Sentence) s).value())) {
+                    strs.add(((Sentence) s).value());
+                    options = ((Sentence) s).options();
+                }
+                if (s instanceof Given && s != null && !"".equals(((Given) s).value())) {
+                    strs.add(((Given) s).value());
+                    options = ((Given) s).options();
+                }
+                if (s instanceof When && s != null && !"".equals(((When) s).value())) {
+                    strs.add(((When) s).value());
+                    options = ((When) s).options();
+                }
+                if (s instanceof Then && s != null && !"".equals(((Then) s).value())) {
+                    strs.add(((Then) s).value());
+                    options = ((Then) s).options();
+                }
             }
             Synonyms sm = m.getAnnotation(Synonyms.class);
             if (sm != null) {
                 for (String syn : sm.value()) {
-                    if(!"".equals(syn)){
+                    if (!"".equals(syn)) {
                         strs.add(syn);
                     }
                 }
@@ -368,10 +394,7 @@ public class PluginSentence extends AbstractPluginScoped {
                 synchronized (cachePatterns) {
                     pattern = cachePatterns.get(str);
                     if (pattern == null) {
-                        int options;
-                        if(i == 0 && s != null) {
-                            options = s.options();
-                        } else {
+                        if (i > 0 || options == null) {
                             options = sm.options();
                         }
                         pattern = Pattern.compile(str, options);

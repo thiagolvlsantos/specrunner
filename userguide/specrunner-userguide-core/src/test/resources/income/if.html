@@ -4,11 +4,11 @@
     <h1>Exemplo simples</h1>
 
     <p>
-        Se x = <span class="local" name="x">3</span> e <span class="if" value="x % 2 == 0">o resto de x por 2 é ${x % 2}</span>: <br> <span class="then"> x é um par com certeza</span> <br>
+        Se x = <span class="local" name="x">3</span> e <span class="if" value="x % 2 == 0">o resto de x por 2 é ${x % 2}</span>: <br> <span class="do"> x é um par com certeza</span> <br>
         <span class="else"> x não é par</span>.
     </p>
     <p>
-        Se x = <span class="local" name="x">4</span> e <span class="if" value="x % 2 == 0">o resto de x por 2 é ${x % 2}</span>: <br> <span class="then"> x é um par com certeza</span> <br>
+        Se x = <span class="local" name="x">4</span> e <span class="if" value="x % 2 == 0">o resto de x por 2 é ${x % 2}</span>: <br> <span class="do"> x é um par com certeza</span> <br>
         <span class="else"> x não é par</span>.
     </p>
     <h1>Exemplo aninhado</h1>
@@ -17,10 +17,10 @@
     <span class="local" name="x">4</span> e
     <span class="if" value="x % 2 == 0">o resto de x por 2 é ${x % 2}</span>:
     <br />
-    <span class="then"> x é um par com certeza, e x + 1 (<span class="local" name="x">${x+1}</span>):
+    <span class="do"> x é um par com certeza, e x + 1 (<span class="local" name="x">${x+1}</span>):
         <blockquote>
             <if value="x % 2 == 0" />
-            <span class="then"> ${x+1} é um par com certeza</span> <br /> <span class="else"> não é par</span>
+            <span class="do"> ${x+1} é um par com certeza</span> <br /> <span class="else"> não é par</span>
         </blockquote>
     </span>
     <br />
@@ -41,12 +41,12 @@
         </tr>
         <tr>
             <td>x</td>
-            <td><span class="then"> x é par</span></td>
+            <td><span class="do"> x é par</span></td>
             <td><span class="else"> x é impar</span></td>
         </tr>
         <tr>
             <td>y</td>
-            <td><span class="then" name="testY"> y é par</span></td>
+            <td><span class="do" name="testY"> y é par</span></td>
             <td><span class="else" name="testY"> y é impar</span></td>
         </tr>
     </table>
@@ -56,14 +56,14 @@
 
     Se z =
     <span class="local" name="z">10</span>
-    <span class="if" value="z % 2 == 0"> <span class="then"> então é par </span> <span class="else"> então é impar </span>.
+    <span class="if" value="z % 2 == 0"> <span class="do"> então é par </span> <span class="else"> então é impar </span>.
     </span>
 
     <p>Outro exemplo:
         Considere que nome=<span class="local" name="nome" value="System.currentTimeMillis()">hora atual</span>
         Considere que local=<span class="local" name="test">${2 % 2 == 0}</span>
         <table class="if" border="1" value="nome % 2 == 0">
-            <tr class="then">
+            <tr class="do">
                 <td>70% - ${nome % 10}</td>
             </tr>
             <tr class="else">

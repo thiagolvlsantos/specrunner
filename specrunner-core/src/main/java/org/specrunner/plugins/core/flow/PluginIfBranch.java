@@ -127,7 +127,7 @@ public abstract class PluginIfBranch extends AbstractPluginNamed {
     /**
      * Return the expected branch condition.
      * 
-     * @return true, for 'then', false, for 'else'.
+     * @return true, for 'do', false, for 'else'.
      */
     protected abstract boolean expected();
 }
