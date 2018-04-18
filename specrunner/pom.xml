@@ -8,7 +8,7 @@
     <groupId>org.specrunner</groupId>
     <artifactId>specrunner</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.15</version>
+    <version>1.5.16</version>
     <name>SpecRunner (multi-module).</name>
     <url>http://www.specrunner.org</url>
     <description>Acceptance Test Driven Development tool</description>
@@ -257,7 +257,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.4</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -278,7 +278,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.4</version>
+                        <version>1.6</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

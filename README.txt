@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.16
+OK - Add support for <given><when><then> #92 https://github.com/thiagolvlsantos/specrunner/issues/92
+
 1.5.15
 OK - Register should not reorder columns for IIdGenerator keys #87 https://github.com/thiagolvlsantos/specrunner/issues/87
 OK - Add bind(clazz,key,instance) to IObjectManager #91 https://github.com/thiagolvlsantos/specrunner/issues/91

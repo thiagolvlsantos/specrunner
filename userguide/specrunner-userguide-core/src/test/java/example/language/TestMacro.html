@@ -1,0 +1,55 @@
+<html>
+<head>
+</head>
+<body>
+	<macro name="myname">
+	Given
+	<given>name is "John Doe"</given>
+	<br /> When
+	<when>splitted</when>
+	<br /> Then
+	<then>first name is "John"</then>
+	<br /> and
+	<then>last name is "Doe"</then>
+	.
+	</macro>
+
+	<p>
+	Calling...
+	<call>myname</call>
+
+
+	<div class="macro" name="myname2">
+	Given 2
+	<given>name is "John Doe"</given>
+	<br /> When
+	<when>splitted</when>
+	<br /> Then
+	<then>first name is "John"</then>
+	<br /> and
+	<then>last name is "Doe"</then>
+	.
+	</div>
+
+	<p>
+	Calling...
+	<div class="call">myname2</div>
+
+
+	<div macro name="myname3">
+	Given 3
+	<given>name is "John Doe"</given>
+	<br /> When
+	<when>splitted</when>
+	<br /> Then
+	<then>first name is "John"</then>
+	<br /> and
+	<then>last name is "Doe"</then>
+	.
+	</div>
+
+	<p>
+	Calling...
+	<div call>myname3</div>
+</body>
+</html>
