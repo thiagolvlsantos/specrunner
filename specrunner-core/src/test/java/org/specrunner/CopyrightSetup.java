@@ -18,7 +18,7 @@ public class CopyrightSetup extends AbstractSetup {
                 return pathname.isDirectory() || name.endsWith(".java") || name.endsWith(".properties") || name.endsWith(".txt");
             }
         };
-        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "Copyright (C) 2011-2016  Thiago Santos", "Copyright (C) 2011-2016  Thiago Santos");
+        adjust("", new File(System.getProperty("user.dir") + "/.."), filter, "Copyright (C) 2011-2018  Thiago Santos", "Copyright (C) 2011-2018  Thiago Santos");
     }
     // CHECKSTYLE:ON
 }
