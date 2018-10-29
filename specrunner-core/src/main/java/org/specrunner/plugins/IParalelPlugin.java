@@ -18,10 +18,10 @@
 package org.specrunner.plugins;
 
 /**
- * Stand for a plugin with concurrency constrains. If plugin implements this
- * interface the boolean threadsafe is the sign for the plugin perfom its
- * actions considering thread safe scenarios, for example in memory databases
- * can have their URLs changed to different threads.
+ * Stand for a plugin with concurrency constrains. If a plugin implements this
+ * interface the boolean threadsafe is the sign to plugin performs its actions
+ * considering thread safe scenarios, for example, in-memory databases can have
+ * their URLs changed to different threads.
  * 
  * @author Thiago Santos
  * 

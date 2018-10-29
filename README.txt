@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.17
+OK - Upgrade jodatime to 2.10 #96 https://github.com/thiagolvlsantos/specrunner/issues/96
+
 1.5.16
 OK - Add support for <given><when><then> #92 https://github.com/thiagolvlsantos/specrunner/issues/92
 
