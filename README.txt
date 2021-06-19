@@ -1,4 +1,7 @@
 -----------------------------------------------------------
+1.5.18
+OK - Filtering tests scenarios by using flags: -DfilterTests=regression,ui,etc... #97 https://github.com/thiagolvlsantos/specrunner/issues/97
+
 1.5.17
 OK - Upgrade jodatime to 2.10 #96 https://github.com/thiagolvlsantos/specrunner/issues/96
 
