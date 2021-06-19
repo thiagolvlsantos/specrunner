@@ -1,5 +1,12 @@
 -----------------------------------------------------------
 1.5.18
+Due to Sonatype changes the groupId had to change to io.github.thiagolvlsantos to use this version set:
+	<groupId>io.github.thiagolvlsantos</groupId>
+	<artifactId>specrunner</artifactId>
+	<version>1.5.18</version>
+	
+Java packages have not changed! The only expected change to your project is the groupId reference.
+
 OK - Filtering tests scenarios by using flags: -DfilterTests=regression,ui,etc... #97 https://github.com/thiagolvlsantos/specrunner/issues/97
 
 1.5.17

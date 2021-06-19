@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.specrunner</groupId>
+		<groupId>io.github.thiagolvlsantos</groupId>
 		<artifactId>specrunner-userguide</artifactId>
 		<version>1.5.18</version>
 		<relativePath>../specrunner-userguide</relativePath>
@@ -10,7 +10,7 @@
 	<artifactId>specrunner-userguide-hibernate3</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>org.specrunner</groupId>
+			<groupId>io.github.thiagolvlsantos</groupId>
 			<artifactId>specrunner-hibernate3</artifactId>
 			<version>${project.version}</version>
 		</dependency>
