@@ -1,21 +1,25 @@
------------------------------------------------------------
-1.5.18
-Due to Sonatype changes the groupId had to change to io.github.thiagolvlsantos to use this version set:
-	<groupId>io.github.thiagolvlsantos</groupId>
-	<artifactId>specrunner</artifactId>
-	<version>1.5.18</version>
-	
-Java packages have not changed! The only expected change to your project is the groupId reference.
+# Changelog
 
+##1.5.18
 OK - Filtering tests scenarios by using flags: -DfilterTests=regression,ui,etc... #97 https://github.com/thiagolvlsantos/specrunner/issues/97
 
-1.5.17
+Due to Sonatype changes the groupId had to change to io.github.thiagolvlsantos to use this version set:
+
+```xml
+<groupId>io.github.thiagolvlsantos</groupId>
+<artifactId>specrunner</artifactId>
+<version>1.5.18</version>
+```
+Java packages have not changed! The only expected change to your project is the groupId reference.
+
+
+## 1.5.17
 OK - Upgrade jodatime to 2.10 #96 https://github.com/thiagolvlsantos/specrunner/issues/96
 
-1.5.16
+## 1.5.16
 OK - Add support for <given><when><then> #92 https://github.com/thiagolvlsantos/specrunner/issues/92
 
-1.5.15
+## 1.5.15
 OK - Register should not reorder columns for IIdGenerator keys #87 https://github.com/thiagolvlsantos/specrunner/issues/87
 OK - Add bind(clazz,key,instance) to IObjectManager #91 https://github.com/thiagolvlsantos/specrunner/issues/91
 
