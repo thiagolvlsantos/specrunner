@@ -131,6 +131,10 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     protected boolean ignored = false;
     /**
+     * Indicate if scenario is accepted.
+     */
+    protected boolean accepted = true;
+    /**
      * The subset of general result for this scenario.
      */
     protected IResultSet subset;
@@ -227,12 +231,14 @@ public abstract class ScenarioFrameListener implements INodeListener {
                     title = sub;
                     startTime = time;
                     checkpoint = result.size();
-                    if (((Boolean) SRServices.getFeatureManager().get(FEATURE_EXECUTE_ENABLED, true)) && execute != null && execute && !holder.attributeEquals(ATT_EXECUTE, "true")) {
+                    Boolean executeEnabled = (Boolean) SRServices.getFeatureManager().get(FEATURE_EXECUTE_ENABLED, true);
+                    if (executeEnabled && execute != null && execute && !holder.attributeEquals(ATT_EXECUTE, "true")) {
                         UtilNode.setIgnore(node);
                     }
                     pending = UtilNode.isPending(node);
                     ignored = UtilNode.isIgnore(node);
-                    if (pending || ignored) {
+                    accepted = UtilNode.isAccepted(node);
+                    if (pending || ignored || !accepted) {
                         next = ENext.SKIP;
                     }
                     fireBefore(name, node, context, result, getInstance());
@@ -283,6 +289,11 @@ public abstract class ScenarioFrameListener implements INodeListener {
             } else if (UtilNode.isIgnore(node)) {
                 if (UtilLog.LOG.isInfoEnabled()) {
                     UtilLog.LOG.info("Scenario IGNORED:" + name);
+                }
+                UtilNode.appendCss(node, CSS_SCENARIO_IGNORED);
+            } else if (!UtilNode.isAccepted(node)) {
+                if (UtilLog.LOG.isInfoEnabled()) {
+                    UtilLog.LOG.info("Scenario NOT_ACCCEPTED:" + name);
                 }
                 UtilNode.appendCss(node, CSS_SCENARIO_IGNORED);
             } else if (subset.getStatus().isError()) {
@@ -351,6 +362,15 @@ public abstract class ScenarioFrameListener implements INodeListener {
      */
     public boolean isIgnored() {
         return ignored;
+    }
+
+    /**
+     * Answer if the scenario is accepted.
+     * 
+     * @return true, if ignored, false, otherwise.
+     */
+    public boolean isAccepted() {
+        return accepted;
     }
 
     /**

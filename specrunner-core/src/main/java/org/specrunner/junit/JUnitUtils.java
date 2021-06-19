@@ -295,7 +295,7 @@ public final class JUnitUtils {
                 }
             }
             final Map<String, List<Description>> parentToChild = new HashMap<String, List<Description>>();
-            final String txtIgnored = "IGNORED|PENDING ->";
+            final int maxLength = "NOT_ACCEPTED".length();
             for (int i = 0; i < scenarios.size(); i++) {
                 Node sc = scenarios.get(i);
                 Node nt = UtilNode.getCssNodeOrElement(sc, ScenarioFrameListener.CSS_TITLE);
@@ -335,7 +335,7 @@ public final class JUnitUtils {
                     public void beforeScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
                         time = System.currentTimeMillis();
                         IResultSet r = frameListener.getResult();
-                        if (frameListener.isPending() || frameListener.isIgnored()) {
+                        if (frameListener.isPending() || frameListener.isIgnored() || !frameListener.isAccepted()) {
                             runner.getNotifier().fireTestIgnored(description);
                             List<Description> list = parentToChild.get(title);
                             if (list != null) {
@@ -351,11 +351,14 @@ public final class JUnitUtils {
 
                     @Override
                     public void afterScenario(String title, Node node, IContext context, IResultSet result, Object instance) {
-                        boolean ignored = false;
+                        String ignoredReason = null;
                         IResultSet r = frameListener.getResult();
-                        if (frameListener.isPending() || frameListener.isIgnored()) {
-                            // just to not perform other things
-                            ignored = true;
+                        if (frameListener.isPending()) {
+                            ignoredReason = "PENDING";
+                        } else if (frameListener.isIgnored()) {
+                            ignoredReason = "IGNORED";
+                        } else if (!frameListener.isAccepted()) {
+                            ignoredReason = "NOT_ACCEPTED";
                         } else if (r == null || r.countErrors() == 0) {
                             runner.getNotifier().fireTestFinished(description);
                         } else {
@@ -371,7 +374,7 @@ public final class JUnitUtils {
                         for (int j = 0; j < level; j++) {
                             tmp.append('\t');
                         }
-                        out.printf(tmp + "Scenario (%5d ms): %-" + txtIgnored.length() + "s '%s'\n", time, (!ignored ? (r.countErrors() > 0 ? "FAIL ------------>" : "SUCCESS --------->") : txtIgnored), title);
+                        out.printf(tmp + "Scenario (%5d ms): %-" + maxLength + "s '%s'\n", time, (ignoredReason == null ? (r.countErrors() > 0 ? pad("FAIL", maxLength) : pad("SUCCESS", maxLength)) : pad(ignoredReason, maxLength)), title);
                     }
                 };
                 listeners.add(frameListener);
@@ -380,6 +383,16 @@ public final class JUnitUtils {
             throw new RuntimeException(e);
         }
         return methods;
+    }
+
+    private static String pad(String msg, int maxLength) {
+        StringBuilder sb = new StringBuilder(msg);
+        sb.append(" ");
+        for (int i = msg.length(); i < maxLength + 1; i++) {
+            sb.append("-");
+        }
+        sb.append(">");
+        return sb.toString();
     }
 
     /**

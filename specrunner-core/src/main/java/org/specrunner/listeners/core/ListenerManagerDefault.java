@@ -26,16 +26,16 @@ package org.specrunner.listeners.core;
 @SuppressWarnings("serial")
 public class ListenerManagerDefault extends ListenerManagerImpl {
 
-    /**
-     * Default constructor.
-     */
-    public ListenerManagerDefault() {
-        add(new IgnoreNodeListener());
-        add(new ContextListenerPopulator());
-        add(new ContextListenerDestroyer());
-        add(new ProfilerSourceListener());
-        add(new ProfilerPluginListener());
-        add(new PauseOnFailureNodeListener());
-        add(new TagPluginListener());
-    }
+	/**
+	 * Default constructor.
+	 */
+	public ListenerManagerDefault() {
+		add(new IgnoreNodeListener());
+		add(new ContextListenerPopulator());
+		add(new ContextListenerDestroyer());
+		add(new ProfilerSourceListener());
+		add(new ProfilerPluginListener());
+		add(new PauseOnFailureNodeListener());
+		add(new TagPluginListener());
+	}
 }

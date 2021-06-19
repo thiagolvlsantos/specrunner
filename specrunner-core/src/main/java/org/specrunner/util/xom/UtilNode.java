@@ -17,6 +17,9 @@
  */
 package org.specrunner.util.xom;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.specrunner.plugins.PluginException;
 
 import nu.xom.Attribute;
@@ -83,6 +86,35 @@ public final class UtilNode {
      */
     public static boolean isPending(Node node) {
         return node instanceof Element && ((Element) node).getAttribute(PENDING) != null;
+    }
+
+    /**
+     * Check is a node is marked to be accepted according to a list of
+     * categories.
+     * 
+     * @param node
+     *            The node to be checked.
+     * @return true, if node is accepted, false, otherwise.
+     */
+    public static boolean isAccepted(Node node) {
+        String filter = System.getProperty("filterTests");
+        if (filter != null && node instanceof Element) {
+            Attribute css = ((Element) node).getAttribute(ATT_CSS);
+            if (css != null) {
+                String value = css.getValue();
+                if (value != null) {
+                    String[] values = value.split(" ");
+                    List<String> classes = Arrays.asList(values);
+                    String[] ps = filter.split(",");
+                    boolean result = false;
+                    for (String p : ps) {
+                        result = result || classes.contains(p);
+                    }
+                    return result;
+                }
+            }
+        }
+        return true;
     }
 
     /**
