@@ -1,7 +1,7 @@
 # Changelog
 
 ## 1.5.18
- - Filtering tests scenarios by using flags: -DfilterTests=regression,ui,etc...
+ - Filtering tests scenarios by using flags: ``-DfilterTests=regression,ui,etc...``
  [#97](https://github.com/thiagolvlsantos/specrunner/issues/97)  
 
 **IMPORTANTE NOTE**: Due to Sonatype changes **the Specrunner groupId had to change to ``io.github.thiagolvlsantos``**. 
@@ -13,7 +13,7 @@ To use this new version replace **groupId** by:
     <artifactId>specrunner-XXX</artifactId>
     <version>1.5.18</version>
 ```
-Java packages inside the library have not changed! The only expected change to your project is the groupId reference. I decided to **not change major version** because running code is not affected, I mean, there is backward compatibility.
+Java packages inside the library have not changed! The only expected change to your project is the ``groupId`` reference. I decided to **not change major version** because running code is not affected, I mean, there is a backward compatibility.
 
 ## 1.5.17
 - Upgrade jodatime to 2.10 [#96](https://github.com/thiagolvlsantos/specrunner/issues/96) 
