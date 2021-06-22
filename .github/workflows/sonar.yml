@@ -30,10 +30,11 @@ jobs:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
-    - name: Build with Maven and Analyze
+    - name: Copy tests
       run: |
         chmod 755 copyTests.sh
         ./copyTests.sh
+    - name: Build with Maven and Analyze
         cd specrunner
         mvn -U -B --no-transfer-progress --file pom.xml verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       env:
