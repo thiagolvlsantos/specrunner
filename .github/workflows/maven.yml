@@ -22,10 +22,9 @@ jobs:
         java-version: '8'
         distribution: 'adopt'
     - name: Build with Maven
-      run: | 
-        ls -la
-        cp -R userguide/specrunner-userguide-core/src/test/java/* specrunner-core/src/test/java/ 
-        cp -R userguide/specrunner-userguide-core/src/test/resources/* specrunner-core/src/test/resources/ 
+      run: |
+        chmod 755 copyTests.sh
+        ./copyTests.sh
         mvn -U -B --no-transfer-progress package --file specrunner/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file tools/specrunner-tools/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file userguide/specrunner-userguide/pom.xml
