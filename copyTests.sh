@@ -1,6 +1,11 @@
 #!/bin/sh
 
 ls -la
+
+mkdir specrunner-ant/build
+cp -R userguide/specrunner-userguide-ant/build/* specrunner-ant/build/
+
+
 for x in core ant 
 do
   echo "Copiando $x"
