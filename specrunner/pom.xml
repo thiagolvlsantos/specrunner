@@ -68,6 +68,10 @@
         <sourceVersion>1.7</sourceVersion>
         <main>none</main>
         <lib>lib</lib>
+	<sonar.user>thiagolvlsantos</sonar.user>
+	<sonar.organization>${sonar.user}-projects</sonar.organization>
+	<sonar.projectKey>${sonar.user}_${project.artifactId}</sonar.projectKey>
+	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <build>
         <pluginManagement>
