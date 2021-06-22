@@ -74,6 +74,23 @@
 	<sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
     <build>
+	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
+	</build>
+
         <pluginManagement>
             <plugins>
                 <plugin>
