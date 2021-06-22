@@ -7,10 +7,9 @@
 
 ## Testing for everyone
 
-For a quick overview checkout this presentation: ['Specrunner'](https://github.com/thiagolvlsantos/specrunner/blob/master/specrunner/ppts/SpecRunner.pdf) and also for each module you can access the [examples projects](https://github.com/thiagolvlsantos/specrunner/tree/master/userguide) using different modules for their ``src/test/java`` classes.
+For a quick overview checkout this presentation **[Specrunner](https://github.com/thiagolvlsantos/specrunner/blob/master/specrunner/ppts/SpecRunner.pdf)** and also for each module you can access the **[examples projects](https://github.com/thiagolvlsantos/specrunner/tree/master/userguide)** using different modules for their ``src/test/java`` classes.
 
-Specrunner is a ATDD testing tool where you can write your acceptance tests using different formats, and moreover strategies how to use is up to you. For example, you can instrument the same test to perform on GUI or to perform in bussiness controllers. 
-
+Specrunner is a ATDD testing tool where you can write your acceptance tests using different styles and formats its up to you, **we wont judge you**. For example, you can instrument the same ATTD test to perform on GUI or to perform in bussiness controllers, for the stakeholders it is transparent. 
 
 ## Usage
 
