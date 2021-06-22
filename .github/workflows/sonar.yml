@@ -36,7 +36,7 @@ jobs:
         ./copyTests.sh
     - name: Build with Maven and Analyze
         cd specrunner
-        mvn -U -B --no-transfer-progress --file pom.xml verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        mvn -U -B -fn --no-transfer-progress --file pom.xml verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
