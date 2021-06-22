@@ -5,6 +5,12 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=thiagolvlsantos_specrunner&metric=coverage)](https://sonarcloud.io/dashboard?id=thiagolvlsantos_specrunner)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.thiagolvlsantos/specrunner/badge.svg)](https://repo1.maven.org/maven2/io/github/thiagolvlsantos/specrunner/)
 
+## Testing for everyone
+
+For a quick overview checkout this presentation: ['Specrunner'](https://github.com/thiagolvlsantos/specrunner/blob/master/specrunner/ppts/SpecRunner.pdf) and also for each module you can access the [examples projects](https://github.com/thiagolvlsantos/specrunner/tree/master/userguide) using different modules for their ``src/test/java`` classes.
+
+Specrunner is a ATDD testing tool where you can write your acceptance tests using different formats, and moreover strategies how to use is up to you. For example, you can instrument the same test to perform on GUI or to perform in bussiness controllers. 
+
 
 ## Usage
 
@@ -17,6 +23,7 @@ Include latest version [![Maven Central](https://maven-badges.herokuapp.com/mave
 			<version>${latestVersion}</version>
 		</dependency>
 ```
+
 
 ## Changelog
 
