@@ -23,6 +23,7 @@ jobs:
         distribution: 'adopt'
     - name: Build with Maven
       run: | 
+        ls -la
         cp -R userguide/specrunner-core/src/tests/java/* specrunner-core/src/tests/java/ 
         cp -R userguide/specrunner-core/src/tests/resources/* specrunner-core/src/tests/resources/ 
         mvn -U -B --no-transfer-progress package --file specrunner/pom.xml
