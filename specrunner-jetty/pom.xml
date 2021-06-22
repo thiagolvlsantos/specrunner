@@ -23,6 +23,7 @@
 
 	<properties>
 		<jetty.version>9.3.27.v20190418</jetty.version>
+		<jetty-jsp.version>9.2.30.v20200428</jetty-jsp.version>
 		<jasper.version>6.0.45</jasper.version>
 		<jstl.version>1.2</jstl.version>
 	</properties>
@@ -47,7 +48,7 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jsp</artifactId>
-            <version>${jetty.version}</version>
+            <version>${jetty-jsp.version}</version>
         </dependency>
 	</dependencies>
 </project>
