@@ -70,7 +70,7 @@
 		<sourceVersion>1.7</sourceVersion>
 		<main>none</main>
 		<lib>lib</lib>
-		<sonar.coverage.jacoco.xmlReportPaths>target/reports/jacoco</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>specrunner-core/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.user>thiagolvlsantos</sonar.user>
 		<sonar.organization>${sonar.user}-projects</sonar.organization>
 		<sonar.projectKey>${sonar.user}_${project.artifactId}</sonar.projectKey>
@@ -207,16 +207,18 @@
 				<version>0.8.7</version>
 				<executions>
 					<execution>
+						<id>prepare-agent</id>
+						<phase>initialize</phase>
 						<goals>
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>report</id>
-						<phase>prepare-package</phase>
 						<goals>
-							<goal>report</goal>
+							<goal>report-aggregate</goal>
 						</goals>
+						<phase>verify</phase>
 					</execution>
 				</executions>
 			</plugin>
