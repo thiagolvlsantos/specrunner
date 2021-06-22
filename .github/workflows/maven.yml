@@ -23,6 +23,6 @@ jobs:
         distribution: 'adopt'
     - name: Build with Maven
       run: | 
-        mvn -U -B -DskipTests package --file specrunner/pom.xml
-        mvn -U -B -DskipTests package --file tools/pom.xml
-        mvn -U -B -DskipTests package --file userguide/pom.xml
+        mvn -U -B -DskipTests --no-transfer-progress package --file specrunner/pom.xml
+        mvn -U -B -DskipTests --no-transfer-progress package --file tools/specrunner-tools/pom.xml
+        mvn -U -B -DskipTests --no-transfer-progress package --file userguide/specrunner-userguide/pom.xml
