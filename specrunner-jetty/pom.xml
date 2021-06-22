@@ -22,7 +22,7 @@
     </distributionManagement>
 
 	<properties>
-		<jetty.version>9.3.27.v20190418</jetty.version>
+		<jetty.version>9.4.34.v20201102</jetty.version>
 		<jetty-jsp.version>9.2.30.v20200428</jetty-jsp.version>
 		<jasper.version>6.0.45</jasper.version>
 		<jstl.version>1.2</jstl.version>
