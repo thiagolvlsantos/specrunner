@@ -27,6 +27,6 @@ jobs:
         ./copyTests.sh
     - name: Build with Maven
       run: |
-        mvn -U -B --no-transfer-progress package --file specrunner/pom.xml
+        mvn -U -B --no-transfer-progress package --file specrunner/pom.xml -fn
         mvn -U -B -DskipTests --no-transfer-progress package --file tools/specrunner-tools/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file userguide/specrunner-userguide/pom.xml
