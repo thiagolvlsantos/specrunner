@@ -21,10 +21,12 @@ jobs:
       with:
         java-version: '8'
         distribution: 'adopt'
-    - name: Build with Maven
+    - name: Copy tests
       run: |
         chmod 755 copyTests.sh
         ./copyTests.sh
+    - name: Build with Maven
+      run: |
         mvn -U -B --no-transfer-progress package --file specrunner/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file tools/specrunner-tools/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file userguide/specrunner-userguide/pom.xml
