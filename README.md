@@ -41,4 +41,4 @@ To use this new version replace **groupId** by:
 ```
 Java packages inside the library have not changed! The only expected change to your project is the ``groupId`` reference. I decided to **not change major version** because running code is not affected, I mean, there is a backward compatibility.
 
-See [full changelog](https://github.com/thiagolvlsantos/specrunner/blob/master/CHANGELOG.md).
+See [full changelog](CHANGELOG).
