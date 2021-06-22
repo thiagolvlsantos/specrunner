@@ -23,6 +23,8 @@ jobs:
         distribution: 'adopt'
     - name: Build with Maven
       run: | 
-        mvn -U -B -DskipTests --no-transfer-progress package --file specrunner/pom.xml
+        cp -R userguide/specrunner-core/src/tests/java/* specrunner-core/src/tests/java/ 
+        cp -R userguide/specrunner-core/src/tests/resources/* specrunner-core/src/tests/resources/ 
+        mvn -U -B --no-transfer-progress package --file specrunner/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file tools/specrunner-tools/pom.xml
         mvn -U -B -DskipTests --no-transfer-progress package --file userguide/specrunner-userguide/pom.xml
