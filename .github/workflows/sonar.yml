@@ -35,6 +35,7 @@ jobs:
         chmod 755 copyTests.sh
         ./copyTests.sh
     - name: Build with Maven and Analyze
+      run: |
         cd specrunner
         mvn -U -B -fn --no-transfer-progress --file pom.xml verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       env:
