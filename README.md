@@ -1,6 +1,8 @@
 # Specrunner
 [![CI with Maven](https://github.com/thiagolvlsantos/specrunner/actions/workflows/maven.yml/badge.svg)](https://github.com/thiagolvlsantos/specrunner/actions/workflows/maven.yml)
-[![CI with CodeQL](https://github.com/thiagolvlsantos/specrunner/actions/workflows/codeql.yml/badge.svg)](https://github.com/thiagolvlsantos/specrunner/actions/workflows/codeql.yml)
+[![CI with Sonar](https://github.com/thiagolvlsantos/specrunner/actions/workflows/sonar.yml/badge.svg)](https://github.com/thiagolvlsantos/specrunner/actions/workflows/sonar.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=thiagolvlsantos_specrunner&metric=alert_status)](https://sonarcloud.io/dashboard?id=thiagolvlsantos_specrunner)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=thiagolvlsantos_specrunner&metric=coverage)](https://sonarcloud.io/dashboard?id=thiagolvlsantos_specrunner)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.thiagolvlsantos/specrunner/badge.svg)](https://repo1.maven.org/maven2/io/github/thiagolvlsantos/specrunner/)
 
 
