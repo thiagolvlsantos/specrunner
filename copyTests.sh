@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ls -la
-for x in core core-excel core-text core-spring
+for x in core core-excel core-text core-spring sql-negative sql-positive hibernate3 hibernate4 ant concordion-emulator 
 do
   echo "Copiando $x"
   export y=${x}/src/test/
