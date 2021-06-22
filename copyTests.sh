@@ -1,3 +1,8 @@
+#!/bin/sh
 ls -la
-cp -R userguide/specrunner-userguide-core/src/test/java/* specrunner-core/src/test/java/ 
-cp -R userguide/specrunner-userguide-core/src/test/resources/* specrunner-core/src/test/resources/
+for x in core core-excel core-text core-spring
+do
+  echo "Copiando $x"
+  cp -R userguide/specrunner-userguide-${x}/src/test/java/* specrunner-${x}/src/test/java/ 
+  cp -R userguide/specrunner-userguide-${x}/src/test/resources/* specrunner-${x}/src/test/resources/
+done;
