@@ -70,7 +70,12 @@
 		<sourceVersion>1.7</sourceVersion>
 		<main>none</main>
 		<lib>lib</lib>
-		<sonar.coverage.jacoco.xmlReportPaths>specrunner-core/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>
+			${project.basedir}/../specrunner-core/target/site/jacoco-aggregate/jacoco.xml,
+			${project.basedir}/../specrunner-core-excel/target/site/jacoco-aggregate/jacoco.xml,
+			${project.basedir}/../specrunner-core-text/target/site/jacoco-aggregate/jacoco.xml,
+			${project.basedir}/../specrunner-core-spring/target/site/jacoco-aggregate/jacoco.xml
+		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.user>thiagolvlsantos</sonar.user>
 		<sonar.organization>${sonar.user}-projects</sonar.organization>
 		<sonar.projectKey>${sonar.user}_${project.artifactId}</sonar.projectKey>
